@@ -42,12 +42,19 @@ jobs:
       matrix:
         profile: [rev1_3, rev3_x]
     steps:
+      # the whole history with its tags: the firmware's version is `git
+      # describe --tags`, and without them (or with git refusing the
+      # container's checkout as someone else's) the IDF names it "1"
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - name: tools
         run: apt-get update && apt-get install -y --no-install-recommends zsh zip binutils
       - name: firmware
         shell: bash
         run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git describe --tags --always --dirty
           . $IDF_PATH/export.sh
           tools/build_fw.sh ${{ matrix.profile }}
       - name: apps

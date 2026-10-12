@@ -18,6 +18,7 @@
  */
 #include "cas_app.h"
 #include "cas_keypad.h"
+#include "cas_plot.h"
 #include "mx_view.h"
 
 #include "aos_gesture.h"
@@ -53,7 +54,7 @@ static struct {
     float       tx;
     /* widgets */
     lv_obj_t   *canvas, *box, *panel, *list, *pill, *editbox, *edview, *kp;
-    lv_draw_buf_t *db;
+    cas_plot_t  plot;
     int         W, H;
     bool        dirty, shown, landscape;
     lv_timer_t *timer;
@@ -224,159 +225,6 @@ static float sx_to_x(float sx) { return G.cx + (sx - G.W / 2.0f) / G.scale; }
 static float x_to_sx(float x)  { return G.W / 2.0f + (x - G.cx) * G.scale; }
 static float y_to_sy(float y)  { return G.H / 2.0f - (y - G.cy) * G.scale; }
 
-static float nice_step(float raw)
-{
-    float p = powf(10.0f, floorf(log10f(raw)));
-    float m = raw / p;
-    return (m < 1.5f ? 1 : m < 3.5f ? 2 : m < 7.5f ? 5 : 10) * p;
-}
-
-/* --- pixels ------------------------------------------------------------------------ */
-
-static inline uint16_t rgb565(uint32_t c)
-{
-    return (uint16_t)(((c >> 8) & 0xF800) | ((c >> 5) & 0x07E0) | ((c >> 3) & 0x001F));
-}
-
-static uint16_t *px_row(int y)
-{
-    return (uint16_t *)(G.db->data + (size_t)y * G.db->header.stride);
-}
-
-static inline void blend(uint16_t *d, uint16_t c, int a)
-{
-    if (a >= 255) {
-        *d = c;
-        return;
-    }
-    if (a <= 0) {
-        return;
-    }
-    uint32_t s = *d;
-    uint32_t sr = s >> 11, sg = (s >> 5) & 63, sb = s & 31;
-    uint32_t cr = c >> 11, cg = (c >> 5) & 63, cb = c & 31;
-    sr += ((cr - sr) * (uint32_t)a + 128) >> 8;
-    sg += ((cg - sg) * (uint32_t)a + 128) >> 8;
-    sb += ((cb - sb) * (uint32_t)a + 128) >> 8;
-    *d = (uint16_t)((sr << 11) | (sg << 5) | sb);
-}
-
-static void fill(uint16_t c)
-{
-    for (int y = 0; y < G.H; y++) {
-        uint16_t *r = px_row(y);
-        for (int x = 0; x < G.W; x++) {
-            r[x] = c;
-        }
-    }
-}
-
-static void vline(int x, uint16_t c, int w)
-{
-    for (int k = 0; k < w; k++) {
-        if (x + k < 0 || x + k >= G.W) continue;
-        for (int y = 0; y < G.H; y++) {
-            px_row(y)[x + k] = c;
-        }
-    }
-}
-
-static void hline(int y, uint16_t c, int w)
-{
-    for (int k = 0; k < w; k++) {
-        if (y + k < 0 || y + k >= G.H) continue;
-        uint16_t *r = px_row(y + k);
-        for (int x = 0; x < G.W; x++) {
-            r[x] = c;
-        }
-    }
-}
-
-/* An anti-aliased line of width w: along its major axis, one span across per
- * pixel, with soft ends. */
-static void aa_line(float x0, float y0, float x1, float y1, uint16_t c, float w)
-{
-    float dx = x1 - x0, dy = y1 - y0;
-    bool steep = fabsf(dy) > fabsf(dx);
-    if (steep) {
-        float t;
-        t = x0; x0 = y0; y0 = t;
-        t = x1; x1 = y1; y1 = t;
-        t = dx; dx = dy; dy = t;
-    }
-    if (x0 > x1) {
-        float t;
-        t = x0; x0 = x1; x1 = t;
-        t = y0; y0 = y1; y1 = t;
-    }
-    float g = dx != 0 ? dy / dx : 0;
-    float half = w * sqrtf(1 + g * g) / 2;
-    int xs = (int)floorf(x0), xe = (int)ceilf(x1);
-    int lim_major = steep ? G.H : G.W, lim_minor = steep ? G.W : G.H;
-    if (xs < 0) xs = 0;
-    if (xe > lim_major - 1) xe = lim_major - 1;
-    for (int x = xs; x <= xe; x++) {
-        float yc = y0 + g * (x + 0.5f - x0);
-        int a0 = (int)floorf(yc - half - 0.5f), a1 = (int)ceilf(yc + half + 0.5f);
-        if (a0 < 0) a0 = 0;
-        if (a1 > lim_minor - 1) a1 = lim_minor - 1;
-        for (int y = a0; y <= a1; y++) {
-            float d = fabsf(y + 0.5f - yc);
-            float cov = half + 0.5f - d;
-            if (cov <= 0) continue;
-            int a = cov >= 1 ? 255 : (int)(cov * 255);
-            uint16_t *p = steep ? &px_row(x)[y] : &px_row(y)[x];
-            blend(p, c, a);
-        }
-    }
-}
-
-static void disc(float cx, float cy, float r, uint16_t c)
-{
-    int y0 = (int)(cy - r - 1), y1 = (int)(cy + r + 1);
-    int x0 = (int)(cx - r - 1), x1 = (int)(cx + r + 1);
-    for (int y = y0; y <= y1; y++) {
-        if (y < 0 || y >= G.H) continue;
-        for (int x = x0; x <= x1; x++) {
-            if (x < 0 || x >= G.W) continue;
-            float d = sqrtf((x + 0.5f - cx) * (x + 0.5f - cx) + (y + 0.5f - cy) * (y + 0.5f - cy));
-            float cov = r + 0.5f - d;
-            if (cov > 0) blend(&px_row(y)[x], c, cov >= 1 ? 255 : (int)(cov * 255));
-        }
-    }
-}
-
-/* --- drawing ------------------------------------------------------------------------- */
-
-static void fmt_num(char *b, size_t n, float v, float step)
-{
-    if (fabsf(v) < step * 1e-3f) v = 0;
-    if (step >= 1 && fabsf(v) < 1e6f) {
-        snprintf(b, n, "%d", (int)lroundf(v));
-    } else {
-        snprintf(b, n, "%g", (double)v);
-    }
-    /* the minus sign of maths, not the hyphen */
-    if (b[0] == '-') {
-        memmove(b + 3, b + 1, strlen(b));
-        b[0] = (char)0xE2; b[1] = (char)0x88; b[2] = (char)0x92;
-    }
-}
-
-static void label(lv_layer_t *layer, int x, int y, const char *s, lv_color_t c, bool center)
-{
-    lv_draw_label_dsc_t d;
-    lv_draw_label_dsc_init(&d);
-    d.text = s;
-    d.text_local = 1;
-    d.font = mx_font(20);
-    d.color = c;
-    int w = mx_text_width(d.font, s) + 2;
-    if (center) x -= w / 2;
-    lv_area_t a = { x, y, x + w, y + lv_font_get_line_height(d.font) };
-    lv_draw_label(layer, &d, &a);
-}
-
 /* how long a redraw takes, in the log every few seconds of use: the number
  * that says whether panning keeps up with the finger */
 static struct {
@@ -403,33 +251,23 @@ static void perf_note(uint32_t us)
 
 static void redraw(void)
 {
-    if (!G.canvas || !G.db) {
+    if (!G.canvas || !G.plot.db) {
         return;
     }
     G.dirty = false;
     uint64_t t0 = aos_hal_uptime_us();
-    fill(rgb565(0x000000));
-
-    /* grid */
-    float step = nice_step(80.0f / G.scale);
-    float xmin = sx_to_x(0), xmax = sx_to_x((float)G.W);
-    float ymax = G.cy + G.H / 2.0f / G.scale, ymin = G.cy - G.H / 2.0f / G.scale;
-    uint16_t grid = rgb565(0x1C1C22), axis = rgb565(0x8E8E93);
-    for (float v = ceilf(xmin / step) * step; v <= xmax; v += step) {
-        vline((int)lroundf(x_to_sx(v)), grid, 1);
-    }
-    for (float v = ceilf(ymin / step) * step; v <= ymax; v += step) {
-        hline((int)lroundf(y_to_sy(v)), grid, 1);
-    }
-    int ax = (int)lroundf(x_to_sx(0)), ay = (int)lroundf(y_to_sy(0));
-    if (ax >= 0 && ax < G.W) vline(ax, axis, 2);
-    if (ay >= 0 && ay < G.H) hline(ay, axis, 2);
+    cas_plot_t *p = &G.plot;
+    p->x0 = sx_to_x(0);
+    p->x1 = sx_to_x((float)G.W);
+    p->y0 = G.cy - G.H / 2.0f / G.scale;
+    p->y1 = G.cy + G.H / 2.0f / G.scale;
+    cas_plot_clear(p, 0x000000);
+    cas_plot_grid(p);
 
     /* curves */
     for (int i = 0; i < NF; i++) {
         fn_t *f = &G.f[i];
         if (!f->ok || !f->on) continue;
-        uint16_t c = rgb565(COLORS[i]);
         float px = 0, py = 0;
         bool have = false;
         for (int s = 0; s <= G.W; s++) {
@@ -445,7 +283,7 @@ static void redraw(void)
             if (have) {
                 /* an asymptote: a jump across the whole screen is not a line */
                 bool jump = fabsf(sy - py) > G.H && (sy < 0 || sy > G.H || py < 0 || py > G.H);
-                if (!jump) aa_line(px, py, (float)s, sy, c, 3.2f);
+                if (!jump) cas_plot_line(p, px, py, (float)s, sy, COLORS[i], 3.2f);
             }
             px = (float)s;
             py = sy;
@@ -459,36 +297,17 @@ static void redraw(void)
         float y = mx_eval(&G.f[G.tf].prog, G.tx);
         if (isfinite(y)) {
             float sx = x_to_sx(G.tx), sy = y_to_sy(y);
-            disc(sx, sy, 9, rgb565(0xFFFFFF));
-            disc(sx, sy, 6, rgb565(COLORS[G.tf]));
-            snprintf(pill, sizeof pill, "f%d   x = %.5g   y = %.5g", G.tf + 1, (double)G.tx, (double)y);
+            cas_plot_disc(p, sx, sy, 9, 0xFFFFFF);
+            cas_plot_disc(p, sx, sy, 6, COLORS[G.tf]);
+            snprintf(pill, sizeof pill, "f%d   x = %.5g   y = %.5g", (G.tf + 1) % 10, (double)G.tx, (double)y);
         }
     }
 
-    /* the numbers on the axes, through LVGL */
     lv_layer_t layer;
     lv_canvas_init_layer(G.canvas, &layer);
-    lv_color_t num = lv_color_hex(0xAEAEB2);
-    int ly = ay + 6;
-    if (ly < 4) ly = 4;
-    if (ly > G.H - 28) ly = G.H - 28;
-    for (float v = ceilf(xmin / step) * step; v <= xmax; v += step) {
-        if (fabsf(v) < step / 2) continue;
-        char b[24];
-        fmt_num(b, sizeof b, v, step);
-        label(&layer, (int)lroundf(x_to_sx(v)), ly, b, num, true);
-    }
-    int lx = ax + 6;
-    if (lx < 4) lx = 4;
-    if (lx > G.W - 70) lx = G.W - 70;
-    for (float v = ceilf(ymin / step) * step; v <= ymax; v += step) {
-        if (fabsf(v) < step / 2) continue;
-        char b[24];
-        fmt_num(b, sizeof b, v, step);
-        label(&layer, lx, (int)lroundf(y_to_sy(v)) - 12, b, num, false);
-    }
+    cas_plot_numbers(p, &layer);
     lv_canvas_finish_layer(G.canvas, &layer);
-    lv_obj_invalidate(G.canvas);
+    cas_plot_done(p);
     perf_note((uint32_t)(aos_hal_uptime_us() - t0));
 
     if (G.pill) {
@@ -801,10 +620,7 @@ static bool      s_panel_hidden;
 
 static void canvas_free(void)
 {
-    if (G.db) {
-        lv_draw_buf_destroy(G.db);
-        G.db = NULL;
-    }
+    cas_plot_free(&G.plot);
 }
 
 static void build(void)
@@ -912,16 +728,13 @@ static void build(void)
     G.H = lv_obj_get_height(G.box);
     if (G.W < 16) G.W = 16;
     if (G.H < 16) G.H = 16;
-    G.db = lv_draw_buf_create((uint32_t)G.W, (uint32_t)G.H, LV_COLOR_FORMAT_RGB565, 0);
-    if (!G.db) {
+    if (!cas_plot_create(&G.plot, G.box, G.W, G.H)) {
         lv_obj_t *l = lv_label_create(G.box);
         lv_label_set_text(l, _("Sin memoria para el gráfico"));
         lv_obj_center(l);
         return;
     }
-    G.canvas = lv_canvas_create(G.box);
-    lv_canvas_set_draw_buf(G.canvas, G.db);
-    lv_obj_set_pos(G.canvas, 0, 0);
+    G.canvas = G.plot.canvas;
     aos_gesture_attach(G.canvas, 0, gesture_cb, NULL);
 
     G.pill = lv_label_create(G.box);
@@ -954,6 +767,23 @@ void cas_graph_build(lv_obj_t *parent, bool landscape)
         G.timer = lv_timer_create(timer_cb, 30, NULL);
     }
     build();
+}
+
+int cas_graph_put(const char *expr)
+{
+    model_init();
+    for (int i = 0; i < NF; i++) {
+        if (mx_row_empty(G.f[i].row)) {
+            mx_row_free(G.f[i].row);
+            G.f[i].row = mx_text_to_row(expr);
+            G.f[i].on = true;
+            compile(i);
+            G.dirty = true;
+            save();
+            return i;
+        }
+    }
+    return -1;
 }
 
 void cas_graph_shown(bool shown)

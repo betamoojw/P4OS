@@ -6,9 +6,11 @@
  * matrices, statistics. It is C++ and comes prebuilt by
  * engine/build_engine.sh; cas_rt.c joins it to the firmware.
  *
- * Two views under a strip of tabs: the calculator (cas_calc.c) and the
- * grapher (cas_graph.c). They share the maths core (mx_*.c) and the engine,
- * which takes one job at a time from the queue here.
+ * Four views under a strip of tabs: the calculator (cas_calc.c), the
+ * grapher (cas_graph.c), statistics (cas_stats.c) and finance (cas_fin.c).
+ * They share the maths core (mx_*.c), the forms (cas_form.c), the plotting
+ * canvas (cas_plot.c) and the engine, which takes one job at a time from
+ * the queue here.
  */
 #include "cas_app.h"
 #include "cas_rt.h"
@@ -266,23 +268,29 @@ static void tab_button(lv_obj_t *bar, const char *text, int v)
 {
     lv_obj_t *b = lv_button_create(bar);
     lv_obj_set_height(b, 52);
-    lv_obj_set_style_pad_hor(b, 24, 0);
+    lv_obj_set_style_pad_hor(b, 16, 0);
     lv_obj_set_style_radius(b, 26, 0);
     lv_obj_set_style_shadow_width(b, 0, 0);
     lv_obj_set_style_bg_color(b, v == A.view ? AOS_C_ACCENT : AOS_C_CARD, 0);
     lv_obj_add_event_cb(b, tab_cb, LV_EVENT_CLICKED, (void *)(intptr_t)v);
     lv_obj_t *l = lv_label_create(b);
     lv_label_set_text(l, text);
-    lv_obj_set_style_text_font(l, aos_font_body, 0);
+    lv_obj_set_style_text_font(l, aos_font_small, 0);
     lv_obj_center(l);
+}
+
+/* the view that is leaving lets go of what it holds outside its widgets */
+static void leave_view(void)
+{
+    cas_graph_shown(false);
+    cas_stats_hidden();
+    cas_fin_hidden();
 }
 
 static void build_views(void)
 {
     lv_obj_t *root = A.root;
-    if (A.view != 1) {
-        cas_graph_shown(false);
-    }
+    leave_view();
     lv_obj_clean(root);
     bool landscape = lv_obj_get_width(root) > lv_obj_get_height(root);
     lv_obj_set_style_bg_color(root, AOS_C_BG, 0);
@@ -300,11 +308,14 @@ static void build_views(void)
     lv_obj_remove_flag(bar, LV_OBJ_FLAG_SCROLLABLE);
     tab_button(bar, _("Cálculo"), 0);
     tab_button(bar, _("Gráfico"), 1);
+    tab_button(bar, _("Estadística"), 2);
+    tab_button(bar, _("Finanzas"), 3);
     A.status = lv_label_create(bar);
     lv_obj_set_flex_grow(A.status, 1);
     lv_obj_set_style_text_align(A.status, LV_TEXT_ALIGN_RIGHT, 0);
     lv_obj_set_style_text_color(A.status, AOS_C_DIM, 0);
     lv_obj_set_style_text_font(A.status, aos_font_small, 0);
+    lv_label_set_long_mode(A.status, LV_LABEL_LONG_MODE_DOTS);
     lv_label_set_text(A.status, "");
     lv_obj_t *menu = lv_button_create(bar);
     lv_obj_set_size(menu, 56, 52);
@@ -323,11 +334,20 @@ static void build_views(void)
     lv_obj_remove_flag(A.content, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_update_layout(root);
 
-    if (A.view == 0) {
+    switch (A.view) {
+    case 0:
         cas_calc_build(A.content, landscape);
-    } else {
+        break;
+    case 1:
         cas_graph_build(A.content, landscape);
         cas_graph_shown(true);
+        break;
+    case 2:
+        cas_stats_build(A.content, landscape);
+        break;
+    default:
+        cas_fin_build(A.content, landscape);
+        break;
     }
     set_status();
 }
@@ -374,9 +394,11 @@ static void cas_destroy(aos_app_t *self, void *inst)
     (void)inst;
     lv_timer_delete(A.timer);
     A.timer = NULL;
-    cas_graph_shown(false);
+    leave_view();
     cas_calc_free();
     cas_graph_free();
+    cas_stats_free();
+    cas_fin_free();
     for (int i = 0; i < A.count; i++) {
         mx_free(A.q[(A.head + i) % QMAX].expr);
     }

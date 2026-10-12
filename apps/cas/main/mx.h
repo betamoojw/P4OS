@@ -176,10 +176,14 @@ mx_row_t *mx_text_to_row(const char *text);             /* parse; raw text if it
 
 typedef struct {
     uint8_t *code;
-    float   *k;
+    double  *k;                 /* constants: double, so a typed 1234567.89 stays itself */
     int      ncode, nk;
 } mx_prog_t;
 
 bool  mx_compile(const mx_ast_t *t, const char *var, mx_prog_t *p);
 void  mx_prog_free(mx_prog_t *p);
-float mx_eval(const mx_prog_t *p, float x);
+float  mx_eval(const mx_prog_t *p, float x);        /* the grapher: fast */
+double mx_eval_d(const mx_prog_t *p, double x);     /* forms: exact enough for money */
+/* A number typed or pasted as text: "1234.5", "1/3", "2pi", "sqrt(2)*10^3".
+ * ±∞ counts. false when it is not a number. */
+bool   mx_text_value(const char *text, double *out);

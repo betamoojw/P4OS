@@ -5,34 +5,41 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/cas/main/cas_app.c:121
+#: apps/cas/main/cas_app.c:123
 Motor apagado	Engine off
 
-#: apps/cas/main/cas_app.c:122
+#: apps/cas/main/cas_app.c:124
 Iniciando...	Starting...
 
-#: apps/cas/main/cas_app.c:123
+#: apps/cas/main/cas_app.c:125
 Calculando...	Calculating...
 
-#: apps/cas/main/cas_app.c:167
+#: apps/cas/main/cas_app.c:169
 El motor no aceptó el cálculo	The engine did not take the calculation
 
-#: apps/cas/main/cas_app.c:246
+#: apps/cas/main/cas_app.c:248
 Parar el cálculo	Stop the calculation
 
-#: apps/cas/main/cas_app.c:247
+#: apps/cas/main/cas_app.c:249
 Borrar el historial	Clear the history
 
-#: apps/cas/main/cas_app.c:248
+#: apps/cas/main/cas_app.c:250
 Banco de pruebas	Benchmark
 
-#: apps/cas/main/cas_app.c:301
+#: apps/cas/main/cas_app.c:309
 Cálculo	Calculate
 
-#: apps/cas/main/cas_app.c:302
+#: apps/cas/main/cas_app.c:310
+#: apps/cas/main/cas_stats.c:968
 Gráfico	Graph
 
-#: apps/cas/main/cas_app.c:355
+#: apps/cas/main/cas_app.c:311
+Estadística	Statistics
+
+#: apps/cas/main/cas_app.c:312
+Finanzas	Finance
+
+#: apps/cas/main/cas_app.c:375
 No se pudo arrancar el motor. Cerrá la app y volvé a abrirla.	The engine could not start. Close the app and open it again.
 
 #: apps/cas/main/cas_calc.c:153
@@ -41,20 +48,187 @@ Error	Error
 #: apps/cas/main/cas_calc.c:196
 El motor no está listo	The engine is not ready
 
-#: apps/cas/main/cas_graph.c:93
-#: apps/cas/main/cas_graph.c:110
+#: apps/cas/main/cas_fin.c:173
+No tiene solución con esos valores	No solution with these values
+
+#: apps/cas/main/cas_fin.c:193
+N (períodos)	N (periods)
+
+#: apps/cas/main/cas_fin.c:193
+I% anual	I% per year
+
+#: apps/cas/main/cas_fin.c:193
+VA (valor actual)	PV (present value)
+
+#: apps/cas/main/cas_fin.c:194
+PAGO (por período)	PMT (per period)
+
+#: apps/cas/main/cas_fin.c:194
+VF (valor final)	FV (future value)
+
+#: apps/cas/main/cas_fin.c:200
+pagos por año	payments per year
+
+#: apps/cas/main/cas_fin.c:201
+capitalizaciones por año	compoundings per year
+
+#: apps/cas/main/cas_fin.c:202
+Pago al final	Payment at end
+
+#: apps/cas/main/cas_fin.c:202
+Pago al inicio	Payment at start
+
+#: apps/cas/main/cas_fin.c:205
+Completá cuatro y tocá =? en la que falta. El dinero que recibís va positivo, el que pagás negativo: un préstamo de 200 000 se paga con cuotas negativas.	Fill in four and tap =? on the missing one. Money you receive is positive, money you pay negative: a loan of 200 000 is repaid with negative payments.
+
+#: apps/cas/main/cas_fin.c:256
+interés	interest
+
+#: apps/cas/main/cas_fin.c:257
+capital	principal
+
+#: apps/cas/main/cas_fin.c:302
+Francés	French
+
+#: apps/cas/main/cas_fin.c:302
+Alemán	German
+
+#: apps/cas/main/cas_fin.c:302
+Americano	Bullet
+
+#: apps/cas/main/cas_fin.c:306
+Monto	Amount
+
+#: apps/cas/main/cas_fin.c:307
+TNA %	Nominal rate %
+
+#: apps/cas/main/cas_fin.c:308
+Plazo (meses)	Term (months)
+
+#: apps/cas/main/cas_fin.c:310
+Primera cuota	First payment
+
+#: apps/cas/main/cas_fin.c:310
+#: apps/cas/main/cas_fin.c:329
+Cuota	Payment
+
+#: apps/cas/main/cas_fin.c:311
+Última cuota	Last payment
+
+#: apps/cas/main/cas_fin.c:312
+Total de intereses	Total interest
+
+#: apps/cas/main/cas_fin.c:313
+Total a pagar	Total to pay
+
+#: apps/cas/main/cas_fin.c:330
+#: apps/cas/main/cas_fin.c:416
+Interés	Interest
+
+#: apps/cas/main/cas_fin.c:331
+Saldo	Balance
+
+#: apps/cas/main/cas_fin.c:343
+La tasa del período es la TNA dividida por 12. Sin IVA ni gastos: el costo financiero total del banco puede ser mayor.	The rate per period is the nominal rate divided by 12. No taxes or fees: the bank's total cost may be higher.
+
+#: apps/cas/main/cas_fin.c:402
+Tasa %	Rate %
+
+#: apps/cas/main/cas_fin.c:404
+capitaliza cada (días)	compounds every (days)
+
+#: apps/cas/main/cas_fin.c:406
+Equivalentes	Equivalents
+
+#: apps/cas/main/cas_fin.c:408
+TNA (cada %.0f días)	Nominal (every %.0f days)
+
+#: apps/cas/main/cas_fin.c:411
+TEM (30 días)	Monthly effective (30 days)
+
+#: apps/cas/main/cas_fin.c:412
+Diaria efectiva	Daily effective
+
+#: apps/cas/main/cas_fin.c:413
+Plazo fijo	Fixed-term deposit
+
+#: apps/cas/main/cas_fin.c:414
+Capital	Principal
+
+#: apps/cas/main/cas_fin.c:415
+Días	Days
+
+#: apps/cas/main/cas_fin.c:417
+Monto al vencer	At maturity
+
+#: apps/cas/main/cas_fin.c:418
+Contra la inflación	Against inflation
+
+#: apps/cas/main/cas_fin.c:419
+Inflación mensual %	Monthly inflation %
+
+#: apps/cas/main/cas_fin.c:420
+Tasa real mensual	Real monthly rate
+
+#: apps/cas/main/cas_fin.c:437
+no hay	none
+
+#: apps/cas/main/cas_fin.c:441
+nunca	never
+
+#: apps/cas/main/cas_fin.c:477
+Tasa de descuento %	Discount rate %
+
+#: apps/cas/main/cas_fin.c:479
+VAN	NPV
+
+#: apps/cas/main/cas_fin.c:480
+TIR	IRR
+
+#: apps/cas/main/cas_fin.c:481
+Recupero (períodos)	Payback (periods)
+
+#: apps/cas/main/cas_fin.c:482
+Flujos	Cash flows
+
+#: apps/cas/main/cas_fin.c:485
+período %d	period %d
+
+#: apps/cas/main/cas_fin.c:485
+inversión (0)	investment (0)
+
+#: apps/cas/main/cas_fin.c:494
++ período	+ period
+
+#: apps/cas/main/cas_fin.c:495
+Quitar el último	Remove the last
+
+#: apps/cas/main/cas_fin.c:517
+Préstamo	Loan
+
+#: apps/cas/main/cas_fin.c:517
+Tasas	Rates
+
+#: apps/cas/main/cas_fin.c:517
+VAN / TIR	NPV / IRR
+
+#: apps/cas/main/cas_form.c:121
+Eso no es un número	That is not a number
+
+#: apps/cas/main/cas_graph.c:94
+#: apps/cas/main/cas_graph.c:111
 no se puede graficar	cannot be graphed
 
-#: apps/cas/main/cas_graph.c:93
+#: apps/cas/main/cas_graph.c:94
 no se entiende	not understood
 
-#: apps/cas/main/cas_graph.c:647
+#: apps/cas/main/cas_graph.c:492
 tocá para escribir	tap to type
 
-#: apps/cas/main/cas_graph.c:859
+#: apps/cas/main/cas_graph.c:701
 Listo	Done
 
-#: apps/cas/main/cas_graph.c:892
+#: apps/cas/main/cas_graph.c:733
 Sin memoria para el gráfico	No memory for the graph
 
 #: apps/cas/main/cas_keypad.c:66
@@ -67,7 +241,142 @@ mcm	lcm
 primos	primes
 
 #: apps/cas/main/cas_keypad.c:84
+#: apps/cas/main/cas_stats.c:244
+#: apps/cas/main/cas_stats.c:910
 media	mean
 
 #: apps/cas/main/cas_keypad.c:84
 desv	stdev
+
+#: apps/cas/main/cas_stats.c:230
+Resumen de L%d	Summary of L%d
+
+#: apps/cas/main/cas_stats.c:238
+Sin datos: tocá una celda para escribir	No data: tap a cell to type
+
+#: apps/cas/main/cas_stats.c:246
+Med	Med
+
+#: apps/cas/main/cas_stats.c:246
+Rango	Range
+
+#: apps/cas/main/cas_stats.c:326
+Ordenar	Sort
+
+#: apps/cas/main/cas_stats.c:327
+Borrar	Clear
+
+#: apps/cas/main/cas_stats.c:422
+L%d: %d clases de ancho %.4g	L%d: %d classes of width %.4g
+
+#: apps/cas/main/cas_stats.c:480
+Dispersión: hacen falta datos en L1 (x) y L2 (y)	Scatter: needs data in L1 (x) and L2 (y)
+
+#: apps/cas/main/cas_stats.c:519
+Sin datos en esta lista	No data in this list
+
+#: apps/cas/main/cas_stats.c:533
+Histograma	Histogram
+
+#: apps/cas/main/cas_stats.c:533
+Cajas	Box plots
+
+#: apps/cas/main/cas_stats.c:533
+Dispersión	Scatter
+
+#: apps/cas/main/cas_stats.c:572
+Hacen falta al menos dos pares en L1 (x) y L2 (y)	At least two pairs are needed in L1 (x) and L2 (y)
+
+#: apps/cas/main/cas_stats.c:573
+Este modelo no se ajusta a estos datos (¿valores negativos o cero?)	This model does not fit these data (negative or zero values?)
+
+#: apps/cas/main/cas_stats.c:632
+Va al gráfico como f%d(x)	Sent to the graph as f%d(x)
+
+#: apps/cas/main/cas_stats.c:634
+El gráfico ya tiene seis funciones	The graph already has six functions
+
+#: apps/cas/main/cas_stats.c:649
+Lineal	Linear
+
+#: apps/cas/main/cas_stats.c:649
+Cuadr.	Quad.
+
+#: apps/cas/main/cas_stats.c:649
+Cúbica	Cubic
+
+#: apps/cas/main/cas_stats.c:649
+Pot.	Power
+
+#: apps/cas/main/cas_stats.c:654
+x en L1, y en L2	x in L1, y in L2
+
+#: apps/cas/main/cas_stats.c:665
+Al gráfico como f(x)	To the graph as f(x)
+
+#: apps/cas/main/cas_stats.c:667
+Ver los puntos	Show the points
+
+#: apps/cas/main/cas_stats.c:776
+Binomial	Binomial
+
+#: apps/cas/main/cas_stats.c:781
+#: apps/cas/main/cas_stats.c:781
+grados de libertad	degrees of freedom
+
+#: apps/cas/main/cas_stats.c:790
+Inversa	Inverse
+
+#: apps/cas/main/cas_stats.c:842
+Se rechaza H₀ (p < %.2g)	H₀ rejected (p < %.2g)
+
+#: apps/cas/main/cas_stats.c:842
+No se rechaza H₀ (p ≥ %.2g)	H₀ not rejected (p ≥ %.2g)
+
+#: apps/cas/main/cas_stats.c:895
+t media	t mean
+
+#: apps/cas/main/cas_stats.c:895
+z proporción	z proportion
+
+#: apps/cas/main/cas_stats.c:895
+t dos medias	t two means
+
+#: apps/cas/main/cas_stats.c:915
+éxitos x	successes x
+
+#: apps/cas/main/cas_stats.c:919
+media ₁	mean ₁
+
+#: apps/cas/main/cas_stats.c:922
+media ₂	mean ₂
+
+#: apps/cas/main/cas_stats.c:926
+nivel de confianza	confidence level
+
+#: apps/cas/main/cas_stats.c:929
+Tomar media, s y n de L%d	Take mean, s and n from L%d
+
+#: apps/cas/main/cas_stats.c:930
+Tomar de L1 y L2	Take from L1 and L2
+
+#: apps/cas/main/cas_stats.c:935
+gl	df
+
+#: apps/cas/main/cas_stats.c:936
+valor p	p-value
+
+#: apps/cas/main/cas_stats.c:937
+intervalo	interval
+
+#: apps/cas/main/cas_stats.c:968
+Datos	Data
+
+#: apps/cas/main/cas_stats.c:968
+Regresión	Regression
+
+#: apps/cas/main/cas_stats.c:968
+Distrib.	Distrib.
+
+#: apps/cas/main/cas_stats.c:968
+Pruebas	Tests

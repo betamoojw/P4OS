@@ -19,8 +19,25 @@ below), and the app has its two first views:
   press. Each function is also defined in Giac, so the calculator can use
   f1(x).
 
-The history and the functions are kept in `data/cas_hist.txt` and
-`data/cas_graph.txt`. The menu has *Stop*, *Clear the history* and the
+- **Statistics:** four lists L1..L4 in a sheet (a tap on a cell types into
+  it and moves down) with the summary of the chosen list; histogram, box
+  plots, or L1 against L2; regressions (linear, quadratic, cubic,
+  exponential, logarithmic, power) with r and r², sent to the grapher with
+  one button; distributions (normal, t, χ², F, binomial, Poisson,
+  exponential): P(a ≤ X ≤ b) or the inverse with the area shaded; tests
+  and intervals (t for a mean, z for a proportion, Welch's t for two means).
+- **Finance:** TVM (fill four, "=?" on the fifth), loans (French, German,
+  American) with the table and a chart of interest and principal, rates
+  (TNA with its compounding days, TEA, TEM, daily; a fixed-term deposit;
+  the real rate against inflation), and NPV, IRR and payback of cash flows.
+
+Statistics and finance are computed in `main/cas_num.c` (double, as each
+value is typed, no engine; checked against tables and the financial
+calculators' examples). A field takes a value the way the keypad writes it
+(1/3, 2π, √2) through `mx_text_value()`.
+
+The history, the functions, the lists and the finance values are kept in
+`data/cas_hist.txt`, `cas_graph.txt`, `cas_stats.txt` and `cas_fin.txt`. The menu has *Stop*, *Clear the history* and the
 bench, which now writes its results into the history as well as the log.
 
 ## Building
@@ -67,9 +84,12 @@ One tree of boxes serves for typing and for showing (`mx.h`):
   the calculator) goes to Giac as simplify(...) and the answer is compiled.
 - The fonts are the firmware's Inter, which already carries Greek, arrows
   and the Mathematical Operators block: no font pack.
-- **cas_graph.c** draws into an RGB565 canvas with its own anti-aliased
-  thick lines (a full redraw is a few milliseconds), and the numbers on the
-  axes through LVGL.
+- **cas_plot.c** is the canvas the grapher and the charts share: RGB565
+  written directly, with its own anti-aliased thick lines, discs and
+  translucent rectangles (a full redraw is a few milliseconds), and the
+  numbers on the axes through LVGL.
+- **cas_form.c**: numeric fields, the entry sheet (the same editor and
+  keypad, on the top layer), a segmented choice, cards and result rows.
 
 ## How the engine fits in a .so
 

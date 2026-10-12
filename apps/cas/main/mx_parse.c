@@ -895,7 +895,7 @@ static void stack(cc_t *c, int d)
     if (c->depth > c->maxdepth) c->maxdepth = c->depth;
 }
 
-static void konst(cc_t *c, float v)
+static void konst(cc_t *c, double v)
 {
     mx_prog_t *p = c->p;
     if (p->nk >= 255) {
@@ -904,7 +904,7 @@ static void konst(cc_t *c, float v)
     }
     if (p->nk == c->kcap) {
         int cap = c->kcap ? c->kcap * 2 : 16;
-        float *q = mx_realloc(p->k, sizeof(float) * (size_t)cap);
+        double *q = mx_realloc(p->k, sizeof(double) * (size_t)cap);
         if (!q) {
             c->bad = true;
             return;
@@ -936,16 +936,16 @@ static void comp(cc_t *c, const mx_ast_t *t)
     }
     switch (t->op) {
     case A_NUM:
-        konst(c, strtof(t->s, NULL));
+        konst(c, strtod(t->s, NULL));
         break;
     case A_ID:
         if (!strcmp(t->s, c->var)) {
             emitb(c, O_X);
             stack(c, 1);
         } else if (!strcmp(t->s, "pi")) {
-            konst(c, 3.14159265358979f);
+            konst(c, 3.14159265358979323846);
         } else if (!strcmp(t->s, "e")) {
-            konst(c, 2.71828182845905f);
+            konst(c, 2.71828182845904523536);
         } else if (!strcmp(t->s, "inf") || !strcmp(t->s, "infinity")) {
             konst(c, INFINITY);
         } else {
@@ -1105,7 +1105,7 @@ float mx_eval(const mx_prog_t *p, float x)
     const uint8_t *c = p->code, *end = c + p->ncode;
     while (c < end) {
         switch (*c++) {
-        case O_K:   s[sp++] = p->k[*c++]; break;
+        case O_K:   s[sp++] = (float)p->k[*c++]; break;
         case O_X:   s[sp++] = x; break;
         case O_ADD: sp--; s[sp - 1] += s[sp]; break;
         case O_SUB: sp--; s[sp - 1] -= s[sp]; break;
@@ -1134,4 +1134,118 @@ float mx_eval(const mx_prog_t *p, float x)
         }
     }
     return sp ? s[0] : NAN;
+}
+
+/* --- the same code over double, for forms ------------------------------------------ */
+
+static double f1d(int f, double a)
+{
+    switch (f) {
+    case F_SIN: return sin(a);
+    case F_COS: return cos(a);
+    case F_TAN: return tan(a);
+    case F_ASIN: return asin(a);
+    case F_ACOS: return acos(a);
+    case F_ATAN: return atan(a);
+    case F_SINH: return sinh(a);
+    case F_COSH: return cosh(a);
+    case F_TANH: return tanh(a);
+    case F_ASINH: return log(a + sqrt(a * a + 1));
+    case F_ACOSH: return log(a + sqrt(a * a - 1));
+    case F_ATANH: return 0.5 * log((1 + a) / (1 - a));
+    case F_EXP: return exp(a);
+    case F_LN: return log(a);
+    case F_LOG10: return log10(a);
+    case F_SQRT: return sqrt(a);
+    case F_ABS: return fabs(a);
+    case F_FLOOR: return floor(a);
+    case F_CEIL: return ceil(a);
+    case F_ROUND: return floor(a + 0.5);
+    case F_SIGN: return a > 0 ? 1.0 : a < 0 ? -1.0 : 0.0;
+    case F_SEC: return 1.0 / cos(a);
+    case F_CSC: return 1.0 / sin(a);
+    case F_COT: return 1.0 / tan(a);
+    case F_FRAC: return a - floor(a);
+    default: return NAN;
+    }
+}
+
+static double f2d(int f, double a, double b)
+{
+    switch (f) {
+    case G_ATAN2: return atan2(a, b);
+    case G_MIN: return a < b ? a : b;
+    case G_MAX: return a > b ? a : b;
+    case G_SURD: {
+        double r = pow(fabs(a), 1.0 / b);
+        return (a < 0 && fmod(b, 2.0) != 0) ? -r : r;
+    }
+    case G_LOGB: return log(a) / log(b);
+    case G_MOD: return a - b * floor(a / b);
+    default: return NAN;
+    }
+}
+
+static double ipow_d(double a, double b)
+{
+    if (a < 0 && b == floor(b)) {
+        double r = pow(-a, b);
+        return fmod(b, 2.0) != 0 ? -r : r;
+    }
+    return pow(a, b);
+}
+
+double mx_eval_d(const mx_prog_t *p, double x)
+{
+    double s[32];
+    int sp = 0;
+    const uint8_t *c = p->code, *end = c + p->ncode;
+    while (c < end) {
+        switch (*c++) {
+        case O_K:   s[sp++] = p->k[*c++]; break;
+        case O_X:   s[sp++] = x; break;
+        case O_ADD: sp--; s[sp - 1] += s[sp]; break;
+        case O_SUB: sp--; s[sp - 1] -= s[sp]; break;
+        case O_MUL: sp--; s[sp - 1] *= s[sp]; break;
+        case O_DIV: sp--; s[sp - 1] /= s[sp]; break;
+        case O_POW: sp--; s[sp - 1] = ipow_d(s[sp - 1], s[sp]); break;
+        case O_NEG: s[sp - 1] = -s[sp - 1]; break;
+        case O_LT:  sp--; s[sp - 1] = s[sp - 1] < s[sp]; break;
+        case O_LE:  sp--; s[sp - 1] = s[sp - 1] <= s[sp]; break;
+        case O_GT:  sp--; s[sp - 1] = s[sp - 1] > s[sp]; break;
+        case O_GE:  sp--; s[sp - 1] = s[sp - 1] >= s[sp]; break;
+        case O_EQ:  sp--; s[sp - 1] = s[sp - 1] == s[sp]; break;
+        case O_NE:  sp--; s[sp - 1] = s[sp - 1] != s[sp]; break;
+        case O_AND: sp--; s[sp - 1] = s[sp - 1] != 0 && s[sp] != 0; break;
+        case O_OR:  sp--; s[sp - 1] = s[sp - 1] != 0 || s[sp] != 0; break;
+        case O_NOT: s[sp - 1] = s[sp - 1] == 0; break;
+        case O_F1:  s[sp - 1] = f1d(*c++, s[sp - 1]); break;
+        case O_F2:  sp--; s[sp - 1] = f2d(*c++, s[sp - 1], s[sp]); break;
+        case O_PIECE:
+            sp -= 2;
+            s[sp - 1] = s[sp] != 0 ? s[sp + 1] : s[sp - 1];
+            break;
+        default:
+            return NAN;
+        }
+    }
+    return sp ? s[0] : NAN;
+}
+
+bool mx_text_value(const char *text, double *out)
+{
+    mx_ast_t *t = mx_parse(text, NULL);
+    if (!t) {
+        return false;
+    }
+    mx_prog_t p;
+    /* a variable name nobody types, so 'x' in a form is an error */
+    bool ok = mx_compile(t, "\x01", &p);
+    mx_ast_free(t);
+    if (!ok) {
+        return false;
+    }
+    *out = mx_eval_d(&p, 0);
+    mx_prog_free(&p);
+    return !isnan(*out);        /* ±∞ is a number here: a bound of P(a ≤ X ≤ b) */
 }

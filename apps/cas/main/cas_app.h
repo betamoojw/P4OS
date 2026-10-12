@@ -29,5 +29,14 @@ void cas_calc_save(void);
 void cas_calc_free(void);
 
 void cas_graph_build(lv_obj_t *parent, bool landscape);
+int  cas_graph_put(const char *expr);          /* into the first free f(x); -1 if none */
 void cas_graph_shown(bool shown);
 void cas_graph_free(void);
+
+void cas_stats_build(lv_obj_t *parent, bool landscape);
+void cas_stats_hidden(void);
+void cas_stats_free(void);
+
+void cas_fin_build(lv_obj_t *parent, bool landscape);
+void cas_fin_hidden(void);
+void cas_fin_free(void);

@@ -15,5 +15,10 @@ void bl_aes128_encrypt(const uint8_t key[16], const uint8_t in[16], uint8_t out[
 bool bl_ccm_decrypt(const uint8_t key[16], const uint8_t *nonce, int nlen, const uint8_t *aad, int alen,
                     const uint8_t *c, int clen, const uint8_t *tag, int mlen, uint8_t *out);
 
+/* The other way: plen bytes of p, then the mlen-byte tag, to out (plen +
+ * mlen bytes). For the Xiaomi activation (bl_mi.c). */
+bool bl_ccm_encrypt(const uint8_t key[16], const uint8_t *nonce, int nlen, const uint8_t *aad, int alen,
+                    const uint8_t *p, int plen, int mlen, uint8_t *out);
+
 /* 32 hex digits (spaces, colons and dashes allowed) into 16 bytes. */
 bool bl_parse_key(const char *s, uint8_t key[16]);

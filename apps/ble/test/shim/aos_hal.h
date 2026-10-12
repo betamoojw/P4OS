@@ -85,3 +85,11 @@ bool aos_hal_ble_gatt_read(uint16_t handle);
 bool aos_hal_ble_gatt_write(uint16_t handle, const void *data, size_t len, bool response);
 bool aos_hal_ble_gatt_subscribe(uint16_t value_handle, int mode);
 int  aos_hal_ble_gatt_events(aos_ble_gatt_ev_t *out, int max);
+
+void aos_hal_random(void *buf, size_t len);
+void aos_hal_sha256(const void *data, size_t len, uint8_t out[32]);
+void aos_hal_hmac_sha256(const void *key, size_t klen, const void *data, size_t len, uint8_t out[32]);
+bool aos_hal_hkdf_sha256(const void *salt, size_t slen, const void *ikm, size_t ilen,
+                         const void *info, size_t infolen, uint8_t *out, size_t outlen);
+bool aos_hal_p256_keypair(uint8_t priv[32], uint8_t pub[64]);
+bool aos_hal_p256_ecdh(const uint8_t priv[32], const uint8_t peer_pub[64], uint8_t secret[32]);

@@ -13,8 +13,13 @@
  *
  * No pairing: a characteristic that wants an encrypted link answers with
  * its ATT error, said in words.
+ *
+ * A Xiaomi with its auth service (0xFE95 with 0x0010 and 0x0019) gets
+ * "Activar": after a warning, bl_mi.c gives it a new bind key, which is
+ * kept in ble/claves.txt like one typed in, and shown to copy elsewhere.
  */
 #include "bl.h"
+#include "bl_mi.h"
 #include "aos_mono.h"
 
 #include <stdio.h>
@@ -53,6 +58,10 @@ static struct {
     bool log_dirty;
     uint16_t write_h;
     bool write_rsp;
+    /* the Xiaomi activation */
+    bool mi_ask;                    /* the warning is showing */
+    int mi_seen;                    /* bl_mi_state() last time */
+    lv_obj_t *mi_card;
 } G;
 
 static const char *att_error(int st)
@@ -282,6 +291,104 @@ static void read_all_cb(lv_event_t *e)
     read_all();
 }
 
+/* ---- the Xiaomi activation ---- */
+
+static bool mi_can(void)
+{
+    return G.state == AOS_BLE_GATT_READY && bl_mi_can(G.at, G.n);
+}
+
+static const char *mi_step(void)
+{
+    switch (bl_mi_state()) {
+    case BL_MI_SUB: return N_("preparando");
+    case BL_MI_INFO: return N_("pidiendo su identificación");
+    case BL_MI_KEYS: return N_("intercambiando claves");
+    case BL_MI_DID:
+    case BL_MI_CONFIRM: return N_("esperando que la acepte");
+    default: return "";
+    }
+}
+
+static void mi_start(void)
+{
+    G.mi_ask = false;
+    if (!mi_can() || bl_mi_busy()) return;
+    if (bl_mi_start(G.at, G.n, (uint32_t)aos_hal_uptime_ms())) log_add("%s", _("activando el sensor..."), NULL);
+}
+
+static void mi_ask_cb(lv_event_t *e)
+{
+    (void)e;
+    G.mi_ask = !G.mi_ask;
+    bl_rebuild();
+}
+
+static void mi_go_cb(lv_event_t *e)
+{
+    (void)e;
+    mi_start();
+    bl_rebuild();
+}
+
+/* Once it is over: the key kept, or why not. */
+static void mi_finish(void)
+{
+    uint8_t key[16];
+    if (bl_mi_key(key)) {
+        int d = bl_find(G.addr);
+        if (d >= 0) {
+            bl_key_set(d, key);
+            log_add("%s", _("activado: clave nueva guardada"), NULL);
+        } else
+            log_add("%s", _("activado, pero no está en la lista: anotá la clave"), NULL);
+        aos_ui_toast(_("Sensor activado"), 1800);
+    } else if (bl_mi_state() == BL_MI_FAILED) {
+        log_add("%s %s", _("no se activó:"), _(bl_mi_why()));
+    }
+    memset(key, 0, sizeof key);
+}
+
+static void mi_card_build(int32_t w)
+{
+    G.mi_card = NULL;
+    bl_mi_state_t ms = bl_mi_state();
+    bool mine = !memcmp(G.addr, BL.sel >= 0 ? BL.dev[BL.sel].addr : G.addr, 6);
+    if (!mine || (!G.mi_ask && ms == BL_MI_IDLE)) return;
+    lv_obj_t *c = G.mi_card = bl_vcard(G.col, w, 22, 10);
+    char t[200];
+    if (G.mi_ask) {
+        aos_label(c, _("Activar este sensor Xiaomi"), aos_font_body, AOS_C_TEXT);
+        bl_caption(c, _("Le da una clave nueva y la guarda en la placa, para leer lo que anuncia cifrado. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva, o volver a agregarlo en Mi Home."), w - 44);
+        lv_obj_t *r = bl_wrap(c, w - 44, 12);
+        bl_pill(r, AOS_SYM_LOCK, _("Activar"), AOS_C_ORANGE, mi_go_cb, NULL);
+        bl_pill(r, NULL, _("Cancelar"), AOS_C_CARD2, mi_ask_cb, NULL);
+        return;
+    }
+    if (bl_mi_busy()) {
+        snprintf(t, sizeof t, "%s: %s...", _("Activando"), _(mi_step()));
+        aos_label(c, t, aos_font_body, AOS_C_TEXT);
+        if (bl_mi_id()[0]) bl_caption(c, bl_mi_id(), w - 44);
+        return;
+    }
+    uint8_t key[16];
+    if (bl_mi_key(key)) {
+        aos_label(c, _("Sensor activado"), aos_font_body, AOS_C_GREEN);
+        char hex[40];
+        for (int i = 0; i < 16; i++) snprintf(hex + 2 * i, 3, "%02x", key[i]);
+        memset(key, 0, sizeof key);
+        snprintf(t, sizeof t, "%s\n%s", _("Clave nueva (bindkey), ya guardada para leerlo acá:"), hex);
+        bl_caption(c, t, w - 44);
+        if (bl_mi_id()[0]) bl_caption(c, bl_mi_id(), w - 44);
+    } else {
+        aos_label(c, _("No se activó"), aos_font_body, AOS_C_ORANGE);
+        snprintf(t, sizeof t, "%s", _(bl_mi_why()));
+        if (bl_mi_code()) snprintf(t + strlen(t), sizeof t - strlen(t), " (0x%X)", (unsigned)bl_mi_code());
+        bl_caption(c, t, w - 44);
+        bl_pill(bl_wrap(c, w - 44, 12), AOS_SYM_LOCK, _("Probar de nuevo"), AOS_C_CARD2, mi_go_cb, NULL);
+    }
+}
+
 /* A connection to addr, from the screen or from the portal. */
 static void connect_to(const uint8_t addr[6], uint8_t type)
 {
@@ -290,6 +397,9 @@ static void connect_to(const uint8_t addr[6], uint8_t type)
     G.rq_n = G.rq_i = 0;
     G.rq_wait = false;
     memcpy(G.addr, addr, 6);
+    G.mi_ask = false;
+    bl_mi_reset();
+    G.mi_seen = BL_MI_IDLE;
     G.open = aos_hal_ble_gatt_connect(addr, type);
     G.state = G.open ? AOS_BLE_GATT_CONNECTING : AOS_BLE_GATT_IDLE;
     G.reason = 0;
@@ -471,6 +581,11 @@ void bl_gatt_refresh(void)
         }
         if (st == AOS_BLE_GATT_FAILED) {
             log_add("%s %s", _("sin conexión:"), _(reason_text(reason)));
+            if (bl_mi_busy()) {
+                bl_mi_reset();
+                G.mi_seen = BL_MI_IDLE;
+                log_add("%s", _("la activación quedó a medias"), NULL);
+            }
             for (int i = 0; i < G.n; i++) G.v[i].sub = false;
             G.rq_n = G.rq_i = 0;
         }
@@ -484,6 +599,7 @@ void bl_gatt_refresh(void)
     while ((n = aos_hal_ble_gatt_events(ev, 8)) > 0) {
         for (int k = 0; k < n; k++) {
             const aos_ble_gatt_ev_t *e = &ev[k];
+            bl_mi_event(e, (uint32_t)aos_hal_uptime_ms());
             int i = attr_index(e->handle);
             char nm[64] = "?";
             if (i >= 0) attr_name(&G.at[i], nm, sizeof nm);
@@ -527,6 +643,22 @@ void bl_gatt_refresh(void)
     }
     /* the next of "read everything"; a read that never answers is skipped */
     uint32_t now = (uint32_t)aos_hal_uptime_ms();
+    bl_mi_tick(now);
+    if ((int)bl_mi_state() != G.mi_seen) {
+        int was = G.mi_seen;
+        G.mi_seen = bl_mi_state();
+        if (G.mi_seen == BL_MI_DONE || G.mi_seen == BL_MI_FAILED) mi_finish();
+        /* the card shows each step; a rebuild only at the start and the end */
+        if (G.col && (was == BL_MI_IDLE || !bl_mi_busy())) {
+            bl_rebuild();
+            return;
+        }
+        if (G.mi_card && bl_mi_busy()) {
+            char t[120];
+            snprintf(t, sizeof t, "%s: %s...", _("Activando"), _(mi_step()));
+            lv_label_set_text(lv_obj_get_child(G.mi_card, 0), t);
+        }
+    }
     if (G.state == AOS_BLE_GATT_READY && G.rq_i < G.rq_n) {
         if (G.rq_wait && now - G.rq_t > 4000) { G.rq_wait = false; G.rq_i++; }
         if (!G.rq_wait && G.rq_i < G.rq_n && aos_hal_ble_gatt_read(G.rq[G.rq_i])) {
@@ -566,9 +698,12 @@ void bl_gatt_build(lv_obj_t *page)
     G.btns = bl_wrap(c, w - 44, 12);
     bool live = G.state == AOS_BLE_GATT_READY || G.state == AOS_BLE_GATT_CONNECTING || G.state == AOS_BLE_GATT_DISCOVERING;
     if (G.state == AOS_BLE_GATT_READY) bl_pill(G.btns, AOS_SYM_DOWNLOAD, _("Leer todo"), BL_C, read_all_cb, NULL);
+    if (mi_can() && !bl_mi_busy() && !G.mi_ask && bl_mi_state() != BL_MI_DONE)
+        bl_pill(G.btns, AOS_SYM_LOCK, _("Activar (Xiaomi)"), AOS_C_CARD2, mi_ask_cb, NULL);
     bl_pill(G.btns, live ? AOS_SYM_LAN_DISCONNECT : AOS_SYM_LAN_CONNECT, live ? _("Desconectar") : _("Conectar de nuevo"),
             AOS_C_CARD2, disc_cb, NULL);
     if (!aos_hal_bt_enabled()) bl_bt_off_card(G.col, w);
+    mi_card_build(w);
     G.built_ready = G.state == AOS_BLE_GATT_READY;
     G.list = bl_box(G.col, w, LV_SIZE_CONTENT);
     lv_obj_set_flex_flow(G.list, LV_FLEX_FLOW_COLUMN);
@@ -589,6 +724,10 @@ void bl_gatt_build(lv_obj_t *page)
 void bl_gatt_close(void)
 {
     if (G.open) aos_hal_ble_gatt_disconnect();
+    bl_mi_reset();
+    G.mi_ask = false;
+    G.mi_seen = BL_MI_IDLE;
+    G.mi_card = NULL;
     G.open = false;
     G.state = AOS_BLE_GATT_IDLE;
     G.col = G.st = G.st_sub = G.btns = G.list = G.log = NULL;
@@ -599,7 +738,7 @@ void bl_gatt_close(void)
 void bl_gatt_gone(void);
 void bl_gatt_gone(void)
 {
-    G.col = G.st = G.st_sub = G.btns = G.list = G.log = NULL;
+    G.col = G.st = G.st_sub = G.btns = G.list = G.log = G.mi_card = NULL;
     memset(G.val_l, 0, sizeof G.val_l);
     memset(G.sub_b, 0, sizeof G.sub_b);
 }
@@ -641,6 +780,10 @@ void bl_gatt_remote(const char *key, const char *v)
     } else if (!strcmp(key, "gatt_sub")) {
         const char *c = strchr(v, ',');
         if (c) aos_hal_ble_gatt_subscribe((uint16_t)atoi(v), atoi(c + 1));
+    } else if (!strcmp(key, "gatt_mi")) {
+        /* the page asked its own "are you sure" */
+        mi_start();
+        if (G.col) bl_rebuild();
     } else if (!strcmp(key, "gatt_hilink")) {
         int i = attr_index((uint16_t)atoi(v));
         if (i >= 0) hilink_send(i);
@@ -690,7 +833,21 @@ size_t bl_gatt_json(char *j, size_t n)
     P(",\"mtu\":%u,\"rssi\":", aos_hal_ble_gatt_mtu());
     if (rok) P("%d", r);
     else P("null");
-    P(",\"reading\":[%d,%d],\"attrs\":[", G.rq_i, G.rq_n);
+    P(",\"reading\":[%d,%d],\"mi\":{\"can\":%s,\"st\":%d,\"step\":", G.rq_i, G.rq_n,
+      mi_can() ? "true" : "false", (int)bl_mi_state());
+    S(mi_step());
+    P(",\"why\":");
+    S(bl_mi_why());
+    P(",\"code\":%d,\"id\":", bl_mi_code());
+    S(bl_mi_id());
+    uint8_t mk[16];
+    if (bl_mi_key(mk)) {
+        P(",\"key\":\"");
+        for (int i = 0; i < 16; i++) P("%02x", mk[i]);
+        P("\"");
+        memset(mk, 0, sizeof mk);
+    }
+    P("},\"attrs\":[");
     for (int i = 0; i < G.n && i < ATTRS_MAX && k < n - 600; i++) {
         const aos_ble_attr_t *at = &G.at[i];
         char nm[80], u[48], t[300];

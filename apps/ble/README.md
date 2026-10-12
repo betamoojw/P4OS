@@ -80,8 +80,9 @@ history, the CSV and MQTT.
 - **The key** goes in from the device's detail ("Cargar la clave", 32 hex
   digits) or from the portal, and is kept in `ble/claves.txt` on the card
   (`AA:BB:CC:DD:EE:FF|<32 hex>`). The detail says whether it matches.
-- **Xiaomi's bindkey** comes from the Mi Home account the sensor is paired
-  with (tools such as "Xiaomi Cloud Tokens Extractor"), or from Home
+- **Xiaomi's bindkey** can be made by the board itself: see "Activating a
+  Xiaomi" below. Otherwise it comes from the Mi Home account the sensor is
+  paired with (tools such as "Xiaomi Cloud Tokens Extractor"), or from Home
   Assistant if it already reads the sensor. MiBeacon v2/v3 (12-byte keys)
   is not supported, and the detail says so.
 - **Checked** against FIPS-197 and NIST SP 800-38C (AES, CCM with 7, 8 and
@@ -95,6 +96,31 @@ the beacon's calibrated one when it says it, the advertised TX power minus
 surroundings chosen in the settings (2.0 outdoors, 2.7 a house, 3.3 an
 office). Walls and bodies move it a lot: it is an estimate, and the screens
 say so.
+
+### Activating a Xiaomi
+
+A Xiaomi sensor with Xiaomi's auth service (0xFE95 with the characteristics
+0x0010 and 0x0019; the LYWSD03MMC and its kin) gets **Activar (Xiaomi)** in
+the GATT explorer, on the board and on the portal's page. After a warning
+it registers the board with the sensor, as pvvx's TelinkMiFlasher does
+("Do Activation"): the sensor gives its id, both sides make a P-256 key
+pair and swap the public halves, HKDF-SHA256 of the shared secret gives
+the token and the new bind key, and the sensor's id goes back encrypted to
+prove the board holds the same secret (`main/bl_mi.c` has the exchange
+byte by byte). When the sensor says yes, the key is kept in
+`ble/claves.txt` like one typed in, the sensor reads at once, and the key
+is shown to copy into Home Assistant or anywhere else.
+
+- **The sensor forgets its previous key.** Mi Home, and whoever read it
+  with the old key, need the new one (or the sensor added to Mi Home again,
+  which makes yet another).
+- The ECDH, HKDF and the random numbers are the firmware's (`aos_hal.h`,
+  "Crypto", since 0.13.5); CCM is the app's own.
+- **Checked** against RFC 5869's HKDF example, and end to end on the Mac
+  against the simulator's stock Xiaomi, which plays the sensor's side of
+  the exchange with mbedTLS and then encrypts its readings with the new key
+  (`test/run.sh`): the key both sides end with is the same, and the
+  readings decrypt with it and no longer with the old one.
 
 ## How many
 

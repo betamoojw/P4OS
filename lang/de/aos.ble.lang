@@ -842,7 +842,7 @@ respuesta a	Antwort auf
 comando	Befehl
 
 #: apps/ble/main/bl_decode.c:2632
-#: apps/ble/main/bl_gatt.c:72
+#: apps/ble/main/bl_gatt.c:81
 error	Fehler
 
 #: apps/ble/main/bl_decode.c:2635
@@ -1030,200 +1030,259 @@ Conectar	Verbinden
 #: apps/ble/main/bl_detail.c:347
 Señal	Signal
 
-#: apps/ble/main/bl_gatt.c:61
+#: apps/ble/main/bl_gatt.c:70
 pide un enlace autenticado (emparejar)	braucht eine authentifizierte Verbindung (koppeln)
 
-#: apps/ble/main/bl_gatt.c:62
+#: apps/ble/main/bl_gatt.c:71
 pide un enlace cifrado (emparejar)	braucht eine verschlüsselte Verbindung (koppeln)
 
-#: apps/ble/main/bl_gatt.c:63
+#: apps/ble/main/bl_gatt.c:72
 pide autorización	braucht eine Autorisierung
 
-#: apps/ble/main/bl_gatt.c:64
+#: apps/ble/main/bl_gatt.c:73
 no se puede leer	nicht lesbar
 
-#: apps/ble/main/bl_gatt.c:65
+#: apps/ble/main/bl_gatt.c:74
 no se puede escribir	nicht beschreibbar
 
-#: apps/ble/main/bl_gatt.c:66
+#: apps/ble/main/bl_gatt.c:75
 atributo inexistente	Attribut existiert nicht
 
-#: apps/ble/main/bl_gatt.c:67
+#: apps/ble/main/bl_gatt.c:76
 largo no válido	ungültige Länge
 
-#: apps/ble/main/bl_gatt.c:68
+#: apps/ble/main/bl_gatt.c:77
 pedido no soportado	Anfrage nicht unterstützt
 
-#: apps/ble/main/bl_gatt.c:69
+#: apps/ble/main/bl_gatt.c:78
 no contestó a tiempo	Zeitüberschreitung
 
-#: apps/ble/main/bl_gatt.c:70
-#: apps/ble/main/bl_gatt.c:307
-#: apps/ble/main/bl_gatt.c:623
+#: apps/ble/main/bl_gatt.c:79
+#: apps/ble/main/bl_gatt.c:417
+#: apps/ble/main/bl_gatt.c:762
 desconectado	getrennt
 
-#: apps/ble/main/bl_gatt.c:71
+#: apps/ble/main/bl_gatt.c:80
 error de ATT	ATT-Fehler
 
-#: apps/ble/main/bl_gatt.c:79
+#: apps/ble/main/bl_gatt.c:88
 no contestó: puede que no acepte conexiones o esté lejos	keine Antwort: nimmt vielleicht keine Verbindungen an oder ist zu weit weg
 
-#: apps/ble/main/bl_gatt.c:80
+#: apps/ble/main/bl_gatt.c:89
 se perdió la señal	Signal verloren
 
-#: apps/ble/main/bl_gatt.c:81
+#: apps/ble/main/bl_gatt.c:90
 el equipo cortó	das Gerät hat getrennt
 
-#: apps/ble/main/bl_gatt.c:82
+#: apps/ble/main/bl_gatt.c:91
 cortado desde acá	von hier getrennt
 
-#: apps/ble/main/bl_gatt.c:83
+#: apps/ble/main/bl_gatt.c:92
 la conexión no llegó a armarse	die Verbindung kam nicht zustande
 
-#: apps/ble/main/bl_gatt.c:86
+#: apps/ble/main/bl_gatt.c:95
 no hay lugar para otra conexión	kein Platz für eine weitere Verbindung
 
-#: apps/ble/main/bl_gatt.c:87
+#: apps/ble/main/bl_gatt.c:96
 ya había una conexión con ese equipo: probá de nuevo	es bestand schon eine Verbindung zu dem Gerät: nochmal versuchen
 
-#: apps/ble/main/bl_gatt.c:88
+#: apps/ble/main/bl_gatt.c:97
 falló	fehlgeschlagen
 
-#: apps/ble/main/bl_gatt.c:153
+#: apps/ble/main/bl_gatt.c:162
 (vacío)	(leer)
 
-#: apps/ble/main/bl_gatt.c:217
+#: apps/ble/main/bl_gatt.c:226
 Hex incompleto: van de a dos cifras	Hex unvollständig: immer zwei Ziffern
 
-#: apps/ble/main/bl_gatt.c:220
+#: apps/ble/main/bl_gatt.c:229
 No se pudo escribir	Schreiben fehlgeschlagen
 
-#: apps/ble/main/bl_gatt.c:227
-#: apps/ble/main/bl_gatt.c:658
+#: apps/ble/main/bl_gatt.c:236
+#: apps/ble/main/bl_gatt.c:801
 escrito en %s: %s bytes	in %s geschrieben: %s Bytes
 
-#: apps/ble/main/bl_gatt.c:247
+#: apps/ble/main/bl_gatt.c:256
 permiso de Hi-Link pedido en %s%s	Hi-Link-Berechtigung angefragt an %s%s
 
-#: apps/ble/main/bl_gatt.c:262
+#: apps/ble/main/bl_gatt.c:271
 Escribir: texto, o bytes con 0x (0x01 A0)	Schreiben: Text oder Bytes mit 0x (0x01 A0)
 
-#: apps/ble/main/bl_gatt.c:276
+#: apps/ble/main/bl_gatt.c:285
 leyendo %s atributos	%s Attribute werden gelesen
 
-#: apps/ble/main/bl_gatt.c:297
+#: apps/ble/main/bl_gatt.c:304
+preparando	Vorbereitung
+
+#: apps/ble/main/bl_gatt.c:305
+pidiendo su identificación	fragt nach seiner Kennung
+
+#: apps/ble/main/bl_gatt.c:306
+intercambiando claves	tauscht Schlüssel aus
+
+#: apps/ble/main/bl_gatt.c:308
+esperando que la acepte	wartet auf die Bestätigung
+
+#: apps/ble/main/bl_gatt.c:317
+activando el sensor...	aktiviere den Sensor...
+
+#: apps/ble/main/bl_gatt.c:342
+activado: clave nueva guardada	aktiviert: neuer Schlüssel gespeichert
+
+#: apps/ble/main/bl_gatt.c:344
+activado, pero no está en la lista: anotá la clave	aktiviert, aber nicht in der Liste: Schlüssel notieren
+
+#: apps/ble/main/bl_gatt.c:345
+#: apps/ble/main/bl_gatt.c:376
+Sensor activado	Sensor aktiviert
+
+#: apps/ble/main/bl_gatt.c:347
+no se activó:	nicht aktiviert:
+
+#: apps/ble/main/bl_gatt.c:361
+Activar este sensor Xiaomi	Diesen Xiaomi-Sensor aktivieren
+
+#: apps/ble/main/bl_gatt.c:362
+Le da una clave nueva y la guarda en la placa, para leer lo que anuncia cifrado. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva, o volver a agregarlo en Mi Home.	Gibt ihm einen neuen Schlüssel und speichert ihn auf der Platine, um seine verschlüsselten Meldungen zu lesen. Der Sensor vergisst den bisherigen: Mi Home und wer ihn mit dem alten Schlüssel liest (etwa Home Assistant), brauchen den neuen oder müssen ihn in Mi Home neu hinzufügen.
+
+#: apps/ble/main/bl_gatt.c:364
+Activar	Aktivieren
+
+#: apps/ble/main/bl_gatt.c:365
+Cancelar	Abbrechen
+
+#: apps/ble/main/bl_gatt.c:369
+#: apps/ble/main/bl_gatt.c:658
+Activando	Aktiviere
+
+#: apps/ble/main/bl_gatt.c:380
+Clave nueva (bindkey), ya guardada para leerlo acá:	Neuer Schlüssel (Bindkey), schon gespeichert, um ihn hier zu lesen:
+
+#: apps/ble/main/bl_gatt.c:384
+No se activó	Nicht aktiviert
+
+#: apps/ble/main/bl_gatt.c:388
+Probar de nuevo	Erneut versuchen
+
+#: apps/ble/main/bl_gatt.c:407
 conectando...	verbinden...
 
-#: apps/ble/main/bl_gatt.c:310
+#: apps/ble/main/bl_gatt.c:420
 #: apps/ble/main/ble.c:389
 Bluetooth apagado	Bluetooth aus
 
-#: apps/ble/main/bl_gatt.c:347
+#: apps/ble/main/bl_gatt.c:457
 lee	liest
 
-#: apps/ble/main/bl_gatt.c:347
+#: apps/ble/main/bl_gatt.c:457
 escribe	schreibt
 
-#: apps/ble/main/bl_gatt.c:347
+#: apps/ble/main/bl_gatt.c:457
 escribe sin respuesta	schreibt ohne Antwort
 
-#: apps/ble/main/bl_gatt.c:347
+#: apps/ble/main/bl_gatt.c:457
 notifica	benachrichtigt
 
-#: apps/ble/main/bl_gatt.c:348
+#: apps/ble/main/bl_gatt.c:458
 indica	indiziert
 
-#: apps/ble/main/bl_gatt.c:348
+#: apps/ble/main/bl_gatt.c:458
 difunde	sendet Broadcast
 
-#: apps/ble/main/bl_gatt.c:348
+#: apps/ble/main/bl_gatt.c:458
 firma	signiert
 
-#: apps/ble/main/bl_gatt.c:367
+#: apps/ble/main/bl_gatt.c:477
 Servicio %s · handles %u a %u	Dienst %s · Handles %u bis %u
 
-#: apps/ble/main/bl_gatt.c:392
+#: apps/ble/main/bl_gatt.c:502
 Leer	Lesen
 
-#: apps/ble/main/bl_gatt.c:393
+#: apps/ble/main/bl_gatt.c:503
 Escribir	Schreiben
 
-#: apps/ble/main/bl_gatt.c:394
+#: apps/ble/main/bl_gatt.c:504
 Pedir los datos (Hi-Link)	Daten anfordern (Hi-Link)
 
-#: apps/ble/main/bl_gatt.c:396
-#: apps/ble/main/bl_gatt.c:516
+#: apps/ble/main/bl_gatt.c:506
+#: apps/ble/main/bl_gatt.c:632
 Dejar de escuchar	Nicht mehr mithören
 
-#: apps/ble/main/bl_gatt.c:396
-#: apps/ble/main/bl_gatt.c:516
+#: apps/ble/main/bl_gatt.c:506
+#: apps/ble/main/bl_gatt.c:632
 Notificaciones	Benachrichtigungen
 
-#: apps/ble/main/bl_gatt.c:396
-#: apps/ble/main/bl_gatt.c:516
+#: apps/ble/main/bl_gatt.c:506
+#: apps/ble/main/bl_gatt.c:632
 Indicaciones	Indikationen
 
-#: apps/ble/main/bl_gatt.c:426
+#: apps/ble/main/bl_gatt.c:536
 Nada todavía.	Noch nichts.
 
-#: apps/ble/main/bl_gatt.c:434
+#: apps/ble/main/bl_gatt.c:544
 Conectando...	Verbinden...
 
-#: apps/ble/main/bl_gatt.c:435
+#: apps/ble/main/bl_gatt.c:545
 Conectado, listando servicios...	Verbunden, Dienste werden aufgelistet...
 
-#: apps/ble/main/bl_gatt.c:440
+#: apps/ble/main/bl_gatt.c:550
 Conectado · %d servicios, %d características	Verbunden · %d Dienste, %d Charakteristiken
 
-#: apps/ble/main/bl_gatt.c:441
+#: apps/ble/main/bl_gatt.c:551
 Señal %d dBm · MTU %u	Signal %d dBm · MTU %u
 
-#: apps/ble/main/bl_gatt.c:445
+#: apps/ble/main/bl_gatt.c:555
  · leyendo %d de %d	 · lese %d von %d
 
-#: apps/ble/main/bl_gatt.c:450
+#: apps/ble/main/bl_gatt.c:560
 Sin conexión	Keine Verbindung
 
-#: apps/ble/main/bl_gatt.c:453
+#: apps/ble/main/bl_gatt.c:563
 Desconectado	Getrennt
 
-#: apps/ble/main/bl_gatt.c:470
+#: apps/ble/main/bl_gatt.c:580
 servicios listados	Dienste aufgelistet
 
-#: apps/ble/main/bl_gatt.c:473
+#: apps/ble/main/bl_gatt.c:583
 sin conexión:	keine Verbindung:
 
-#: apps/ble/main/bl_gatt.c:503
+#: apps/ble/main/bl_gatt.c:587
+la activación quedó a medias	die Aktivierung blieb unvollständig
+
+#: apps/ble/main/bl_gatt.c:619
 leer %s: %s	lesen %s: %s
 
-#: apps/ble/main/bl_gatt.c:519
+#: apps/ble/main/bl_gatt.c:635
 suscribir %s: %s	abonnieren %s: %s
 
-#: apps/ble/main/bl_gatt.c:520
+#: apps/ble/main/bl_gatt.c:636
 escuchando %s%s	hört mit: %s%s
 
-#: apps/ble/main/bl_gatt.c:520
+#: apps/ble/main/bl_gatt.c:636
 ya no escucha %s%s	hört nicht mehr: %s%s
 
-#: apps/ble/main/bl_gatt.c:522
+#: apps/ble/main/bl_gatt.c:638
 escribir %s: %s	schreiben %s: %s
 
-#: apps/ble/main/bl_gatt.c:523
+#: apps/ble/main/bl_gatt.c:639
 escritura aceptada en %s%s	Schreiben akzeptiert: %s%s
 
-#: apps/ble/main/bl_gatt.c:568
+#: apps/ble/main/bl_gatt.c:700
 Leer todo	Alles lesen
 
-#: apps/ble/main/bl_gatt.c:569
+#: apps/ble/main/bl_gatt.c:702
+Activar (Xiaomi)	Aktivieren (Xiaomi)
+
+#: apps/ble/main/bl_gatt.c:703
 Desconectar	Trennen
 
-#: apps/ble/main/bl_gatt.c:569
+#: apps/ble/main/bl_gatt.c:703
 Conectar de nuevo	Neu verbinden
 
-#: apps/ble/main/bl_gatt.c:578
+#: apps/ble/main/bl_gatt.c:713
 Si tarda, puede que el equipo no acepte conexiones o que ya esté conectado a otro (muchos aceptan uno solo).	Dauert es lange, nimmt das Gerät vielleicht keine Verbindungen an oder ist schon mit einem anderen verbunden (viele erlauben nur eine).
 
-#: apps/ble/main/bl_gatt.c:580
+#: apps/ble/main/bl_gatt.c:715
 Lo último	Zuletzt
 
 #: apps/ble/main/bl_list.c:27
@@ -1269,6 +1328,52 @@ Nadie con este filtro.	Nichts passt zu diesem Filter.
 
 #: apps/ble/main/bl_list.c:152
 Escuchando... los equipos aparecen a medida que anuncian.	Höre zu... Geräte erscheinen, sobald sie senden.
+
+#: apps/ble/main/bl_mi.c:121
+#: apps/ble/main/bl_mi.c:127
+se cortó la conexión	die Verbindung brach ab
+
+#: apps/ble/main/bl_mi.c:163
+no se pudo generar la clave	der Schlüssel ließ sich nicht erzeugen
+
+#: apps/ble/main/bl_mi.c:178
+la clave del sensor no es válida	der Schlüssel des Sensors ist ungültig
+
+#: apps/ble/main/bl_mi.c:188
+no se pudo derivar la clave	der Schlüssel ließ sich nicht ableiten
+
+#: apps/ble/main/bl_mi.c:200
+el sensor no dio su identificación	der Sensor gab keine Kennung
+
+#: apps/ble/main/bl_mi.c:235
+el sensor se cansó de esperar	der Sensor hat das Warten aufgegeben
+
+#: apps/ble/main/bl_mi.c:235
+el sensor cortó el intercambio	der Sensor brach den Austausch ab
+
+#: apps/ble/main/bl_mi.c:241
+el sensor mandó algo inesperado	der Sensor schickte etwas Unerwartetes
+
+#: apps/ble/main/bl_mi.c:273
+el sensor rechazó el registro	der Sensor lehnte die Registrierung ab
+
+#: apps/ble/main/bl_mi.c:274
+el sensor no pudo verificar el registro	der Sensor konnte die Registrierung nicht prüfen
+
+#: apps/ble/main/bl_mi.c:275
+el sensor dice que ya está registrado	der Sensor meldet, er sei schon registriert
+
+#: apps/ble/main/bl_mi.c:276
+el sensor pide que se apriete su botón antes	der Sensor will, dass zuerst seine Taste gedrückt wird
+
+#: apps/ble/main/bl_mi.c:302
+no deja escuchar sus avisos	es lässt seine Meldungen nicht abonnieren
+
+#: apps/ble/main/bl_mi.c:309
+no aceptó lo que se le escribió	es nahm das Geschriebene nicht an
+
+#: apps/ble/main/bl_mi.c:324
+el sensor no contestó a tiempo	der Sensor antwortete nicht rechtzeitig
 
 #: apps/ble/main/bl_names.c:603
 Computadora de escritorio	Desktop-Computer

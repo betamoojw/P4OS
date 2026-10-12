@@ -1287,6 +1287,27 @@ bool aos_hal_ble_gatt_subscribe(uint16_t value_handle, int mode);
 int  aos_hal_ble_gatt_events(aos_ble_gatt_ev_t *out, int max);
 
 /* --------------------------------------------------------------------------
+ * Crypto: the pieces a pairing or key-exchange protocol is made of
+ * (aos_crypto.c, mbedTLS on the board and in the simulator)
+ *
+ * Since 0.13.5, for the BLE app's Xiaomi activation; generic on purpose.
+ * Keys and points go raw and big-endian: a P-256 public key is X then Y,
+ * 64 bytes, without the 0x04 in front. Nothing is kept between calls.
+ * -------------------------------------------------------------------------- */
+
+/* Bytes from the hardware's random number generator. */
+void aos_hal_random(void *buf, size_t len);
+void aos_hal_sha256(const void *data, size_t len, uint8_t out[32]);
+void aos_hal_hmac_sha256(const void *key, size_t klen, const void *data, size_t len, uint8_t out[32]);
+/* RFC 5869; salt may be NULL (then 32 zero bytes). out up to 255 * 32 bytes. */
+bool aos_hal_hkdf_sha256(const void *salt, size_t slen, const void *ikm, size_t ilen,
+                         const void *info, size_t infolen, uint8_t *out, size_t outlen);
+/* A new P-256 key pair. */
+bool aos_hal_p256_keypair(uint8_t priv[32], uint8_t pub[64]);
+/* ECDH: the shared secret's X. False when the peer's point is not on the curve. */
+bool aos_hal_p256_ecdh(const uint8_t priv[32], const uint8_t peer_pub[64], uint8_t secret[32]);
+
+/* --------------------------------------------------------------------------
  * Phone notifications
  *
  * The provider (NimBLE on the board, an imaginary phone in the simulator)

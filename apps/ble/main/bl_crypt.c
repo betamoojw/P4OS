@@ -83,27 +83,20 @@ static void ctr_block(uint8_t b[16], const uint8_t *nonce, int nlen, uint32_t i)
     for (int k = 0; k < L && k < 4; k++) b[15 - k] = (uint8_t)(i >> (8 * k));
 }
 
-bool bl_ccm_decrypt(const uint8_t key[16], const uint8_t *nonce, int nlen, const uint8_t *aad, int alen,
-                    const uint8_t *c, int clen, const uint8_t *tag, int mlen, uint8_t *out)
+/* The CBC-MAC over B0, the associated data and the payload p, into x;
+ * false when the sizes are out of CCM's range. */
+static bool ccm_mac(const uint8_t key[16], const uint8_t *nonce, int nlen, const uint8_t *aad, int alen,
+                    const uint8_t *p, int plen, int mlen, uint8_t x[16])
 {
-    if (nlen < 7 || nlen > 13 || mlen < 4 || mlen > 16 || (mlen & 1) || clen < 0 || alen < 0 || alen > 62)
+    if (nlen < 7 || nlen > 13 || mlen < 4 || mlen > 16 || (mlen & 1) || plen < 0 || alen < 0 || alen > 62)
         return false;
     int L = 15 - nlen;
-    if (L < 4 && clen >= (1 << (8 * L))) return false;
-    uint8_t a[16], s[16];
-    /* the payload: P = C xor S_i, i from 1 */
-    for (int off = 0, i = 1; off < clen; off += 16, i++) {
-        ctr_block(a, nonce, nlen, (uint32_t)i);
-        bl_aes128_encrypt(key, a, s);
-        int n = clen - off < 16 ? clen - off : 16;
-        for (int k = 0; k < n; k++) out[off + k] = c[off + k] ^ s[k];
-    }
-    /* the CBC-MAC over B0, the associated data and the payload */
-    uint8_t x[16], b[16];
+    if (L < 4 && plen >= (1 << (8 * L))) return false;
+    uint8_t b[16];
     memset(b, 0, 16);
     b[0] = (uint8_t)((alen ? 0x40 : 0) | (((mlen - 2) / 2) << 3) | (L - 1));
     memcpy(b + 1, nonce, nlen);
-    for (int k = 0; k < L && k < 4; k++) b[15 - k] = (uint8_t)((uint32_t)clen >> (8 * k));
+    for (int k = 0; k < L && k < 4; k++) b[15 - k] = (uint8_t)((uint32_t)plen >> (8 * k));
     bl_aes128_encrypt(key, b, x);
     if (alen) {
         /* two bytes of length, then the data, in blocks padded with zeros */
@@ -118,10 +111,35 @@ bool bl_ccm_decrypt(const uint8_t key[16], const uint8_t *nonce, int nlen, const
             bl_aes128_encrypt(key, x, x);
         }
     }
-    for (int off = 0; off < clen; off += 16) {
-        int n = clen - off < 16 ? clen - off : 16;
-        for (int k = 0; k < n; k++) x[k] ^= out[off + k];
+    for (int off = 0; off < plen; off += 16) {
+        int n = plen - off < 16 ? plen - off : 16;
+        for (int k = 0; k < n; k++) x[k] ^= p[off + k];
         bl_aes128_encrypt(key, x, x);
+    }
+    return true;
+}
+
+/* in xor S_i, i from 1: the same both ways */
+static void ccm_ctr(const uint8_t key[16], const uint8_t *nonce, int nlen, const uint8_t *in, int len, uint8_t *out)
+{
+    uint8_t a[16], s[16];
+    for (int off = 0, i = 1; off < len; off += 16, i++) {
+        ctr_block(a, nonce, nlen, (uint32_t)i);
+        bl_aes128_encrypt(key, a, s);
+        int n = len - off < 16 ? len - off : 16;
+        for (int k = 0; k < n; k++) out[off + k] = in[off + k] ^ s[k];
+    }
+}
+
+bool bl_ccm_decrypt(const uint8_t key[16], const uint8_t *nonce, int nlen, const uint8_t *aad, int alen,
+                    const uint8_t *c, int clen, const uint8_t *tag, int mlen, uint8_t *out)
+{
+    uint8_t x[16], a[16], s[16];
+    if (nlen < 7 || nlen > 13 || clen < 0) return false;
+    ccm_ctr(key, nonce, nlen, c, clen, out);
+    if (!ccm_mac(key, nonce, nlen, aad, alen, out, clen, mlen, x)) {
+        memset(out, 0, clen);
+        return false;
     }
     /* the tag: the MAC's first bytes xor S_0 */
     ctr_block(a, nonce, nlen, 0);
@@ -130,6 +148,18 @@ bool bl_ccm_decrypt(const uint8_t key[16], const uint8_t *nonce, int nlen, const
     for (int k = 0; k < mlen; k++) diff |= (uint8_t)((x[k] ^ s[k]) ^ tag[k]);
     if (diff) memset(out, 0, clen);
     return diff == 0;
+}
+
+bool bl_ccm_encrypt(const uint8_t key[16], const uint8_t *nonce, int nlen, const uint8_t *aad, int alen,
+                    const uint8_t *p, int plen, int mlen, uint8_t *out)
+{
+    uint8_t x[16], a[16], s[16];
+    if (!ccm_mac(key, nonce, nlen, aad, alen, p, plen, mlen, x)) return false;
+    ccm_ctr(key, nonce, nlen, p, plen, out);
+    ctr_block(a, nonce, nlen, 0);
+    bl_aes128_encrypt(key, a, s);
+    for (int k = 0; k < mlen; k++) out[plen + k] = x[k] ^ s[k];
+    return true;
 }
 
 bool bl_parse_key(const char *s, uint8_t key[16])

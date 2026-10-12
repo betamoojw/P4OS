@@ -1,7 +1,8 @@
 #!/bin/sh
 # BLE - builds and runs the decoder's tests on the Mac, under ASan and UBSan:
 # packets written by hand from each format's documentation, the simulator's
-# whole neighbourhood (sim/ble_sim.c, through shim/aos_hal.h), and noise.
+# whole neighbourhood (sim/ble_sim.c, through shim/aos_hal.h), a Xiaomi
+# activation against the simulator's sensor (bl_mi.c), and noise.
 #   apps/ble/test/run.sh [fuzz iterations, 200000 by default]
 set -e
 cd "$(dirname "$0")"
@@ -25,7 +26,11 @@ awk '
 SAN="-g -O1 -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all"
 # the simulator is not this app's: built apart, its warnings shown but not fatal
 mkdir -p "$OUT.d"
-cc -std=c11 -Wall -Wextra -Wno-missing-field-initializers $SAN -Ishim -c ../../../sim/ble_sim.c -o "$OUT.d/ble_sim.o"
+# mbedTLS for the HAL's crypto (aos_crypto.c) and the simulated Xiaomi, as the simulator links it
+MB=$(brew --prefix mbedtls 2>/dev/null || echo /opt/homebrew/opt/mbedtls)
+cc -std=c11 -Wall -Wextra -Wno-missing-field-initializers $SAN -Ishim -I"$MB/include" -c ../../../sim/ble_sim.c -o "$OUT.d/ble_sim.o"
+cc -std=c11 -Wall -Wextra $SAN -Ishim -I"$MB/include" -c ../../../components/aos_hal/aos_crypto.c -o "$OUT.d/aos_crypto.o"
 cc -std=c11 -Wall -Wextra -Werror $SAN -I../main -Ishim \
-   ../main/bl_decode.c ../main/bl_names.c ../main/bl_crypt.c test_decode.c "$OUT.d/ble_sim.o" -lm -o "$OUT"
+   ../main/bl_decode.c ../main/bl_names.c ../main/bl_crypt.c ../main/bl_mi.c test_decode.c \
+   "$OUT.d/ble_sim.o" "$OUT.d/aos_crypto.o" -L"$MB/lib" -lmbedcrypto -lm -o "$OUT"
 "$OUT" "$@"

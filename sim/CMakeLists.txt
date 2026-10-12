@@ -179,6 +179,7 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_tcp.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_ws.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_tls.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_crypto.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_logring.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_radio.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_notif.c

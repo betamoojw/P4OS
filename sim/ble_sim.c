@@ -5,9 +5,10 @@
  * people flash or buy (pvvx, BTHome, Govee, Ruuvi, Xiaomi's MiBeacon,
  * SwitchBot, Qingping, Inkbird), beacons (iBeacon, Eddystone), the phones,
  * earbuds, watches and trackers that fill any room, someone walking about
- * and someone passing by, and two devices that take a connection: a heart
- * rate strap and an ESP32 with environmental sensing and a UART that
- * answers. Nothing is anybody's real device: names, addresses and values
+ * and someone passing by, and the devices that take a connection: a heart
+ * rate strap, an ESP32 with environmental sensing and a UART that answers,
+ * a Hi-Link radar, and the stock Xiaomi, which takes an activation (a new
+ * bind key) as a real one does. Nothing is anybody's real device: names, addresses and values
  * are invented.
  *
  * No threads: the packets a device would have sent since the last call are
@@ -18,6 +19,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include "mbedtls/ccm.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -28,7 +30,7 @@ typedef struct sdev sdev_t;
 typedef void (*adv_fn)(sdev_t *d, uint32_t now, uint8_t *out, uint8_t *len, bool rsp);
 
 enum { MOVE_STILL, MOVE_WALK, MOVE_PASS, MOVE_FAR };
-enum { PROF_NONE, PROF_HR, PROF_ESP, PROF_HLK };
+enum { PROF_NONE, PROF_HR, PROF_ESP, PROF_HLK, PROF_MI };
 
 struct sdev {
     uint8_t addr[6];
@@ -185,6 +187,37 @@ static void adv_mibeacon(sdev_t *d, uint32_t now, uint8_t *o, uint8_t *n, bool r
     ad(o, n, 0x16, s, 20);
 }
 
+/* Once activated (sim_mi_* below), the bind key it made, and its readings
+ * encrypted here with it; before, the packets made with the test key. */
+static bool s_mi_on;
+static uint8_t s_mi_bind[16];
+
+/* MiBeacon v5, encrypted: frame control 0x5858, product 0x055B, counter,
+ * MAC, then the object encrypted, the 3-byte extended counter and the
+ * 4-byte tag. Nonce: MAC (LE) + product + counter + extended counter. */
+static int mi_v5(const sdev_t *d, uint8_t cnt, uint16_t obj, const uint8_t *v, int vn, uint8_t *o)
+{
+    uint8_t p[8], nonce[12];
+    int k = 0;
+    o[k++] = 0x58; o[k++] = 0x58; o[k++] = 0x5B; o[k++] = 0x05; o[k++] = cnt;
+    for (int i = 0; i < 6; i++) o[k++] = d->addr[5 - i];
+    p[0] = (uint8_t)obj; p[1] = (uint8_t)(obj >> 8); p[2] = (uint8_t)vn;
+    memcpy(p + 3, v, vn);
+    memcpy(nonce, o + 5, 6);
+    nonce[6] = 0x5B; nonce[7] = 0x05; nonce[8] = cnt;
+    nonce[9] = 1; nonce[10] = 0; nonce[11] = 0;
+    uint8_t aad = 0x11, tag[4];
+    mbedtls_ccm_context c;
+    mbedtls_ccm_init(&c);
+    mbedtls_ccm_setkey(&c, MBEDTLS_CIPHER_ID_AES, s_mi_bind, 128);
+    mbedtls_ccm_encrypt_and_tag(&c, 3 + vn, nonce, 12, &aad, 1, p, o + k, tag, 4);
+    mbedtls_ccm_free(&c);
+    k += 3 + vn;
+    o[k++] = 1; o[k++] = 0; o[k++] = 0;
+    memcpy(o + k, tag, 4);
+    return k + 4;
+}
+
 /* A stock Xiaomi LYWSD03MMC: MiBeacon v5 encrypted, one reading a packet
  * (temperature 22.4, humidity 58, battery 83). Made beforehand with
  * pycryptodome and the test key 00 01 02 .. 0F, which is what the app
@@ -205,6 +238,15 @@ static void adv_mi_enc(sdev_t *d, uint32_t now, uint8_t *o, uint8_t *n, bool rsp
     }
     ad_flags(o, n);
     int k = (int)(d->seq++ % 3);
+    if (s_mi_on) {
+        static const uint8_t T[2] = { 224, 0 }, H[2] = { 0x44, 0x02 }, B[1] = { 83 };
+        uint8_t s[2 + 24] = { 0x95, 0xFE };
+        int len = k == 0 ? mi_v5(d, (uint8_t)d->seq, 0x1004, T, 2, s + 2)
+                : k == 1 ? mi_v5(d, (uint8_t)d->seq, 0x1006, H, 2, s + 2)
+                         : mi_v5(d, (uint8_t)d->seq, 0x100A, B, 1, s + 2);
+        ad(o, n, 0x16, s, 2 + len);
+        return;
+    }
     uint8_t s[25] = { 0x95, 0xFE };
     int len = k == 0 ? 23 : 22;
     memcpy(s + 2, P[k], len);
@@ -487,7 +529,7 @@ static sdev_t DEV[] = {
     { A(A4, C1, 38, 52, 4F, 21), 0, AOS_BLE_ADV_IND, 2000, -80, MOVE_STILL, 0, adv_govee },
     { A(F1, 0C, 55, 9D, 3F, 8C), 1, AOS_BLE_ADV_IND, 1285, -86, MOVE_STILL, 0, adv_ruuvi },
     { A(58, 2D, 34, 10, 77, 6A), 0, AOS_BLE_ADV_IND, 3000, -74, MOVE_STILL, 0, adv_mibeacon },
-    { A(A4, C1, 38, E1, F0, A1), 0, AOS_BLE_ADV_IND, 2400, -59, MOVE_STILL, 0, adv_mi_enc },
+    { A(A4, C1, 38, E1, F0, A1), 0, AOS_BLE_ADV_IND, 2400, -59, MOVE_STILL, PROF_MI, adv_mi_enc },
     { A(C9, 21, 7E, 0A, 3D, 91), 1, AOS_BLE_ADV_IND, 1800, -68, MOVE_STILL, 0, adv_switchbot },
     { A(58, 2D, 34, 54, 2C, 08), 0, AOS_BLE_ADV_NONCONN_IND, 2000, -83, MOVE_STILL, 0, adv_qingping },
     { A(49, 22, 06, 12, 3A, 7B), 0, AOS_BLE_ADV_IND, 2500, -88, MOVE_STILL, 0, adv_inkbird },
@@ -729,6 +771,21 @@ static const gattr_t HLK_TABLE[] = {
     C_(8, 0x10, 0xFFF1, NULL),
     D_(9, 0x2902),
 };
+/* the stock Xiaomi: Xiaomi's auth in 0xFE95 (version, 0x0010, 0x0019) */
+static const gattr_t MI_TABLE[] = {
+    S_(1, 3, 0x1800),
+    C_(3, 0x02, 0x2A00, "LYWSD03MMC"),
+    S_(4, 12, 0xFE95),
+    C_(6, 0x02, 0x0004, "1.0.0_0130"),
+    C_(8, 0x18, 0x0010, NULL),
+    D_(9, 0x2902),
+    C_(11, 0x14, 0x0019, NULL),
+    D_(12, 0x2902),
+    S_(13, 17, 0x180A),
+    C_(15, 0x02, 0x2A29, "miaomiaoce.com"),
+    C_(17, 0x02, 0x2A26, "1.0.0_0130"),
+};
+
 /* it reports only after the permission command, as the real one */
 static bool s_hlk_ok, s_hlk_ack;
 static uint32_t s_hlk_next;
@@ -848,9 +905,11 @@ static void gatt_run(void)
         }
         s_gstate = AOS_BLE_GATT_DISCOVERING;
         s_gt = now;
-        s_tab = s_gdev->prof == PROF_HR ? HR_TABLE : s_gdev->prof == PROF_HLK ? HLK_TABLE : ESP_TABLE;
+        s_tab = s_gdev->prof == PROF_HR ? HR_TABLE : s_gdev->prof == PROF_HLK ? HLK_TABLE
+              : s_gdev->prof == PROF_MI ? MI_TABLE : ESP_TABLE;
         s_ntab = s_gdev->prof == PROF_HR    ? (int)(sizeof HR_TABLE / sizeof HR_TABLE[0])
                  : s_gdev->prof == PROF_HLK ? (int)(sizeof HLK_TABLE / sizeof HLK_TABLE[0])
+                 : s_gdev->prof == PROF_MI  ? (int)(sizeof MI_TABLE / sizeof MI_TABLE[0])
                                             : (int)(sizeof ESP_TABLE / sizeof ESP_TABLE[0]);
         s_hlk_ok = s_hlk_ack = false;
     }
@@ -956,6 +1015,121 @@ bool aos_hal_ble_gatt_read(uint16_t handle)
     return true;
 }
 
+/* The Xiaomi's side of the activation (apps/ble/main/bl_mi.c has the
+ * protocol): its id, its key pair, the same derivation, and a check that
+ * the DID came back encrypted with the same secret. */
+#define MI_H10 8
+#define MI_H19 11
+static const uint8_t MI_DID[20] = { 0x00, 'b', 'l', 't', '.', '3', '.', '1', 's', 'i', 'm', '0', 'p', '4', 'o', 's', '0', 'a', '1', 'b' };
+static struct {
+    uint8_t out[96];            /* the parcel it is sending */
+    int out_len;
+    uint8_t in[96];             /* the one it is getting */
+    int in_len, in_count;
+    uint8_t in_cmd;
+    uint8_t priv[32], pub[64], bind[16], a[16];
+    bool keyed, verified;
+} MI;
+
+static void mi_note(uint16_t h, const void *d, int n) { if (s_sub[h]) ev_put(AOS_BLE_EV_NOTIFY, h, 0, d, n); }
+
+static void mi_send(uint8_t cmd, const uint8_t *d, int n)
+{
+    memcpy(MI.out, d, n);
+    MI.out_len = n;
+    uint8_t h[6] = { 0, 0, 0, cmd, (uint8_t)((n + 17) / 18), 0 };
+    mi_note(MI_H19, h, 6);
+}
+
+static void mi_parcel(uint8_t cmd, const uint8_t *d, int n)
+{
+    if (cmd == 3 && n == 64) {
+        /* the app's key: ours back, and the secret */
+        uint8_t secret[32], out[64];
+        aos_hal_p256_keypair(MI.priv, MI.pub);
+        if (aos_hal_p256_ecdh(MI.priv, d, secret) &&
+            aos_hal_hkdf_sha256(NULL, 0, secret, 32, "mible-setup-info", 16, out, 64)) {
+            memcpy(MI.bind, out + 12, 16);
+            memcpy(MI.a, out + 28, 16);
+            MI.keyed = true;
+        }
+        mi_send(3, MI.pub, 64);
+    } else if (cmd == 0 && MI.keyed && n == (int)sizeof MI_DID + 4) {
+        static const uint8_t NONCE[12] = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B };
+        uint8_t did[sizeof MI_DID];
+        mbedtls_ccm_context c;
+        mbedtls_ccm_init(&c);
+        mbedtls_ccm_setkey(&c, MBEDTLS_CIPHER_ID_AES, MI.a, 128);
+        MI.verified = !mbedtls_ccm_auth_decrypt(&c, sizeof did, NONCE, 12, (const uint8_t *)"devID", 5, d, did,
+                                                d + sizeof did, 4) &&
+                      !memcmp(did, MI_DID, sizeof did);
+        mbedtls_ccm_free(&c);
+    }
+}
+
+static void mi_write(uint16_t h, const uint8_t *d, int n)
+{
+    if (h == MI_H10 && n == 4) {
+        if (d[0] == 0xA2) {
+            uint8_t info[4 + sizeof MI_DID] = { 1, 0, 0, 0 };
+            memcpy(info + 4, MI_DID, sizeof MI_DID);
+            MI.keyed = MI.verified = false;
+            mi_send(0, info, sizeof info);
+        } else if (d[0] == 0x13) {
+            uint8_t v[4] = { (uint8_t)(MI.verified ? 0x11 : 0x12), 0, 0, 0 };
+            if (MI.verified) {
+                memcpy(s_mi_bind, MI.bind, 16);
+                s_mi_on = true;
+            }
+            mi_note(MI_H10, v, 4);
+        }
+        return;
+    }
+    if (h != MI_H19 || n < 2) return;
+    int idx = d[0] | (d[1] << 8);
+    if (idx == 0 && n == 4 && d[2] == 1) {
+        /* the app's ack: ready, so the frames; or all of them got */
+        if (d[3] == 1)
+            for (int off = 0, i = 1; off < MI.out_len; off += 18, i++) {
+                uint8_t f[20] = { (uint8_t)i, 0 };
+                int k = MI.out_len - off < 18 ? MI.out_len - off : 18;
+                memcpy(f + 2, MI.out + off, k);
+                mi_note(MI_H19, f, 2 + k);
+            }
+    } else if (idx == 0 && n == 6 && d[2] == 0) {
+        MI.in_cmd = d[3];
+        MI.in_count = d[4];
+        MI.in_len = 0;
+        static const uint8_t RDY[4] = { 0, 0, 1, 1 };
+        mi_note(MI_H19, RDY, 4);
+    } else if (idx > 0 && MI.in_count) {
+        int k = n - 2;
+        if (MI.in_len + k > (int)sizeof MI.in) k = (int)sizeof MI.in - MI.in_len;
+        memcpy(MI.in + MI.in_len, d + 2, k);
+        MI.in_len += k;
+        if (idx == MI.in_count) {
+            static const uint8_t OK[4] = { 0, 0, 1, 0 };
+            MI.in_count = 0;
+            mi_note(MI_H19, OK, 4);
+            mi_parcel(MI.in_cmd, MI.in, MI.in_len);
+        }
+    }
+}
+
+/* For the tests: the sensor as it came, keyed with the test key again. */
+void sim_ble_mi_reset(void);
+void sim_ble_mi_reset(void)
+{
+    s_mi_on = false;
+    memset(&MI, 0, sizeof MI);
+}
+bool sim_ble_mi_key(uint8_t key[16]);
+bool sim_ble_mi_key(uint8_t key[16])
+{
+    if (s_mi_on) memcpy(key, s_mi_bind, 16);
+    return s_mi_on;
+}
+
 bool aos_hal_ble_gatt_write(uint16_t handle, const void *data, size_t len, bool response)
 {
     if (!gatt_ready() || len > 512) return false;
@@ -972,6 +1146,7 @@ bool aos_hal_ble_gatt_write(uint16_t handle, const void *data, size_t len, bool 
             s_hlk_ack = true;
         }
     }
+    if (!st && s_tab == MI_TABLE) mi_write(handle, data, (int)len);
     if (!st && a->uuid128 == U_NUS_RX) {
         /* the UART answers what it is sent, shouting */
         const char *p = data;

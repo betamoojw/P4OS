@@ -8,6 +8,7 @@
  */
 #include "bl_decode.h"
 #include "bl_crypt.h"
+#include "bl_mi.h"
 #include "aos_hal.h"
 
 #include <math.h>
@@ -1538,6 +1539,106 @@ static void fuzz(int iters)
     printf("fuzz: %d packets of noise\n", iters);
 }
 
+/* ---- activating a Xiaomi (bl_mi.c) against the simulator's sensor ---- */
+
+void sim_ble_mi_reset(void);
+bool sim_ble_mi_key(uint8_t key[16]);
+
+static int mi_run(const uint8_t a[6], uint32_t ms)
+{
+    static aos_ble_gatt_ev_t ev[16];
+    for (uint32_t t = 0; t < ms && bl_mi_busy(); t += 100) {
+        g_now += 100;
+        aos_hal_ble_gatt_state(NULL);
+        int n;
+        while ((n = aos_hal_ble_gatt_events(ev, 16)) > 0)
+            for (int i = 0; i < n; i++) bl_mi_event(&ev[i], (uint32_t)g_now);
+        bl_mi_tick((uint32_t)g_now);
+    }
+    (void)a;
+    return bl_mi_state();
+}
+
+static void test_mi(void)
+{
+    /* the HAL's pieces: RFC 5869's first HKDF case, ECDH both ways */
+    uint8_t ikm[22], salt[13], info[10], okm[42], want[42];
+    memset(ikm, 0x0b, sizeof ikm);
+    for (int i = 0; i < 13; i++) salt[i] = (uint8_t)i;
+    for (int i = 0; i < 10; i++) info[i] = (uint8_t)(0xf0 + i);
+    unhex("3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865", want);
+    CHECK(aos_hal_hkdf_sha256(salt, 13, ikm, 22, info, 10, okm, 42) && !memcmp(okm, want, 42));
+    uint8_t p1[32], q1[64], p2[32], q2[64], s1[32], s2[32];
+    CHECK(aos_hal_p256_keypair(p1, q1) && aos_hal_p256_keypair(p2, q2));
+    CHECK(aos_hal_p256_ecdh(p1, q2, s1) && aos_hal_p256_ecdh(p2, q1, s2) && !memcmp(s1, s2, 32));
+    q2[63] ^= 1;                                        /* off the curve */
+    CHECK(!aos_hal_p256_ecdh(p1, q2, s1));
+    /* CCM both ways */
+    uint8_t k[16], nonce[12], pt[20], ct[24], back[20];
+    for (int i = 0; i < 16; i++) k[i] = (uint8_t)(i * 7);
+    for (int i = 0; i < 12; i++) nonce[i] = (uint8_t)(0x10 + i);
+    for (int i = 0; i < 20; i++) pt[i] = (uint8_t)(i * 13 + 1);
+    CHECK(bl_ccm_encrypt(k, nonce, 12, (const uint8_t *)"devID", 5, pt, 20, 4, ct));
+    CHECK(bl_ccm_decrypt(k, nonce, 12, (const uint8_t *)"devID", 5, ct, 20, ct + 20, 4, back) && !memcmp(back, pt, 20));
+    ct[3] ^= 0x40;
+    CHECK(!bl_ccm_decrypt(k, nonce, 12, (const uint8_t *)"devID", 5, ct, 20, ct + 20, 4, back));
+
+    /* the whole activation with the simulator's stock Xiaomi */
+    const uint8_t a[6] = { 0xA4, 0xC1, 0x38, 0xE1, 0xF0, 0xA1 };
+    sim_ble_mi_reset();
+    aos_ble_gatt_state_t st = AOS_BLE_GATT_IDLE;
+    aos_hal_ble_gatt_connect(a, 0);
+    for (int i = 0; i < 40 && st != AOS_BLE_GATT_READY; i++) {
+        g_now += 100;
+        st = aos_hal_ble_gatt_state(NULL);
+    }
+    CHECK(st == AOS_BLE_GATT_READY);
+    static aos_ble_attr_t at[64];
+    int n = aos_hal_ble_gatt_attrs(at, 64);
+    CHECK(bl_mi_can(at, n));
+    CHECK(!bl_mi_can(at, 2));
+    uint64_t t0 = g_now;
+    CHECK(bl_mi_start(at, n, (uint32_t)g_now));
+    int r = mi_run(a, 40000);
+    if (r != BL_MI_DONE) printf("  activation: state %d, %s (%d)\n", r, bl_mi_why(), bl_mi_code());
+    CHECK(r == BL_MI_DONE);
+    STREQ(bl_mi_id(), "blt.3.1sim0p4os0a1b");
+    uint8_t key[16], skey[16];
+    CHECK(bl_mi_key(key) && sim_ble_mi_key(skey) && !memcmp(key, skey, 16));
+    printf("mi: activated in %u ms (simulated)\n", (unsigned)(g_now - t0));
+    aos_hal_ble_gatt_disconnect();
+    /* its readings, now encrypted with the new key: read with it, not with the old one */
+    static const uint8_t OLD[16] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+    aos_hal_ble_scan_start(true, 100);
+    static aos_ble_adv_t buf[1024];
+    int ok = 0, old_ok = 0;
+    for (int step = 0; step < 15; step++) {
+        g_now += 1000;
+        int m = aos_hal_ble_scan_read(buf, 1024);
+        for (int i = 0; i < m; i++) {
+            if (memcmp(buf[i].addr, a, 6) || buf[i].kind == AOS_BLE_ADV_SCAN_RSP) continue;
+            bl_ad_t ad;
+            bl_sensor_t sv;
+            bl_ad_clear(&ad);
+            bl_ad_merge(&ad, buf[i].data, buf[i].len);
+            if (bl_sensor_decode_key(&ad, a, key, &sv) == BL_KEY_OK) ok++;
+            if (bl_sensor_decode_key(&ad, a, OLD, &sv) == BL_KEY_OK) old_ok++;
+        }
+    }
+    aos_hal_ble_scan_stop();
+    CHECK(ok >= 3 && old_ok == 0);
+
+    /* a sensor that never answers: it gives up after its time */
+    sim_ble_mi_reset();
+    CHECK(bl_mi_start(at, n, (uint32_t)g_now));
+    g_now += 31000;
+    bl_mi_tick((uint32_t)g_now);
+    CHECK(bl_mi_state() == BL_MI_FAILED && bl_mi_why()[0]);
+    CHECK(!bl_mi_key(key));
+    bl_mi_reset();
+    sim_ble_mi_reset();
+}
+
 int main(int argc, char **argv)
 {
     int iters = argc > 1 ? atoi(argv[1]) : 200000;
@@ -1554,6 +1655,7 @@ int main(int argc, char **argv)
     test_crypto();
     test_hilink();
     test_sim();
+    test_mi();
     fuzz(iters);
     printf("%d checks passed, %d failed\n", g_pass, g_fail);
     return g_fail ? 1 : 0;

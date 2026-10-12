@@ -313,8 +313,9 @@ P.registerPage({
     const keyBox = h('div', {});
 
     /* ---- the GATT explorer, on the board's connection: the page asks
-     * (gatt=<address>, gatt_readall, gatt_read, gatt_sub, gatt_write) and
-     * draws what the app puts as "gatt" ---- */
+     * (gatt=<address>, gatt_readall, gatt_read, gatt_sub, gatt_write,
+     * gatt_mi for a Xiaomi's activation) and draws what the app puts as
+     * "gatt" ---- */
     let gatt = null;
     const gattBox = h('div', {});
     const GATT_STATE = ['Desconectado', 'Conectando...', 'Conectado, listando servicios...', 'Conectado', 'Sin conexión'];
@@ -330,6 +331,10 @@ P.registerPage({
       else if (act === 'read') send('gatt_read=' + hd);
       else if (act === 'sub') send(`gatt_sub=${hd},${b.dataset.m}`);
       else if (act === 'hilink') send('gatt_hilink=' + hd);
+      else if (act === 'mi') {
+        if (confirm('Activar este sensor Xiaomi: le da una clave nueva y la guarda en la placa. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva. ¿Seguir?'))
+          send('gatt_mi=1');
+      }
       else if (act === 'write') {
         const v = prompt('Escribir: texto, o bytes con 0x (por ejemplo 0x01 A0)');
         if (v !== null && v !== '') send(`gatt_write=${hd},${v}`);
@@ -367,9 +372,19 @@ P.registerPage({
           h('td', { class: 'bl-hex', style: `white-space:pre-wrap;color:${a.s ? 'var(--orange)' : 'var(--fg, inherit)'}` }, a.v + (a.c > 1 ? '' : '')),
           h('td', { style: 'white-space:nowrap' }, ...acts)));
       }
+      /* a Xiaomi with its auth service: the activation (bl_mi.c) */
+      const mi = g.mi || {};
+      let miBox = null;
+      if (mi.st >= 1 && mi.st <= 5) miBox = h('p', { class: 'note' }, `Activando: ${mi.step}...` + (mi.id ? ` (${mi.id})` : ''));
+      else if (mi.st === 6) miBox = h('div', { class: 'note' }, h('b', { style: 'color:var(--green)' }, 'Sensor activado. '),
+        'Clave nueva (bindkey), ya guardada en la placa para leerlo: ', h('code', { style: 'user-select:all' }, mi.key || ''),
+        mi.id ? h('div', { class: 'sub' }, mi.id) : null);
+      else if (mi.st === 7) miBox = h('p', { class: 'note', style: 'color:var(--orange)' }, `No se activó: ${mi.why}` + (mi.code ? ` (0x${mi.code.toString(16).toUpperCase()})` : ''));
       put(gattBox, h('h3', {}, 'GATT'), h('p', { class: 'note', style: g.state === 4 ? 'color:var(--orange)' : '' }, st),
         h('div', { class: 'btns' }, g.state === 3 ? btn('Leer todo', 'all', {}, 'btn pri') : null,
+          mi.can && !(mi.st >= 1 && mi.st <= 6) ? btn(mi.st === 7 ? 'Probar de nuevo la activación' : 'Activar (Xiaomi)', 'mi') : null,
           live ? btn('Desconectar', 'off') : btn('Conectar de nuevo', 'connect')),
+        miBox,
         rows.length ? h('div', { class: 'bl-wrap' }, h('table', { class: 'bl-tbl' }, h('tbody', {}, ...rows))) : null,
         g.log.length ? h('details', {}, h('summary', { class: 'small muted' }, 'Lo último'), h('div', { class: 'small muted', style: 'white-space:pre-line' }, g.log.join('\n'))) : null);
     }

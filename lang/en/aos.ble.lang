@@ -842,7 +842,7 @@ respuesta a	answer to
 comando	command
 
 #: apps/ble/main/bl_decode.c:2632
-#: apps/ble/main/bl_gatt.c:72
+#: apps/ble/main/bl_gatt.c:81
 error	error
 
 #: apps/ble/main/bl_decode.c:2635
@@ -1030,200 +1030,259 @@ Conectar	Connect
 #: apps/ble/main/bl_detail.c:347
 Señal	Signal
 
-#: apps/ble/main/bl_gatt.c:61
+#: apps/ble/main/bl_gatt.c:70
 pide un enlace autenticado (emparejar)	needs an authenticated link (pair)
 
-#: apps/ble/main/bl_gatt.c:62
+#: apps/ble/main/bl_gatt.c:71
 pide un enlace cifrado (emparejar)	needs an encrypted link (pair)
 
-#: apps/ble/main/bl_gatt.c:63
+#: apps/ble/main/bl_gatt.c:72
 pide autorización	needs authorization
 
-#: apps/ble/main/bl_gatt.c:64
+#: apps/ble/main/bl_gatt.c:73
 no se puede leer	not readable
 
-#: apps/ble/main/bl_gatt.c:65
+#: apps/ble/main/bl_gatt.c:74
 no se puede escribir	not writable
 
-#: apps/ble/main/bl_gatt.c:66
+#: apps/ble/main/bl_gatt.c:75
 atributo inexistente	attribute not found
 
-#: apps/ble/main/bl_gatt.c:67
+#: apps/ble/main/bl_gatt.c:76
 largo no válido	invalid length
 
-#: apps/ble/main/bl_gatt.c:68
+#: apps/ble/main/bl_gatt.c:77
 pedido no soportado	request not supported
 
-#: apps/ble/main/bl_gatt.c:69
+#: apps/ble/main/bl_gatt.c:78
 no contestó a tiempo	timed out
 
-#: apps/ble/main/bl_gatt.c:70
-#: apps/ble/main/bl_gatt.c:307
-#: apps/ble/main/bl_gatt.c:623
+#: apps/ble/main/bl_gatt.c:79
+#: apps/ble/main/bl_gatt.c:417
+#: apps/ble/main/bl_gatt.c:762
 desconectado	disconnected
 
-#: apps/ble/main/bl_gatt.c:71
+#: apps/ble/main/bl_gatt.c:80
 error de ATT	ATT error
 
-#: apps/ble/main/bl_gatt.c:79
+#: apps/ble/main/bl_gatt.c:88
 no contestó: puede que no acepte conexiones o esté lejos	no answer: it may not accept connections or be too far
 
-#: apps/ble/main/bl_gatt.c:80
+#: apps/ble/main/bl_gatt.c:89
 se perdió la señal	signal lost
 
-#: apps/ble/main/bl_gatt.c:81
+#: apps/ble/main/bl_gatt.c:90
 el equipo cortó	the device hung up
 
-#: apps/ble/main/bl_gatt.c:82
+#: apps/ble/main/bl_gatt.c:91
 cortado desde acá	disconnected from here
 
-#: apps/ble/main/bl_gatt.c:83
+#: apps/ble/main/bl_gatt.c:92
 la conexión no llegó a armarse	the connection never came up
 
-#: apps/ble/main/bl_gatt.c:86
+#: apps/ble/main/bl_gatt.c:95
 no hay lugar para otra conexión	no room for another connection
 
-#: apps/ble/main/bl_gatt.c:87
+#: apps/ble/main/bl_gatt.c:96
 ya había una conexión con ese equipo: probá de nuevo	there was already a connection to it: try again
 
-#: apps/ble/main/bl_gatt.c:88
+#: apps/ble/main/bl_gatt.c:97
 falló	failed
 
-#: apps/ble/main/bl_gatt.c:153
+#: apps/ble/main/bl_gatt.c:162
 (vacío)	(empty)
 
-#: apps/ble/main/bl_gatt.c:217
+#: apps/ble/main/bl_gatt.c:226
 Hex incompleto: van de a dos cifras	Incomplete hex: digits go in pairs
 
-#: apps/ble/main/bl_gatt.c:220
+#: apps/ble/main/bl_gatt.c:229
 No se pudo escribir	Could not write
 
-#: apps/ble/main/bl_gatt.c:227
-#: apps/ble/main/bl_gatt.c:658
+#: apps/ble/main/bl_gatt.c:236
+#: apps/ble/main/bl_gatt.c:801
 escrito en %s: %s bytes	wrote to %s: %s bytes
 
-#: apps/ble/main/bl_gatt.c:247
+#: apps/ble/main/bl_gatt.c:256
 permiso de Hi-Link pedido en %s%s	Hi-Link permission asked on %s%s
 
-#: apps/ble/main/bl_gatt.c:262
+#: apps/ble/main/bl_gatt.c:271
 Escribir: texto, o bytes con 0x (0x01 A0)	Write: text, or bytes with 0x (0x01 A0)
 
-#: apps/ble/main/bl_gatt.c:276
+#: apps/ble/main/bl_gatt.c:285
 leyendo %s atributos	reading %s attributes
 
-#: apps/ble/main/bl_gatt.c:297
+#: apps/ble/main/bl_gatt.c:304
+preparando	getting ready
+
+#: apps/ble/main/bl_gatt.c:305
+pidiendo su identificación	asking for its id
+
+#: apps/ble/main/bl_gatt.c:306
+intercambiando claves	exchanging keys
+
+#: apps/ble/main/bl_gatt.c:308
+esperando que la acepte	waiting for it to accept
+
+#: apps/ble/main/bl_gatt.c:317
+activando el sensor...	activating the sensor...
+
+#: apps/ble/main/bl_gatt.c:342
+activado: clave nueva guardada	activated: new key saved
+
+#: apps/ble/main/bl_gatt.c:344
+activado, pero no está en la lista: anotá la clave	activated, but it is not in the list: write the key down
+
+#: apps/ble/main/bl_gatt.c:345
+#: apps/ble/main/bl_gatt.c:376
+Sensor activado	Sensor activated
+
+#: apps/ble/main/bl_gatt.c:347
+no se activó:	not activated:
+
+#: apps/ble/main/bl_gatt.c:361
+Activar este sensor Xiaomi	Activate this Xiaomi sensor
+
+#: apps/ble/main/bl_gatt.c:362
+Le da una clave nueva y la guarda en la placa, para leer lo que anuncia cifrado. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva, o volver a agregarlo en Mi Home.	Gives it a new key and keeps it on the board, to read what it advertises encrypted. The sensor forgets the one it had: Mi Home and whoever reads it with the old key (Home Assistant, say) will need the new one, or to add it to Mi Home again.
+
+#: apps/ble/main/bl_gatt.c:364
+Activar	Activate
+
+#: apps/ble/main/bl_gatt.c:365
+Cancelar	Cancel
+
+#: apps/ble/main/bl_gatt.c:369
+#: apps/ble/main/bl_gatt.c:658
+Activando	Activating
+
+#: apps/ble/main/bl_gatt.c:380
+Clave nueva (bindkey), ya guardada para leerlo acá:	New key (bindkey), already saved to read it here:
+
+#: apps/ble/main/bl_gatt.c:384
+No se activó	Not activated
+
+#: apps/ble/main/bl_gatt.c:388
+Probar de nuevo	Try again
+
+#: apps/ble/main/bl_gatt.c:407
 conectando...	connecting...
 
-#: apps/ble/main/bl_gatt.c:310
+#: apps/ble/main/bl_gatt.c:420
 #: apps/ble/main/ble.c:389
 Bluetooth apagado	Bluetooth off
 
-#: apps/ble/main/bl_gatt.c:347
+#: apps/ble/main/bl_gatt.c:457
 lee	read
 
-#: apps/ble/main/bl_gatt.c:347
+#: apps/ble/main/bl_gatt.c:457
 escribe	write
 
-#: apps/ble/main/bl_gatt.c:347
+#: apps/ble/main/bl_gatt.c:457
 escribe sin respuesta	write w/o response
 
-#: apps/ble/main/bl_gatt.c:347
+#: apps/ble/main/bl_gatt.c:457
 notifica	notify
 
-#: apps/ble/main/bl_gatt.c:348
+#: apps/ble/main/bl_gatt.c:458
 indica	indicate
 
-#: apps/ble/main/bl_gatt.c:348
+#: apps/ble/main/bl_gatt.c:458
 difunde	broadcast
 
-#: apps/ble/main/bl_gatt.c:348
+#: apps/ble/main/bl_gatt.c:458
 firma	signed
 
-#: apps/ble/main/bl_gatt.c:367
+#: apps/ble/main/bl_gatt.c:477
 Servicio %s · handles %u a %u	Service %s · handles %u to %u
 
-#: apps/ble/main/bl_gatt.c:392
+#: apps/ble/main/bl_gatt.c:502
 Leer	Read
 
-#: apps/ble/main/bl_gatt.c:393
+#: apps/ble/main/bl_gatt.c:503
 Escribir	Write
 
-#: apps/ble/main/bl_gatt.c:394
+#: apps/ble/main/bl_gatt.c:504
 Pedir los datos (Hi-Link)	Ask for its data (Hi-Link)
 
-#: apps/ble/main/bl_gatt.c:396
-#: apps/ble/main/bl_gatt.c:516
+#: apps/ble/main/bl_gatt.c:506
+#: apps/ble/main/bl_gatt.c:632
 Dejar de escuchar	Stop listening
 
-#: apps/ble/main/bl_gatt.c:396
-#: apps/ble/main/bl_gatt.c:516
+#: apps/ble/main/bl_gatt.c:506
+#: apps/ble/main/bl_gatt.c:632
 Notificaciones	Notifications
 
-#: apps/ble/main/bl_gatt.c:396
-#: apps/ble/main/bl_gatt.c:516
+#: apps/ble/main/bl_gatt.c:506
+#: apps/ble/main/bl_gatt.c:632
 Indicaciones	Indications
 
-#: apps/ble/main/bl_gatt.c:426
+#: apps/ble/main/bl_gatt.c:536
 Nada todavía.	Nothing yet.
 
-#: apps/ble/main/bl_gatt.c:434
+#: apps/ble/main/bl_gatt.c:544
 Conectando...	Connecting...
 
-#: apps/ble/main/bl_gatt.c:435
+#: apps/ble/main/bl_gatt.c:545
 Conectado, listando servicios...	Connected, listing services...
 
-#: apps/ble/main/bl_gatt.c:440
+#: apps/ble/main/bl_gatt.c:550
 Conectado · %d servicios, %d características	Connected · %d services, %d characteristics
 
-#: apps/ble/main/bl_gatt.c:441
+#: apps/ble/main/bl_gatt.c:551
 Señal %d dBm · MTU %u	Signal %d dBm · MTU %u
 
-#: apps/ble/main/bl_gatt.c:445
+#: apps/ble/main/bl_gatt.c:555
  · leyendo %d de %d	 · reading %d of %d
 
-#: apps/ble/main/bl_gatt.c:450
+#: apps/ble/main/bl_gatt.c:560
 Sin conexión	No connection
 
-#: apps/ble/main/bl_gatt.c:453
+#: apps/ble/main/bl_gatt.c:563
 Desconectado	Disconnected
 
-#: apps/ble/main/bl_gatt.c:470
+#: apps/ble/main/bl_gatt.c:580
 servicios listados	services listed
 
-#: apps/ble/main/bl_gatt.c:473
+#: apps/ble/main/bl_gatt.c:583
 sin conexión:	no connection:
 
-#: apps/ble/main/bl_gatt.c:503
+#: apps/ble/main/bl_gatt.c:587
+la activación quedó a medias	the activation was left half done
+
+#: apps/ble/main/bl_gatt.c:619
 leer %s: %s	read %s: %s
 
-#: apps/ble/main/bl_gatt.c:519
+#: apps/ble/main/bl_gatt.c:635
 suscribir %s: %s	subscribe %s: %s
 
-#: apps/ble/main/bl_gatt.c:520
+#: apps/ble/main/bl_gatt.c:636
 escuchando %s%s	listening to %s%s
 
-#: apps/ble/main/bl_gatt.c:520
+#: apps/ble/main/bl_gatt.c:636
 ya no escucha %s%s	stopped listening to %s%s
 
-#: apps/ble/main/bl_gatt.c:522
+#: apps/ble/main/bl_gatt.c:638
 escribir %s: %s	write %s: %s
 
-#: apps/ble/main/bl_gatt.c:523
+#: apps/ble/main/bl_gatt.c:639
 escritura aceptada en %s%s	write accepted on %s%s
 
-#: apps/ble/main/bl_gatt.c:568
+#: apps/ble/main/bl_gatt.c:700
 Leer todo	Read all
 
-#: apps/ble/main/bl_gatt.c:569
+#: apps/ble/main/bl_gatt.c:702
+Activar (Xiaomi)	Activate (Xiaomi)
+
+#: apps/ble/main/bl_gatt.c:703
 Desconectar	Disconnect
 
-#: apps/ble/main/bl_gatt.c:569
+#: apps/ble/main/bl_gatt.c:703
 Conectar de nuevo	Reconnect
 
-#: apps/ble/main/bl_gatt.c:578
+#: apps/ble/main/bl_gatt.c:713
 Si tarda, puede que el equipo no acepte conexiones o que ya esté conectado a otro (muchos aceptan uno solo).	If it takes long, the device may not accept connections or may already be connected to another one (many accept only one).
 
-#: apps/ble/main/bl_gatt.c:580
+#: apps/ble/main/bl_gatt.c:715
 Lo último	Latest
 
 #: apps/ble/main/bl_list.c:27
@@ -1269,6 +1328,52 @@ Nadie con este filtro.	Nothing matches this filter.
 
 #: apps/ble/main/bl_list.c:152
 Escuchando... los equipos aparecen a medida que anuncian.	Listening... devices show up as they advertise.
+
+#: apps/ble/main/bl_mi.c:121
+#: apps/ble/main/bl_mi.c:127
+se cortó la conexión	the connection dropped
+
+#: apps/ble/main/bl_mi.c:163
+no se pudo generar la clave	the key could not be made
+
+#: apps/ble/main/bl_mi.c:178
+la clave del sensor no es válida	the sensor's key is not valid
+
+#: apps/ble/main/bl_mi.c:188
+no se pudo derivar la clave	the key could not be derived
+
+#: apps/ble/main/bl_mi.c:200
+el sensor no dio su identificación	the sensor gave no id
+
+#: apps/ble/main/bl_mi.c:235
+el sensor se cansó de esperar	the sensor got tired of waiting
+
+#: apps/ble/main/bl_mi.c:235
+el sensor cortó el intercambio	the sensor broke off the exchange
+
+#: apps/ble/main/bl_mi.c:241
+el sensor mandó algo inesperado	the sensor sent something unexpected
+
+#: apps/ble/main/bl_mi.c:273
+el sensor rechazó el registro	the sensor refused the registration
+
+#: apps/ble/main/bl_mi.c:274
+el sensor no pudo verificar el registro	the sensor could not verify the registration
+
+#: apps/ble/main/bl_mi.c:275
+el sensor dice que ya está registrado	the sensor says it is registered already
+
+#: apps/ble/main/bl_mi.c:276
+el sensor pide que se apriete su botón antes	the sensor wants its button pressed first
+
+#: apps/ble/main/bl_mi.c:302
+no deja escuchar sus avisos	it does not let us listen to its notifications
+
+#: apps/ble/main/bl_mi.c:309
+no aceptó lo que se le escribió	it did not take what was written to it
+
+#: apps/ble/main/bl_mi.c:324
+el sensor no contestó a tiempo	the sensor did not answer in time
 
 #: apps/ble/main/bl_names.c:603
 Computadora de escritorio	Desktop computer

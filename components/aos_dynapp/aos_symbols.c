@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 186 funciones de libc/libm agregadas a mano.
- * Total: 3352 simbolos.
+ * Total: 3360 simbolos.
  */
 
 #include <stddef.h>
@@ -274,6 +274,8 @@ extern int aos_hal_hid_gamepad_dpad;
 extern int aos_hal_hid_gamepad_get;
 extern int aos_hal_hid_mouse_present;
 extern int aos_hal_hid_mouse_read;
+extern int aos_hal_hkdf_sha256;
+extern int aos_hal_hmac_sha256;
 extern int aos_hal_http_body;
 extern int aos_hal_http_get;
 extern int aos_hal_http_len;
@@ -439,6 +441,8 @@ extern int aos_hal_ota_mark_valid;
 extern int aos_hal_ota_pending_verify;
 extern int aos_hal_ota_running_slot;
 extern int aos_hal_ota_write;
+extern int aos_hal_p256_ecdh;
+extern int aos_hal_p256_keypair;
 extern int aos_hal_panel_hw_reset;
 extern int aos_hal_panel_sleep_enable;
 extern int aos_hal_panel_sleep_enabled;
@@ -495,6 +499,7 @@ extern int aos_hal_radio_play;
 extern int aos_hal_radio_status;
 extern int aos_hal_raise_wake_enable;
 extern int aos_hal_raise_wake_enabled;
+extern int aos_hal_random;
 extern int aos_hal_reboot;
 extern int aos_hal_rec_pause;
 extern int aos_hal_rec_peaks;
@@ -526,6 +531,7 @@ extern int aos_hal_set_button_cb;
 extern int aos_hal_set_display_state_cb;
 extern int aos_hal_set_night_guard_cb;
 extern int aos_hal_set_power_event_cb;
+extern int aos_hal_sha256;
 extern int aos_hal_shutdown;
 extern int aos_hal_sleep;
 extern int aos_hal_sleep_hold;
@@ -942,6 +948,8 @@ extern int aos_mqtt_unsubscribe;
 extern int aos_mqtt_version;
 extern int aos_net_p4_c6_updating;
 extern int aos_net_p4_note_rssi;
+extern int aos_net_p4_scan_done;
+extern int aos_net_p4_scan_start;
 extern int aos_net_p4_start;
 extern int aos_net_p4_up;
 extern int aos_notif_act;
@@ -3629,6 +3637,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_hid_gamepad_get),
     ESP_ELFSYM_EXPORT(aos_hal_hid_mouse_present),
     ESP_ELFSYM_EXPORT(aos_hal_hid_mouse_read),
+    ESP_ELFSYM_EXPORT(aos_hal_hkdf_sha256),
+    ESP_ELFSYM_EXPORT(aos_hal_hmac_sha256),
     ESP_ELFSYM_EXPORT(aos_hal_http_body),
     ESP_ELFSYM_EXPORT(aos_hal_http_get),
     ESP_ELFSYM_EXPORT(aos_hal_http_len),
@@ -3794,6 +3804,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_ota_pending_verify),
     ESP_ELFSYM_EXPORT(aos_hal_ota_running_slot),
     ESP_ELFSYM_EXPORT(aos_hal_ota_write),
+    ESP_ELFSYM_EXPORT(aos_hal_p256_ecdh),
+    ESP_ELFSYM_EXPORT(aos_hal_p256_keypair),
     ESP_ELFSYM_EXPORT(aos_hal_panel_hw_reset),
     ESP_ELFSYM_EXPORT(aos_hal_panel_sleep_enable),
     ESP_ELFSYM_EXPORT(aos_hal_panel_sleep_enabled),
@@ -3850,6 +3862,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_radio_status),
     ESP_ELFSYM_EXPORT(aos_hal_raise_wake_enable),
     ESP_ELFSYM_EXPORT(aos_hal_raise_wake_enabled),
+    ESP_ELFSYM_EXPORT(aos_hal_random),
     ESP_ELFSYM_EXPORT(aos_hal_reboot),
     ESP_ELFSYM_EXPORT(aos_hal_rec_pause),
     ESP_ELFSYM_EXPORT(aos_hal_rec_peaks),
@@ -3881,6 +3894,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_set_display_state_cb),
     ESP_ELFSYM_EXPORT(aos_hal_set_night_guard_cb),
     ESP_ELFSYM_EXPORT(aos_hal_set_power_event_cb),
+    ESP_ELFSYM_EXPORT(aos_hal_sha256),
     ESP_ELFSYM_EXPORT(aos_hal_shutdown),
     ESP_ELFSYM_EXPORT(aos_hal_sleep),
     ESP_ELFSYM_EXPORT(aos_hal_sleep_hold),
@@ -4297,6 +4311,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_mqtt_version),
     ESP_ELFSYM_EXPORT(aos_net_p4_c6_updating),
     ESP_ELFSYM_EXPORT(aos_net_p4_note_rssi),
+    ESP_ELFSYM_EXPORT(aos_net_p4_scan_done),
+    ESP_ELFSYM_EXPORT(aos_net_p4_scan_start),
     ESP_ELFSYM_EXPORT(aos_net_p4_start),
     ESP_ELFSYM_EXPORT(aos_net_p4_up),
     ESP_ELFSYM_EXPORT(aos_notif_act),

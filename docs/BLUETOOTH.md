@@ -130,6 +130,12 @@ bytes as they came, and the meaning is the app's.
   command and post an event to NimBLE's queue; the host task does the rest.
   Everything shared is in PSRAM (~170 KB, the first time an app asks), under
   one mutex.
+- **The crypto for a pairing protocol** (since 0.13.5): `aos_hal_random`,
+  `_sha256`, `_hmac_sha256`, `_hkdf_sha256`, `_p256_keypair` and
+  `_p256_ecdh` in `components/aos_hal/aos_crypto.c`, on the mbedTLS the
+  firmware already carries for HTTPS (and the simulator links). Generic;
+  the BLE app's Xiaomi activation is the first to use them. Nothing stays
+  between calls, and a peer's point off the curve is refused.
 - **The simulator** (`sim/ble_sim.c`) makes up a neighbourhood with a
   device of every format the app decodes and two that take a connection.
 

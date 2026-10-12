@@ -612,6 +612,24 @@ __attribute__((weak)) bool aos_hal_ble_gatt_subscribe(uint16_t value_handle, int
 __attribute__((weak)) int aos_hal_ble_gatt_events(aos_ble_gatt_ev_t *out, int max)
 { int v; memset(&v, 0, sizeof v); return v; }
 
+__attribute__((weak)) void aos_hal_random(void *buf, size_t len)
+{ }
+
+__attribute__((weak)) void aos_hal_sha256(const void *data, size_t len, uint8_t out[32])
+{ }
+
+__attribute__((weak)) void aos_hal_hmac_sha256(const void *key, size_t klen, const void *data, size_t len, uint8_t out[32])
+{ }
+
+__attribute__((weak)) bool aos_hal_hkdf_sha256(const void *salt, size_t slen, const void *ikm, size_t ilen, const void *info, size_t infolen, uint8_t *out, size_t outlen)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) bool aos_hal_p256_keypair(uint8_t priv[32], uint8_t pub[64])
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) bool aos_hal_p256_ecdh(const uint8_t priv[32], const uint8_t peer_pub[64], uint8_t secret[32])
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
 __attribute__((weak)) bool aos_hal_notif_pop(aos_notif_t *out)
 { bool v; memset(&v, 0, sizeof v); return v; }
 

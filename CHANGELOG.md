@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.13.5 — 2026-10-11
+
+- **BLE activates Xiaomi sensors from the board.** A Xiaomi with its auth
+  service (0xFE95 with 0x0010 and 0x0019; the LYWSD03MMC and its kin) gets
+  "Activar (Xiaomi)" in the GATT explorer, on the board and on the portal's
+  page. After a warning (the sensor forgets its previous key), the app runs
+  the register pvvx's TelinkMiFlasher does: the sensor's id, a P-256 key
+  exchange, HKDF-SHA256 of the secret into the new bind key, and the id
+  sent back encrypted. When the sensor accepts, the key is kept in
+  `ble/claves.txt`, the sensor reads at once, and the key is shown to copy
+  into Home Assistant. Tried with a stock LYWSD03MMC: accepted in ~5 s.
+- **Crypto for the apps** (`aos_hal.h`, "Crypto"): random bytes from the
+  chip, SHA-256, HMAC, HKDF and P-256 key pairs and ECDH, on the mbedTLS
+  the firmware already had for HTTPS (`components/aos_hal/aos_crypto.c`,
+  shared with the simulator). The BLE app needs this firmware or later.
+- The simulator's stock Xiaomi takes a connection and an activation, and
+  then encrypts its readings with the new key; `apps/ble/test` runs the
+  whole exchange on the Mac.
+- **The released firmware says its version.** Every firmware built by the
+  CI said "1" in the portal: in the IDF's container git refused the
+  checkout and had no tags, so `git describe` failed. Fixed from this
+  release on.
+
 ## 0.13.4 — 2026-10-10
 
 - **BLE's GATT client connects at 15-30 ms.** At NimBLE's default

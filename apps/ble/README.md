@@ -111,6 +111,8 @@ byte by byte). When the sensor says yes, the key is kept in
 `ble/claves.txt` like one typed in, the sensor reads at once, and the key
 is shown to copy into Home Assistant or anywhere else.
 
+<img src="../../docs/img/app-ble-mi-ask.png" width="270" alt="The warning before activating a Xiaomi sensor"> <img src="../../docs/img/app-ble-mi-done.png" width="270" alt="The sensor activated, its new key shown (the simulator's)">
+
 - **The sensor forgets its previous key.** Mi Home, and whoever read it
   with the old key, need the new one (or the sensor added to Mi Home again,
   which makes yet another).

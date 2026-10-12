@@ -2,8 +2,9 @@
  * P4OS - CAS: the engine's stand-in for the simulator.
  *
  * Giac is built for the board only (engine/build_engine.sh), so in the
- * simulator the app runs against this: it answers every expression with a
- * note after a short pause, which is enough to lay out the interface.
+ * simulator the app runs against this: it answers every expression with
+ * the expression itself after a short pause, which is enough to lay out
+ * the interface and to see how results are drawn.
  */
 #ifdef AOS_SIM
 
@@ -44,12 +45,7 @@ char *cas_rt_take(int *is_error, uint32_t *ms)
     if (!s_job || (int32_t)(aos_hal_uptime_ms() - s_due) < 0) {
         return NULL;
     }
-    size_t n = strlen(s_job) + 48;
-    char *r = malloc(n);
-    if (r) {
-        snprintf(r, n, "[%s: sin motor en el simulador]", s_job);
-    }
-    free(s_job);
+    char *r = s_job;
     s_job = NULL;
     *is_error = 0;
     *ms = 150;

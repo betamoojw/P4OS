@@ -32,6 +32,9 @@ extern "C" int cas_engine_boot(unsigned stack_bytes)
     s_out = new std::string;
     language(0, s_ctx);
     angle_radian(true, s_ctx);
+    /* KhiCAS starts in its Python-like syntax (x**2, list[...], True);
+     * the app reads and writes Xcas's: x^2, [1,2], true */
+    python_compat(0, s_ctx);
     caseval_maxtime = 60;           /* seconds; ctrl_c stops it earlier */
     return 0;
 }

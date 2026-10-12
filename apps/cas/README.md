@@ -5,10 +5,23 @@ A computer algebra system for P4OS, on the card. The engine is
 of Xcas, as its author ported it to calculators (KhiCAS): exact arithmetic,
 algebra, calculus, equations, matrices, statistics.
 
-**State (2026-10-12): feasibility test, passed on the board** (firmware
-0.13.5). The app is a line to type
-into, the history and a bench (`Banco de pruebas`) that logs each
-computation's time and the arena's size to the portal's log.
+**State (2026-10-12):** the engine runs on the board (the feasibility test
+below), and the app has its two first views:
+
+- **Calculate:** a history of inputs and results drawn as a book prints
+  them, a two-dimensional editor (fractions, exponents, roots, integrals,
+  sums, derivatives, limits, matrices as templates) and a maths keypad of
+  four pages. Tapping an input puts it back in the editor; tapping a result
+  inserts it at the cursor. A USB or Bluetooth keyboard types too ("/" a
+  fraction, "^" an exponent).
+- **Graph:** up to six functions f1..f6 on a canvas that pans with one
+  finger, zooms with two (or a double tap), and traces a curve with a long
+  press. Each function is also defined in Giac, so the calculator can use
+  f1(x).
+
+The history and the functions are kept in `data/cas_hist.txt` and
+`data/cas_graph.txt`. The menu has *Stop*, *Clear the history* and the
+bench, which now writes its results into the history as well as the log.
 
 ## Building
 
@@ -31,6 +44,32 @@ it. `cas.so` as a whole is GPL-3.0; the firmware that loads it stays MIT.
 
 In the simulator the app runs against a stand-in (`main/cas_rt_sim.c`): the
 engine is built for the board only.
+
+## The interface (main/mx_*.c)
+
+One tree of boxes serves for typing and for showing (`mx.h`):
+
+    text  --mx_parse-->  AST  --mx_ast_to_row-->  boxes  --mx_view-->  screen
+    boxes --mx_row_text--> text for Giac
+    AST   --mx_compile-->  stack code over float for the grapher
+
+- **mx_edit.c**: keys are strings; "/" takes the operand before the cursor
+  as numerator (as in Desmos), backspace goes into a structure rather than
+  deleting it, a tap places the cursor.
+- **mx_layout.c**: sizes from the font size alone; radicals, tall brackets,
+  integral and sum signs drawn with lines, so they grow with their content;
+  brackets one line high use the font's glyphs.
+- **mx_parse.c**: a Pratt parser for Giac's Xcas syntax (the engine is set
+  to it with `python_compat(0)`), the book-style rendering (2*x as 2x, a/b
+  stacked, exp(x) as e^x, lists of equal lists as matrices), and the
+  grapher's evaluator: about a hundred times faster than asking Giac for
+  each point. A function it cannot compile (diff(), something defined in
+  the calculator) goes to Giac as simplify(...) and the answer is compiled.
+- The fonts are the firmware's Inter, which already carries Greek, arrows
+  and the Mathematical Operators block: no font pack.
+- **cas_graph.c** draws into an RGB565 canvas with its own anti-aliased
+  thick lines (a full redraw is a few milliseconds), and the numbers on the
+  axes through LVGL.
 
 ## How the engine fits in a .so
 

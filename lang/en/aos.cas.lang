@@ -1,0 +1,73 @@
+# amoledos-lang 1   es -> en
+# aos.cas.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/cas/main/cas_app.c:121
+Motor apagado	Engine off
+
+#: apps/cas/main/cas_app.c:122
+Iniciando...	Starting...
+
+#: apps/cas/main/cas_app.c:123
+Calculando...	Calculating...
+
+#: apps/cas/main/cas_app.c:167
+El motor no aceptó el cálculo	The engine did not take the calculation
+
+#: apps/cas/main/cas_app.c:246
+Parar el cálculo	Stop the calculation
+
+#: apps/cas/main/cas_app.c:247
+Borrar el historial	Clear the history
+
+#: apps/cas/main/cas_app.c:248
+Banco de pruebas	Benchmark
+
+#: apps/cas/main/cas_app.c:301
+Cálculo	Calculate
+
+#: apps/cas/main/cas_app.c:302
+Gráfico	Graph
+
+#: apps/cas/main/cas_app.c:355
+No se pudo arrancar el motor. Cerrá la app y volvé a abrirla.	The engine could not start. Close the app and open it again.
+
+#: apps/cas/main/cas_calc.c:153
+Error	Error
+
+#: apps/cas/main/cas_calc.c:196
+El motor no está listo	The engine is not ready
+
+#: apps/cas/main/cas_graph.c:93
+#: apps/cas/main/cas_graph.c:110
+no se puede graficar	cannot be graphed
+
+#: apps/cas/main/cas_graph.c:93
+no se entiende	not understood
+
+#: apps/cas/main/cas_graph.c:647
+tocá para escribir	tap to type
+
+#: apps/cas/main/cas_graph.c:859
+Listo	Done
+
+#: apps/cas/main/cas_graph.c:892
+Sin memoria para el gráfico	No memory for the graph
+
+#: apps/cas/main/cas_keypad.c:66
+mcd	gcd
+
+#: apps/cas/main/cas_keypad.c:67
+mcm	lcm
+
+#: apps/cas/main/cas_keypad.c:67
+primos	primes
+
+#: apps/cas/main/cas_keypad.c:84
+media	mean
+
+#: apps/cas/main/cas_keypad.c:84
+desv	stdev

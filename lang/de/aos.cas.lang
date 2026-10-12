@@ -1,0 +1,73 @@
+# amoledos-lang 1   es -> de
+# aos.cas.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/cas/main/cas_app.c:121
+Motor apagado	Rechenkern aus
+
+#: apps/cas/main/cas_app.c:122
+Iniciando...	Startet...
+
+#: apps/cas/main/cas_app.c:123
+Calculando...	Rechnet...
+
+#: apps/cas/main/cas_app.c:167
+El motor no aceptó el cálculo	Der Rechenkern hat die Rechnung nicht angenommen
+
+#: apps/cas/main/cas_app.c:246
+Parar el cálculo	Rechnung abbrechen
+
+#: apps/cas/main/cas_app.c:247
+Borrar el historial	Verlauf löschen
+
+#: apps/cas/main/cas_app.c:248
+Banco de pruebas	Benchmark
+
+#: apps/cas/main/cas_app.c:301
+Cálculo	Rechnen
+
+#: apps/cas/main/cas_app.c:302
+Gráfico	Graph
+
+#: apps/cas/main/cas_app.c:355
+No se pudo arrancar el motor. Cerrá la app y volvé a abrirla.	Der Rechenkern konnte nicht starten. Schließe die App und öffne sie erneut.
+
+#: apps/cas/main/cas_calc.c:153
+Error	Fehler
+
+#: apps/cas/main/cas_calc.c:196
+El motor no está listo	Der Rechenkern ist nicht bereit
+
+#: apps/cas/main/cas_graph.c:93
+#: apps/cas/main/cas_graph.c:110
+no se puede graficar	nicht darstellbar
+
+#: apps/cas/main/cas_graph.c:93
+no se entiende	nicht verständlich
+
+#: apps/cas/main/cas_graph.c:647
+tocá para escribir	zum Eingeben tippen
+
+#: apps/cas/main/cas_graph.c:859
+Listo	Fertig
+
+#: apps/cas/main/cas_graph.c:892
+Sin memoria para el gráfico	Kein Speicher für den Graphen
+
+#: apps/cas/main/cas_keypad.c:66
+mcd	ggT
+
+#: apps/cas/main/cas_keypad.c:67
+mcm	kgV
+
+#: apps/cas/main/cas_keypad.c:67
+primos	Primf.
+
+#: apps/cas/main/cas_keypad.c:84
+media	Mittel
+
+#: apps/cas/main/cas_keypad.c:84
+desv	Stdabw

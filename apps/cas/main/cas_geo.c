@@ -1103,7 +1103,7 @@ static void scrim_cb(lv_event_t *e)
 static lv_obj_t *sheet_button(lv_obj_t *parent, const char *text, bool lit)
 {
     lv_obj_t *b = lv_button_create(parent);
-    lv_obj_set_height(b, 58);
+    lv_obj_set_height(b, V.landscape ? 48 : 58);      /* lying down the sheet has 720 px for everything */
     lv_obj_set_style_radius(b, 14, 0);
     lv_obj_set_style_shadow_width(b, 0, 0);
     lv_obj_set_style_pad_hor(b, 6, 0);
@@ -1133,7 +1133,7 @@ static void sheet_section(lv_obj_t *box, const char *title, const tool_t *tools,
     lv_obj_remove_flag(grid, LV_OBJ_FLAG_SCROLLABLE);
     for (int k = 0; k < n; k++) {
         lv_obj_t *b = sheet_button(grid, _(TOOL_NAME[tools[k]]), tools[k] == V.tool);
-        lv_obj_set_width(b, cols == 3 ? LV_PCT(32) : LV_PCT(24));
+        lv_obj_set_width(b, cols == 3 && !V.landscape ? LV_PCT(32) : LV_PCT(24));
         lv_obj_add_event_cb(b, tool_cb, LV_EVENT_CLICKED, (void *)(intptr_t)tools[k]);
     }
 }
@@ -1151,9 +1151,9 @@ static void tools_open(lv_event_t *e)
     lv_obj_add_event_cb(V.sheet, scrim_cb, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t *box = lv_obj_create(V.sheet);
-    lv_obj_set_width(box, LV_PCT(100));
+    lv_obj_set_width(box, V.landscape ? 900 : LV_PCT(100));
     lv_obj_set_height(box, LV_SIZE_CONTENT);
-    lv_obj_set_style_max_height(box, LV_PCT(86), 0);
+    lv_obj_set_style_max_height(box, LV_PCT(V.landscape ? 96 : 86), 0);
     lv_obj_align(box, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_bg_color(box, AOS_C_CARD2, 0);
     lv_obj_set_style_border_width(box, 0, 0);
@@ -1169,7 +1169,7 @@ static void tools_open(lv_event_t *e)
     static const tool_t FIG[] = { T_CIRCLE, T_CIRC3, T_POLY };
     static const tool_t MEA[] = { T_LEN, T_ANGLE, T_AREA, T_EQ, T_COORD, T_DELETE };
     sheet_section(box, _("Puntos"), PTS, 4, 4);
-    sheet_section(box, _("Líneas"), LIN, 7, 3);
+    sheet_section(box, _("Líneas"), LIN, 7, V.landscape ? 4 : 3);
     sheet_section(box, _("Figuras"), FIG, 3, 3);
     sheet_section(box, _("Medir y editar"), MEA, 6, 3);
 

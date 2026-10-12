@@ -535,10 +535,13 @@ static void element_detail(void)
 static void page_table(lv_obj_t *body)
 {
     lv_obj_update_layout(body);
-    int w = lv_obj_get_width(body);
+    int w = lv_obj_get_width(body), th = (int)(w / 18.0f * 1.25f * 10);
+    /* lying down the width would make cells taller than the screen: the
+     * table takes the height there is, its cells wider than tall */
+    if (C.landscape && th > lv_obj_get_height(body)) th = lv_obj_get_height(body);
     C.table = lv_obj_create(body);
     lv_obj_remove_style_all(C.table);
-    lv_obj_set_size(C.table, w, (int)(w / 18.0f * 1.25f * 10));
+    lv_obj_set_size(C.table, w, th);
     lv_obj_add_flag(C.table, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(C.table, table_draw, LV_EVENT_DRAW_MAIN_END, NULL);
     lv_obj_add_event_cb(C.table, table_click, LV_EVENT_CLICKED, NULL);

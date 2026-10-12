@@ -49,7 +49,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: tools
-        run: apt-get update && apt-get install -y --no-install-recommends zsh zip binutils
+        # m4 to curl: CAS's engine (GMP's configure wants m4 and a native cc)
+        run: apt-get update && apt-get install -y --no-install-recommends zsh zip binutils m4 bzip2 xz-utils curl make gcc g++ libc6-dev perl
       - name: firmware
         shell: bash
         run: |
@@ -57,6 +58,33 @@ jobs:
           git describe --tags --always --dirty
           . $IDF_PATH/export.sh
           tools/build_fw.sh ${{ matrix.profile }}
+      # CAS's engine (apps/cas/engine): Giac and its runtime as PIC, not in
+      # git; built once (~150 MB of sources checked by SHA-256, 10-15 min)
+      # and kept in the cache while apps/cas/engine/ does not change
+      - name: CAS engine (cache)
+        if: matrix.profile == 'rev1_3'
+        id: cas-engine
+        uses: actions/cache@v4
+        with:
+          path: apps/cas/engine/lib
+          key: cas-engine-${{ hashFiles('apps/cas/engine/build_engine.sh', 'apps/cas/engine/*.cc', 'apps/cas/engine/*.c', 'apps/cas/engine/*.ld') }}
+      - name: CAS engine
+        if: matrix.profile == 'rev1_3' && steps.cas-engine.outputs.cache-hit != 'true'
+        continue-on-error: true
+        shell: bash
+        run: |
+          . $IDF_PATH/export.sh
+          CAS_WORK=/tmp/cas-work apps/cas/engine/build_engine.sh
+      # without its engine CAS cannot be built, and build_apps.sh would stop
+      # there: the release goes out without CAS, and says so
+      - name: CAS engine missing
+        if: matrix.profile == 'rev1_3'
+        shell: bash
+        run: |
+          if [ ! -f apps/cas/engine/lib/libcasengine.a ]; then
+            echo "::warning::CAS's engine did not build: this build leaves CAS out"
+            rm -rf apps/cas
+          fi
       - name: apps
         if: matrix.profile == 'rev1_3'
         shell: bash

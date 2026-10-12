@@ -44,11 +44,16 @@ hardware has to replace them.
 |---|---|---|---|
 | **doomgeneric** (`dcb7a8d`), Chocolate Doom 2.2.1's music player, DOSBox's DBOPL | **vendored**, `apps/doom/main/doomgeneric/` | **GPL-2.0-or-later** | modified, every change listed in [apps/doom/README.md](apps/doom/README.md). `doom.so` as a whole is GPL-2.0; the repository at the release's tag is its source. **No WAD is included.** |
 | **librtlsdr 2.0.3** | **vendored**, `apps/rf/main/rtlsdr/` | **GPL-2.0-or-later** | two small changes, listed in [apps/rf/README.md](apps/rf/README.md). `rf.so` as a whole is GPL-2.0-or-later; the repository at the release's tag is its source. |
+| **Giac 1.9** (as KhiCAS ships it for the NumWorks), **GMP 6.2.1**, **MPFR 4.1.0**, **MPFI 1.5.4** | **downloaded and built** by `apps/cas/engine/build_engine.sh` (checked by SHA-256), not in git | **GPL-3.0-or-later** (Giac), **LGPL-3.0-or-later** (GMP, MPFR, MPFI) | KhiCAS's interface (`kdisplay.cc`) is left out; its turtle commands are cut out of it unchanged. `cas.so` as a whole is GPL-3.0-or-later; the repository at the release's tag and the archives the script names are its source. Details in [apps/cas/README.md](apps/cas/README.md). |
+| **libstdc++, libsupc++ and libgcc's soft-fp** of **GCC 14.2.0** | **downloaded and built**, the same way | GPL-3.0 with the GCC Runtime Library Exception | rebuilt as position-independent code; `tzdb.cc` is replaced by an empty file |
+| **openlibm 0.8.8** | **downloaded and built**, the same way | MIT, BSD-2-Clause and others (FreeBSD's msun) | one line patched in `riscv_fpmath.h` (a 128-bit long double on RV32) |
+| **TLSF 3.1** (Matthew Conte) | **vendored**, `apps/cas/main/tlsf.c` | BSD-3-Clause | as KhiCAS carries it |
 | **Lua 5.4.8** | **vendored**, `apps/lua/main/lua/` | MIT, Lua.org, PUC-Rio | one patch to `luaconf.h`, recorded in `VENDOR.md`; the notice stays in `lua.h` |
 | compact AES (forward cipher), after **tiny-AES-c** (kokke) | **vendored**, `apps/rf/main/aes.c` | public domain (the Unlicense) | the standard AES S-box and schedule, generalised to a runtime key size, for `rf_mesh.c`'s AES-CTR (reading a Meshtastic channel the user has the key to) |
 
-The firmware that loads `doom.so` and `rf.so` stays MIT. The GPL applies to
-the Doom and RF apps and to any simulator build that compiles them in.
+The firmware that loads `doom.so`, `rf.so` and `cas.so` stays MIT. The GPL
+applies to the Doom, RF and CAS apps and to any simulator build that compiles
+them in.
 
 The simulator links the Mac's libusb (LGPL-2.1, from Homebrew, dynamically)
 when it is installed, for `P4_SIM_USB=1`; it is not part of anything the
@@ -75,6 +80,11 @@ Every 3D model, art pack, sprite, tune and translation in this project is
 the author's own. The packs are rendered from the Blender scripts in
 `apps/*/tools/blender/` and are not in git. No map tiles, sounds or pictures
 from anyone else are tracked.
+
+- **The periodic table** in CAS (`apps/cas/main/cas_elements.c`): IUPAC's
+  standard atomic weights; configurations, electronegativities, states,
+  temperatures and densities from PubChem's periodic table (NIH, public
+  domain). `apps/cas/tools/gen_elements.py` writes it.
 
 What the board fetches at runtime:
 

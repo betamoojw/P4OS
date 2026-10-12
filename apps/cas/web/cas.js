@@ -247,7 +247,18 @@ P.registerPage({
       try {
         const crop = onlyPlot && state && state.plot ? state.plot : null;
         if (onlyPlot && !crop) { P.toast('La placa no muestra ningún gráfico ahora', true); return; }
-        const cv = await screenCanvas(crop);
+        /* the buttons that float over the plot hidden for the picture */
+        let cleaned = false;
+        if (crop && open) {
+          await send('clean 1');
+          for (let i = 0; i < 15 && !cleaned; i++) {
+            await new Promise(r => setTimeout(r, 100));
+            try { cleaned = (await P.api(LIVE + '&key=state')).clean; } catch { break; }
+          }
+          await new Promise(r => setTimeout(r, 150));      /* a frame drawn without them */
+        }
+        let cv;
+        try { cv = await screenCanvas(crop); } finally { if (cleaned) send('clean 0').catch(() => {}); }
         cv.toBlob(b => {
           const stamp = new Date().toISOString().slice(0, 19).replace(/[-:]/g, '').replace('T', '-');
           P.saveBlob(b, (onlyPlot ? 'cas-grafico-' : 'cas-pantalla-') + stamp + '.png');

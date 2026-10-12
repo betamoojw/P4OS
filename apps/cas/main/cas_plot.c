@@ -31,9 +31,48 @@ static void live_add(cas_plot_t *p)
     }
 }
 
+static cas_plot_t *biggest(lv_area_t *out);
+
 bool cas_plot_on_screen(lv_area_t *out)
 {
+    return biggest(out) != NULL;
+}
+
+#define HIDE_MAX 16
+static lv_obj_t *s_hid[HIDE_MAX];
+static int s_nhid;
+
+bool cas_plot_clean(bool on)
+{
+    if (!on) {
+        for (int i = 0; i < s_nhid; i++) {
+            if (lv_obj_is_valid(s_hid[i])) lv_obj_remove_flag(s_hid[i], LV_OBJ_FLAG_HIDDEN);
+        }
+        s_nhid = 0;
+        return true;
+    }
+    if (s_nhid) return true;            /* already */
+    lv_area_t a;
+    cas_plot_t *p = biggest(&a);
+    if (!p) return false;
+    /* only a box whose children float (no flex, no grid): hiding them moves
+     * nothing; in a column the plot itself would move */
+    lv_obj_t *box = lv_obj_get_parent(p->canvas);
+    if (!box || lv_obj_get_style_layout(box, LV_PART_MAIN) != LV_LAYOUT_NONE) return true;
+    uint32_t n = lv_obj_get_child_count(box);
+    for (uint32_t i = 0; i < n && s_nhid < HIDE_MAX; i++) {
+        lv_obj_t *c = lv_obj_get_child(box, (int32_t)i);
+        if (c == p->canvas || lv_obj_has_flag(c, LV_OBJ_FLAG_HIDDEN)) continue;
+        lv_obj_add_flag(c, LV_OBJ_FLAG_HIDDEN);
+        s_hid[s_nhid++] = c;
+    }
+    return true;
+}
+
+static cas_plot_t *biggest(lv_area_t *out)
+{
     int best = 0;
+    cas_plot_t *found = NULL;
     for (int i = 0; i < LIVE_MAX; i++) {
         cas_plot_t *p = s_live[i];
         if (!p || !p->db || !p->canvas || !lv_obj_is_valid(p->canvas) || !lv_obj_is_visible(p->canvas)) continue;
@@ -56,9 +95,10 @@ bool cas_plot_on_screen(lv_area_t *out)
         if (size > best) {
             best = size;
             *out = a;
+            found = p;
         }
     }
-    return best > 0;
+    return found;
 }
 
 bool cas_plot_create(cas_plot_t *p, lv_obj_t *parent, int w, int h)

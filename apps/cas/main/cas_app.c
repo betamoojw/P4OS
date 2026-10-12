@@ -77,6 +77,7 @@ static struct {
     lv_obj_t   *root, *content, *status;
     int         view;           /* CAS_V_* */
     uint32_t    bench_t0;
+    uint32_t    clean_until;    /* the plot's buttons hidden for a picture until then */
     int         bench_left;
 } A;
 
@@ -167,6 +168,11 @@ static void live_take(void)
             cas_graph_set(msg[6] - '1', msg[7] == ' ' ? msg + 8 : "");
         } else if (!strcmp(msg, "stats")) {
             cas_stats_reload();
+        } else if (!strncmp(msg, "clean ", 6)) {
+            /* a picture of the plot without what floats over it: back by
+             * itself if the page never says so */
+            cas_plot_clean(msg[6] == '1');
+            A.clean_until = msg[6] == '1' ? aos_hal_uptime_ms() + 4000 : 0;
         } else if (!strncmp(msg, "view ", 5)) {
             int v = atoi(msg + 5);
             if (v >= 0 && v < CAS_V_COUNT && v != A.view) show_view(v);
@@ -183,12 +189,13 @@ static void live_put(void)
         return;
     }
     uint32_t now = aos_hal_uptime_ms();
-    if (now - last_state >= 400) {
+    if (now - last_state >= 400 || A.clean_until) {
         last_state = now;
         char j[200];
         lv_area_t a;
-        int k = snprintf(j, sizeof j, "{\"view\":%d,\"ready\":%s,\"busy\":%s,\"plot\":", A.view,
-                         cas_rt_ready() ? "true" : "false", A.busy || A.count ? "true" : "false");
+        int k = snprintf(j, sizeof j, "{\"view\":%d,\"ready\":%s,\"busy\":%s,\"clean\":%s,\"plot\":", A.view,
+                         cas_rt_ready() ? "true" : "false", A.busy || A.count ? "true" : "false",
+                         A.clean_until ? "true" : "false");
         if (cas_plot_on_screen(&a)) {
             snprintf(j + k, sizeof j - (size_t)k, "{\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d}}",
                      (int)a.x1, (int)a.y1, (int)lv_area_get_width(&a), (int)lv_area_get_height(&a));
@@ -256,6 +263,10 @@ static void poll_cb(lv_timer_t *t)
         set_status();
     }
     live_take();
+    if (A.clean_until && (int32_t)(aos_hal_uptime_ms() - A.clean_until) > 0) {
+        cas_plot_clean(false);
+        A.clean_until = 0;
+    }
     live_put();
 }
 
@@ -390,6 +401,8 @@ static lv_obj_t *tab_button(lv_obj_t *bar, const char *text, int v)
 /* the view that is leaving lets go of what it holds outside its widgets */
 static void leave_view(void)
 {
+    cas_plot_clean(false);
+    A.clean_until = 0;
     cas_graph_shown(false);
     cas_geo_shown(false);
     cas_stats_hidden();

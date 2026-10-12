@@ -26,6 +26,9 @@ void   cas_plot_free(cas_plot_t *p);     /* the buffer; the canvas goes with its
 /* Where on the screen the biggest plot in view is (for the portal's page
  * to cut it out of a screenshot); false when none is. */
 bool   cas_plot_on_screen(lv_area_t *out);
+/* Hides what floats over that plot (the grapher's buttons, geometry's hint)
+ * for a picture, and shows it again; true when there was a plot. */
+bool   cas_plot_clean(bool on);
 
 float  cas_plot_sx(const cas_plot_t *p, double x);
 float  cas_plot_sy(const cas_plot_t *p, double y);

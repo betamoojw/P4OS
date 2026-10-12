@@ -5,221 +5,413 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/cas/main/cas_app.c:123
+#: apps/cas/main/cas_app.c:125
 Motor apagado	Engine off
 
-#: apps/cas/main/cas_app.c:124
+#: apps/cas/main/cas_app.c:126
 Iniciando...	Starting...
 
-#: apps/cas/main/cas_app.c:125
+#: apps/cas/main/cas_app.c:127
 Calculando...	Calculating...
 
-#: apps/cas/main/cas_app.c:169
+#: apps/cas/main/cas_app.c:174
 El motor no aceptó el cálculo	The engine did not take the calculation
 
-#: apps/cas/main/cas_app.c:248
+#: apps/cas/main/cas_app.c:270
+Memoria del motor: %u KB	Engine memory: %u KB
+
+#: apps/cas/main/cas_app.c:278
 Parar el cálculo	Stop the calculation
 
-#: apps/cas/main/cas_app.c:249
+#: apps/cas/main/cas_app.c:279
 Borrar el historial	Clear the history
 
-#: apps/cas/main/cas_app.c:250
+#: apps/cas/main/cas_app.c:280
 Banco de pruebas	Benchmark
 
-#: apps/cas/main/cas_app.c:309
+#: apps/cas/main/cas_app.c:351
 Cálculo	Calculate
 
-#: apps/cas/main/cas_app.c:310
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_app.c:351
+#: apps/cas/main/cas_stats.c:976
 Gráfico	Graph
 
-#: apps/cas/main/cas_app.c:311
+#: apps/cas/main/cas_app.c:351
+Geometría	Geometry
+
+#: apps/cas/main/cas_app.c:351
 Estadística	Statistics
 
-#: apps/cas/main/cas_app.c:312
+#: apps/cas/main/cas_app.c:351
 Finanzas	Finance
 
-#: apps/cas/main/cas_app.c:375
+#: apps/cas/main/cas_app.c:434
 No se pudo arrancar el motor. Cerrá la app y volvé a abrirla.	The engine could not start. Close the app and open it again.
 
-#: apps/cas/main/cas_calc.c:153
+#: apps/cas/main/cas_calc.c:154
 Error	Error
 
-#: apps/cas/main/cas_calc.c:196
+#: apps/cas/main/cas_calc.c:197
 El motor no está listo	The engine is not ready
 
-#: apps/cas/main/cas_fin.c:173
+#: apps/cas/main/cas_fin.c:174
 No tiene solución con esos valores	No solution with these values
 
-#: apps/cas/main/cas_fin.c:193
+#: apps/cas/main/cas_fin.c:194
 N (períodos)	N (periods)
 
-#: apps/cas/main/cas_fin.c:193
+#: apps/cas/main/cas_fin.c:194
 I% anual	I% per year
 
-#: apps/cas/main/cas_fin.c:193
+#: apps/cas/main/cas_fin.c:194
 VA (valor actual)	PV (present value)
 
-#: apps/cas/main/cas_fin.c:194
+#: apps/cas/main/cas_fin.c:195
 PAGO (por período)	PMT (per period)
 
-#: apps/cas/main/cas_fin.c:194
+#: apps/cas/main/cas_fin.c:195
 VF (valor final)	FV (future value)
 
-#: apps/cas/main/cas_fin.c:200
+#: apps/cas/main/cas_fin.c:201
 pagos por año	payments per year
 
-#: apps/cas/main/cas_fin.c:201
+#: apps/cas/main/cas_fin.c:202
 capitalizaciones por año	compoundings per year
 
-#: apps/cas/main/cas_fin.c:202
+#: apps/cas/main/cas_fin.c:203
 Pago al final	Payment at end
 
-#: apps/cas/main/cas_fin.c:202
+#: apps/cas/main/cas_fin.c:203
 Pago al inicio	Payment at start
 
-#: apps/cas/main/cas_fin.c:205
+#: apps/cas/main/cas_fin.c:206
 Completá cuatro y tocá =? en la que falta. El dinero que recibís va positivo, el que pagás negativo: un préstamo de 200 000 se paga con cuotas negativas.	Fill in four and tap =? on the missing one. Money you receive is positive, money you pay negative: a loan of 200 000 is repaid with negative payments.
 
-#: apps/cas/main/cas_fin.c:256
+#: apps/cas/main/cas_fin.c:272
 interés	interest
 
-#: apps/cas/main/cas_fin.c:257
+#: apps/cas/main/cas_fin.c:273
 capital	principal
 
-#: apps/cas/main/cas_fin.c:302
-Francés	French
-
-#: apps/cas/main/cas_fin.c:302
-Alemán	German
-
-#: apps/cas/main/cas_fin.c:302
-Americano	Bullet
-
-#: apps/cas/main/cas_fin.c:306
-Monto	Amount
-
-#: apps/cas/main/cas_fin.c:307
-TNA %	Nominal rate %
-
-#: apps/cas/main/cas_fin.c:308
-Plazo (meses)	Term (months)
-
-#: apps/cas/main/cas_fin.c:310
-Primera cuota	First payment
-
-#: apps/cas/main/cas_fin.c:310
-#: apps/cas/main/cas_fin.c:329
+#: apps/cas/main/cas_fin.c:314
+#: apps/cas/main/cas_fin.c:341
 Cuota	Payment
 
-#: apps/cas/main/cas_fin.c:311
-Última cuota	Last payment
-
-#: apps/cas/main/cas_fin.c:312
-Total de intereses	Total interest
-
-#: apps/cas/main/cas_fin.c:313
-Total a pagar	Total to pay
-
-#: apps/cas/main/cas_fin.c:330
-#: apps/cas/main/cas_fin.c:416
+#: apps/cas/main/cas_fin.c:314
+#: apps/cas/main/cas_fin.c:429
 Interés	Interest
 
-#: apps/cas/main/cas_fin.c:331
+#: apps/cas/main/cas_fin.c:314
 Saldo	Balance
 
+#: apps/cas/main/cas_fin.c:333
+Francés	French
+
+#: apps/cas/main/cas_fin.c:333
+Alemán	German
+
+#: apps/cas/main/cas_fin.c:333
+Americano	Bullet
+
+#: apps/cas/main/cas_fin.c:337
+Monto	Amount
+
+#: apps/cas/main/cas_fin.c:338
+TNA %	Nominal rate %
+
+#: apps/cas/main/cas_fin.c:339
+Plazo (meses)	Term (months)
+
+#: apps/cas/main/cas_fin.c:341
+Primera cuota	First payment
+
+#: apps/cas/main/cas_fin.c:342
+Última cuota	Last payment
+
 #: apps/cas/main/cas_fin.c:343
+Total de intereses	Total interest
+
+#: apps/cas/main/cas_fin.c:344
+Total a pagar	Total to pay
+
+#: apps/cas/main/cas_fin.c:356
 La tasa del período es la TNA dividida por 12. Sin IVA ni gastos: el costo financiero total del banco puede ser mayor.	The rate per period is the nominal rate divided by 12. No taxes or fees: the bank's total cost may be higher.
 
-#: apps/cas/main/cas_fin.c:402
+#: apps/cas/main/cas_fin.c:415
 Tasa %	Rate %
 
-#: apps/cas/main/cas_fin.c:404
+#: apps/cas/main/cas_fin.c:417
 capitaliza cada (días)	compounds every (days)
 
-#: apps/cas/main/cas_fin.c:406
+#: apps/cas/main/cas_fin.c:419
 Equivalentes	Equivalents
 
-#: apps/cas/main/cas_fin.c:408
+#: apps/cas/main/cas_fin.c:421
 TNA (cada %.0f días)	Nominal (every %.0f days)
 
-#: apps/cas/main/cas_fin.c:411
+#: apps/cas/main/cas_fin.c:424
 TEM (30 días)	Monthly effective (30 days)
 
-#: apps/cas/main/cas_fin.c:412
+#: apps/cas/main/cas_fin.c:425
 Diaria efectiva	Daily effective
 
-#: apps/cas/main/cas_fin.c:413
+#: apps/cas/main/cas_fin.c:426
 Plazo fijo	Fixed-term deposit
 
-#: apps/cas/main/cas_fin.c:414
+#: apps/cas/main/cas_fin.c:427
 Capital	Principal
 
-#: apps/cas/main/cas_fin.c:415
+#: apps/cas/main/cas_fin.c:428
 Días	Days
 
-#: apps/cas/main/cas_fin.c:417
+#: apps/cas/main/cas_fin.c:430
 Monto al vencer	At maturity
 
-#: apps/cas/main/cas_fin.c:418
+#: apps/cas/main/cas_fin.c:431
 Contra la inflación	Against inflation
 
-#: apps/cas/main/cas_fin.c:419
+#: apps/cas/main/cas_fin.c:432
 Inflación mensual %	Monthly inflation %
 
-#: apps/cas/main/cas_fin.c:420
+#: apps/cas/main/cas_fin.c:433
 Tasa real mensual	Real monthly rate
 
-#: apps/cas/main/cas_fin.c:437
+#: apps/cas/main/cas_fin.c:450
 no hay	none
 
-#: apps/cas/main/cas_fin.c:441
+#: apps/cas/main/cas_fin.c:454
 nunca	never
 
-#: apps/cas/main/cas_fin.c:477
+#: apps/cas/main/cas_fin.c:490
 Tasa de descuento %	Discount rate %
 
-#: apps/cas/main/cas_fin.c:479
+#: apps/cas/main/cas_fin.c:492
 VAN	NPV
 
-#: apps/cas/main/cas_fin.c:480
+#: apps/cas/main/cas_fin.c:493
 TIR	IRR
 
-#: apps/cas/main/cas_fin.c:481
+#: apps/cas/main/cas_fin.c:494
 Recupero (períodos)	Payback (periods)
 
-#: apps/cas/main/cas_fin.c:482
+#: apps/cas/main/cas_fin.c:495
 Flujos	Cash flows
 
-#: apps/cas/main/cas_fin.c:485
+#: apps/cas/main/cas_fin.c:498
 período %d	period %d
 
-#: apps/cas/main/cas_fin.c:485
+#: apps/cas/main/cas_fin.c:498
 inversión (0)	investment (0)
 
-#: apps/cas/main/cas_fin.c:494
+#: apps/cas/main/cas_fin.c:507
 + período	+ period
 
-#: apps/cas/main/cas_fin.c:495
+#: apps/cas/main/cas_fin.c:508
 Quitar el último	Remove the last
 
-#: apps/cas/main/cas_fin.c:517
+#: apps/cas/main/cas_fin.c:530
 Préstamo	Loan
 
-#: apps/cas/main/cas_fin.c:517
+#: apps/cas/main/cas_fin.c:530
 Tasas	Rates
 
-#: apps/cas/main/cas_fin.c:517
+#: apps/cas/main/cas_fin.c:530
 VAN / TIR	NPV / IRR
 
-#: apps/cas/main/cas_form.c:121
+#: apps/cas/main/cas_form.c:123
 Eso no es un número	That is not a number
 
-#: apps/cas/main/cas_graph.c:94
-#: apps/cas/main/cas_graph.c:111
+#: apps/cas/main/cas_geo.c:52
+Mover	Move
+
+#: apps/cas/main/cas_geo.c:52
+Punto	Point
+
+#: apps/cas/main/cas_geo.c:52
+Punto medio	Midpoint
+
+#: apps/cas/main/cas_geo.c:52
+Intersección	Intersection
+
+#: apps/cas/main/cas_geo.c:53
+Segmento	Segment
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:692
+#: apps/cas/main/cas_geom.c:696
+Recta	Line
+
+#: apps/cas/main/cas_geo.c:53
+Semirrecta	Ray
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:694
+Perpendicular	Perpendicular
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:694
+Paralela	Parallel
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:694
+Mediatriz	Perp. bisector
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:694
+Bisectriz	Angle bisector
+
+#: apps/cas/main/cas_geo.c:54
+Circunferencia	Circle
+
+#: apps/cas/main/cas_geo.c:54
+Circ. por 3 puntos	Circle by 3 points
+
+#: apps/cas/main/cas_geo.c:54
+Polígono	Polygon
+
+#: apps/cas/main/cas_geo.c:55
+Longitud	Length
+
+#: apps/cas/main/cas_geo.c:55
+#: apps/cas/main/cas_geom.c:675
+Ángulo	Angle
+
+#: apps/cas/main/cas_geo.c:55
+#: apps/cas/main/cas_geom.c:683
+Área	Area
+
+#: apps/cas/main/cas_geo.c:55
+Ecuación	Equation
+
+#: apps/cas/main/cas_geo.c:55
+Coordenadas	Coordinates
+
+#: apps/cas/main/cas_geo.c:56
+#: apps/cas/main/cas_stats.c:351
+Borrar	Clear
+
+#: apps/cas/main/cas_geo.c:146
+Nada para deshacer	Nothing to undo
+
+#: apps/cas/main/cas_geo.c:318
+La figura está llena	The figure is full
+
+#: apps/cas/main/cas_geo.c:366
+Arrastrá un punto, o tocá algo para verlo	Drag a point, or tap something to see it
+
+#: apps/cas/main/cas_geo.c:367
+Tocá donde va el punto	Tap where the point goes
+
+#: apps/cas/main/cas_geo.c:369
+#: apps/cas/main/cas_geo.c:373
+#: apps/cas/main/cas_geo.c:379
+#: apps/cas/main/cas_geo.c:381
+Tocá el segundo punto	Tap the second point
+
+#: apps/cas/main/cas_geo.c:369
+Tocá un segmento o el primer punto	Tap a segment or the first point
+
+#: apps/cas/main/cas_geo.c:370
+Tocá la otra línea	Tap the other line
+
+#: apps/cas/main/cas_geo.c:370
+Tocá dos líneas, o donde se cruzan	Tap two lines, or where they cross
+
+#: apps/cas/main/cas_geo.c:373
+#: apps/cas/main/cas_geo.c:379
+Tocá el primer punto	Tap the first point
+
+#: apps/cas/main/cas_geo.c:375
+Ahora el otro: la recta o el punto	Now the other one: the line or the point
+
+#: apps/cas/main/cas_geo.c:375
+Tocá una recta y un punto	Tap a line and a point
+
+#: apps/cas/main/cas_geo.c:377
+Tocá un punto del primer lado	Tap a point on the first side
+
+#: apps/cas/main/cas_geo.c:377
+Tocá el vértice	Tap the vertex
+
+#: apps/cas/main/cas_geo.c:377
+Tocá un punto del otro lado	Tap a point on the other side
+
+#: apps/cas/main/cas_geo.c:378
+Tocá un punto de la circunferencia	Tap a point on the circle
+
+#: apps/cas/main/cas_geo.c:378
+Tocá el centro	Tap the centre
+
+#: apps/cas/main/cas_geo.c:379
+Tocá el tercer punto	Tap the third point
+
+#: apps/cas/main/cas_geo.c:380
+Tocá los vértices	Tap the vertices
+
+#: apps/cas/main/cas_geo.c:380
+Tocá el primero para cerrarlo	Tap the first one to close it
+
+#: apps/cas/main/cas_geo.c:381
+Tocá dos puntos, un segmento o una figura	Tap two points, a segment or a shape
+
+#: apps/cas/main/cas_geo.c:382
+Tocá un polígono o un círculo	Tap a polygon or a circle
+
+#: apps/cas/main/cas_geo.c:383
+Tocá una recta o una circunferencia	Tap a line or a circle
+
+#: apps/cas/main/cas_geo.c:384
+Tocá un punto	Tap a point
+
+#: apps/cas/main/cas_geo.c:385
+Tocá lo que querés borrar	Tap what you want to delete
+
+#: apps/cas/main/cas_geo.c:569
+No se cruzan	They do not cross
+
+#: apps/cas/main/cas_geo.c:1150
+Puntos	Points
+
+#: apps/cas/main/cas_geo.c:1151
+Líneas	Lines
+
+#: apps/cas/main/cas_geo.c:1152
+Figuras	Shapes
+
+#: apps/cas/main/cas_geo.c:1153
+Medir y editar	Measure and edit
+
+#: apps/cas/main/cas_geo.c:1163
+Cuadrícula	Grid
+
+#: apps/cas/main/cas_geo.c:1163
+Ajustar a la grilla	Snap to grid
+
+#: apps/cas/main/cas_geo.c:1163
+Borrar todo	Clear all
+
+#: apps/cas/main/cas_geo.c:1230
+Las medidas aparecen acá: elegí Longitud, Ángulo, Área o Ecuación.	Measurements show up here: pick Length, Angle, Area or Equation.
+
+#: apps/cas/main/cas_geo.c:1357
+#: apps/cas/main/cas_geo.c:1401
+Sin memoria para la figura	No memory for the figure
+
+#: apps/cas/main/cas_geom.c:639
+#: apps/cas/main/cas_geom.c:642
+Circ.	Circle
+
+#: apps/cas/main/cas_geom.c:679
+Perímetro	Perimeter
+
+#: apps/cas/main/cas_geom.c:734
+no existe	does not exist
+
+#: apps/cas/main/cas_graph.c:95
+#: apps/cas/main/cas_graph.c:112
 no se puede graficar	cannot be graphed
 
-#: apps/cas/main/cas_graph.c:94
+#: apps/cas/main/cas_graph.c:95
 no se entiende	not understood
 
 #: apps/cas/main/cas_graph.c:492
@@ -241,142 +433,142 @@ mcm	lcm
 primos	primes
 
 #: apps/cas/main/cas_keypad.c:84
-#: apps/cas/main/cas_stats.c:244
-#: apps/cas/main/cas_stats.c:910
+#: apps/cas/main/cas_stats.c:234
+#: apps/cas/main/cas_stats.c:918
 media	mean
 
 #: apps/cas/main/cas_keypad.c:84
 desv	stdev
 
-#: apps/cas/main/cas_stats.c:230
-Resumen de L%d	Summary of L%d
-
-#: apps/cas/main/cas_stats.c:238
-Sin datos: tocá una celda para escribir	No data: tap a cell to type
-
-#: apps/cas/main/cas_stats.c:246
+#: apps/cas/main/cas_stats.c:235
 Med	Med
 
-#: apps/cas/main/cas_stats.c:246
+#: apps/cas/main/cas_stats.c:235
 Rango	Range
 
-#: apps/cas/main/cas_stats.c:326
+#: apps/cas/main/cas_stats.c:246
+Sin datos: tocá una celda para escribir	No data: tap a cell to type
+
+#: apps/cas/main/cas_stats.c:269
+Resumen de L%d	Summary of L%d
+
+#: apps/cas/main/cas_stats.c:350
 Ordenar	Sort
 
-#: apps/cas/main/cas_stats.c:327
-Borrar	Clear
-
-#: apps/cas/main/cas_stats.c:422
+#: apps/cas/main/cas_stats.c:427
 L%d: %d clases de ancho %.4g	L%d: %d classes of width %.4g
 
-#: apps/cas/main/cas_stats.c:480
+#: apps/cas/main/cas_stats.c:485
 Dispersión: hacen falta datos en L1 (x) y L2 (y)	Scatter: needs data in L1 (x) and L2 (y)
 
-#: apps/cas/main/cas_stats.c:519
+#: apps/cas/main/cas_stats.c:524
 Sin datos en esta lista	No data in this list
 
-#: apps/cas/main/cas_stats.c:533
+#: apps/cas/main/cas_stats.c:538
 Histograma	Histogram
 
-#: apps/cas/main/cas_stats.c:533
+#: apps/cas/main/cas_stats.c:538
 Cajas	Box plots
 
-#: apps/cas/main/cas_stats.c:533
+#: apps/cas/main/cas_stats.c:538
 Dispersión	Scatter
 
-#: apps/cas/main/cas_stats.c:572
+#: apps/cas/main/cas_stats.c:577
 Hacen falta al menos dos pares en L1 (x) y L2 (y)	At least two pairs are needed in L1 (x) and L2 (y)
 
-#: apps/cas/main/cas_stats.c:573
+#: apps/cas/main/cas_stats.c:578
 Este modelo no se ajusta a estos datos (¿valores negativos o cero?)	This model does not fit these data (negative or zero values?)
 
-#: apps/cas/main/cas_stats.c:632
+#: apps/cas/main/cas_stats.c:637
 Va al gráfico como f%d(x)	Sent to the graph as f%d(x)
 
-#: apps/cas/main/cas_stats.c:634
+#: apps/cas/main/cas_stats.c:639
 El gráfico ya tiene seis funciones	The graph already has six functions
 
-#: apps/cas/main/cas_stats.c:649
+#: apps/cas/main/cas_stats.c:657
 Lineal	Linear
 
-#: apps/cas/main/cas_stats.c:649
+#: apps/cas/main/cas_stats.c:657
 Cuadr.	Quad.
 
-#: apps/cas/main/cas_stats.c:649
+#: apps/cas/main/cas_stats.c:657
 Cúbica	Cubic
 
-#: apps/cas/main/cas_stats.c:649
+#: apps/cas/main/cas_stats.c:657
 Pot.	Power
 
-#: apps/cas/main/cas_stats.c:654
+#: apps/cas/main/cas_stats.c:662
 x en L1, y en L2	x in L1, y in L2
 
-#: apps/cas/main/cas_stats.c:665
+#: apps/cas/main/cas_stats.c:673
 Al gráfico como f(x)	To the graph as f(x)
 
-#: apps/cas/main/cas_stats.c:667
+#: apps/cas/main/cas_stats.c:675
 Ver los puntos	Show the points
 
-#: apps/cas/main/cas_stats.c:776
+#: apps/cas/main/cas_stats.c:784
 Binomial	Binomial
 
-#: apps/cas/main/cas_stats.c:781
-#: apps/cas/main/cas_stats.c:781
+#: apps/cas/main/cas_stats.c:789
+#: apps/cas/main/cas_stats.c:789
 grados de libertad	degrees of freedom
 
-#: apps/cas/main/cas_stats.c:790
+#: apps/cas/main/cas_stats.c:798
 Inversa	Inverse
 
-#: apps/cas/main/cas_stats.c:842
+#: apps/cas/main/cas_stats.c:850
 Se rechaza H₀ (p < %.2g)	H₀ rejected (p < %.2g)
 
-#: apps/cas/main/cas_stats.c:842
+#: apps/cas/main/cas_stats.c:850
 No se rechaza H₀ (p ≥ %.2g)	H₀ not rejected (p ≥ %.2g)
 
-#: apps/cas/main/cas_stats.c:895
+#: apps/cas/main/cas_stats.c:903
 t media	t mean
 
-#: apps/cas/main/cas_stats.c:895
+#: apps/cas/main/cas_stats.c:903
 z proporción	z proportion
 
-#: apps/cas/main/cas_stats.c:895
+#: apps/cas/main/cas_stats.c:903
 t dos medias	t two means
 
-#: apps/cas/main/cas_stats.c:915
+#: apps/cas/main/cas_stats.c:923
 éxitos x	successes x
 
-#: apps/cas/main/cas_stats.c:919
+#: apps/cas/main/cas_stats.c:927
 media ₁	mean ₁
 
-#: apps/cas/main/cas_stats.c:922
+#: apps/cas/main/cas_stats.c:930
 media ₂	mean ₂
 
-#: apps/cas/main/cas_stats.c:926
+#: apps/cas/main/cas_stats.c:934
 nivel de confianza	confidence level
 
-#: apps/cas/main/cas_stats.c:929
+#: apps/cas/main/cas_stats.c:937
 Tomar media, s y n de L%d	Take mean, s and n from L%d
 
-#: apps/cas/main/cas_stats.c:930
+#: apps/cas/main/cas_stats.c:938
 Tomar de L1 y L2	Take from L1 and L2
 
-#: apps/cas/main/cas_stats.c:935
+#: apps/cas/main/cas_stats.c:943
 gl	df
 
-#: apps/cas/main/cas_stats.c:936
+#: apps/cas/main/cas_stats.c:944
 valor p	p-value
 
-#: apps/cas/main/cas_stats.c:937
+#: apps/cas/main/cas_stats.c:945
 intervalo	interval
 
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_stats.c:976
 Datos	Data
 
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_stats.c:976
 Regresión	Regression
 
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_stats.c:976
 Distrib.	Distrib.
 
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_stats.c:976
 Pruebas	Tests
+
+#: apps/cas/main/cas_geo.c
+Eliminar	Delete

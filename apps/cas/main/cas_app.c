@@ -74,7 +74,7 @@ static struct {
     bool        started;
     lv_timer_t *timer;
     lv_obj_t   *root, *content, *status;
-    int         view;           /* 0 calc, 1 graph */
+    int         view;           /* CAS_V_* */
     uint32_t    bench_t0;
     int         bench_left;
 } A;
@@ -126,13 +126,16 @@ static void set_status(void)
                       : !cas_rt_ready() ? _("Iniciando...")
                       : A.busy          ? _("Calculando...")
                       :                   "";
-    char buf[96];
-    if (m.arena) {
-        snprintf(buf, sizeof buf, "%s  %u KB", state, (unsigned)(m.used / 1024));
-    } else {
-        snprintf(buf, sizeof buf, "%s", state);
+    (void)m;
+    /* a pill over the view, only while there is something to say */
+    if (strcmp(lv_label_get_text(A.status), state)) {
+        lv_label_set_text(A.status, state);
     }
-    lv_label_set_text(A.status, buf);
+    if (state[0]) {
+        lv_obj_remove_flag(A.status, LV_OBJ_FLAG_HIDDEN);
+    } else {
+        lv_obj_add_flag(A.status, LV_OBJ_FLAG_HIDDEN);
+    }
 }
 
 static void poll_cb(lv_timer_t *t)
@@ -224,8 +227,8 @@ static void menu_cb(lv_event_t *e)
     const char *what = lv_obj_get_user_data(mb);
     lv_obj_delete_async(lv_obj_get_parent(lv_obj_get_parent(mb)));
     if (!strcmp(what, "bench")) {
-        if (A.view != 0) {
-            show_view(0);
+        if (A.view != CAS_V_CALC) {
+            show_view(CAS_V_CALC);
         }
         aos_hal_log("cas", "bench start (engine booted in %u ms)", (unsigned)cas_rt_boot_ms());
         A.bench_t0 = aos_hal_uptime_ms();
@@ -260,6 +263,17 @@ static void menu_open(lv_event_t *e)
     lv_obj_set_flex_flow(box, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_pad_all(box, 10, 0);
     lv_obj_set_style_pad_row(box, 6, 0);
+    cas_mem_t m;
+    cas_rt_mem(&m);
+    if (m.arena) {
+        char mb[64];
+        snprintf(mb, sizeof mb, _("Memoria del motor: %u KB"), (unsigned)(m.used / 1024));
+        lv_obj_t *ml = lv_label_create(box);
+        lv_label_set_text(ml, mb);
+        lv_obj_set_style_text_color(ml, AOS_C_DIM, 0);
+        lv_obj_set_style_text_font(ml, aos_font_small, 0);
+        lv_obj_set_style_pad_all(ml, 8, 0);
+    }
     static const char *const ITEMS[][2] = {
         { "stop", N_("Parar el cálculo") },
         { "clear", N_("Borrar el historial") },
@@ -280,25 +294,27 @@ static void menu_open(lv_event_t *e)
     }
 }
 
-static void tab_button(lv_obj_t *bar, const char *text, int v)
+static lv_obj_t *tab_button(lv_obj_t *bar, const char *text, int v)
 {
     lv_obj_t *b = lv_button_create(bar);
     lv_obj_set_height(b, 52);
-    lv_obj_set_style_pad_hor(b, 16, 0);
+    lv_obj_set_style_pad_hor(b, 12, 0);
     lv_obj_set_style_radius(b, 26, 0);
     lv_obj_set_style_shadow_width(b, 0, 0);
     lv_obj_set_style_bg_color(b, v == A.view ? AOS_C_ACCENT : AOS_C_CARD, 0);
     lv_obj_add_event_cb(b, tab_cb, LV_EVENT_CLICKED, (void *)(intptr_t)v);
     lv_obj_t *l = lv_label_create(b);
     lv_label_set_text(l, text);
-    lv_obj_set_style_text_font(l, aos_font_small, 0);
+    lv_obj_set_style_text_font(l, mx_font(20), 0);      /* five tabs and the menu in 720 px */
     lv_obj_center(l);
+    return b;
 }
 
 /* the view that is leaving lets go of what it holds outside its widgets */
 static void leave_view(void)
 {
     cas_graph_shown(false);
+    cas_geo_shown(false);
     cas_stats_hidden();
     cas_fin_hidden();
 }
@@ -322,17 +338,22 @@ static void build_views(void)
     lv_obj_set_flex_align(bar, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_style_pad_column(bar, 10, 0);
     lv_obj_remove_flag(bar, LV_OBJ_FLAG_SCROLLABLE);
-    tab_button(bar, _("Cálculo"), 0);
-    tab_button(bar, _("Gráfico"), 1);
-    tab_button(bar, _("Estadística"), 2);
-    tab_button(bar, _("Finanzas"), 3);
-    A.status = lv_label_create(bar);
-    lv_obj_set_flex_grow(A.status, 1);
-    lv_obj_set_style_text_align(A.status, LV_TEXT_ALIGN_RIGHT, 0);
-    lv_obj_set_style_text_color(A.status, AOS_C_DIM, 0);
-    lv_obj_set_style_text_font(A.status, aos_font_small, 0);
-    lv_label_set_long_mode(A.status, LV_LABEL_LONG_MODE_DOTS);
-    lv_label_set_text(A.status, "");
+    /* five tabs: in German or on a narrow screen they slide */
+    lv_obj_t *tabs = lv_obj_create(bar);
+    lv_obj_remove_style_all(tabs);
+    lv_obj_set_height(tabs, 56);
+    lv_obj_set_flex_grow(tabs, 1);
+    lv_obj_set_flex_flow(tabs, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(tabs, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_column(tabs, 6, 0);
+    lv_obj_set_scroll_dir(tabs, LV_DIR_HOR);
+    lv_obj_set_scrollbar_mode(tabs, LV_SCROLLBAR_MODE_OFF);
+    static const char *const TABS[CAS_V_COUNT] = { N_("Cálculo"), N_("Gráfico"), N_("Geometría"), N_("Estadística"), N_("Finanzas") };
+    lv_obj_t *lit = NULL;
+    for (int v = 0; v < CAS_V_COUNT; v++) {
+        lv_obj_t *b = tab_button(tabs, _(TABS[v]), v);
+        if (v == A.view) lit = b;
+    }
     lv_obj_t *menu = lv_button_create(bar);
     lv_obj_set_size(menu, 56, 52);
     lv_obj_set_style_radius(menu, 26, 0);
@@ -342,6 +363,10 @@ static void build_views(void)
     lv_obj_t *ml = lv_label_create(menu);
     lv_label_set_text(ml, LV_SYMBOL_LIST);
     lv_obj_center(ml);
+    lv_obj_update_layout(bar);
+    if (lit) {
+        lv_obj_scroll_to_view(lit, LV_ANIM_OFF);
+    }
 
     A.content = lv_obj_create(root);
     lv_obj_remove_style_all(A.content);
@@ -351,20 +376,38 @@ static void build_views(void)
     lv_obj_update_layout(root);
 
     switch (A.view) {
-    case 0:
+    case CAS_V_CALC:
         cas_calc_build(A.content, landscape);
         break;
-    case 1:
+    case CAS_V_GRAPH:
         cas_graph_build(A.content, landscape);
         cas_graph_shown(true);
         break;
-    case 2:
+    case CAS_V_GEO:
+        cas_geo_build(A.content, landscape);
+        cas_geo_shown(true);
+        break;
+    case CAS_V_STATS:
         cas_stats_build(A.content, landscape);
         break;
     default:
         cas_fin_build(A.content, landscape);
         break;
     }
+
+    /* the engine's state, over the view while it has something to say */
+    A.status = lv_label_create(root);
+    lv_obj_add_flag(A.status, LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_FLOATING);
+    lv_obj_set_style_bg_color(A.status, AOS_C_CARD2, 0);
+    lv_obj_set_style_bg_opa(A.status, LV_OPA_90, 0);
+    lv_obj_set_style_radius(A.status, 16, 0);
+    lv_obj_set_style_pad_hor(A.status, 14, 0);
+    lv_obj_set_style_pad_ver(A.status, 6, 0);
+    lv_obj_set_style_text_color(A.status, AOS_C_DIM, 0);
+    lv_obj_set_style_text_font(A.status, aos_font_small, 0);
+    lv_label_set_text(A.status, "");
+    lv_obj_align(A.status, LV_ALIGN_TOP_RIGHT, -76, 70);
+    lv_obj_add_flag(A.status, LV_OBJ_FLAG_HIDDEN);
     set_status();
 }
 
@@ -410,13 +453,14 @@ static void cas_destroy(aos_app_t *self, void *inst)
     (void)inst;
     lv_timer_delete(A.timer);
     A.timer = NULL;
-    for (int v = 0; v < 4; v++) {
+    for (int v = 0; v < CAS_V_COUNT; v++) {
         lv_async_call_cancel(show_async, (void *)(intptr_t)v);
     }
     leave_view();
     cas_entry_free();
     cas_calc_free();
     cas_graph_free();
+    cas_geo_free();
     cas_stats_free();
     cas_fin_free();
     for (int i = 0; i < A.count; i++) {

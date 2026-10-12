@@ -6,7 +6,7 @@ of Xcas, as its author ported it to calculators (KhiCAS): exact arithmetic,
 algebra, calculus, equations, matrices, statistics.
 
 **State (2026-10-12):** the engine runs on the board (the feasibility test
-below), and the app has its two first views:
+below), and the app has five views:
 
 - **Calculate:** a history of inputs and results drawn as a book prints
   them, a two-dimensional editor (fractions, exponents, roots, integrals,
@@ -18,7 +18,15 @@ below), and the app has its two first views:
   finger, zooms with two (or a double tap), and traces a curve with a long
   press. Each function is also defined in Giac, so the calculator can use
   f1(x).
-
+- **Geometry:** dynamic geometry on a canvas like the grapher's. A tool
+  sheet (points, midpoints, intersections; segments, lines, rays,
+  perpendiculars, parallels, perpendicular and angle bisectors; circles by
+  centre or by three points, polygons) and measurements (lengths and
+  perimeters, angles, areas, equations of lines and circles, coordinates)
+  listed under the figure and written on it. Dragging a free point, or a
+  point along its curve, moves everything built on it; snapping to the grid
+  keeps the numbers exact, so they come out as 4√2, 25/4 or 16π with the
+  decimal after. Undo takes back each change.
 - **Statistics:** four lists L1..L4 in a sheet (a tap on a cell types into
   it and moves down) with the summary of the chosen list; histogram, box
   plots, or L1 against L2; regressions (linear, quadratic, cubic,
@@ -31,13 +39,15 @@ below), and the app has its two first views:
   (TNA with its compounding days, TEA, TEM, daily; a fixed-term deposit;
   the real rate against inflation), and NPV, IRR and payback of cash flows.
 
-Statistics and finance are computed in `main/cas_num.c` (double, as each
+Geometry is `main/cas_geom.c` (the figure as a list of objects, each built
+from earlier ones, recomputed in order; tested on the Mac like `cas_num.c`)
+and `main/cas_geo.c` (the view). Statistics and finance are computed in `main/cas_num.c` (double, as each
 value is typed, no engine; checked against tables and the financial
 calculators' examples). A field takes a value the way the keypad writes it
 (1/3, 2π, √2) through `mx_text_value()`.
 
 The history, the functions, the lists and the finance values are kept in
-`data/cas_hist.txt`, `cas_graph.txt`, `cas_stats.txt` and `cas_fin.txt`. The menu has *Stop*, *Clear the history* and the
+`data/cas_hist.txt`, `cas_graph.txt`, `cas_geo.txt`, `cas_stats.txt` and `cas_fin.txt`. The menu has *Stop*, *Clear the history* and the
 bench, which now writes its results into the history as well as the log.
 
 ## Building

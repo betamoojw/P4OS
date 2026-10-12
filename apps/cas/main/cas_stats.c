@@ -640,7 +640,7 @@ static void reg_graph_cb(lv_event_t *e)
     }
     aos_ui_toast(b, 1800);
     if (i >= 0) {
-        cas_app_show(1);
+        cas_app_show(CAS_V_GRAPH);
     }
 }
 

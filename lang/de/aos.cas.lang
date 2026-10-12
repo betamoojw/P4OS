@@ -5,221 +5,413 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/cas/main/cas_app.c:123
+#: apps/cas/main/cas_app.c:125
 Motor apagado	Rechenkern aus
 
-#: apps/cas/main/cas_app.c:124
+#: apps/cas/main/cas_app.c:126
 Iniciando...	Startet...
 
-#: apps/cas/main/cas_app.c:125
+#: apps/cas/main/cas_app.c:127
 Calculando...	Rechnet...
 
-#: apps/cas/main/cas_app.c:169
+#: apps/cas/main/cas_app.c:174
 El motor no aceptó el cálculo	Der Rechenkern hat die Rechnung nicht angenommen
 
-#: apps/cas/main/cas_app.c:248
+#: apps/cas/main/cas_app.c:270
+Memoria del motor: %u KB	Speicher des Rechenkerns: %u KB
+
+#: apps/cas/main/cas_app.c:278
 Parar el cálculo	Rechnung abbrechen
 
-#: apps/cas/main/cas_app.c:249
+#: apps/cas/main/cas_app.c:279
 Borrar el historial	Verlauf löschen
 
-#: apps/cas/main/cas_app.c:250
+#: apps/cas/main/cas_app.c:280
 Banco de pruebas	Benchmark
 
-#: apps/cas/main/cas_app.c:309
+#: apps/cas/main/cas_app.c:351
 Cálculo	Rechnen
 
-#: apps/cas/main/cas_app.c:310
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_app.c:351
+#: apps/cas/main/cas_stats.c:976
 Gráfico	Graph
 
-#: apps/cas/main/cas_app.c:311
+#: apps/cas/main/cas_app.c:351
+Geometría	Geometrie
+
+#: apps/cas/main/cas_app.c:351
 Estadística	Statistik
 
-#: apps/cas/main/cas_app.c:312
+#: apps/cas/main/cas_app.c:351
 Finanzas	Finanzen
 
-#: apps/cas/main/cas_app.c:375
+#: apps/cas/main/cas_app.c:434
 No se pudo arrancar el motor. Cerrá la app y volvé a abrirla.	Der Rechenkern konnte nicht starten. Schließe die App und öffne sie erneut.
 
-#: apps/cas/main/cas_calc.c:153
+#: apps/cas/main/cas_calc.c:154
 Error	Fehler
 
-#: apps/cas/main/cas_calc.c:196
+#: apps/cas/main/cas_calc.c:197
 El motor no está listo	Der Rechenkern ist nicht bereit
 
-#: apps/cas/main/cas_fin.c:173
+#: apps/cas/main/cas_fin.c:174
 No tiene solución con esos valores	Mit diesen Werten nicht lösbar
 
-#: apps/cas/main/cas_fin.c:193
+#: apps/cas/main/cas_fin.c:194
 N (períodos)	N (Perioden)
 
-#: apps/cas/main/cas_fin.c:193
+#: apps/cas/main/cas_fin.c:194
 I% anual	I% p. a.
 
-#: apps/cas/main/cas_fin.c:193
+#: apps/cas/main/cas_fin.c:194
 VA (valor actual)	BW (Barwert)
 
-#: apps/cas/main/cas_fin.c:194
+#: apps/cas/main/cas_fin.c:195
 PAGO (por período)	RATE (je Periode)
 
-#: apps/cas/main/cas_fin.c:194
+#: apps/cas/main/cas_fin.c:195
 VF (valor final)	EW (Endwert)
 
-#: apps/cas/main/cas_fin.c:200
+#: apps/cas/main/cas_fin.c:201
 pagos por año	Zahlungen pro Jahr
 
-#: apps/cas/main/cas_fin.c:201
+#: apps/cas/main/cas_fin.c:202
 capitalizaciones por año	Verzinsungen pro Jahr
 
-#: apps/cas/main/cas_fin.c:202
+#: apps/cas/main/cas_fin.c:203
 Pago al final	Zahlung am Ende
 
-#: apps/cas/main/cas_fin.c:202
+#: apps/cas/main/cas_fin.c:203
 Pago al inicio	Zahlung am Anfang
 
-#: apps/cas/main/cas_fin.c:205
+#: apps/cas/main/cas_fin.c:206
 Completá cuatro y tocá =? en la que falta. El dinero que recibís va positivo, el que pagás negativo: un préstamo de 200 000 se paga con cuotas negativas.	Vier ausfüllen und beim fehlenden =? tippen. Erhaltenes Geld ist positiv, gezahltes negativ: ein Kredit über 200 000 wird mit negativen Raten getilgt.
 
-#: apps/cas/main/cas_fin.c:256
+#: apps/cas/main/cas_fin.c:272
 interés	Zinsen
 
-#: apps/cas/main/cas_fin.c:257
+#: apps/cas/main/cas_fin.c:273
 capital	Tilgung
 
-#: apps/cas/main/cas_fin.c:302
-Francés	Annuität
-
-#: apps/cas/main/cas_fin.c:302
-Alemán	Ratentilgung
-
-#: apps/cas/main/cas_fin.c:302
-Americano	Endfällig
-
-#: apps/cas/main/cas_fin.c:306
-Monto	Betrag
-
-#: apps/cas/main/cas_fin.c:307
-TNA %	Nominalzins %
-
-#: apps/cas/main/cas_fin.c:308
-Plazo (meses)	Laufzeit (Monate)
-
-#: apps/cas/main/cas_fin.c:310
-Primera cuota	Erste Rate
-
-#: apps/cas/main/cas_fin.c:310
-#: apps/cas/main/cas_fin.c:329
+#: apps/cas/main/cas_fin.c:314
+#: apps/cas/main/cas_fin.c:341
 Cuota	Rate
 
-#: apps/cas/main/cas_fin.c:311
-Última cuota	Letzte Rate
-
-#: apps/cas/main/cas_fin.c:312
-Total de intereses	Zinsen gesamt
-
-#: apps/cas/main/cas_fin.c:313
-Total a pagar	Gesamtbetrag
-
-#: apps/cas/main/cas_fin.c:330
-#: apps/cas/main/cas_fin.c:416
+#: apps/cas/main/cas_fin.c:314
+#: apps/cas/main/cas_fin.c:429
 Interés	Zinsen
 
-#: apps/cas/main/cas_fin.c:331
+#: apps/cas/main/cas_fin.c:314
 Saldo	Restschuld
 
+#: apps/cas/main/cas_fin.c:333
+Francés	Annuität
+
+#: apps/cas/main/cas_fin.c:333
+Alemán	Ratentilgung
+
+#: apps/cas/main/cas_fin.c:333
+Americano	Endfällig
+
+#: apps/cas/main/cas_fin.c:337
+Monto	Betrag
+
+#: apps/cas/main/cas_fin.c:338
+TNA %	Nominalzins %
+
+#: apps/cas/main/cas_fin.c:339
+Plazo (meses)	Laufzeit (Monate)
+
+#: apps/cas/main/cas_fin.c:341
+Primera cuota	Erste Rate
+
+#: apps/cas/main/cas_fin.c:342
+Última cuota	Letzte Rate
+
 #: apps/cas/main/cas_fin.c:343
+Total de intereses	Zinsen gesamt
+
+#: apps/cas/main/cas_fin.c:344
+Total a pagar	Gesamtbetrag
+
+#: apps/cas/main/cas_fin.c:356
 La tasa del período es la TNA dividida por 12. Sin IVA ni gastos: el costo financiero total del banco puede ser mayor.	Der Periodenzins ist der Nominalzins durch 12. Ohne Steuern und Gebühren: die Gesamtkosten der Bank können höher sein.
 
-#: apps/cas/main/cas_fin.c:402
+#: apps/cas/main/cas_fin.c:415
 Tasa %	Zins %
 
-#: apps/cas/main/cas_fin.c:404
+#: apps/cas/main/cas_fin.c:417
 capitaliza cada (días)	Verzinsung alle (Tage)
 
-#: apps/cas/main/cas_fin.c:406
+#: apps/cas/main/cas_fin.c:419
 Equivalentes	Entsprechungen
 
-#: apps/cas/main/cas_fin.c:408
+#: apps/cas/main/cas_fin.c:421
 TNA (cada %.0f días)	Nominal (alle %.0f Tage)
 
-#: apps/cas/main/cas_fin.c:411
+#: apps/cas/main/cas_fin.c:424
 TEM (30 días)	Monatlich effektiv (30 Tage)
 
-#: apps/cas/main/cas_fin.c:412
+#: apps/cas/main/cas_fin.c:425
 Diaria efectiva	Täglich effektiv
 
-#: apps/cas/main/cas_fin.c:413
+#: apps/cas/main/cas_fin.c:426
 Plazo fijo	Festgeld
 
-#: apps/cas/main/cas_fin.c:414
+#: apps/cas/main/cas_fin.c:427
 Capital	Kapital
 
-#: apps/cas/main/cas_fin.c:415
+#: apps/cas/main/cas_fin.c:428
 Días	Tage
 
-#: apps/cas/main/cas_fin.c:417
+#: apps/cas/main/cas_fin.c:430
 Monto al vencer	Bei Fälligkeit
 
-#: apps/cas/main/cas_fin.c:418
+#: apps/cas/main/cas_fin.c:431
 Contra la inflación	Gegen die Inflation
 
-#: apps/cas/main/cas_fin.c:419
+#: apps/cas/main/cas_fin.c:432
 Inflación mensual %	Monatliche Inflation %
 
-#: apps/cas/main/cas_fin.c:420
+#: apps/cas/main/cas_fin.c:433
 Tasa real mensual	Realer Monatszins
 
-#: apps/cas/main/cas_fin.c:437
+#: apps/cas/main/cas_fin.c:450
 no hay	keiner
 
-#: apps/cas/main/cas_fin.c:441
+#: apps/cas/main/cas_fin.c:454
 nunca	nie
 
-#: apps/cas/main/cas_fin.c:477
+#: apps/cas/main/cas_fin.c:490
 Tasa de descuento %	Kalkulationszins %
 
-#: apps/cas/main/cas_fin.c:479
+#: apps/cas/main/cas_fin.c:492
 VAN	Kapitalwert
 
-#: apps/cas/main/cas_fin.c:480
+#: apps/cas/main/cas_fin.c:493
 TIR	Interner Zins
 
-#: apps/cas/main/cas_fin.c:481
+#: apps/cas/main/cas_fin.c:494
 Recupero (períodos)	Amortisation (Perioden)
 
-#: apps/cas/main/cas_fin.c:482
+#: apps/cas/main/cas_fin.c:495
 Flujos	Zahlungsströme
 
-#: apps/cas/main/cas_fin.c:485
+#: apps/cas/main/cas_fin.c:498
 período %d	Periode %d
 
-#: apps/cas/main/cas_fin.c:485
+#: apps/cas/main/cas_fin.c:498
 inversión (0)	Investition (0)
 
-#: apps/cas/main/cas_fin.c:494
+#: apps/cas/main/cas_fin.c:507
 + período	+ Periode
 
-#: apps/cas/main/cas_fin.c:495
+#: apps/cas/main/cas_fin.c:508
 Quitar el último	Letzte entfernen
 
-#: apps/cas/main/cas_fin.c:517
+#: apps/cas/main/cas_fin.c:530
 Préstamo	Kredit
 
-#: apps/cas/main/cas_fin.c:517
+#: apps/cas/main/cas_fin.c:530
 Tasas	Zinsen
 
-#: apps/cas/main/cas_fin.c:517
+#: apps/cas/main/cas_fin.c:530
 VAN / TIR	KW / IZF
 
-#: apps/cas/main/cas_form.c:121
+#: apps/cas/main/cas_form.c:123
 Eso no es un número	Das ist keine Zahl
 
-#: apps/cas/main/cas_graph.c:94
-#: apps/cas/main/cas_graph.c:111
+#: apps/cas/main/cas_geo.c:52
+Mover	Bewegen
+
+#: apps/cas/main/cas_geo.c:52
+Punto	Punkt
+
+#: apps/cas/main/cas_geo.c:52
+Punto medio	Mittelpunkt
+
+#: apps/cas/main/cas_geo.c:52
+Intersección	Schnittpunkt
+
+#: apps/cas/main/cas_geo.c:53
+Segmento	Strecke
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:692
+#: apps/cas/main/cas_geom.c:696
+Recta	Gerade
+
+#: apps/cas/main/cas_geo.c:53
+Semirrecta	Halbgerade
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:694
+Perpendicular	Senkrechte
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:694
+Paralela	Parallele
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:694
+Mediatriz	Mittelsenkrechte
+
+#: apps/cas/main/cas_geo.c:53
+#: apps/cas/main/cas_geom.c:694
+Bisectriz	Winkelhalbierende
+
+#: apps/cas/main/cas_geo.c:54
+Circunferencia	Kreis
+
+#: apps/cas/main/cas_geo.c:54
+Circ. por 3 puntos	Kreis durch 3 Punkte
+
+#: apps/cas/main/cas_geo.c:54
+Polígono	Vieleck
+
+#: apps/cas/main/cas_geo.c:55
+Longitud	Länge
+
+#: apps/cas/main/cas_geo.c:55
+#: apps/cas/main/cas_geom.c:675
+Ángulo	Winkel
+
+#: apps/cas/main/cas_geo.c:55
+#: apps/cas/main/cas_geom.c:683
+Área	Fläche
+
+#: apps/cas/main/cas_geo.c:55
+Ecuación	Gleichung
+
+#: apps/cas/main/cas_geo.c:55
+Coordenadas	Koordinaten
+
+#: apps/cas/main/cas_geo.c:56
+#: apps/cas/main/cas_stats.c:351
+Borrar	Leeren
+
+#: apps/cas/main/cas_geo.c:146
+Nada para deshacer	Nichts rückgängig zu machen
+
+#: apps/cas/main/cas_geo.c:318
+La figura está llena	Die Figur ist voll
+
+#: apps/cas/main/cas_geo.c:366
+Arrastrá un punto, o tocá algo para verlo	Punkt ziehen oder etwas antippen, um es zu sehen
+
+#: apps/cas/main/cas_geo.c:367
+Tocá donde va el punto	Tippe, wo der Punkt hin soll
+
+#: apps/cas/main/cas_geo.c:369
+#: apps/cas/main/cas_geo.c:373
+#: apps/cas/main/cas_geo.c:379
+#: apps/cas/main/cas_geo.c:381
+Tocá el segundo punto	Tippe den zweiten Punkt an
+
+#: apps/cas/main/cas_geo.c:369
+Tocá un segmento o el primer punto	Tippe eine Strecke oder den ersten Punkt an
+
+#: apps/cas/main/cas_geo.c:370
+Tocá la otra línea	Tippe die andere Linie an
+
+#: apps/cas/main/cas_geo.c:370
+Tocá dos líneas, o donde se cruzan	Tippe zwei Linien an oder ihren Schnitt
+
+#: apps/cas/main/cas_geo.c:373
+#: apps/cas/main/cas_geo.c:379
+Tocá el primer punto	Tippe den ersten Punkt an
+
+#: apps/cas/main/cas_geo.c:375
+Ahora el otro: la recta o el punto	Jetzt das andere: die Gerade oder der Punkt
+
+#: apps/cas/main/cas_geo.c:375
+Tocá una recta y un punto	Tippe eine Gerade und einen Punkt an
+
+#: apps/cas/main/cas_geo.c:377
+Tocá un punto del primer lado	Tippe einen Punkt auf dem ersten Schenkel an
+
+#: apps/cas/main/cas_geo.c:377
+Tocá el vértice	Tippe den Scheitel an
+
+#: apps/cas/main/cas_geo.c:377
+Tocá un punto del otro lado	Tippe einen Punkt auf dem anderen Schenkel an
+
+#: apps/cas/main/cas_geo.c:378
+Tocá un punto de la circunferencia	Tippe einen Punkt auf dem Kreis an
+
+#: apps/cas/main/cas_geo.c:378
+Tocá el centro	Tippe den Mittelpunkt an
+
+#: apps/cas/main/cas_geo.c:379
+Tocá el tercer punto	Tippe den dritten Punkt an
+
+#: apps/cas/main/cas_geo.c:380
+Tocá los vértices	Tippe die Ecken an
+
+#: apps/cas/main/cas_geo.c:380
+Tocá el primero para cerrarlo	Tippe den ersten an, um es zu schließen
+
+#: apps/cas/main/cas_geo.c:381
+Tocá dos puntos, un segmento o una figura	Tippe zwei Punkte, eine Strecke oder eine Figur an
+
+#: apps/cas/main/cas_geo.c:382
+Tocá un polígono o un círculo	Tippe ein Vieleck oder einen Kreis an
+
+#: apps/cas/main/cas_geo.c:383
+Tocá una recta o una circunferencia	Tippe eine Gerade oder einen Kreis an
+
+#: apps/cas/main/cas_geo.c:384
+Tocá un punto	Tippe einen Punkt an
+
+#: apps/cas/main/cas_geo.c:385
+Tocá lo que querés borrar	Tippe an, was du löschen willst
+
+#: apps/cas/main/cas_geo.c:569
+No se cruzan	Sie schneiden sich nicht
+
+#: apps/cas/main/cas_geo.c:1150
+Puntos	Punkte
+
+#: apps/cas/main/cas_geo.c:1151
+Líneas	Linien
+
+#: apps/cas/main/cas_geo.c:1152
+Figuras	Figuren
+
+#: apps/cas/main/cas_geo.c:1153
+Medir y editar	Messen und bearbeiten
+
+#: apps/cas/main/cas_geo.c:1163
+Cuadrícula	Raster
+
+#: apps/cas/main/cas_geo.c:1163
+Ajustar a la grilla	Am Raster einrasten
+
+#: apps/cas/main/cas_geo.c:1163
+Borrar todo	Alles löschen
+
+#: apps/cas/main/cas_geo.c:1230
+Las medidas aparecen acá: elegí Longitud, Ángulo, Área o Ecuación.	Hier erscheinen die Messungen: Länge, Winkel, Fläche oder Gleichung wählen.
+
+#: apps/cas/main/cas_geo.c:1357
+#: apps/cas/main/cas_geo.c:1401
+Sin memoria para la figura	Kein Speicher für die Figur
+
+#: apps/cas/main/cas_geom.c:639
+#: apps/cas/main/cas_geom.c:642
+Circ.	Kreis
+
+#: apps/cas/main/cas_geom.c:679
+Perímetro	Umfang
+
+#: apps/cas/main/cas_geom.c:734
+no existe	existiert nicht
+
+#: apps/cas/main/cas_graph.c:95
+#: apps/cas/main/cas_graph.c:112
 no se puede graficar	nicht darstellbar
 
-#: apps/cas/main/cas_graph.c:94
+#: apps/cas/main/cas_graph.c:95
 no se entiende	nicht verständlich
 
 #: apps/cas/main/cas_graph.c:492
@@ -241,142 +433,142 @@ mcm	kgV
 primos	Primf.
 
 #: apps/cas/main/cas_keypad.c:84
-#: apps/cas/main/cas_stats.c:244
-#: apps/cas/main/cas_stats.c:910
+#: apps/cas/main/cas_stats.c:234
+#: apps/cas/main/cas_stats.c:918
 media	Mittel
 
 #: apps/cas/main/cas_keypad.c:84
 desv	Stdabw
 
-#: apps/cas/main/cas_stats.c:230
-Resumen de L%d	Übersicht L%d
-
-#: apps/cas/main/cas_stats.c:238
-Sin datos: tocá una celda para escribir	Keine Daten: zum Eingeben eine Zelle tippen
-
-#: apps/cas/main/cas_stats.c:246
+#: apps/cas/main/cas_stats.c:235
 Med	Med
 
-#: apps/cas/main/cas_stats.c:246
+#: apps/cas/main/cas_stats.c:235
 Rango	Spannweite
 
-#: apps/cas/main/cas_stats.c:326
+#: apps/cas/main/cas_stats.c:246
+Sin datos: tocá una celda para escribir	Keine Daten: zum Eingeben eine Zelle tippen
+
+#: apps/cas/main/cas_stats.c:269
+Resumen de L%d	Übersicht L%d
+
+#: apps/cas/main/cas_stats.c:350
 Ordenar	Sortieren
 
-#: apps/cas/main/cas_stats.c:327
-Borrar	Leeren
-
-#: apps/cas/main/cas_stats.c:422
+#: apps/cas/main/cas_stats.c:427
 L%d: %d clases de ancho %.4g	L%d: %d Klassen der Breite %.4g
 
-#: apps/cas/main/cas_stats.c:480
+#: apps/cas/main/cas_stats.c:485
 Dispersión: hacen falta datos en L1 (x) y L2 (y)	Streuung: braucht Daten in L1 (x) und L2 (y)
 
-#: apps/cas/main/cas_stats.c:519
+#: apps/cas/main/cas_stats.c:524
 Sin datos en esta lista	Keine Daten in dieser Liste
 
-#: apps/cas/main/cas_stats.c:533
+#: apps/cas/main/cas_stats.c:538
 Histograma	Histogramm
 
-#: apps/cas/main/cas_stats.c:533
+#: apps/cas/main/cas_stats.c:538
 Cajas	Boxplots
 
-#: apps/cas/main/cas_stats.c:533
+#: apps/cas/main/cas_stats.c:538
 Dispersión	Streuung
 
-#: apps/cas/main/cas_stats.c:572
+#: apps/cas/main/cas_stats.c:577
 Hacen falta al menos dos pares en L1 (x) y L2 (y)	Mindestens zwei Paare in L1 (x) und L2 (y) nötig
 
-#: apps/cas/main/cas_stats.c:573
+#: apps/cas/main/cas_stats.c:578
 Este modelo no se ajusta a estos datos (¿valores negativos o cero?)	Dieses Modell passt nicht zu den Daten (negative oder Nullwerte?)
 
-#: apps/cas/main/cas_stats.c:632
+#: apps/cas/main/cas_stats.c:637
 Va al gráfico como f%d(x)	Als f%d(x) im Graphen
 
-#: apps/cas/main/cas_stats.c:634
+#: apps/cas/main/cas_stats.c:639
 El gráfico ya tiene seis funciones	Der Graph hat schon sechs Funktionen
 
-#: apps/cas/main/cas_stats.c:649
+#: apps/cas/main/cas_stats.c:657
 Lineal	Linear
 
-#: apps/cas/main/cas_stats.c:649
+#: apps/cas/main/cas_stats.c:657
 Cuadr.	Quadr.
 
-#: apps/cas/main/cas_stats.c:649
+#: apps/cas/main/cas_stats.c:657
 Cúbica	Kubisch
 
-#: apps/cas/main/cas_stats.c:649
+#: apps/cas/main/cas_stats.c:657
 Pot.	Potenz
 
-#: apps/cas/main/cas_stats.c:654
+#: apps/cas/main/cas_stats.c:662
 x en L1, y en L2	x in L1, y in L2
 
-#: apps/cas/main/cas_stats.c:665
+#: apps/cas/main/cas_stats.c:673
 Al gráfico como f(x)	In den Graphen als f(x)
 
-#: apps/cas/main/cas_stats.c:667
+#: apps/cas/main/cas_stats.c:675
 Ver los puntos	Punkte zeigen
 
-#: apps/cas/main/cas_stats.c:776
+#: apps/cas/main/cas_stats.c:784
 Binomial	Binomial
 
-#: apps/cas/main/cas_stats.c:781
-#: apps/cas/main/cas_stats.c:781
+#: apps/cas/main/cas_stats.c:789
+#: apps/cas/main/cas_stats.c:789
 grados de libertad	Freiheitsgrade
 
-#: apps/cas/main/cas_stats.c:790
+#: apps/cas/main/cas_stats.c:798
 Inversa	Invers
 
-#: apps/cas/main/cas_stats.c:842
+#: apps/cas/main/cas_stats.c:850
 Se rechaza H₀ (p < %.2g)	H₀ verworfen (p < %.2g)
 
-#: apps/cas/main/cas_stats.c:842
+#: apps/cas/main/cas_stats.c:850
 No se rechaza H₀ (p ≥ %.2g)	H₀ nicht verworfen (p ≥ %.2g)
 
-#: apps/cas/main/cas_stats.c:895
+#: apps/cas/main/cas_stats.c:903
 t media	t Mittel
 
-#: apps/cas/main/cas_stats.c:895
+#: apps/cas/main/cas_stats.c:903
 z proporción	z Anteil
 
-#: apps/cas/main/cas_stats.c:895
+#: apps/cas/main/cas_stats.c:903
 t dos medias	t zwei Mittel
 
-#: apps/cas/main/cas_stats.c:915
+#: apps/cas/main/cas_stats.c:923
 éxitos x	Erfolge x
 
-#: apps/cas/main/cas_stats.c:919
+#: apps/cas/main/cas_stats.c:927
 media ₁	Mittel ₁
 
-#: apps/cas/main/cas_stats.c:922
+#: apps/cas/main/cas_stats.c:930
 media ₂	Mittel ₂
 
-#: apps/cas/main/cas_stats.c:926
+#: apps/cas/main/cas_stats.c:934
 nivel de confianza	Konfidenzniveau
 
-#: apps/cas/main/cas_stats.c:929
+#: apps/cas/main/cas_stats.c:937
 Tomar media, s y n de L%d	Mittel, s und n aus L%d
 
-#: apps/cas/main/cas_stats.c:930
+#: apps/cas/main/cas_stats.c:938
 Tomar de L1 y L2	Aus L1 und L2
 
-#: apps/cas/main/cas_stats.c:935
+#: apps/cas/main/cas_stats.c:943
 gl	FG
 
-#: apps/cas/main/cas_stats.c:936
+#: apps/cas/main/cas_stats.c:944
 valor p	p-Wert
 
-#: apps/cas/main/cas_stats.c:937
+#: apps/cas/main/cas_stats.c:945
 intervalo	Intervall
 
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_stats.c:976
 Datos	Daten
 
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_stats.c:976
 Regresión	Regression
 
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_stats.c:976
 Distrib.	Vertlg.
 
-#: apps/cas/main/cas_stats.c:968
+#: apps/cas/main/cas_stats.c:976
 Pruebas	Tests
+
+#: apps/cas/main/cas_geo.c
+Eliminar	Löschen

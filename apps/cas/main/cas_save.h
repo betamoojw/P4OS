@@ -11,3 +11,5 @@ void cas_save_text(const char *path, mx_str_t *text);
 void cas_save_wait(void);
 /* printf into a growing string */
 void cas_str_printf(mx_str_t *b, const char *fmt, ...);
+/* s as a JSON string, quotes included; NULL is null */
+void cas_str_json(mx_str_t *b, const char *s);

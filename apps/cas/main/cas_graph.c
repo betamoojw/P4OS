@@ -62,6 +62,7 @@ static struct {
     int         editing;        /* function being edited, -1 none */
     mx_ed_t     ed;
     bool        ed_ok;
+    unsigned    ver;            /* changes with the functions: the portal's page follows them */
 } G;
 
 static void list_build(void);
@@ -152,6 +153,7 @@ static void save(void)
     if (!G.init) {
         return;
     }
+    G.ver++;
     char path[200];
     state_path(path, sizeof path);
     mx_str_t b = { 0 };
@@ -824,6 +826,45 @@ void cas_graph_shown(bool shown)
     } else {
         G.dirty = true;
     }
+}
+
+void cas_graph_set(int i, const char *expr)
+{
+    if (i < 0 || i >= NF) return;
+    model_init();
+    if (G.editing == i) {
+        return;                 /* being typed on the board: the board wins */
+    }
+    cas_job_cancel(&G.f[i]);
+    mx_row_free(G.f[i].row);
+    G.f[i].row = expr && *expr ? mx_text_to_row(expr) : mx_row_new();
+    G.f[i].on = true;
+    compile(i);
+    G.dirty = true;
+    save();
+    list_build();
+}
+
+unsigned cas_graph_version(void)
+{
+    model_init();
+    return G.ver;
+}
+
+void cas_graph_json(mx_str_t *b)
+{
+    model_init();
+    mx_str_add(b, "[");
+    for (int i = 0; i < NF; i++) {
+        char *t = mx_row_empty(G.f[i].row) ? NULL : mx_row_text(G.f[i].row);
+        mx_str_add(b, i ? ",{\"f\":" : "{\"f\":");
+        cas_str_json(b, t ? t : "");
+        cas_str_printf(b, ",\"on\":%s,\"err\":", G.f[i].on ? "true" : "false");
+        cas_str_json(b, G.f[i].err[0] ? G.f[i].err : NULL);
+        mx_str_addc(b, '}');
+        mx_free(t);
+    }
+    mx_str_add(b, "]");
 }
 
 void cas_graph_free(void)

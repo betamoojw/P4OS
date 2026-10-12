@@ -14,9 +14,57 @@
 #include <stdio.h>
 #include <string.h>
 
+/* the plots that exist, wherever their structs live */
+#define LIVE_MAX 8
+static cas_plot_t *s_live[LIVE_MAX];
+
+static void live_add(cas_plot_t *p)
+{
+    for (int i = 0; i < LIVE_MAX; i++) {
+        if (s_live[i] == p) return;
+    }
+    for (int i = 0; i < LIVE_MAX; i++) {
+        if (!s_live[i]) {
+            s_live[i] = p;
+            return;
+        }
+    }
+}
+
+bool cas_plot_on_screen(lv_area_t *out)
+{
+    int best = 0;
+    for (int i = 0; i < LIVE_MAX; i++) {
+        cas_plot_t *p = s_live[i];
+        if (!p || !p->db || !p->canvas || !lv_obj_is_valid(p->canvas) || !lv_obj_is_visible(p->canvas)) continue;
+        lv_area_t a;
+        lv_obj_get_coords(p->canvas, &a);
+        /* only what the screen and its parents let show */
+        lv_obj_t *par = lv_obj_get_parent(p->canvas);
+        while (par) {
+            lv_area_t pc;
+            lv_obj_get_coords(par, &pc);
+            if (pc.x1 > a.x1) a.x1 = pc.x1;
+            if (pc.y1 > a.y1) a.y1 = pc.y1;
+            if (pc.x2 < a.x2) a.x2 = pc.x2;
+            if (pc.y2 < a.y2) a.y2 = pc.y2;
+            if (a.x1 > a.x2 || a.y1 > a.y2) break;
+            par = lv_obj_get_parent(par);
+        }
+        if (a.x1 > a.x2 || a.y1 > a.y2) continue;
+        int size = lv_area_get_width(&a) * lv_area_get_height(&a);
+        if (size > best) {
+            best = size;
+            *out = a;
+        }
+    }
+    return best > 0;
+}
+
 bool cas_plot_create(cas_plot_t *p, lv_obj_t *parent, int w, int h)
 {
     memset(p, 0, sizeof *p);
+    live_add(p);
     if (w < 16) w = 16;
     if (h < 16) h = 16;
     p->W = w;
@@ -37,6 +85,9 @@ bool cas_plot_create(cas_plot_t *p, lv_obj_t *parent, int w, int h)
 
 void cas_plot_free(cas_plot_t *p)
 {
+    for (int i = 0; i < LIVE_MAX; i++) {
+        if (s_live[i] == p) s_live[i] = NULL;
+    }
     if (p->db) {
         lv_draw_buf_destroy(p->db);
     }

@@ -14,6 +14,7 @@
  */
 #include "cas_app.h"
 #include "cas_form.h"
+#include "cas_plot.h"
 #include "cas_rt.h"
 #include "cas_save.h"
 #include "mx.h"
@@ -138,6 +139,80 @@ static void set_status(void)
     }
 }
 
+/* --- the portal's page (apps/cas/web/cas.js) ------------------------------------
+ * It sends one line at a time on the live channel:
+ *   calc <expression>     typed into the calculator, as if on the board
+ *   graph <1..6> <expr>   a function of the grapher ("" clears it)
+ *   stats                 the lists file was written: read it again
+ *   view <n>              show a view (CAS_V_*)
+ * and reads, while it looks: "state" (the view, the engine, where the plot
+ * on screen is), "hist" (the history) and "graph" (the functions), each
+ * put again only when it changed. */
+
+#define LIVE_ID "aos.cas"
+
+static void show_view(int v);
+
+static void live_take(void)
+{
+    char msg[AOS_LIVE_MSG_MAX + 1];
+    int n;
+    while ((n = aos_hal_live_take(LIVE_ID, msg, sizeof msg - 1)) > 0) {
+        msg[n] = 0;
+        msg[strcspn(msg, "\r\n")] = 0;
+        if (!strncmp(msg, "calc ", 5)) {
+            if (A.view != CAS_V_CALC) show_view(CAS_V_CALC);
+            cas_calc_submit_text(msg + 5);
+        } else if (!strncmp(msg, "graph ", 6) && msg[6] >= '1' && msg[6] <= '6') {
+            cas_graph_set(msg[6] - '1', msg[7] == ' ' ? msg + 8 : "");
+        } else if (!strcmp(msg, "stats")) {
+            cas_stats_reload();
+        } else if (!strncmp(msg, "view ", 5)) {
+            int v = atoi(msg + 5);
+            if (v >= 0 && v < CAS_V_COUNT && v != A.view) show_view(v);
+        }
+    }
+}
+
+static void live_put(void)
+{
+    static uint32_t last_state;
+    static unsigned hist_ver = ~0u, graph_ver = ~0u;
+    if (aos_hal_live_idle_ms(LIVE_ID) > 5000) {
+        hist_ver = graph_ver = ~0u;     /* the next page to look gets everything */
+        return;
+    }
+    uint32_t now = aos_hal_uptime_ms();
+    if (now - last_state >= 400) {
+        last_state = now;
+        char j[200];
+        lv_area_t a;
+        int k = snprintf(j, sizeof j, "{\"view\":%d,\"ready\":%s,\"busy\":%s,\"plot\":", A.view,
+                         cas_rt_ready() ? "true" : "false", A.busy || A.count ? "true" : "false");
+        if (cas_plot_on_screen(&a)) {
+            snprintf(j + k, sizeof j - (size_t)k, "{\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d}}",
+                     (int)a.x1, (int)a.y1, (int)lv_area_get_width(&a), (int)lv_area_get_height(&a));
+        } else {
+            snprintf(j + k, sizeof j - (size_t)k, "null}");
+        }
+        aos_hal_live_put(LIVE_ID, "state", "application/json", j, strlen(j));
+    }
+    if (cas_calc_version() != hist_ver) {
+        hist_ver = cas_calc_version();
+        mx_str_t b = { 0 };
+        cas_calc_json(&b);
+        if (b.s) aos_hal_live_put(LIVE_ID, "hist", "application/json", b.s, b.n);
+        mx_str_free(&b);
+    }
+    if (cas_graph_version() != graph_ver) {
+        graph_ver = cas_graph_version();
+        mx_str_t b = { 0 };
+        cas_graph_json(&b);
+        if (b.s) aos_hal_live_put(LIVE_ID, "graph", "application/json", b.s, b.n);
+        mx_str_free(&b);
+    }
+}
+
 static void poll_cb(lv_timer_t *t)
 {
     (void)t;
@@ -180,6 +255,8 @@ static void poll_cb(lv_timer_t *t)
         last = aos_hal_uptime_ms();
         set_status();
     }
+    live_take();
+    live_put();
 }
 
 /* --- the shell ----------------------------------------------------------------- */
@@ -457,6 +534,7 @@ static void cas_destroy(aos_app_t *self, void *inst)
     (void)inst;
     lv_timer_delete(A.timer);
     A.timer = NULL;
+    aos_hal_live_clear(LIVE_ID);
     for (int v = 0; v < CAS_V_COUNT; v++) {
         lv_async_call_cancel(show_async, (void *)(intptr_t)v);
     }

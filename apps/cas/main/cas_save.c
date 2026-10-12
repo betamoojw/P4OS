@@ -69,6 +69,29 @@ void cas_save_wait(void)
     }
 }
 
+void cas_str_json(mx_str_t *b, const char *s)
+{
+    if (!s) {
+        mx_str_add(b, "null");
+        return;
+    }
+    mx_str_addc(b, '"');
+    for (; *s; s++) {
+        unsigned char c = (unsigned char)*s;
+        if (c == '"' || c == '\\') {
+            mx_str_addc(b, '\\');
+            mx_str_addc(b, (char)c);
+        } else if (c < 0x20) {
+            char u[8];
+            snprintf(u, sizeof u, "\\u%04x", c);
+            mx_str_add(b, u);
+        } else {
+            mx_str_addc(b, (char)c);
+        }
+    }
+    mx_str_addc(b, '"');
+}
+
 void cas_str_printf(mx_str_t *b, const char *fmt, ...)
 {
     char buf[256];

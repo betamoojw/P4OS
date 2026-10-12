@@ -40,6 +40,7 @@ static struct {
     bool      ed_ok;
     char     *ans;              /* the last result's text          */
     bool      loaded;
+    unsigned  ver;              /* changes with the history: the portal's page follows it */
     lv_obj_t *list, *edbox, *edview;
 } C;
 
@@ -162,11 +163,18 @@ static void job_done(void *user, const char *result, bool error, uint32_t ms)
     if (C.list) {
         lv_obj_scroll_to_y(C.list, LV_COORD_MAX, LV_ANIM_ON);
     }
+    C.ver++;
     cas_calc_save();
 }
 
+static void load(void);
+
 static void submit_row(mx_row_t *in)
 {
+    if (!C.loaded) {
+        load();                 /* the page can type before the view was ever shown */
+    }
+    C.ver++;
     char *text = mx_row_text(in);
     if (!text || !*text) {
         mx_free(text);
@@ -211,10 +219,32 @@ void cas_calc_clear(void)
         C.e[i] = NULL;
     }
     C.n = 0;
+    C.ver++;
     if (C.list) {
         lv_obj_clean(C.list);
     }
     cas_calc_save();
+}
+
+unsigned cas_calc_version(void)
+{
+    return C.ver;
+}
+
+void cas_calc_json(mx_str_t *b)
+{
+    mx_str_addc(b, '[');
+    for (int i = 0; i < C.n; i++) {
+        entry_t *e = C.e[i];
+        char *in = mx_row_text(e->in);
+        mx_str_add(b, i ? ",{\"in\":" : "{\"in\":");
+        cas_str_json(b, in);
+        mx_str_add(b, ",\"out\":");
+        cas_str_json(b, e->res);
+        cas_str_printf(b, ",\"err\":%s,\"ms\":%u}", e->err ? "true" : "false", (unsigned)e->ms);
+        mx_free(in);
+    }
+    mx_str_addc(b, ']');
 }
 
 /* --- the editor ---------------------------------------------------------------- */

@@ -1027,6 +1027,18 @@ void cas_stats_hidden(void)
     memset(S.res, 0, sizeof S.res);
 }
 
+void cas_stats_reload(void)
+{
+    model_init();
+    for (int i = 0; i < NL; i++) S.n[i] = 0;
+    load();
+    int n = S.n[0] < S.n[1] ? S.n[0] : S.n[1];
+    num_regress(S.rk, S.v[0], S.v[1], n, &S.reg);
+    if (S.root) {
+        build_page();
+    }
+}
+
 void cas_stats_free(void)
 {
     cas_stats_hidden();

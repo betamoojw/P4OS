@@ -53,6 +53,18 @@ below), and the app has six views:
     its χ² test, a DNA sequence (complement, transcription, translation,
     GC, Tm, mass), population growth and serial dilutions.
 
+**The page in the portal** (`web/cas.js`, `#cas`): the calculator from the
+computer's keyboard (the expression is computed on the board and stays in
+its history), the grapher's six functions, the statistics lists in from a
+CSV or a pasted table (comma, semicolon or tab; a decimal comma is
+understood) and out as a CSV, and what the board shows saved as a PNG: the
+plot alone, cut out of the portal's screenshot where the app says it is, or
+the whole screen. While the app is open they talk on the live channel
+(`cas_app.c`, "the portal's page"): the page sends lines (`calc`, `graph`,
+`stats`, `view`) and reads `state`, `hist` and `graph`, which the app puts
+only while someone looks and only when they changed. With the app closed the
+page reads the same files in `/data`.
+
 Sciences are `main/cas_chem.c`, `cas_phys.c` and `cas_bio.c` (the models,
 tested on the Mac) and `main/cas_sci.c` (the view). A relation between a
 few quantities (PV = nRT, c = m/(M·V), every physics formula) is data: the

@@ -4,6 +4,7 @@
 #pragma once
 
 #include "lvgl.h"
+#include "mx.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -30,11 +31,16 @@ void cas_calc_submit_text(const char *expr);    /* as if typed and entered */
 void cas_calc_clear(void);
 void cas_calc_save(void);
 void cas_calc_free(void);
+unsigned cas_calc_version(void);
+void cas_calc_json(mx_str_t *b);                /* the history, for the portal's page */
 
 void cas_graph_build(lv_obj_t *parent, bool landscape);
 int  cas_graph_put(const char *expr);          /* into the first free f(x); -1 if none */
 void cas_graph_shown(bool shown);
 void cas_graph_free(void);
+void cas_graph_set(int i, const char *expr);    /* f(i+1); "" clears it */
+unsigned cas_graph_version(void);
+void cas_graph_json(mx_str_t *b);
 
 void cas_geo_build(lv_obj_t *parent, bool landscape);
 void cas_geo_shown(bool shown);
@@ -43,6 +49,7 @@ void cas_geo_free(void);
 void cas_stats_build(lv_obj_t *parent, bool landscape);
 void cas_stats_hidden(void);
 void cas_stats_free(void);
+void cas_stats_reload(void);                    /* the lists file changed under it */
 
 void cas_fin_build(lv_obj_t *parent, bool landscape);
 void cas_fin_hidden(void);

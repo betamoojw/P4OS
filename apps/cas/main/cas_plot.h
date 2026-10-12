@@ -23,6 +23,9 @@ typedef struct {
 
 bool   cas_plot_create(cas_plot_t *p, lv_obj_t *parent, int w, int h);
 void   cas_plot_free(cas_plot_t *p);     /* the buffer; the canvas goes with its parent */
+/* Where on the screen the biggest plot in view is (for the portal's page
+ * to cut it out of a screenshot); false when none is. */
+bool   cas_plot_on_screen(lv_area_t *out);
 
 float  cas_plot_sx(const cas_plot_t *p, double x);
 float  cas_plot_sy(const cas_plot_t *p, double y);

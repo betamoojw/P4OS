@@ -772,6 +772,26 @@ void cas_graph_build(lv_obj_t *parent, bool landscape)
 int cas_graph_put(const char *expr)
 {
     model_init();
+    /* already there (the same regression sent twice): show that one */
+    mx_row_t *row = mx_text_to_row(expr);
+    char *want = mx_row_text(row);
+    mx_row_free(row);
+    int found = -1;
+    for (int i = 0; i < NF && found < 0; i++) {
+        if (mx_row_empty(G.f[i].row)) continue;
+        char *have = mx_row_text(G.f[i].row);
+        if (want && have && !strcmp(want, have)) found = i;
+        mx_free(have);
+    }
+    mx_free(want);
+    if (found >= 0) {
+        if (!G.f[found].on) {
+            G.f[found].on = true;
+            G.dirty = true;
+            save();
+        }
+        return found;
+    }
     for (int i = 0; i < NF; i++) {
         if (mx_row_empty(G.f[i].row)) {
             mx_row_free(G.f[i].row);

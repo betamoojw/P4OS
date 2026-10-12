@@ -353,7 +353,8 @@ No game forces an orientation any more: none declares
 `AOS_APP_FLAG_PORTRAIT` or `LANDSCAPE`. Each one lays itself out from the
 root it gets, and the screen turning gives it a new root (the runtime
 creates the app again, or calls its `resize()`, which Claude Jump and
-ARKANOS use to keep the game going). The service lays out from the root's
+ARKANOS use to keep the game going; on the board only since 2026-10-12,
+when the loader started passing it on). The service lays out from the root's
 size too: the canvas, and the controls below or beside it.
 
 ## The games on it

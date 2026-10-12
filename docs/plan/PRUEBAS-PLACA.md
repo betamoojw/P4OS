@@ -193,6 +193,20 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       cuelgues y el del enlace del C6). Ahora se escribe a PSRAM, y sin red
       por un motivo claro (201 no está, 15/202/204 contraseña) no reinicia:
       "no restart" en el registro, un solo arranque.
+- [x] Caché del escaneo de apps (2026-10-12, firmware con el caché por
+      OTA): el primer arranque abre las 44 `.so` (2643 ms) y escribe
+      `/data/apps.cache`; el siguiente sólo abre `lua.so` (503 ms). Los
+      íconos AIC llegan del caché (48 apps con ícono), y una app del caché
+      abre y cierra bien (Gemas, CAS).
+- [x] Rotar con CAS abierta (2026-10-12, pedido de la sesión de CAS):
+      el cargador no pasaba `resize()`, así que la app se destruía y se
+      volvía a crear sin recargar la `.so`, y CAS se niega a arrancar el
+      motor dos veces en la misma carga. Arreglado: rotando, no hay "arena
+      freed" ni corte de `/api/screen.bmp` (10 de 10). La pantalla de
+      bloqueo no la pone la rotación: la placa arranca bloqueada y
+      `/api/open` abre la app debajo (capturas de antes y después). Con el
+      bloqueo apagado por el usuario: CAS girada de vertical a horizontal
+      y de vuelta, rearmada por su `resize()` sin cerrarse.
 - [ ] Sin Wi-Fi después de un reinicio por software (visto otra vez el
       2026-10-06, 1 vez en ~140 reinicios seguidos): la interfaz anda, el
       C6 no levanta la red, y no lo arreglan ni apagar y prender el Wi-Fi

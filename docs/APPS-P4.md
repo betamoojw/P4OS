@@ -91,6 +91,12 @@ What it wants, and what bit:
   system is up at 4.2 s. Registering used to rebuild the home screen once per
   app: 8.3 s with 40 apps. The scan now holds the home screen and builds it
   once (`aos_ui_hold_home`).
+- **Boot with the scan cache (2026-10-12):** 44 modules, 51 apps; the scan
+  takes 2643 ms when every `.so` is opened (the first boot, or after a new
+  firmware) and 503 ms when they come from `/data/apps.cache` (only
+  `lua.so`, which declares its apps per script, is opened). An app is
+  opened to be described again when its file changes in name, size or
+  date.
 - **`hello_app.so`:** 3 KB, 18 symbols. 16 apps opened one after the other with
   no reset; internal RAM steady at ~126 KB free.
 - Every app in `apps/` builds and passes the checks.
@@ -341,6 +347,12 @@ that bite:
 - **The screen:** 720×1280 portrait, 1280×720 landscape. Nothing is enlarged
   (the pixel density is almost the watch's); more fits. No literal positions
   from 368×448.
+- **Turning:** the runtime calls the app's `resize()` with the new root;
+  without one, it destroys the app and creates it again, without
+  reloading the `.so` (its statics keep their values). An app that keeps
+  state in statics, or starts something only once per load, should have a
+  `resize()`. Before 2026-10-12 the loader dropped `resize()`, so on the
+  board every card app was created again.
 - **Retro games** draw into a small canvas that the OS scales (`aos_retro_*`,
   [RETRO.md](RETRO.md)).
 - **GCC is stricter than the simulator's clang:** `-Werror=format-truncation`

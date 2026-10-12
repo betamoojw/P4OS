@@ -4,7 +4,7 @@ idf_component_register(
     REQUIRES aos_ui aos_hal elf_loader espressif__esp_new_jpeg espressif__esp-dsp
     # the symbol table names aos_io's functions: aos_io links after it, or
     # an object nothing else pulls in (aos_io_signal*.c) stays out
-    PRIV_REQUIRES aos_io
+    PRIV_REQUIRES aos_io esp_app_format
 )
 
 # Interceptamos esp_elf_malloc() para mandar los datos del cargador a PSRAM y

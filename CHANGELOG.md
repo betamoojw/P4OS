@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+- **The card's apps keep going when the screen turns.** The loader never
+  passed an app's `resize()` on: every `.so` app was destroyed and created
+  again when the screen turned, though twenty of them (ARKANOS, Claude
+  Jump, Doom, Maps, Mila, CAS...) know how to lay themselves out again.
+  Created again within the same tick, the module was not reloaded either,
+  and CAS, whose engine starts once per load, came back without it and
+  closed. The UI also stood still ~5 s while CAS stopped its engine, which
+  is why `/api/screen.bmp` failed right after turning. The simulator links
+  the apps without the loader, so it never showed.
+- **Booting does not open every app any more.** What each app says about
+  itself (id, name, colours, order, flags, its AIC icon) is kept in
+  `/data/apps.cache`, checked by the file's name, size and date and by the
+  firmware's ELF hash; only a new or changed `.so` is opened to be
+  described. On the board with 44 modules: the scan went from 2.6 s to
+  0.5 s, and `cas.so` (5 MB) no longer costs ~0.6 s at every boot.
+
 ## 0.13.5 — 2026-10-11
 
 - **BLE activates Xiaomi sensors from the board.** A Xiaomi with its auth

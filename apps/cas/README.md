@@ -132,6 +132,13 @@ One tree of boxes serves for typing and for showing (`mx.h`):
 | Opening the app | ~470 ms at 5.0 MB (~660 at 5.9): dlopen + relocations; constructors and Giac's context 3 ms |
 | The bench, 23 lines | all right; 1 to 92 ms each (`integrate(x*sin(x),x,0,pi)` 92, `sum(1/k^2,k,1,inf)` 84, `laplace` 79, `expand((x+y)^12)` 33, `factor(x^4-1)` 10) |
 | Arena | 2 MB pool, 21 KB at the peak |
+| A 360-month loan's table | 228 ms to fill an `lv_table` (1440 cells, each measured); with `cas_grid`, which draws only the rows in view, an invalidation |
+| Saving after each value | up to a second on the LVGL task (open/truncate/close on the card's FAT); now `cas_save` writes on a thread |
+
+Statistics and finance were checked on the board against hand computation:
+summary and quartiles, histogram, linear regression, normal and t, the
+t test with its interval, TVM (payment and N), the loan, rate equivalents,
+NPV/IRR and payback.
 
 The bench gives the same 23 results, in the same times, with and without
 KhiCAS's interface. The turtle commands (cut out of it) and `print()`

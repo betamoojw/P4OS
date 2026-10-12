@@ -19,6 +19,7 @@
 #include "cas_app.h"
 #include "cas_keypad.h"
 #include "cas_plot.h"
+#include "cas_save.h"
 #include "mx_view.h"
 
 #include "aos_gesture.h"
@@ -153,20 +154,19 @@ static void save(void)
     }
     char path[200];
     state_path(path, sizeof path);
-    FILE *f = fopen(path, "w");
-    if (!f) {
-        return;
-    }
-    fprintf(f, "W %g %g %g\n", (double)G.cx, (double)G.cy, (double)G.scale);
+    mx_str_t b = { 0 };
+    cas_str_printf(&b, "W %g %g %g\n", (double)G.cx, (double)G.cy, (double)G.scale);
     for (int i = 0; i < NF; i++) {
         if (mx_row_empty(G.f[i].row)) {
             continue;
         }
         char *t = mx_row_text(G.f[i].row);
-        fprintf(f, "F %d %d %s\n", i, G.f[i].on ? 1 : 0, t);
+        cas_str_printf(&b, "F %d %d ", i, G.f[i].on ? 1 : 0);
+        mx_str_add(&b, t);
+        mx_str_addc(&b, '\n');
         mx_free(t);
     }
-    fclose(f);
+    cas_save_text(path, &b);
 }
 
 static void load(void)

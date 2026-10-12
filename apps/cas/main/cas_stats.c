@@ -20,8 +20,10 @@
  */
 #include "cas_app.h"
 #include "cas_form.h"
+#include "cas_grid.h"
 #include "cas_num.h"
 #include "cas_plot.h"
+#include "cas_save.h"
 #include "mx_view.h"
 
 #include "aos_hal.h"
@@ -58,7 +60,7 @@ static struct {
     lv_obj_t   *root, *body, *table, *summary, *plotbox, *results;
     cas_plot_t  plot;
     lv_obj_t   *res[8];
-    lv_obj_t   *eq;
+    lv_obj_t   *sum_title, *sum_hint, *sum_val[12];
     bool        landscape;
     int         erow, ecol;     /* the cell being typed into        */
 } S;
@@ -106,18 +108,15 @@ static void save(void)
 {
     char path[200];
     state_path(path, sizeof path);
-    FILE *f = fopen(path, "w");
-    if (!f) {
-        return;
-    }
+    mx_str_t b = { 0 };
     for (int l = 0; l < NL; l++) {
-        fprintf(f, "L%d", l + 1);
+        cas_str_printf(&b, "L%d", l + 1);
         for (int i = 0; i < S.n[l]; i++) {
-            fprintf(f, " %.17g", S.v[l][i]);
+            cas_str_printf(&b, " %.17g", S.v[l][i]);
         }
-        fputc('\n', f);
+        mx_str_addc(&b, '\n');
     }
-    fclose(f);
+    cas_save_text(path, &b);
 }
 
 static void load(void)
@@ -165,6 +164,10 @@ static bool cell_entered(void *user, const char *text, double v)
     S.erow = r + 1;
     save();
     fill_table();
+    if (S.table) {
+        cas_grid_select(S.table, S.erow, l + 1);
+        cas_grid_scroll_to_row(S.table, S.erow);
+    }
     fill_summary();
     char t[32];
     snprintf(t, sizeof t, "L%d[%d]", l + 1, S.erow + 1);
@@ -172,31 +175,51 @@ static bool cell_entered(void *user, const char *text, double v)
     return S.erow < MAXN;
 }
 
-static void table_cb(lv_event_t *e)
+static void table_text(void *user, int row, int col, char *buf, size_t n, uint32_t *color)
 {
-    lv_obj_t *t = lv_event_get_target(e);
-    uint32_t row, col;
-    lv_table_get_selected_cell(t, &row, &col);
-    if (row == LV_TABLE_CELL_NONE || row == 0 || col == 0) {
-        if (row == 0 && col >= 1 && col <= NL) {
-            S.col = (int)col - 1;
-            build_page();
+    (void)user;
+    if (row < 0) {
+        if (col == 0) {
+            snprintf(buf, n, "#");
+        } else {
+            snprintf(buf, n, "L%d", col);
+            if (col - 1 == S.col) *color = LCOL[S.col];
         }
         return;
     }
-    S.ecol = (int)col - 1;
-    S.erow = (int)row - 1;
+    if (col == 0) {
+        snprintf(buf, n, "%d", row + 1);
+        *color = 0x8E8E93;
+    } else if (row < S.n[col - 1]) {
+        cas_fmt(buf, n, S.v[col - 1][row], 8);
+    }
+}
+
+static void table_tap(void *user, int row, int col)
+{
+    (void)user;
+    if (col == 0) return;
+    if (row < 0) {
+        S.col = col - 1;
+        cas_grid_refresh(S.table);
+        fill_summary();
+        return;
+    }
+    S.ecol = col - 1;
+    S.erow = row;
     if (S.erow > S.n[S.ecol]) S.erow = S.n[S.ecol];
     if (S.col != S.ecol) {
         S.col = S.ecol;
         fill_summary();
     }
+    cas_grid_select(S.table, S.erow, col);
     char title[32];
     snprintf(title, sizeof title, "L%d[%d]", S.ecol + 1, S.erow + 1);
     bool has = S.erow < S.n[S.ecol];
     cas_entry_open(title, has ? S.v[S.ecol][S.erow] : 0, has, cell_entered, NULL);
 }
 
+/* the sheet draws its cells itself (cas_grid.c): this only says how many rows */
 static void fill_table(void)
 {
     if (!S.table) return;
@@ -204,48 +227,26 @@ static void fill_table(void)
     for (int l = 0; l < NL; l++) {
         if (S.n[l] > rows) rows = S.n[l];
     }
-    rows = rows + 1 < MAXN ? rows + 1 : MAXN;
-    lv_table_set_row_count(S.table, (uint32_t)rows + 1);
-    for (int r = 0; r < rows; r++) {
-        char b[48];
-        snprintf(b, sizeof b, "%d", r + 1);
-        lv_table_set_cell_value(S.table, (uint32_t)r + 1, 0, b);
-        for (int l = 0; l < NL; l++) {
-            if (r < S.n[l]) {
-                cas_fmt(b, sizeof b, S.v[l][r], 8);
-            } else {
-                b[0] = 0;
-            }
-            lv_table_set_cell_value(S.table, (uint32_t)r + 1, (uint32_t)l + 1, b);
-        }
-    }
+    cas_grid_set_rows(S.table, rows + 1 < MAXN ? rows + 1 : MAXN);
 }
 
-static void fill_summary(void)
+static const char *const SUM_K[12] = {
+    "n", N_("media"), "\xCE\xA3x", "\xCE\xA3x\xC2\xB2", "s", "\xCF\x83",
+    "min", "Q1", N_("Med"), "Q3", "max", N_("Rango"),
+};
+
+/* the summary's widgets, built once per page: a value typed only changes
+ * their texts */
+static void build_summary(void)
 {
-    if (!S.summary) return;
-    lv_obj_clean(S.summary);
-    num_stats_t s;
-    char title[48];
-    snprintf(title, sizeof title, _("Resumen de L%d"), S.col + 1);
-    lv_obj_t *t = lv_label_create(S.summary);
-    lv_label_set_text(t, title);
-    lv_obj_set_width(t, LV_PCT(100));
-    lv_obj_set_style_text_font(t, aos_font_small, 0);
-    lv_obj_set_style_text_color(t, lv_color_hex(LCOL[S.col]), 0);
-    if (!num_stats(S.v[S.col], S.n[S.col], &s)) {
-        lv_obj_t *l = lv_label_create(S.summary);
-        lv_label_set_text(l, _("Sin datos: tocá una celda para escribir"));
-        lv_obj_set_style_text_color(l, AOS_C_DIM, 0);
-        lv_obj_set_style_text_font(l, aos_font_small, 0);
-        return;
-    }
-    const struct { const char *k; double v; } rows[] = {
-        { "n", s.n }, { N_("media"), s.mean }, { "\xCE\xA3x", s.sum }, { "\xCE\xA3x\xC2\xB2", s.sum2 },
-        { "s", s.sx }, { "\xCF\x83", s.px }, { "min", s.min }, { "Q1", s.q1 },
-        { N_("Med"), s.med }, { "Q3", s.q3 }, { "max", s.max }, { N_("Rango"), s.max - s.min },
-    };
-    for (size_t i = 0; i < sizeof rows / sizeof rows[0]; i++) {
+    S.sum_title = lv_label_create(S.summary);
+    lv_obj_set_width(S.sum_title, LV_PCT(100));
+    lv_obj_set_style_text_font(S.sum_title, aos_font_small, 0);
+    S.sum_hint = lv_label_create(S.summary);
+    lv_label_set_text(S.sum_hint, _("Sin datos: tocá una celda para escribir"));
+    lv_obj_set_style_text_color(S.sum_hint, AOS_C_DIM, 0);
+    lv_obj_set_style_text_font(S.sum_hint, aos_font_small, 0);
+    for (int i = 0; i < 12; i++) {
         lv_obj_t *cell = lv_obj_create(S.summary);
         lv_obj_remove_style_all(cell);
         lv_obj_set_size(cell, LV_PCT(S.landscape ? 31 : 48), LV_SIZE_CONTENT);
@@ -253,14 +254,36 @@ static void fill_summary(void)
         lv_obj_set_flex_align(cell, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
         lv_obj_remove_flag(cell, LV_OBJ_FLAG_SCROLLABLE);
         lv_obj_t *k = lv_label_create(cell);
-        lv_label_set_text(k, _(rows[i].k));
+        lv_label_set_text(k, _(SUM_K[i]));
         lv_obj_set_style_text_color(k, AOS_C_DIM, 0);
         lv_obj_set_style_text_font(k, mx_font(24), 0);
-        lv_obj_t *v = lv_label_create(cell);
+        S.sum_val[i] = lv_label_create(cell);
+        lv_obj_set_style_text_font(S.sum_val[i], mx_font(24), 0);
+    }
+}
+
+static void fill_summary(void)
+{
+    if (!S.summary) return;
+    char title[48];
+    snprintf(title, sizeof title, _("Resumen de L%d"), S.col + 1);
+    lv_label_set_text(S.sum_title, title);
+    lv_obj_set_style_text_color(S.sum_title, lv_color_hex(LCOL[S.col]), 0);
+    num_stats_t s;
+    bool have = num_stats(S.v[S.col], S.n[S.col], &s);
+    if (have) lv_obj_add_flag(S.sum_hint, LV_OBJ_FLAG_HIDDEN);
+    else lv_obj_remove_flag(S.sum_hint, LV_OBJ_FLAG_HIDDEN);
+    double v[12] = { s.n, s.mean, s.sum, s.sum2, s.sx, s.px, s.min, s.q1, s.med, s.q3, s.max, s.max - s.min };
+    for (int i = 0; i < 12; i++) {
+        lv_obj_t *cell = lv_obj_get_parent(S.sum_val[i]);
+        if (!have) {
+            lv_obj_add_flag(cell, LV_OBJ_FLAG_HIDDEN);
+            continue;
+        }
+        lv_obj_remove_flag(cell, LV_OBJ_FLAG_HIDDEN);
         char b[48];
-        cas_fmt(b, sizeof b, rows[i].v, 8);
-        lv_label_set_text(v, b);
-        lv_obj_set_style_text_font(v, mx_font(24), 0);
+        cas_fmt(b, sizeof b, v[i], 8);
+        lv_label_set_text(S.sum_val[i], b);
     }
 }
 
@@ -269,6 +292,7 @@ static void list_choose(void *user, int sel)
     (void)user;
     S.col = sel;
     fill_summary();
+    if (S.table) cas_grid_refresh(S.table);
 }
 
 static void clear_cb(lv_event_t *e)
@@ -326,36 +350,17 @@ static void page_data(lv_obj_t *body)
     small_button(bar, _("Ordenar"), sort_cb, NULL);
     small_button(bar, _("Borrar"), clear_cb, NULL);
 
-    S.table = lv_table_create(body);
+    static const uint8_t W[NL + 1] = { 2, 4, 4, 4, 4 };
+    S.table = cas_grid_create(body, NL + 1, W, 54, table_text, NULL);
     lv_obj_set_width(S.table, LV_PCT(100));
     lv_obj_set_flex_grow(S.table, 1);
-    lv_table_set_column_count(S.table, NL + 1);
-    lv_obj_update_layout(body);
-    int w = lv_obj_get_content_width(body);
-    /* the table's own padding and scrollbar take ~24 px */
-    int cw = (w - 64 - 24) / NL;
-    lv_table_set_column_width(S.table, 0, 64);
-    for (int l = 0; l < NL; l++) {
-        lv_table_set_column_width(S.table, (uint32_t)l + 1, cw);
-        lv_table_set_cell_value(S.table, 0, (uint32_t)l + 1, LNAMES[l]);
-    }
-    lv_table_set_cell_value(S.table, 0, 0, "#");
-    lv_obj_set_style_text_font(S.table, mx_font(24), LV_PART_ITEMS);
-    lv_obj_set_style_bg_color(S.table, AOS_C_CARD, LV_PART_ITEMS);
-    lv_obj_set_style_border_color(S.table, AOS_C_CARD2, LV_PART_ITEMS);
-    lv_obj_set_style_text_color(S.table, AOS_C_TEXT, LV_PART_ITEMS);
-    lv_obj_set_style_pad_ver(S.table, 10, LV_PART_ITEMS);
-    lv_obj_set_style_pad_hor(S.table, 8, LV_PART_ITEMS);
-    lv_obj_set_style_text_align(S.table, LV_TEXT_ALIGN_RIGHT, LV_PART_ITEMS);
-    lv_obj_set_style_bg_color(S.table, AOS_C_BG, 0);
-    lv_obj_set_style_border_width(S.table, 0, 0);
-    lv_obj_set_style_radius(S.table, 14, 0);
-    lv_obj_add_event_cb(S.table, table_cb, LV_EVENT_VALUE_CHANGED, NULL);
+    cas_grid_on_tap(S.table, table_tap, NULL);
     fill_table();
 
     S.summary = cas_card(body, NULL);
     lv_obj_set_flex_flow(S.summary, LV_FLEX_FLOW_ROW_WRAP);
     lv_obj_set_style_pad_column(S.summary, 14, 0);
+    build_summary();
     fill_summary();
 }
 
@@ -634,6 +639,9 @@ static void reg_graph_cb(lv_event_t *e)
         snprintf(b, sizeof b, "%s", _("El gráfico ya tiene seis funciones"));
     }
     aos_ui_toast(b, 1800);
+    if (i >= 0) {
+        cas_app_show(1);
+    }
 }
 
 static void reg_scatter_cb(lv_event_t *e)

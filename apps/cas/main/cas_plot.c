@@ -250,9 +250,11 @@ void cas_plot_numbers(cas_plot_t *p, lv_layer_t *layer)
     if (ly > p->H - 28) ly = p->H - 28;
     for (double v = ceil(p->x0 / sx) * sx; v <= p->x1; v += sx) {
         if (fabs(v) < sx / 2 && ax >= 0 && ax < p->W) continue;
+        int x = (int)lroundf(cas_plot_sx(p, v));
+        if (x < 20 || x > p->W - 20) continue;      /* centred on the edge: half of it cut */
         char b[32];
         cas_plot_fmt(b, sizeof b, v, sx);
-        cas_plot_text(layer, (int)lroundf(cas_plot_sx(p, v)), ly, b, 0xAEAEB2, 1);
+        cas_plot_text(layer, x, ly, b, 0xAEAEB2, 1);
     }
     int lx = ax + 6;
     if (lx < 4) lx = 4;

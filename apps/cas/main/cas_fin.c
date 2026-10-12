@@ -16,8 +16,10 @@
  */
 #include "cas_app.h"
 #include "cas_form.h"
+#include "cas_grid.h"
 #include "cas_num.h"
 #include "cas_plot.h"
+#include "cas_save.h"
 #include "mx.h"
 
 #include "aos_hal.h"
@@ -119,16 +121,15 @@ static void save(void)
 {
     char path[200];
     snprintf(path, sizeof path, "%s/cas_fin.txt", aos_hal_path_data());
-    FILE *f = fopen(path, "w");
-    if (!f) return;
-    fprintf(f, "n %.17g\niy %.17g\npv %.17g\npmt %.17g\nfv %.17g\npy %.17g\ncy %.17g\nbegin %d\n",
-            F.tvm.n, F.tvm.iy, F.tvm.pv, F.tvm.pmt, F.tvm.fv, F.tvm.py, F.tvm.cy, F.tvm.begin ? 1 : 0);
-    fprintf(f, "amount %.17g\ntna %.17g\nmonths %.17g\nsystem %d\n", F.amount, F.tna, F.months, F.system);
-    fprintf(f, "rtype %d\nrate %.17g\nrdays %.17g\ncapital %.17g\ndays %.17g\ninflation %.17g\n",
-            F.rtype, F.rate, F.rdays, F.capital, F.days, F.inflation);
-    fprintf(f, "disc %.17g\nncf %d\n", F.disc, F.ncf);
-    for (int i = 0; i < F.ncf; i++) fprintf(f, "cf%d %.17g\n", i, F.cf[i]);
-    fclose(f);
+    mx_str_t b = { 0 };
+    cas_str_printf(&b, "n %.17g\niy %.17g\npv %.17g\npmt %.17g\nfv %.17g\npy %.17g\ncy %.17g\nbegin %d\n",
+                   F.tvm.n, F.tvm.iy, F.tvm.pv, F.tvm.pmt, F.tvm.fv, F.tvm.py, F.tvm.cy, F.tvm.begin ? 1 : 0);
+    cas_str_printf(&b, "amount %.17g\ntna %.17g\nmonths %.17g\nsystem %d\n", F.amount, F.tna, F.months, F.system);
+    cas_str_printf(&b, "rtype %d\nrate %.17g\nrdays %.17g\ncapital %.17g\ndays %.17g\ninflation %.17g\n",
+                   F.rtype, F.rate, F.rdays, F.capital, F.days, F.inflation);
+    cas_str_printf(&b, "disc %.17g\nncf %d\n", F.disc, F.ncf);
+    for (int i = 0; i < F.ncf; i++) cas_str_printf(&b, "cf%d %.17g\n", i, F.cf[i]);
+    cas_save_text(path, &b);
 }
 
 static lv_obj_t *button(lv_obj_t *parent, const char *text, lv_event_cb_t cb, void *user, bool accent)
@@ -242,11 +243,26 @@ static void loan_draw(int n, double r)
     cas_plot_clear(p, 0x000000);
     cas_plot_grid(p);
     float bw = (float)p->W / (n + 0.4f) * 0.7f;
-    if (bw < 1) bw = 1;
+    float y0 = cas_plot_sy(p, 0);
+    if (bw < 4) {
+        /* bars this thin round to stripes: one pixel column per payment
+         * instead, a stacked area */
+        int c0 = (int)cas_plot_sx(p, 1), c1 = (int)cas_plot_sx(p, n);
+        for (int c = c0; c <= c1; c++) {
+            int k = (int)(cas_plot_wx(p, c + 0.5f) + 0.5);
+            if (k < 1) k = 1;
+            if (k > n) k = n;
+            num_loan_row((num_loan_kind_t)F.system, F.amount, r, n, k, &row);
+            float yi = cas_plot_sy(p, row.interest), yt = cas_plot_sy(p, row.payment);
+            cas_plot_rect(p, c, yi, c + 1, y0, 0xFF453A, 210);
+            cas_plot_rect(p, c, yt, c + 1, yi, 0x0A84FF, 210);
+        }
+        n = 0;
+    }
     for (int k = 1; k <= n; k++) {
         num_loan_row((num_loan_kind_t)F.system, F.amount, r, n, k, &row);
         float x = cas_plot_sx(p, k);
-        float y0 = cas_plot_sy(p, 0), yi = cas_plot_sy(p, row.interest), yt = cas_plot_sy(p, row.payment);
+        float yi = cas_plot_sy(p, row.interest), yt = cas_plot_sy(p, row.payment);
         cas_plot_rect(p, x - bw / 2, yi, x + bw / 2, y0, 0xFF453A, 210);       /* interest  */
         cas_plot_rect(p, x - bw / 2, yt, x + bw / 2, yi, 0x0A84FF, 210);       /* principal */
     }
@@ -262,6 +278,7 @@ static void loan_draw(int n, double r)
 static void loan_fill(void)
 {
     if (!F.res[0]) return;
+    uint32_t t0 = aos_hal_uptime_ms();
     int n = (int)F.months;
     if (n < 1) n = 1;
     if (n > 600) n = 600;
@@ -281,20 +298,34 @@ static void loan_fill(void)
     lv_label_set_text(F.res[3], b);
     loan_draw(n, r);
     if (F.table) {
-        lv_table_set_row_count(F.table, (uint32_t)n + 1);
-        for (int k = 1; k <= n; k++) {
-            num_loan_row_t row;
-            num_loan_row((num_loan_kind_t)F.system, F.amount, r, n, k, &row);
-            snprintf(b, sizeof b, "%d", k);
-            lv_table_set_cell_value(F.table, (uint32_t)k, 0, b);
-            cas_fmt_money(b, sizeof b, row.payment);
-            lv_table_set_cell_value(F.table, (uint32_t)k, 1, b);
-            cas_fmt_money(b, sizeof b, row.interest);
-            lv_table_set_cell_value(F.table, (uint32_t)k, 2, b);
-            cas_fmt_money(b, sizeof b, row.balance);
-            lv_table_set_cell_value(F.table, (uint32_t)k, 3, b);
-        }
+        cas_grid_set_rows(F.table, n);
     }
+    uint32_t dt = aos_hal_uptime_ms() - t0;
+    if (dt > 40) {
+        aos_hal_log("cas", "loan: %d rows took %u ms", n, (unsigned)dt);
+    }
+}
+
+/* a row of the table, computed as it is drawn: only the rows on screen */
+static void loan_text(void *user, int row, int col, char *buf, size_t n, uint32_t *color)
+{
+    (void)user;
+    if (row < 0) {
+        static const char *const H[] = { "#", N_("Cuota"), N_("Interés"), N_("Saldo") };
+        snprintf(buf, n, "%s", _(H[col]));
+        return;
+    }
+    if (col == 0) {
+        snprintf(buf, n, "%d", row + 1);
+        *color = 0x8E8E93;
+        return;
+    }
+    int months = (int)F.months;
+    if (months < 1) months = 1;
+    if (months > 600) months = 600;
+    num_loan_row_t r;
+    num_loan_row((num_loan_kind_t)F.system, F.amount, F.tna / 100 / 12, months, row + 1, &r);
+    cas_fmt_money(buf, n, col == 1 ? r.payment : col == 2 ? r.interest : r.balance);
 }
 
 static void page_loan(lv_obj_t *body)
@@ -317,28 +348,10 @@ static void page_loan(lv_obj_t *body)
     lv_obj_set_style_radius(F.plotbox, 16, 0);
     lv_obj_set_style_clip_corner(F.plotbox, true, 0);
     lv_obj_remove_flag(F.plotbox, LV_OBJ_FLAG_SCROLLABLE);
-    F.table = lv_table_create(body);
-    lv_obj_set_width(F.table, LV_PCT(100));
-    lv_obj_set_height(F.table, LV_SIZE_CONTENT);
-    lv_table_set_column_count(F.table, 4);
+    static const uint8_t W[4] = { 2, 5, 5, 5 };
+    F.table = cas_grid_create(body, 4, W, 46, loan_text, NULL);
+    lv_obj_set_size(F.table, LV_PCT(100), F.landscape ? 360 : 520);
     lv_obj_update_layout(body);
-    int w = lv_obj_get_content_width(body);
-    lv_table_set_column_width(F.table, 0, 70);
-    for (int c = 1; c < 4; c++) lv_table_set_column_width(F.table, (uint32_t)c, (w - 74) / 3);
-    lv_table_set_cell_value(F.table, 0, 0, "#");
-    lv_table_set_cell_value(F.table, 0, 1, _("Cuota"));
-    lv_table_set_cell_value(F.table, 0, 2, _("Interés"));
-    lv_table_set_cell_value(F.table, 0, 3, _("Saldo"));
-    lv_obj_set_style_text_font(F.table, mx_font(20), LV_PART_ITEMS);
-    lv_obj_set_style_bg_color(F.table, AOS_C_CARD, LV_PART_ITEMS);
-    lv_obj_set_style_border_color(F.table, AOS_C_CARD2, LV_PART_ITEMS);
-    lv_obj_set_style_text_color(F.table, AOS_C_TEXT, LV_PART_ITEMS);
-    lv_obj_set_style_pad_ver(F.table, 8, LV_PART_ITEMS);
-    lv_obj_set_style_pad_hor(F.table, 6, LV_PART_ITEMS);
-    lv_obj_set_style_text_align(F.table, LV_TEXT_ALIGN_RIGHT, LV_PART_ITEMS);
-    lv_obj_set_style_bg_color(F.table, AOS_C_BG, 0);
-    lv_obj_set_style_border_width(F.table, 0, 0);
-    lv_obj_remove_flag(F.table, LV_OBJ_FLAG_SCROLLABLE);
     cas_plot_create(&F.plot, F.plotbox, lv_obj_get_width(F.plotbox), lv_obj_get_height(F.plotbox));
     note(body, _("La tasa del período es la TNA dividida por 12. Sin IVA ni gastos: el costo financiero total del banco puede ser mayor."));
     loan_fill();

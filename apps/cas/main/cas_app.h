@@ -19,6 +19,7 @@ void cas_job_cancel(void *user);
 bool cas_engine_ok(void);
 void cas_engine_stop_job(void);
 void cas_app_set_gestures(bool graph);   /* the back gesture off while the graph is shown */
+void cas_app_show(int view);              /* 0 calc, 1 graph, 2 statistics, 3 finance */
 
 /* --- the views ------------------------------------------------------------ */
 

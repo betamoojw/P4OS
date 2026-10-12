@@ -11,6 +11,7 @@
  */
 #include "cas_app.h"
 #include "cas_keypad.h"
+#include "cas_save.h"
 #include "mx_view.h"
 
 #include "aos_hal.h"
@@ -288,10 +289,10 @@ static void hist_path(char *out, size_t n)
     snprintf(out, n, "%s/cas_hist.txt", aos_hal_path_data());
 }
 
-static void put_field(FILE *f, const char *s)
+static void put_field(mx_str_t *b, const char *s)
 {
     for (; s && *s; s++) {
-        fputc(*s == '\t' || *s == '\n' || *s == '\r' ? ' ' : *s, f);
+        mx_str_addc(b, *s == '\t' || *s == '\n' || *s == '\r' ? ' ' : *s);
     }
 }
 
@@ -299,23 +300,20 @@ void cas_calc_save(void)
 {
     char path[200];
     hist_path(path, sizeof path);
-    FILE *f = fopen(path, "w");
-    if (!f) {
-        return;
-    }
+    mx_str_t b = { 0 };
     for (int i = 0; i < C.n; i++) {
         entry_t *e = C.e[i];
         if (!e->res) {
             continue;           /* still computing: not worth keeping */
         }
         char *in = mx_row_text(e->in);
-        put_field(f, in);
-        fputc('\t', f);
-        put_field(f, e->res);
-        fputs(e->err ? "\t1\n" : "\t0\n", f);
+        put_field(&b, in);
+        mx_str_addc(&b, '\t');
+        put_field(&b, e->res);
+        mx_str_add(&b, e->err ? "\t1\n" : "\t0\n");
         mx_free(in);
     }
-    fclose(f);
+    cas_save_text(path, &b);
 }
 
 static void load(void)

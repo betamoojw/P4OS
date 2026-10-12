@@ -21,6 +21,7 @@ typedef bool (*cas_entry_cb_t)(void *user, const char *text, double value);
 void cas_entry_open(const char *title, double initial, bool has_initial, cas_entry_cb_t cb, void *user);
 void cas_entry_title(const char *title);
 void cas_entry_close(void);
+void cas_entry_free(void);             /* when the app closes */
 
 /* A numeric field. 'value' is the model and stays the caller's; cb runs
  * after it changed. */

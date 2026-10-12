@@ -98,6 +98,8 @@ static struct {
     lv_obj_t      *scrim, *title, *edbox, *edview;
     mx_ed_t        ed;
     bool           ed_ok;
+    bool           land;            /* the orientation it was built for */
+    bool           shown;
     cas_entry_cb_t cb;
     void          *user;
 } E;
@@ -173,24 +175,16 @@ static void ok_cb(lv_event_t *e)
     entry_commit();
 }
 
-void cas_entry_open(const char *title, double initial, bool has_initial, cas_entry_cb_t cb, void *user)
+/* The sheet is built once and then hidden and shown: building its keypad
+ * took long enough on the board for the first taps after opening to be
+ * lost. It is rebuilt only when the screen turned. */
+static void build_sheet(bool land)
 {
-    cas_entry_close();
-    if (!E.ed_ok) {
-        mx_ed_init(&E.ed);
-        E.ed_ok = true;
+    if (E.scrim) {
+        lv_obj_delete(E.scrim);
     }
-    mx_ed_clear(&E.ed);
-    if (has_initial && isfinite(initial)) {
-        char b[40];
-        snprintf(b, sizeof b, "%.12g", initial);
-        mx_ed_set_row(&E.ed, mx_text_to_row(b));
-    }
-    E.cb = cb;
-    E.user = user;
-
+    E.land = land;
     lv_obj_t *top = lv_layer_top();
-    bool land = lv_obj_get_width(top) > lv_obj_get_height(top);
     E.scrim = lv_obj_create(top);
     lv_obj_remove_style_all(E.scrim);
     lv_obj_set_size(E.scrim, LV_PCT(100), LV_PCT(100));
@@ -222,7 +216,6 @@ void cas_entry_open(const char *title, double initial, bool has_initial, cas_ent
     lv_obj_set_style_pad_column(hdr, 10, 0);
     lv_obj_remove_flag(hdr, LV_OBJ_FLAG_SCROLLABLE);
     E.title = lv_label_create(hdr);
-    lv_label_set_text(E.title, title);
     lv_obj_set_flex_grow(E.title, 1);
     lv_label_set_long_mode(E.title, LV_LABEL_LONG_MODE_DOTS);
     lv_obj_set_style_text_font(E.title, aos_font_body, 0);
@@ -258,22 +251,63 @@ void cas_entry_open(const char *title, double initial, bool has_initial, cas_ent
     lv_obj_t *kp = cas_keypad_create(card, entry_key, NULL);
     lv_obj_set_width(kp, LV_PCT(100));
     lv_obj_set_flex_grow(kp, 1);
+}
+
+void cas_entry_open(const char *title, double initial, bool has_initial, cas_entry_cb_t cb, void *user)
+{
+    if (!E.ed_ok) {
+        mx_ed_init(&E.ed);
+        E.ed_ok = true;
+    }
+    mx_ed_clear(&E.ed);
+    if (has_initial && isfinite(initial)) {
+        char b[40];
+        snprintf(b, sizeof b, "%.12g", initial);
+        mx_ed_set_row(&E.ed, mx_text_to_row(b));
+    }
+    E.cb = cb;
+    E.user = user;
+    lv_obj_t *top = lv_layer_top();
+    bool land = lv_obj_get_width(top) > lv_obj_get_height(top);
+    if (!E.scrim || land != E.land) {
+        build_sheet(land);
+    }
+    lv_label_set_text(E.title, title);
+    mx_view_refresh(E.edview);
+    lv_obj_remove_flag(E.scrim, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_move_foreground(E.scrim);
+    E.shown = true;
     aos_ui_hwkbd_handler(entry_hw);
 }
 
 void cas_entry_title(const char *title)
 {
-    if (E.title) {
+    if (E.title && E.shown) {
         lv_label_set_text(E.title, title);
     }
 }
 
 void cas_entry_close(void)
 {
+    if (E.scrim && E.shown) {
+        lv_obj_add_flag(E.scrim, LV_OBJ_FLAG_HIDDEN);
+        E.shown = false;
+        E.cb = NULL;
+        aos_ui_hwkbd_handler(NULL);
+    }
+}
+
+void cas_entry_free(void)
+{
     if (E.scrim) {
         lv_obj_delete(E.scrim);
-        E.scrim = E.title = E.edbox = E.edview = NULL;
-        aos_ui_hwkbd_handler(NULL);
+    }
+    E.scrim = E.title = E.edbox = E.edview = NULL;
+    E.shown = false;
+    E.cb = NULL;
+    if (E.ed_ok) {
+        mx_ed_free(&E.ed);
+        E.ed_ok = false;
     }
 }
 

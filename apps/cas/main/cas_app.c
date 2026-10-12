@@ -13,7 +13,9 @@
  * the queue here.
  */
 #include "cas_app.h"
+#include "cas_form.h"
 #include "cas_rt.h"
+#include "cas_save.h"
 #include "mx.h"
 
 #include "aos_app.h"
@@ -185,6 +187,20 @@ static void show_view(int v)
 {
     A.view = v;
     build_views();
+}
+
+static void show_async(void *v)
+{
+    if (A.root && (int)(intptr_t)v != A.view) {
+        show_view((int)(intptr_t)v);
+    }
+}
+
+void cas_app_show(int view)
+{
+    /* the caller is usually a button of the view going away: switch after
+     * its event is over */
+    lv_async_call(show_async, (void *)(intptr_t)view);
 }
 
 static void tab_cb(lv_event_t *e)
@@ -394,7 +410,11 @@ static void cas_destroy(aos_app_t *self, void *inst)
     (void)inst;
     lv_timer_delete(A.timer);
     A.timer = NULL;
+    for (int v = 0; v < 4; v++) {
+        lv_async_call_cancel(show_async, (void *)(intptr_t)v);
+    }
     leave_view();
+    cas_entry_free();
     cas_calc_free();
     cas_graph_free();
     cas_stats_free();
@@ -408,6 +428,7 @@ static void cas_destroy(aos_app_t *self, void *inst)
     A.running.expr = NULL;
     A.busy = false;
     cas_rt_stop();
+    cas_save_wait();
     A.status = A.content = A.root = NULL;
     A.app = NULL;
 }

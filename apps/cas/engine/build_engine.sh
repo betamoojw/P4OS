@@ -27,6 +27,14 @@ WORK=${CAS_WORK:-$HOME/.cache/p4os-cas}
 OUT=$HERE/lib
 JOBS=${JOBS:-$(sysctl -n hw.ncpu 2>/dev/null || nproc)}
 
+# what the build takes from the machine, besides the toolchain: on the Mac
+# it is all there; in the CI's IDF container (Ubuntu) some has to be
+# installed: apt-get install m4 bzip2 xz-utils curl make gcc g++ perl
+missing=""
+for c in curl tar bzip2 xz m4 make cc sed awk; do command -v $c >/dev/null || missing="$missing $c"; done
+command -v sha256sum >/dev/null || command -v shasum >/dev/null || missing="$missing sha256sum"
+[ -z "$missing" ] || { echo "missing on this machine:$missing"; exit 1; }
+
 if [ "${CLEAN:-0}" = 1 ]; then rm -rf "$WORK/build" "$WORK/src" "$OUT"; fi
 mkdir -p "$WORK/dl" "$WORK/src" "$WORK/build" "$OUT"
 
@@ -58,7 +66,9 @@ OLM_SHA=721bab18ff37160fd9e903eb211ff26fdee38c3d0041d556b07d76089c435d17
 fetch() {  # url sha file
     local f=$WORK/dl/$3
     if [ ! -f "$f" ]; then echo "downloading $3"; curl -sSL -o "$f.part" "$1"; mv "$f.part" "$f"; fi
-    echo "$2  $f" | shasum -a 256 -c --quiet - || { echo "$3: wrong checksum"; exit 1; }
+    local sum
+    if command -v sha256sum >/dev/null; then sum=$(sha256sum "$f"); else sum=$(shasum -a 256 "$f"); fi
+    [ "${sum%% *}" = "$2" ] || { echo "$3: wrong checksum"; exit 1; }
 }
 fetch $KHI_URL $KHI_SHA khiext.tar.bz2
 fetch $GCC_URL $GCC_SHA gcc-14.2.0.tar.xz

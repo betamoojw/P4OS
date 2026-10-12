@@ -317,6 +317,7 @@ static void leave_view(void)
     cas_geo_shown(false);
     cas_stats_hidden();
     cas_fin_hidden();
+    cas_sci_hidden();
 }
 
 static void build_views(void)
@@ -348,7 +349,7 @@ static void build_views(void)
     lv_obj_set_style_pad_column(tabs, 6, 0);
     lv_obj_set_scroll_dir(tabs, LV_DIR_HOR);
     lv_obj_set_scrollbar_mode(tabs, LV_SCROLLBAR_MODE_OFF);
-    static const char *const TABS[CAS_V_COUNT] = { N_("Cálculo"), N_("Gráfico"), N_("Geometría"), N_("Estadística"), N_("Finanzas") };
+    static const char *const TABS[CAS_V_COUNT] = { N_("Cálculo"), N_("Gráfico"), N_("Geometría"), N_("Estadística"), N_("Finanzas"), N_("Ciencias") };
     lv_obj_t *lit = NULL;
     for (int v = 0; v < CAS_V_COUNT; v++) {
         lv_obj_t *b = tab_button(tabs, _(TABS[v]), v);
@@ -390,8 +391,11 @@ static void build_views(void)
     case CAS_V_STATS:
         cas_stats_build(A.content, landscape);
         break;
-    default:
+    case CAS_V_FIN:
         cas_fin_build(A.content, landscape);
+        break;
+    default:
+        cas_sci_build(A.content, landscape);
         break;
     }
 
@@ -458,11 +462,13 @@ static void cas_destroy(aos_app_t *self, void *inst)
     }
     leave_view();
     cas_entry_free();
+    cas_text_free();
     cas_calc_free();
     cas_graph_free();
     cas_geo_free();
     cas_stats_free();
     cas_fin_free();
+    cas_sci_free();
     for (int i = 0; i < A.count; i++) {
         mx_free(A.q[(A.head + i) % QMAX].expr);
     }

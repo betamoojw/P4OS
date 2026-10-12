@@ -23,7 +23,7 @@ void cas_app_show(int view);              /* CAS_V_CALC... */
 
 /* --- the views ------------------------------------------------------------ */
 
-enum { CAS_V_CALC, CAS_V_GRAPH, CAS_V_GEO, CAS_V_STATS, CAS_V_FIN, CAS_V_COUNT };
+enum { CAS_V_CALC, CAS_V_GRAPH, CAS_V_GEO, CAS_V_STATS, CAS_V_FIN, CAS_V_SCI, CAS_V_COUNT };
 
 void cas_calc_build(lv_obj_t *parent, bool landscape);
 void cas_calc_submit_text(const char *expr);    /* as if typed and entered */
@@ -47,3 +47,7 @@ void cas_stats_free(void);
 void cas_fin_build(lv_obj_t *parent, bool landscape);
 void cas_fin_hidden(void);
 void cas_fin_free(void);
+
+void cas_sci_build(lv_obj_t *parent, bool landscape);
+void cas_sci_hidden(void);
+void cas_sci_free(void);

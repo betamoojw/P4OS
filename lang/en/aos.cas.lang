@@ -29,24 +29,46 @@ Borrar el historial	Clear the history
 #: apps/cas/main/cas_app.c:280
 Banco de pruebas	Benchmark
 
-#: apps/cas/main/cas_app.c:351
+#: apps/cas/main/cas_app.c:352
 Cálculo	Calculate
 
-#: apps/cas/main/cas_app.c:351
+#: apps/cas/main/cas_app.c:352
 #: apps/cas/main/cas_stats.c:976
 Gráfico	Graph
 
-#: apps/cas/main/cas_app.c:351
+#: apps/cas/main/cas_app.c:352
 Geometría	Geometry
 
-#: apps/cas/main/cas_app.c:351
+#: apps/cas/main/cas_app.c:352
 Estadística	Statistics
 
-#: apps/cas/main/cas_app.c:351
+#: apps/cas/main/cas_app.c:352
 Finanzas	Finance
 
-#: apps/cas/main/cas_app.c:434
+#: apps/cas/main/cas_app.c:352
+Ciencias	Sciences
+
+#: apps/cas/main/cas_app.c:438
 No se pudo arrancar el motor. Cerrá la app y volvé a abrirla.	The engine could not start. Close the app and open it again.
+
+#: apps/cas/main/cas_bio.c:33
+#: apps/cas/main/cas_bio.c:47
+hasta %d genes	up to %d genes
+
+#: apps/cas/main/cas_bio.c:38
+sólo letras: AaBb	letters only: AaBb
+
+#: apps/cas/main/cas_bio.c:43
+cada gen son dos letras: AaBb	each gene is two letters: AaBb
+
+#: apps/cas/main/cas_bio.c:52
+%c y %c no son el mismo gen	%c and %c are not the same gene
+
+#: apps/cas/main/cas_bio.c:84
+los dos padres necesitan los mismos genes	both parents need the same genes
+
+#: apps/cas/main/cas_bio.c:89
+los dos padres necesitan los mismos genes, en el mismo orden	both parents need the same genes, in the same order
 
 #: apps/cas/main/cas_calc.c:154
 Error	Error
@@ -54,7 +76,410 @@ Error	Error
 #: apps/cas/main/cas_calc.c:197
 El motor no está listo	The engine is not ready
 
+#: apps/cas/main/cas_chem.c:120
+#: apps/cas/main/cas_chem.c:438
+demasiados elementos	too many elements
+
+#: apps/cas/main/cas_chem.c:149
+#: apps/cas/main/cas_chem.c:191
+falta cerrar un paréntesis	a bracket is not closed
+
+#: apps/cas/main/cas_chem.c:157
+paréntesis mal cerrado	mismatched bracket
+
+#: apps/cas/main/cas_chem.c:175
+#: apps/cas/main/cas_chem.c:181
+no hay elemento %s	there is no element %s
+
+#: apps/cas/main/cas_chem.c:184
+un subíndice no puede ser 0	a subscript cannot be 0
+
+#: apps/cas/main/cas_chem.c:195
+#: apps/cas/main/cas_chem.c:258
+no se entiende: %s	not understood: %s
+
+#: apps/cas/main/cas_chem.c:195
+#: apps/cas/main/cas_chem.c:267
+falta la fórmula	the formula is missing
+
+#: apps/cas/main/cas_chem.c:226
+la carga va así: ^2+ o ^-	write the charge like this: ^2+ or ^-
+
+#: apps/cas/main/cas_chem.c:386
+falta una sustancia	a substance is missing
+
+#: apps/cas/main/cas_chem.c:390
+demasiadas sustancias	too many substances
+
+#: apps/cas/main/cas_chem.c:413
+separá los lados con = o ->	separate the sides with = or ->
+
+#: apps/cas/main/cas_chem.c:423
+falta un lado	one side is missing
+
+#: apps/cas/main/cas_chem.c:489
+#: apps/cas/main/cas_chem.c:519
+no se puede balancear: revisá las fórmulas	cannot be balanced: check the formulas
+
+#: apps/cas/main/cas_chem.c:493
+tiene más de una forma de balancearse: son varias reacciones juntas	it balances in more than one way: several reactions together
+
+#: apps/cas/main/cas_elements.c:10
+Hidrógeno	Hydrogen
+
+#: apps/cas/main/cas_elements.c:11
+Helio	Helium
+
+#: apps/cas/main/cas_elements.c:12
+Litio	Lithium
+
+#: apps/cas/main/cas_elements.c:13
+Berilio	Beryllium
+
+#: apps/cas/main/cas_elements.c:14
+Boro	Boron
+
+#: apps/cas/main/cas_elements.c:15
+Carbono	Carbon
+
+#: apps/cas/main/cas_elements.c:16
+Nitrógeno	Nitrogen
+
+#: apps/cas/main/cas_elements.c:17
+Oxígeno	Oxygen
+
+#: apps/cas/main/cas_elements.c:18
+Flúor	Fluorine
+
+#: apps/cas/main/cas_elements.c:19
+Neón	Neon
+
+#: apps/cas/main/cas_elements.c:20
+Sodio	Sodium
+
+#: apps/cas/main/cas_elements.c:21
+Magnesio	Magnesium
+
+#: apps/cas/main/cas_elements.c:22
+Aluminio	Aluminium
+
+#: apps/cas/main/cas_elements.c:23
+Silicio	Silicon
+
+#: apps/cas/main/cas_elements.c:24
+Fósforo	Phosphorus
+
+#: apps/cas/main/cas_elements.c:25
+Azufre	Sulfur
+
+#: apps/cas/main/cas_elements.c:26
+Cloro	Chlorine
+
+#: apps/cas/main/cas_elements.c:27
+Argón	Argon
+
+#: apps/cas/main/cas_elements.c:28
+Potasio	Potassium
+
+#: apps/cas/main/cas_elements.c:29
+Calcio	Calcium
+
+#: apps/cas/main/cas_elements.c:30
+Escandio	Scandium
+
+#: apps/cas/main/cas_elements.c:31
+Titanio	Titanium
+
+#: apps/cas/main/cas_elements.c:32
+Vanadio	Vanadium
+
+#: apps/cas/main/cas_elements.c:33
+Cromo	Chromium
+
+#: apps/cas/main/cas_elements.c:34
+Manganeso	Manganese
+
+#: apps/cas/main/cas_elements.c:35
+Hierro	Iron
+
+#: apps/cas/main/cas_elements.c:36
+Cobalto	Cobalt
+
+#: apps/cas/main/cas_elements.c:37
+Níquel	Nickel
+
+#: apps/cas/main/cas_elements.c:38
+Cobre	Copper
+
+#: apps/cas/main/cas_elements.c:39
+Zinc	Zinc
+
+#: apps/cas/main/cas_elements.c:40
+Galio	Gallium
+
+#: apps/cas/main/cas_elements.c:41
+Germanio	Germanium
+
+#: apps/cas/main/cas_elements.c:42
+Arsénico	Arsenic
+
+#: apps/cas/main/cas_elements.c:43
+Selenio	Selenium
+
+#: apps/cas/main/cas_elements.c:44
+Bromo	Bromine
+
+#: apps/cas/main/cas_elements.c:45
+Kriptón	Krypton
+
+#: apps/cas/main/cas_elements.c:46
+Rubidio	Rubidium
+
+#: apps/cas/main/cas_elements.c:47
+Estroncio	Strontium
+
+#: apps/cas/main/cas_elements.c:48
+Itrio	Yttrium
+
+#: apps/cas/main/cas_elements.c:49
+Circonio	Zirconium
+
+#: apps/cas/main/cas_elements.c:50
+Niobio	Niobium
+
+#: apps/cas/main/cas_elements.c:51
+Molibdeno	Molybdenum
+
+#: apps/cas/main/cas_elements.c:52
+Tecnecio	Technetium
+
+#: apps/cas/main/cas_elements.c:53
+Rutenio	Ruthenium
+
+#: apps/cas/main/cas_elements.c:54
+Rodio	Rhodium
+
+#: apps/cas/main/cas_elements.c:55
+Paladio	Palladium
+
+#: apps/cas/main/cas_elements.c:56
+Plata	Silver
+
+#: apps/cas/main/cas_elements.c:57
+Cadmio	Cadmium
+
+#: apps/cas/main/cas_elements.c:58
+Indio	Indium
+
+#: apps/cas/main/cas_elements.c:59
+Estaño	Tin
+
+#: apps/cas/main/cas_elements.c:60
+Antimonio	Antimony
+
+#: apps/cas/main/cas_elements.c:61
+Telurio	Tellurium
+
+#: apps/cas/main/cas_elements.c:62
+Yodo	Iodine
+
+#: apps/cas/main/cas_elements.c:63
+Xenón	Xenon
+
+#: apps/cas/main/cas_elements.c:64
+Cesio	Caesium
+
+#: apps/cas/main/cas_elements.c:65
+Bario	Barium
+
+#: apps/cas/main/cas_elements.c:66
+Lantano	Lanthanum
+
+#: apps/cas/main/cas_elements.c:67
+Cerio	Cerium
+
+#: apps/cas/main/cas_elements.c:68
+Praseodimio	Praseodymium
+
+#: apps/cas/main/cas_elements.c:69
+Neodimio	Neodymium
+
+#: apps/cas/main/cas_elements.c:70
+Prometio	Promethium
+
+#: apps/cas/main/cas_elements.c:71
+Samario	Samarium
+
+#: apps/cas/main/cas_elements.c:72
+Europio	Europium
+
+#: apps/cas/main/cas_elements.c:73
+Gadolinio	Gadolinium
+
+#: apps/cas/main/cas_elements.c:74
+Terbio	Terbium
+
+#: apps/cas/main/cas_elements.c:75
+Disprosio	Dysprosium
+
+#: apps/cas/main/cas_elements.c:76
+Holmio	Holmium
+
+#: apps/cas/main/cas_elements.c:77
+Erbio	Erbium
+
+#: apps/cas/main/cas_elements.c:78
+Tulio	Thulium
+
+#: apps/cas/main/cas_elements.c:79
+Iterbio	Ytterbium
+
+#: apps/cas/main/cas_elements.c:80
+Lutecio	Lutetium
+
+#: apps/cas/main/cas_elements.c:81
+Hafnio	Hafnium
+
+#: apps/cas/main/cas_elements.c:82
+Tantalio	Tantalum
+
+#: apps/cas/main/cas_elements.c:83
+Wolframio	Tungsten
+
+#: apps/cas/main/cas_elements.c:84
+Renio	Rhenium
+
+#: apps/cas/main/cas_elements.c:85
+Osmio	Osmium
+
+#: apps/cas/main/cas_elements.c:86
+Iridio	Iridium
+
+#: apps/cas/main/cas_elements.c:87
+Platino	Platinum
+
+#: apps/cas/main/cas_elements.c:88
+Oro	Gold
+
+#: apps/cas/main/cas_elements.c:89
+Mercurio	Mercury
+
+#: apps/cas/main/cas_elements.c:90
+Talio	Thallium
+
+#: apps/cas/main/cas_elements.c:91
+Plomo	Lead
+
+#: apps/cas/main/cas_elements.c:92
+Bismuto	Bismuth
+
+#: apps/cas/main/cas_elements.c:93
+Polonio	Polonium
+
+#: apps/cas/main/cas_elements.c:94
+Astato	Astatine
+
+#: apps/cas/main/cas_elements.c:95
+Radón	Radon
+
+#: apps/cas/main/cas_elements.c:96
+Francio	Francium
+
+#: apps/cas/main/cas_elements.c:97
+Radio	Radium
+
+#: apps/cas/main/cas_elements.c:98
+Actinio	Actinium
+
+#: apps/cas/main/cas_elements.c:99
+Torio	Thorium
+
+#: apps/cas/main/cas_elements.c:100
+Protactinio	Protactinium
+
+#: apps/cas/main/cas_elements.c:101
+Uranio	Uranium
+
+#: apps/cas/main/cas_elements.c:102
+Neptunio	Neptunium
+
+#: apps/cas/main/cas_elements.c:103
+Plutonio	Plutonium
+
+#: apps/cas/main/cas_elements.c:104
+Americio	Americium
+
+#: apps/cas/main/cas_elements.c:105
+Curio	Curium
+
+#: apps/cas/main/cas_elements.c:106
+Berkelio	Berkelium
+
+#: apps/cas/main/cas_elements.c:107
+Californio	Californium
+
+#: apps/cas/main/cas_elements.c:108
+Einstenio	Einsteinium
+
+#: apps/cas/main/cas_elements.c:109
+Fermio	Fermium
+
+#: apps/cas/main/cas_elements.c:110
+Mendelevio	Mendelevium
+
+#: apps/cas/main/cas_elements.c:111
+Nobelio	Nobelium
+
+#: apps/cas/main/cas_elements.c:112
+Lawrencio	Lawrencium
+
+#: apps/cas/main/cas_elements.c:113
+Rutherfordio	Rutherfordium
+
+#: apps/cas/main/cas_elements.c:114
+Dubnio	Dubnium
+
+#: apps/cas/main/cas_elements.c:115
+Seaborgio	Seaborgium
+
+#: apps/cas/main/cas_elements.c:116
+Bohrio	Bohrium
+
+#: apps/cas/main/cas_elements.c:117
+Hasio	Hassium
+
+#: apps/cas/main/cas_elements.c:118
+Meitnerio	Meitnerium
+
+#: apps/cas/main/cas_elements.c:119
+Darmstatio	Darmstadtium
+
+#: apps/cas/main/cas_elements.c:120
+Roentgenio	Roentgenium
+
+#: apps/cas/main/cas_elements.c:121
+Copernicio	Copernicium
+
+#: apps/cas/main/cas_elements.c:122
+Nihonio	Nihonium
+
+#: apps/cas/main/cas_elements.c:123
+Flerovio	Flerovium
+
+#: apps/cas/main/cas_elements.c:124
+Moscovio	Moscovium
+
+#: apps/cas/main/cas_elements.c:125
+Livermorio	Livermorium
+
+#: apps/cas/main/cas_elements.c:126
+Teneso	Tennessine
+
+#: apps/cas/main/cas_elements.c:127
+Oganesón	Oganesson
+
 #: apps/cas/main/cas_fin.c:174
+#: apps/cas/main/cas_sci.c:348
 No tiene solución con esos valores	No solution with these values
 
 #: apps/cas/main/cas_fin.c:194
@@ -281,120 +706,120 @@ Longitud	Length
 Área	Area
 
 #: apps/cas/main/cas_geo.c:55
+#: apps/cas/main/cas_sci.c:1170
 Ecuación	Equation
 
 #: apps/cas/main/cas_geo.c:55
 Coordenadas	Coordinates
 
 #: apps/cas/main/cas_geo.c:56
-#: apps/cas/main/cas_stats.c:351
-Borrar	Clear
+Eliminar	Delete
 
-#: apps/cas/main/cas_geo.c:146
+#: apps/cas/main/cas_geo.c:147
 Nada para deshacer	Nothing to undo
 
-#: apps/cas/main/cas_geo.c:318
+#: apps/cas/main/cas_geo.c:319
 La figura está llena	The figure is full
 
-#: apps/cas/main/cas_geo.c:366
+#: apps/cas/main/cas_geo.c:367
 Arrastrá un punto, o tocá algo para verlo	Drag a point, or tap something to see it
 
-#: apps/cas/main/cas_geo.c:367
+#: apps/cas/main/cas_geo.c:368
 Tocá donde va el punto	Tap where the point goes
 
-#: apps/cas/main/cas_geo.c:369
-#: apps/cas/main/cas_geo.c:373
-#: apps/cas/main/cas_geo.c:379
-#: apps/cas/main/cas_geo.c:381
+#: apps/cas/main/cas_geo.c:370
+#: apps/cas/main/cas_geo.c:374
+#: apps/cas/main/cas_geo.c:380
+#: apps/cas/main/cas_geo.c:382
 Tocá el segundo punto	Tap the second point
 
-#: apps/cas/main/cas_geo.c:369
+#: apps/cas/main/cas_geo.c:370
 Tocá un segmento o el primer punto	Tap a segment or the first point
 
-#: apps/cas/main/cas_geo.c:370
+#: apps/cas/main/cas_geo.c:371
 Tocá la otra línea	Tap the other line
 
-#: apps/cas/main/cas_geo.c:370
+#: apps/cas/main/cas_geo.c:371
 Tocá dos líneas, o donde se cruzan	Tap two lines, or where they cross
 
-#: apps/cas/main/cas_geo.c:373
-#: apps/cas/main/cas_geo.c:379
+#: apps/cas/main/cas_geo.c:374
+#: apps/cas/main/cas_geo.c:380
 Tocá el primer punto	Tap the first point
 
-#: apps/cas/main/cas_geo.c:375
+#: apps/cas/main/cas_geo.c:376
 Ahora el otro: la recta o el punto	Now the other one: the line or the point
 
-#: apps/cas/main/cas_geo.c:375
+#: apps/cas/main/cas_geo.c:376
 Tocá una recta y un punto	Tap a line and a point
 
-#: apps/cas/main/cas_geo.c:377
+#: apps/cas/main/cas_geo.c:378
 Tocá un punto del primer lado	Tap a point on the first side
 
-#: apps/cas/main/cas_geo.c:377
+#: apps/cas/main/cas_geo.c:378
 Tocá el vértice	Tap the vertex
 
-#: apps/cas/main/cas_geo.c:377
+#: apps/cas/main/cas_geo.c:378
 Tocá un punto del otro lado	Tap a point on the other side
 
-#: apps/cas/main/cas_geo.c:378
+#: apps/cas/main/cas_geo.c:379
 Tocá un punto de la circunferencia	Tap a point on the circle
 
-#: apps/cas/main/cas_geo.c:378
+#: apps/cas/main/cas_geo.c:379
 Tocá el centro	Tap the centre
 
-#: apps/cas/main/cas_geo.c:379
+#: apps/cas/main/cas_geo.c:380
 Tocá el tercer punto	Tap the third point
 
-#: apps/cas/main/cas_geo.c:380
+#: apps/cas/main/cas_geo.c:381
 Tocá los vértices	Tap the vertices
 
-#: apps/cas/main/cas_geo.c:380
+#: apps/cas/main/cas_geo.c:381
 Tocá el primero para cerrarlo	Tap the first one to close it
 
-#: apps/cas/main/cas_geo.c:381
+#: apps/cas/main/cas_geo.c:382
 Tocá dos puntos, un segmento o una figura	Tap two points, a segment or a shape
 
-#: apps/cas/main/cas_geo.c:382
+#: apps/cas/main/cas_geo.c:383
 Tocá un polígono o un círculo	Tap a polygon or a circle
 
-#: apps/cas/main/cas_geo.c:383
+#: apps/cas/main/cas_geo.c:384
 Tocá una recta o una circunferencia	Tap a line or a circle
 
-#: apps/cas/main/cas_geo.c:384
+#: apps/cas/main/cas_geo.c:385
 Tocá un punto	Tap a point
 
-#: apps/cas/main/cas_geo.c:385
+#: apps/cas/main/cas_geo.c:386
 Tocá lo que querés borrar	Tap what you want to delete
 
-#: apps/cas/main/cas_geo.c:569
+#: apps/cas/main/cas_geo.c:570
 No se cruzan	They do not cross
 
-#: apps/cas/main/cas_geo.c:1150
+#: apps/cas/main/cas_geo.c:1171
 Puntos	Points
 
-#: apps/cas/main/cas_geo.c:1151
+#: apps/cas/main/cas_geo.c:1172
 Líneas	Lines
 
-#: apps/cas/main/cas_geo.c:1152
+#: apps/cas/main/cas_geo.c:1173
 Figuras	Shapes
 
-#: apps/cas/main/cas_geo.c:1153
+#: apps/cas/main/cas_geo.c:1174
 Medir y editar	Measure and edit
 
-#: apps/cas/main/cas_geo.c:1163
+#: apps/cas/main/cas_geo.c:1184
 Cuadrícula	Grid
 
-#: apps/cas/main/cas_geo.c:1163
+#: apps/cas/main/cas_geo.c:1184
 Ajustar a la grilla	Snap to grid
 
-#: apps/cas/main/cas_geo.c:1163
+#: apps/cas/main/cas_geo.c:1184
 Borrar todo	Clear all
 
-#: apps/cas/main/cas_geo.c:1230
+#: apps/cas/main/cas_geo.c:1251
 Las medidas aparecen acá: elegí Longitud, Ángulo, Área o Ecuación.	Measurements show up here: pick Length, Angle, Area or Equation.
 
-#: apps/cas/main/cas_geo.c:1357
-#: apps/cas/main/cas_geo.c:1401
+#: apps/cas/main/cas_geo.c:1380
+#: apps/cas/main/cas_geo.c:1424
 Sin memoria para la figura	No memory for the figure
 
 #: apps/cas/main/cas_geom.c:639
@@ -415,6 +840,7 @@ no se puede graficar	cannot be graphed
 no se entiende	not understood
 
 #: apps/cas/main/cas_graph.c:492
+#: apps/cas/main/cas_sci.c:317
 tocá para escribir	tap to type
 
 #: apps/cas/main/cas_graph.c:701
@@ -440,6 +866,867 @@ media	mean
 #: apps/cas/main/cas_keypad.c:84
 desv	stdev
 
+#: apps/cas/main/cas_phys.c:22
+masa	mass
+
+#: apps/cas/main/cas_phys.c:23
+velocidad	velocity
+
+#: apps/cas/main/cas_phys.c:24
+velocidad inicial	initial velocity
+
+#: apps/cas/main/cas_phys.c:25
+aceleración	acceleration
+
+#: apps/cas/main/cas_phys.c:26
+tiempo	time
+
+#: apps/cas/main/cas_phys.c:27
+gravedad	gravity
+
+#: apps/cas/main/cas_phys.c:28
+altura	height
+
+#: apps/cas/main/cas_phys.c:29
+fuerza	force
+
+#: apps/cas/main/cas_phys.c:30
+distancia	distance
+
+#: apps/cas/main/cas_phys.c:31
+radio	radius
+
+#: apps/cas/main/cas_phys.c:32
+constante del resorte	spring constant
+
+#: apps/cas/main/cas_phys.c:33
+estiramiento	extension
+
+#: apps/cas/main/cas_phys.c:34
+densidad	density
+
+#: apps/cas/main/cas_phys.c:35
+#: apps/cas/main/cas_sci.c:41
+volumen	volume
+
+#: apps/cas/main/cas_phys.c:39
+#: apps/cas/main/cas_phys.c:41
+#: apps/cas/main/cas_phys.c:42
+#: apps/cas/main/cas_phys.c:44
+Cinemática	Kinematics
+
+#: apps/cas/main/cas_phys.c:39
+Movimiento uniforme	Uniform motion
+
+#: apps/cas/main/cas_phys.c:40
+#: apps/cas/main/cas_phys.c:43
+posición	position
+
+#: apps/cas/main/cas_phys.c:40
+#: apps/cas/main/cas_phys.c:43
+posición inicial	initial position
+
+#: apps/cas/main/cas_phys.c:41
+Velocidad (MRUV)	Velocity (constant a)
+
+#: apps/cas/main/cas_phys.c:42
+Posición (MRUV)	Position (constant a)
+
+#: apps/cas/main/cas_phys.c:44
+Torricelli	Torricelli
+
+#: apps/cas/main/cas_phys.c:45
+Caída libre	Free fall
+
+#: apps/cas/main/cas_phys.c:47
+#: apps/cas/main/cas_phys.c:48
+#: apps/cas/main/cas_phys.c:49
+#: apps/cas/main/cas_phys.c:52
+Dinámica	Dynamics
+
+#: apps/cas/main/cas_phys.c:47
+Segunda ley de Newton	Newton's second law
+
+#: apps/cas/main/cas_phys.c:48
+Peso	Weight
+
+#: apps/cas/main/cas_phys.c:48
+peso	weight
+
+#: apps/cas/main/cas_phys.c:49
+Rozamiento	Friction
+
+#: apps/cas/main/cas_phys.c:50
+fuerza de rozamiento	friction force
+
+#: apps/cas/main/cas_phys.c:50
+coeficiente de rozamiento	friction coefficient
+
+#: apps/cas/main/cas_phys.c:51
+fuerza normal	normal force
+
+#: apps/cas/main/cas_phys.c:52
+Ley de Hooke	Hooke's law
+
+#: apps/cas/main/cas_phys.c:53
+Cantidad de movimiento	Momentum
+
+#: apps/cas/main/cas_phys.c:54
+cantidad de movimiento	momentum
+
+#: apps/cas/main/cas_phys.c:55
+Impulso	Impulse
+
+#: apps/cas/main/cas_phys.c:55
+impulso	impulse
+
+#: apps/cas/main/cas_phys.c:57
+#: apps/cas/main/cas_phys.c:59
+#: apps/cas/main/cas_phys.c:61
+#: apps/cas/main/cas_phys.c:63
+Energía	Energy
+
+#: apps/cas/main/cas_phys.c:57
+Energía cinética	Kinetic energy
+
+#: apps/cas/main/cas_phys.c:58
+energía cinética	kinetic energy
+
+#: apps/cas/main/cas_phys.c:59
+Energía potencial	Potential energy
+
+#: apps/cas/main/cas_phys.c:60
+energía potencial	potential energy
+
+#: apps/cas/main/cas_phys.c:61
+Energía elástica	Elastic energy
+
+#: apps/cas/main/cas_phys.c:62
+energía elástica	elastic energy
+
+#: apps/cas/main/cas_phys.c:63
+Trabajo	Work
+
+#: apps/cas/main/cas_phys.c:64
+#: apps/cas/main/cas_phys.c:66
+trabajo	work
+
+#: apps/cas/main/cas_phys.c:64
+ángulo	angle
+
+#: apps/cas/main/cas_phys.c:65
+Potencia	Power
+
+#: apps/cas/main/cas_phys.c:66
+#: apps/cas/main/cas_phys.c:98
+potencia	power
+
+#: apps/cas/main/cas_phys.c:68
+#: apps/cas/main/cas_phys.c:70
+#: apps/cas/main/cas_phys.c:72
+#: apps/cas/main/cas_phys.c:74
+Circular y gravitación	Circular motion and gravity
+
+#: apps/cas/main/cas_phys.c:68
+Aceleración centrípeta	Centripetal acceleration
+
+#: apps/cas/main/cas_phys.c:69
+aceleración centrípeta	centripetal acceleration
+
+#: apps/cas/main/cas_phys.c:70
+Velocidad angular	Angular velocity
+
+#: apps/cas/main/cas_phys.c:71
+#: apps/cas/main/cas_phys.c:73
+velocidad angular	angular velocity
+
+#: apps/cas/main/cas_phys.c:72
+Período	Period
+
+#: apps/cas/main/cas_phys.c:73
+#: apps/cas/main/cas_phys.c:78
+#: apps/cas/main/cas_phys.c:93
+período	period
+
+#: apps/cas/main/cas_phys.c:74
+Gravitación universal	Universal gravitation
+
+#: apps/cas/main/cas_phys.c:75
+#: apps/cas/main/cas_phys.c:145
+constante de gravitación	gravitational constant
+
+#: apps/cas/main/cas_phys.c:76
+masa 1	mass 1
+
+#: apps/cas/main/cas_phys.c:76
+masa 2	mass 2
+
+#: apps/cas/main/cas_phys.c:77
+Péndulo simple	Simple pendulum
+
+#: apps/cas/main/cas_phys.c:78
+largo	length
+
+#: apps/cas/main/cas_phys.c:80
+#: apps/cas/main/cas_phys.c:81
+#: apps/cas/main/cas_phys.c:83
+#: apps/cas/main/cas_phys.c:85
+Fluidos	Fluids
+
+#: apps/cas/main/cas_phys.c:80
+#: apps/cas/main/cas_sci.c:524
+Densidad	Density
+
+#: apps/cas/main/cas_phys.c:81
+#: apps/cas/main/cas_sci.c:1182
+#: apps/cas/main/cas_sci.c:1183
+Presión	Pressure
+
+#: apps/cas/main/cas_phys.c:82
+#: apps/cas/main/cas_phys.c:84
+#: apps/cas/main/cas_phys.c:114
+#: apps/cas/main/cas_sci.c:41
+presión	pressure
+
+#: apps/cas/main/cas_phys.c:82
+área	area
+
+#: apps/cas/main/cas_phys.c:83
+Presión hidrostática	Hydrostatic pressure
+
+#: apps/cas/main/cas_phys.c:84
+profundidad	depth
+
+#: apps/cas/main/cas_phys.c:85
+Empuje (Arquímedes)	Buoyancy (Archimedes)
+
+#: apps/cas/main/cas_phys.c:86
+empuje	buoyant force
+
+#: apps/cas/main/cas_phys.c:87
+Caudal	Flow rate
+
+#: apps/cas/main/cas_phys.c:88
+caudal	flow rate
+
+#: apps/cas/main/cas_phys.c:88
+sección	cross-section
+
+#: apps/cas/main/cas_phys.c:90
+#: apps/cas/main/cas_phys.c:92
+Ondas	Waves
+
+#: apps/cas/main/cas_phys.c:90
+Velocidad de una onda	Wave speed
+
+#: apps/cas/main/cas_phys.c:91
+longitud de onda	wavelength
+
+#: apps/cas/main/cas_phys.c:91
+#: apps/cas/main/cas_phys.c:93
+#: apps/cas/main/cas_phys.c:131
+frecuencia	frequency
+
+#: apps/cas/main/cas_phys.c:92
+Frecuencia y período	Frequency and period
+
+#: apps/cas/main/cas_phys.c:95
+#: apps/cas/main/cas_phys.c:97
+#: apps/cas/main/cas_phys.c:99
+#: apps/cas/main/cas_phys.c:102
+Electricidad	Electricity
+
+#: apps/cas/main/cas_phys.c:95
+Ley de Ohm	Ohm's law
+
+#: apps/cas/main/cas_phys.c:96
+#: apps/cas/main/cas_phys.c:98
+#: apps/cas/main/cas_phys.c:106
+#: apps/cas/main/cas_phys.c:108
+tensión	voltage
+
+#: apps/cas/main/cas_phys.c:96
+#: apps/cas/main/cas_phys.c:98
+corriente	current
+
+#: apps/cas/main/cas_phys.c:96
+resistencia	resistance
+
+#: apps/cas/main/cas_phys.c:97
+Potencia eléctrica	Electric power
+
+#: apps/cas/main/cas_phys.c:99
+Ley de Coulomb	Coulomb's law
+
+#: apps/cas/main/cas_phys.c:100
+#: apps/cas/main/cas_phys.c:153
+constante de Coulomb	Coulomb constant
+
+#: apps/cas/main/cas_phys.c:101
+carga 1	charge 1
+
+#: apps/cas/main/cas_phys.c:101
+carga 2	charge 2
+
+#: apps/cas/main/cas_phys.c:102
+Resistencias en paralelo	Resistors in parallel
+
+#: apps/cas/main/cas_phys.c:103
+resistencia total	total resistance
+
+#: apps/cas/main/cas_phys.c:103
+resistencia 1	resistance 1
+
+#: apps/cas/main/cas_phys.c:104
+resistencia 2	resistance 2
+
+#: apps/cas/main/cas_phys.c:105
+Capacitor	Capacitor
+
+#: apps/cas/main/cas_phys.c:106
+carga	charge
+
+#: apps/cas/main/cas_phys.c:106
+#: apps/cas/main/cas_phys.c:108
+capacidad	capacitance
+
+#: apps/cas/main/cas_phys.c:107
+Energía en un capacitor	Energy in a capacitor
+
+#: apps/cas/main/cas_phys.c:108
+#: apps/cas/main/cas_phys.c:128
+#: apps/cas/main/cas_phys.c:130
+energía	energy
+
+#: apps/cas/main/cas_phys.c:110
+#: apps/cas/main/cas_phys.c:113
+#: apps/cas/main/cas_phys.c:116
+Calor	Heat
+
+#: apps/cas/main/cas_phys.c:110
+Calor sensible	Sensible heat
+
+#: apps/cas/main/cas_phys.c:111
+calor	heat
+
+#: apps/cas/main/cas_phys.c:111
+calor específico	specific heat
+
+#: apps/cas/main/cas_phys.c:112
+#: apps/cas/main/cas_phys.c:118
+cambio de temperatura	temperature change
+
+#: apps/cas/main/cas_phys.c:113
+#: apps/cas/main/cas_sci.c:40
+Gas ideal	Ideal gas
+
+#: apps/cas/main/cas_phys.c:114
+#: apps/cas/main/cas_sci.c:42
+moles	moles
+
+#: apps/cas/main/cas_phys.c:115
+#: apps/cas/main/cas_phys.c:142
+#: apps/cas/main/cas_phys.c:143
+#: apps/cas/main/cas_sci.c:42
+constante de los gases	gas constant
+
+#: apps/cas/main/cas_phys.c:115
+#: apps/cas/main/cas_sci.c:43
+temperatura	temperature
+
+#: apps/cas/main/cas_phys.c:116
+Dilatación lineal	Linear expansion
+
+#: apps/cas/main/cas_phys.c:117
+cambio de largo	change in length
+
+#: apps/cas/main/cas_phys.c:117
+coeficiente de dilatación	expansion coefficient
+
+#: apps/cas/main/cas_phys.c:118
+largo inicial	initial length
+
+#: apps/cas/main/cas_phys.c:120
+#: apps/cas/main/cas_phys.c:123
+Óptica	Optics
+
+#: apps/cas/main/cas_phys.c:120
+Ley de Snell	Snell's law
+
+#: apps/cas/main/cas_phys.c:121
+índice 1	index 1
+
+#: apps/cas/main/cas_phys.c:121
+ángulo de incidencia	angle of incidence
+
+#: apps/cas/main/cas_phys.c:122
+índice 2	index 2
+
+#: apps/cas/main/cas_phys.c:122
+ángulo de refracción	angle of refraction
+
+#: apps/cas/main/cas_phys.c:123
+Lente delgada	Thin lens
+
+#: apps/cas/main/cas_phys.c:124
+distancia focal	focal length
+
+#: apps/cas/main/cas_phys.c:124
+distancia al objeto	object distance
+
+#: apps/cas/main/cas_phys.c:125
+distancia a la imagen	image distance
+
+#: apps/cas/main/cas_phys.c:127
+#: apps/cas/main/cas_phys.c:129
+Moderna	Modern
+
+#: apps/cas/main/cas_phys.c:127
+Masa y energía	Mass and energy
+
+#: apps/cas/main/cas_phys.c:128
+#: apps/cas/main/cas_phys.c:136
+velocidad de la luz	speed of light
+
+#: apps/cas/main/cas_phys.c:129
+Energía de un fotón	Photon energy
+
+#: apps/cas/main/cas_phys.c:130
+#: apps/cas/main/cas_phys.c:137
+constante de Planck	Planck constant
+
+#: apps/cas/main/cas_phys.c:138
+constante de Planck reducida	reduced Planck constant
+
+#: apps/cas/main/cas_phys.c:139
+carga elemental	elementary charge
+
+#: apps/cas/main/cas_phys.c:140
+número de Avogadro	Avogadro constant
+
+#: apps/cas/main/cas_phys.c:141
+constante de Boltzmann	Boltzmann constant
+
+#: apps/cas/main/cas_phys.c:144
+constante de Faraday	Faraday constant
+
+#: apps/cas/main/cas_phys.c:146
+gravedad estándar	standard gravity
+
+#: apps/cas/main/cas_phys.c:147
+masa del electrón	electron mass
+
+#: apps/cas/main/cas_phys.c:148
+masa del protón	proton mass
+
+#: apps/cas/main/cas_phys.c:149
+masa del neutrón	neutron mass
+
+#: apps/cas/main/cas_phys.c:150
+unidad de masa atómica	atomic mass unit
+
+#: apps/cas/main/cas_phys.c:151
+permitividad del vacío	vacuum permittivity
+
+#: apps/cas/main/cas_phys.c:152
+permeabilidad del vacío	vacuum permeability
+
+#: apps/cas/main/cas_phys.c:154
+constante de Stefan-Boltzmann	Stefan-Boltzmann constant
+
+#: apps/cas/main/cas_phys.c:155
+radio de Bohr	Bohr radius
+
+#: apps/cas/main/cas_phys.c:156
+volumen molar (0 °C, 1 atm)	molar volume (0 °C, 1 atm)
+
+#: apps/cas/main/cas_phys.c:157
+atmósfera estándar	standard atmosphere
+
+#: apps/cas/main/cas_phys.c:158
+electronvoltio	electronvolt
+
+#: apps/cas/main/cas_phys.c:159
+masa de la Tierra	Earth's mass
+
+#: apps/cas/main/cas_phys.c:160
+radio medio de la Tierra	Earth's mean radius
+
+#: apps/cas/main/cas_sci.c:45
+Molaridad	Molarity
+
+#: apps/cas/main/cas_sci.c:46
+concentración	concentration
+
+#: apps/cas/main/cas_sci.c:46
+masa de soluto	mass of solute
+
+#: apps/cas/main/cas_sci.c:47
+#: apps/cas/main/cas_sci.c:581
+masa molar	molar mass
+
+#: apps/cas/main/cas_sci.c:47
+volumen de solución	volume of solution
+
+#: apps/cas/main/cas_sci.c:49
+Dilución	Dilution
+
+#: apps/cas/main/cas_sci.c:50
+#: apps/cas/main/cas_sci.c:1147
+concentración inicial	initial concentration
+
+#: apps/cas/main/cas_sci.c:50
+volumen inicial	initial volume
+
+#: apps/cas/main/cas_sci.c:51
+concentración final	final concentration
+
+#: apps/cas/main/cas_sci.c:51
+volumen final	final volume
+
+#: apps/cas/main/cas_sci.c:57
+Metal alcalino	Alkali metal
+
+#: apps/cas/main/cas_sci.c:57
+Alcalinotérreo	Alkaline earth metal
+
+#: apps/cas/main/cas_sci.c:57
+Metal de transición	Transition metal
+
+#: apps/cas/main/cas_sci.c:57
+Otro metal	Post-transition metal
+
+#: apps/cas/main/cas_sci.c:57
+Metaloide	Metalloid
+
+#: apps/cas/main/cas_sci.c:58
+No metal	Nonmetal
+
+#: apps/cas/main/cas_sci.c:58
+Halógeno	Halogen
+
+#: apps/cas/main/cas_sci.c:58
+Gas noble	Noble gas
+
+#: apps/cas/main/cas_sci.c:58
+Lantánido	Lanthanide
+
+#: apps/cas/main/cas_sci.c:58
+Actínido	Actinide
+
+#: apps/cas/main/cas_sci.c:340
+Falta %s	%s is missing
+
+#: apps/cas/main/cas_sci.c:355
+También es solución: %s = %s	Also a solution: %s = %s
+
+#: apps/cas/main/cas_sci.c:501
+Masa atómica	Atomic mass
+
+#: apps/cas/main/cas_sci.c:502
+Configuración	Configuration
+
+#: apps/cas/main/cas_sci.c:506
+Grupo · período	Group · period
+
+#: apps/cas/main/cas_sci.c:507
+sólido	solid
+
+#: apps/cas/main/cas_sci.c:507
+líquido	liquid
+
+#: apps/cas/main/cas_sci.c:507
+gas	gas
+
+#: apps/cas/main/cas_sci.c:508
+ (previsto)	 (predicted)
+
+#: apps/cas/main/cas_sci.c:509
+Estado a 25 °C	State at 25 °C
+
+#: apps/cas/main/cas_sci.c:512
+Electronegatividad	Electronegativity
+
+#: apps/cas/main/cas_sci.c:519
+Fusión · ebullición	Melting · boiling
+
+#: apps/cas/main/cas_sci.c:526
+Estados de oxidación	Oxidation states
+
+#: apps/cas/main/cas_sci.c:531
+Sumar %s a la fórmula	Add %s to the formula
+
+#: apps/cas/main/cas_sci.c:568
+Fórmula (Ca(OH)2, CuSO4.5H2O, SO4^2-)	Formula (Ca(OH)2, CuSO4.5H2O, SO4^2-)
+
+#: apps/cas/main/cas_sci.c:593
+Gramos y moles	Grams and moles
+
+#: apps/cas/main/cas_sci.c:594
+masa (g)	mass (g)
+
+#: apps/cas/main/cas_sci.c:595
+cantidad (mol)	amount (mol)
+
+#: apps/cas/main/cas_sci.c:598
+partículas	particles
+
+#: apps/cas/main/cas_sci.c:613
+Sustancia	Substance
+
+#: apps/cas/main/cas_sci.c:613
+Coef.	Coef.
+
+#: apps/cas/main/cas_sci.c:650
+Gramos de %s	Grams of %s
+
+#: apps/cas/main/cas_sci.c:656
+Ecuación (Fe + O2 = Fe2O3; iones: Fe^3+)	Equation (Fe + O2 = Fe2O3; ions: Fe^3+)
+
+#: apps/cas/main/cas_sci.c:666
+Estequiometría: tocá una sustancia para escribir cuántos gramos hay; el resto sale de ahí.	Stoichiometry: tap a substance to type how many grams there are; the rest follows.
+
+#: apps/cas/main/cas_sci.c:679
+Llená cuatro y tocá =? en el que falta. La temperatura va en kelvin: 0 °C son 273,15 K.	Fill in four and tap =? on the missing one. Temperature is in kelvin: 0 °C is 273.15 K.
+
+#: apps/cas/main/cas_sci.c:704
+Ácido fuerte	Strong acid
+
+#: apps/cas/main/cas_sci.c:704
+Base fuerte	Strong base
+
+#: apps/cas/main/cas_sci.c:704
+Ácido débil	Weak acid
+
+#: apps/cas/main/cas_sci.c:704
+Base débil	Weak base
+
+#: apps/cas/main/cas_sci.c:708
+concentración (mol/L)	concentration (mol/L)
+
+#: apps/cas/main/cas_sci.c:716
+A 25 °C (Kw = 10⁻¹⁴).	At 25 °C (Kw = 10⁻¹⁴).
+
+#: apps/cas/main/cas_sci.c:735
+ionizado	ionised
+
+#: apps/cas/main/cas_sci.c:764
+#: apps/cas/main/cas_sci.c:1224
+Fórmulas	Formulas
+
+#: apps/cas/main/cas_sci.c:767
+Llená los datos y tocá =? en el que querés saber. Los ángulos van en grados.	Fill in what you know and tap =? on what you want. Angles are in degrees.
+
+#: apps/cas/main/cas_sci.c:847
+Con esa altura no llega al suelo.	From that height it never reaches the ground.
+
+#: apps/cas/main/cas_sci.c:853
+Tiempo de vuelo	Time of flight
+
+#: apps/cas/main/cas_sci.c:854
+Alcance	Range
+
+#: apps/cas/main/cas_sci.c:855
+Altura máxima	Maximum height
+
+#: apps/cas/main/cas_sci.c:856
+Velocidad al caer	Speed on landing
+
+#: apps/cas/main/cas_sci.c:857
+Ángulo al caer	Angle on landing
+
+#: apps/cas/main/cas_sci.c:864
+v₀ velocidad inicial (m/s)	v₀ initial speed (m/s)
+
+#: apps/cas/main/cas_sci.c:864
+θ ángulo (°)	θ angle (°)
+
+#: apps/cas/main/cas_sci.c:865
+h₀ altura inicial (m)	h₀ initial height (m)
+
+#: apps/cas/main/cas_sci.c:865
+g gravedad (m/s²)	g gravity (m/s²)
+
+#: apps/cas/main/cas_sci.c:890
+CODATA 2018. Desde 2019 c, h, e, Nₐ y kB son exactas por definición.	CODATA 2018. Since 2019 c, h, e, Nₐ and kB are exact by definition.
+
+#: apps/cas/main/cas_sci.c:920
+#: apps/cas/main/cas_sci.c:1170
+Padre 1	Parent 1
+
+#: apps/cas/main/cas_sci.c:921
+#: apps/cas/main/cas_sci.c:1170
+Padre 2	Parent 2
+
+#: apps/cas/main/cas_sci.c:935
+Fenotipos	Phenotypes
+
+#: apps/cas/main/cas_sci.c:941
+Genotipos	Genotypes
+
+#: apps/cas/main/cas_sci.c:947
+Mayúscula: el alelo dominante. A_ quiere decir AA o Aa.	Capital: the dominant allele. A_ means AA or Aa.
+
+#: apps/cas/main/cas_sci.c:960
+Con los genotipos contados	From genotype counts
+
+#: apps/cas/main/cas_sci.c:965
+Con la frecuencia del fenotipo recesivo	From the recessive phenotype's frequency
+
+#: apps/cas/main/cas_sci.c:983
+Esperados (AA, Aa, aa)	Expected (AA, Aa, aa)
+
+#: apps/cas/main/cas_sci.c:988
+#: apps/cas/main/cas_stats.c:944
+valor p	p-value
+
+#: apps/cas/main/cas_sci.c:989
+No está en equilibrio (p < 0,05)	Not in equilibrium (p < 0.05)
+
+#: apps/cas/main/cas_sci.c:989
+Compatible con el equilibrio (p ≥ 0,05)	Consistent with equilibrium (p ≥ 0.05)
+
+#: apps/cas/main/cas_sci.c:1000
+AA (p²)	AA (p²)
+
+#: apps/cas/main/cas_sci.c:1001
+portadores Aa (2pq)	carriers Aa (2pq)
+
+#: apps/cas/main/cas_sci.c:1025
+Secuencia (ADN o ARN)	Sequence (DNA or RNA)
+
+#: apps/cas/main/cas_sci.c:1028
+Se dejaron afuera %d letras que no son bases.	%d letters that are not bases were left out.
+
+#: apps/cas/main/cas_sci.c:1036
+Largo	Length
+
+#: apps/cas/main/cas_sci.c:1039
+Masa (hebra simple)	Mass (single strand)
+
+#: apps/cas/main/cas_sci.c:1041
+Complementaria	Complement
+
+#: apps/cas/main/cas_sci.c:1043
+Reversa complementaria	Reverse complement
+
+#: apps/cas/main/cas_sci.c:1045
+ARN mensajero	Messenger RNA
+
+#: apps/cas/main/cas_sci.c:1046
+Marco 1	Frame 1
+
+#: apps/cas/main/cas_sci.c:1046
+Marco 2	Frame 2
+
+#: apps/cas/main/cas_sci.c:1046
+Marco 3	Frame 3
+
+#: apps/cas/main/cas_sci.c:1046
+Desde ATG	From ATG
+
+#: apps/cas/main/cas_sci.c:1051
+Proteína (código estándar; * es stop)	Protein (standard code; * is stop)
+
+#: apps/cas/main/cas_sci.c:1052
+Tm: regla de Wallace hasta 13 bases, la fórmula de GC desde 14. Una estimación: no reemplaza a la de la sal y la concentración.	Tm: Wallace's rule up to 13 bases, the GC formula from 14. An estimate: it does not replace one with salt and concentration.
+
+#: apps/cas/main/cas_sci.c:1094
+exponencial	exponential
+
+#: apps/cas/main/cas_sci.c:1095
+logística	logistic
+
+#: apps/cas/main/cas_sci.c:1106
+Exponencial N(t)	Exponential N(t)
+
+#: apps/cas/main/cas_sci.c:1107
+Logística N(t)	Logistic N(t)
+
+#: apps/cas/main/cas_sci.c:1108
+Tiempo de duplicación	Doubling time
+
+#: apps/cas/main/cas_sci.c:1119
+Tubo %d	Tube %d
+
+#: apps/cas/main/cas_sci.c:1125
+Dilución total	Total dilution
+
+#: apps/cas/main/cas_sci.c:1132
+Crecimiento de una población	Population growth
+
+#: apps/cas/main/cas_sci.c:1133
+N₀ población inicial	N₀ initial population
+
+#: apps/cas/main/cas_sci.c:1133
+r tasa de crecimiento	r growth rate
+
+#: apps/cas/main/cas_sci.c:1134
+K capacidad de carga	K carrying capacity
+
+#: apps/cas/main/cas_sci.c:1134
+t tiempo	t time
+
+#: apps/cas/main/cas_sci.c:1146
+Diluciones seriadas	Serial dilutions
+
+#: apps/cas/main/cas_sci.c:1147
+factor por paso	factor per step
+
+#: apps/cas/main/cas_sci.c:1147
+pasos	steps
+
+#: apps/cas/main/cas_sci.c:1170
+Fórmula	Formula
+
+#: apps/cas/main/cas_sci.c:1170
+Secuencia	Sequence
+
+#: apps/cas/main/cas_sci.c:1181
+Temperatura	Temperature
+
+#: apps/cas/main/cas_sci.c:1218
+Química	Chemistry
+
+#: apps/cas/main/cas_sci.c:1218
+Física	Physics
+
+#: apps/cas/main/cas_sci.c:1218
+Biología	Biology
+
+#: apps/cas/main/cas_sci.c:1223
+Tabla	Table
+
+#: apps/cas/main/cas_sci.c:1223
+Masa molar	Molar mass
+
+#: apps/cas/main/cas_sci.c:1223
+Balancear	Balance
+
+#: apps/cas/main/cas_sci.c:1223
+Gases	Gases
+
+#: apps/cas/main/cas_sci.c:1223
+Soluciones	Solutions
+
+#: apps/cas/main/cas_sci.c:1224
+Tiro oblicuo	Projectile
+
+#: apps/cas/main/cas_sci.c:1224
+Constantes	Constants
+
+#: apps/cas/main/cas_sci.c:1225
+Punnett	Punnett
+
+#: apps/cas/main/cas_sci.c:1225
+Hardy-W.	Hardy-W.
+
+#: apps/cas/main/cas_sci.c:1225
+ADN	DNA
+
+#: apps/cas/main/cas_sci.c:1225
+Crecimiento	Growth
+
 #: apps/cas/main/cas_stats.c:235
 Med	Med
 
@@ -454,6 +1741,9 @@ Resumen de L%d	Summary of L%d
 
 #: apps/cas/main/cas_stats.c:350
 Ordenar	Sort
+
+#: apps/cas/main/cas_stats.c:351
+Borrar	Clear
 
 #: apps/cas/main/cas_stats.c:427
 L%d: %d clases de ancho %.4g	L%d: %d classes of width %.4g
@@ -552,9 +1842,6 @@ Tomar de L1 y L2	Take from L1 and L2
 #: apps/cas/main/cas_stats.c:943
 gl	df
 
-#: apps/cas/main/cas_stats.c:944
-valor p	p-value
-
 #: apps/cas/main/cas_stats.c:945
 intervalo	interval
 
@@ -569,6 +1856,3 @@ Distrib.	Distrib.
 
 #: apps/cas/main/cas_stats.c:976
 Pruebas	Tests
-
-#: apps/cas/main/cas_geo.c
-Eliminar	Delete

@@ -23,6 +23,15 @@ void cas_entry_title(const char *title);
 void cas_entry_close(void);
 void cas_entry_free(void);             /* when the app closes */
 
+/* The text sheet: a line (or a few) and the system keyboard, for what is
+ * not a number: a chemical formula, a sequence, a genotype. A USB keyboard
+ * types into it too. */
+typedef void (*cas_text_cb_t)(void *user, const char *text);
+
+void cas_text_open(const char *title, const char *initial, bool multiline, cas_text_cb_t cb, void *user);
+void cas_text_close(void);
+void cas_text_free(void);              /* when the app closes */
+
 /* A numeric field. 'value' is the model and stays the caller's; cb runs
  * after it changed. */
 typedef void (*cas_field_cb_t)(void *user, int id);

@@ -6,7 +6,7 @@ of Xcas, as its author ported it to calculators (KhiCAS): exact arithmetic,
 algebra, calculus, equations, matrices, statistics.
 
 **State (2026-10-12):** the engine runs on the board (the feasibility test
-below), and the app has five views:
+below), and the app has six views:
 
 - **Calculate:** a history of inputs and results drawn as a book prints
   them, a two-dimensional editor (fractions, exponents, roots, integrals,
@@ -39,6 +39,30 @@ below), and the app has five views:
   (TNA with its compounding days, TEA, TEM, daily; a fixed-term deposit;
   the real rate against inflation), and NPV, IRR and payback of cash flows.
 
+- **Sciences:**
+  - *Chemistry:* the periodic table (tap an element for its data), molar
+    mass and composition of a formula as people write it (Ca(OH)2,
+    CuSO4·5H2O, SO4^2-), equations balanced exactly (ions too) with the
+    stoichiometry of every substance from the grams of one, ideal gases,
+    molarity and dilution, and pH of strong and weak acids and bases.
+  - *Physics:* a library of formulas (kinematics, dynamics, energy,
+    gravitation, fluids, waves, electricity, heat, optics) that solve for
+    whichever variable is missing, a projectile drawn with its numbers,
+    and the CODATA 2018 constants.
+  - *Biology:* Punnett squares for up to three genes, Hardy-Weinberg with
+    its χ² test, a DNA sequence (complement, transcription, translation,
+    GC, Tm, mass), population growth and serial dilutions.
+
+Sciences are `main/cas_chem.c`, `cas_phys.c` and `cas_bio.c` (the models,
+tested on the Mac) and `main/cas_sci.c` (the view). A relation between a
+few quantities (PV = nRT, c = m/(M·V), every physics formula) is data: the
+known values replace their names, the unknown becomes x, and the roots are
+found by a scan from zero outwards and bisection, so an angle's smallest
+solution comes first. The periodic table is `main/cas_elements.c`, written
+by `tools/gen_elements.py`: IUPAC's standard atomic weights, and the rest
+(configuration, electronegativity, state, temperatures, density) from
+PubChem's periodic table (public domain).
+
 Geometry is `main/cas_geom.c` (the figure as a list of objects, each built
 from earlier ones, recomputed in order; tested on the Mac like `cas_num.c`)
 and `main/cas_geo.c` (the view). Statistics and finance are computed in `main/cas_num.c` (double, as each
@@ -47,7 +71,7 @@ calculators' examples). A field takes a value the way the keypad writes it
 (1/3, 2π, √2) through `mx_text_value()`.
 
 The history, the functions, the lists and the finance values are kept in
-`data/cas_hist.txt`, `cas_graph.txt`, `cas_geo.txt`, `cas_stats.txt` and `cas_fin.txt`. The menu has *Stop*, *Clear the history* and the
+`data/cas_hist.txt`, `cas_graph.txt`, `cas_geo.txt`, `cas_stats.txt`, `cas_fin.txt` and `cas_sci.txt`. The menu has *Stop*, *Clear the history* and the
 bench, which now writes its results into the history as well as the log.
 
 ## Building

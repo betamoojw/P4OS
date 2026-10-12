@@ -98,6 +98,9 @@ jobs:
           mkdir -p out
           # the image an OTA takes, and what a first flash over the CH340 needs
           cp build/$p/p4os.bin out/p4os-$p.bin
+          # the ELF, for decoding a core dump of this very firmware
+          # (tools/coredump.sh fetches it by the dump's version)
+          xz -T0 -6 -c build/$p/p4os.elf > out/p4os-$p.elf.xz
           (cd build/$p && zip -q ../../out/p4os-$p-full.zip p4os.bin bootloader/bootloader.bin \
               partition_table/partition-table.bin ota_data_initial.bin flash_args)
           if [ "$p" = rev1_3 ]; then

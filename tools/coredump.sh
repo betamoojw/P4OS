@@ -9,8 +9,10 @@
 # build/elf/ (tools/elf_keep.sh). A dump stays in flash through any number of
 # restarts until it is erased, and read against the wrong ELF an old dump
 # looks like a new bug with wrong lines (2026-10-08: the BLE panic of 0.12's
-# first OTA, read a day later as a new one). So with no ELF of that sha here
-# it stops and says so, instead of trying the others.
+# first OTA, read a day later as a new one). A firmware installed from a
+# release has its ELF in that release (p4os-<rev>.elf.xz): fetched with gh
+# by the dump's version and kept only if its sha is the dump's. With no ELF
+# of that sha anywhere it stops and says so, instead of trying the others.
 #
 #   ERASE=1 tools/coredump.sh ...    and forgets it on the board afterwards
 #   ELF=path/to/p4os.elf tools/...   that ELF, whatever its sha (at your risk)
@@ -87,6 +89,19 @@ elif [ "$(ls build/elf/"$sha"*.elf 2>/dev/null | wc -l)" -eq 1 ]; then
 elif [ -f build/rev1_3/p4os.elf ] && [ "$(shasum -a 256 build/rev1_3/p4os.elf | cut -c1-${#sha})" = "$sha" ]; then
     elf=build/rev1_3/p4os.elf
     echo "== the firmware that crashed: $elf (the one built last)"
+elif ver=$(echo "$info" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version",""))') &&
+     echo "$ver" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$' && command -v gh >/dev/null &&
+     fetched=$(for p in rev1_3 rev3_x; do
+                   rm -f "$tmp/p4os-$p.elf.xz"
+                   gh release download "$ver" --repo charliejgallo/P4OS -p "p4os-$p.elf.xz" -D "$tmp" >/dev/null 2>&1 || continue
+                   xz -dc "$tmp/p4os-$p.elf.xz" > "$tmp/fw.elf"
+                   s=$(shasum -a 256 "$tmp/fw.elf" | cut -c1-16)
+                   if [ "${s:0:${#sha}}" = "$sha" ]; then mkdir -p build/elf; mv "$tmp/fw.elf" "build/elf/$s.elf"; echo "build/elf/$s.elf"; break; fi
+               done) && [ -n "$fetched" ]; then
+    # a released firmware (installed from a release, built by the CI): its
+    # ELF goes with every release from the next one on (p4os-<rev>.elf.xz)
+    elf=$fetched
+    echo "== the firmware that crashed: $ver, its ELF from the release ($elf)"
 else
     echo "the ELF of firmware $sha is not in build/elf/ (it keeps the last 10): this dump cannot be"
     echo "decoded here, and decoding it against another firmware would point at the wrong lines."

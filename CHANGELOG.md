@@ -1,7 +1,28 @@
 # Changelog
 
-## Unreleased
+## 0.14.0 — 2026-10-12
 
+- **CAS, a computer algebra system** (`cas.so`, from the card): Giac, the
+  engine of Xcas, built as an app (exact arithmetic, algebra, calculus,
+  equations, matrices) behind six views. **Calculate:** results drawn as a
+  book prints them, a two-dimensional editor and a maths keypad (or a USB
+  or Bluetooth keyboard). **Graph:** six functions, pan, pinch, trace.
+  **Geometry:** constructions with points that drag and everything built on
+  them following, and exact measurements (4√2, 25/4, 16π). **Statistics:**
+  four lists, charts, six regressions, seven distributions, tests.
+  **Finance:** TVM, loans with their table, rates (TNA, TEA, TEM), NPV and
+  IRR. **Sciences:** the periodic table, molar mass, equations balanced
+  exactly, gases, solutions and pH; 41 physics formulas that solve for any
+  variable, a projectile, the CODATA constants; Punnett, Hardy-Weinberg,
+  DNA, growth. Portrait and landscape, Spanish, English and German. On the
+  board: the engine opens in ~0.5 s and the bench's 23 lines take 1-92 ms
+  each. [apps/cas/README.md](apps/cas/README.md).
+- **CAS's page in the portal** (`#cas`): the calculator from the
+  computer's keyboard, the grapher's functions, the statistics lists in and
+  out as CSV, and the plot on the board's screen saved as a PNG.
+- `cas.so` is GPL-3.0-or-later (Giac); the firmware stays MIT
+  ([THIRD-PARTY.md](THIRD-PARTY.md)). The CI builds its engine
+  (`apps/cas/engine/build_engine.sh`) and keeps it in its cache.
 - **The card's apps keep going when the screen turns.** The loader never
   passed an app's `resize()` on: every `.so` app was destroyed and created
   again when the screen turned, though twenty of them (ARKANOS, Claude
@@ -17,6 +38,10 @@
   firmware's ELF hash; only a new or changed `.so` is opened to be
   described. On the board with 44 modules: the scan went from 2.6 s to
   0.5 s, and `cas.so` (5 MB) no longer costs ~0.6 s at every boot.
+- **Each release carries its firmware's ELF** (`p4os-<rev>.elf.xz`), so a
+  crash dump from a released firmware can be read: `tools/coredump.sh`
+  takes the version from the dump, downloads that release's ELF and keeps
+  it only if its hash matches the dump's.
 
 ## 0.13.5 — 2026-10-11
 

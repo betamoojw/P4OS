@@ -8,7 +8,7 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and thirty-eight more on
+portrait or landscape. There are twenty-three built-in apps and thirty-nine more on
 the microSD, loaded as shared objects:
 
 - **Games:** twenty-one, among them Mila (a Sokoban with a black cat in
@@ -16,7 +16,8 @@ the microSD, loaded as shared objects:
   35 fps.
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
-  a VNC viewer for a computer's screen, and Lua.
+  a VNC viewer for a computer's screen, a computer algebra system with
+  graphs, geometry and statistics, and Lua.
 - **A web portal** for files, updates, the log and the network sweeps, and a
   page for every app that wants one, which the app brings from the card.
 - **Bluetooth with the phone:** the iPhone's notifications on the board, in
@@ -312,6 +313,46 @@ its own screen.
 <p align="center">
   <img src="docs/img/photo-ble-xiaomi.jpg" width="300" alt="BLE on the board showing a Xiaomi thermometer's decrypted readings next to the thermometer showing the same 24.6 °C and 65 %">
 </p>
+
+### CAS, a computer algebra system
+
+[Giac](https://www-fourier.univ-grenoble-alpes.fr/~parisse/giac.html), the
+engine of Xcas, as its author ported it to calculators (KhiCAS), built as
+an app for the board: exact arithmetic, algebra, calculus, equations,
+matrices, behind a touch interface of six views
+([apps/cas/README.md](apps/cas/README.md)). From the card, since 0.14.
+
+| Calculate | Graph | Geometry |
+|---|---|---|
+| <img src="docs/img/app-cas-calc.png" width="180"> | <img src="docs/img/app-cas-graph.png" width="180"> | <img src="docs/img/app-cas-geo.png" width="180"> |
+
+| Statistics | Finance | Sciences |
+|---|---|---|
+| <img src="docs/img/app-cas-stats.png" width="180"> | <img src="docs/img/app-cas-fin.png" width="180"> | <img src="docs/img/app-cas-sci.png" width="180"> |
+
+- **Calculate:** results drawn as a book prints them (fractions, roots,
+  integrals, matrices), a two-dimensional editor with a keypad of
+  templates, and a USB or Bluetooth keyboard typing too. Factor, expand,
+  solve, differentiate, integrate, limits, series, Laplace, ODEs...
+- **Graph:** six functions on the whole screen; one finger pans, two zoom,
+  a long press traces. A regression from Statistics goes there with a tap.
+- **Geometry:** points, lines, circles, polygons, intersections,
+  perpendiculars, bisectors; drag a point and everything built on it
+  follows, with lengths, angles, areas and equations exact when they can be
+  (4√2, 25/4, 16π).
+- **Statistics:** four lists, histogram, box plots, scatter, six
+  regressions, seven distributions, t and z tests.
+- **Finance:** TVM, French, German and bullet loans with their table,
+  rates (TNA, TEA, TEM), NPV and IRR.
+- **Sciences:** the periodic table, molar mass, equations balanced (ions
+  too) with their stoichiometry, gases, solutions and pH; 41 physics
+  formulas that solve for whichever variable is missing; Punnett squares,
+  Hardy-Weinberg, a DNA sequence translated.
+- **Its page in the portal:** type from the computer, edit the functions,
+  bring lists in from a CSV, save the plot as a PNG.
+
+`cas.so` is GPL-3.0-or-later (Giac); the firmware stays MIT
+([THIRD-PARTY.md](THIRD-PARTY.md)).
 
 ### Apps from the card
 
@@ -656,7 +697,7 @@ idioma de la tarjeta. Los documentos del plan y de las pruebas en la placa
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 39 de la tarjeta (juegos, notas, mapas, radio, video, Lua, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 40 de la tarjeta (juegos, notas, mapas, radio, video, Lua, una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
 | Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
 | Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |

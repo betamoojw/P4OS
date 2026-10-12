@@ -377,12 +377,37 @@ static void label(lv_layer_t *layer, int x, int y, const char *s, lv_color_t c, 
     lv_draw_label(layer, &d, &a);
 }
 
+/* how long a redraw takes, in the log every few seconds of use: the number
+ * that says whether panning keeps up with the finger */
+static struct {
+    uint32_t n, sum_us, max_us, since;
+} s_perf;
+
+static void perf_note(uint32_t us)
+{
+    s_perf.n++;
+    s_perf.sum_us += us;
+    if (us > s_perf.max_us) s_perf.max_us = us;
+    uint32_t now = aos_hal_uptime_ms();
+    if (now - s_perf.since >= 3000) {
+        if (s_perf.n > 1) {
+            aos_hal_log("cas", "graph: %u redraws, %u.%u ms avg, %u.%u ms max (%dx%d)",
+                        (unsigned)s_perf.n, (unsigned)(s_perf.sum_us / s_perf.n / 1000),
+                        (unsigned)(s_perf.sum_us / s_perf.n / 100 % 10),
+                        (unsigned)(s_perf.max_us / 1000), (unsigned)(s_perf.max_us / 100 % 10), G.W, G.H);
+        }
+        memset(&s_perf, 0, sizeof s_perf);
+        s_perf.since = now;
+    }
+}
+
 static void redraw(void)
 {
     if (!G.canvas || !G.db) {
         return;
     }
     G.dirty = false;
+    uint64_t t0 = aos_hal_uptime_us();
     fill(rgb565(0x000000));
 
     /* grid */
@@ -464,6 +489,7 @@ static void redraw(void)
     }
     lv_canvas_finish_layer(G.canvas, &layer);
     lv_obj_invalidate(G.canvas);
+    perf_note((uint32_t)(aos_hal_uptime_us() - t0));
 
     if (G.pill) {
         if (pill[0]) {

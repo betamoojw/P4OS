@@ -56,6 +56,10 @@ static int sym_pad(const mx_node_t *n, int px, int *right)
         *right = px / 4;
         return px / 4;
     }
+    if (n->flags & MX_F_FUNC) {
+        *right = 0;
+        return px / 10;
+    }
     *right = 0;
     return 0;
 }
@@ -152,7 +156,7 @@ static void lay_node(mx_node_t *n, int px, int fdepth, const mx_node_t *prev)
         /* one line high: the font's own bracket, which matches the text;
          * taller: drawn, so it grows with what it holds */
         n->flags &= (uint8_t)~MX_F_GLYPH;
-        if (n->text[0] != '|' && in->asc <= A(px) + 2 && in->dsc <= D(px) + 2) {
+        if (n->text[0] != '|' && in->asc <= A(px) * 3 / 2 && in->dsc <= D(px) * 16 / 10) {
             char g[2] = { n->text[0], 0 };
             n->flags |= MX_F_GLYPH;
             pw = mx_text_width(mx_font(px), g) + px / 16;

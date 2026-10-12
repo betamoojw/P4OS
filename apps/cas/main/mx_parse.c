@@ -466,6 +466,12 @@ static void emit_id(mx_row_t *r, const char *s)
             return;
         }
     }
+    /* Euler's number and the imaginary unit: names of their own, so 2e or
+     * x·e never glue into "xe" when put back in the editor */
+    if (!strcmp(s, "e") || !strcmp(s, "i")) {
+        sym(r, s, MX_F_ATOM);
+        return;
+    }
     if (!strcmp(s, "undef") || !strcmp(s, "true") || !strcmp(s, "false")) {
         sym(r, s, MX_F_TEXT);
         return;
@@ -525,12 +531,46 @@ static void emit_num(mx_row_t *r, const char *s)
     word(r, s, 0);
 }
 
-static bool starts_like_name(const mx_ast_t *t)
+/* The leftmost and rightmost leaves of a product's factors, for deciding
+ * whether the product can be written without its dot. */
+static const mx_ast_t *first_leaf(const mx_ast_t *t)
 {
-    while (t->op == A_POW || t->op == A_FACT || t->op == A_MUL) {
+    while (t->op == A_POW || t->op == A_FACT || t->op == A_MUL || t->op == A_PRIME) {
         t = t->a[0];
     }
-    return t->op == A_ID || t->op == A_CALL || (t->op == A_LIST);
+    return t;
+}
+
+static const mx_ast_t *last_leaf(const mx_ast_t *t)
+{
+    while (t->op == A_MUL) {
+        t = t->a[1];
+    }
+    return t;
+}
+
+static bool is_glyph_name(const mx_ast_t *t)
+{
+    if (t->op != A_ID) return false;
+    for (size_t i = 0; i < sizeof NAMES / sizeof NAMES[0]; i++) {
+        if (!strcmp(t->s, NAMES[i].name)) return true;
+    }
+    return !strcmp(t->s, "e") || !strcmp(t->s, "i");
+}
+
+/* 2x, x sin(x), c0 e^x, (1/4)ln(x), x²y: as a book writes them. Two plain
+ * names stay apart (x·y): written together they would read as the name
+ * "xy" when the result is put back in the editor. */
+static bool juxtapose(const mx_ast_t *a, const mx_ast_t *b)
+{
+    const mx_ast_t *la = last_leaf(a), *lb = first_leaf(b);
+    if (lb->op == A_NUM || lb->op == A_NEG || lb->op == A_STR) return false;
+    if (la->op == A_NUM) return true;
+    if (lb->op == A_CALL || is_glyph_name(lb)) return true;
+    if (lb->op == A_ID) {
+        return la->op == A_DIV || la->op == A_POW || la->op == A_CALL || is_glyph_name(la);
+    }
+    return false;
 }
 
 static bool is_list_matrix(const mx_ast_t *t)
@@ -670,10 +710,7 @@ static void emit(mx_row_t *r, const mx_ast_t *t, int need)
     case A_MUL: {
         const mx_ast_t *a = t->a[0], *b = t->a[1];
         emit(r, a, 8);
-        /* 2x, 3sin(x), (1/4)ln(x): juxtaposed; 2·3 and x·y keep the dot */
-        bool juxt = (a->op == A_NUM || a->op == A_DIV || a->op == A_POW) && starts_like_name(b) &&
-                    b->op != A_NUM;
-        if (a->op == A_POW && b->op == A_ID) juxt = false;
+        bool juxt = juxtapose(a, b);
         if (!juxt) op_sym(r, "\xC2\xB7");
         emit(r, b, 9);
         break;

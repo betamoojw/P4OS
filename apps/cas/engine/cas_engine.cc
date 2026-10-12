@@ -48,8 +48,17 @@ extern "C" const char *cas_engine_eval(const char *in, int *is_error)
     g = equaltosto(g, s_ctx);
     gen r = protecteval(g, 1, s_ctx);
     *is_error = (r.type == _STRNG && r.subtype == -1) || ctrl_c || interrupted;
-    /* what print() wrote comes first, as on the calculators' console */
-    *s_out = cas_console_text();
+    /* what print() wrote comes first, as on the calculators' console; the
+     * lines Giac writes about itself ("// Parsing f1", "// Success") do not */
+    s_out->clear();
+    for (const char *p = cas_console_text(); *p;) {
+        const char *e = strchr(p, '\n');
+        size_t n = e ? (size_t)(e - p + 1) : strlen(p);
+        if (!(p[0] == '/' && p[1] == '/')) {
+            s_out->append(p, n);
+        }
+        p += n;
+    }
     *s_out += r.print(s_ctx);
     ctrl_c = interrupted = false;
     return s_out->c_str();

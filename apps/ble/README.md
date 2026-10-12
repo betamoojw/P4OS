@@ -120,7 +120,9 @@ is shown to copy into Home Assistant or anywhere else.
   against the simulator's stock Xiaomi, which plays the sensor's side of
   the exchange with mbedTLS and then encrypts its readings with the new key
   (`test/run.sh`): the key both sides end with is the same, and the
-  readings decrypt with it and no longer with the old one.
+  readings decrypt with it and no longer with the old one. On the board
+  with a stock LYWSD03MMC: accepted in ~5 s, and its next readings read
+  with the new key.
 
 ## How many
 

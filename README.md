@@ -484,7 +484,9 @@ test layouts.
   key, the same as its screen. The GATT explorer with that thermometer
   (10 connections out of 10, its 86 attributes listed) and with an
   HLK-LD2410 presence radar, whose UART bridge reported once given the
-  permission command, also from the portal.
+  permission command, also from the portal. That thermometer activated
+  from the board (a new bind key in ~5 s, its readings decrypted with it
+  right after).
 
 **Waiting for hardware on the bench:**
 
@@ -506,8 +508,6 @@ test layouts.
 
 - **RF:** FSK signals, a CC1101 module on the header as a second receiver
   and transmitter, and ADS-B.
-- **BLE:** activating Xiaomi sensors from the board itself (their key is
-  made elsewhere for now).
 - **ESP-NOW:** esp_hosted does not carry it (3.0.9 neither), so the two-device games of
   AmoledOS run alone here.
 - **USB host:** MIDI is written but not tried with a device; Xbox pads

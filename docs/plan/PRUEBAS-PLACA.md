@@ -52,7 +52,12 @@ Sin probar en la placa (2026-10-07, firmware `2611062` en adelante):
       pedido del usuario): un radar HLK-LD2410 (puente serie listado y
       tramas tras el comando de permiso, también desde el portal) y el
       Xiaomi de fábrica, 10 de 10 a 15-30 ms (con el intervalo por defecto
-      fallaban 4 de 6). **Falta:** activar sensores Xiaomi desde la placa.
+      fallaban 4 de 6). Activación del Xiaomi desde la placa (2026-10-11,
+      a pedido del usuario, firmware `2817c6d`): registro aceptado en ~5 s
+      (identificación, intercambio de claves, confirmación), la clave nueva
+      quedó en `ble/claves.txt` y los paquetes siguientes se descifran con
+      ella (18,1 °C, 58 %). Su 0x0010 y su 0x0019 son de escritura sin
+      respuesta.
 
 Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
 - [x] **Host USB** (docs/USB.md): los dos puertos a la vez (21/23 y 25/27)

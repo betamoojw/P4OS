@@ -26,5 +26,8 @@ typedef enum {
 lv_obj_t *term_create(lv_obj_t *parent, const lv_font_t *font);
 void      term_write(lv_obj_t *term, const char *s, size_t n, term_kind_t kind);
 void      term_clear(lv_obj_t *term);
-/* the text of everything, for copying out (malloc'd, the caller frees) */
-char     *term_text(lv_obj_t *term);
+/* the text, the newest lines that fit in max bytes with the terminating
+ * zero (malloc'd, the caller frees) */
+char     *term_text(lv_obj_t *term, size_t max);
+/* changes at every write or clear: whether there is anything new */
+uint32_t  term_seq(lv_obj_t *term);

@@ -37,7 +37,7 @@
 #include <string.h>
 
 #define HEAP_BYTES   (12u * 1024 * 1024)
-#define LINE_MAX     1024
+#define INPUT_MAX     1024
 #define HIST_MAX     200
 #define LIVE_ID      "aos.python"
 
@@ -71,7 +71,7 @@ typedef struct {
     lv_timer_t *timer;
     bool        landscape, kbd_hidden, started, was_busy, was_input;
     /* the line being typed */
-    char        line[LINE_MAX];
+    char        line[INPUT_MAX];
     int         len, cur;           /* bytes; the cursor is a byte offset */
     int         hscroll;            /* the first character shown */
     /* a statement over several lines, until it is complete */
@@ -80,7 +80,9 @@ typedef struct {
     /* the lines typed before */
     char       *hist[HIST_MAX];
     int         nhist, hpos;        /* hpos == nhist: the line being typed */
-    char        saved[LINE_MAX];    /* it, while going through the history */
+    char        saved[INPUT_MAX];    /* it, while going through the history */
+    /* the console's text as the portal last got it */
+    uint32_t    con_seq, con_ms;
 } py_t;
 
 static py_t *P;
@@ -114,7 +116,7 @@ static void hist_load(py_t *p)
     hist_path(path, sizeof path);
     FILE *f = fopen(path, "r");
     if (!f) return;
-    char buf[LINE_MAX];
+    char buf[INPUT_MAX];
     while (fgets(buf, sizeof buf, f)) {
         buf[strcspn(buf, "\r\n")] = 0;
         hist_add(p, buf);
@@ -179,7 +181,7 @@ static void inbox_draw(lv_event_t *e)
         while (j < p->len && ((unsigned char)s[j] & 0xC0) == 0x80) j++;
         shown++;
     }
-    char buf[LINE_MAX + 8];
+    char buf[INPUT_MAX + 8];
     snprintf(buf, sizeof buf, "%s%.*s", pr, j - i, s + i);
     lv_draw_label_dsc_t d;
     lv_draw_label_dsc_init(&d);
@@ -215,7 +217,7 @@ static void line_set(py_t *p, const char *s)
 static void line_insert(py_t *p, const char *s)
 {
     int n = (int)strlen(s);
-    if (p->len + n >= LINE_MAX) return;
+    if (p->len + n >= INPUT_MAX) return;
     memmove(p->line + p->cur + n, p->line + p->cur, p->len - p->cur + 1);
     memcpy(p->line + p->cur, s, n);
     p->len += n;
@@ -284,7 +286,7 @@ static void block_add(py_t *p, const char *s)
 
 static void enter(py_t *p)
 {
-    char line[LINE_MAX];
+    char line[INPUT_MAX];
     snprintf(line, sizeof line, "%s", p->line);
     if (p4py_wants_input()) {
         echo(p, "", line);
@@ -410,6 +412,20 @@ static void live_take(py_t *p)
     }
 }
 
+/* the console's text for the page, key "con", while one is looking (at
+ * most five times a second) */
+static void live_put(py_t *p)
+{
+    uint32_t seq = term_seq(p->term), now = (uint32_t)aos_hal_uptime_ms();
+    if (seq == p->con_seq || now - p->con_ms < 200 || aos_hal_live_idle_ms(LIVE_ID) > 10000) return;
+    char *txt = term_text(p->term, AOS_LIVE_BLOB_MAX);
+    if (!txt) return;
+    aos_hal_live_put(LIVE_ID, "con", "text/plain; charset=utf-8", txt, strlen(txt));
+    free(txt);
+    p->con_seq = seq;
+    p->con_ms = now;
+}
+
 /* --- the frame --------------------------------------------------------------------- */
 
 static void status_update(py_t *p)
@@ -434,6 +450,7 @@ static void tick(lv_timer_t *t)
     size_t n;
     while ((n = p4py_take_output(buf, sizeof buf)) > 0) term_write(p->term, buf, n, TERM_OUT);
     live_take(p);
+    live_put(p);
     status_update(p);
 }
 

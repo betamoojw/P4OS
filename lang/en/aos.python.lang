@@ -5,26 +5,26 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/python/main/mod_p4.c:43
-El Python de P4OS es MicroPython 1.29.\n\nEscribí una expresión y Enter:\n  2**100, sum(range(10)), 'hola'.upper()\ndef, for, if... siguen con '...'; una\n  línea vacía los corre.\nMódulos: math, cmath, random, json, re,\n  time, collections, struct, array,\n  heapq, gc. help('modules') los lista;\n  help(math) muestra uno.\nArchivos: open() e import usan la\n  carpeta /python de la tarjeta.\nDetener corta lo que está corriendo.\n	P4OS's Python is MicroPython 1.29.\n\nType an expression and Enter:\n  2**100, sum(range(10)), 'hello'.upper()\ndef, for, if... go on with '...'; an\n  empty line runs them.\nModules: math, cmath, random, json, re,\n  time, collections, struct, array,\n  heapq, gc. help('modules') lists them;\n  help(math) shows one.\nFiles: open() and import use the card's\n  /python folder.\nStop interrupts what is running.\n
+#: apps/python/main/mod_p4.c:145
+El Python de P4OS es MicroPython 1.29.\n\nEscribí una expresión y Enter:\n  2**100, sum(range(10)), 'hola'.upper()\ndef, for, if... siguen con '...'; una\n  línea vacía los corre.\nMódulos: math, random, json, re, time,\n  os, struct, collections, gc...\n  help('modules') los lista;\n  help(math) muestra uno.\nArchivos: la tarjeta es '/' y se\n  empieza en /python. open(), os e\n  import como en cualquier Python.\nRed: requests.get(url), socket.\nBibliotecas: import mip, y\n  mip.install('nombre') la baja de\n  micropython-lib a /python/lib.\nDetener corta lo que está corriendo.\n	P4OS's Python is MicroPython 1.29.\n\nType an expression and Enter:\n  2**100, sum(range(10)), 'hello'.upper()\ndef, for, if... go on with '...'; an\n  empty line runs them.\nModules: math, random, json, re, time,\n  os, struct, collections, gc...\n  help('modules') lists them;\n  help(math) shows one.\nFiles: the card is '/' and you start\n  in /python. open(), os and import\n  as in any Python.\nNetwork: requests.get(url), socket.\nLibraries: import mip, and\n  mip.install('name') fetches one from\n  micropython-lib into /python/lib.\nStop interrupts what is running.\n
 
-#: apps/python/main/mod_p4.c:80
-Y los .py de la carpeta /python de la tarjeta.\n	And the .py files in the card's /python folder.\n
+#: apps/python/main/mod_p4.c:189
+Y los .py y .mpy de /python y /python/lib.\n	And the .py and .mpy in /python and /python/lib.\n
 
-#: apps/python/main/py_app.c:418
+#: apps/python/main/py_app.c:434
 MicroPython no arrancó	MicroPython did not start
 
-#: apps/python/main/py_app.c:419
+#: apps/python/main/py_app.c:435
 esperando una línea	waiting for a line
 
-#: apps/python/main/py_app.c:420
+#: apps/python/main/py_app.c:436
 corriendo…	running…
 
-#: apps/python/main/py_app.c:518
+#: apps/python/main/py_app.c:535
 Detener	Stop
 
-#: apps/python/main/py_app.c:521
+#: apps/python/main/py_app.c:538
 Limpiar	Clear
 
-#: apps/python/main/py_app.c:564
+#: apps/python/main/py_app.c:581
 MicroPython 1.29 en P4OS · help() para empezar\n	MicroPython 1.29 on P4OS · help() to start\n

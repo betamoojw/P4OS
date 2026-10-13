@@ -15,7 +15,7 @@
 #include <string.h>
 
 #define TERM_LINES  2000
-#define LINE_MAX    4000            /* a line longer than this is cut into several */
+#define TERM_LINE_MAX    4000            /* a line longer than this is cut into several */
 
 typedef struct {
     char    *s;
@@ -32,6 +32,7 @@ typedef struct {
     const lv_font_t *font;
     int        cw, rh, cols;        /* character width, row height, columns */
     int        rows;                /* all the rows, at this width  */
+    uint32_t   seq;                 /* one more at every change     */
 } term_t;
 
 static term_t *get(lv_obj_t *o)
@@ -97,7 +98,7 @@ static void line_put(term_t *t, const char *s, size_t n)
 {
     line_t *l = line_at(t, t->n - 1);
     int before = line_rows(t, l);
-    if (l->len + n > LINE_MAX) n = LINE_MAX - l->len;
+    if (l->len + n > TERM_LINE_MAX) n = TERM_LINE_MAX - l->len;
     if (l->len + n + 1 > l->cap) {
         size_t cap = l->cap ? l->cap : 64;
         while (cap < l->len + n + 1) cap *= 2;
@@ -116,6 +117,7 @@ void term_write(lv_obj_t *o, const char *s, size_t n, term_kind_t kind)
 {
     term_t *t = get(o);
     if (!t) return;
+    t->seq++;
     fit(o, t);
     /* at the bottom now: stay there after the new rows */
     bool follow = lv_obj_get_scroll_bottom(o) <= t->rh;
@@ -158,6 +160,7 @@ void term_clear(lv_obj_t *o)
 {
     term_t *t = get(o);
     if (!t) return;
+    t->seq++;
     for (int i = 0; i < t->n; i++) free(line_at(t, i)->s);
     memset(t->l, 0, sizeof(line_t) * TERM_LINES);
     t->first = t->n = t->rows = 0;
@@ -167,15 +170,17 @@ void term_clear(lv_obj_t *o)
     lv_obj_invalidate(o);
 }
 
-char *term_text(lv_obj_t *o)
+char *term_text(lv_obj_t *o, size_t max)
 {
     term_t *t = get(o);
-    if (!t) return NULL;
+    if (!t || max < 2) return NULL;
+    /* the newest lines that fit, oldest first */
     size_t total = 1;
-    for (int i = 0; i < t->n; i++) total += line_at(t, i)->len + 1;
+    int from = t->n;
+    while (from > 0 && total + line_at(t, from - 1)->len + 1 <= max) total += line_at(t, --from)->len + 1;
     char *out = malloc(total), *p = out;
     if (!out) return NULL;
-    for (int i = 0; i < t->n; i++) {
+    for (int i = from; i < t->n; i++) {
         line_t *l = line_at(t, i);
         if (l->len) memcpy(p, l->s, l->len);
         p += l->len;
@@ -183,6 +188,12 @@ char *term_text(lv_obj_t *o)
     }
     *p = 0;
     return out;
+}
+
+uint32_t term_seq(lv_obj_t *o)
+{
+    term_t *t = get(o);
+    return t ? t->seq : 0;
 }
 
 static uint32_t kind_color(int k)
@@ -222,7 +233,7 @@ static void draw_cb(lv_event_t *e)
     lv_draw_label_dsc_init(&d);
     d.font = t->font;
     d.text_local = 1;
-    static char row[LINE_MAX + 1];
+    static char row[TERM_LINE_MAX + 1];
     int r = 0;
     for (int i = 0; i < t->n && r <= bottom_row; i++) {
         line_t *l = line_at(t, i);

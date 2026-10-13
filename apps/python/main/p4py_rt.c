@@ -9,7 +9,8 @@
  *
  * What MicroPython's embed port asks of the program is here too: the
  * console (mp_hal_stdout_*), the clock (time's ticks_ms...), the random
- * seed, and importing a module from the card's /python folder.
+ * numbers, and where import looks: the card, mounted at "/" when the
+ * interpreter starts (mod_card.c).
  */
 #include "p4py_rt.h"
 
@@ -23,6 +24,7 @@
 #include "py/repl.h"
 #include "py/runtime.h"
 #include "py/stackctrl.h"
+#include "extmod/vfs.h"
 
 #include "aos_hal.h"
 #ifdef AOS_SIM
@@ -39,7 +41,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
 
 #define STACK_BYTES   (128u * 1024)
 #define OUT_MAX       (32u * 1024)          /* printed and not yet shown */
@@ -143,6 +146,31 @@ void mp_hal_delay_us(mp_uint_t us)
     while (aos_hal_uptime_us() < end) {}
 }
 
+/* every 64 jumps or returns of the bytecode (mpconfigport.h): a millisecond
+ * off the core every 50, 2 % of the speed, so the tasks below the
+ * interpreter's priority get their turn */
+#define YIELD_EVERY_MS  50
+
+void p4py_vm_hook(void)
+{
+    static uint32_t last;
+    uint32_t now = (uint32_t)aos_hal_uptime_ms();
+    if (now - last >= YIELD_EVERY_MS) {
+        aos_hal_sleep_ms(1);
+        last = (uint32_t)aos_hal_uptime_ms();
+    }
+}
+
+void mp_hal_get_random(size_t n, void *buf)
+{
+    aos_hal_random(buf, n);
+}
+
+uint64_t mp_hal_time_ns(void)
+{
+    return (uint64_t)time(NULL) * 1000000000ull;
+}
+
 unsigned int p4py_random_seed(void)
 {
     unsigned int s;
@@ -157,38 +185,22 @@ double log2(double x)
     return log(x) * 1.442695040888963407354163704;
 }
 
-/* --- imports from the card --------------------------------------------------------- */
+/* --- files -------------------------------------------------------------------------- */
 
-/* "mod.py" or "pkg/mod.py", as the importer asks: under /sdcard/python (mod_file.c) */
-bool p4py_card_path(const char *name, char *out, size_t n);
+/* open() and import's file checks are MicroPython's own over the mounted
+ * filesystem (py/builtin.h, with MICROPY_VFS) */
+bool p4py_card_mount(void);                 /* mod_card.c */
+bool p4py_card_take_written(void);
 
-mp_import_stat_t mp_import_stat(const char *path)
+#ifndef AOS_SIM
+/* a file's flush() (extmod/vfs_posix_file.c): the firmware lends no
+ * fsync(), and the card's FAT writes what is pending when the file closes */
+int fsync(int fd)
 {
-    char full[300];
-    struct stat st;
-    if (!p4py_card_path(path, full, sizeof full) || stat(full, &st) != 0) return MP_IMPORT_STAT_NO_EXIST;
-    return S_ISDIR(st.st_mode) ? MP_IMPORT_STAT_DIR : MP_IMPORT_STAT_FILE;
+    (void)fd;
+    return 0;
 }
-
-mp_lexer_t *mp_lexer_new_from_file(qstr filename)
-{
-    char full[300];
-    const char *name = qstr_str(filename);
-    FILE *f = p4py_card_path(name, full, sizeof full) ? fopen(full, "rb") : NULL;
-    if (!f) mp_raise_OSError(MP_ENOENT);
-    fseek(f, 0, SEEK_END);
-    long len = ftell(f);
-    fseek(f, 0, SEEK_SET);
-    if (len < 0 || len > 512 * 1024) {
-        fclose(f);
-        mp_raise_OSError(MP_EFBIG);
-    }
-    char *buf = m_new(char, len + 1);
-    size_t got = fread(buf, 1, (size_t)len, f);
-    fclose(f);
-    buf[got] = 0;
-    return mp_lexer_new_from_str_len(filename, buf, got, len + 1);
-}
+#endif
 
 /* --- input() --------------------------------------------------------------------- */
 
@@ -251,6 +263,16 @@ static void run_one(void)
         out_add("\x02", 1);
         err = true;
     }
+    /* open('f', 'w').write(...) leaves the file to the collector, and the
+     * card's FAT commits what was written only when the file closes: a file
+     * opened to write and no longer referenced is closed now, not at some
+     * later collection (12 ms with the heap empty) */
+    if (p4py_card_take_written()) {
+        if (nlr_push(&nlr) == 0) {
+            gc_collect();
+            nlr_pop();
+        }
+    }
     /* a Stop that came after the code ended is not for the next run */
     MP_STATE_THREAD(mp_pending_exception) = MP_OBJ_NULL;
     s_last_ms = aos_hal_uptime_ms() - t0;
@@ -265,6 +287,13 @@ static void py_main(void *arg)
     mp_embed_init(s_heap, s_heap_bytes, &top);
     /* the stack's limit, with room for what runs after the check */
     mp_stack_set_limit(STACK_BYTES - 16 * 1024);
+    nlr_buf_t nlr;
+    if (nlr_push(&nlr) == 0) {
+        if (!p4py_card_mount()) aos_hal_log("python", "no card: no files, no imports");
+        nlr_pop();
+    } else {
+        mp_obj_print_exception(&mp_plat_print, (mp_obj_t)nlr.ret_val);
+    }
     s_boot_ms = aos_hal_uptime_ms() - t0;
     aos_hal_log("python", "MicroPython up in %u ms, %u KB heap", (unsigned)s_boot_ms, (unsigned)(s_heap_bytes / 1024));
     s_state = ST_IDLE;

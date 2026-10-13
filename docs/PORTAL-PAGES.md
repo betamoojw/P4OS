@@ -107,6 +107,7 @@ The pages there are, to copy from:
 | `apps/recorder/web/recorder.js` | the recordings, to listen to, download, delete | `<audio>` straight from the card, a file's header read with a `Range` request |
 | `apps/clima/web/clima.js` | the place, searched with a keyboard, and the forecast | a setting the app keeps in a preference, mirrored to a file both sides write |
 | `apps/cotiz/web/cotiz.js` | which rates the board shows | a one-line file the app reads |
+| `apps/python/web/python.js` | the board's Python console, its programs, apps and libraries | the live channel both ways (lines in; the text and a state out), an editor that indents |
 | `apps/pixel`, `lua`, `mapas`, `visor3d` | drawings, scripts, offline zones, models | big uploads with progress, downloads made in the browser |
 
 ## Live data

@@ -39,6 +39,32 @@ The portal can type too: `POST /api/live?app=aos.python` with `line <text>`
 /api/live?app=aos.python&key=con` is the console's text. That is how it is
 tested.
 
+## The portal's page (`#python`)
+
+`web/python.js`, installed with the app (`docs/PORTAL-PAGES.md`):
+
+- **The board's console from the browser**: its text, a line to type into
+  (with history; several lines pasted go one by one, closing the block),
+  Detener, Limpiar, and whether it runs or waits for `input()`. If the
+  console is not open, typing opens it.
+- **Programas** (`/python`), **Apps** (`/python/apps`) and **Bibliotecas**
+  (`/python/lib`), with an editor (Tab and Shift+Tab indent four spaces,
+  Enter keeps the indent and adds four after a colon, ⌘S saves, ⌘↩ saves and
+  runs). A program runs in the console ("run <path>": its tracebacks name
+  the file); an app opens on the board, and what it prints and its error
+  show under the editor. Uploads by drag and drop, downloads, deletes (a
+  library's folder with what it holds).
+- **Instalar una biblioteca**: a name for `mip.install()`, typed into the
+  console on the board.
+
+The console's side of it is the live channel: lines in (`line`, `run`,
+`stop`, `clear`), its text (`con`) and its state (`st`: `idle`, `busy`,
+`input`, `off`) out, published again whenever a page starts looking. An
+app puts what it printed under its own id (`py.<name>`), the error between
+the bytes 0x01 and 0x02. The live channel takes ids of 24 characters at
+most: an app whose file name (without `.py`) is longer than 21 runs, but the
+page does not see its output.
+
 ## Files
 
 The card is `/` (a VFS of the app's own, `main/mod_card.c`) and the current

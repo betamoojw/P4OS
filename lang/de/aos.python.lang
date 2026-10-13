@@ -11,23 +11,29 @@ El Python de P4OS es MicroPython 1.29.\n\nEscribí una expresión y Enter:\n  2*
 #: apps/python/main/mod_p4.c:189
 Y los .py y .mpy de /python y /python/lib.\n	Und die .py und .mpy in /python und /python/lib.\n
 
-#: apps/python/main/py_app.c:435
+#: apps/python/main/py_app.c:409
+Hay algo corriendo: detenelo primero\n	Es läuft noch etwas: erst stoppen\n
+
+#: apps/python/main/py_app.c:427
+No se pudo leer %s\n	%s konnte nicht gelesen werden\n
+
+#: apps/python/main/py_app.c:492
 MicroPython no arrancó	MicroPython ist nicht gestartet
 
-#: apps/python/main/py_app.c:436
+#: apps/python/main/py_app.c:493
 esperando una línea	wartet auf eine Zeile
 
-#: apps/python/main/py_app.c:437
+#: apps/python/main/py_app.c:494
 corriendo…	läuft…
 
-#: apps/python/main/py_app.c:536
+#: apps/python/main/py_app.c:593
 Detener	Stopp
 
-#: apps/python/main/py_app.c:539
+#: apps/python/main/py_app.c:596
 Limpiar	Leeren
 
-#: apps/python/main/py_app.c:583
+#: apps/python/main/py_app.c:640
 MicroPython 1.29 en P4OS · help() para empezar\n	MicroPython 1.29 auf P4OS · help() zum Anfangen\n
 
-#: apps/python/main/py_script.c:273
+#: apps/python/main/py_script.c:276
 Tocá para correrlo de nuevo	Tippen, um es neu zu starten

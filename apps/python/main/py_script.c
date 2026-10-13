@@ -97,6 +97,7 @@ typedef struct {
     char       tail[PYS_TAIL + 1];
     size_t     tail_n;
     uint32_t   tail_seq, tail_put_seq, tail_put_ms;
+    bool       tail_watched;
 
     uint32_t   watch_at;
     time_t     watch_mtime;
@@ -205,8 +206,10 @@ static void output_drain(pys_t *s)
     size_t n;
     while ((n = p4py_take_output(buf, sizeof buf)) > 0) tail_add(s, buf, n);
     uint32_t now = now_ms();
-    if (s->tail_seq != s->tail_put_seq && now - s->tail_put_ms > 200 &&
-        aos_hal_live_idle_ms(s->self->desc.id) < 10000) {
+    bool watched = aos_hal_live_idle_ms(s->self->desc.id) <= 10000;
+    bool fresh = watched && !s->tail_watched;     /* a page that just started looking */
+    s->tail_watched = watched;
+    if (watched && (fresh || (s->tail_seq != s->tail_put_seq && now - s->tail_put_ms > 200))) {
         aos_hal_live_put(s->self->desc.id, "con", "text/plain; charset=utf-8", s->tail, s->tail_n);
         s->tail_put_seq = s->tail_seq;
         s->tail_put_ms = now;
@@ -672,6 +675,7 @@ static void reload(pys_t *s)
     s->started = s->posted = s->done = false;
     s->tail_n = 0;
     s->tail[0] = 0;
+    s->tail_seq++;                              /* the page sees it empty again */
     s->n_pend = 0;
     if (s->message) lv_obj_add_flag(s->message, LV_OBJ_FLAG_HIDDEN);
     watch_mark(s);

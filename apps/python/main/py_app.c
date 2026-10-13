@@ -16,8 +16,10 @@
  * data/python_hist.txt). Stop, or Ctrl+C on a keyboard, raises
  * KeyboardInterrupt.
  *
- * The portal can type too, on the live channel ("line <text>", "stop",
- * "clear"): the #python page will, and it is how the console is tested.
+ * The portal can type too, on the live channel: "line <text>", "run
+ * <path>" (a program on the card), "stop", "clear". It reads the text back
+ * (key "con") and what the console is doing (key "st"): the #python page
+ * does, and it is how the console is tested.
  */
 #include "p4py_kbd.h"
 #include "p4py_rt.h"
@@ -37,6 +39,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define RUN_MAX      (256 * 1024)        /* a program the page runs */
 #define HEAP_BYTES   (2u * 1024 * 1024)     /* to start: it grows (p4py_rt.c) */
 #define INPUT_MAX     1024
 #define HIST_MAX     200
@@ -84,6 +87,8 @@ typedef struct {
     char        saved[INPUT_MAX];    /* it, while going through the history */
     /* the console's text as the portal last got it */
     uint32_t    con_seq, con_ms;
+    const char *con_st;
+    bool        con_watched;
 } py_t;
 
 static py_t *P;
@@ -396,6 +401,45 @@ static bool hw_key(uint32_t k, uint8_t mods)
 
 /* --- the portal --------------------------------------------------------------------- */
 
+/* The page's Correr: a program on the card ("/python/x.py"), run whole as a
+ * file is, with its name in the tracebacks. Not while something runs. */
+static void run_file(py_t *p, const char *path)
+{
+    if (p4py_busy()) {
+        const char *busy = _("Hay algo corriendo: detenelo primero\n");
+        term_write(p->term, busy, strlen(busy), TERM_INFO);
+        return;
+    }
+    const char *sd = aos_hal_path_sd_root();
+    char full[256];
+    snprintf(full, sizeof full, "%s%s", sd ? sd : "", path);
+    FILE *f = path[0] == '/' && !strstr(path, "..") ? fopen(full, "rb") : NULL;
+    long len = -1;
+    if (f) {
+        fseek(f, 0, SEEK_END);
+        len = ftell(f);
+        rewind(f);
+    }
+    char *src = len >= 0 && len <= RUN_MAX ? malloc((size_t)len + 1) : NULL;
+    if (!src) {
+        if (f) fclose(f);
+        char msg[300];
+        snprintf(msg, sizeof msg, _("No se pudo leer %s\n"), path);
+        term_write(p->term, msg, strlen(msg), TERM_ERR);
+        return;
+    }
+    size_t got = fread(src, 1, (size_t)len, f);
+    fclose(f);
+    src[got] = 0;
+    const char *name = strrchr(path, '/');
+    name = name ? name + 1 : path;
+    char head[96];
+    snprintf(head, sizeof head, "\xe2\x96\xb6 %s\n", name);
+    term_write(p->term, head, strlen(head), TERM_INFO);
+    p4py_run(src, name, P4PY_FILE);
+    free(src);
+}
+
 static void live_take(py_t *p)
 {
     char msg[AOS_LIVE_MSG_MAX + 1];
@@ -405,6 +449,8 @@ static void live_take(py_t *p)
         if (!strncmp(msg, "line ", 5) || !strcmp(msg, "line")) {
             line_set(p, n > 5 ? msg + 5 : "");
             enter(p);
+        } else if (!strncmp(msg, "run ", 4)) {
+            run_file(p, msg + 4);
         } else if (!strcmp(msg, "stop")) {
             stop(p);
         } else if (!strcmp(msg, "clear")) {
@@ -417,8 +463,19 @@ static void live_take(py_t *p)
  * most five times a second) */
 static void live_put(py_t *p)
 {
+    bool watched = aos_hal_live_idle_ms(LIVE_ID) <= 10000;
+    /* a page that just started looking gets everything as it is now */
+    bool fresh = watched && !p->con_watched;
+    p->con_watched = watched;
+    if (!watched) return;
+    /* and what it is doing, for the page's buttons: "idle", "busy", "input" */
+    const char *st = !p->started ? "off" : p4py_wants_input() ? "input" : p4py_busy() ? "busy" : "idle";
+    if (st != p->con_st || fresh) {
+        aos_hal_live_put(LIVE_ID, "st", "text/plain", st, strlen(st));
+        p->con_st = st;
+    }
     uint32_t seq = term_seq(p->term), now = (uint32_t)aos_hal_uptime_ms();
-    if (seq == p->con_seq || now - p->con_ms < 200 || aos_hal_live_idle_ms(LIVE_ID) > 10000) return;
+    if (!fresh && (seq == p->con_seq || now - p->con_ms < 200)) return;
     char *txt = term_text(p->term, AOS_LIVE_BLOB_MAX);
     if (!txt) return;
     aos_hal_live_put(LIVE_ID, "con", "text/plain; charset=utf-8", txt, strlen(txt));

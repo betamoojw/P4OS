@@ -242,6 +242,7 @@ background until that is fixed: `AOS_APP_FLAG_KEEP` goes back in
 public with STARTTLS, UDP and servers.
 
 Python® is a registered trademark of the Python Software Foundation; this
-app uses the name, and an icon after its logo, to say what it runs, and is
-not affiliated with or endorsed by the PSF. MicroPython is Damien George's
-project, MIT-licensed (`main/upy/LICENSE`).
+app uses the name to say what it runs, and is not affiliated with or
+endorsed by the PSF. Its icon is the REPL's prompt, `>>>`, and not the
+Python logo. MicroPython is Damien George's project, MIT-licensed
+(`main/upy/LICENSE`).

@@ -47,25 +47,21 @@
 
 bool mp_repl_continue_with_input(const char *input);   /* py/repl.h: plain text, no interpreter */
 
-/* Python's logo: two snakes, the same shape turned half a turn about the
- * centre, blue above and yellow below, each with its eye; a thin line of
- * the background between them. Percent of the icon, from its centre. */
+/* ">>>", the prompt: three chevrons in Python's yellow on its blue. Each
+ * arm is a row of discs that overlap (a 4 % step, 12 % across), which draws
+ * the diagonal without rotating anything: a rotated shape costs the
+ * launcher a layer every frame (tools/aic.py lint). 248 of the 256 bytes. */
+#define PY_DISC(x, y) AIC_RECT(AIC_CENTER, (x), (y), 12, 12, AIC_CIRCLE, AIC_C_YELLOW, 255)
+#define PY_CHEVRON(tx) \
+    PY_DISC((tx) - 16, -16), PY_DISC((tx) - 12, -12), PY_DISC((tx) - 8, -8), PY_DISC((tx) - 4, -4), \
+    PY_DISC((tx), 0), \
+    PY_DISC((tx) - 4, 4), PY_DISC((tx) - 8, 8), PY_DISC((tx) - 12, 12), PY_DISC((tx) - 16, 16)
+
 static const uint8_t PY_ICON[] = {
     AIC_HEADER,
-    /* blue: the head on top, the body to the left */
-    AIC_RECT(AIC_CENTER,  -2, -21, 34, 18, 8, AIC_C_LIT(0x3776AB), 255),
-    AIC_GRAD(AIC_C_LIT(0x4B8BBE), AIC_GRAD_VER),
-    AIC_RECT(AIC_CENTER, -14,  -2, 32, 20, 8, AIC_C_LIT(0x3776AB), 255),
-    AIC_GRAD(AIC_C_LIT(0x306998), AIC_GRAD_VER),
-    AIC_RECT(AIC_CENTER,  -4, -11, 14, 12, 0, AIC_C_LIT(0x3776AB), 255),
-    AIC_RECT(AIC_CENTER, -11, -25,  5,  5, AIC_CIRCLE, AIC_C_TEXT, 255),
-    /* yellow: the same, turned */
-    AIC_RECT(AIC_CENTER,  14,   2, 32, 20, 8, AIC_C_LIT(0xFFD43B), 255),
-    AIC_GRAD(AIC_C_LIT(0xFFE873), AIC_GRAD_VER),
-    AIC_BORDER(2, AIC_C_LIT(0xF5F7FA), 255),
-    AIC_RECT(AIC_CENTER,   2,  21, 34, 18, 8, AIC_C_LIT(0xFFD43B), 255),
-    AIC_RECT(AIC_CENTER,   4,  11, 14, 12, 0, AIC_C_LIT(0xFFD43B), 255),
-    AIC_RECT(AIC_CENTER,  11,  25,  5,  5, AIC_CIRCLE, AIC_C_TEXT, 255),
+    PY_CHEVRON(-12),
+    PY_CHEVRON(8),
+    PY_CHEVRON(28),
     AIC_END
 };
 
@@ -678,8 +674,8 @@ bool py_console_describe(aos_app_t *app)
     app->desc.name     = "Python";
     app->desc.icon     = LV_SYMBOL_EDIT;
     app->desc.icon_vec = AOS_ICON_NONE;
-    app->desc.color_a  = 0xF5F7FA;
-    app->desc.color_b  = 0xD3DCE6;
+    app->desc.color_a  = 0x3776AB;                 /* Python's blue */
+    app->desc.color_b  = 0x1E4A75;
     app->desc.order    = 205;
     /* Not AOS_APP_FLAG_KEEP for now, though a session kept while other apps
      * are used is what the console wants: the firmware unloads a module

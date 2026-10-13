@@ -34,3 +34,9 @@ uint32_t p4py_last_ms(void);
 bool     p4py_last_error(void);
 /* The heap: used and free bytes (from the GC's point of view). */
 void     p4py_mem(size_t *used, size_t *free_);
+
+/* input(): the script asks the console for a line. While it waits,
+ * p4py_wants_input() is true and gives its prompt; the console answers with
+ * p4py_give_input(). Stop while it waits is a KeyboardInterrupt as usual. */
+bool     p4py_wants_input(void);
+void     p4py_give_input(const char *line);

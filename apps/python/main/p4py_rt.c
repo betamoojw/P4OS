@@ -56,6 +56,8 @@ static volatile bool s_job;
 static char    *s_src, s_name[64];
 static p4py_mode_t s_mode;
 static char    *s_out;                       /* OUT_MAX, PSRAM */
+static volatile bool s_want_input, s_input_ready;
+static char    *s_input;                     /* the console's answer (malloc'd) */
 static size_t   s_out_n;
 static bool     s_out_dropped;
 
@@ -188,6 +190,46 @@ mp_lexer_t *mp_lexer_new_from_file(qstr filename)
     return mp_lexer_new_from_str_len(filename, buf, got, len + 1);
 }
 
+/* --- input() --------------------------------------------------------------------- */
+
+bool p4py_wants_input(void)
+{
+    return s_want_input && !s_input_ready;
+}
+
+void p4py_give_input(const char *line)
+{
+    if (!s_want_input || s_input_ready) return;
+    size_t n = strlen(line);
+    char *c = malloc(n + 1);
+    if (!c) return;
+    memcpy(c, line, n + 1);
+    s_input = c;
+    s_input_ready = true;
+}
+
+/* mod_p4.c's input(): on the interpreter's thread */
+char *p4py_input_wait(void)
+{
+    s_input_ready = false;
+    s_want_input = true;
+    while (!s_input_ready) {
+        nlr_buf_t nlr;
+        if (nlr_push(&nlr) == 0) {
+            mp_handle_pending(true);           /* Stop raises here */
+            nlr_pop();
+        } else {
+            s_want_input = false;
+            nlr_jump(nlr.ret_val);
+        }
+        aos_hal_sleep_ms(20);
+    }
+    char *line = s_input;
+    s_input = NULL;
+    s_want_input = s_input_ready = false;
+    return line;
+}
+
 /* --- the thread ---------------------------------------------------------------------- */
 
 static void run_one(void)
@@ -203,7 +245,10 @@ static void run_one(void)
         mp_call_function_0(fun);
         nlr_pop();
     } else {
+        /* the console paints between these bytes red (p4py_term.c) */
+        out_add("\x01", 1);
         mp_obj_print_exception(&mp_plat_print, (mp_obj_t)nlr.ret_val);
+        out_add("\x02", 1);
         err = true;
     }
     /* a Stop that came after the code ended is not for the next run */

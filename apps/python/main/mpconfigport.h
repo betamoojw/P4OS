@@ -107,6 +107,18 @@
 #define MICROPY_PY_CRYPTOLIB                (0)
 #define MICROPY_PY_OPENAMP                  (0)
 
+/* the port's builtins (mod_p4.c): input() asks the app's console, and
+ * help() speaks the interface's language (MicroPython's own help text is a
+ * fixed array, so its help is off and the port's takes the name) */
+#define MICROPY_PY_BUILTINS_HELP            (0)
+#define MICROPY_PORT_BUILTINS \
+    { MP_ROM_QSTR(MP_QSTR_input), MP_ROM_PTR(&p4py_input_obj) }, \
+    { MP_ROM_QSTR(MP_QSTR_help), MP_ROM_PTR(&p4py_help_obj) },
+#ifndef __ASSEMBLER__
+extern const struct _mp_obj_fun_builtin_var_t p4py_input_obj;
+extern const struct _mp_obj_fun_builtin_var_t p4py_help_obj;
+#endif
+
 /* the random seed comes from the chip (p4py_rt.c) */
 #ifndef __ASSEMBLER__
 unsigned int p4py_random_seed(void);

@@ -88,6 +88,19 @@ if(AOS_LUA_SRC)
     target_compile_options(aos_lua PRIVATE -w)
 endif()
 
+# MicroPython (apps/python/main/upy, written by apps/python/tools/gen_upy.sh)
+# is below the glob too, and builds apart for Lua's reasons. Its double
+# maths (lib/libm_dbl) is the board's; on the Mac the system's libm does.
+if("python" IN_LIST P4OS_SIM_APPS)
+    file(GLOB_RECURSE AOS_UPY_SRC CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../apps/python/main/upy/*.c)
+    list(FILTER AOS_UPY_SRC EXCLUDE REGEX "/lib/libm_dbl/")
+    add_library(aos_upy STATIC ${AOS_UPY_SRC})
+    target_include_directories(aos_upy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../apps/python/main
+        ${CMAKE_CURRENT_SOURCE_DIR}/../apps/python/main/upy)
+    target_compile_definitions(aos_upy PRIVATE NDEBUG)
+    target_compile_options(aos_upy PRIVATE -w)
+endif()
+
 # Doom's engine (apps/doom/main/doomgeneric, GPL, third-party) and its port
 # live below the glob too, and for the same reasons as Lua they build apart:
 # Chocolate Doom does not survive our warnings, and the port's files see the
@@ -231,6 +244,7 @@ target_compile_options(p4os_sim PRIVATE -Wall -Wextra -Wno-unused-parameter)
 target_compile_definitions(p4os_sim PRIVATE AOS_SIM_BUILTIN AOS_SIM)
 target_link_libraries(p4os_sim PRIVATE lvgl ${SDL2_LIBRARIES} m aos_cjson
     $<$<BOOL:${AOS_LUA_SRC}>:aos_lua>
+    $<$<BOOL:${AOS_UPY_SRC}>:aos_upy>
     $<$<BOOL:${AOS_DOOM_SRC}>:aos_doom>
     $<$<BOOL:${AOS_RTLSDR_SRC}>:aos_rtlsdr>
     ${MBEDTLS_LIB} ${MBEDX509_LIB} ${MBEDCRYPTO_LIB} ${AVCODEC_LIBRARIES})

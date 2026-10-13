@@ -23,6 +23,17 @@
 
 #define MICROPY_ENABLE_COMPILER             (1)
 #define MICROPY_ENABLE_GC                   (1)
+/* the heap grows in areas as a program needs them, and gives back the ones
+ * that empty (p4py_rt.c says how far) */
+#define MICROPY_GC_SPLIT_HEAP               (1)
+#define MICROPY_GC_SPLIT_HEAP_AUTO          (1)
+#define MP_PLAT_ALLOC_HEAP(size)            p4py_heap_alloc(size)
+#define MP_PLAT_FREE_HEAP(ptr)              p4py_heap_free(ptr)
+#ifndef __ASSEMBLER__
+#include <stddef.h>
+void *p4py_heap_alloc(size_t n);
+void p4py_heap_free(void *p);
+#endif
 #define MICROPY_PY_GC                       (1)
 /* the C stack is checked against a limit the app sets (its thread's) */
 #define MICROPY_STACK_CHECK                 (1)
@@ -115,7 +126,7 @@ void p4py_vm_hook(void);
 #define MICROPY_PY_THREAD                   (0)
 #define MICROPY_PY_ASYNCIO                  (0)
 #define MICROPY_PY_UCTYPES                  (0)
-#define MICROPY_PY_FRAMEBUF                 (0)
+#define MICROPY_PY_FRAMEBUF                 (1)     /* aos.fb, and for anyone */
 #define MICROPY_PY_BTREE                    (0)
 #define MICROPY_PY_ONEWIRE                  (0)
 #define MICROPY_PY_WEBSOCKET                (0)

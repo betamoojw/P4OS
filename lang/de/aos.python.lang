@@ -6,25 +6,28 @@
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
 #: apps/python/main/mod_p4.c:145
-El Python de P4OS es MicroPython 1.29.\n\nEscribí una expresión y Enter:\n  2**100, sum(range(10)), 'hola'.upper()\ndef, for, if... siguen con '...'; una\n  línea vacía los corre.\nMódulos: math, random, json, re, time,\n  os, struct, collections, gc...\n  help('modules') los lista;\n  help(math) muestra uno.\nArchivos: la tarjeta es '/' y se\n  empieza en /python. open(), os e\n  import como en cualquier Python.\nRed: requests.get(url), socket.\nBibliotecas: import mip, y\n  mip.install('nombre') la baja de\n  micropython-lib a /python/lib.\nDetener corta lo que está corriendo.\n	Das Python von P4OS ist MicroPython 1.29.\n\nAusdruck eingeben und Enter:\n  2**100, sum(range(10)), 'hallo'.upper()\ndef, for, if... gehen mit '...' weiter;\n  eine leere Zeile führt sie aus.\nModule: math, random, json, re, time,\n  os, struct, collections, gc...\n  help('modules') listet sie auf;\n  help(math) zeigt eines.\nDateien: die Karte ist '/', Start in\n  /python. open(), os und import wie\n  in jedem Python.\nNetz: requests.get(url), socket.\nBibliotheken: import mip, und\n  mip.install('name') lädt eine aus\n  micropython-lib nach /python/lib.\nStopp bricht ab, was gerade läuft.\n
+El Python de P4OS es MicroPython 1.29.\n\nEscribí una expresión y Enter:\n  2**100, sum(range(10)), 'hola'.upper()\ndef, for, if... siguen con '...'; una\n  línea vacía los corre.\nMódulos: math, random, json, re, time,\n  os, struct, collections, gc...\n  help('modules') los lista;\n  help(math) muestra uno.\nArchivos: la tarjeta es '/' y se\n  empieza en /python. open(), os e\n  import como en cualquier Python.\nRed: requests.get(url), socket.\nBibliotecas: import mip, y\n  mip.install('nombre') la baja de\n  micropython-lib a /python/lib.\nApps: cada .py de /python/apps es una\n  app del inicio que dibuja con aos.\nDetener corta lo que está corriendo.\n	Das Python von P4OS ist MicroPython 1.29.\n\nAusdruck eingeben und Enter:\n  2**100, sum(range(10)), 'hallo'.upper()\ndef, for, if... gehen mit '...' weiter;\n  eine leere Zeile führt sie aus.\nModule: math, random, json, re, time,\n  os, struct, collections, gc...\n  help('modules') listet sie auf;\n  help(math) zeigt eines.\nDateien: die Karte ist '/', Start in\n  /python. open(), os und import wie\n  in jedem Python.\nNetz: requests.get(url), socket.\nBibliotheken: import mip, und\n  mip.install('name') lädt eine aus\n  micropython-lib nach /python/lib.\nApps: jede .py in /python/apps ist eine\n  App im Startbildschirm (zeichnet mit aos).\nStopp bricht ab, was gerade läuft.\n
 
 #: apps/python/main/mod_p4.c:189
 Y los .py y .mpy de /python y /python/lib.\n	Und die .py und .mpy in /python und /python/lib.\n
 
-#: apps/python/main/py_app.c:434
+#: apps/python/main/py_app.c:435
 MicroPython no arrancó	MicroPython ist nicht gestartet
 
-#: apps/python/main/py_app.c:435
+#: apps/python/main/py_app.c:436
 esperando una línea	wartet auf eine Zeile
 
-#: apps/python/main/py_app.c:436
+#: apps/python/main/py_app.c:437
 corriendo…	läuft…
 
-#: apps/python/main/py_app.c:535
+#: apps/python/main/py_app.c:536
 Detener	Stopp
 
-#: apps/python/main/py_app.c:538
+#: apps/python/main/py_app.c:539
 Limpiar	Leeren
 
-#: apps/python/main/py_app.c:581
+#: apps/python/main/py_app.c:583
 MicroPython 1.29 en P4OS · help() para empezar\n	MicroPython 1.29 auf P4OS · help() zum Anfangen\n
+
+#: apps/python/main/py_script.c:273
+Tocá para correrlo de nuevo	Tippen, um es neu zu starten

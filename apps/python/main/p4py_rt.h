@@ -17,8 +17,12 @@ typedef enum {
     P4PY_SINGLE,                /* a REPL line: an expression's value is printed */
 } p4py_mode_t;
 
+/* heap_bytes is where the heap starts: it grows as a program needs, up to
+ * 12 MB in all, leaving the system its share of PSRAM (p4py_rt.c). There
+ * is one interpreter for all the apps of python.so (the loader gives them
+ * one copy of the module): one already up is stopped first. */
 bool     p4py_start(size_t heap_bytes);
-void     p4py_stop(void);                   /* waits for the thread, frees the heap */
+bool     p4py_stop(void);                   /* waits for the thread, frees the heap; false if it did not stop */
 bool     p4py_ready(void);                  /* booted, nothing running */
 bool     p4py_busy(void);
 uint32_t p4py_boot_ms(void);
@@ -32,6 +36,8 @@ size_t   p4py_take_output(char *out, size_t n);
 /* The last run: how long it took and whether it ended in an exception. */
 uint32_t p4py_last_ms(void);
 bool     p4py_last_error(void);
+/* It ended in sys.exit() (an ending, not an error: an app closes on it). */
+bool     p4py_exited(void);
 /* The heap: used and free bytes (from the GC's point of view). */
 void     p4py_mem(size_t *used, size_t *free_);
 

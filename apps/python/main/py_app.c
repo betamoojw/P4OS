@@ -22,6 +22,7 @@
 #include "p4py_kbd.h"
 #include "p4py_rt.h"
 #include "p4py_term.h"
+#include "py_canvas.h"
 
 #include "aos_app.h"
 #include "aos_hal.h"
@@ -36,7 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define HEAP_BYTES   (12u * 1024 * 1024)
+#define HEAP_BYTES   (2u * 1024 * 1024)     /* to start: it grows (p4py_rt.c) */
 #define INPUT_MAX     1024
 #define HIST_MAX     200
 #define LIVE_ID      "aos.python"
@@ -577,6 +578,7 @@ static void *py_create(aos_app_t *self, lv_obj_t *root)
     hist_load(p);
     p->hpos = p->nhist;
     build(p, root);
+    pyc_current = NULL;                         /* aos draws only in an app */
     p->started = p4py_start(HEAP_BYTES);
     const char *banner = _("MicroPython 1.29 en P4OS · help() para empezar\n");
     term_write(p->term, banner, strlen(banner), TERM_INFO);
@@ -612,7 +614,8 @@ static void py_destroy(aos_app_t *self, void *inst)
     free(p);
 }
 
-static bool py_init(aos_app_t *app)
+/* index 0 of the module (py_script.c brings the rest: one app per script) */
+bool py_console_describe(aos_app_t *app)
 {
     app->desc.id       = "aos.python";
     app->desc.name     = "Python";
@@ -621,7 +624,13 @@ static bool py_init(aos_app_t *app)
     app->desc.color_a  = 0xF5F7FA;
     app->desc.color_b  = 0xD3DCE6;
     app->desc.order    = 205;
-    app->desc.flags    = AOS_APP_FLAG_KEEP;     /* a session kept while other apps are used */
+    /* Not AOS_APP_FLAG_KEEP for now, though a session kept while other apps
+     * are used is what the console wants: the firmware unloads a module
+     * when any of its apps closes, also while another app of the same
+     * module is alive (the loader gives them one copy), and a Python app
+     * opened and closed meanwhile would take the console's code with it.
+     * Asked of the firmware (docs/internal/HANDOFF-NUEVAS-APPS.md). */
+    app->desc.flags    = AOS_APP_FLAG_NONE;
     aos_icon_set_ops(app, PY_ICON, sizeof PY_ICON);
     app->create  = py_create;
     app->resize  = py_resize;
@@ -629,4 +638,3 @@ static bool py_init(aos_app_t *app)
     return true;
 }
 
-AOS_APP_ENTRY(py_init);

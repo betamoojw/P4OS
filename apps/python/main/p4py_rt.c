@@ -54,7 +54,8 @@ static void    *s_lock;
 static void    *s_heap;
 static size_t   s_heap_bytes;
 static uint32_t s_boot_ms, s_last_ms;
-static volatile bool s_last_err;
+static volatile bool s_last_err, s_exited;
+static volatile bool s_cancel;               /* stop it, and keep stopping it */
 static volatile bool s_job;
 static char    *s_src, s_name[64];
 static p4py_mode_t s_mode;
@@ -154,6 +155,9 @@ void mp_hal_delay_us(mp_uint_t us)
 void p4py_vm_hook(void)
 {
     static uint32_t last;
+    /* raised again and again while the app is leaving: a script that
+     * catches KeyboardInterrupt in its loop does not get to go round */
+    if (s_cancel && MP_STATE_THREAD(mp_pending_exception) == MP_OBJ_NULL) mp_sched_keyboard_interrupt();
     uint32_t now = (uint32_t)aos_hal_uptime_ms();
     if (now - last >= YIELD_EVERY_MS) {
         aos_hal_sleep_ms(1);
@@ -242,11 +246,81 @@ char *p4py_input_wait(void)
     return line;
 }
 
+/* --- the heap ---------------------------------------------------------------------- */
+
+/* MicroPython's heap starts at what p4py_start() is given and grows in more
+ * areas when a program needs them (MICROPY_GC_SPLIT_HEAP_AUTO), up to
+ * HEAP_MAX in all and never leaving the system less than PSRAM_KEEP of
+ * PSRAM; an area that empties is given back. Each app made from python.so
+ * is a copy with an interpreter of its own -the console kept in the
+ * background and a Python app in front are two- so a fixed 12 MB each did
+ * not fit. */
+#define HEAP_MAX      (12u * 1024 * 1024)
+#define PSRAM_KEEP    (3u * 1024 * 1024)
+#define GROWN_MAX     32
+
+static struct { void *p; size_t n; } s_grown[GROWN_MAX];
+static size_t s_heap_total;
+
+size_t gc_get_max_new_split(void)
+{
+    uint32_t free_int = 0, free_psram = 0;
+    aos_hal_heap_info(&free_int, &free_psram);
+    if (free_psram <= PSRAM_KEEP || s_heap_total >= HEAP_MAX) return 0;
+    size_t can = free_psram - PSRAM_KEEP;
+    if (can > HEAP_MAX - s_heap_total) can = HEAP_MAX - s_heap_total;
+    /* what is free is not one block: the largest that can be had, tried */
+    while (can >= 64 * 1024) {
+        void *t = big_alloc(can);
+        if (t) {
+            big_free(t);
+            return can;
+        }
+        can = can / 4 * 3;
+    }
+    return 0;
+}
+
+void *p4py_heap_alloc(size_t n)
+{
+    for (int i = 0; i < GROWN_MAX; i++) {
+        if (s_grown[i].p) continue;
+        void *p = big_alloc(n);
+        if (!p) return NULL;
+        s_grown[i].p = p;
+        s_grown[i].n = n;
+        s_heap_total += n;
+        return p;
+    }
+    return NULL;
+}
+
+void p4py_heap_free(void *p)
+{
+    for (int i = 0; i < GROWN_MAX; i++) {
+        if (s_grown[i].p != p) continue;
+        s_heap_total -= s_grown[i].n;
+        s_grown[i].p = NULL;
+        break;
+    }
+    big_free(p);
+}
+
+static void heap_free_grown(void)
+{
+    for (int i = 0; i < GROWN_MAX; i++) {
+        if (s_grown[i].p) big_free(s_grown[i].p);
+        s_grown[i].p = NULL;
+    }
+    s_heap_total = 0;
+}
+
 /* --- the thread ---------------------------------------------------------------------- */
 
 static void run_one(void)
 {
     nlr_buf_t nlr;
+    s_exited = false;
     uint32_t t0 = aos_hal_uptime_ms();
     bool err = false;
     if (nlr_push(&nlr) == 0) {
@@ -256,6 +330,10 @@ static void run_one(void)
         mp_obj_t fun = mp_compile(&tree, name, s_mode == P4PY_SINGLE);
         mp_call_function_0(fun);
         nlr_pop();
+    } else if (mp_obj_is_subclass_fast(MP_OBJ_FROM_PTR(((mp_obj_base_t *)nlr.ret_val)->type),
+                                       MP_OBJ_FROM_PTR(&mp_type_SystemExit))) {
+        /* sys.exit(): an ending, not an error; an app closes on it */
+        s_exited = true;
     } else {
         /* the console paints between these bytes red (p4py_term.c) */
         out_add("\x01", 1);
@@ -315,7 +393,10 @@ static void py_main(void *arg)
 
 bool p4py_start(size_t heap_bytes)
 {
-    if (s_state != ST_OFF) return false;
+    /* One interpreter for every app of python.so: the firmware's loader
+     * gives all of them the same copy of the module, statics and all. The
+     * app that starts one takes it from whichever had it. */
+    if (s_state != ST_OFF && !p4py_stop()) return false;
     if (!s_lock) s_lock = aos_hal_mutex_create();
     s_out = big_alloc(OUT_MAX);
     s_heap = big_alloc(heap_bytes);
@@ -326,6 +407,8 @@ bool p4py_start(size_t heap_bytes)
         return false;
     }
     s_heap_bytes = heap_bytes;
+    s_heap_total = heap_bytes;
+    s_cancel = false;
     s_out_n = 0;
     s_state = ST_BOOTING;
     if (!aos_hal_thread_start("python", py_main, NULL, STACK_BYTES, 3)) {
@@ -340,6 +423,7 @@ bool p4py_busy(void)     { return s_job || s_state == ST_BUSY || s_state == ST_B
 uint32_t p4py_boot_ms(void) { return s_boot_ms; }
 uint32_t p4py_last_ms(void) { return s_last_ms; }
 bool p4py_last_error(void)  { return s_last_err; }
+bool p4py_exited(void)      { return s_exited; }
 
 bool p4py_run(const char *src, const char *name, p4py_mode_t mode)
 {
@@ -372,11 +456,12 @@ void p4py_mem(size_t *used, size_t *free_)
     *free_ = info.free;
 }
 
-void p4py_stop(void)
+bool p4py_stop(void)
 {
-    if (s_state == ST_OFF) return;
+    if (s_state == ST_OFF) return true;
     for (int i = 0; i < 300 && s_state == ST_BOOTING; i++) aos_hal_sleep_ms(10);
-    for (int i = 0; i < 50 && s_state == ST_BUSY; i++) {
+    s_cancel = true;
+    for (int i = 0; i < 150 && s_state == ST_BUSY; i++) {
         p4py_interrupt();
         aos_hal_sleep_ms(20);
     }
@@ -385,9 +470,13 @@ void p4py_stop(void)
     if (s_state == ST_DONE) {
         big_free(s_heap);
         big_free(s_out);
+        heap_free_grown();
     } else {
         aos_hal_log("python", "the interpreter did not stop: its memory is left");
     }
+    bool ok = s_state == ST_DONE;
     s_heap = s_out = NULL;
+    s_cancel = false;
     s_state = ST_OFF;
+    return ok;
 }

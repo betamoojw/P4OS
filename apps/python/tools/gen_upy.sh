@@ -34,7 +34,7 @@ SRC=$WORK/src/micropython-$VER
 # their names have to be in the qstr table, so they are scanned here too
 EXTMOD="extmod/modrandom.c extmod/modjson.c extmod/modre.c extmod/modheapq.c extmod/modtime.c
         extmod/modbinascii.c extmod/modhashlib.c extmod/moddeflate.c
-        extmod/vfs.c extmod/modos.c extmod/vfs_reader.c"
+        extmod/vfs.c extmod/modos.c extmod/vfs_reader.c extmod/modframebuf.c"
 EXTMOD=$(echo $EXTMOD)
 OWN=$(ls "$HERE"/main/mod_*.c 2>/dev/null | tr '\n' ' ' || true)
 
@@ -67,7 +67,7 @@ U=$B/upy
 mkdir -p "$U/extmod" "$U/lib/re1.5" "$U/lib/libm_dbl" "$U/lib/uzlib" "$U/lib/crypto-algorithms" "$U/shared/timeutils"
 for f in $EXTMOD; do cp "$SRC/$f" "$U/extmod/"; done
 cp "$B/patched/vfs_posix_file.c" "$U/extmod/"
-cp "$SRC"/extmod/modtime.h "$SRC"/extmod/vfs.h "$SRC"/extmod/vfs_posix.h "$SRC"/extmod/misc.h "$U/extmod/"
+cp "$SRC"/extmod/modtime.h "$SRC"/extmod/vfs.h "$SRC"/extmod/vfs_posix.h "$SRC"/extmod/misc.h "$SRC"/extmod/font_petme128_8x8.h "$U/extmod/"
 cp "$SRC"/shared/timeutils/timeutils.[ch] "$U/shared/timeutils/"
 # sources that a module #includes rather than compiles on its own
 cp "$SRC"/lib/re1.5/re1.5.h "$U/lib/re1.5/"

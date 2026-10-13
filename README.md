@@ -8,7 +8,7 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and thirty-nine more on
+portrait or landscape. There are twenty-three built-in apps and forty more on
 the microSD, loaded as shared objects:
 
 - **Games:** twenty-one, among them Mila (a Sokoban with a black cat in
@@ -17,7 +17,7 @@ the microSD, loaded as shared objects:
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
   a VNC viewer for a computer's screen, a computer algebra system with
-  graphs, geometry and statistics, and Lua.
+  graphs, geometry and statistics, Lua, and Python (MicroPython).
 - **A web portal** for files, updates, the log and the network sweeps, and a
   page for every app that wants one, which the app brings from the card.
 - **Bluetooth with the phone:** the iPhone's notifications on the board, in
@@ -354,6 +354,39 @@ matrices, behind a touch interface of six views
 `cas.so` is GPL-3.0-or-later (Giac); the firmware stays MIT
 ([THIRD-PARTY.md](THIRD-PARTY.md)).
 
+### Python
+
+MicroPython 1.29 as an app ([apps/python/README.md](apps/python/README.md)),
+from the card: a console, the card as its filesystem, the network, libraries
+with `mip`, and apps of its own in the launcher. From the card, since 0.15.
+
+| The console | An app: Mila | A game | `framebuf`, lying down |
+|---|---|---|---|
+| <img src="docs/img/app-python-console.png" width="160"> | <img src="docs/img/app-python-hola.png" width="160"> | <img src="docs/img/app-python-atrapa.png" width="160"> | <img src="docs/img/land-python-marquesina.png" width="285"> |
+
+- **The console:** a REPL with a keyboard made for Python (a bar of the
+  words typed most, a page of signs, history, auto-indent), or a USB or
+  Bluetooth keyboard. Double floats, integers of any size, complex numbers;
+  `json`, `re`, `time` with the board's clock, `hashlib`, `deflate`...
+- **Files:** the card is `/` and you start in `/python`; `open()`, `os` and
+  `import` as on any MicroPython board, precompiled `.mpy` too.
+- **Network:** `socket` and `tls` over the board's connection (https:// with
+  the system's certificates), and micropython-lib's `requests` and `mip`
+  inside: `mip.install("umqtt.simple")` brings a library and what it needs.
+- **Apps:** every `.py` in `/python/apps` is an app of its own in the
+  launcher. It draws with the `aos` module, Lua's names, written as
+  functions the app calls or as a loop of its own around `aos.frame()`;
+  MicroPython's `framebuf` works on the same canvas. An error is a message
+  with its line, never a reboot; saving the file runs it again. Seven
+  samples come with it.
+- **Its page in the portal:** the board's console from the browser, an
+  editor for the programs, apps and libraries, and `mip` by name.
+
+The heap starts at 2 MB and grows to 12 MB as a program asks, and goes back
+when it ends. On the board: `fib(24)` in 481 ms, a megabyte downloaded and
+written to the card in 2 s, an app at 50 fps when only part of its canvas
+changes.
+
 ### Apps from the card
 
 These are `.so` files that the firmware loads at boot. Their code runs
@@ -393,7 +426,8 @@ needs a WAD of your own, and none is included.
   with a USB mouse and keyboard; a keyboard bubble that floats over the
   remote screen, and one monitor of several marked with a finger.
 - **Also from the card:** Cameras (RTSP H.264 and MJPEG), Recorder, Weather,
-  Quotes, and Lua, where a script on the card is an app.
+  Quotes, Lua, where a script on the card is an app, and Python, where a
+  `.py` is.
 
 | Drawing | VNC, in landscape |
 |---|---|
@@ -421,7 +455,7 @@ an app.
 
 | | |
 |---|---|
-| **Web portal** | at `p4os.local`: a file explorer, the firmware (updates, both slots, the last crash dump), the log (including the tail of the previous boot), and the network sweeps (each device with its MAC and maker, what changed since the last one, the Wi-Fi channels). The apps bring their own pages from the card, with no firmware: Notes, Radio, RF, Cameras, Recorder, Weather, Quotes, Maps, Lua, Pixel Art and the 3D viewer have one, and an app can stream live data to its page ([docs/PORTAL-PAGES.md](docs/PORTAL-PAGES.md)) |
+| **Web portal** | at `p4os.local`: a file explorer, the firmware (updates, both slots, the last crash dump), the log (including the tail of the previous boot), and the network sweeps (each device with its MAC and maker, what changed since the last one, the Wi-Fi channels). The apps bring their own pages from the card, with no firmware: Notes, Radio, RF, Cameras, Recorder, Weather, Quotes, Maps, Lua, Python, CAS, Pixel Art and the 3D viewer have one, and an app can stream live data to its page ([docs/PORTAL-PAGES.md](docs/PORTAL-PAGES.md)) |
 | **Updates over the air** | two slots: an update is written into the idle one and boots on trial. If the board restarts in the first 30 s, the bootloader goes back by itself. Settings, Update can go back on purpose |
 | **USB** | the OTG port is high speed (480 Mbit/s). **Keyboard and mouse:** keyboard, media keys, mouse, a gamepad, a MIDI keyboard, and a network over the cable (the portal at `192.168.7.1`, 6.7 MB/s). **Disk:** the microSD as a USB drive. The mode is kept across restarts. **Host:** devices on the 40-pin header (5 V from pin 1, data on pins 21/23, 25/27 or both at once, through P4OS's own copy of ESP-IDF's host library): pendrives at `/usb` (7.4 MB/s), keyboards that type into any text field, a mouse pointer, gamepads that play every game ([docs/GAMEPAD.md](docs/GAMEPAD.md)), webcams in Cameras, sound cards for all the board's sound and recording, USB serial ports in the Terminal (CH340, CP210x, FTDI, CDC-ACM), MIDI, and raw devices for apps that bring their own driver (an RTL-SDR in RF); a Raspberry Pi Pico is programmed by copying its `.uf2` ([docs/USB.md](docs/USB.md)) |
 | **Its own Wi-Fi** | an access point, `P4OS-XXXX`, next to the home network or alone. Two QR codes: one joins the phone, the other opens the portal at `192.168.4.1`. A phone downloaded from it at ~3 MB/s |
@@ -680,6 +714,10 @@ the character, and are not affiliated with or endorsed by Anthropic. Doom is
 id Software's, and Home Assistant is its owners'. The other products named
 in the apps belong to their owners too.
 
+Python® is a registered trademark of the Python Software Foundation; the
+Python app uses the name to say what it runs, and is not affiliated with or
+endorsed by the PSF. MicroPython is Damien George's project, MIT-licensed.
+
 ## Licence
 
 MIT, see [LICENSE](LICENSE). Third-party code, fonts, icons and data keep
@@ -697,7 +735,7 @@ idioma de la tarjeta. Los documentos del plan y de las pruebas en la placa
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 40 de la tarjeta (juegos, notas, mapas, radio, video, Lua, una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 41 de la tarjeta (juegos, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
 | Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
 | Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |

@@ -49,6 +49,9 @@ hardware has to replace them.
 | **openlibm 0.8.8** | **downloaded and built**, the same way | MIT, BSD-2-Clause and others (FreeBSD's msun) | one line patched in `riscv_fpmath.h` (a 128-bit long double on RV32) |
 | **TLSF 3.1** (Matthew Conte) | **vendored**, `apps/cas/main/tlsf.c` | BSD-3-Clause | as KhiCAS carries it |
 | **Lua 5.4.8** | **vendored**, `apps/lua/main/lua/` | MIT, Lua.org, PUC-Rio | one patch to `luaconf.h`, recorded in `VENDOR.md`; the notice stays in `lua.h` |
+| **MicroPython 1.29.0** (Damien George and contributors) | **generated and vendored**, `apps/python/main/upy/`, by `apps/python/tools/gen_upy.sh` from the release tarball (checked by SHA-256) | MIT | its embed port; `main/upy/VENDOR.md` lists the changes (sources a module includes renamed `.inc`, `extmod/vfs_posix_file.c` built without VfsPosix, `<sys/poll.h>`); its `LICENSE` summarises the rest |
+| musl's double-precision maths (`lib/libm_dbl`), **re1.5** (Russ Cox, Paul Sokolovsky), **uzlib** (Jørgen Ibsen, Paul Sokolovsky), **crypto-algorithms** SHA-256 (Brad Conte) | **vendored** with MicroPython, `apps/python/main/upy/lib/` | MIT; BSD-3-Clause; Zlib; public domain | as MicroPython carries them |
+| **requests 1.1.1** and **mip 0.5.0** of **micropython-lib** (`90028be`) | **vendored** and frozen into `python.so`, `apps/python/frozen/` | MIT | one change in `requests` (reading a body whole), marked `P4OS:`; `apps/python/frozen/VENDOR.md` |
 | compact AES (forward cipher), after **tiny-AES-c** (kokke) | **vendored**, `apps/rf/main/aes.c` | public domain (the Unlicense) | the standard AES S-box and schedule, generalised to a runtime key size, for `rf_mesh.c`'s AES-CTR (reading a Meshtastic channel the user has the key to) |
 
 The firmware that loads `doom.so`, `rf.so` and `cas.so` stays MIT. The GPL
@@ -108,6 +111,10 @@ their pixel art was drawn for this project. The Claude app signs in through
 Claude Code's public OAuth client. Its tokens stay on the board and go only
 to Anthropic, and using it is subject to Anthropic's terms
 ([docs/CLAUDE-APP.md](docs/CLAUDE-APP.md)).
+
+Python® is a registered trademark of the Python Software Foundation; the
+Python app uses the name to say what it runs, and is not affiliated with or
+endorsed by the PSF. MicroPython is Damien George's project, MIT-licensed.
 
 Home Assistant and the other products named in the apps belong to their
 owners. P4OS is not affiliated with any of them.

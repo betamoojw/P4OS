@@ -207,6 +207,16 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       `/api/open` abre la app debajo (capturas de antes y después). Con el
       bloqueo apagado por el usuario: CAS girada de vertical a horizontal
       y de vuelta, rearmada por su `resize()` sin cerrarse.
+- [x] Dos apps de un mismo módulo (2026-10-13, pedido URGENTE de la sesión
+      de Python): pasar de una app de Python a otra reiniciaba la placa (el
+      `dlopen` del cargador devuelve el mismo módulo sin contar y el
+      `dlclose` lo descargaba). Arreglado (`module_release`): cinco apps de
+      Python y tres guiones de Lua seguidos sin pasar por el inicio, sin
+      reinicio, con "stays loaded" en cada salto. `f.flush()` de Python llega
+      a la tarjeta con el `fsync` del firmware. La consola de Python en
+      segundo plano no alcanza con el arreglo: las apps comparten un
+      intérprete y una app abierta en el medio lo reinicia (probado: la
+      consola vuelve muda); queda para la sesión de Python.
 - [ ] Sin Wi-Fi después de un reinicio por software (visto otra vez el
       2026-10-06, 1 vez en ~140 reinicios seguidos): la interfaz anda, el
       C6 no levanta la red, y no lo arreglan ni apagar y prender el Wi-Fi

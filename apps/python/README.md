@@ -76,8 +76,11 @@ with `mpy-cross` 1.29).
 
 The card's FAT commits what was written when the file closes. `with
 open(...)` closes it; a file left to the collector
-(`open('f', 'w').write(...)`) is closed after the line that opened it. There
-is no `f.flush()` to the card yet (no `fsync` in the firmware's table).
+(`open('f', 'w').write(...)`) is closed after the line that opened it. From
+the 0.15.0 firmware on, `f.flush()` commits too: the firmware lends `fsync`,
+which takes the place of the app's empty one (tried on the board: the size
+shows on the card before the file is closed). `f.truncate()` still waits for
+the app to use the firmware's `ftruncate`.
 
 ## Network and libraries
 
@@ -234,12 +237,20 @@ it through framebuf, ~16; 8 MB in one `bytearray` and a dict of
 
 ## Waiting for the firmware
 
-In `docs/internal/HANDOFF-NUEVAS-APPS.md`: an app's module is unloaded when
-another app of the same module closes (the console is not kept in the
-background until that is fixed: `AOS_APP_FLAG_KEEP` goes back in
-`main/py_app.c`), `fsync`/`ftruncate`, memory to run native code from
+In `docs/internal/HANDOFF-NUEVAS-APPS.md`: memory to run native code from
 (`@micropython.native`, `viper`, native `.mpy`), the connection's API made
 public with STARTTLS, UDP and servers.
+
+Done in the 0.15.0 firmware: a module is no longer unloaded while another
+of its apps is alive (going from one Python app to another restarted the
+board), and `fsync`/`ftruncate` are in the table. The console is still not
+kept in the background, and the firmware is no longer why: the apps share
+one interpreter, so a Python app opened meanwhile starts it over and stops
+it when it closes, and the console came back with a session that no longer
+runs anything (tried on the board on 2026-10-13). Keeping it needs the
+console to own its interpreter, or to start one again when it comes back;
+and with `AOS_APP_FLAG_KEEP` the shell's automatic policy still closes it
+on leaving (it holds over 1 MB) unless it says `aos_ui_set_busy()`.
 
 Python® is a registered trademark of the Python Software Foundation; this
 app uses the name to say what it runs, and is not affiliated with or

@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.15.0 — 2026-10-13
+
+- **Python** (`python.so`, from the card): MicroPython 1.29 with double
+  floats, big integers and complex numbers. **A console** on the board with
+  a keyboard made for Python (a bar of the words typed most, history,
+  auto-indent), or a USB or Bluetooth keyboard; `input()` and `help()` in
+  the interface's language. **The card** is its filesystem: `open()`, `os`
+  and `import` as on any MicroPython board, `.mpy` too. **The network:**
+  `socket` and `tls` over the firmware's connection (https:// with the
+  system's certificates), and micropython-lib's `requests` and `mip`
+  inside: `mip.install()` fetches libraries into `/python/lib` with their
+  dependencies. **Apps:** every `.py` in `/python/apps` is an app of its own
+  in the launcher, drawing with the `aos` module (Lua's names, plus a loop
+  of its own around `aos.frame()`, MicroPython's `framebuf` over the canvas,
+  RGB565 images); seven samples, written there the first time. The heap
+  grows from 2 MB to 12 MB as a program asks and goes back when it ends.
+  On the board: `fib(24)` in 481 ms, a megabyte downloaded and written to
+  the card in 2 s, a sample app at 50 fps.
+  [apps/python/README.md](apps/python/README.md).
+- **Python's page in the portal** (`#python`): the board's console from
+  the browser, the card's programs, apps and libraries with an editor; a
+  program runs in the console, an app opens on the board with its output
+  and its errors under the editor; `mip` by name.
+- `tools/fake_mip.py`: a fake micropython-lib index and web server (HTTP or
+  HTTPS) to test the network without outside servers.
+- **Two apps of one module no longer pull the code from under each other.**
+  The loader's `dlopen()` hands back the module already loaded, with no
+  count, and `dlclose()` unloaded it outright: the apps of `lua.so` and
+  `python.so` share one copy, and closing one took the code from the next
+  (going from one Python app to another without passing through the home
+  screen: an illegal instruction, and a restart). A module is unloaded now
+  only when none of its apps is alive, and the same goes for the scan and
+  for an app that fails to start. Tried on the board: five Python apps and
+  three Lua scripts one after the other, with no restart.
+- **`fsync` and `ftruncate` for the apps.** Python's `f.flush()` reaches the
+  card now (the size shows before the file is closed).
 ## 0.14.0 — 2026-10-12
 
 - **CAS, a computer algebra system** (`cas.so`, from the card): Giac, the

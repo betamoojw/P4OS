@@ -161,6 +161,9 @@ EXTRA_SYMBOLS = [
     # read() on a descriptor goes to the card in the caller's buffer, where
     # stdio's fread() went through its own (docs/MEMORY.md, "The card").
     "open", "read", "write", "lseek", "close", "fstat",
+    # Python (2026-10-13): f.flush() reaching the card (the FAT commits only
+    # on close, or on fsync) and f.truncate()
+    "fsync", "ftruncate",
     # aligned buffers for the card and the DMA (aos_hal_io_alloc is the
     # HAL's; this is the general one)
     "heap_caps_aligned_alloc",

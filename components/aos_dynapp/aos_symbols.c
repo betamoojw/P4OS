@@ -3,8 +3,8 @@
  *
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
- * Mas 186 funciones de libc/libm agregadas a mano.
- * Total: 3360 simbolos.
+ * Mas 188 funciones de libc/libm agregadas a mano.
+ * Total: 3363 simbolos.
  */
 
 #include <stddef.h>
@@ -673,6 +673,7 @@ extern int aos_i18n_current;
 extern int aos_i18n_init;
 extern int aos_i18n_scan;
 extern int aos_i18n_set;
+extern int aos_icon_app_ops;
 extern int aos_icon_clear_ops;
 extern int aos_icon_create;
 extern int aos_icon_create_ops;
@@ -1217,7 +1218,9 @@ extern int frexpf;
 extern int frogfs_decomp_raw;
 extern int fseek;
 extern int fstat;
+extern int fsync;
 extern int ftell;
+extern int ftruncate;
 extern int fwrite;
 extern int getc;
 extern int getenv;
@@ -4036,6 +4039,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_i18n_init),
     ESP_ELFSYM_EXPORT(aos_i18n_scan),
     ESP_ELFSYM_EXPORT(aos_i18n_set),
+    ESP_ELFSYM_EXPORT(aos_icon_app_ops),
     ESP_ELFSYM_EXPORT(aos_icon_clear_ops),
     ESP_ELFSYM_EXPORT(aos_icon_create),
     ESP_ELFSYM_EXPORT(aos_icon_create_ops),
@@ -4580,7 +4584,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(frogfs_decomp_raw),
     ESP_ELFSYM_EXPORT(fseek),
     ESP_ELFSYM_EXPORT(fstat),
+    ESP_ELFSYM_EXPORT(fsync),
     ESP_ELFSYM_EXPORT(ftell),
+    ESP_ELFSYM_EXPORT(ftruncate),
     ESP_ELFSYM_EXPORT(fwrite),
     ESP_ELFSYM_EXPORT(getc),
     ESP_ELFSYM_EXPORT(getenv),

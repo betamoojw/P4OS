@@ -7325,3 +7325,5 @@ Lo que ocupa cada una se mide al salir de ella. Tocar una la cierra.	Was jede be
 
 #: components/aos_apps/aos_app_settings.c
 Reiniciar la placa	Platine neu starten
+CAS	CAS
+Python	Python

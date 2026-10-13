@@ -461,6 +461,39 @@ bool aos_dynapp_is_dynamic(const char *app_id)
  * -------------------------------------------------------------------------- */
 
 /* Opens the module and returns the aos_app_t its init() builds. */
+/* The loader's dlopen() hands back the SAME module when it is already
+ * loaded, with no count (elf_loader's dlmod_insert), and dlclose() unloads it
+ * outright. A module with several apps (lua.so, python.so) is shared that
+ * way: closing one of them took the code from under the other (seen on the
+ * board going from one Python app to another: illegal instruction, pc == ra).
+ * So every dlclose goes through here: the module is only unloaded when no
+ * live app holds it (a handle not about to be closed), and then every entry
+ * that pointed at it lets go. 'self' is the entry closing, or NULL.
+ * Returns whether it was unloaded. */
+static bool module_release(void *handle, dynapp_t *self)
+{
+    if (!handle) {
+        return false;
+    }
+    for (int i = 0; i < s_count; i++) {
+        dynapp_t *a = &s_apps[i];
+        if (a != self && a->in_use && a->handle == handle && !a->pending_close) {
+            ESP_LOGI(TAG, "%s stays loaded: %s still uses it", a->file, a->id);
+            return false;
+        }
+    }
+    dlclose(handle);
+    for (int i = 0; i < s_count; i++) {
+        dynapp_t *a = &s_apps[i];
+        if (a != self && a->handle == handle) {
+            a->handle = NULL;
+            a->pending_close = false;
+            memset(&a->loaded, 0, sizeof(a->loaded));
+        }
+    }
+    return true;
+}
+
 static bool module_open(const char *filename, uint32_t index,
                         void **out_handle, aos_app_t *out_app)
 {
@@ -519,7 +552,7 @@ static bool module_open(const char *filename, uint32_t index,
 
     if (!abi_fn || !init_fn) {
         ESP_LOGE(TAG, "%s does not export aos_app_abi/aos_app_init", filename);
-        dlclose(handle);
+        module_release(handle, NULL);
         return false;
     }
 
@@ -527,7 +560,7 @@ static bool module_open(const char *filename, uint32_t index,
     if (abi != AOS_ABI_VERSION) {
         ESP_LOGE(TAG, "%s uses ABI %u and the firmware expects %u: rebuild it",
                  filename, (unsigned)abi, (unsigned)AOS_ABI_VERSION);
-        dlclose(handle);
+        module_release(handle, NULL);
         return false;
     }
 
@@ -535,7 +568,7 @@ static bool module_open(const char *filename, uint32_t index,
     bool ok = init_at_fn ? init_at_fn(out_app, index) : (index == 0 && init_fn(out_app));
     if (!ok) {
         ESP_LOGE(TAG, "%s failed to initialise app %u", filename, (unsigned)index);
-        dlclose(handle);
+        module_release(handle, NULL);
         return false;
     }
 
@@ -614,9 +647,12 @@ static void module_close(dynapp_t *app)
         ESP_LOGW(TAG, "closing %s with no handle: was it already unloaded?", app->file);
         return;
     }
-    dlclose(app->handle);
+    void *handle = app->handle;
     app->handle = NULL;
     memset(&app->loaded, 0, sizeof(app->loaded));
+    if (!module_release(handle, app)) {
+        return;
+    }
     ESP_LOGI(TAG, "%s unloaded (executable free: %u B)", app->file,
              (unsigned)heap_caps_get_free_size(MALLOC_CAP_EXEC));
 }
@@ -863,8 +899,9 @@ static int register_apps(const char *filename, bool first_only, uint32_t *total)
                  registered == 1 ? "" : "s", first_only && n > 1 ? " (more later)" : "");
     }
 
-    /* descriptors read, the code goes away: it comes back in when it is opened */
-    dlclose(handle);
+    /* descriptors read, the code goes away: it comes back in when it is opened
+     * (unless one of its apps is open: a later scan of lua.so, say) */
+    module_release(handle, NULL);
     return registered;
 }
 

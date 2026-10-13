@@ -15,7 +15,7 @@ P4_SIM_SCRIPT="wait 1200; open aos.python" ./build-py/p4os_sim              # th
 
 # the .so for the card
 tools/build_apps.sh python                    # apps/python/build/python.so
-# card: /apps/python.so, and the apps in /python/apps/ (apps/python/scripts/*.py)
+# card: /apps/python.so; the first boot with it writes the samples to /python/apps
 ```
 
 MicroPython itself is in `main/upy/`, written by `tools/gen_upy.sh` from the
@@ -117,7 +117,10 @@ lines may say:
 # @orientation portrait         or landscape: the screen turns for it
 ```
 
-An `.aic` beside it is its icon (`python3 tools/aic.py asm`). A new file
+An `.aic` beside it is its icon (`python3 tools/aic.py asm`). The first
+time the app finds no `/python/apps` it makes it with the samples
+(`scripts/`, carried inside the `.so` as `main/py_samples.c`, written by
+`tools/gen_samples.py`); a folder that is there, even empty, is left alone. A new file
 shows in the launcher after a restart (the card is scanned at boot). While
 an app runs it watches its file and starts again when it changes, so saving
 is the whole step (`PUT /api/fs/put?path=/python/apps/x.py`). An error
@@ -238,5 +241,7 @@ background until that is fixed: `AOS_APP_FLAG_KEEP` goes back in
 (`@micropython.native`, `viper`, native `.mpy`), the connection's API made
 public with STARTTLS, UDP and servers.
 
-"Python" is a registered trademark of the Python Software Foundation;
-MicroPython is MIT-licensed (`main/upy/LICENSE`).
+Python® is a registered trademark of the Python Software Foundation; this
+app uses the name, and an icon after its logo, to say what it runs, and is
+not affiliated with or endorsed by the PSF. MicroPython is Damien George's
+project, MIT-licensed (`main/upy/LICENSE`).

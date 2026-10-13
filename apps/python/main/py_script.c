@@ -13,7 +13,8 @@
  *     # @orientation portrait       or landscape: the screen turns for it
  *
  * and draws with the aos module (mod_aos.c), on a canvas the OS scales
- * (aos_retro.h). An .aic beside it (gatitos.aic) is its icon.
+ * (aos_retro.h). An .aic beside it (gatitos.aic) is its icon. The first
+ * time there is no such folder it is made with the samples (scripts/).
  *
  * This file is the view, all of it in the LVGL task: the canvas, the finger
  * and the gestures, the gamepad, what the script printed, its error. The
@@ -29,6 +30,7 @@
  */
 #include "p4py_rt.h"
 #include "py_canvas.h"
+#include "py_samples.h"
 
 #include "aos_app.h"
 #include "aos_gesture.h"
@@ -833,12 +835,25 @@ static void apps_scan(void)
     snprintf(dir, sizeof dir, "%s" PYS_DIR, sd);
     DIR *d = opendir(dir);
     if (!d) {
-        /* made, so the folder is there for the first script */
+        /* The first time: the folder, with the samples in it (scripts/,
+         * carried in py_samples.c). Only when there is no folder at all, so
+         * a sample deleted stays deleted; an empty folder gets none. */
         char py[128];
         snprintf(py, sizeof py, "%s/python", sd);
         mkdir(py, 0777);
-        mkdir(dir, 0777);
-        return;
+        if (mkdir(dir, 0777) != 0) return;
+        int n = 0;
+        for (const py_sample_t *x = py_samples; x->name; x++) {
+            char path[192];
+            snprintf(path, sizeof path, "%s/%s", dir, x->name);
+            FILE *f = fopen(path, "wb");
+            if (!f) continue;
+            if (fwrite(x->text, 1, x->len, f) == x->len) n++;
+            fclose(f);
+        }
+        aos_hal_log("python", "%s made, with %d samples", dir, n);
+        d = opendir(dir);
+        if (!d) return;
     }
     struct dirent *e;
     while ((e = readdir(d)) != NULL && s_count < PYS_MAX_APPS) {

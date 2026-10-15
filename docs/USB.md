@@ -329,7 +329,10 @@ image accepts are checked against the chip's before writing: ESPHome builds
 for v0.0-v1.99 unless told otherwise (`CONFIG_ESP32P4_SELECTS_REV_LESS_V3: n`
 and `CONFIG_ESP32P4_REV_MIN_300: y` in `sdkconfig_options`, and 400 MHz).
 Tried: ESPHome's 2.7 MB image written and MD5-checked in 254 s at 115200
-baud, and the Nano started it.
+baud, and the Nano started it. Then an ESP32-P4 v1.3 (32 MB, the same CH343)
+with an Arduino image of 1.2 MB at 460800: 30.1 s in all, ~40 KB/s while
+writing. Arduino's images say they take any revision (v0.0 to v655.35), so
+there the choice between a rev1 and a rev3 build is the user's.
 
 **Webcams**: MJPEG, at 1280 x 720 or the largest size below it that the
 camera has; the newest frame is copied for the Cameras app, which decodes

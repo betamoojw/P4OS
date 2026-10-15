@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.15.1 — 2026-10-15
 
 - **The web portal speaks the board's language.** The portal, the pages the
   apps bring (23) and the API's messages followed nothing but Spanish: now

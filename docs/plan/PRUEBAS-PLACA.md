@@ -217,6 +217,13 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       segundo plano no alcanza con el arreglo: las apps comparten un
       intérprete y una app abierta en el medio lo reinicia (probado: la
       consola vuelve muda); queda para la sesión de Python.
+- [x] Programador con ESP32-P4 (2026-10-15): una P4-Nano v3.1 (CH343
+      por USB) con ESPHome, 254 s a 115200, y el gateway Modbus v1.3 a
+      460800 en 30 s; los mensajes del Programador en inglés.
+- [x] Portal web en inglés (2026-10-15): el portal, las 22 páginas de las
+      apps y los mensajes de la API siguen el idioma de la placa; revisado
+      en el simulador (38 páginas) y probado por el usuario en la placa
+      ("anda bien").
 - [ ] Sin Wi-Fi después de un reinicio por software (visto otra vez el
       2026-10-06, 1 vez en ~140 reinicios seguidos): la interfaz anda, el
       C6 no levanta la red, y no lo arreglan ni apagar y prender el Wi-Fi

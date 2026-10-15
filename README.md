@@ -500,7 +500,9 @@ complete, and travel twice: inside the firmware, so they work with no card,
 and as packs on the card. The two are joined string by string with the
 card's first, so a fix copied to the card wins, and a card older than the
 firmware still gets the new screens translated. A pseudo-locale is used to
-test layouts.
+test layouts. The web portal and the apps' pages follow the same language
+(since 0.15.1): their catalogs live only on the card and only the browser
+reads them.
 
 ## What was tested, and what not yet
 
@@ -731,7 +733,7 @@ GNU GPL v2, and no WAD is included.
 P4OS es un sistema tipo iPhone para la
 [placa de 5" de Waveshare con ESP32-P4](https://www.waveshare.com/esp32-p4-wifi6-touch-lcd-5.htm).
 La interfaz está escrita en castellano y se traduce con los paquetes de
-idioma de la tarjeta. Los documentos del plan y de las pruebas en la placa
+idioma de la tarjeta, la de la placa y la del portal web. Los documentos del plan y de las pruebas en la placa
 (`docs/plan/`) están en castellano; el resto, en inglés.
 
 | | |

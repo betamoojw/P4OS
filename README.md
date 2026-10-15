@@ -541,8 +541,9 @@ test layouts.
   asked for from there.
 - Scanning for Wi-Fi with the saved network out of reach (as away from
   home), and staying up without a network instead of restarting.
-- The Programmer flashing an ESP32 on a CP2102 (6.6 s) and an ESP32-C3 on
-  its own USB (1.5 s), plugged into the USB host.
+- The Programmer flashing an ESP32 on a CP2102 (6.6 s), an ESP32-C3 on
+  its own USB (1.5 s) and an ESP32-P4-Nano v3.1 with ESPHome, plugged into
+  the USB host.
 - The workshop on the bench: PWM at three frequencies at once, a servo and
   the analog level; a WS2812B strip; infrared learned and sent; a 24LC256
   read, written and restored; CAN's self test with no transceiver.

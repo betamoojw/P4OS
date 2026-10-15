@@ -15,6 +15,17 @@
   read too, and an image for other revisions is refused before anything is
   written: an ESP32-P4 v3.1 with a build for v0.0-v1.99 would have been
   flashed and never started. The wiring help says GPIO35 for the P4's BOOT.
+- **The Programmer flashes an ESP32-P4 v3.1 or v3.2.** Those revisions come
+  out of reset with their flash unpowered, and esptool powers it right after
+  connecting; esp-serial-flasher does not yet (its issue 184), so the first
+  erase hung. The Programmer runs esptool 5.3.1's sequence before the stub
+  goes up. Tried with an ESP32-P4-Nano (v3.1, a CH343 on USB): ESPHome's
+  2.7 MB image written and MD5-checked in 254 s at 115200 baud, and the
+  board started it.
+- **Two more of esp-serial-flasher's guesses, corrected.** Flash encryption
+  is read from FLASH_CRYPT_CNT, as esptool does (the library counted the key
+  purposes' bits, and the Nano came out "encrypted"), and an erase gets 30 s
+  per MB, esptool's margin, instead of 10.
 
 ## 0.15.0 — 2026-10-13
 

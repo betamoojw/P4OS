@@ -315,6 +315,22 @@ Tried with an ESP32-C3 (v0.4, 4 MB) whose old firmware restarted every
 1.5 s (250 KB/s: USB, not the baud rate), then read and written in the
 Terminal.
 
+**An ESP32-P4-Nano** (2026-10-15): its USB-C is a WCH CH343 (`1a86:55d3`),
+a standard CDC-ACM device under the CH340's vendor id, so CDC-ACM is taken
+before the vendor drivers (the CH34x driver reset the target but the data
+timed out). The ESP32-P4 v3.1 and v3.2 power their flash only when told to:
+the Programmer does what esptool 5.3.1 does after connecting
+(`p4_power_on_flash` in `components/aos_flasher/aos_flasher.c`), which
+esp-serial-flasher still lacks (espressif/esp-serial-flasher#184). Two more
+of the library's guesses are corrected there: flash encryption comes from
+FLASH_CRYPT_CNT, not from the key purposes, and an erase gets 30 s per MB.
+A merged ESP32-P4 image has its bootloader at 0x2000, and the revisions an
+image accepts are checked against the chip's before writing: ESPHome builds
+for v0.0-v1.99 unless told otherwise (`CONFIG_ESP32P4_SELECTS_REV_LESS_V3: n`
+and `CONFIG_ESP32P4_REV_MIN_300: y` in `sdkconfig_options`, and 400 MHz).
+Tried: ESPHome's 2.7 MB image written and MD5-checked in 254 s at 115200
+baud, and the Nano started it.
+
 **Webcams**: MJPEG, at 1280 x 720 or the largest size below it that the
 camera has; the newest frame is copied for the Cameras app, which decodes
 it with the P4's JPEG engine like an MJPEG over HTTP. One camera streams

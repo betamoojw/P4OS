@@ -56,6 +56,7 @@
 #define HAVE_ESF 1
 #include "esp_loader.h"
 #include "esp_loader_io.h"
+#include "esp_loader_stubs.h"
 #else
 #define HAVE_ESF 0
 #endif
@@ -252,8 +253,14 @@ static void p_reset_target(esp_loader_port_t *port)
     aos_io_uart_lines(p->u, 1, 1);
 }
 
+/* esp-serial-flasher gives an erase 10 s per MB; esptool gives it 30. A
+ * 16 MB flash erasing 4 KB sectors at ~45 ms each needs ~11.5 s per MB.
+ * Above 3 s a timeout is one of the library's per-MB ones (erase, MD5,
+ * loading to RAM), never one that waits for an answer, so those are
+ * tripled: esptool's margin. */
 static void p_start_timer(esp_loader_port_t *port, uint32_t ms)
 {
+    if (ms > 3000) ms *= 3;
     container_of(port, fl_port_t, port)->deadline = aos_hal_uptime_ms() + ms;
 }
 
@@ -322,6 +329,21 @@ static const char *err_text(esp_loader_error_t e)
     }
 }
 
+/* Flash encryption, as esptool decides it: an odd number of bits set in
+ * FLASH_CRYPT_CNT. esp-serial-flasher (2.1.0, and its main branch on
+ * 2026-10-15) counts the bits of the key purposes instead, so an ESP32-P4
+ * v3.1 with nothing encrypted came out "encrypted" and could not be
+ * flashed. Its GET_SECURITY_INFO is asked again here, the reply laid out as
+ * the library's protocol.h has it (an ESP32-S2's lacks the last 8 bytes). */
+typedef struct __attribute__((packed)) {
+    uint32_t flags;
+    uint8_t  flash_crypt_cnt;
+    uint8_t  key_purposes[7];
+    uint32_t chip_id;
+    uint32_t eco_version;
+} sec_reply_t;
+extern esp_loader_error_t loader_get_security_info_cmd(esp_loader_t *loader, sec_reply_t *reply, uint32_t *got);
+
 typedef struct {
     esp_loader_t L;
     fl_port_t P;
@@ -354,6 +376,88 @@ static void progress(uint32_t add)
     unlock();
 }
 
+/* ESP32-P4 v3.1 and v3.2 (ECO6, ECO7) come out of reset with their flash
+ * unpowered: the default went from 1.8 V to 3.3 V, so it stays off until
+ * someone powers it at the voltage the eFuses say. esptool does it right
+ * after connecting (esptool 5.3.1, targets/esp32p4.py, power_on_flash);
+ * esp-serial-flasher does not yet (its issue 184), and an ESP32-P4-Nano
+ * (v3.1) answered, read its MAC and then hung on the first erase. The same
+ * register writes, through the ROM, before the stub goes up. */
+#define P4_EFUSE_RD_REPEAT_DATA1    0x5012D034u
+#define P4_EFUSE_DL_XPD_ON          (1u << 16)
+#define P4_LP_SYS_XPD_PAD_GROUP     0x5011010Cu
+#define P4_PMU_EXT_LDO_P0_0P1A      0x501151B8u
+#define P4_PMU_EXT_LDO_P0_0P1A_ANA  0x501151BCu
+#define P4_PMU_DATE                 0x501153FCu
+#define P4_ANA_0P1A_EN_CUR_LIM_0    (1u << 27)
+#define P4_0P1A_TARGET0_0           (0xFFu << 23)
+#define P4_0P1A_FORCE_TIEH_SEL_0    (1u << 7)
+
+static esp_loader_error_t reg_or(esp_loader_t *l, uint32_t a, uint32_t set, uint32_t clear)
+{
+    uint32_t v;
+    esp_loader_error_t e = esp_loader_read_register(l, a, &v);
+    if (e != ESP_LOADER_SUCCESS) return e;
+    return esp_loader_write_register(l, a, (v | set) & ~clear);
+}
+
+static void p4_power_on_flash(esp_loader_t *l)
+{
+    uint16_t rev = 0xFFFF;
+    if (esp_loader_get_chip_revision(l, &rev) != ESP_LOADER_SUCCESS || (rev != 301 && rev != 302)) return;
+    esp_loader_target_security_info_t si;
+    if (esp_loader_get_security_info(l, &si) == ESP_LOADER_SUCCESS && si.secure_download_mode_enabled) return;
+    uint32_t v = 0;
+    if (rev == 302 && esp_loader_read_register(l, P4_EFUSE_RD_REPEAT_DATA1, &v) == ESP_LOADER_SUCCESS &&
+        (v & P4_EFUSE_DL_XPD_ON)) {
+        /* the ROM powered it already; only release its force-on */
+        esp_loader_write_register(l, P4_PMU_DATE, 0);
+        return;
+    }
+    esp_loader_error_t e = esp_loader_write_register(l, P4_LP_SYS_XPD_PAD_GROUP, 1);
+    aos_hal_sleep_ms(10);
+    if (e == ESP_LOADER_SUCCESS) e = reg_or(l, P4_PMU_EXT_LDO_P0_0P1A_ANA, P4_ANA_0P1A_EN_CUR_LIM_0, 0);
+    if (e == ESP_LOADER_SUCCESS) e = reg_or(l, P4_PMU_EXT_LDO_P0_0P1A, P4_0P1A_FORCE_TIEH_SEL_0, 0);
+    if (e == ESP_LOADER_SUCCESS) e = reg_or(l, P4_PMU_DATE, 3, 0);
+    aos_hal_sleep_ms(1);                                    /* esptool: 50 us */
+    if (e == ESP_LOADER_SUCCESS) e = reg_or(l, P4_PMU_EXT_LDO_P0_0P1A_ANA, 0, P4_ANA_0P1A_EN_CUR_LIM_0);
+    if (e == ESP_LOADER_SUCCESS) e = reg_or(l, P4_PMU_EXT_LDO_P0_0P1A, 0, P4_0P1A_TARGET0_0);
+    if (e == ESP_LOADER_SUCCESS) e = reg_or(l, P4_PMU_EXT_LDO_P0_0P1A, 0x80, 0);     /* the eFuses' voltage */
+    if (e == ESP_LOADER_SUCCESS) e = reg_or(l, P4_PMU_EXT_LDO_P0_0P1A, 0, P4_0P1A_FORCE_TIEH_SEL_0);
+    aos_hal_sleep_ms(2);                                    /* esptool: 1.8 ms */
+    aos_hal_log("flasher", "ESP32-P4 v%u.%u: flash powered on (%s)", rev / 100, rev % 100,
+                e == ESP_LOADER_SUCCESS ? "ok" : "a register write failed");
+}
+
+/* The stub the library would pick, with the P4's flash powered first. The
+ * library's own provider is static: its table is copied here. */
+static const esp_stub_t *stub_for(esp_loader_t *loader, target_chip_t chip, void *ctx)
+{
+    (void)ctx;
+    switch (chip) {
+    case ESP8266_CHIP:  return &esp_stub_esp8266;
+    case ESP32_CHIP:    return &esp_stub_esp32;
+    case ESP32S2_CHIP:  return &esp_stub_esp32s2;
+    case ESP32C3_CHIP:  return &esp_stub_esp32c3;
+    case ESP32S3_CHIP:  return &esp_stub_esp32s3;
+    case ESP32C2_CHIP:  return &esp_stub_esp32c2;
+    case ESP32C5_CHIP:  return &esp_stub_esp32c5;
+    case ESP32H2_CHIP:  return &esp_stub_esp32h2;
+    case ESP32C6_CHIP:  return &esp_stub_esp32c6;
+    case ESP32C61_CHIP: return &esp_stub_esp32c61;
+    case ESP32S31_CHIP: return &esp_stub_esp32s31;
+    case ESP32H21_CHIP: return &esp_stub_esp32h21;
+    case ESP32H4_CHIP:  return &esp_stub_esp32h4;
+    case ESP32P4_CHIP: {
+        p4_power_on_flash(loader);
+        esp_loader_target_security_info_t si;
+        bool v3 = esp_loader_get_security_info(loader, &si) == ESP_LOADER_SUCCESS && si.eco_version >= 5;
+        return v3 ? &esp_stub_esp32p4 : &esp_stub_esp32p4rev1;
+    }
+    default:            return NULL;
+    }
+}
+
 static bool connect(ctx_t *c, bool stub)
 {
     set_phase(AOS_FLASHER_CONNECTING);
@@ -363,7 +467,7 @@ static bool connect(ctx_t *c, bool stub)
     if (!c->P.lines) args.trials = 80;      /* about ten seconds to press the buttons */
     esp_loader_error_t e;
     if (stub) {
-        e = esp_loader_connect_with_stub(&c->L, &args);
+        e = esp_loader_connect_with_stub_provider(&c->L, &args, stub_for, NULL);
         if (e != ESP_LOADER_SUCCESS && !s_cancel && esp_loader_get_target(&c->L) != ESP_UNKNOWN_CHIP) {
             /* it answered but the stub did not come up: the ROM can do it all, slower */
             logf_(L_WARN, "El stub no arrancó (%s): sigo con la ROM", err_text(e));
@@ -374,6 +478,8 @@ static bool connect(ctx_t *c, bool stub)
     } else {
         e = esp_loader_connect(&c->L, &args);
     }
+    if (e == ESP_LOADER_SUCCESS && !stub && esp_loader_get_target(&c->L) == ESP32P4_CHIP)
+        p4_power_on_flash(&c->L);
     if (s_cancel) return false;
     if (e != ESP_LOADER_SUCCESS)
         return failf(e == ESP_LOADER_ERROR_TIMEOUT ? "La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT"
@@ -398,7 +504,11 @@ static bool read_info(ctx_t *c)
     esp_loader_target_security_info_t si;
     if (t != ESP32_CHIP && t != ESP8266_CHIP && esp_loader_get_security_info(&c->L, &si) == ESP_LOADER_SUCCESS) {
         secure = si.secure_boot_enabled || si.secure_download_mode_enabled;
-        crypt = si.flash_encryption_enabled;
+        sec_reply_t r;
+        uint32_t got = 0;
+        p_start_timer(&c->P.port, 100);
+        if (loader_get_security_info_cmd(&c->L, &r, &got) == ESP_LOADER_SUCCESS && got >= 5)
+            crypt = __builtin_popcount(r.flash_crypt_cnt) & 1;
     }
     uint32_t flash = 0;
     if (esp_loader_flash_detect_size(&c->L, &flash) != ESP_LOADER_SUCCESS) flash = 0;

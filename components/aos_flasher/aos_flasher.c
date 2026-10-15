@@ -423,6 +423,13 @@ static bool read_info(ctx_t *c)
         return failf("La flash está cifrada: grabarla en claro la deja sin arrancar");
     if (J.job == AOS_FLASHER_JOB_FLASH && J.src.chip[0] && idf && strcasecmp(J.src.chip, idf))
         return failf("El firmware es para %s y la placa es %s", aos_flasher_chip_label(J.src.chip), s_st.chip);
+    /* the bootloader refuses to start outside its range: say it now, not
+     * after a flash that leaves the board without a program */
+    if (J.job == AOS_FLASHER_JOB_FLASH && J.src.rev_max && rev != 0xFFFF &&
+        (rev < J.src.rev_min || rev > J.src.rev_max))
+        return failf("El firmware acepta la revisión v%u.%u a v%u.%u y el chip es v%u.%u: no arrancaría",
+                     J.src.rev_min / 100, J.src.rev_min % 100, J.src.rev_max / 100, J.src.rev_max % 100,
+                     rev / 100, rev % 100);
     return true;
 }
 

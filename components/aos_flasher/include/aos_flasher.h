@@ -56,6 +56,9 @@ typedef struct {
     char     flash_mode[8], flash_size[8], flash_freq[8];   /* "dio" "4MB" "80m", "" unknown */
     char     app_name[32];      /* from the app descriptor, when there is one */
     char     app_version[32];
+    /* the chip revisions its images accept (major * 100 + minor), from the
+     * extended header; rev_max 0: not said (an image older than IDF 5) */
+    uint16_t rev_min, rev_max;
     int      nfiles;
     aos_flasher_file_t files[AOS_FLASHER_FILES_MAX];
     uint32_t total;             /* bytes of all the files */

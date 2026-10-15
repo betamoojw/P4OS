@@ -74,6 +74,7 @@ typedef struct {
     const char *chip;           /* from the extended header, NULL unknown */
     bool app;                   /* has the app descriptor */
     char app_name[32], app_version[32];
+    uint16_t rev_min, rev_max;  /* min/max_chip_rev_full; rev_max 0 unknown */
 } head_t;
 
 static void copy_field(char *dst, size_t cap, const uint8_t *src, size_t n)
@@ -93,12 +94,24 @@ static void parse_head(const uint8_t *b, size_t n, head_t *h)
     memset(h, 0, sizeof *h);
     if (n < 24 || b[0] != 0xE9) return;
     h->image = true;
-    if (b[8] == 0xEE) h->chip = chip_of_id(b[12] | (b[13] << 8));
+    if (b[8] == 0xEE) {
+        h->chip = chip_of_id(b[12] | (b[13] << 8));
+        h->rev_min = (uint16_t)(b[15] | (b[16] << 8));
+        h->rev_max = (uint16_t)(b[17] | (b[18] << 8));
+    }
     if (n >= 112 && b[32] == 0x32 && b[33] == 0x54 && b[34] == 0xCD && b[35] == 0xAB) {
         h->app = true;
         copy_field(h->app_version, sizeof h->app_version, b + 48, 32);
         copy_field(h->app_name, sizeof h->app_name, b + 80, 32);
     }
+}
+
+/* The narrowest range of chip revisions the images ask for. */
+static void note_revs(aos_flasher_source_t *src, const head_t *h)
+{
+    if (!h->image || !h->rev_max) return;
+    if (!src->rev_max || h->rev_min > src->rev_min) src->rev_min = h->rev_min;
+    if (!src->rev_max || h->rev_max < src->rev_max) src->rev_max = h->rev_max;
 }
 
 static size_t read_at(const char *path, uint32_t off, uint8_t *buf, size_t n)
@@ -283,6 +296,7 @@ static bool load_project(const char *dir, aos_flasher_source_t *src, char *err, 
         uint8_t h[128];
         head_t hd;
         parse_head(h, read_at(path, 0, h, sizeof h), &hd);
+        note_revs(src, &hd);
         if (!src->chip[0] && hd.chip) snprintf(src->chip, sizeof src->chip, "%s", hd.chip);
         if (hd.app && !src->app_name[0]) {
             snprintf(src->app_name, sizeof src->app_name, "%s", hd.app_name);
@@ -323,10 +337,12 @@ static bool load_bin(const char *path, aos_flasher_source_t *src, char *err, siz
     } else {
         f->offset = 0;
         src->kind = AOS_FLASHER_BIN_MERGED;
-        /* an ESP32's merged image starts with 4 KB of padding before the
-         * bootloader; the others start with it */
+        /* the bootloader of a merged image: at 0x0 on most chips, after
+         * 4 KB of padding on an ESP32 and the S2, and 8 KB on the P4 */
         if (!hd.image) parse_head(h, read_at(path, 0x1000, h, sizeof h), &hd);
+        if (!hd.image) parse_head(h, read_at(path, 0x2000, h, sizeof h), &hd);
     }
+    note_revs(src, &hd);
     if (hd.chip) snprintf(src->chip, sizeof src->chip, "%s", hd.chip);
     if (hd.app) {
         snprintf(src->app_name, sizeof src->app_name, "%s", hd.app_name);
@@ -334,6 +350,7 @@ static bool load_bin(const char *path, aos_flasher_source_t *src, char *err, siz
     } else if (f->offset == 0 && f->size > 0x10000 + 128) {
         head_t app;
         parse_head(h, read_at(path, 0x10000, h, sizeof h), &app);
+        note_revs(src, &app);
         if (app.app) {
             snprintf(src->app_name, sizeof src->app_name, "%s", app.app_name);
             snprintf(src->app_version, sizeof src->app_version, "%s", app.app_version);

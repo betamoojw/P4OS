@@ -446,7 +446,7 @@ static void build_wiring(lv_obj_t *parent, int32_t w)
         { p->pins[0], "TX", N_("RX de la placa (U0RXD)") },
         { p->pins[1], "RX", N_("TX de la placa (U0TXD)") },
         { en, "EN", N_("EN / RST") },
-        { boot, "BOOT", N_("GPIO0 (GPIO9 en C3/C6/H2)") },
+        { boot, "BOOT", N_("GPIO0 (GPIO9 en C3/C6/H2, GPIO35 en P4)") },
         { -2, "GND", N_("GND, común a las dos") },
     };
     int n = 0;

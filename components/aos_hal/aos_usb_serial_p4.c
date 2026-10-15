@@ -92,11 +92,12 @@ static void new_dev(usb_device_handle_t dev)
         usb_host_device_info(dev, &di) != ESP_OK)
         return;
     int kind = -1, intf = 0;
-    if (dd->idVendor == NANJING_QINHENG_MICROE_VID) kind = K_CH34X;
-    else if (dd->idVendor == SILICON_LABS_VID) kind = K_CP210X;
-    else if (dd->idVendor == FTDI_VID) kind = K_FTDI;
-    else {
-        /* CDC-ACM: a communications interface of the abstract control model */
+    /* CDC-ACM first, whoever made it: a communications interface of the
+     * abstract control model. WCH's newer chips (CH343, CH9102: pid 55d2 and
+     * up) are CDC-ACM under the CH34x's vendor id, and the CH34x driver's own
+     * requests left the CH343 of an ESP32-P4-Nano taking the line changes
+     * but not the data (the Programmer saw "TX transfer timeout"). */
+    {
         int off = 0;
         const usb_standard_desc_t *d = (const usb_standard_desc_t *)cfg;
         while ((d = usb_parse_next_descriptor(d, cfg->wTotalLength, &off)))
@@ -108,6 +109,11 @@ static void new_dev(usb_device_handle_t dev)
                     break;
                 }
             }
+    }
+    if (kind < 0) {
+        if (dd->idVendor == NANJING_QINHENG_MICROE_VID) kind = K_CH34X;
+        else if (dd->idVendor == SILICON_LABS_VID) kind = K_CP210X;
+        else if (dd->idVendor == FTDI_VID) kind = K_FTDI;
     }
     if (kind < 0) return;
     xSemaphoreTake(S.mx, portMAX_DELAY);

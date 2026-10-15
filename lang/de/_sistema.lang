@@ -2417,7 +2417,7 @@ TX de la placa (U0TXD)	TX der Platine (U0TXD)
 EN / RST	EN / RST
 
 #: components/aos_apps/aos_app_flasher.c:436
-GPIO0 (GPIO9 en C3/C6/H2)	GPIO0 (GPIO9 bei C3/C6/H2)
+GPIO0 (GPIO9 en C3/C6/H2, GPIO35 en P4)	GPIO0 (GPIO9 bei C3/C6/H2, GPIO35 beim P4)
 
 #: components/aos_apps/aos_app_flasher.c:437
 GND, común a las dos	GND, gemeinsam

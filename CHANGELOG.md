@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+- **The Programmer talks to WCH's newer USB-serial chips.** A CH343 or
+  CH9102 (vendor `1a86`, pid `55d2` and up: the ESP32-P4-Nano's, for one)
+  is a standard CDC-ACM device under the CH340's vendor id; it went to the
+  CH34x driver, whose own requests reset the target but left the data
+  stuck (`TX transfer timeout`, "No response"). The USB host now takes a
+  CDC-ACM interface first, whoever made the chip, and the vendor drivers
+  only when there is none.
+- **The Programmer reads an ESP32-P4 image and checks its revision.** A
+  merged P4 image has its bootloader at 0x2000, and the chip went
+  unrecognised. The chip revisions an image accepts (from its header) are
+  read too, and an image for other revisions is refused before anything is
+  written: an ESP32-P4 v3.1 with a build for v0.0-v1.99 would have been
+  flashed and never started. The wiring help says GPIO35 for the P4's BOOT.
+
 ## 0.15.0 — 2026-10-13
 
 - **Python** (`python.so`, from the card): MicroPython 1.29 with double

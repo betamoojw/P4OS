@@ -53,7 +53,10 @@ DEFAULT_OUT = os.path.join(REPO, "lang")
 
 SYSTEM_CATALOG = "_sistema.lang"
 FIRMWARE_DIRS = ["components/aos_ui", "components/aos_apps", "components/aos_dynapp",
-                 "main"]
+                 "main",
+                 # services whose messages an app shows: aos_flasher calls
+                 # aos_tr() itself; the HAL cannot, and marks its keys N_()
+                 "components/aos_flasher", "components/aos_hal"]
 
 # `_("...")` and `N_("...")`, allowing the adjacent-literal concatenation C
 # does for you:

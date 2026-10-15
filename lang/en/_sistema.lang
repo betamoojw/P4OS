@@ -7327,3 +7327,54 @@ Lo que ocupa cada una se mide al salir de ella. Tocar una la cierra.	What each o
 Reiniciar la placa	Restart the board
 CAS	CAS
 Python	Python
+#: components/aos_flasher, components/aos_hal (2026-10-15)
+sin FAT32 que montar: exFAT y NTFS no se leen	no FAT32 to mount: exFAT and NTFS are not read
+bien	fine
+no respondió a tiempo	did not answer in time
+la imagen no entra en la flash	the image does not fit in the flash
+el MD5 no coincide	the MD5 does not match
+parámetro inválido	invalid parameter
+chip desconocido	unknown chip
+chip no soportado	unsupported chip
+el chip no lo soporta	the chip does not support it
+respuesta inválida	invalid response
+El stub no arrancó (%s): sigo con la ROM	The stub did not start (%s): going on with the ROM
+La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT	The board did not answer: check TX/RX crossed, GND, EN and BOOT
+No se pudo conectar: %s	Could not connect: %s
+Secure boot o descarga segura activos	Secure boot or secure download mode is on
+La flash está cifrada: grabarla en claro la deja sin arrancar	The flash is encrypted: writing it in the clear would leave the board unable to start
+El firmware es para %s y la placa es %s	The firmware is for %s and the board is %s
+El firmware acepta la revisión v%u.%u a v%u.%u y el chip es v%u.%u: no arrancaría	The firmware takes revisions v%u.%u to v%u.%u and the chip is v%u.%u: it would not start
+Velocidad: %u baudios	Speed: %u baud
+A %u baudios no contesta: vuelvo a 115200	No answer at %u baud: back to 115200
+La placa quedó a %u baudios: reseteala y probá de nuevo	The board was left at %u baud: reset it and try again
+No se pudo abrir %s	Could not open %s
+0x%x: no empezó (%s)	0x%x: did not start (%s)
+%s: no se pudo leer de la tarjeta	%s: could not be read from the card
+0x%x: falló la escritura (%s)	0x%x: writing failed (%s)
+: escrito	: written
+: escrito, MD5 bien	: written, MD5 fine
+No hay un puerto serie %s	There is no serial port %s
+No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?	Could not open %s: is it plugged in, or open in the Terminal?
+%s está ocupado: lo tiene %s	%s is busy: %s has it
+%s: la USB-Serial-JTAG del chip, se reinicia sola	%s: the chip's own USB-Serial-JTAG, it resets by itself
+%s, EN por RTS y BOOT por DTR	%s, EN on RTS and BOOT on DTR
+%s, EN GPIO%d, BOOT GPIO%d	%s, EN GPIO%d, BOOT GPIO%d
+%s: EN/BOOT ocupados por %s	%s: EN/BOOT taken by %s
+otro	another
+%s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)	%s without EN/BOOT: put the board in download mode (hold BOOT and press reset)
+No entra: llega a %u KB y la flash tiene %u KB	It does not fit: it reaches %u KB and the flash has %u KB
+Placa reiniciada	Board restarted
+Reseteá la placa para que arranque el firmware nuevo	Reset the board to start the new firmware
+Listo en %u,%u s	Done in %u.%u s
+%s %s en %s	%s %s on %s
+No se pudo lanzar la tarea	Could not start the task
+Falta esp-serial-flasher: compilá el firmware una vez (managed_components)	esp-serial-flasher is missing: build the firmware once (managed_components)
+no se pudo abrir la imagen	the image could not be opened
+el C6 no aceptó empezar	the C6 would not start
+se cortó al mandar la imagen	the link broke while sending the image
+el C6 rechazó la imagen	the C6 rejected the image
+el C6 no activó la imagen	the C6 did not activate the image
+FM17522 (clon)	FM17522 (clone)
+FM17522E (clon)	FM17522E (clone)
+clon (sin marca)	clone (no brand)

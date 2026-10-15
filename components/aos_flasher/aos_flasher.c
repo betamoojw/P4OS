@@ -44,6 +44,7 @@
  * it, with aos_io_uart_lines for its SET_CONTROL, and STM32's UART bootloader.
  */
 #include "aos_flasher.h"
+#include "aos_i18n.h"
 #include "aos_hal.h"
 #include "aos_io.h"
 
@@ -316,16 +317,16 @@ static const char *const CHIP_IDF[ESP_MAX_CHIP] = {
 static const char *err_text(esp_loader_error_t e)
 {
     switch (e) {
-    case ESP_LOADER_SUCCESS: return "bien";
-    case ESP_LOADER_ERROR_TIMEOUT: return "no respondió a tiempo";
-    case ESP_LOADER_ERROR_IMAGE_SIZE: return "la imagen no entra en la flash";
-    case ESP_LOADER_ERROR_INVALID_MD5: return "el MD5 no coincide";
-    case ESP_LOADER_ERROR_INVALID_PARAM: return "parámetro inválido";
-    case ESP_LOADER_ERROR_INVALID_TARGET: return "chip desconocido";
-    case ESP_LOADER_ERROR_UNSUPPORTED_CHIP: return "chip no soportado";
-    case ESP_LOADER_ERROR_UNSUPPORTED_FUNC: return "el chip no lo soporta";
-    case ESP_LOADER_ERROR_INVALID_RESPONSE: return "respuesta inválida";
-    default: return "falló";
+    case ESP_LOADER_SUCCESS: return _("bien");
+    case ESP_LOADER_ERROR_TIMEOUT: return _("no respondió a tiempo");
+    case ESP_LOADER_ERROR_IMAGE_SIZE: return _("la imagen no entra en la flash");
+    case ESP_LOADER_ERROR_INVALID_MD5: return _("el MD5 no coincide");
+    case ESP_LOADER_ERROR_INVALID_PARAM: return _("parámetro inválido");
+    case ESP_LOADER_ERROR_INVALID_TARGET: return _("chip desconocido");
+    case ESP_LOADER_ERROR_UNSUPPORTED_CHIP: return _("chip no soportado");
+    case ESP_LOADER_ERROR_UNSUPPORTED_FUNC: return _("el chip no lo soporta");
+    case ESP_LOADER_ERROR_INVALID_RESPONSE: return _("respuesta inválida");
+    default: return _("falló");
     }
 }
 
@@ -470,7 +471,7 @@ static bool connect(ctx_t *c, bool stub)
         e = esp_loader_connect_with_stub_provider(&c->L, &args, stub_for, NULL);
         if (e != ESP_LOADER_SUCCESS && !s_cancel && esp_loader_get_target(&c->L) != ESP_UNKNOWN_CHIP) {
             /* it answered but the stub did not come up: the ROM can do it all, slower */
-            logf_(L_WARN, "El stub no arrancó (%s): sigo con la ROM", err_text(e));
+            logf_(L_WARN, _("El stub no arrancó (%s): sigo con la ROM"), err_text(e));
             esp_loader_init_serial(&c->L, &c->P.port);
             e = esp_loader_connect(&c->L, &args);
             stub = false;
@@ -482,8 +483,8 @@ static bool connect(ctx_t *c, bool stub)
         p4_power_on_flash(&c->L);
     if (s_cancel) return false;
     if (e != ESP_LOADER_SUCCESS)
-        return failf(e == ESP_LOADER_ERROR_TIMEOUT ? "La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT"
-                                                   : "No se pudo conectar: %s", err_text(e));
+        return failf(e == ESP_LOADER_ERROR_TIMEOUT ? _("La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT")
+                                                   : _("No se pudo conectar: %s"), err_text(e));
     lock();
     s_st.stub = stub;
     s_st.baud = 115200;
@@ -528,16 +529,16 @@ static bool read_info(ctx_t *c)
     char fl[16] = "?";
     if (flash) snprintf(fl, sizeof fl, "%u MB", (unsigned)(flash >> 20));
     logf_(L_OK, "%s%s%s, flash %s%s", s_st.chip, revs, macs, fl, s_st.stub ? ", stub" : ", ROM");
-    if (secure) logf_(L_WARN, "Secure boot o descarga segura activos");
+    if (secure) logf_(L_WARN, "%s", _("Secure boot o descarga segura activos"));
     if (crypt && J.job == AOS_FLASHER_JOB_FLASH)
-        return failf("La flash está cifrada: grabarla en claro la deja sin arrancar");
+        return failf("%s", _("La flash está cifrada: grabarla en claro la deja sin arrancar"));
     if (J.job == AOS_FLASHER_JOB_FLASH && J.src.chip[0] && idf && strcasecmp(J.src.chip, idf))
-        return failf("El firmware es para %s y la placa es %s", aos_flasher_chip_label(J.src.chip), s_st.chip);
+        return failf(_("El firmware es para %s y la placa es %s"), aos_flasher_chip_label(J.src.chip), s_st.chip);
     /* the bootloader refuses to start outside its range: say it now, not
      * after a flash that leaves the board without a program */
     if (J.job == AOS_FLASHER_JOB_FLASH && J.src.rev_max && rev != 0xFFFF &&
         (rev < J.src.rev_min || rev > J.src.rev_max))
-        return failf("El firmware acepta la revisión v%u.%u a v%u.%u y el chip es v%u.%u: no arrancaría",
+        return failf(_("El firmware acepta la revisión v%u.%u a v%u.%u y el chip es v%u.%u: no arrancaría"),
                      J.src.rev_min / 100, J.src.rev_min % 100, J.src.rev_max / 100, J.src.rev_max % 100,
                      rev / 100, rev % 100);
     return true;
@@ -556,14 +557,14 @@ static bool go_fast(ctx_t *c)
     if (e == ESP_LOADER_SUCCESS) e = esp_loader_read_mac(&c->L, mac);
     if (s_cancel) return false;
     if (e == ESP_LOADER_SUCCESS) {
-        logf_(L_INFO, "Velocidad: %u baudios", (unsigned)baud);
+        logf_(L_INFO, _("Velocidad: %u baudios"), (unsigned)baud);
         lock();
         s_st.baud = baud;
         unlock();
         return true;
     }
-    logf_(L_WARN, "A %u baudios no contesta: vuelvo a 115200", (unsigned)baud);
-    if (!c->P.lines) return failf("La placa quedó a %u baudios: reseteala y probá de nuevo", (unsigned)baud);
+    logf_(L_WARN, _("A %u baudios no contesta: vuelvo a 115200"), (unsigned)baud);
+    if (!c->P.lines) return failf(_("La placa quedó a %u baudios: reseteala y probá de nuevo"), (unsigned)baud);
     return connect(c, s_st.stub);
 }
 
@@ -574,7 +575,7 @@ static bool write_file(ctx_t *c, int i)
     if (J.src.project) snprintf(path, sizeof path, "%s/%s", J.src.path, f->name);
     else snprintf(path, sizeof path, "%s", J.src.path);
     FILE *fp = fopen(path, "rb");
-    if (!fp) return failf("No se pudo abrir %s", f->name);
+    if (!fp) return failf(_("No se pudo abrir %s"), f->name);
 
     target_chip_t t = esp_loader_get_target(&c->L);
     bool stub = s_st.stub;
@@ -593,7 +594,7 @@ static bool write_file(ctx_t *c, int i)
     unlock();
     logf_(L_INFO, "0x%05x %s: %u KB", (unsigned)f->offset, f->name, (unsigned)((f->size + 1023) / 1024));
     esp_loader_error_t e = esp_loader_flash_start(&c->L, &cfg);
-    if (e != ESP_LOADER_SUCCESS) { fclose(fp); return s_cancel ? false : failf("0x%x: no empezó (%s)", (unsigned)f->offset, err_text(e)); }
+    if (e != ESP_LOADER_SUCCESS) { fclose(fp); return s_cancel ? false : failf(_("0x%x: no empezó (%s)"), (unsigned)f->offset, err_text(e)); }
 
     set_phase(AOS_FLASHER_WRITING);
     uint32_t left = padded, file_left = f->size;
@@ -601,12 +602,12 @@ static bool write_file(ctx_t *c, int i)
         uint32_t want = left < block ? left : block;
         size_t n = fread(c->buf, 1, want, fp);
         if (n < want) memset(c->buf + n, 0xFF, want - n);      /* the padding to four */
-        if (n == 0 && want > 3) { fclose(fp); return failf("%s: no se pudo leer de la tarjeta", f->name); }
+        if (n == 0 && want > 3) { fclose(fp); return failf(_("%s: no se pudo leer de la tarjeta"), f->name); }
         uint64_t t0 = aos_hal_uptime_ms();
         e = esp_loader_flash_write(&c->L, &cfg, c->buf, want);
         J.write_ms += aos_hal_uptime_ms() - t0;
         J.write_bytes += want;
-        if (e != ESP_LOADER_SUCCESS) { fclose(fp); return s_cancel ? false : failf("0x%x: falló la escritura (%s)", (unsigned)(f->offset + padded - left), err_text(e)); }
+        if (e != ESP_LOADER_SUCCESS) { fclose(fp); return s_cancel ? false : failf(_("0x%x: falló la escritura (%s)"), (unsigned)(f->offset + padded - left), err_text(e)); }
         left -= want;
         uint32_t add = want < file_left ? want : file_left;     /* the padding is not the file's */
         file_left -= add;
@@ -623,7 +624,7 @@ static bool write_file(ctx_t *c, int i)
         s_st.verified = false;
         unlock();
     }
-    logf_(L_OK, "0x%05x %s%s", (unsigned)f->offset, f->name, cfg.skip_verify ? ": escrito" : ": escrito, MD5 bien");
+    logf_(L_OK, "0x%05x %s%s", (unsigned)f->offset, f->name, cfg.skip_verify ? _(": escrito") : _(": escrito, MD5 bien"));
     return true;
 }
 
@@ -632,7 +633,7 @@ static bool run(ctx_t *c)
     set_phase(AOS_FLASHER_OPENING);
     const aos_io_port_t *pt = aos_io_port_find(J.port);
     bool usb = !strncmp(J.port, "usb", 3);      /* a USB serial port of the host */
-    if (!usb && (!pt || pt->kind != AOS_PORT_UART)) return failf("No hay un puerto serie %s", J.port);
+    if (!usb && (!pt || pt->kind != AOS_PORT_UART)) return failf(_("No hay un puerto serie %s"), J.port);
     c->u = aos_io_uart_open(J.port, 115200, false, AOS_FLASHER_OWNER);
     /* A USB device can be away for a moment: a chip on its own USB that
      * restarts (an ESP32-C3 in a boot loop was gone 0.4 s out of every
@@ -641,11 +642,11 @@ static bool run(ctx_t *c)
         aos_hal_sleep_ms(100);
         c->u = aos_io_uart_open(J.port, 115200, false, AOS_FLASHER_OWNER);
     }
-    if (!c->u && usb) return failf("No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?", J.port);
+    if (!c->u && usb) return failf(_("No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?"), J.port);
     if (!c->u) {
         const char *o = aos_io_owner(pt->pins[0]);
         if (!o) o = aos_io_owner(pt->pins[1]);
-        return o ? failf("%s está ocupado: lo tiene %s", J.port, o) : failf("No se pudo abrir %s", J.port);
+        return o ? failf(_("%s está ocupado: lo tiene %s"), J.port, o) : failf(_("No se pudo abrir %s"), J.port);
     }
     c->P.port.ops = &PORT_OPS;
     c->P.u = c->u;
@@ -656,11 +657,11 @@ static bool run(ctx_t *c)
     unlock();
     int en = -1, boot = -1;
     aos_io_port_lines(J.port, &en, &boot);
-    if (c->P.jtag) logf_(L_INFO, "%s: la USB-Serial-JTAG del chip, se reinicia sola", aos_io_uart_desc(c->u));
-    else if (usb) logf_(L_INFO, "%s, EN por RTS y BOOT por DTR", aos_io_uart_desc(c->u));
-    else if (c->P.lines) logf_(L_INFO, "%s, EN GPIO%d, BOOT GPIO%d", aos_io_uart_desc(c->u), en, boot);
-    else if (en >= 0 || boot >= 0) logf_(L_WARN, "%s: EN/BOOT ocupados por %s", aos_io_uart_desc(c->u), aos_io_owner(en >= 0 ? en : boot) ? aos_io_owner(en >= 0 ? en : boot) : "otro");
-    else logf_(L_WARN, "%s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)", aos_io_uart_desc(c->u));
+    if (c->P.jtag) logf_(L_INFO, _("%s: la USB-Serial-JTAG del chip, se reinicia sola"), aos_io_uart_desc(c->u));
+    else if (usb) logf_(L_INFO, _("%s, EN por RTS y BOOT por DTR"), aos_io_uart_desc(c->u));
+    else if (c->P.lines) logf_(L_INFO, _("%s, EN GPIO%d, BOOT GPIO%d"), aos_io_uart_desc(c->u), en, boot);
+    else if (en >= 0 || boot >= 0) logf_(L_WARN, _("%s: EN/BOOT ocupados por %s"), aos_io_uart_desc(c->u), aos_io_owner(en >= 0 ? en : boot) ? aos_io_owner(en >= 0 ? en : boot) : _("otro"));
+    else logf_(L_WARN, _("%s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)"), aos_io_uart_desc(c->u));
 
     bool stub = J.job == AOS_FLASHER_JOB_FLASH && !J.opts.no_stub;
     if (!connect(c, stub)) return false;
@@ -673,7 +674,7 @@ static bool run(ctx_t *c)
         if (e > end) end = e;
     }
     if (s_st.flash_size && end > s_st.flash_size)
-        return failf("No entra: llega a %u KB y la flash tiene %u KB", (unsigned)(end >> 10), (unsigned)(s_st.flash_size >> 10));
+        return failf(_("No entra: llega a %u KB y la flash tiene %u KB"), (unsigned)(end >> 10), (unsigned)(s_st.flash_size >> 10));
     if (!go_fast(c)) return false;
     lock();
     s_st.verified = !J.opts.no_verify;
@@ -690,9 +691,9 @@ static void worker(void *arg)
     if (c) {
         c->buf = malloc(BLOCK_MAX);
         if (c->buf) ok = run(c);
-        else failf("Sin memoria");
+        else failf("%s", _("Sin memoria"));
     } else {
-        failf("Sin memoria");
+        failf("%s", _("Sin memoria"));
     }
     bool cancelled = s_cancel && !ok;
     if (c && c->u) {
@@ -702,9 +703,9 @@ static void worker(void *arg)
             set_phase(AOS_FLASHER_RESETTING);
             s_cancel = false;       /* a cancelled job still resets */
             esp_loader_reset_target(&c->L);
-            if (J.job == AOS_FLASHER_JOB_FLASH && ok) logf_(L_INFO, "Placa reiniciada");
+            if (J.job == AOS_FLASHER_JOB_FLASH && ok) logf_(L_INFO, "%s", _("Placa reiniciada"));
         } else if (ok && J.job == AOS_FLASHER_JOB_FLASH && !c->P.lines) {
-            logf_(L_WARN, "Reseteá la placa para que arranque el firmware nuevo");
+            logf_(L_WARN, "%s", _("Reseteá la placa para que arranque el firmware nuevo"));
         }
         aos_io_uart_close(c->u);
     }
@@ -715,16 +716,16 @@ static void worker(void *arg)
     if (ok) s_st.percent = 100;
     if (ok && J.job == AOS_FLASHER_JOB_FLASH) { s_st.done = s_st.total; s_st.eta_ms = 0; }
     s_st.phase = ok ? AOS_FLASHER_DONE : cancelled ? AOS_FLASHER_CANCELLED : AOS_FLASHER_FAILED;
-    if (cancelled) snprintf(s_st.error, sizeof s_st.error, "Cancelado");
+    if (cancelled) snprintf(s_st.error, sizeof s_st.error, "%s", _("Cancelado"));
     s_st.elapsed_ms = (uint32_t)(aos_hal_uptime_ms() - J.t0);
     s_st.busy = false;
     s_st.seq++;
     unlock();
     uint32_t ms = s_st.elapsed_ms;
     if (ok && J.job == AOS_FLASHER_JOB_FLASH)
-        logf_(L_OK, "Listo en %u,%u s", (unsigned)(ms / 1000), (unsigned)(ms % 1000 / 100));
+        logf_(L_OK, _("Listo en %u,%u s"), (unsigned)(ms / 1000), (unsigned)(ms % 1000 / 100));
     else if (cancelled)
-        logf_(L_WARN, "Cancelado");
+        logf_(L_WARN, "%s", _("Cancelado"));
     s_cancel = false;
 }
 
@@ -754,13 +755,13 @@ static bool start(aos_flasher_job_t job, const char *port)
     }
     s_st.elapsed_ms = (uint32_t)J.t0;      /* the start, while busy (see aos_flasher_status) */
     unlock();
-    logf_(L_INFO, "%s %s en %s", job == AOS_FLASHER_JOB_DETECT ? "Detectar" : "Grabar",
+    logf_(L_INFO, _("%s %s en %s"), job == AOS_FLASHER_JOB_DETECT ? _("Detectar") : _("Grabar"),
           job == AOS_FLASHER_JOB_DETECT ? "chip" : J.src.name, J.port);
     if (!aos_hal_thread_start("flasher", worker, NULL, 8192, 5)) {
         lock();
         s_st.busy = false;
         s_st.phase = AOS_FLASHER_FAILED;
-        snprintf(s_st.error, sizeof s_st.error, "No se pudo lanzar la tarea");
+        snprintf(s_st.error, sizeof s_st.error, "%s", _("No se pudo lanzar la tarea"));
         unlock();
         return false;
     }
@@ -790,7 +791,7 @@ static bool unavailable(const char *port)
     lock();
     s_st.phase = AOS_FLASHER_FAILED;
     s_st.seq++;
-    snprintf(s_st.error, sizeof s_st.error, "Falta esp-serial-flasher: compilá el firmware una vez (managed_components)");
+    snprintf(s_st.error, sizeof s_st.error, "%s", _("Falta esp-serial-flasher: compilá el firmware una vez (managed_components)"));
     unlock();
     logf_(L_ERR, "%s", s_st.error);
     return false;

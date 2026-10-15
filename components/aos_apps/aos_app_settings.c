@@ -449,11 +449,16 @@ static const char *host_state_text(uint32_t *color)
                       dv[i].port == AOS_HAL_USB_HOST_HEADER ? "21/23" : "25/27", dv[i].hub_port ? ", hub" : "",
                       use[0] ? use : _("sin uso todavía"));
     }
-    /* why a pendrive is not mounted */
+    /* why a pendrive is not mounted (the HAL's key, aos_usb_p4.c) */
+    (void)N_("sin FAT32 que montar: exFAT y NTFS no se leen");
     for (int i = 0; i < np && o < sizeof t; i++)
         if (!in[i].mounted && in[i].error[0]) {
             *color = 0xFF453A;
-            o += snprintf(t + o, sizeof t - o, "\n%s %s: %s", in[i].vendor, in[i].product, in[i].error);
+            if (in[i].why)
+                o += snprintf(t + o, sizeof t - o, "\n%s %s: %s (%s)", in[i].vendor, in[i].product, _(in[i].why),
+                              in[i].err ? in[i].err : "?");
+            else
+                o += snprintf(t + o, sizeof t - o, "\n%s %s: %s", in[i].vendor, in[i].product, in[i].error);
         }
     return t;
 }
@@ -1472,7 +1477,10 @@ static void c6_refresh(void)
         snprintf(v, sizeof v, _("mandando… %u %%"), (unsigned)(u.total ? (uint64_t)u.sent * 100 / u.total : 0));
         break;
     case AOS_C6_DONE: snprintf(v, sizeof v, "%s", _("listo: reiniciando")); break;
-    case AOS_C6_FAILED: snprintf(v, sizeof v, "%s", u.error); break;
+    case AOS_C6_FAILED:
+        if (u.why) snprintf(v, sizeof v, "%s%s%s", _(u.why), u.err ? ": " : "", u.err ? u.err : "");
+        else snprintf(v, sizeof v, "%s", u.error);
+        break;
     default: v[0] = 0; break;
     }
     lv_label_set_text(U.c6_state, v);

@@ -679,6 +679,8 @@ static void host_mount(uint8_t addr)
     } else {
         sl->vfs = NULL;
         snprintf(in.error, sizeof in.error, "sin FAT32 que montar (%s): exFAT y NTFS no se leen", esp_err_to_name(e));
+        in.why = "sin FAT32 que montar: exFAT y NTFS no se leen";     /* a key of the system catalog */
+        in.err = esp_err_to_name(e);
     }
     ESP_LOGI(TAG, "pendrive %04x:%04x \"%s %s\", %" PRIu64 " MB: %s%s", in.vid, in.pid, in.vendor, in.product,
              in.bytes / 1000000, in.mounted ? "mounted at " : "", in.mounted ? root : in.error);

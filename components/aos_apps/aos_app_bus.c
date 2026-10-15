@@ -869,11 +869,11 @@ static void spi_decode(char *t, size_t n, lv_color_t *col)
         if (len < 2) break;
         static const struct { uint8_t v; const char *name; } VER[] = {
             { 0x91, "MFRC522 v1.0" }, { 0x92, "MFRC522 v2.0" }, { 0x90, "MFRC522 v0.0" },
-            { 0x88, "FM17522 (clon)" }, { 0xB2, "FM17522E (clon)" }, { 0x12, "clon (sin marca)" },
+            { 0x88, N_("FM17522 (clon)") }, { 0xB2, N_("FM17522E (clon)") }, { 0x12, N_("clon (sin marca)") },
         };
         for (size_t i = 0; i < sizeof VER / sizeof VER[0]; i++)
             if (VER[i].v == rx[1]) {
-                snprintf(t, n, _("Contestó %s (versión %02X): el lector está bien conectado"), VER[i].name, rx[1]);
+                snprintf(t, n, _("Contestó %s (versión %02X): el lector está bien conectado"), _(VER[i].name), rx[1]);
                 *col = AOS_C_GREEN;
                 return;
             }

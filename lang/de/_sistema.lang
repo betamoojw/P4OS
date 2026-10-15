@@ -7327,3 +7327,54 @@ Lo que ocupa cada una se mide al salir de ella. Tocar una la cierra.	Was jede be
 Reiniciar la placa	Platine neu starten
 CAS	CAS
 Python	Python
+#: components/aos_flasher, components/aos_hal (2026-10-15)
+sin FAT32 que montar: exFAT y NTFS no se leen	kein FAT32 zum Einhängen: exFAT und NTFS werden nicht gelesen
+bien	in Ordnung
+no respondió a tiempo	hat nicht rechtzeitig geantwortet
+la imagen no entra en la flash	das Image passt nicht in den Flash
+el MD5 no coincide	der MD5 stimmt nicht überein
+parámetro inválido	ungültiger Parameter
+chip desconocido	unbekannter Chip
+chip no soportado	nicht unterstützter Chip
+el chip no lo soporta	der Chip unterstützt das nicht
+respuesta inválida	ungültige Antwort
+El stub no arrancó (%s): sigo con la ROM	Der Stub ist nicht gestartet (%s): weiter mit dem ROM
+La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT	Die Platine hat nicht geantwortet: TX/RX gekreuzt, GND, EN und BOOT prüfen
+No se pudo conectar: %s	Verbindung fehlgeschlagen: %s
+Secure boot o descarga segura activos	Secure Boot oder sicherer Download-Modus aktiv
+La flash está cifrada: grabarla en claro la deja sin arrancar	Der Flash ist verschlüsselt: unverschlüsselt beschrieben startet die Platine nicht mehr
+El firmware es para %s y la placa es %s	Die Firmware ist für %s, die Platine ist %s
+El firmware acepta la revisión v%u.%u a v%u.%u y el chip es v%u.%u: no arrancaría	Die Firmware akzeptiert Revision v%u.%u bis v%u.%u, der Chip ist v%u.%u: sie würde nicht starten
+Velocidad: %u baudios	Geschwindigkeit: %u Baud
+A %u baudios no contesta: vuelvo a 115200	Bei %u Baud keine Antwort: zurück auf 115200
+La placa quedó a %u baudios: reseteala y probá de nuevo	Die Platine steht auf %u Baud: zurücksetzen und erneut versuchen
+No se pudo abrir %s	%s konnte nicht geöffnet werden
+0x%x: no empezó (%s)	0x%x: nicht begonnen (%s)
+%s: no se pudo leer de la tarjeta	%s: konnte nicht von der Karte gelesen werden
+0x%x: falló la escritura (%s)	0x%x: Schreiben fehlgeschlagen (%s)
+: escrito	: geschrieben
+: escrito, MD5 bien	: geschrieben, MD5 in Ordnung
+No hay un puerto serie %s	Es gibt keinen seriellen Port %s
+No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?	%s konnte nicht geöffnet werden: angeschlossen, oder im Terminal offen?
+%s está ocupado: lo tiene %s	%s ist belegt: %s nutzt ihn
+%s: la USB-Serial-JTAG del chip, se reinicia sola	%s: das USB-Serial-JTAG des Chips, setzt sich selbst zurück
+%s, EN por RTS y BOOT por DTR	%s, EN über RTS und BOOT über DTR
+%s, EN GPIO%d, BOOT GPIO%d	%s, EN GPIO%d, BOOT GPIO%d
+%s: EN/BOOT ocupados por %s	%s: EN/BOOT belegt von %s
+otro	ein anderer
+%s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)	%s ohne EN/BOOT: Platine in den Download-Modus bringen (BOOT halten und Reset drücken)
+No entra: llega a %u KB y la flash tiene %u KB	Passt nicht: reicht bis %u KB, der Flash hat %u KB
+Placa reiniciada	Platine neu gestartet
+Reseteá la placa para que arranque el firmware nuevo	Platine zurücksetzen, damit die neue Firmware startet
+Listo en %u,%u s	Fertig in %u,%u s
+%s %s en %s	%s %s an %s
+No se pudo lanzar la tarea	Der Task konnte nicht gestartet werden
+Falta esp-serial-flasher: compilá el firmware una vez (managed_components)	esp-serial-flasher fehlt: die Firmware einmal bauen (managed_components)
+no se pudo abrir la imagen	das Image konnte nicht geöffnet werden
+el C6 no aceptó empezar	der C6 hat den Start abgelehnt
+se cortó al mandar la imagen	die Verbindung brach beim Senden des Images ab
+el C6 rechazó la imagen	der C6 hat das Image abgelehnt
+el C6 no activó la imagen	der C6 hat das Image nicht aktiviert
+FM17522 (clon)	FM17522 (Klon)
+FM17522E (clon)	FM17522E (Klon)
+clon (sin marca)	Klon (ohne Marke)

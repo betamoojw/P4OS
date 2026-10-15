@@ -423,8 +423,16 @@ bool aos_hal_net_coprocessor_image(const char *path, char *version, size_t n)
     return ok;
 }
 
+/* the reasons are keys of the system catalog: the HAL cannot call aos_tr(),
+ * Settings translates them (tools/gen_lang.py finds N_()) */
+#ifndef N_
+#define N_(s) s
+#endif
+
 static void c6_fail(const char *why, esp_err_t e)
 {
+    s_c6up.why = why;
+    s_c6up.err = e ? esp_err_to_name(e) : NULL;
     snprintf(s_c6up.error, sizeof s_c6up.error, "%s%s%s", why, e ? ": " : "", e ? esp_err_to_name(e) : "");
     ESP_LOGE(TAG, "C6 update: %s", s_c6up.error);
     s_c6up.state = AOS_C6_FAILED;
@@ -437,26 +445,26 @@ static void c6_update_task(void *arg)
     esp_err_t e = ESP_OK;
     bool begun = false;
     if (!f || !buf) {
-        c6_fail("no se pudo abrir la imagen", 0);
+        c6_fail(N_("no se pudo abrir la imagen"), 0);
         goto out;
     }
     ESP_LOGW(TAG, "C6 update: %s, %u bytes, version %s (the C6 runs %s)", s_c6_path, (unsigned)s_c6up.total,
              s_c6up.version, s_c6_fw[0] ? s_c6_fw : "?");
     if ((e = esp_hosted_slave_ota_begin()) != ESP_OK) {
-        c6_fail("el C6 no aceptó empezar", e);
+        c6_fail(N_("el C6 no aceptó empezar"), e);
         goto out;
     }
     begun = true;
     size_t got;
     while ((got = fread(buf, 1, C6_CHUNK, f)) > 0) {
         if ((e = esp_hosted_slave_ota_write(buf, got)) != ESP_OK) {
-            c6_fail("se cortó al mandar la imagen", e);
+            c6_fail(N_("se cortó al mandar la imagen"), e);
             goto out;
         }
         s_c6up.sent += got;
     }
     if ((e = esp_hosted_slave_ota_end()) != ESP_OK) {
-        c6_fail("el C6 rechazó la imagen", e);
+        c6_fail(N_("el C6 rechazó la imagen"), e);
         goto out;
     }
     /* From 2.6 on the C6 switches slots on activate; older ones did it at
@@ -464,7 +472,7 @@ static void c6_update_task(void *arg)
      * its INIT event (0 for the factory firmware, which predates it). */
     uint32_t v = eh_host_mcu_transport_get_fw_version();
     if (v >= ((2u << 16) | (6u << 8)) && (e = esp_hosted_slave_ota_activate()) != ESP_OK) {
-        c6_fail("el C6 no activó la imagen", e);
+        c6_fail(N_("el C6 no activó la imagen"), e);
         goto out;
     }
     ESP_LOGW(TAG, "C6 update: %u bytes sent and accepted; restarting", (unsigned)s_c6up.sent);

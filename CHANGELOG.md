@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **The Programmer speaks the interface's language.** Its messages are
+  formatted in the flashing service, which the translation tool did not
+  read: with the board in English they came out in Spanish. So did the C6
+  update's errors and the pendrive's, which the HAL writes; it now keeps the
+  reason as a key that Settings translates. English and German added.
 - **The Programmer talks to WCH's newer USB-serial chips.** A CH343 or
   CH9102 (vendor `1a86`, pid `55d2` and up: the ESP32-P4-Nano's, for one)
   is a standard CDC-ACM device under the CH340's vendor id; it went to the

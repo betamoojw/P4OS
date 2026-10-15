@@ -1525,6 +1525,9 @@ typedef struct {
     uint32_t sent, total;   /* bytes */
     char     version[32];   /* the image's */
     char     error[64];
+    /* the same failure for the screen: 'why' in Spanish, a key for _()
+     * (the HAL cannot translate), and the IDF's name for the error or NULL */
+    const char *why, *err;
 } aos_c6_update_t;
 
 /* The image's version into 'version' ("" when the file is not one). */
@@ -1935,6 +1938,7 @@ typedef struct {
     uint64_t bytes;             /* its capacity */
     char     error[64];         /* why it is not mounted, "" if it is */
     char     path[8];           /* "/usb", "/usb2", "/usb3"; "" if not mounted */
+    const char *why, *err;      /* 'error' for the screen: a key for _(), the IDF's name or NULL */
 } aos_usb_host_info_t;
 bool aos_hal_usb_host_on(void);
 bool aos_hal_usb_host_set(bool on);             /* remembered across restarts; false = busy */

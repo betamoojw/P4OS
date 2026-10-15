@@ -7,10 +7,35 @@
  * a second while someone looks. The page sends lines of key=value: sel,
  * pause, active, duty, env, minrssi, csv, mqtt, forget, fav, alias. The CSVs
  * of the sensors are plain card files under /ble. Texts in Spanish, like the
- * rest of the portal. */
+ * rest of the portal, through tr() (web.ble.lang). */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
+const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));
 const APP = 'aos.ble';
 const LIVE = 'live?app=' + APP;
+
+/* What the app puts in the live channel (the classes, the labels, the
+ * packets explained, the GATT states) are its own keys, in Spanish: the app
+ * translates them on its screen. Here they are looked up in its pack,
+ * /lang/<code>/aos.ble.lang, which tools/install_lang.sh puts on the card
+ * next to this page's; without it they stay as they come. */
+const APP_TR = new Map();
+const appTr = s => s ? (APP_TR.get(s) ?? tr(s)) : s;
+const appPack = (async () => {
+  const code = P.lang ? P.lang() : 'es';
+  if (code === 'es') return;
+  try {
+    const r = await fetch(`/lang/${code}/aos.ble.lang`, { cache: 'no-store' });
+    if (!r.ok) return;
+    const unesc = x => x.replace(/\\(.)/g, (_, c) => c === 'n' ? '\n' : c === 't' ? '\t' : c);
+    for (const line of (await r.text()).split('\n')) {
+      if (!line || line[0] === '#') continue;
+      const tab = line.indexOf('\t');
+      if (tab > 0 && tab < line.length - 1) APP_TR.set(unesc(line.slice(0, tab)), unesc(line.slice(tab + 1).replace(/\r$/, '')));
+    }
+  } catch { /* the page works without it */ }
+})();
 
 const css = `
 .bl-top{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
@@ -36,31 +61,35 @@ const css = `
 @media (max-width:700px){.bl-hide-s{display:none}}
 `;
 
-const CLS_COLOR = {
-  'Teléfono': '#0A84FF', 'Computadora': '#5E5CE6', 'Tableta': '#5E5CE6', 'Reloj': '#FF9F0A', 'Audio': '#BF5AF2',
-  'Rastreador': '#FF375F', 'Sensor': '#30D158', 'Baliza': '#40C8E0', 'Teclado o mouse': '#64D2FF', 'Joystick': '#FF6482',
-  'Tele': '#AC8E68', 'Salud': '#FF453A', 'Luz': '#FFD60A', 'Deporte': '#66D4CF', 'Placa de desarrollo': '#E5484D',
-};
-const num = (v, d = 1) => v === undefined || v === null ? '' : (+v).toFixed(d).replace('.', ',');
-const age = ms => ms < 2000 ? 'ahora' : ms < 60000 ? Math.round(ms / 1000) + ' s' : ms < 3600000 ? Math.round(ms / 60000) + ' min' : Math.round(ms / 3600000) + ' h';
+/* by the class the app sends, which is its Spanish key (bl_class_name);
+ * the name shown goes through appTr() */
+const CLS_COLOR = Object.fromEntries([
+  [N_('Teléfono'), '#0A84FF'], [N_('Computadora'), '#5E5CE6'], [N_('Tableta'), '#5E5CE6'], [N_('Reloj'), '#FF9F0A'], [N_('Audio'), '#BF5AF2'],
+  [N_('Rastreador'), '#FF375F'], [N_('Sensor'), '#30D158'], [N_('Baliza'), '#40C8E0'], [N_('Teclado o mouse'), '#64D2FF'], [N_('Joystick'), '#FF6482'],
+  [N_('Tele'), '#AC8E68'], [N_('Salud'), '#FF453A'], [N_('Luz'), '#FFD60A'], [N_('Deporte'), '#66D4CF'], [N_('Placa de desarrollo'), '#E5484D'],
+  [N_('Desconocido'), '#8e8e93'],
+]);
+/* a number for the eye, one decimal unless told, and nothing when missing */
+const nf = (v, d = 1) => v === undefined || v === null ? '' : num(+v, d);
+const age = ms => ms < 2000 ? tr('ahora') : ms < 60000 ? Math.round(ms / 1000) + ' s' : ms < 3600000 ? Math.round(ms / 60000) + ' min' : Math.round(ms / 3600000) + ' h';
 const rssiColor = r => r >= -60 ? 'var(--green)' : r >= -75 ? 'var(--accent)' : r >= -88 ? '#e6b800' : 'var(--orange)';
-const devName = d => d.al || d.n || d.lbl || d.co || 'Sin nombre';
-const ivText = v => v <= 0 ? '' : v < 1000 ? v + ' ms' : num(v / 1000) + ' s';
+const devName = d => d.al || d.n || appTr(d.lbl) || d.co || tr('Sin nombre');
+const ivText = v => v <= 0 ? '' : v < 1000 ? v + ' ms' : nf(v / 1000) + ' s';
 
 function senLine(s) {
   if (!s) return '';
-  if (s.encrypted) return 'cifrado';
+  if (s.encrypted) return tr('cifrado');
   const p = [];
-  if (s.temp !== undefined) p.push(num(s.temp) + ' °C');
-  if (s.hum !== undefined) p.push(num(s.hum, 0) + ' %');
-  if (s.press !== undefined) p.push(num(s.press, 0) + ' hPa');
+  if (s.temp !== undefined) p.push(nf(s.temp) + ' °C');
+  if (s.hum !== undefined) p.push(nf(s.hum, 0) + ' %');
+  if (s.press !== undefined) p.push(nf(s.press, 0) + ' hPa');
   if (s.co2 !== undefined) p.push(s.co2 + ' ppm');
   if (s.lux !== undefined) p.push(s.lux + ' lx');
-  if (s.open !== undefined) p.push(s.open ? 'abierto' : 'cerrado');
-  if (s.motion !== undefined) p.push(s.motion ? 'movimiento' : 'quieto');
-  if (s.hr !== undefined) p.push(s.hr + ' lpm');
-  if (s.batt !== undefined) p.push('bat. ' + s.batt + ' %');
-  else if (s.volt !== undefined) p.push(num(s.volt, 2) + ' V');
+  if (s.open !== undefined) p.push(s.open ? tr('abierto') : tr('cerrado'));
+  if (s.motion !== undefined) p.push(s.motion ? tr('movimiento') : tr('quieto'));
+  if (s.hr !== undefined) p.push(tr('%s lpm', s.hr));
+  if (s.batt !== undefined) p.push(tr('bat. %s', s.batt + ' %'));
+  else if (s.volt !== undefined) p.push(nf(s.volt, 2) + ' V');
   return p.join(' · ');
 }
 
@@ -74,6 +103,8 @@ P.registerPage({
     let st = null, devs = [], sel = null, dev = null, alive = true;
     let sortKey = 'r', sortDir = -1, query = '', onlyAlive = true, clsFilter = '';
     const drawn = {};
+    /* the app's pack arrived: everything drawn again with it */
+    appPack.then(() => { if (APP_TR.size) for (const k in drawn) drawn[k] = null; });
     const changed = (part, sig) => { if (drawn[part] === sig) return false; drawn[part] = sig; return true; };
     const send = text => P.api(LIVE, { method: 'POST', body: text }).catch(e => P.toast(e.message, true));
 
@@ -87,27 +118,27 @@ P.registerPage({
     const missing = h('div', { class: 'card' });
 
     /* ---- the devices ---- */
-    const search = h('input', { type: 'search', placeholder: 'Buscar por nombre, dirección o fabricante', style: 'flex:1;min-width:200px',
+    const search = h('input', { type: 'search', placeholder: tr('Buscar por nombre, dirección o fabricante'), style: 'flex:1;min-width:200px',
       oninput: () => { query = search.value.toLowerCase(); drawTable(true); } });
-    const clsSel = h('select', { onchange: () => { clsFilter = clsSel.value; drawTable(true); } }, h('option', { value: '' }, 'Todo'));
+    const clsSel = h('select', { onchange: () => { clsFilter = clsSel.value; drawTable(true); } }, h('option', { value: '' }, tr('Todo')));
     const aliveBox = h('input', { type: 'checkbox', checked: true, onchange: () => { onlyAlive = aliveBox.checked; drawTable(true); } });
     /* the table is drawn again every second: the clicks are taken on its
      * box, which stays, at pointerdown, so a redraw between pressing and
      * releasing does not swallow them */
     const tableBox = h('div', { class: 'bl-wrap' });
     tableBox.addEventListener('pointerdown', ev => {
-      const th = ev.target.closest('th[data-k]'), tr = ev.target.closest('tr[data-a]');
+      const th = ev.target.closest('th[data-k]'), row = ev.target.closest('tr[data-a]');
       if (th) {
         const k = th.dataset.k;
         if (sortKey === k) sortDir = -sortDir; else { sortKey = k; sortDir = ['r', 'fav', 'adv'].includes(k) ? -1 : 1; }
         drawTable(true);
-      } else if (tr) select(tr.dataset.a);
+      } else if (row) select(row.dataset.a);
     });
     const exportBtns = h('div', { class: 'btns' },
-      h('button', { class: 'btn', onclick: () => exportCsv() }, 'Bajar la tabla (CSV)'),
-      h('button', { class: 'btn', onclick: () => P.saveBlob(new Blob([JSON.stringify(devs, null, 1)], { type: 'application/json' }), `ble-${Date.now()}.json`) }, 'Bajar todo (JSON)'));
-    const list = h('div', { class: 'card' }, h('h2', {}, 'Equipos'),
-      h('div', { class: 'row', style: 'gap:10px;flex-wrap:wrap' }, search, clsSel, h('label', { class: 'row', style: 'gap:6px' }, aliveBox, 'Sólo los que se oyen')),
+      h('button', { class: 'btn', onclick: () => exportCsv() }, tr('Bajar la tabla (CSV)')),
+      h('button', { class: 'btn', onclick: () => P.saveBlob(new Blob([JSON.stringify(devs, null, 1)], { type: 'application/json' }), `ble-${Date.now()}.json`) }, tr('Bajar todo (JSON)')));
+    const list = h('div', { class: 'card' }, h('h2', {}, tr('Equipos')),
+      h('div', { class: 'row', style: 'gap:10px;flex-wrap:wrap' }, search, clsSel, h('label', { class: 'row', style: 'gap:6px' }, aliveBox, tr('Sólo los que se oyen'))),
       tableBox, exportBtns);
 
     /* ---- one device ---- */
@@ -121,8 +152,8 @@ P.registerPage({
     function showMissing(m) {
       missing.style.display = m ? '' : 'none';
       top.style.display = list.style.display = sensors.style.display = m ? 'none' : '';
-      if (m) put(missing, h('h2', {}, 'BLE'), h('p', { class: 'note' }, 'La app BLE no está abierta en la placa: los datos en vivo salen de ella.'),
-        h('button', { class: 'btn pri', onclick: () => P.openApp(APP).then(() => P.toast('Abriendo BLE en la placa')).catch(e => P.toast(e.message, true)) }, 'Abrir BLE en la placa'));
+      if (m) put(missing, h('h2', {}, 'BLE'), h('p', { class: 'note' }, tr('La app BLE no está abierta en la placa: los datos en vivo salen de ella.')),
+        h('button', { class: 'btn pri', onclick: () => P.openApp(APP).then(() => P.toast(tr('Abriendo BLE en la placa'))).catch(e => P.toast(e.message, true)) }, tr('Abrir BLE en la placa')));
     }
 
     function drawControls(s) {
@@ -132,27 +163,26 @@ P.registerPage({
       const sw = (label, on, cmd) => h('label', { class: 'row', style: 'gap:6px' },
         h('input', { type: 'checkbox', checked: on, onchange: ev => send(cmd + '=' + (ev.target.checked ? 1 : 0)) }), label);
       put(controls,
-        h('button', { class: 'btn' + (s.paused ? ' pri' : ''), onclick: () => send('pause=' + (s.paused ? 0 : 1)) }, s.paused ? 'Seguir' : 'Pausa'),
-        h('span', {}, 'Escaneo ', select('active', s.active ? 1 : 0, [[1, 'activo'], [0, 'pasivo']])),
-        h('span', {}, 'Escuchando ', select('duty', s.duty, [[10, '10 %'], [30, '30 %'], [60, '60 %'], [100, '100 %']])),
-        h('span', {}, 'Entorno ', select('env', s.env, [[0, 'al aire libre'], [1, 'casa'], [2, 'oficina']])),
-        h('span', {}, 'Señal mínima ', select('minrssi', s.min_rssi, [[-100, 'todos'], [-90, '-90 dBm'], [-80, '-80 dBm'], [-70, '-70 dBm']])),
-        sw('CSV de los sensores', s.csv, 'csv'),
-        sw(s.mqtt_ready ? 'MQTT' : 'MQTT (no conectado)', s.mqtt, 'mqtt'),
-        h('button', { class: 'btn', onclick: () => { if (confirm('¿Vaciar la lista? Los favoritos quedan.')) send('forget=1'); } }, 'Vaciar la lista'));
+        h('button', { class: 'btn' + (s.paused ? ' pri' : ''), onclick: () => send('pause=' + (s.paused ? 0 : 1)) }, s.paused ? tr('Seguir') : tr('Pausa')),
+        h('span', {}, tr('Escaneo') + ' ', select('active', s.active ? 1 : 0, [[1, tr('activo')], [0, tr('pasivo')]])),
+        h('span', {}, tr('Escuchando') + ' ', select('duty', s.duty, [[10, '10 %'], [30, '30 %'], [60, '60 %'], [100, '100 %']])),
+        h('span', {}, tr('Entorno') + ' ', select('env', s.env, [[0, tr('al aire libre')], [1, tr('casa')], [2, tr('oficina')]])),
+        h('span', {}, tr('Señal mínima') + ' ', select('minrssi', s.min_rssi, [[-100, tr('todos')], [-90, '-90 dBm'], [-80, '-80 dBm'], [-70, '-70 dBm']])),
+        sw(tr('CSV de los sensores'), s.csv, 'csv'),
+        sw(s.mqtt_ready ? 'MQTT' : tr('MQTT (no conectado)'), s.mqtt, 'mqtt'),
+        h('button', { class: 'btn', onclick: () => { if (confirm(tr('¿Vaciar la lista? Los favoritos quedan.'))) send('forget=1'); } }, tr('Vaciar la lista')));
     }
 
     function drawLost(s) {
       if (!changed('lost', s.lost + '|' + Math.floor((s.lost_age || 0) / 60000))) return;
       if (!s.lost) { lostBox.style.display = 'none'; return; }
-      const w = [];
-      if (s.lost & 1) w.push('el teléfono');
-      if (s.lost & 2) w.push('la computadora');
-      if (s.lost & 4) w.push('el Wi-Fi');
-      const what = w.length > 1 ? w.slice(0, -1).join(', ') + ' y ' + w[w.length - 1] : w[0];
+      /* what went down, by its bits: 1 the phone, 2 the computer, 4 the wifi */
+      const what = ['', N_('el teléfono'), N_('la computadora'), N_('el teléfono y la computadora'), N_('el Wi-Fi'),
+        N_('el teléfono y el Wi-Fi'), N_('la computadora y el Wi-Fi'), N_('el teléfono, la computadora y el Wi-Fi')][s.lost & 7];
+      const when = s.lost_age < 60000 ? tr('recién') : tr('hace %s', age(s.lost_age));
       lostBox.style.display = '';
-      put(lostBox, h('div', {}, `⚠ Mientras escaneaba se desconectó ${what} (${s.lost_age < 60000 ? 'recién' : 'hace ' + age(s.lost_age)}). El Bluetooth y el Wi-Fi de la placa comparten una sola radio: escuchar menos tiempo o pausar el escaneo les deja más aire.`),
-        h('div', { class: 'btns', style: 'margin-top:8px' }, h('button', { class: 'btn', onclick: () => send('lost_ok=1') }, 'Entendido')));
+      put(lostBox, h('div', {}, tr('⚠ Mientras escaneaba se desconectó %s (%s). El Bluetooth y el Wi-Fi de la placa comparten una sola radio: escuchar menos tiempo o pausar el escaneo les deja más aire.', tr(what), when)),
+        h('div', { class: 'btns', style: 'margin-top:8px' }, h('button', { class: 'btn', onclick: () => send('lost_ok=1') }, tr('Entendido'))));
     }
 
     function drawChart(s) {
@@ -175,22 +205,22 @@ P.registerPage({
       g.stroke();
       g.font = '12px sans-serif';
       g.fillStyle = accent;
-      g.fillText(`paquetes/s (máx. ${mp})`, 6, 14);
+      g.fillText(tr('paquetes/s (máx. %s)', mp), 6, 14);
       g.fillStyle = '#FF9F0A';
       g.textAlign = 'right';
-      g.fillText(`equipos/s (máx. ${md})`, W - 6, 14);
+      g.fillText(tr('equipos/s (máx. %s)', md), W - 6, 14);
       g.textAlign = 'left';
     }
 
     function showState(s) {
       st = s;
       showMissing(false);
-      status.textContent = s.bt_off ? 'Bluetooth apagado en la placa (se prende en Ajustes o desde la app).'
-        : `${s.alive} cerca · ${s.seen ?? s.known} vistos · ${num(s.pps)} paquetes/s · ${s.total} en total · ${s.lost} perdidos · `
-          + (s.paused ? 'en pausa' : `${s.active ? 'activo' : 'pasivo'} ${s.duty} %`)
+      status.textContent = s.bt_off ? tr('Bluetooth apagado en la placa (se prende en Ajustes o desde la app).')
+        : [tr('%s cerca', s.alive), tr('%s vistos', s.seen ?? s.known), tr('%s paquetes/s', nf(s.pps)), tr('%s en total', s.total), tr('%s perdidos', s.lost),
+          s.paused ? tr('en pausa') : (s.active ? tr('activo') : tr('pasivo')) + ` ${s.duty} %`].join(' · ')
           /* the table's top, and what fits in one answer of the live channel */
-          + (s.forgotten ? ` · la placa guarda ${s.cap} equipos y olvidó ${s.forgotten} para hacer lugar` : '')
-          + (s.listed !== undefined && s.listed < s.known ? ` · la tabla de abajo muestra los ${s.listed} más fuertes de ${s.known}` : '');
+          + (s.forgotten ? ' · ' + tr('la placa guarda %s equipos y olvidó %s para hacer lugar', s.cap, s.forgotten) : '')
+          + (s.listed !== undefined && s.listed < s.known ? ' · ' + tr('la tabla de abajo muestra los %s más fuertes de %s', s.listed, s.known) : '');
       drawControls(s);
       drawLost(s);
       drawChart(s);
@@ -198,10 +228,10 @@ P.registerPage({
 
     /* ---- the table ---- */
     const COLS = [
-      ['fav', '★', d => d.fav ? 1 : 0], ['name', 'Nombre', d => devName(d).toLowerCase()], ['cls', 'Qué es', d => d.cls],
-      ['co', 'Fabricante', d => d.co || ''], ['a', 'Dirección', d => d.a], ['r', 'Señal', d => d.age < 30000 ? d.ra : -200],
-      ['dist', 'Distancia', d => d.dist], ['iv', 'Intervalo', d => d.iv || 1e9], ['adv', 'Paquetes', d => d.adv + d.rsp],
-      ['age', 'Oído', d => d.age], ['sub', 'Datos', d => d.sub],
+      ['fav', '★', d => d.fav ? 1 : 0], ['name', N_('Nombre'), d => devName(d).toLowerCase()], ['cls', N_('Qué es'), d => appTr(d.cls)],
+      ['co', N_('Fabricante'), d => d.co || ''], ['a', N_('Dirección'), d => d.a], ['r', N_('Señal'), d => d.age < 30000 ? d.ra : -200],
+      ['dist', N_('Distancia'), d => d.dist], ['iv', N_('Intervalo'), d => d.iv || 1e9], ['adv', N_('Paquetes'), d => d.adv + d.rsp],
+      ['age', N_('Oído'), d => d.age], ['sub', N_('Datos'), d => d.sub],
     ];
     const HIDE_S = new Set(['co', 'dist', 'iv', 'adv']);
 
@@ -209,7 +239,7 @@ P.registerPage({
       let v = devs;
       if (onlyAlive) v = v.filter(d => d.age < 30000 || d.fav);
       if (clsFilter) v = v.filter(d => d.cls === clsFilter);
-      if (query) v = v.filter(d => [devName(d), d.n, d.a, d.co, d.lbl, d.sub].join(' ').toLowerCase().includes(query));
+      if (query) v = v.filter(d => [devName(d), d.n, d.a, d.co, appTr(d.lbl), appTr(d.cls), d.sub].join(' ').toLowerCase().includes(query));
       const col = COLS.find(c => c[0] === sortKey) || COLS[5];
       return v.slice().sort((x, y) => { const a = col[2](x), b = col[2](y); return (a < b ? -1 : a > b ? 1 : 0) * sortDir; });
     }
@@ -218,13 +248,13 @@ P.registerPage({
       const v = visible();
       const sig = v.map(d => [d.a, d.r, d.age > 30000, d.fav, d.al, d.n, d.sub, d.adv].join('|')).join(';') + sel + sortKey + sortDir;
       if (!force && !changed('table', sig)) return;
-      const clses = [...new Set(devs.map(d => d.cls))].sort();
+      const clses = [...new Set(devs.map(d => d.cls))].sort((a, b) => String(appTr(a) ?? '').localeCompare(String(appTr(b) ?? '')));
       if (changed('cls', clses.join())) {
-        put(clsSel, h('option', { value: '' }, 'Todo'), ...clses.map(c => h('option', { value: c, selected: c === clsFilter }, c)));
+        put(clsSel, h('option', { value: '' }, tr('Todo')), ...clses.map(c => h('option', { value: c, selected: c === clsFilter }, appTr(c))));
       }
       const head = h('tr', {}, ...COLS.map(([k, t]) => h('th', {
         class: (HIDE_S.has(k) ? 'bl-hide-s' : '') + (['r', 'dist', 'iv', 'adv', 'age'].includes(k) ? ' num' : ''), 'data-k': k,
-      }, t + (sortKey === k ? (sortDir < 0 ? ' ▾' : ' ▴') : ''))));
+      }, tr(t) + (sortKey === k ? (sortDir < 0 ? ' ▾' : ' ▴') : ''))));
       const rows = v.map(d => {
         const gone = d.age >= 30000;
         const w = Math.max(4, Math.min(60, (d.r + 100) * 0.85));
@@ -232,18 +262,18 @@ P.registerPage({
           h('td', {}, d.fav ? '★' : ''),
           h('td', {}, h('span', { class: 'bl-dot', style: `background:${CLS_COLOR[d.cls] || '#8e8e93'}` }), devName(d),
             d.al && d.n ? h('div', { class: 'sub' }, d.n) : null),
-          h('td', {}, d.cls, d.lbl && d.lbl !== devName(d) ? h('div', { class: 'sub' }, d.lbl) : null),
+          h('td', {}, appTr(d.cls), d.lbl && appTr(d.lbl) !== devName(d) ? h('div', { class: 'sub' }, appTr(d.lbl)) : null),
           h('td', { class: 'bl-hide-s' }, d.co || '', d.cid !== undefined ? h('div', { class: 'sub' }, '0x' + d.cid.toString(16).toUpperCase().padStart(4, '0')) : null),
-          h('td', {}, h('span', { class: 'mono small' }, d.a), h('div', { class: 'sub' }, d.k)),
+          h('td', {}, h('span', { class: 'mono small' }, d.a), h('div', { class: 'sub' }, appTr(d.k))),
           h('td', { class: 'num' }, gone ? '—' : d.r + ' dBm', gone ? null : h('span', { class: 'bl-bar', style: `width:${w}px;background:${rssiColor(d.r)}` })),
-          h('td', { class: 'num bl-hide-s' }, '≈ ' + num(d.dist, d.dist < 10 ? 1 : 0) + ' m'),
+          h('td', { class: 'num bl-hide-s' }, '≈ ' + nf(d.dist, d.dist < 10 ? 1 : 0) + ' m'),
           h('td', { class: 'num bl-hide-s' }, ivText(d.iv)),
           h('td', { class: 'num bl-hide-s' }, d.adv + (d.rsp ? ' + ' + d.rsp : '')),
           h('td', { class: 'num' }, age(d.age)),
-          h('td', { class: 'sub' }, d.sen ? senLine(d.sen) : d.sub));
+          h('td', { class: 'sub' }, d.sen ? senLine(d.sen) : appTr(d.sub)));
       });
       put(tableBox, h('table', { class: 'bl-tbl' }, h('thead', {}, head), h('tbody', {}, ...rows)),
-        v.length ? null : h('p', { class: 'note' }, devs.length ? 'Nadie con este filtro.' : 'Escuchando...'));
+        v.length ? null : h('p', { class: 'note' }, devs.length ? tr('Nadie con este filtro.') : tr('Escuchando...')));
     }
 
     function exportCsv() {
@@ -258,13 +288,13 @@ P.registerPage({
       const ss = devs.filter(d => d.sen);
       const sig = ss.map(d => [d.a, senLine(d.sen), d.al, d.age > 120000].join('|')).join(';');
       if (!changed('sen', sig)) return;
-      put(sensors, h('h2', {}, 'Sensores'),
+      put(sensors, h('h2', {}, tr('Sensores')),
         ss.length ? h('div', { class: 'bl-grid' }, ...ss.map(d => h('div', { class: 'bl-sen', onclick: () => select(d.a), style: d.age > 120000 ? 'opacity:.5' : '' },
           h('div', {}, devName(d)), h('div', { class: 'small muted' }, `${d.sen.format} · ${d.a}`),
-          h('div', { class: 'big' }, d.sen.temp !== undefined ? num(d.sen.temp) + '°' : d.sen.encrypted ? 'cifrado' : ''),
-          h('div', {}, d.sen.hum !== undefined ? num(d.sen.hum, 0) + ' % de humedad' : ''),
+          h('div', { class: 'big' }, d.sen.temp !== undefined ? nf(d.sen.temp) + '°' : d.sen.encrypted ? tr('cifrado') : ''),
+          h('div', {}, d.sen.hum !== undefined ? tr('%s de humedad', nf(d.sen.hum, 0) + ' %') : ''),
           h('div', { class: 'small muted' }, senLine({ ...d.sen, temp: undefined, hum: undefined }) + ' · ' + age(d.age)))))
-          : h('p', { class: 'note' }, 'Ninguno a la vista. Aparecen solos los que anuncian en BTHome, pvvx/ATC, MiBeacon sin cifrar, Govee, Ruuvi, SwitchBot, Qingping, Inkbird o Eddystone TLM.'));
+          : h('p', { class: 'note' }, tr('Ninguno a la vista. Aparecen solos los que anuncian en BTHome, pvvx/ATC, MiBeacon sin cifrar, Govee, Ruuvi, SwitchBot, Qingping, Inkbird o Eddystone TLM.')));
     }
 
     /* ---- one device ---- */
@@ -303,8 +333,8 @@ P.registerPage({
       if (!bars) g.stroke();
       g.font = '11px sans-serif';
       g.fillStyle = '#8e8e93';
-      g.fillText(num(hi, bars ? 0 : 1), 4, 12);
-      g.fillText(num(lo, bars ? 0 : 1), 4, H - 4);
+      g.fillText(nf(hi, bars ? 0 : 1), 4, 12);
+      g.fillText(nf(lo, bars ? 0 : 1), 4, H - 4);
     }
 
     /* the key of a device that encrypts: typed here, kept by the app in
@@ -318,9 +348,9 @@ P.registerPage({
      * "gatt" ---- */
     let gatt = null;
     const gattBox = h('div', {});
-    const GATT_STATE = ['Desconectado', 'Conectando...', 'Conectado, listando servicios...', 'Conectado', 'Sin conexión'];
-    const propsText = p => [[2, 'lee'], [8, 'escribe'], [4, 'escribe sin respuesta'], [16, 'notifica'], [32, 'indica']]
-      .filter(([b]) => p & b).map(([, t]) => t).join(' · ');
+    const GATT_STATE = [N_('Desconectado'), N_('Conectando...'), N_('Conectado, listando servicios...'), N_('Conectado'), N_('Sin conexión')];
+    const propsText = p => [[2, N_('lee')], [8, N_('escribe')], [4, N_('escribe sin respuesta')], [16, N_('notifica')], [32, N_('indica')]]
+      .filter(([b]) => p & b).map(([, t]) => tr(t)).join(' · ');
     gattBox.addEventListener('pointerdown', ev => {
       const b = ev.target.closest('[data-g]');
       if (!b) return;
@@ -332,11 +362,11 @@ P.registerPage({
       else if (act === 'sub') send(`gatt_sub=${hd},${b.dataset.m}`);
       else if (act === 'hilink') send('gatt_hilink=' + hd);
       else if (act === 'mi') {
-        if (confirm('Activar este sensor Xiaomi: le da una clave nueva y la guarda en la placa. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva. ¿Seguir?'))
+        if (confirm(tr('Activar este sensor Xiaomi: le da una clave nueva y la guarda en la placa. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva. ¿Seguir?')))
           send('gatt_mi=1');
       }
       else if (act === 'write') {
-        const v = prompt('Escribir: texto, o bytes con 0x (por ejemplo 0x01 A0)');
+        const v = prompt(tr('Escribir: texto, o bytes con 0x (por ejemplo 0x01 A0)'));
         if (v !== null && v !== '') send(`gatt_write=${hd},${v}`);
       }
     });
@@ -345,26 +375,26 @@ P.registerPage({
       if (!changed('gatt', JSON.stringify(g) + sel)) return;
       const btn = (t, act, extra = {}, cls = 'btn') => h('button', { class: cls, 'data-g': act, ...extra }, t);
       if (!g || (!g.open && g.state === 0)) {
-        put(gattBox, h('h3', {}, 'GATT'), h('p', { class: 'note' }, 'Conectarse para ver sus servicios y características, leerlas, escribirlas y escuchar sus notificaciones. Mientras tanto la placa deja de escanear un momento; muchos equipos aceptan una sola conexión a la vez.'),
-          h('div', { class: 'btns' }, btn('Conectar por GATT', 'connect', {}, 'btn pri')));
+        put(gattBox, h('h3', {}, 'GATT'), h('p', { class: 'note' }, tr('Conectarse para ver sus servicios y características, leerlas, escribirlas y escuchar sus notificaciones. Mientras tanto la placa deja de escanear un momento; muchos equipos aceptan una sola conexión a la vez.')),
+          h('div', { class: 'btns' }, btn(tr('Conectar por GATT'), 'connect', {}, 'btn pri')));
         return;
       }
-      let st = GATT_STATE[g.state] || '';
-      if (g.state === 3) st += ` · MTU ${g.mtu}` + (g.rssi !== null ? ` · señal ${g.rssi} dBm` : '') + (g.reading[0] < g.reading[1] ? ` · leyendo ${g.reading[0] + 1} de ${g.reading[1]}` : '');
-      if (g.state === 4) st += `: ${g.why} (${g.reason})`;
+      let st = GATT_STATE[g.state] ? tr(GATT_STATE[g.state]) : '';
+      if (g.state === 3) st += ` · MTU ${g.mtu}` + (g.rssi !== null ? ' · ' + tr('señal %s dBm', g.rssi) : '') + (g.reading[0] < g.reading[1] ? ' · ' + tr('leyendo %s de %s', g.reading[0] + 1, g.reading[1]) : '');
+      if (g.state === 4) st += `: ${appTr(g.why)} (${g.reason})`;
       const live = g.state >= 1 && g.state <= 3;
       const rows = [];
       for (const a of g.attrs) {
         if (a.k === 0) {
-          rows.push(h('tr', {}, h('td', { colspan: 3, style: 'padding-top:14px' }, h('b', { style: 'color:var(--accent)' }, a.n), h('div', { class: 'sub' }, `Servicio ${a.u} · handles ${a.h} a ${a.end}`))));
+          rows.push(h('tr', {}, h('td', { colspan: 3, style: 'padding-top:14px' }, h('b', { style: 'color:var(--accent)' }, a.n), h('div', { class: 'sub' }, tr('Servicio %s · handles %s a %s', a.u, a.h, a.end)))));
           continue;
         }
         const desc = a.k === 2;
         const acts = [];
-        if (!desc && (a.p & 2)) acts.push(btn('Leer', 'read', { 'data-h': a.h }));
-        if (!desc && (a.p & 12)) acts.push(btn('Escribir', 'write', { 'data-h': a.h }));
-        if (a.hl) acts.push(btn('Pedir los datos (Hi-Link)', 'hilink', { 'data-h': a.h }, 'btn pri'));
-        if (!desc && (a.p & 48)) acts.push(btn(a.sub ? 'Dejar de escuchar' : (a.p & 16) ? 'Notificaciones' : 'Indicaciones', 'sub',
+        if (!desc && (a.p & 2)) acts.push(btn(tr('Leer'), 'read', { 'data-h': a.h }));
+        if (!desc && (a.p & 12)) acts.push(btn(tr('Escribir'), 'write', { 'data-h': a.h }));
+        if (a.hl) acts.push(btn(tr('Pedir los datos (Hi-Link)'), 'hilink', { 'data-h': a.h }, 'btn pri'));
+        if (!desc && (a.p & 48)) acts.push(btn(a.sub ? tr('Dejar de escuchar') : (a.p & 16) ? tr('Notificaciones') : tr('Indicaciones'), 'sub',
           { 'data-h': a.h, 'data-m': a.sub ? 0 : (a.p & 16) ? 1 : 2 }, a.sub ? 'btn pri' : 'btn'));
         rows.push(h('tr', {},
           h('td', { style: desc ? 'padding-left:22px' : '' }, desc ? h('span', { class: 'sub' }, a.n) : a.n,
@@ -375,18 +405,18 @@ P.registerPage({
       /* a Xiaomi with its auth service: the activation (bl_mi.c) */
       const mi = g.mi || {};
       let miBox = null;
-      if (mi.st >= 1 && mi.st <= 5) miBox = h('p', { class: 'note' }, `Activando: ${mi.step}...` + (mi.id ? ` (${mi.id})` : ''));
-      else if (mi.st === 6) miBox = h('div', { class: 'note' }, h('b', { style: 'color:var(--green)' }, 'Sensor activado. '),
-        'Clave nueva (bindkey), ya guardada en la placa para leerlo: ', h('code', { style: 'user-select:all' }, mi.key || ''),
+      if (mi.st >= 1 && mi.st <= 5) miBox = h('p', { class: 'note' }, tr('Activando: %s...', appTr(mi.step)) + (mi.id ? ` (${mi.id})` : ''));
+      else if (mi.st === 6) miBox = h('div', { class: 'note' }, h('b', { style: 'color:var(--green)' }, tr('Sensor activado.') + ' '),
+        tr('Clave nueva (bindkey), ya guardada en la placa para leerlo:') + ' ', h('code', { style: 'user-select:all' }, mi.key || ''),
         mi.id ? h('div', { class: 'sub' }, mi.id) : null);
-      else if (mi.st === 7) miBox = h('p', { class: 'note', style: 'color:var(--orange)' }, `No se activó: ${mi.why}` + (mi.code ? ` (0x${mi.code.toString(16).toUpperCase()})` : ''));
+      else if (mi.st === 7) miBox = h('p', { class: 'note', style: 'color:var(--orange)' }, tr('No se activó: %s', appTr(mi.why)) + (mi.code ? ` (0x${mi.code.toString(16).toUpperCase()})` : ''));
       put(gattBox, h('h3', {}, 'GATT'), h('p', { class: 'note', style: g.state === 4 ? 'color:var(--orange)' : '' }, st),
-        h('div', { class: 'btns' }, g.state === 3 ? btn('Leer todo', 'all', {}, 'btn pri') : null,
-          mi.can && !(mi.st >= 1 && mi.st <= 6) ? btn(mi.st === 7 ? 'Probar de nuevo la activación' : 'Activar (Xiaomi)', 'mi') : null,
-          live ? btn('Desconectar', 'off') : btn('Conectar de nuevo', 'connect')),
+        h('div', { class: 'btns' }, g.state === 3 ? btn(tr('Leer todo'), 'all', {}, 'btn pri') : null,
+          mi.can && !(mi.st >= 1 && mi.st <= 6) ? btn(mi.st === 7 ? tr('Probar de nuevo la activación') : tr('Activar (Xiaomi)'), 'mi') : null,
+          live ? btn(tr('Desconectar'), 'off') : btn(tr('Conectar de nuevo'), 'connect')),
         miBox,
         rows.length ? h('div', { class: 'bl-wrap' }, h('table', { class: 'bl-tbl' }, h('tbody', {}, ...rows))) : null,
-        g.log.length ? h('details', {}, h('summary', { class: 'small muted' }, 'Lo último'), h('div', { class: 'small muted', style: 'white-space:pre-line' }, g.log.join('\n'))) : null);
+        g.log.length ? h('details', {}, h('summary', { class: 'small muted' }, tr('Lo último')), h('div', { class: 'small muted', style: 'white-space:pre-line' }, g.log.join('\n'))) : null);
     }
     async function gattTick() {
       if (!alive || !sel) return;
@@ -397,23 +427,25 @@ P.registerPage({
     }
     function drawKey(d) {
       if (!changed('key', [d.a, d.key].join('|'))) return;
-      const inp = h('input', { placeholder: '32 cifras hexadecimales (la bindkey)', style: 'width:340px;font-family:ui-monospace,Menlo,monospace', maxlength: 47 });
-      const st = d.key === -2 ? 'Sin clave: sus lecturas van cifradas.' : d.key === 0 ? 'Clave correcta: las lecturas se descifran.'
-        : d.key === 2 ? 'La clave no coincide con lo que anuncia.' : d.key === 3 ? 'Usa un cifrado viejo (MiBeacon v2/v3) que la app no descifra.'
-        : 'Clave cargada: esperando un paquete cifrado para probarla.';
-      put(keyBox, h('h3', {}, 'Clave'), h('p', { class: 'note', style: d.key === 0 ? 'color:var(--green)' : d.key >= 2 ? 'color:var(--orange)' : '' }, st),
+      const inp = h('input', { placeholder: tr('32 cifras hexadecimales (la bindkey)'), style: 'width:340px;font-family:ui-monospace,Menlo,monospace', maxlength: 47 });
+      const st = d.key === -2 ? tr('Sin clave: sus lecturas van cifradas.') : d.key === 0 ? tr('Clave correcta: las lecturas se descifran.')
+        : d.key === 2 ? tr('La clave no coincide con lo que anuncia.') : d.key === 3 ? tr('Usa un cifrado viejo (MiBeacon v2/v3) que la app no descifra.')
+        : tr('Clave cargada: esperando un paquete cifrado para probarla.');
+      put(keyBox, h('h3', {}, tr('Clave')), h('p', { class: 'note', style: d.key === 0 ? 'color:var(--green)' : d.key >= 2 ? 'color:var(--orange)' : '' }, st),
         h('div', { class: 'btns' }, inp,
           h('button', { class: 'btn pri', onclick: () => {
             const k = inp.value.replace(/[\s:-]/g, '');
-            if (!/^[0-9a-fA-F]{32}$/.test(k)) { P.toast('Tienen que ser 32 cifras hexadecimales', true); return; }
+            if (!/^[0-9a-fA-F]{32}$/.test(k)) { P.toast(tr('Tienen que ser 32 cifras hexadecimales'), true); return; }
             /* the app confirms by the device's state in the next table:
              * until then, only that it was sent */
-            send(`key=${d.a},${k}`).then(() => P.toast('Clave enviada: la app la guarda y la prueba con el próximo paquete'));
-          } }, 'Guardar la clave'),
-          d.key > -2 ? h('button', { class: 'btn', onclick: () => send(`key=${d.a},`) }, 'Borrar la clave') : null),
-        h('p', { class: 'note small' }, 'La bindkey de un sensor Xiaomi sale de su cuenta de Mi Home (por ejemplo con "Xiaomi Cloud Tokens Extractor"), o de Home Assistant si ya lo lee. BTHome cifrado usa la clave que le pusiste al configurarlo.'));
+            send(`key=${d.a},${k}`).then(() => P.toast(tr('Clave enviada: la app la guarda y la prueba con el próximo paquete')));
+          } }, tr('Guardar la clave')),
+          d.key > -2 ? h('button', { class: 'btn', onclick: () => send(`key=${d.a},`) }, tr('Borrar la clave')) : null),
+        h('p', { class: 'note small' }, tr('La bindkey de un sensor Xiaomi sale de su cuenta de Mi Home (por ejemplo con "Xiaomi Cloud Tokens Extractor"), o de Home Assistant si ya lo lee. BTHome cifrado usa la clave que le pusiste al configurarlo.')));
     }
 
+    /* the app's explanation of a packet, its keys in the board's language */
+    const explained = ls => (ls || []).map(([k, v]) => [appTr(k), appTr(v)]);
     function lines(ls) {
       return h('div', { class: 'bl-kv' }, ...ls.flatMap(([k, v]) => [h('div', { class: 'k' }, k), h('div', {}, v)]));
     }
@@ -423,37 +455,37 @@ P.registerPage({
       if (!sel || !d) { detail.style.display = 'none'; return; }
       detail.style.display = '';
       if (changed('detailHead', [sel, d.fav, d.al, d.n].join('|'))) {
-        const alias = h('input', { value: d.al || '', placeholder: 'Un nombre propio', maxlength: 27, style: 'width:220px' });
+        const alias = h('input', { value: d.al || '', placeholder: tr('Un nombre propio'), maxlength: 27, style: 'width:220px' });
         put(detailHead, h('h2', {}, devName(d)),
           h('div', { class: 'btns' },
-            h('button', { class: 'btn' + (d.fav ? ' pri' : ''), onclick: () => send(`fav=${d.a},${d.fav ? 0 : 1}`) }, d.fav ? '★ Favorito' : '☆ Marcar'),
-            alias, h('button', { class: 'btn', onclick: () => send(`alias=${d.a},${alias.value.replace(/[\n|]/g, ' ')}`) }, 'Guardar el nombre'),
-            h('button', { class: 'btn', onclick: () => select(d.a) }, 'Cerrar')));
+            h('button', { class: 'btn' + (d.fav ? ' pri' : ''), onclick: () => send(`fav=${d.a},${d.fav ? 0 : 1}`) }, d.fav ? tr('★ Favorito') : tr('☆ Marcar')),
+            alias, h('button', { class: 'btn', onclick: () => send(`alias=${d.a},${alias.value.replace(/[\n|]/g, ' ')}`) }, tr('Guardar el nombre')),
+            h('button', { class: 'btn', onclick: () => select(d.a) }, tr('Cerrar'))));
         put(detail, detailHead, detailBody);
       }
       drawKey(d);
       const sig = JSON.stringify([d.r, d.age, d.adv, d.key, d.sen && d.sen.encrypted, dev && dev.adv, dev && dev.rsp, dev && dev.hist && dev.hist.slice(-3)]);
       if (!changed('detail', sig)) return;
-      const info = [['Qué es', d.cls + (d.lbl ? ' · ' + d.lbl : '')], ['Dirección', `${d.a} (${d.k})`]];
-      if (d.co) info.push(['Fabricante', `${d.co}` + (d.cid !== undefined ? ` (0x${d.cid.toString(16).toUpperCase().padStart(4, '0')})` : '')]);
-      info.push(['Señal', d.age < 10000 ? `${d.r} dBm · prom. ${num(d.ra, 0)} · mín. ${d.rmin} · máx. ${d.rmax}` : '—'],
-        ['Distancia', `≈ ${num(d.dist)} m (estimada por la señal)`], ['Intervalo', ivText(d.iv) || '?'],
-        ['Paquetes', `${d.adv} anuncios, ${d.rsp} respuestas, cambió ${d.chg} veces`], ['Oído', `hace ${age(d.age)} · desde hace ${age(d.seen)}`],
-        ['Conectable', d.conn ? 'sí (abajo, GATT)' : 'no']);
-      const parts = [lines(info), h('h3', {}, 'Señal, dos minutos'), sigCanvas];
+      const info = [[tr('Qué es'), appTr(d.cls) + (d.lbl ? ' · ' + appTr(d.lbl) : '')], [tr('Dirección'), `${d.a} (${appTr(d.k)})`]];
+      if (d.co) info.push([tr('Fabricante'), `${d.co}` + (d.cid !== undefined ? ` (0x${d.cid.toString(16).toUpperCase().padStart(4, '0')})` : '')]);
+      info.push([tr('Señal'), d.age < 10000 ? tr('%s dBm · prom. %s · mín. %s · máx. %s', d.r, nf(d.ra, 0), d.rmin, d.rmax) : '—'],
+        [tr('Distancia'), tr('≈ %s m (estimada por la señal)', nf(d.dist))], [tr('Intervalo'), ivText(d.iv) || '?'],
+        [tr('Paquetes'), tr('%s anuncios, %s respuestas, cambió %s veces', d.adv, d.rsp, d.chg)], [tr('Oído'), tr('hace %s · desde hace %s', age(d.age), age(d.seen))],
+        [tr('Conectable'), d.conn ? tr('sí (abajo, GATT)') : tr('no')]);
+      const parts = [lines(info), h('h3', {}, tr('Señal, dos minutos')), sigCanvas];
       if ((d.sen && d.sen.encrypted) || d.key > -2) parts.push(keyBox);
       if (d.conn || (gatt && gatt.a === sel)) parts.push(gattBox);
-      if (d.sen) parts.push(h('h3', {}, 'Sensor · ' + d.sen.format), lines(Object.entries(d.sen).filter(([k]) => k !== 'format').map(([k, v]) => [k, String(v)])));
-      if (dev && dev.temps && dev.temps.some(v => v !== null)) parts.push(h('h3', {}, 'Temperatura, dos horas'), tempCanvas);
+      if (d.sen) parts.push(h('h3', {}, tr('Sensor') + ' · ' + d.sen.format), lines(Object.entries(d.sen).filter(([k]) => k !== 'format').map(([k, v]) => [k, String(v)])));
+      if (dev && dev.temps && dev.temps.some(v => v !== null)) parts.push(h('h3', {}, tr('Temperatura, dos horas')), tempCanvas);
       if (dev && dev.beacon) {
         const b = dev.beacon;
         const kinds = ['', 'iBeacon', 'AltBeacon', 'Eddystone UID', 'Eddystone URL', 'Eddystone TLM', 'Eddystone EID'];
-        parts.push(h('h3', {}, 'Baliza · ' + (kinds[b.kind] || '')), lines([['UUID', b.uuid], ['Mayor / menor', `${b.major} / ${b.minor}`], ['Potencia de referencia', b.tx1m + ' dBm']].concat(b.url ? [['URL', b.url]] : [])));
+        parts.push(h('h3', {}, tr('Baliza') + ' · ' + (kinds[b.kind] || '')), lines([['UUID', b.uuid], [tr('Mayor / menor'), `${b.major} / ${b.minor}`], [tr('Potencia de referencia'), b.tx1m + ' dBm']].concat(b.url ? [['URL', b.url]] : [])));
       }
       if (dev) {
-        if (dev.adv) parts.push(h('h3', {}, `Anuncio · ${dev.adv.length / 2} bytes`), lines(dev.adv_lines), h('div', { class: 'bl-hex' }, dev.adv.replace(/(..)/g, '$1 ')));
-        if (dev.rsp) parts.push(h('h3', {}, `Respuesta al escaneo · ${dev.rsp.length / 2} bytes`), lines(dev.rsp_lines), h('div', { class: 'bl-hex' }, dev.rsp.replace(/(..)/g, '$1 ')));
-      } else parts.push(h('p', { class: 'note' }, 'Pidiendo los paquetes a la placa...'));
+        if (dev.adv) parts.push(h('h3', {}, tr('Anuncio · %s bytes', dev.adv.length / 2)), lines(explained(dev.adv_lines)), h('div', { class: 'bl-hex' }, dev.adv.replace(/(..)/g, '$1 ')));
+        if (dev.rsp) parts.push(h('h3', {}, tr('Respuesta al escaneo · %s bytes', dev.rsp.length / 2)), lines(explained(dev.rsp_lines)), h('div', { class: 'bl-hex' }, dev.rsp.replace(/(..)/g, '$1 ')));
+      } else parts.push(h('p', { class: 'note' }, tr('Pidiendo los paquetes a la placa...')));
       put(detailBody, ...parts);
       drawn.gatt = null;
       drawGatt();
@@ -468,11 +500,11 @@ P.registerPage({
       const fl = await P.fsList('/ble').catch(() => []);
       const csv = fl.filter(f => f.name.endsWith('.csv') && !f.name.startsWith('.')).sort((a, b) => b.name.localeCompare(a.name));
       if (!changed('files', csv.map(f => f.name + f.size).join())) return;
-      put(files, h('h2', {}, 'Lecturas guardadas (CSV)'),
-        csv.length ? null : h('p', { class: 'note' }, 'Todavía no hay. Se prende con "CSV de los sensores", arriba o en los ajustes de la app.'),
+      put(files, h('h2', {}, tr('Lecturas guardadas (CSV)')),
+        csv.length ? null : h('p', { class: 'note' }, tr('Todavía no hay. Se prende con "CSV de los sensores", arriba o en los ajustes de la app.')),
         ...csv.map(f => h('div', { class: 'row' }, h('div', { class: 'grow' }, f.name, h('span', { class: 'small muted' }, ' ' + P.fmtBytes(f.size))),
-          h('a', { class: 'btn', href: P.fsUrl('/ble/' + f.name, true) }, 'Bajar'),
-          h('button', { class: 'btn red', onclick: async () => { if (!confirm('¿Borrar ' + f.name + '?')) return; await P.fsDelete('/ble/' + f.name).catch(e => P.toast(e.message, true)); drawn.files = null; loadFiles(); } }, '✕'))));
+          h('a', { class: 'btn', href: P.fsUrl('/ble/' + f.name, true) }, tr('Bajar')),
+          h('button', { class: 'btn red', onclick: async () => { if (!confirm(tr('¿Borrar %s?', f.name))) return; await P.fsDelete('/ble/' + f.name).catch(e => P.toast(e.message, true)); drawn.files = null; loadFiles(); } }, '✕'))));
     }
 
     /* ---- polling ---- */

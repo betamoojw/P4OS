@@ -3,6 +3,10 @@
  * puts this file in the card's /web and the portal loads it from there.
  * window.P4OS (version 1) is all it uses, and its styles come with it. */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
+const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const { main, h, put, $, api, post, toast, row, fmtBytes, fmtDate, fsPut, fsList, fsDelete, fsMkdir, fsUrl,
   fsText, fsBytes, openApp, saveBlob, fsSlug } = P;
 
@@ -333,7 +337,7 @@ function mpPack(name, box, tiles) {
 /* A pack read back: its header and a map "z/x/y" -> tile. */
 function mpUnpack(buf) {
   const dv = new DataView(buf), u8 = new Uint8Array(buf);
-  if (dv.getUint32(0, true) !== 0x31504D41) throw new Error('no es un AMP1');
+  if (dv.getUint32(0, true) !== 0x31504D41) throw new Error(tr('no es un AMP1'));
   const n = dv.getUint32(4, true), io = dv.getUint32(60, true), tiles = new Map();
   for (let i = 0; i < n; i++) {
     const o = io + i * 20;
@@ -422,7 +426,7 @@ function mpMapView(box, onMoveEnd) {
   const tiles = new Map();          /* "z/x/y" -> { b } | { err } | { loading } */
   let W = 0, H = 0, dpr = 1, raf = 0, endT = 0, inflight = 0, queue = [], fails = 0, used = 0;
   box.append(cv,
-    h('div', { class: 'mpzoom' }, h('button', { class: 'btn', title: 'Acercar', onclick: () => zoomAt(1, W / 2, H / 2) }, '+'), h('button', { class: 'btn', title: 'Alejar', onclick: () => zoomAt(-1, W / 2, H / 2) }, '−')),
+    h('div', { class: 'mpzoom' }, h('button', { class: 'btn', title: tr('Acercar'), onclick: () => zoomAt(1, W / 2, H / 2) }, '+'), h('button', { class: 'btn', title: tr('Alejar'), onclick: () => zoomAt(-1, W / 2, H / 2) }, '−')),
     note, h('div', { class: 'mpattr' }, '© OpenStreetMap · OpenMapTiles · OpenFreeMap'));
   const scale = () => 512 * Math.pow(2, st.z);
   const toX = lon => (lon + 180) / 360, toY = lat => { const r = Math.max(-85.0511, Math.min(85.0511, lat)) * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2; };
@@ -452,7 +456,7 @@ function mpMapView(box, onMoveEnd) {
       const [k, z, x, y] = queue.pop();
       inflight++;
       mpFetch(z, x, y).then(u8 => { tiles.set(k, { b: mpDecode(u8, z) }); fails = 0; note.style.display = 'none'; },
-        err => { tiles.set(k, { err: true }); if (++fails >= 3) { note.textContent = 'El mapa necesita internet en esta computadora (OpenFreeMap).'; note.style.display = ''; } })
+        err => { tiles.set(k, { err: true }); if (++fails >= 3) { note.textContent = tr('El mapa necesita internet en esta computadora (OpenFreeMap).'); note.style.display = ''; } })
         .finally(() => { inflight--; pump(); draw(); });
     }
     if (queue.length > 64) { for (const [k] of queue.splice(0, queue.length - 64)) tiles.delete(k); }
@@ -581,14 +585,14 @@ async function pageMapas() {
   let zones = [], zonesRaw = null, packs = [];
   const zoneList = h('div', { class: 'card' }), packList = h('div', { class: 'card' });
   const mapBox = h('div', { class: 'mpmap' }), where = h('p', { class: 'note' });
-  const q = h('input', { type: 'search', placeholder: 'Buscar un lugar: ciudad, calle, barrio…' });
+  const q = h('input', { type: 'search', placeholder: tr('Buscar un lugar: ciudad, calle, barrio…') });
   const results = h('div', { class: 'mpres' });
-  const zName = h('input', { type: 'text', maxlength: 30, placeholder: 'Nombre de la zona' });
-  const dName = h('input', { type: 'text', maxlength: 30, placeholder: 'Nombre de la zona' });
-  const detail = h('select', {}, [['14', 'Calles, con sus nombres (lo más completo)'], ['13', 'Avenidas y barrios'], ['12', 'Rutas y ciudades']].map(([v, t]) => h('option', { value: v }, t)));
+  const zName = h('input', { type: 'text', maxlength: 30, placeholder: tr('Nombre de la zona') });
+  const dName = h('input', { type: 'text', maxlength: 30, placeholder: tr('Nombre de la zona') });
+  const detail = h('select', {}, [['14', tr('Calles, con sus nombres (lo más completo)')], ['13', tr('Avenidas y barrios')], ['12', tr('Rutas y ciudades')]].map(([v, t]) => h('option', { value: v }, t)));
   const est = h('div', { class: 'note' });
-  const dlBtn = h('button', { class: 'btn pri', id: 'mp-bajar', onclick: () => download() }, 'Descargar y guardar en la placa');
-  const cancelBtn = h('button', { class: 'btn', id: 'mp-cancel', style: 'display:none', onclick: () => { mpJob.cancel = true; } }, 'Cancelar');
+  const dlBtn = h('button', { class: 'btn pri', id: 'mp-bajar', onclick: () => download() }, tr('Descargar y guardar en la placa'));
+  const cancelBtn = h('button', { class: 'btn', id: 'mp-cancel', style: 'display:none', onclick: () => { mpJob.cancel = true; } }, tr('Cancelar'));
   const map = mpMapView(mapBox, () => { paintWhere(); estimate(); });
   mpView = map;
 
@@ -597,7 +601,7 @@ async function pageMapas() {
   const boardZoom = () => Math.max(3, Math.min(18, Math.round((map.getZoom() + 1 + Math.log2(MP_SCREEN / (map.width() || MP_SCREEN))) * 10) / 10));
   function paintWhere() {
     const c = map.getCenter();
-    where.textContent = `Centro ${c.lat.toFixed(5)}, ${c.lng.toFixed(5)} · zoom ${boardZoom().toFixed(1).replace('.', ',')} en la placa`;
+    where.textContent = tr('Centro %s, %s · zoom %s en la placa', c.lat.toFixed(5), c.lng.toFixed(5), num(boardZoom(), 1));
   }
   const viewBox = () => { const b = map.getBounds(); return { w: Math.max(-180, b.w), e: Math.min(179.9999, b.e), s: Math.max(-85, b.s), n: Math.min(85, b.n) }; };
 
@@ -613,7 +617,7 @@ async function pageMapas() {
       const r = await fetch('https://photon.komoot.io/api/?limit=6&lang=' + lang + '&q=' + encodeURIComponent(s));
       feats = (await r.json()).features || [];
     } catch { feats = []; }
-    if (!feats.length) { put(results, h('p', { class: 'note' }, 'No se encontró nada.')); return; }
+    if (!feats.length) { put(results, h('p', { class: 'note' }, tr('No se encontró nada.'))); return; }
     put(results, feats.map(f => {
       const pr = f.properties || {};
       return h('button', { class: 'mpresult', onclick: () => {
@@ -650,28 +654,28 @@ async function pageMapas() {
       await fsMkdir(MP_DIR);
       await fsPut(MP_DIR + '/goto.txt', Math.round(la * 1e6) + '\t' + Math.round(lo * 1e6) + '\t' + Math.round(z * 10) + '\n');
       await openApp('demo.mapas');
-      toast('Enviado: la placa abre Mapas ahí');
+      toast(tr('Enviado: la placa abre Mapas ahí'));
     } catch (e) { toast(e.message, true); }
   }
   function paintZones() {
     put(zoneList, zones.length ? zones.map((z, i) => h('div', { class: 'row' },
-      h('div', { class: 'grow' }, h('div', { class: 'ell' }, z.name), h('div', { class: 'muted small' }, `${z.la.toFixed(4)}, ${z.lo.toFixed(4)} · zoom ${z.z.toFixed(1).replace('.', ',')}`)),
+      h('div', { class: 'grow' }, h('div', { class: 'ell' }, z.name), h('div', { class: 'muted small' }, `${z.la.toFixed(4)}, ${z.lo.toFixed(4)} · zoom ${num(z.z, 1)}`)),
       h('div', { class: 'btns' },
-        h('button', { class: 'btn', onclick: () => map.flyTo({ center: [z.lo, z.la], zoom: z.z - 1 - Math.log2(MP_SCREEN / (map.width() || MP_SCREEN)) }) }, 'Ir'),
-        h('button', { class: 'btn', onclick: () => showOnBoard(z.la, z.lo, z.z) }, 'En la placa'),
+        h('button', { class: 'btn', onclick: () => map.flyTo({ center: [z.lo, z.la], zoom: z.z - 1 - Math.log2(MP_SCREEN / (map.width() || MP_SCREEN)) }) }, tr('Ir')),
+        h('button', { class: 'btn', onclick: () => showOnBoard(z.la, z.lo, z.z) }, tr('En la placa')),
         h('button', { class: 'btn', onclick: async () => {
-          const n = prompt('Nuevo nombre', z.name);
+          const n = prompt(tr('Nuevo nombre'), z.name);
           if (!n || !n.trim() || n.trim() === z.name) return;
           z.name = n.trim().slice(0, 30);
           try { await writeZones(); paintZones(); } catch (e) { toast(e.message, true); }
-        } }, 'Renombrar'),
+        } }, tr('Renombrar')),
         h('button', { class: 'btn red', onclick: async () => {
-          if (!confirm(`¿Borrar la zona «${z.name}»?`)) return;
+          if (!confirm(tr('¿Borrar la zona «%s»?', z.name))) return;
           zones.splice(i, 1);
           try { await writeZones(); } catch (e) { toast(e.message, true); }
           paintZones();
-        } }, 'Borrar')))) :
-      h('div', { class: 'row muted' }, 'Todavía no hay zonas. Mové el mapa hasta un lugar y guardalo: en la placa aparece en el menú ☰ de la app.'));
+        } }, tr('Borrar'))))) :
+      h('div', { class: 'row muted' }, tr('Todavía no hay zonas. Mové el mapa hasta un lugar y guardalo: en la placa aparece en el menú ☰ de la app.')));
   }
   async function loadZones() {
     try { zonesRaw = await fsText(MP_DIR + '/zones.txt'); } catch (e) { toast(e.message, true); zonesRaw = null; }
@@ -680,10 +684,10 @@ async function pageMapas() {
   }
   async function saveZone() {
     const n = zName.value.trim();
-    if (!n) { toast('Primero ponele un nombre', true); return; }
+    if (!n) { toast(tr('Primero ponele un nombre'), true); return; }
     const c = map.getCenter();
     zones.push({ name: n.slice(0, 30), la: c.lat, lo: c.lng, z: boardZoom() });
-    try { await writeZones(); toast('Zona guardada'); } catch (e) { zones.pop(); toast(e.message, true); }
+    try { await writeZones(); toast(tr('Zona guardada')); } catch (e) { zones.pop(); toast(e.message, true); }
     paintZones();
   }
   /* zones.txt by hand: what is not a zone line is kept as it is */
@@ -692,14 +696,15 @@ async function pageMapas() {
     ta.value = zonesRaw ?? zonesText();
     const close = () => md.remove();
     const md = h('div', { class: 'modal', onclick: e => { if (e.target === md) close(); } },
-      h('div', { class: 'box' }, h('div', { class: 'head' }, h('b', { class: 'grow' }, MP_DIR + '/zones.txt'), h('span', { class: 'muted small' }, 'nombre ⇥ lat×1e6 ⇥ lon×1e6 ⇥ zoom×10')), ta,
-        h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, 'Cancelar'),
+      h('div', { class: 'box' }, h('div', { class: 'head' }, h('b', { class: 'grow' }, MP_DIR + '/zones.txt'), h('span', { class: 'muted small' }, tr('nombre ⇥ lat×1e6 ⇥ lon×1e6 ⇥ zoom×10'))), ta,
+        h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, tr('Cancelar')),
           h('button', { class: 'btn pri', onclick: async () => {
             const z = parseZones(ta.value);
             const bad = ta.value.split(/\r?\n/).filter(l => l && l[0] !== '#' && !parseZones(l).length);
-            if (bad.length && !confirm(`${bad.length === 1 ? 'Una línea no es' : bad.length + ' líneas no son'} una zona y la app la${bad.length === 1 ? '' : 's'} va a ignorar:\n${bad.slice(0, 3).join('\n')}\n¿Guardar igual?`)) return;
-            try { await writeZones(ta.value.endsWith('\n') ? ta.value : ta.value + '\n'); zones = z; paintZones(); close(); toast('zones.txt guardado'); } catch (e) { toast(e.message, true); }
-          } }, 'Guardar'))));
+            if (bad.length && !confirm((bad.length === 1 ? tr('Una línea no es una zona y la app la va a ignorar:') : tr('%s líneas no son una zona y la app las va a ignorar:', bad.length)) +
+              '\n' + bad.slice(0, 3).join('\n') + '\n' + tr('¿Guardar igual?'))) return;
+            try { await writeZones(ta.value.endsWith('\n') ? ta.value : ta.value + '\n'); zones = z; paintZones(); close(); toast(tr('zones.txt guardado')); } catch (e) { toast(e.message, true); }
+          } }, tr('Guardar')))));
     document.body.append(md);
     ta.focus();
   }
@@ -721,12 +726,12 @@ async function pageMapas() {
       return h('div', { class: 'row' },
         h('div', { class: 'grow' }, h('div', { class: 'mono ell' }, k), h('div', { class: 'muted small' }, fmtBytes(g.bytes) + ' · ' + g.files.join(', ') + (g.mtime ? ' · ' + fmtDate(g.mtime) : ''))),
         h('button', { class: 'btn red', onclick: async () => {
-          if (!confirm(`¿Borrar «${k}» de la placa?`)) return;
-          try { for (const a of g.files) await fsDelete(MP_DIR + '/' + a); toast('Borrado ' + k); } catch (e) { toast(e.message, true); }
+          if (!confirm(tr('¿Borrar «%s» de la placa?', k))) return;
+          try { for (const a of g.files) await fsDelete(MP_DIR + '/' + a); toast(tr('Borrado %s', k)); } catch (e) { toast(e.message, true); }
           loadPacks();
-        } }, 'Borrar'));
-    }) : h('div', { class: 'row muted' }, 'No hay mapas guardados en la placa.'),
-    files.some(f => f.dir && f.name === 'cache') ? h('div', { class: 'row muted small' }, '/maps/cache: lo visto en línea, que la app guarda sola (se vacía desde su menú).') : null);
+        } }, tr('Borrar')));
+    }) : h('div', { class: 'row muted' }, tr('No hay mapas guardados en la placa.')),
+    files.some(f => f.dir && f.name === 'cache') ? h('div', { class: 'row muted small' }, tr('/maps/cache: lo visto en línea, que la app guarda sola (se vacía desde su menú).')) : null);
   }
 
   /* The size cannot be known without downloading: a stripped tile of the
@@ -754,9 +759,9 @@ async function pageMapas() {
     const maxz = +detail.value, box = viewBox(), list = mpTilesIn(box, MP_MINZ, maxz), n = list.length, tok = ++estTok;
     clearTimeout(estT);
     dlBtn.disabled = n > MP_MAX_TILES || mpJob.running;
-    if (n > MP_MAX_TILES) { est.className = 'note bad'; est.textContent = `${n.toLocaleString('es-AR')} teselas: demasiado grande. Acercá el mapa o elegí menos detalle.`; return; }
+    if (n > MP_MAX_TILES) { est.className = 'note bad'; est.textContent = tr('%s teselas: demasiado grande. Acercá el mapa o elegí menos detalle.', n.toLocaleString(LOC)); return; }
     est.className = 'note';
-    est.textContent = `${n} teselas del zoom ${MP_MINZ} al ${maxz}: calculando el tamaño…`;
+    est.textContent = tr('%s teselas del zoom %s al %s: calculando el tamaño…', n, MP_MINZ, maxz);
     /* once the map is still: moving it must not set off downloads */
     estT = setTimeout(async () => {
       try {
@@ -772,20 +777,20 @@ async function pageMapas() {
           if (z === maxz) idx = avg(m => m.i) * arr.length * 0.5;
           measured += ms.length;
         }
-        est.textContent = `${n} teselas del zoom ${MP_MINZ} al ${maxz}: unos ${fmtBytes(Math.round(bytes + idx))} en la tarjeta (medido sobre ${measured} teselas de muestra).`;
-      } catch { if (tok === estTok) est.textContent = `${n} teselas del zoom ${MP_MINZ} al ${maxz}. No se pudo calcular el tamaño (¿sin internet?).`; }
+        est.textContent = tr('%s teselas del zoom %s al %s: unos %s en la tarjeta (medido sobre %s teselas de muestra).', n, MP_MINZ, maxz, fmtBytes(Math.round(bytes + idx)), measured);
+      } catch { if (tok === estTok) est.textContent = tr('%s teselas del zoom %s al %s. No se pudo calcular el tamaño (¿sin internet?).', n, MP_MINZ, maxz); }
     }, 700);
   }
 
   /* -- the download -- */
   async function download() {
     const name = dName.value.trim();
-    if (!name) { toast('Primero ponele un nombre', true); return; }
+    if (!name) { toast(tr('Primero ponele un nombre'), true); return; }
     if (mpJob.running) return;
     const maxz = +detail.value, box = viewBox(), list = mpTilesIn(box, MP_MINZ, maxz);
     if (list.length > MP_MAX_TILES) return;
     const centre = map.getCenter(), zb = boardZoom();
-    Object.assign(mpJob, { running: true, cancel: false, bad: false, frac: 0, msg: 'Empezando…' });
+    Object.assign(mpJob, { running: true, cancel: false, bad: false, frac: 0, msg: tr('Empezando…') });
     mpJobShow();
     const say = (msg, frac) => { mpJob.msg = msg; if (frac != null) mpJob.frac = frac; mpJobShow(); };
     try {
@@ -796,7 +801,7 @@ async function pageMapas() {
           const t = list[i++];
           let u8 = null;
           for (let a = 0; a < 3 && !u8; a++) try { u8 = await mpFetch(t.z, t.x, t.y); } catch { /* again */ }
-          if (!u8) throw new Error(`No se pudo bajar la tesela ${t.z}/${t.x}/${t.y}`);
+          if (!u8) throw new Error(tr('No se pudo bajar la tesela %s', `${t.z}/${t.x}/${t.y}`));
           mpNames(u8, t.z, t.x, t.y, (nm, kind, la, lo, z) => {
             const k = mpKey(nm) + '\u0001' + (kind === 'calle' || kind === 'lugar' || kind === 'agua' ? kind : 'poi:' + kind);
             const prev = idx.get(k);
@@ -804,13 +809,13 @@ async function pageMapas() {
           });
           done.push({ z: t.z, x: t.x, y: t.y, d: mpStrip(u8) });
           ready++;
-          say(`Descargando ${ready} de ${list.length} teselas…`, ready / list.length);
+          say(tr('Descargando %s de %s teselas…', ready, list.length), ready / list.length);
         }
       };
       await Promise.all([1, 2, 3, 4, 5, 6].map(worker));
-      if (mpJob.cancel) throw new Error('Cancelado.');
+      if (mpJob.cancel) throw new Error(tr('Cancelado.'));
       const r = await mpStore(name, box, done, [...idx.values()].map(v => [v.nm, v.kind, v.la, v.lo]), centre, zb, say);
-      say(`Guardado: ${r.tiles} teselas en ${r.file} (${fmtBytes(r.bytes)}), ${r.names} nombres para buscar.`, 1);
+      say(tr('Guardado: %s teselas en %s (%s), %s nombres para buscar.', r.tiles, r.file, fmtBytes(r.bytes), r.names), 1);
     } catch (e) { mpJob.bad = true; say(e.message || String(e)); }
     mpJob.running = false;
     mpJobShow();
@@ -822,13 +827,13 @@ async function pageMapas() {
    * it next opens its list. The parts of an older download of the same zone
    * (from the watch, which split at 7.5 MB) go once the new pack is in. */
   async function mpStore(name, box, tiles, names, centre, zb, say) {
-    say('Armando el paquete…');
+    say(tr('Armando el paquete…'));
     tiles.sort((a, b) => a.z - b.z || a.x - b.x || a.y - b.y);
     const base = mpSlug(name), pack = mpPack(name, box, tiles), index = mpIndex(names);
     await fsMkdir(MP_DIR);
-    say(`Guardando en la placa: ${base}.amp (${fmtBytes(pack.byteLength)})…`, 0);
-    await fsPut(MP_DIR + '/' + base + '.amp', new Blob([pack]), f => say(`Guardando en la placa: ${base}.amp (${fmtBytes(pack.byteLength)})… ${Math.round(f * 100)} %`, f));
-    say('Guardando el índice de nombres…');
+    say(tr('Guardando en la placa: %s (%s)…', base + '.amp', fmtBytes(pack.byteLength)), 0);
+    await fsPut(MP_DIR + '/' + base + '.amp', new Blob([pack]), f => say(tr('Guardando en la placa: %s (%s)…', base + '.amp', fmtBytes(pack.byteLength)) + ` ${Math.round(f * 100)} %`, f));
+    say(tr('Guardando el índice de nombres…'));
     await fsPut(MP_DIR + '/' + base + '.idx', new Blob([index]));
     for (const f of await fsList(MP_DIR)) if (new RegExp('^' + base + '\\.\\d+\\.amp$').test(f.name)) await fsDelete(MP_DIR + '/' + f.name).catch(() => {});
     const now = parseZones(await fsText(MP_DIR + '/zones.txt').catch(() => null)).filter(z => z.name !== name.slice(0, 30));
@@ -843,24 +848,24 @@ async function pageMapas() {
 
   q.onkeydown = e => { if (e.key === 'Enter') search(); };
   detail.onchange = estimate;
-  put(main, h('h1', {}, 'Mapas'),
-    h('div', { class: 'btns', style: 'margin-bottom:10px;flex-wrap:nowrap' }, h('div', { style: 'flex:1;min-width:0' }, q), h('button', { class: 'btn', onclick: search }, 'Buscar')),
+  put(main, h('h1', {}, tr('Mapas')),
+    h('div', { class: 'btns', style: 'margin-bottom:10px;flex-wrap:nowrap' }, h('div', { style: 'flex:1;min-width:0' }, q), h('button', { class: 'btn', onclick: search }, tr('Buscar'))),
     results, mapBox, where,
-    h('h2', {}, 'Zonas'), zoneList,
+    h('h2', {}, tr('Zonas')), zoneList,
     h('div', { class: 'btns', style: 'margin-top:10px' }, h('div', { style: 'flex:1 1 200px' }, zName),
-      h('button', { class: 'btn pri', onclick: saveZone }, 'Guardar lo que se ve como zona'),
-      h('button', { class: 'btn', onclick: () => { const c = map.getCenter(); showOnBoard(c.lat, c.lng, boardZoom()); } }, 'Mostrarlo en la placa'),
-      h('button', { class: 'btn', onclick: editZones }, 'Editar zones.txt')),
-    h('h2', {}, 'Sin conexión'), packList,
+      h('button', { class: 'btn pri', onclick: saveZone }, tr('Guardar lo que se ve como zona')),
+      h('button', { class: 'btn', onclick: () => { const c = map.getCenter(); showOnBoard(c.lat, c.lng, boardZoom()); } }, tr('Mostrarlo en la placa')),
+      h('button', { class: 'btn', onclick: editZones }, tr('Editar zones.txt'))),
+    h('h2', {}, tr('Sin conexión')), packList,
     h('div', { class: 'card pad', style: 'margin-top:10px' },
-      h('label', { class: 'f', style: 'margin-top:0' }, 'Se descarga lo que se ve en el mapa de arriba, con este nombre:'), dName,
-      h('label', { class: 'f' }, 'Hasta qué detalle'), detail, est,
+      h('label', { class: 'f', style: 'margin-top:0' }, tr('Se descarga lo que se ve en el mapa de arriba, con este nombre:')), dName,
+      h('label', { class: 'f' }, tr('Hasta qué detalle')), detail, est,
       h('div', { class: 'prog', id: 'mp-prog', style: 'display:none' }, h('div')),
       h('div', { class: 'note', id: 'mp-estado' }),
       h('div', { class: 'btns', style: 'margin-top:12px' }, dlBtn, cancelBtn)),
-    h('p', { class: 'note' }, 'Todo se hace en este navegador: baja las teselas de OpenFreeMap, les quita lo que la placa no dibuja, arma el índice de nombres para buscar y las guarda en /maps de la tarjeta, un archivo por zona. En la app, lo guardado se usa antes que la red y lo que se ve en línea queda en la tarjeta para la próxima vez. Datos © colaboradores de OpenStreetMap, OpenMapTiles y OpenFreeMap; búsqueda de Photon (komoot).'));
+    h('p', { class: 'note' }, tr('Todo se hace en este navegador: baja las teselas de OpenFreeMap, les quita lo que la placa no dibuja, arma el índice de nombres para buscar y las guarda en /maps de la tarjeta, un archivo por zona. En la app, lo guardado se usa antes que la red y lo que se ve en línea queda en la tarjeta para la próxima vez. Datos © colaboradores de OpenStreetMap, OpenMapTiles y OpenFreeMap; búsqueda de Photon (komoot).')));
   mpJobShow();
-  window.onbeforeunload = () => mpJob.running ? 'Hay una descarga en curso' : undefined;
+  window.onbeforeunload = () => mpJob.running ? tr('Hay una descarga en curso') : undefined;
   await loadZones();
   loadPacks();
   /* where to start: the first zone, or Clima's city, or the Obelisco */
@@ -871,4 +876,4 @@ async function pageMapas() {
   paintWhere();
 }
 
-P.registerPage({ id: 'mapas', name: 'Mapas', icon: '⌖', render: () => { pageMapas(); } });
+P.registerPage({ id: 'mapas', name: tr('Mapas'), icon: '⌖', render: () => { pageMapas(); } });

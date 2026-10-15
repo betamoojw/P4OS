@@ -360,14 +360,14 @@ static void api_apps(aos_httpd_req_t *r)
 static void api_app_icon(aos_httpd_req_t *r)
 {
     char id[48];
-    if (!aos_httpd_query(r, "id", id, sizeof id)) { send_err(r, 400, "falta id"); return; }
+    if (!aos_httpd_query(r, "id", id, sizeof id)) { send_err(r, 400, _("falta id")); return; }
     size_t len = 0;
     const uint8_t *ops = aos_icon_ops_for(id, &len);
     for (int i = 0; !ops && i < aos_ui_app_count(); i++) {
         const aos_app_t *a = aos_ui_app_at(i);
         if (a && a->desc.id && !strcmp(a->desc.id, id)) ops = aos_icon_ops_builtin(a->desc.icon_vec, &len);
     }
-    if (!ops || !len) { send_err(r, 404, "sin ícono AIC"); return; }
+    if (!ops || !len) { send_err(r, 404, _("sin ícono AIC")); return; }
     if (aos_httpd_begin(r, 200, "application/octet-stream", (long)len, NULL)) aos_httpd_write(r, ops, len);
 }
 
@@ -384,7 +384,7 @@ static void api_wifi(aos_httpd_req_t *r)
         bool ok = ssid && aos_hal_net_set_credentials(ssid, pass ? pass : "");
         cJSON_Delete(b);
         if (ok) send_ok(r);
-        else send_err(r, 400, "red o contraseña inválidas (WPA2: de 8 a 63 caracteres)");
+        else send_err(r, 400, _("red o contraseña inválidas (WPA2: de 8 a 63 caracteres)"));
         return;
     }
     cJSON *o = cJSON_CreateObject();
@@ -443,8 +443,8 @@ static void api_usb(aos_httpd_req_t *r)
         bool host_on = host && cJSON_IsTrue(host);
         cJSON_Delete(b);
         if (bad) {
-            send_err(r, 400, "\"mode\": console o keys; \"host\": true o false; \"pins\": 21/23, 25/27 o both; "
-                             "\"layout\": latam o us");
+            send_err(r, 400, _("\"mode\": console o keys; \"host\": true o false; \"pins\": 21/23, 25/27 o both; "
+                             "\"layout\": latam o us"));
             return;
         }
         if (lay >= 0) aos_hal_usb_kbd_layout_set(lay);
@@ -453,7 +453,7 @@ static void api_usb(aos_httpd_req_t *r)
         if (ok && host) ok = aos_hal_usb_host_set(host_on);
         if (ok && want >= 0) ok = aos_hal_usb_mode_set((aos_hal_usb_mode_t)want);
         if (!ok) {
-            send_err(r, 409, "el USB está cambiando de modo");
+            send_err(r, 409, _("el USB está cambiando de modo"));
             return;
         }
     }
@@ -612,7 +612,7 @@ static void api_bt(aos_httpd_req_t *r)
         if (cJSON_IsBool(music)) aos_hal_media_enable(cJSON_IsTrue(music));
         bool any = cJSON_IsBool(on) || cJSON_IsBool(kbd) || forget || cJSON_IsBool(music);
         cJSON_Delete(b);
-        if (!any) { send_err(r, 400, "falta \"on\", \"keyboard\", \"music\" o \"forget\""); return; }
+        if (!any) { send_err(r, 400, _("falta \"on\", \"keyboard\", \"music\" o \"forget\"")); return; }
     }
     static const char *const ST[] = { "off", "advertising", "pairing", "connected" };
     aos_bt_state_t st = aos_hal_bt_state();
@@ -657,7 +657,7 @@ static void api_c6(aos_httpd_req_t *r)
     char path[96], ver[32] = "";
     c6_card_path(path, sizeof path);
     bool img = path[0] && aos_hal_net_coprocessor_image(path, ver, sizeof ver);
-    aos_c6_update_t u;
+    aos_c6_update_t u = { 0 };      /* the simulator's stub fills nothing */
     aos_hal_net_coprocessor_status(&u);
     cJSON *o = cJSON_CreateObject();
     cJSON_AddStringToObject(o, "running", aos_hal_net_coprocessor_fw());
@@ -666,7 +666,11 @@ static void api_c6(aos_httpd_req_t *r)
     cJSON_AddStringToObject(o, "state", u.state <= AOS_C6_FAILED ? ST[u.state] : "?");
     cJSON_AddNumberToObject(o, "sent", u.sent);
     cJSON_AddNumberToObject(o, "total", u.total);
-    if (u.error[0]) cJSON_AddStringToObject(o, "error", u.error);
+    if (u.state == AOS_C6_FAILED && u.why) {    /* the HAL's N_() key, translated here */
+        char e[112];
+        snprintf(e, sizeof e, "%s%s%s", _(u.why), u.err ? ": " : "", u.err ? u.err : "");
+        cJSON_AddStringToObject(o, "error", e);
+    } else if (u.error[0]) cJSON_AddStringToObject(o, "error", u.error);
     send_cjson(r, 200, o);
 }
 
@@ -675,9 +679,9 @@ static void api_c6_update(aos_httpd_req_t *r)
     char path[96];
     c6_card_path(path, sizeof path);
     if (!path[0] || !aos_hal_net_coprocessor_image(path, NULL, 0))
-        send_err(r, 400, "no hay una imagen del C6 en /firmware/c6.bin");
+        send_err(r, 400, _("no hay una imagen del C6 en /firmware/c6.bin"));
     else if (!aos_hal_net_coprocessor_update(path))
-        send_err(r, 409, "no se pudo empezar (¿ya hay una en curso?)");
+        send_err(r, 409, _("no se pudo empezar (¿ya hay una en curso?)"));
     else send_ok(r);
 }
 
@@ -685,7 +689,7 @@ static void api_wifi_scan(aos_httpd_req_t *r)
 {
     aos_wifi_ap_t aps[24];
     int n = aos_hal_net_scan(aps, 24);
-    if (n < 0) { send_err(r, 503, "la búsqueda falló"); return; }
+    if (n < 0) { send_err(r, 503, _("la búsqueda falló")); return; }
     cJSON *a = cJSON_CreateArray();
     for (int i = 0; i < n; i++) {
         cJSON *o = cJSON_CreateObject();
@@ -717,7 +721,7 @@ static void api_ha(aos_httpd_req_t *r)
         if (ok && token && token[0]) aos_ha_set_token(token);
         cJSON_Delete(b);
         if (ok) send_ok(r);
-        else send_err(r, 400, "la dirección empieza con http://");
+        else send_err(r, 400, _("la dirección empieza con http://"));
         return;
     }
     static const char *const ST[] = { "unconfigured", "waiting_net", "connecting", "auth_failed", "loading", "ready", "error" };
@@ -790,11 +794,11 @@ static bool fs_list_one(const aos_dir_entry_t *de, void *ctx)
 static void api_fs_list(aos_httpd_req_t *r)
 {
     char path[320], rel[256];
-    if (!card_path(r, "path", path, sizeof path, rel, sizeof rel)) { send_err(r, 400, "sin tarjeta o ruta inválida"); return; }
+    if (!card_path(r, "path", path, sizeof path, rel, sizeof rel)) { send_err(r, 400, _("sin tarjeta o ruta inválida")); return; }
     cJSON *o = cJSON_CreateObject();
     cJSON_AddStringToObject(o, "path", rel);
     fs_list_t l = { cJSON_AddArrayToObject(o, "entries"), 0 };
-    if (aos_hal_dir_scan(path, fs_list_one, &l) < 0) { cJSON_Delete(o); send_err(r, 404, "no existe"); return; }
+    if (aos_hal_dir_scan(path, fs_list_one, &l) < 0) { cJSON_Delete(o); send_err(r, 404, _("no existe")); return; }   /* app.js fsList looks at the 404, not the text */
     if (l.n >= FS_LIST_MAX) cJSON_AddBoolToObject(o, "truncated", true);
     char usb[8];
     bool on_usb = rel[0] == '/' && usb_root_of(rel + 1, usb, sizeof usb, NULL);
@@ -836,7 +840,7 @@ static const char *ctype_of(const char *name)
         { ".jpg", "image/jpeg" }, { ".jpeg", "image/jpeg" }, { ".png", "image/png" }, { ".gif", "image/gif" },
         { ".bmp", "image/bmp" }, { ".mp3", "audio/mpeg" }, { ".wav", "audio/wav" }, { ".html", "text/html; charset=utf-8" },
         { ".js", "text/javascript; charset=utf-8" }, { ".mjs", "text/javascript; charset=utf-8" },
-        { ".css", "text/css; charset=utf-8" }, { ".svg", "image/svg+xml" },
+        { ".css", "text/css; charset=utf-8" }, { ".svg", "image/svg+xml" }, { ".lang", "text/plain; charset=utf-8" },
     };
     for (size_t i = 0; i < sizeof T / sizeof T[0]; i++)
         if (!strcasecmp(dot, T[i][0])) return T[i][1];
@@ -871,10 +875,10 @@ static bool range_of(const char *h, long size, long *from, long *to, bool *bad)
 static void api_fs_get(aos_httpd_req_t *r)
 {
     char path[320];
-    if (!card_path(r, "path", path, sizeof path, NULL, 0)) { send_err(r, 400, "ruta inválida"); return; }
+    if (!card_path(r, "path", path, sizeof path, NULL, 0)) { send_err(r, 400, _("ruta inválida")); return; }
     FILE *f = fopen(path, "rb");
     struct stat st;
-    if (!f || stat(path, &st) || S_ISDIR(st.st_mode)) { if (f) fclose(f); send_err(r, 404, "no existe"); return; }
+    if (!f || stat(path, &st) || S_ISDIR(st.st_mode)) { if (f) fclose(f); send_err(r, 404, _("no existe")); return; }
     const char *name = strrchr(path, '/') ? strrchr(path, '/') + 1 : path;
     long size = (long)st.st_size, from = 0, to = size - 1;
     bool bad, ranged = range_of(aos_httpd_header(r, "Range"), size, &from, &to, &bad);
@@ -923,11 +927,11 @@ static bool menu_ok(aos_httpd_req_t *r, const char *path)
         size_t len = fread(buf, 1, AOS_MENU_FILE_MAX + 1, f);
         fclose(f);
         ok = aos_menu_validate(buf, len, err, sizeof err);
-    } else snprintf(err, sizeof err, "no se pudo leer");
+    } else snprintf(err, sizeof err, "%s", _("no se pudo leer"));
     free(buf);
     if (!ok) {
         char msg[128];
-        snprintf(msg, sizeof msg, "menu.txt inválido: %s", err);
+        snprintf(msg, sizeof msg, _("menu.txt inválido: %s"), err);
         send_err(r, 400, msg);
     }
     return ok;
@@ -938,10 +942,10 @@ static bool menu_ok(aos_httpd_req_t *r, const char *path)
 static void api_fs_bench(aos_httpd_req_t *r)
 {
     char path[320], rel[256];
-    if (!card_path(r, "path", path, sizeof path, rel, sizeof rel)) { send_err(r, 400, "ruta inválida"); return; }
+    if (!card_path(r, "path", path, sizeof path, rel, sizeof rel)) { send_err(r, 400, _("ruta inválida")); return; }
     FILE *f = fopen(path, "rb");
     char *buf = aos_hal_io_alloc(65536);
-    if (!f || !buf) { if (f) fclose(f); aos_hal_io_free(buf); send_err(r, 404, "no se pudo abrir"); return; }
+    if (!f || !buf) { if (f) fclose(f); aos_hal_io_free(buf); send_err(r, 404, _("no se pudo abrir")); return; }
     uint64_t t0 = aos_hal_uptime_ms(), n = 0;
     ssize_t got;            /* read(), as fs/get: an unbuffered fread() goes byte by byte */
     while ((got = read(fileno(f), buf, 65536)) > 0 && n < 16u * 1048576) n += (uint64_t)got;
@@ -958,14 +962,14 @@ static void api_fs_bench(aos_httpd_req_t *r)
 static void api_fs_put(aos_httpd_req_t *r)
 {
     char path[320], rel[256], tmp[340];
-    if (!card_path(r, "path", path, sizeof path, rel, sizeof rel) || !strcmp(rel, "/")) { send_err(r, 400, "ruta inválida"); return; }
-    if (aos_httpd_body_len(r) < 0) { send_err(r, 400, "falta Content-Length"); return; }
+    if (!card_path(r, "path", path, sizeof path, rel, sizeof rel) || !strcmp(rel, "/")) { send_err(r, 400, _("ruta inválida")); return; }
+    if (aos_httpd_body_len(r) < 0) { send_err(r, 400, _("falta Content-Length")); return; }
     uint64_t tot = 0, fr = 0;
-    if (aos_hal_sd_usage(&tot, &fr) && (uint64_t)aos_httpd_body_len(r) + 65536 > fr) { send_err(r, 413, "no entra en la tarjeta"); return; }
+    if (aos_hal_sd_usage(&tot, &fr) && (uint64_t)aos_httpd_body_len(r) + 65536 > fr) { send_err(r, 413, _("no entra en la tarjeta")); return; }
     /* into a temporary name, renamed at the end: a cut upload leaves the old file whole */
     snprintf(tmp, sizeof tmp, "%s.part", path);
     FILE *f = fopen(tmp, "wb");
-    if (!f) { send_err(r, 409, "no se pudo crear (¿existe la carpeta?)"); return; }
+    if (!f) { send_err(r, 409, _("no se pudo crear (¿existe la carpeta?)")); return; }
     setvbuf(f, NULL, _IONBF, 0);            /* 16 KB at a time straight from buf */
     char *buf = aos_hal_io_alloc(16384);
     long done = 0;
@@ -976,12 +980,12 @@ static void api_fs_put(aos_httpd_req_t *r)
     }
     aos_hal_io_free(buf);
     fclose(f);
-    if (n < 0 || done != aos_httpd_body_len(r)) { remove(tmp); send_err(r, 500, "se cortó la subida"); return; }
+    if (n < 0 || done != aos_httpd_body_len(r)) { remove(tmp); send_err(r, 500, _("se cortó la subida")); return; }
     /* menu.txt is read all or nothing: a bad one would put the home screen
      * back to the default order, so it is refused with the parser's reason */
     if (!strcmp(rel, "/menu.txt") && !menu_ok(r, tmp)) { remove(tmp); return; }
     remove(path);
-    if (rename(tmp, path)) { remove(tmp); send_err(r, 500, "no se pudo guardar"); return; }
+    if (rename(tmp, path)) { remove(tmp); send_err(r, 500, _("no se pudo guardar")); return; }
     aos_hal_log("portal", "wrote %s (%ld bytes)", rel, done);
     reload_for(rel);
     send_ok(r);
@@ -1008,7 +1012,7 @@ static bool rm_tree(const char *path)
 static void api_fs_op(aos_httpd_req_t *r, const char *op)
 {
     char path[320], rel[256];
-    if (!card_path(r, "path", path, sizeof path, rel, sizeof rel) || !strcmp(rel, "/")) { send_err(r, 400, "ruta inválida"); return; }
+    if (!card_path(r, "path", path, sizeof path, rel, sizeof rel) || !strcmp(rel, "/")) { send_err(r, 400, _("ruta inválida")); return; }
     bool ok = false;
     if (!strcmp(op, "mkdir")) ok = mkdir(path, 0777) == 0;
     else if (!strcmp(op, "delete")) ok = rm_tree(path);
@@ -1138,12 +1142,12 @@ static void api_flash_start(aos_httpd_req_t *r)
     if (ok) {
         aos_flasher_opts_t o = { .baud = cJSON_IsNumber(baud) ? (uint32_t)baud->valueint : 0 };
         ok = aos_flasher_flash(port && port[0] ? port : "uart.b", &src, &o);
-        if (!ok) snprintf(err, sizeof err, "%s", aos_flasher_busy() ? "ya hay una grabación en curso" : "no se pudo empezar");
+        if (!ok) snprintf(err, sizeof err, "%s", aos_flasher_busy() ? _("ya hay una grabación en curso") : _("no se pudo empezar"));
     }
     aos_hal_mutex_unlock(mx);
     cJSON_Delete(b);
     if (ok) send_ok(r);
-    else send_err(r, 409, err[0] ? err : "falta path");
+    else send_err(r, 409, err[0] ? err : _("falta path"));
 }
 
 static void api_flash_detect(aos_httpd_req_t *r)
@@ -1153,7 +1157,7 @@ static void api_flash_detect(aos_httpd_req_t *r)
     bool ok = aos_flasher_detect(port && port[0] ? port : "uart.b");
     cJSON_Delete(b);
     if (ok) send_ok(r);
-    else send_err(r, 409, "ya hay un trabajo en curso");
+    else send_err(r, 409, _("ya hay un trabajo en curso"));
 }
 
 static void api_flash_log(aos_httpd_req_t *r)
@@ -1278,7 +1282,7 @@ static void api_serial_post(aos_httpd_req_t *r, const char *op)
         const char *port = jstr(b, "port");
         const cJSON *baud = cJSON_GetObjectItemCaseSensitive(b, "baud");
         ok = port && cJSON_IsNumber(baud) && aos_serial_start(ch, port, (uint32_t)baud->valueint);
-        if (!ok) err = "no se pudo abrir el puerto (¿lo tiene otra app?)";
+        if (!ok) err = _("no se pudo abrir el puerto (¿lo tiene otra app?)");
     } else if (!strcmp(op, "stop")) {
         aos_serial_stop(ch);
     } else if (!strcmp(op, "send")) {
@@ -1287,19 +1291,19 @@ static void api_serial_post(aos_httpd_req_t *r, const char *op)
         int n = snprintf(buf, sizeof buf, "%s%s", text ? text : "", eol ? eol : "\r\n");
         if (n > (int)sizeof buf - 1) n = (int)sizeof buf - 1;
         ok = aos_serial_send(ch, buf, n) >= 0;
-        if (!ok) err = "el canal no está conectado";
+        if (!ok) err = _("el canal no está conectado");
     } else if (!strcmp(op, "record")) {
         ok = aos_serial_record(ch, cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(b, "on")));
-        if (!ok) err = "hace falta el canal conectado y la tarjeta";
+        if (!ok) err = _("hace falta el canal conectado y la tarjeta");
     } else if (!strcmp(op, "trigger")) {
         const char *add = jstr(b, "add");
         const cJSON *idx = cJSON_GetObjectItemCaseSensitive(b, "index");
         const cJSON *flags = cJSON_GetObjectItemCaseSensitive(b, "flags");
         if (add) ok = aos_serial_trigger_add(add, cJSON_IsNumber(flags) ? (uint8_t)flags->valueint : AOS_SERIAL_T_NOTIFY) >= 0;
         else if (cJSON_IsNumber(idx) && cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(b, "remove"))) aos_serial_trigger_remove(idx->valueint);
-        else if (cJSON_IsNumber(idx) && jstr(b, "text")) { ok = aos_serial_trigger_rename(idx->valueint, jstr(b, "text")); if (!ok) err = "texto vacío"; }
+        else if (cJSON_IsNumber(idx) && jstr(b, "text")) { ok = aos_serial_trigger_rename(idx->valueint, jstr(b, "text")); if (!ok) err = _("texto vacío"); }
         else if (cJSON_IsNumber(idx) && cJSON_IsNumber(flags)) aos_serial_trigger_set(idx->valueint, (uint8_t)flags->valueint);
-        if (!ok && !err[0]) err = "ya hay 8 avisos";
+        if (!ok && !err[0]) err = _("ya hay 8 avisos");
     }
     cJSON_Delete(b);
     if (ok) send_ok(r);
@@ -1353,7 +1357,7 @@ static void api_settings(aos_httpd_req_t *r)
         const char *err = NULL;
         const char *v;
         const cJSON *n;
-        if ((v = jstr(b, "name")) && !aos_hal_device_name_set(v)) err = "el nombre va con a-z, 0-9 y guiones";
+        if ((v = jstr(b, "name")) && !aos_hal_device_name_set(v)) err = _("el nombre va con a-z, 0-9 y guiones");
         if ((v = jstr(b, "tz"))) aos_hal_timezone_set(v);
         if ((v = jstr(b, "lang"))) aos_ui_request_language(v);
         if (cJSON_IsNumber(n = cJSON_GetObjectItemCaseSensitive(b, "wallpaper")))
@@ -1439,7 +1443,7 @@ static void api_restart(aos_httpd_req_t *r)
  * outside /web can be reached through here. Not cached by the browser (the
  * server sends no-store), and app.js asks for each page with its date in
  * the address anyway. */
-static void serve_card_web(aos_httpd_req_t *r, const char *name)
+static void serve_card_file(aos_httpd_req_t *r, const char *dir, const char *name)
 {
     if (!*name || name[0] == '.' || strlen(name) > 64) { aos_httpd_send_text(r, 404, "no existe"); return; }
     for (const char *c = name; *c; c++)
@@ -1448,9 +1452,9 @@ static void serve_card_web(aos_httpd_req_t *r, const char *name)
             return;
         }
     const char *root = aos_hal_path_sd_root();
-    char path[128];
+    char path[144];
     struct stat st;
-    snprintf(path, sizeof path, "%s/web/%s", root ? root : "", name);
+    snprintf(path, sizeof path, "%s/%s/%s", root ? root : "", dir, name);
     FILE *f = root ? fopen(path, "rb") : NULL;
     if (!f || stat(path, &st) || S_ISDIR(st.st_mode)) {
         if (f) fclose(f);
@@ -1467,6 +1471,25 @@ static void serve_card_web(aos_httpd_req_t *r, const char *name)
     fclose(f);
 }
 
+static void serve_card_web(aos_httpd_req_t *r, const char *name) { serve_card_file(r, "web", name); }
+
+/* The portal's translations: /lang/<code>/<file> from the card's
+ * /lang/<code>, the packs tools/install_lang.sh puts there (_portal.lang for
+ * the portal, web.<page>.lang for each app's page). Public, like the page
+ * itself: the login screen is translated too, and a catalog holds nothing
+ * of the board's. One level under one code of [a-z] only. */
+static void serve_card_lang(aos_httpd_req_t *r, const char *rest)
+{
+    const char *slash = strchr(rest, '/');
+    size_t n = slash ? (size_t)(slash - rest) : 0;
+    if (n < 2 || n > 8) { aos_httpd_send_text(r, 404, "no existe"); return; }
+    for (size_t i = 0; i < n; i++)
+        if (rest[i] < 'a' || rest[i] > 'z') { aos_httpd_send_text(r, 404, "no existe"); return; }
+    char dir[16];
+    snprintf(dir, sizeof dir, "lang/%.*s", (int)n, rest);
+    serve_card_file(r, dir, slash + 1);
+}
+
 static void serve_asset(aos_httpd_req_t *r, const char *path)
 {
     if (!strcmp(path, "/")) path = "/index.html";
@@ -1477,6 +1500,7 @@ static void serve_asset(aos_httpd_req_t *r, const char *path)
         return;
     }
     if (!strncmp(path, "/web/", 5)) { serve_card_web(r, path + 5); return; }
+    if (!strncmp(path, "/lang/", 6)) { serve_card_lang(r, path + 6); return; }
     aos_httpd_send_text(r, 404, "no existe");
 }
 
@@ -1502,8 +1526,8 @@ static void handler(aos_httpd_req_t *r)
         cJSON *on = b ? cJSON_GetObjectItem(b, "on") : NULL;
         bool want = cJSON_IsTrue(on), ok = cJSON_IsBool(on);
         cJSON_Delete(b);
-        if (!ok) send_err(r, 400, "falta \"on\"");
-        else if (want && !aos_hal_net_ap_start()) send_err(r, 409, "la radio está ocupada");
+        if (!ok) send_err(r, 400, _("falta \"on\""));
+        else if (want && !aos_hal_net_ap_start()) send_err(r, 409, _("la radio está ocupada"));
         else { if (!want) aos_hal_net_ap_stop(); send_ok(r); }
     }
     else if (!strcmp(p, "bt")) api_bt(r);
@@ -1512,7 +1536,7 @@ static void handler(aos_httpd_req_t *r)
     else if (post && !strcmp(p, "c6/update")) api_c6_update(r);
     else if (post && !strcmp(p, "wifi/linktest")) {    /* tests the link watchdog (docs/BUILDING.md) */
         if (aos_hal_net_test_freeze_link()) send_ok(r);
-        else send_err(r, 404, "no hay enlace que congelar");
+        else send_err(r, 404, _("no hay enlace que congelar"));
     }
     else if (!strcmp(p, "ha")) api_ha(r);
     else if (get && !strcmp(p, "ha/entities")) api_ha_entities(r);
@@ -1546,7 +1570,7 @@ static void handler(aos_httpd_req_t *r)
     else if (get && !strcmp(p, "player")) api_player(r);
     else if (get && !strcmp(p, "log")) api_log(r);
     else if (post && !strcmp(p, "restart")) api_restart(r);
-    else send_err(r, 404, "no existe");
+    else send_err(r, 404, _("no existe"));
 }
 
 /* HTTPS, when Settings, Portal web turned it on: on 443 (in the simulator,

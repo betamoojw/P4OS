@@ -7,15 +7,19 @@
  * its own waterfall, and sends the app lines of key=value (freq, mode,
  * rate, gain, sq, step, step_by, capture, rec_iq, rec_wav, play, play_stop,
  * log, mqtt), the same as rf/control.txt. The recordings and the CSVs are
- * plain card files (fsList, fsUrl). The texts are in Spanish, like the rest
- * of the portal. */
+ * plain card files (fsList, fsUrl). The texts are in Spanish and go through
+ * tr(), with this page's catalog (web.rf.lang). */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
+const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const APP = 'aos.rf';
 const LIVE = 'live?app=' + APP;
 
-const MODES = [['off', 'Sin audio'], ['wfm', 'FM'], ['am', 'AM'], ['nfm', 'FM angosta'], ['data', 'Datos'], ['lora', 'LoRa']];
+const MODES = [['off', N_('Sin audio')], ['wfm', 'FM'], ['am', 'AM'], ['nfm', N_('FM angosta')], ['data', N_('Datos')], ['lora', 'LoRa']];
 const HALF = { wfm: 100000, am: 4000, nfm: 6500 };
-const BANDS = [['FM', 98000000, 'wfm', 100000], ['Aire', 125000000, 'am', 25000], ['Marina', 156800000, 'nfm', 25000],
+const BANDS = [['FM', 98000000, 'wfm', 100000], [N_('Aire'), 125000000, 'am', 25000], [N_('Marina'), 156800000, 'nfm', 25000],
   ['2 m', 145000000, 'nfm', 12500], ['433', 433920000, 'data', 25000], ['70 cm', 435000000, 'nfm', 12500],
   ['PMR', 446006250, 'nfm', 12500], ['868', 868300000, 'data', 25000], ['LoRa 868', 868100000, 'lora', 25000],
   ['LoRa 915', 915200000, 'lora', 25000], ['ADS-B', 1090000000, 'off', 1000000]];
@@ -63,18 +67,18 @@ const LUT = (() => {
   return out;
 })();
 
-const mhz = (hz, d = 4) => (hz / 1e6).toFixed(d).replace('.', ',');
-const khz = hz => (hz / 1000).toLocaleString('es-AR', { maximumFractionDigits: 3 }) + ' kHz';
+const mhz = (hz, d = 4) => num(hz / 1e6, d);
+const khz = hz => (hz / 1000).toLocaleString(LOC, { maximumFractionDigits: 3 }) + ' kHz';
 
 function evLine(e) {
   let s;
   if (e.temp !== undefined) {
-    s = `ID ${e.id} · canal ${e.channel} · ${e.temp.toFixed(1).replace('.', ',')} °C`;
+    s = tr('ID %s · canal %s · %s °C', e.id, e.channel, num(e.temp, 1));
     if (e.hum !== undefined) s += ` · ${e.hum} %`;
-    if (e.batt_low) s += ' · batería baja';
-  } else if (e.proto === 'PT2262') s = `código ${e.code.slice(0, 8)} · datos ${e.code.slice(8)}`;
-  else if (e.proto) s = `ID ${e.id.toString(16).toUpperCase().padStart(5, '0')} · botón ${(e.button ?? 0).toString(16).toUpperCase()}`;
-  else s = `${e.mod || '?'} ${e.short}/${e.long} µs · ${e.bits} bits · ${e.hex}`;
+    if (e.batt_low) s += ' · ' + tr('batería baja');
+  } else if (e.proto === 'PT2262') s = tr('código %s · datos %s', e.code.slice(0, 8), e.code.slice(8));
+  else if (e.proto) s = tr('ID %s · botón %s', e.id.toString(16).toUpperCase().padStart(5, '0'), (e.button ?? 0).toString(16).toUpperCase());
+  else s = tr('%s %s/%s µs · %s bits · %s', e.mod || '?', e.short, e.long, e.bits, e.hex);
   return s + ` · ${e.off >= 0 ? '+' : ''}${Math.round(e.off / 1000)} kHz`;
 }
 
@@ -93,9 +97,9 @@ P.registerPage({
     const send = text => P.api(LIVE, { method: 'POST', body: text }).catch(e => P.toast(e.message, true));
 
     /* ---- the top: the frequency, the steps, the status ---- */
-    const freq = h('div', { class: 'rf-freq', title: 'Tocar para escribir una frecuencia' }, '—');
+    const freq = h('div', { class: 'rf-freq', title: tr('Tocar para escribir una frecuencia') }, '—');
     freq.onclick = () => {
-      const v = prompt('Frecuencia en MHz', st ? mhz(st.freq) : '');
+      const v = prompt(tr('Frecuencia en MHz'), st ? mhz(st.freq) : '');
       if (v) send('freq=' + (parseFloat(v.replace(',', '.')) * 1e6).toFixed(0));
     };
     const status = h('div', { class: 'note', style: 'text-align:center' }, '');
@@ -113,15 +117,15 @@ P.registerPage({
       ...STEPS.map(s => h('option', { value: s }, khz(s))));
     const sq = h('input', { type: 'range', min: 0, max: 40, step: 1, style: 'width:140px', onchange: () => send('sq=' + sq.value) });
     const sqLbl = h('span', { class: 'small' }, '');
-    const sqBox = h('span', {}, 'Silenciador ', sq, ' ', sqLbl);
+    const sqBox = h('span', {}, tr('Silenciador') + ' ', sq, ' ', sqLbl);
     /* the board's volume (the system's) and the radio's own mute */
     const vol = h('input', { type: 'range', min: 0, max: 100, step: 1, style: 'width:120px', onchange: () => send('vol=' + vol.value) });
     const volLbl = h('span', { class: 'small' }, '');
     let muted = false;
-    const muteBtn = h('button', { class: 'btn', onclick: () => send('mute=' + (muted ? 0 : 1)) }, 'Silenciar');
-    const volBox = h('span', {}, 'Volumen ', vol, ' ', volLbl, ' ', muteBtn);
+    const muteBtn = h('button', { class: 'btn', onclick: () => send('mute=' + (muted ? 0 : 1)) }, tr('Silenciar'));
+    const volBox = h('span', {}, tr('Volumen') + ' ', vol, ' ', volLbl, ' ', muteBtn);
     const bands = h('div', { class: 'rf-seg' }, ...BANDS.map(([n, hz, m, step]) =>
-      h('button', { class: 'btn', onclick: () => send(`mode=${m}\nfreq=${hz}\nstep=${step}`) }, n)));
+      h('button', { class: 'btn', onclick: () => send(`mode=${m}\nfreq=${hz}\nstep=${step}`) }, tr(n))));
     const meshReg = h('select', {}, ...MESH_REGIONS.map(([n], i) => h('option', { value: i }, n)));
     const meshPre = h('select', {}, ...MESH_PRESETS.map(([n], i) => h('option', { value: i, selected: i === 1 }, n)));
     const meshLbl = h('span', { class: 'small' }, '');
@@ -131,22 +135,22 @@ P.registerPage({
     };
     meshReg.onchange = meshPre.onchange = meshShow;
     meshShow();
-    const mesh = h('div', { class: 'row', style: 'flex-wrap:wrap;gap:10px;margin-top:10px' }, 'Meshtastic, canal por defecto: ',
+    const mesh = h('div', { class: 'row', style: 'flex-wrap:wrap;gap:10px;margin-top:10px' }, tr('Meshtastic, canal por defecto:') + ' ',
       meshReg, meshPre, meshLbl,
-      h('button', { class: 'btn', onclick: () => send(`mode=lora\nfreq=${meshFreq(meshReg.value, meshPre.value)}\nstep=${MESH_PRESETS[meshPre.value][2] * 1000}`) }, 'Escuchar ahí'));
+      h('button', { class: 'btn', onclick: () => send(`mode=lora\nfreq=${meshFreq(meshReg.value, meshPre.value)}\nstep=${MESH_PRESETS[meshPre.value][2] * 1000}`) }, tr('Escuchar ahí')));
     /* the channel key: paste a PSK (base64) to read the text of its packets */
-    const keyIn = h('input', { type: 'text', placeholder: 'PSK en base64 (p. ej. AQ==)', style: 'width:220px' });
+    const keyIn = h('input', { type: 'text', placeholder: tr('PSK en base64 (p. ej. AQ==)'), style: 'width:220px' });
     const keyStatus = h('span', { class: 'small' }, '');
-    const meshKey = h('div', { class: 'row', style: 'flex-wrap:wrap;gap:10px;margin-top:8px' }, 'Clave del canal: ', keyStatus,
+    const meshKey = h('div', { class: 'row', style: 'flex-wrap:wrap;gap:10px;margin-top:8px' }, tr('Clave del canal:') + ' ', keyStatus,
       keyIn,
-      h('button', { class: 'btn', onclick: () => { const v = keyIn.value.trim(); if (v) send('key=' + v); } }, 'Poner'),
-      h('button', { class: 'btn', onclick: () => send('key=AQ==') }, 'Canal público'),
-      h('button', { class: 'btn', onclick: () => send('key=none') }, 'Quitar'),
-      h('span', { class: 'small', style: 'flex-basis:100%;opacity:.7' }, 'La clave se guarda en la tarjeta de la placa, no en el navegador ni en la nube. Los mensajes directos cifrados a otro nodo no se leen.'));
+      h('button', { class: 'btn', onclick: () => { const v = keyIn.value.trim(); if (v) send('key=' + v); } }, tr('Poner')),
+      h('button', { class: 'btn', onclick: () => send('key=AQ==') }, tr('Canal público')),
+      h('button', { class: 'btn', onclick: () => send('key=none') }, tr('Quitar')),
+      h('span', { class: 'small', style: 'flex-basis:100%;opacity:.7' }, tr('La clave se guarda en la tarjeta de la placa, no en el navegador ni en la nube. Los mensajes directos cifrados a otro nodo no se leen.')));
     const controls = h('div', { class: 'card' },
       modeRow,
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:14px;margin-top:10px' },
-        h('span', {}, 'Muestreo ', rateSel), h('span', {}, 'Ganancia ', gainSel), h('span', {}, 'Paso ', stepSel), sqBox, volBox),
+        h('span', {}, tr('Muestreo') + ' ', rateSel), h('span', {}, tr('Ganancia') + ' ', gainSel), h('span', {}, tr('Paso') + ' ', stepSel), sqBox, volBox),
       h('div', { style: 'margin-top:10px' }, bands), mesh, meshKey);
 
     /* ---- the spectrum and the waterfall (or Data's list) ---- */
@@ -176,15 +180,15 @@ P.registerPage({
     /* the wheel tunes over the spectrum only: over the tall waterfall it
      * would keep the page from scrolling */
     sc.onwheel = ev => { ev.preventDefault(); send('step_by=' + (ev.deltaY > 0 ? -1 : 1)); };
-    sc.title = 'Tocar para ir a esa frecuencia; la rueda mueve de a un paso';
+    sc.title = tr('Tocar para ir a esa frecuencia; la rueda mueve de a un paso');
 
     /* ---- keeping ---- */
     const keep = h('div', { class: 'card' });
     const files = h('div', {});
 
     const missing = h('div', { class: 'card' },
-      h('p', {}, 'La app RF no está abierta en la placa (o la placa no tiene la RTL-SDR).'),
-      h('button', { class: 'btn pri', onclick: () => P.openApp(APP).then(() => P.toast('Abierta en la placa')) }, 'Abrir RF en la placa'));
+      h('p', {}, tr('La app RF no está abierta en la placa (o la placa no tiene la RTL-SDR).')),
+      h('button', { class: 'btn pri', onclick: () => P.openApp(APP).then(() => P.toast(tr('Abierta en la placa'))) }, tr('Abrir RF en la placa')));
 
     put(main, h('h1', {}, 'RF'), missing, top, controls, view, keep, files);
     const showMissing = on => {
@@ -235,7 +239,7 @@ P.registerPage({
       const tick = steps.find(t => span / t <= W / 90) || 1e6, lo_hz = s.freq - span / 2;
       const kids = [];
       for (let t = Math.ceil(lo_hz / tick) * tick; t < lo_hz + span; t += tick)
-        kids.push(h('span', { style: `left:${(t - lo_hz) / span * 100}%` }, (t / 1e6).toFixed(tick >= 1e6 ? 0 : tick >= 100e3 ? 1 : tick >= 10e3 ? 2 : 3).replace('.', ',')));
+        kids.push(h('span', { style: `left:${(t - lo_hz) / span * 100}%` }, num(t / 1e6, tick >= 1e6 ? 0 : tick >= 100e3 ? 1 : tick >= 10e3 ? 2 : 3)));
       put(axis, ...kids);
       /* the waterfall: down a row, the new one on top */
       if (st && st.mode === 'data') return;
@@ -257,33 +261,33 @@ P.registerPage({
       st = s;
       showMissing(false);
       freq.textContent = mhz(s.freq) + ' MHz';
-      let t = s.state === 'run' ? `${s.kind} ${s.tuner} · ${(s.rate / 1e6).toFixed(3).replace('.', ',')} Msps · ${String(s.mbs).replace('.', ',')} MB/s` :
-        s.state === 'search' ? 'Buscando la radio…' : (s.why || 'Sin radio');
-      if (s.listening) t += ` · señal ${Math.round(s.level)} dB${s.open ? '' : ' · silenciado'}${s.mode === 'wfm' && s.pilot >= 10 ? ' · estéreo' : ''}`;
-      if (s.mode === 'data') t += ` · ${s.received} recibidos`;
-      if (s.mode === 'lora') t += ` · LoRa en el canal, el último minuto: ${s.lora_n} paquetes, ocupado ${String(s.lora_busy).replace('.', ',')} %`;
-      if (s.playing) t += ' · reproduciendo ' + s.play;
-      if (s.rec_iq) t += ` · grabando la señal (${s.iq_mb} MB${s.iq_dropped ? ', perdiendo' : ''})`;
-      if (s.rec_wav) t += ` · grabando el audio (${Math.floor(s.wav_s / 60)}:${String(s.wav_s % 60).padStart(2, '0')})`;
+      let t = s.state === 'run' ? `${s.kind} ${s.tuner} · ${num(s.rate / 1e6, 3)} Msps · ${(+s.mbs).toLocaleString(LOC)} MB/s` :
+        s.state === 'search' ? tr('Buscando la radio…') : (s.why || tr('Sin radio'));
+      if (s.listening) t += ' · ' + tr('señal %s dB', Math.round(s.level)) + (s.open ? '' : ' · ' + tr('silenciado')) + (s.mode === 'wfm' && s.pilot >= 10 ? ' · ' + tr('estéreo') : '');
+      if (s.mode === 'data') t += ' · ' + tr('%s recibidos', s.received);
+      if (s.mode === 'lora') t += ' · ' + tr('LoRa en el canal, el último minuto: %s paquetes, ocupado %s %', s.lora_n, (+s.lora_busy).toLocaleString(LOC));
+      if (s.playing) t += ' · ' + tr('reproduciendo %s', s.play);
+      if (s.rec_iq) t += ' · ' + (s.iq_dropped ? tr('grabando la señal (%s MB, perdiendo)', s.iq_mb) : tr('grabando la señal (%s MB)', s.iq_mb));
+      if (s.rec_wav) t += ' · ' + tr('grabando el audio (%s)', `${Math.floor(s.wav_s / 60)}:${String(s.wav_s % 60).padStart(2, '0')}`);
       status.textContent = t;
       if (changed('modes', s.mode))
-        put(modeRow, ...MODES.map(([m, n]) => h('button', { class: 'btn' + (s.mode === m ? ' on' : ''), onclick: () => send('mode=' + m) }, n)));
+        put(modeRow, ...MODES.map(([m, n]) => h('button', { class: 'btn' + (s.mode === m ? ' on' : ''), onclick: () => send('mode=' + m) }, tr(n))));
       const rates = !s.high_speed ? RATES.fs : s.mode !== 'off' && s.mode !== 'lora' ? RATES.listen : RATES.hs;
       if (!rates.includes(s.rate)) rates.unshift(s.rate);   /* a recording's own */
       if (changed('rates', rates.join() + '/' + s.rate))
-        put(rateSel, ...rates.map(r => h('option', { value: r, selected: r === s.rate }, (r / 1e6).toFixed(3).replace('.', ',') + ' Msps')));
+        put(rateSel, ...rates.map(r => h('option', { value: r, selected: r === s.rate }, num(r / 1e6, 3) + ' Msps')));
       rateSel.disabled = s.mode === 'data' || s.playing;
       if (changed('gains', s.gains.join() + '/' + s.gain))
-        put(gainSel, h('option', { value: 'auto', selected: s.gain < 0 }, 'Automática'),
-          ...s.gains.map(g => h('option', { value: g, selected: g === s.gain }, (g / 10).toFixed(1).replace('.', ',') + ' dB')));
+        put(gainSel, h('option', { value: 'auto', selected: s.gain < 0 }, tr('Automática')),
+          ...s.gains.map(g => h('option', { value: g, selected: g === s.gain }, num(g / 10, 1) + ' dB')));
       if (document.activeElement !== stepSel) stepSel.value = s.step;
       if (document.activeElement !== sq) sq.value = s.sq;
-      sqLbl.textContent = s.sq ? s.sq + ' dB' : 'no';
+      sqLbl.textContent = s.sq ? s.sq + ' dB' : tr('no');
       if (s.vol !== undefined) {
         if (document.activeElement !== vol) vol.value = s.vol;
         volLbl.textContent = s.vol + ' %';
         muted = !!s.muted;
-        muteBtn.textContent = muted ? 'Activar el sonido' : 'Silenciar';
+        muteBtn.textContent = muted ? tr('Activar el sonido') : tr('Silenciar');
         muteBtn.classList.toggle('red', muted);
       }
       sqBox.style.display = s.mode === 'am' || s.mode === 'nfm' ? '' : 'none';
@@ -291,7 +295,7 @@ P.registerPage({
       evBox.style.display = s.mode === 'data' ? '' : 'none';
       loraBox.style.display = s.mode === 'lora' ? '' : 'none';
       meshKey.style.display = s.mode === 'lora' ? '' : 'none';
-      if (s.has_key !== undefined) keyStatus.textContent = s.has_key ? 'puesta ✓' : 'ninguna';
+      if (s.has_key !== undefined) keyStatus.textContent = s.has_key ? tr('puesta ✓') : tr('ninguna');
       if (s.mode === 'lora') loadLora();
       drawKeep(s);
       if (s.mode === 'data' && s.received !== evSeen) {
@@ -303,20 +307,20 @@ P.registerPage({
     function loadEvents() {
       P.api(LIVE + '&key=events').then(list => {
         if (!list.length) {
-          put(evBox, h('p', { class: 'note' }, 'Esperando transmisiones en la banda: controles remotos, sensores de temperatura, timbres…'));
+          put(evBox, h('p', { class: 'note' }, tr('Esperando transmisiones en la banda: controles remotos, sensores de temperatura, timbres…')));
           return;
         }
         const rows = [];
         for (const e of list) {
           rows.push(h('tr', { class: 'k', onclick: () => { opened[e.n] = !opened[e.n]; loadEvents(); } },
-            h('td', {}, e.t), h('td', {}, h('b', {}, e.proto || 'Desconocido'), e.count > 1 ? ` ×${e.count}` : ''),
+            h('td', {}, e.t), h('td', {}, h('b', {}, e.proto || tr('Desconocido')), e.count > 1 ? ` ×${e.count}` : ''),
             h('td', {}, evLine(e)), h('td', { class: 'small' }, Math.round(e.snr) + ' dB')));
           if (opened[e.n])
             rows.push(h('tr', {}, h('td', {}), h('td', { colspan: 3, class: 'det' },
-              `${mhz(e.freq, 3)} MHz · ${e.mod || '?'} · corto ${e.short} µs · largo ${e.long} µs · pausa ${e.gap} µs · ${e.bits} bits: ${e.hex}`)));
+              tr('%s MHz · %s · corto %s µs · largo %s µs · pausa %s µs · %s bits: %s', mhz(e.freq, 3), e.mod || '?', e.short, e.long, e.gap, e.bits, e.hex))));
         }
         put(evBox, h('table', { class: 'rf-ev' }, h('tbody', {}, ...rows)),
-          h('p', { class: 'note small' }, 'Tocá una fila para ver sus pulsos y sus bits. Todo queda también en rf/datos-<día>.csv de la tarjeta.'));
+          h('p', { class: 'note small' }, tr('Tocá una fila para ver sus pulsos y sus bits. Todo queda también en rf/datos-<día>.csv de la tarjeta.')));
       }).catch(() => {});
     }
 
@@ -330,27 +334,27 @@ P.registerPage({
         if (key === loraSeen) return;
         loraSeen = key;
         if (!list.length) {
-          put(loraBox, h('p', { class: 'note' }, 'Esperando paquetes LoRa en la banda.'));
+          put(loraBox, h('p', { class: 'note' }, tr('Esperando paquetes LoRa en la banda.')));
           return;
         }
         const rows = [];
         for (const e of list) {
           rows.push(h('tr', e.sf ? { class: 'k', onclick: () => send('decode=' + e.n) } : {},
             h('td', {}, e.t),
-            h('td', {}, h('b', {}, e.preset || (e.sf ? `SF${e.sf} · ${e.bw / 1000} kHz` : 'Otra señal'))),
-            h('td', {}, `${mhz(e.freq, 4)} MHz` + (e.sf ? ` · SF${e.sf} · ${e.bw / 1000} kHz` : ` · ${Math.round(e.width / 1000)} kHz de ancho`)),
+            h('td', {}, h('b', {}, e.preset || (e.sf ? `SF${e.sf} · ${e.bw / 1000} kHz` : tr('Otra señal')))),
+            h('td', {}, `${mhz(e.freq, 4)} MHz` + (e.sf ? ` · SF${e.sf} · ${e.bw / 1000} kHz` : ' · ' + tr('%s kHz de ancho', Math.round(e.width / 1000)))),
             h('td', { class: 'small' }, `${e.ms} ms · ${Math.round(e.snr)} dB`)));
           if (e.from !== undefined) {
-            const to = e.to === 4294967295 ? 'todos (broadcast)' : hid(e.to);
-            const body = `De ${hid(e.from)} a ${to} · ${e.hops} saltos`
-              + (e.port === 1 ? ` · Texto: ${e.text}` : e.port !== undefined ? ` · tipo ${e.port} (no es texto)` : '');
+            const to = e.to === 4294967295 ? tr('todos (broadcast)') : hid(e.to);
+            const body = tr('De %s a %s · %s saltos', hid(e.from), to, e.hops)
+              + (e.port === 1 ? ' · ' + tr('Texto: %s', e.text) : e.port !== undefined ? ' · ' + tr('tipo %s (no es texto)', e.port) : '');
             rows.push(h('tr', {}, h('td', {}), h('td', { colspan: 3, class: 'det' }, body)));
           } else if (e.decfail) {
-            rows.push(h('tr', {}, h('td', {}), h('td', { colspan: 3, class: 'det' }, 'No se pudo decodificar.')));
+            rows.push(h('tr', {}, h('td', {}), h('td', { colspan: 3, class: 'det' }, tr('No se pudo decodificar.'))));
           }
         }
         put(loraBox, h('table', { class: 'rf-ev' }, h('tbody', {}, ...rows)),
-          h('p', { class: 'note small' }, 'Tocá un paquete LoRa para leer su cabecera (y el texto, con la clave puesta). El SF y el ancho salen del preámbulo; todo queda en rf/lora-<día>.csv de la tarjeta.'));
+          h('p', { class: 'note small' }, tr('Tocá un paquete LoRa para leer su cabecera (y el texto, con la clave puesta). El SF y el ancho salen del preámbulo; todo queda en rf/lora-<día>.csv de la tarjeta.')));
       }).catch(() => {});
     }
 
@@ -359,16 +363,16 @@ P.registerPage({
       const tog = (on, a, b, cmd) => h('button', { class: 'btn' + (on ? ' red' : ''), onclick: () => send(cmd + '=' + (on ? 0 : 1)) }, on ? b : a);
       const sw = (label, on, cmd) => h('label', { class: 'row', style: 'gap:8px' },
         h('input', { type: 'checkbox', checked: on, onchange: ev => send(cmd + '=' + (ev.target.checked ? 1 : 0)) }), label);
-      put(keep, h('h2', {}, 'Guardar'),
+      put(keep, h('h2', {}, tr('Guardar')),
         h('div', { class: 'btns' },
-          h('button', { class: 'btn', onclick: () => send('capture=1').then(() => P.toast('La placa guarda la captura en Fotos → Capturas')) }, 'Captura de la placa'),
-          h('button', { class: 'btn', onclick: savePng }, 'Imagen del espectro (PNG)'),
-          s.listening || s.rec_wav ? tog(s.rec_wav, 'Grabar el audio', 'Terminar el audio', 'rec_wav') : null,
-          tog(s.rec_iq, 'Grabar la señal (I/Q)', 'Terminar la señal', 'rec_iq'),
-          s.playing ? h('button', { class: 'btn red', onclick: () => send('play_stop=1') }, 'Dejar de reproducir') : null),
-        sw('Guardar lo recibido en Datos y LoRa (rf/datos- y rf/lora-<día>.csv)', s.log, 'log'),
-        sw(s.mqtt_ready ? 'Publicarlo por MQTT' : 'Publicarlo por MQTT (no conectado)', s.mqtt, 'mqtt'),
-        h('p', { class: 'note small' }, `La señal ocupa ${Math.round(s.rate * 2 * 60 / 1e6)} MB por minuto a esta tasa; la tarjeta escribe unos 3 MB/s.`));
+          h('button', { class: 'btn', onclick: () => send('capture=1').then(() => P.toast(tr('La placa guarda la captura en Fotos → Capturas'))) }, tr('Captura de la placa')),
+          h('button', { class: 'btn', onclick: savePng }, tr('Imagen del espectro (PNG)')),
+          s.listening || s.rec_wav ? tog(s.rec_wav, tr('Grabar el audio'), tr('Terminar el audio'), 'rec_wav') : null,
+          tog(s.rec_iq, tr('Grabar la señal (I/Q)'), tr('Terminar la señal'), 'rec_iq'),
+          s.playing ? h('button', { class: 'btn red', onclick: () => send('play_stop=1') }, tr('Dejar de reproducir')) : null),
+        sw(tr('Guardar lo recibido en Datos y LoRa (rf/datos- y rf/lora-<día>.csv)'), s.log, 'log'),
+        sw(s.mqtt_ready ? tr('Publicarlo por MQTT') : tr('Publicarlo por MQTT (no conectado)'), s.mqtt, 'mqtt'),
+        h('p', { class: 'note small' }, tr('La señal ocupa %s MB por minuto a esta tasa; la tarjeta escribe unos 3 MB/s.', Math.round(s.rate * 2 * 60 / 1e6))));
     }
 
     function savePng() {
@@ -380,7 +384,7 @@ P.registerPage({
       if (wf.style.display !== 'none') g.drawImage(wf, 0, sc.height);
       g.fillStyle = '#fff';
       g.font = '14px sans-serif';
-      g.fillText(`${freq.textContent} · ${new Date().toLocaleString('es-AR')}`, 8, 18);
+      g.fillText(`${freq.textContent} · ${new Date().toLocaleString(LOC)}`, 8, 18);
       c.toBlob(b => P.saveBlob(b, `rf-${st ? st.freq : 0}-${Date.now()}.png`));
     }
 
@@ -390,28 +394,28 @@ P.registerPage({
       const csv = rf.filter(f => f.name.startsWith('datos-') && f.name.endsWith('.csv')).sort((a, b) => b.name.localeCompare(a.name));
       const aud = wav.filter(f => f.name.startsWith('RF_') && f.name.endsWith('.wav')).sort((a, b) => b.name.localeCompare(a.name));
       const del = async (path, also) => {
-        if (!confirm('¿Borrar ' + path.split('/').pop() + '?')) return;
+        if (!confirm(tr('¿Borrar %s?', path.split('/').pop()))) return;
         try { await P.fsDelete(path); if (also) await P.fsDelete(also).catch(() => {}); loadFiles(); } catch (e) { P.toast(e.message, true); }
       };
       put(files,
-        h('div', { class: 'card' }, h('h2', {}, 'Señales grabadas (I/Q)'),
-          rec.length ? null : h('p', { class: 'note' }, 'Todavía no hay.'),
+        h('div', { class: 'card' }, h('h2', {}, tr('Señales grabadas (I/Q)')),
+          rec.length ? null : h('p', { class: 'note' }, tr('Todavía no hay.')),
           ...rec.map(f => {
             const [when, hz, sps] = f.name.replace('.cu8', '').split('_');
-            return h('div', { class: 'row' }, h('div', { class: 'grow' }, `${when} · ${mhz(+hz, 3)} MHz · ${(+sps / 1e6).toFixed(3).replace('.', ',')} Msps`, h('span', { class: 'small muted' }, ' ' + P.fmtBytes(f.size))),
-              h('button', { class: 'btn', onclick: () => send('play=' + f.name) }, 'Reproducir'),
-              h('a', { class: 'btn', href: P.fsUrl('/rf/iq/' + f.name, true) }, 'Bajar'),
+            return h('div', { class: 'row' }, h('div', { class: 'grow' }, `${when} · ${mhz(+hz, 3)} MHz · ${num(+sps / 1e6, 3)} Msps`, h('span', { class: 'small muted' }, ' ' + P.fmtBytes(f.size))),
+              h('button', { class: 'btn', onclick: () => send('play=' + f.name) }, tr('Reproducir')),
+              h('a', { class: 'btn', href: P.fsUrl('/rf/iq/' + f.name, true) }, tr('Bajar')),
               h('button', { class: 'btn red', onclick: () => del('/rf/iq/' + f.name, '/rf/iq/' + f.name.replace('.cu8', '.txt')) }, '✕'));
           })),
-        h('div', { class: 'card' }, h('h2', {}, 'Audio grabado'),
-          aud.length ? null : h('p', { class: 'note' }, 'Todavía no hay.'),
+        h('div', { class: 'card' }, h('h2', {}, tr('Audio grabado')),
+          aud.length ? null : h('p', { class: 'note' }, tr('Todavía no hay.')),
           ...aud.map(f => h('div', { class: 'row' }, h('div', { class: 'grow' }, f.name),
             h('audio', { controls: true, preload: 'none', src: P.fsUrl('/recordings/' + f.name) }),
-            h('a', { class: 'btn', href: P.fsUrl('/recordings/' + f.name, true) }, 'Bajar')))),
-        h('div', { class: 'card' }, h('h2', {}, 'Datos recibidos (CSV)'),
-          csv.length ? null : h('p', { class: 'note' }, 'Todavía no hay.'),
+            h('a', { class: 'btn', href: P.fsUrl('/recordings/' + f.name, true) }, tr('Bajar'))))),
+        h('div', { class: 'card' }, h('h2', {}, tr('Datos recibidos (CSV)')),
+          csv.length ? null : h('p', { class: 'note' }, tr('Todavía no hay.')),
           ...csv.map(f => h('div', { class: 'row' }, h('div', { class: 'grow' }, f.name, h('span', { class: 'small muted' }, ' ' + P.fmtBytes(f.size))),
-            h('a', { class: 'btn', href: P.fsUrl('/rf/' + f.name, true) }, 'Bajar')))));
+            h('a', { class: 'btn', href: P.fsUrl('/rf/' + f.name, true) }, tr('Bajar'))))));
     }
 
     /* ---- polling: the spectrum as fast as it comes (one ask at a time), the

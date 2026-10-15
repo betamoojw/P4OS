@@ -1,0 +1,127 @@
+# amoledos-lang 1   es -> de
+# web.cas.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/cas/web/cas.js:65
+columna %d	Spalte %d
+
+#: apps/cas/web/cas.js:90
+No se pudo leer la pantalla (%s)	Bildschirm konnte nicht gelesen werden (%s)
+
+#: apps/cas/web/cas.js:118
+#: apps/cas/web/cas.js:274
+CAS	CAS
+
+#: apps/cas/web/cas.js:126
+CAS abierta en la placa	CAS auf der Platine geöffnet
+
+#: apps/cas/web/cas.js:126
+Abrir CAS en la placa	CAS auf der Platine öffnen
+
+#: apps/cas/web/cas.js:160
+Copiar abajo	Nach unten kopieren
+
+#: apps/cas/web/cas.js:161
+Sumar al final de lo que escribís	An die Eingabe anhängen
+
+#: apps/cas/web/cas.js:163
+calculando…	rechnet…
+
+#: apps/cas/web/cas.js:164
+Todavía no hay cuentas.	Noch keine Rechnungen.
+
+#: apps/cas/web/cas.js:189
+Abrí CAS en la placa primero	Zuerst CAS auf der Platine öffnen
+
+#: apps/cas/web/cas.js:198
+Funciones enviadas	Funktionen gesendet
+
+#: apps/cas/web/cas.js:203
+Pegá una tabla (de una planilla, separada por comas, punto y coma o tabulaciones) o elegí un archivo .csv	Eine Tabelle einfügen (aus einer Tabellenkalkulation, getrennt durch Kommas, Semikolons oder Tabulatoren) oder eine .csv-Datei wählen
+
+#: apps/cas/web/cas.js:208
+No encontré columnas de números.	Keine Zahlenspalten gefunden.
+
+#: apps/cas/web/cas.js:217
+Hay %d columnas: van las cuatro primeras.	Es gibt %d Spalten: die ersten vier werden übernommen.
+
+#: apps/cas/web/cas.js:218
+Cada lista toma hasta 500 valores.	Jede Liste nimmt bis zu 500 Werte.
+
+#: apps/cas/web/cas.js:227
+No hay columnas de números para cargar	Keine Zahlenspalten zum Laden
+
+#: apps/cas/web/cas.js:232
+Listas cargadas en la placa	Listen auf die Platine geladen
+
+#: apps/cas/web/cas.js:232
+Listas guardadas: las ve CAS cuando abra Estadística	Listen gespeichert: CAS sieht sie beim Öffnen von Statistik
+
+#: apps/cas/web/cas.js:239
+Las listas están vacías	Die Listen sind leer
+
+#: apps/cas/web/cas.js:248
+Guardar el gráfico como PNG	Graph als PNG speichern
+
+#: apps/cas/web/cas.js:252
+La placa no muestra ningún gráfico ahora	Die Platine zeigt gerade keinen Graphen
+
+#: apps/cas/web/cas.js:276
+En la placa	Auf der Platine
+
+#: apps/cas/web/cas.js:278
+Calculadora	Rechner
+
+#: apps/cas/web/cas.js:280
+Calcular	Berechnen
+
+#: apps/cas/web/cas.js:281
+Sintaxis de Xcas: factor(x^4-1), int(sin(x)^2,x), solve(x^2=2,x), diff(f1(x),x), limit(sin(x)/x,x,0).	Xcas-Syntax: factor(x^4-1), int(sin(x)^2,x), solve(x^2=2,x), diff(f1(x),x), limit(sin(x)/x,x,0).
+
+#: apps/cas/web/cas.js:282
+La cuenta se hace en la placa y queda en su historial. ↑ y ↓ traen lo que escribiste antes; tocar una cuenta la copia abajo, tocar un resultado lo suma.	Die Rechnung läuft auf der Platine und bleibt in ihrem Verlauf. ↑ und ↓ holen frühere Eingaben zurück; ein Klick auf eine Rechnung kopiert sie nach unten, ein Klick auf ein Ergebnis hängt es an.
+
+#: apps/cas/web/cas.js:283
+Funciones del gráfico	Funktionen des Graphen
+
+#: apps/cas/web/cas.js:286
+Enviar	Senden
+
+#: apps/cas/web/cas.js:287
+Mostrar el gráfico en la placa	Graph auf der Platine zeigen
+
+#: apps/cas/web/cas.js:288
+Listas de Estadística	Statistik-Listen
+
+#: apps/cas/web/cas.js:291
+Cargar en L1…L4	In L1…L4 laden
+
+#: apps/cas/web/cas.js:292
+Bajar las listas (CSV)	Listen herunterladen (CSV)
+
+#: apps/cas/web/cas.js:293
+Cargar reemplaza las cuatro listas de la placa.	Laden ersetzt die vier Listen der Platine.
+
+#: apps/cas/web/cas.js:294
+Imagen	Bild
+
+#: apps/cas/web/cas.js:295
+Lo que la placa muestra ahora: el gráfico solo (de Gráfico, Geometría, Estadística, Finanzas o Ciencias) o la pantalla entera.	Was die Platine gerade zeigt: nur der Graph (aus Graph, Geometrie, Statistik, Finanzen oder Naturwissenschaften) oder der ganze Bildschirm.
+
+#: apps/cas/web/cas.js:297
+Guardar la pantalla	Bildschirm speichern
+
+#: apps/cas/web/cas.js:328
+Abierta, arrancando el motor	Geöffnet, Rechenkern startet
+
+#: apps/cas/web/cas.js:328
+Abierta, calculando	Geöffnet, rechnet
+
+#: apps/cas/web/cas.js:328
+Abierta	Geöffnet
+
+#: apps/cas/web/cas.js:328
+Cerrada	Geschlossen

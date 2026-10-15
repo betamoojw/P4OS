@@ -1,0 +1,187 @@
+# amoledos-lang 1   es -> en
+# web.pwm.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/pwm/web/pwm.js:27
+PWM	PWM
+
+#: apps/pwm/web/pwm.js:27
+Servo	Servo
+
+#: apps/pwm/web/pwm.js:27
+LED	LED
+
+#: apps/pwm/web/pwm.js:27
+Nivel	Level
+
+#: apps/pwm/web/pwm.js:28
+Fijo	Steady
+
+#: apps/pwm/web/pwm.js:28
+Respirar	Breathe
+
+#: apps/pwm/web/pwm.js:28
+Barrido	Sweep
+
+#: apps/pwm/web/pwm.js:28
+Estrobo	Strobe
+
+#: apps/pwm/web/pwm.js:29
+Rampa	Ramp
+
+#: apps/pwm/web/pwm.js:29
+Seno	Sine
+
+#: apps/pwm/web/pwm.js:29
+Pasos	Steps
+
+#: apps/pwm/web/pwm.js:117
+%s · %d bits	%s · %d bits
+
+#: apps/pwm/web/pwm.js:119
+ciclo %s	duty %s
+
+#: apps/pwm/web/pwm.js:120
+%d de 255	%d of 255
+
+#: apps/pwm/web/pwm.js:225
+#: apps/pwm/web/pwm.js:492
+Generador PWM	PWM generator
+
+#: apps/pwm/web/pwm.js:237
+nombre del preset	preset name
+
+#: apps/pwm/web/pwm.js:249
+No se pudo mandar: %s	Could not send: %s
+
+#: apps/pwm/web/pwm.js:252
+La app no está abierta en la placa: lo toma al abrirla	The app is not open on the board: it picks this up when opened
+
+#: apps/pwm/web/pwm.js:279
+Borrar el canal	Delete the channel
+
+#: apps/pwm/web/pwm.js:294
+Frecuencia	Frequency
+
+#: apps/pwm/web/pwm.js:316
+Pin	Pin
+
+#: apps/pwm/web/pwm.js:324
+Patrón	Pattern
+
+#: apps/pwm/web/pwm.js:325
+Período	Period
+
+#: apps/pwm/web/pwm.js:326
+Desde	From
+
+#: apps/pwm/web/pwm.js:327
+Hasta	To
+
+#: apps/pwm/web/pwm.js:329
+Pasos (%)	Steps (%)
+
+#: apps/pwm/web/pwm.js:344
+Invertir la salida	Invert the output
+
+#: apps/pwm/web/pwm.js:345
+Mínimo	Minimum
+
+#: apps/pwm/web/pwm.js:345
+Máximo	Maximum
+
+#: apps/pwm/web/pwm.js:346
+Recorrido	Travel
+
+#: apps/pwm/web/pwm.js:347
+Gamma	Gamma
+
+#: apps/pwm/web/pwm.js:348
+Con 1 kΩ en serie y 1 µF a GND: de 0 a 3,3 V.	With 1 kΩ in series and 1 µF to GND: 0 to 3.3 V.
+
+#: apps/pwm/web/pwm.js:364
+sin pin	no pin
+
+#: apps/pwm/web/pwm.js:365
+GPIO%d · pata %d (otro canal)	GPIO%d · pin %d (other channel)
+
+#: apps/pwm/web/pwm.js:365
+GPIO%d · pata %d	GPIO%d · pin %d
+
+#: apps/pwm/web/pwm.js:370
+real %s · %d bits	actual %s · %d bits
+
+#: apps/pwm/web/pwm.js:370
+apagado	off
+
+#: apps/pwm/web/pwm.js:380
+entre %s y %s	between %s and %s
+
+#: apps/pwm/web/pwm.js:421
+La app está abierta en la placa	The app is open on the board
+
+#: apps/pwm/web/pwm.js:421
+La app no está abierta en la placa: las salidas están apagadas	The app is not open on the board: the outputs are off
+
+#: apps/pwm/web/pwm.js:423
+Abierta en la placa	Opened on the board
+
+#: apps/pwm/web/pwm.js:423
+Abrir en la placa	Open on the board
+
+#: apps/pwm/web/pwm.js:424
+Apagar todo	Turn all off
+
+#: apps/pwm/web/pwm.js:432
++ Canal	+ Channel
+
+#: apps/pwm/web/pwm.js:438
+Ningún PWM encendido	No PWM on
+
+#: apps/pwm/web/pwm.js:439
+(%d de 3 frecuencias): el LEDC no da más de tres	(%d of 3 frequencies): the LEDC gives no more than three
+
+#: apps/pwm/web/pwm.js:439
+(%d de 3 frecuencias)	(%d of 3 frequencies)
+
+#: apps/pwm/web/pwm.js:450
+Guardar	Save
+
+#: apps/pwm/web/pwm.js:451
+Subir	Upload
+
+#: apps/pwm/web/pwm.js:454
+Cargar	Load
+
+#: apps/pwm/web/pwm.js:455
+Bajar	Download
+
+#: apps/pwm/web/pwm.js:456
+Borrar	Delete
+
+#: apps/pwm/web/pwm.js:457
+Todavía no hay presets.	No presets yet.
+
+#: apps/pwm/web/pwm.js:464
+Guardado: %s	Saved: %s
+
+#: apps/pwm/web/pwm.js:472
+el preset no tiene canales	the preset has no channels
+
+#: apps/pwm/web/pwm.js:474
+Cargado: %s	Loaded: %s
+
+#: apps/pwm/web/pwm.js:478
+¿Borrar el preset %s?	Delete the preset %s?
+
+#: apps/pwm/web/pwm.js:494
+Los canales de la app PWM de la placa, en vivo. Las perillas giran como en la placa (Mayúsculas o la rueda: más fino). Los patrones se ven animados acá con su forma, no con la fase de la placa.	The channels of the board's PWM app, live. The knobs turn as on the board (Shift or the wheel: finer). Patterns are animated here with their shape, not with the board's phase.
+
+#: apps/pwm/web/pwm.js:496
+Presets	Presets
+
+#: apps/pwm/web/pwm.js:498
+En /pwm de la tarjeta, una línea por canal. Al cargar uno, los canales encendidos se encienden en la placa.	In /pwm on the card, one line per channel. Loading one turns its enabled channels on on the board.

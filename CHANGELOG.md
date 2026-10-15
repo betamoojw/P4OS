@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **The web portal speaks the board's language.** The portal, the pages the
+  apps bring (23) and the API's messages followed nothing but Spanish: now
+  English and German too, about 1,900 texts, following Settings, Language
+  (the login screen as well). The portal asks the board its language
+  (`/api/auth`) and the catalogs come from the card at `/lang/<code>/`:
+  `_portal.lang` and one `web.<page>.lang` per page, in the packs' format,
+  read by the browser and never by the board. A page marks its texts
+  `P.tr('...')` (docs/PORTAL-PAGES.md, "Languages"), and
+  `tools/gen_lang.py` finds them as it finds `_()`. Numbers and dates take
+  the language's form (a decimal point in English). Nothing in the portal
+  tells a missing file by an error's text any more, only by its 404.
 - **The Programmer speaks the interface's language.** Its messages are
   formatted in the flashing service, which the translation tool did not
   read: with the board in English they came out in Spanish. So did the C6

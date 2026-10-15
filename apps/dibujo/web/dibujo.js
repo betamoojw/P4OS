@@ -18,6 +18,8 @@
  * Only window.P4OS (version 1). */
 const P = window.P4OS;
 const { h, put, toast, fmtBytes, fmtDate, fsList, fsBytes, fsPut, fsDelete, fsMkdir, fsUrl, fsSlug, saveBlob, openApp } = P;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 
 const DIR = '/dibujo', IMP = '/dibujo/importar', TILE = 64, PREVIEW = 160;
 
@@ -153,7 +155,7 @@ function djCompose(d, hidden) {
   return img;
 }
 
-const prettyName = f => { const m = /^dibujo(\d+)\.dib$/.exec(f); return m ? 'Dibujo ' + m[1] : f.replace(/\.dib$/, ''); };
+const prettyName = f => { const m = /^dibujo(\d+)\.dib$/.exec(f); return m ? tr('Dibujo %s', m[1]) : f.replace(/\.dib$/, ''); };
 
 /* A picture the board can import: baseline JPEG (PNG if it has
  * transparency), at most 1280 px on its longest side. */
@@ -173,7 +175,7 @@ async function djForBoard(file) {
 
 function render(main) {
   let alive = true;
-  const grid = h('div', { class: 'djgrid' }, h('p', { class: 'muted' }, 'Cargando…'));
+  const grid = h('div', { class: 'djgrid' }, h('p', { class: 'muted' }, tr('Cargando…')));
   const viewer = h('div', { class: 'card pad', style: 'display:none' });
   const exported = h('div', {}), imports = h('div', {});
   const up = h('input', { type: 'file', accept: 'image/*', multiple: true, style: 'display:none' });
@@ -183,20 +185,20 @@ function render(main) {
     try {
       const r = await fetch(fsUrl(DIR + '/' + name), { headers: { Range: 'bytes=0-' + (20 + PREVIEW * PREVIEW * 2 - 1) } });
       const buf = await r.arrayBuffer(), d = djHead(buf);
-      if (!d) throw new Error('no se lee');
+      if (!d) throw new Error(tr('no se lee'));
       djPreview(buf, d, canvas);
-      sub.textContent = `${d.w} × ${d.h} · ${d.nl} ${d.nl === 1 ? 'capa' : 'capas'}`;
+      sub.textContent = d.nl === 1 ? tr('%d × %d · %d capa', d.w, d.h, d.nl) : tr('%d × %d · %d capas', d.w, d.h, d.nl);
     } catch (e) { sub.textContent = e.message; sub.className = 'bad small'; }
   }
 
   async function open(name, card) {
     grid.querySelectorAll('.djcard').forEach(c => c.classList.toggle('on', c === card));
     viewer.style.display = '';
-    put(viewer, h('p', { class: 'muted' }, 'Armando el dibujo…'));
+    put(viewer, h('p', { class: 'muted' }, tr('Armando el dibujo…')));
     let d;
     try { d = djParse(await fsBytes(DIR + '/' + name)); } catch (e) { put(viewer, h('p', { class: 'bad' }, e.message)); return; }
     if (!alive) return;
-    if (!d) { put(viewer, h('p', { class: 'bad' }, name + ' no se lee')); return; }
+    if (!d) { put(viewer, h('p', { class: 'bad' }, tr('%s no se lee', name))); return; }
     const hidden = new Set(), big = h('canvas', { class: 'djbig' });
     big.width = d.w;
     big.height = d.h;
@@ -211,22 +213,22 @@ function render(main) {
       const cb = h('input', { type: 'checkbox', checked: L.visible, disabled: !L.visible,
         onchange: e => { if (e.target.checked) hidden.delete(i); else hidden.add(i); draw(); } });
       return h('div', { class: 'djlayer' }, thumb,
-        h('label', {}, cb, h('div', { class: 'grow', style: 'min-width:0' }, h('div', { class: 'djell' }, L.name || 'Capa'),
-          h('div', { class: 'muted small' }, (L.visible ? Math.round(L.opacity * 100 / 255) + ' %' : 'oculta en la placa')))));
+        h('label', {}, cb, h('div', { class: 'grow', style: 'min-width:0' }, h('div', { class: 'djell' }, L.name || tr('Capa')),
+          h('div', { class: 'muted small' }, (L.visible ? Math.round(L.opacity * 100 / 255) + ' %' : tr('oculta en la placa'))))));
     });
     put(viewer, h('div', { class: 'djview' }, big,
       h('div', { class: 'djside' },
         h('h3', {}, prettyName(name)),
-        h('div', { class: 'muted small' }, `${d.w} × ${d.h} px · fondo ${(d.bg >>> 24) ? '#' + (d.bg & 0xFFFFFF).toString(16).padStart(6, '0') : 'transparente'}`),
+        h('div', { class: 'muted small' }, (d.bg >>> 24) ? tr('%d × %d px · fondo %s', d.w, d.h, '#' + (d.bg & 0xFFFFFF).toString(16).padStart(6, '0')) : tr('%d × %d px · fondo transparente', d.w, d.h)),
         h('div', { class: 'btns' },
-          h('button', { class: 'btn pri', onclick: () => big.toBlob(b => saveBlob(b, base + '.png'), 'image/png') }, 'Bajar PNG'),
-          h('button', { class: 'btn', onclick: async () => saveBlob(new Blob([await fsBytes(DIR + '/' + name)]), name) }, 'Bajar .dib'),
-          h('button', { class: 'btn', onclick: async () => { try { await openApp('aos.dibujo'); } catch (e) { toast(e.message, true); } } }, 'Abrir la app')),
-        h('div', {}, h('div', { class: 'muted small', style: 'margin-bottom:4px' }, 'Capas (destildá una para sacarla del PNG; el archivo no cambia)'), layers),
+          h('button', { class: 'btn pri', onclick: () => big.toBlob(b => saveBlob(b, base + '.png'), 'image/png') }, tr('Bajar PNG')),
+          h('button', { class: 'btn', onclick: async () => saveBlob(new Blob([await fsBytes(DIR + '/' + name)]), name) }, tr('Bajar .dib')),
+          h('button', { class: 'btn', onclick: async () => { try { await openApp('aos.dibujo'); } catch (e) { toast(e.message, true); } } }, tr('Abrir la app'))),
+        h('div', {}, h('div', { class: 'muted small', style: 'margin-bottom:4px' }, tr('Capas (destildá una para sacarla del PNG; el archivo no cambia)')), layers),
         h('div', { class: 'btns' }, h('button', { class: 'btn red', onclick: async () => {
-          if (!confirm('¿Borrar ' + prettyName(name) + ' de la tarjeta? No se puede deshacer.')) return;
-          try { await fsDelete(DIR + '/' + name); toast('Borrado'); viewer.style.display = 'none'; load(); } catch (e) { toast(e.message, true); }
-        } }, 'Borrar de la tarjeta')))));
+          if (!confirm(tr('¿Borrar %s de la tarjeta? No se puede deshacer.', prettyName(name)))) return;
+          try { await fsDelete(DIR + '/' + name); toast(tr('Borrado')); viewer.style.display = 'none'; load(); } catch (e) { toast(e.message, true); }
+        } }, tr('Borrar de la tarjeta'))))));
   }
 
   function fileRow(dir, a, extra) {
@@ -234,11 +236,11 @@ function render(main) {
       h('img', { class: 'djthumb', src: fsUrl(dir + '/' + a.name) + '&_=' + (a.mtime || a.size), alt: '', loading: 'lazy' }),
       h('div', { class: 'grow' }, h('div', { class: 'mono djell' }, a.name),
         h('div', { class: 'muted small' }, fmtBytes(a.size) + (a.mtime ? ' · ' + fmtDate(a.mtime) : ''))),
-      h('div', { class: 'btns' }, extra, h('a', { class: 'btn', href: fsUrl(dir + '/' + a.name, true) }, 'Bajar'),
+      h('div', { class: 'btns' }, extra, h('a', { class: 'btn', href: fsUrl(dir + '/' + a.name, true) }, tr('Bajar')),
         h('button', { class: 'btn red', onclick: async () => {
-          if (!confirm('¿Borrar ' + a.name + '?')) return;
+          if (!confirm(tr('¿Borrar %s?', a.name))) return;
           try { await fsDelete(dir + '/' + a.name); load(); } catch (e) { toast(e.message, true); }
-        } }, 'Borrar')));
+        } }, tr('Borrar'))));
   }
 
   async function load() {
@@ -253,11 +255,11 @@ function render(main) {
         h('span', { class: 'muted small' }, a.mtime ? fmtDate(a.mtime) : ''));
       preview(a.name, c, sub);
       return card;
-    }) : h('p', { class: 'muted' }, 'Todavía no hay dibujos. Se hacen en la placa, con la app Dibujo.'));
+    }) : h('p', { class: 'muted' }, tr('Todavía no hay dibujos. Se hacen en la placa, con la app Dibujo.')));
     const pngs = files.filter(a => !a.dir && !a.name.startsWith('.') && /\.png$/i.test(a.name));
-    put(exported, pngs.length ? pngs.map(a => fileRow(DIR, a)) : h('p', { class: 'muted small' }, 'Ninguno todavía: en la app, Menú → Exportar PNG.'));
+    put(exported, pngs.length ? pngs.map(a => fileRow(DIR, a)) : h('p', { class: 'muted small' }, tr('Ninguno todavía: en la app, Menú → Exportar PNG.')));
     const pics = imp.filter(a => !a.dir && !a.name.startsWith('.') && /\.(jpe?g|png|bmp)$/i.test(a.name));
-    put(imports, pics.length ? pics.map(a => fileRow(IMP, a)) : h('p', { class: 'muted small' }, 'No hay imágenes subidas.'));
+    put(imports, pics.length ? pics.map(a => fileRow(IMP, a)) : h('p', { class: 'muted small' }, tr('No hay imágenes subidas.')));
   }
 
   up.onchange = async () => {
@@ -266,28 +268,28 @@ function render(main) {
     try { await fsMkdir(IMP); } catch (e) { /* already there */ }
     for (const f of list) {
       try {
-        prog.textContent = 'Preparando ' + f.name + '…';
+        prog.textContent = tr('Preparando %s…', f.name);
         const r = await djForBoard(f);
         const name = fsSlug(f.name.replace(/\.[^.]*$/, ''), 40, 'imagen') + r.ext;
-        await fsPut(IMP + '/' + name, r.blob, x => { prog.textContent = `Subiendo ${name}: ${Math.round(x * 100)} %`; });
-        toast(`${name} (${r.w} × ${r.h}) subida`);
+        await fsPut(IMP + '/' + name, r.blob, x => { prog.textContent = tr('Subiendo %s: %d', name, Math.round(x * 100)) + ' %'; });
+        toast(tr('%s (%d × %d) subida', name, r.w, r.h));
       } catch (e) { toast(f.name + ': ' + e.message, true); }
     }
     prog.textContent = '';
     load();
   };
 
-  put(main, h('h1', {}, 'Dibujo'),
-    h('div', { class: 'card pad' }, h('h3', {}, 'Dibujos'), grid),
+  put(main, h('h1', {}, tr('Dibujo')),
+    h('div', { class: 'card pad' }, h('h3', {}, tr('Dibujos')), grid),
     viewer,
-    h('div', { class: 'card pad' }, h('h3', {}, 'Exportados'), exported),
-    h('div', { class: 'card pad' }, h('h3', {}, 'Imágenes para importar'),
-      h('p', { class: 'muted small' }, 'En la app: Menú → Importar una imagen. Van a una capa nueva, abajo de todo, para calcar o pintar encima.'),
+    h('div', { class: 'card pad' }, h('h3', {}, tr('Exportados')), exported),
+    h('div', { class: 'card pad' }, h('h3', {}, tr('Imágenes para importar')),
+      h('p', { class: 'muted small' }, tr('En la app: Menú → Importar una imagen. Van a una capa nueva, abajo de todo, para calcar o pintar encima.')),
       imports,
-      h('div', { class: 'btns', style: 'margin-top:8px' }, h('button', { class: 'btn pri', onclick: () => up.click() }, 'Subir imágenes'), up), prog),
-    h('p', { class: 'note' }, 'Los dibujos están en /dibujo de la tarjeta, con sus capas (.dib). El PNG que se baja acá lo arma el navegador, igual al que exporta la app.'));
+      h('div', { class: 'btns', style: 'margin-top:8px' }, h('button', { class: 'btn pri', onclick: () => up.click() }, tr('Subir imágenes')), up), prog),
+    h('p', { class: 'note' }, tr('Los dibujos están en /dibujo de la tarjeta, con sus capas (.dib). El PNG que se baja acá lo arma el navegador, igual al que exporta la app.')));
   load();
   return () => { alive = false; };
 }
 
-P.registerPage({ id: 'dibujo', name: 'Dibujo', icon: '✎', render });
+P.registerPage({ id: 'dibujo', name: tr('Dibujo'), icon: '✎', render });

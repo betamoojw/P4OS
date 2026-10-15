@@ -30,8 +30,8 @@ P.registerPage({
 });
 ```
 
-The texts are in Spanish, like the rest of the portal: it has no
-translations.
+The texts are written in Spanish, like the rest of the portal, and go
+through `tr()` to follow the board's language (below, "Languages").
 
 - **`render` is synchronous.** What it returns is the cleanup; an `async`
   render returns a promise and the cleanup is lost. Load the data inside,
@@ -180,3 +180,42 @@ Radio and Cameras were born this way, each with its page in its app; Radio
 has its own JSON API for the keys (`/api/radio`, aos_portal_radio.c). Red is
 an internal app, so its page (the saved sweeps, `/api/net`) lives in the
 firmware's `app.js` with the system's.
+
+## Languages
+
+The portal follows the board's language (Settings, Language; since 0.15.1).
+Its texts are written in Spanish and the Spanish is the key, as on the
+board: `P.tr('texto')` gives the translation, or the Spanish itself when
+there is none. `%s` and `%d` take the arguments, in order:
+
+```js
+const P = window.P4OS;
+/* on a firmware before 0.15.1 there is no P.tr: the Spanish, formatted */
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+
+P.registerPage({ id: 'hola', name: tr('Hola'), icon: '☺', render(main) {
+  P.put(main, P.h('h1', {}, tr('Hola')), P.h('p', {}, tr('%s archivos en la tarjeta', n)));
+} });
+```
+
+- **One literal per `tr()`,** in single or double quotes and on one line:
+  `tools/gen_lang.py` finds them with a regex. Not a template literal and
+  not a concatenation (`tr('Hay ' + n)`): a sentence with a value inside is
+  one key with `%s`. `N_('...')` only marks a text (a table of labels) that
+  a `tr()` translates where it is shown.
+- **`tr` and not `t`:** `t` is a local everywhere.
+- **The catalogs** are the board's packs' format, one per page:
+  `lang/<code>/web.<page>.lang` for `apps/<app>/web/<page>.js` (and
+  `_portal.lang` for the portal itself). `python3 tools/gen_lang.py template
+  en --only web.<page>.lang` writes it with every key, `check en` says what
+  is missing; `tools/install_lang.sh` puts them on the card, and the
+  browser asks for them at `/lang/<code>/<file>` (public, like the page:
+  the login screen is translated too). They never go into the firmware nor
+  into the board's memory.
+- **Numbers for the eye** with `P.num(v, decimals)` (a comma in Spanish and
+  German, a point in English), dates with the board's language
+  (`P.lang()` gives its code). What is sent to the board or written to a
+  file keeps its own format.
+- **Never test a message's text** (`/no existe/.test(e.message)`): the
+  board's API answers in its language too.
+

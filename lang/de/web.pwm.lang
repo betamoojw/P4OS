@@ -1,0 +1,187 @@
+# amoledos-lang 1   es -> de
+# web.pwm.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/pwm/web/pwm.js:27
+PWM	PWM
+
+#: apps/pwm/web/pwm.js:27
+Servo	Servo
+
+#: apps/pwm/web/pwm.js:27
+LED	LED
+
+#: apps/pwm/web/pwm.js:27
+Nivel	Pegel
+
+#: apps/pwm/web/pwm.js:28
+Fijo	Fest
+
+#: apps/pwm/web/pwm.js:28
+Respirar	Atmen
+
+#: apps/pwm/web/pwm.js:28
+Barrido	Schwenk
+
+#: apps/pwm/web/pwm.js:28
+Estrobo	Stroboskop
+
+#: apps/pwm/web/pwm.js:29
+Rampa	Rampe
+
+#: apps/pwm/web/pwm.js:29
+Seno	Sinus
+
+#: apps/pwm/web/pwm.js:29
+Pasos	Schritte
+
+#: apps/pwm/web/pwm.js:117
+%s · %d bits	%s · %d Bit
+
+#: apps/pwm/web/pwm.js:119
+ciclo %s	Tastgrad %s
+
+#: apps/pwm/web/pwm.js:120
+%d de 255	%d von 255
+
+#: apps/pwm/web/pwm.js:225
+#: apps/pwm/web/pwm.js:492
+Generador PWM	PWM-Generator
+
+#: apps/pwm/web/pwm.js:237
+nombre del preset	Name des Presets
+
+#: apps/pwm/web/pwm.js:249
+No se pudo mandar: %s	Senden fehlgeschlagen: %s
+
+#: apps/pwm/web/pwm.js:252
+La app no está abierta en la placa: lo toma al abrirla	Die App ist auf der Platine nicht geöffnet: Sie übernimmt es beim Öffnen
+
+#: apps/pwm/web/pwm.js:279
+Borrar el canal	Kanal löschen
+
+#: apps/pwm/web/pwm.js:294
+Frecuencia	Frequenz
+
+#: apps/pwm/web/pwm.js:316
+Pin	Pin
+
+#: apps/pwm/web/pwm.js:324
+Patrón	Muster
+
+#: apps/pwm/web/pwm.js:325
+Período	Periode
+
+#: apps/pwm/web/pwm.js:326
+Desde	Von
+
+#: apps/pwm/web/pwm.js:327
+Hasta	Bis
+
+#: apps/pwm/web/pwm.js:329
+Pasos (%)	Schritte (%)
+
+#: apps/pwm/web/pwm.js:344
+Invertir la salida	Ausgang invertieren
+
+#: apps/pwm/web/pwm.js:345
+Mínimo	Minimum
+
+#: apps/pwm/web/pwm.js:345
+Máximo	Maximum
+
+#: apps/pwm/web/pwm.js:346
+Recorrido	Stellweg
+
+#: apps/pwm/web/pwm.js:347
+Gamma	Gamma
+
+#: apps/pwm/web/pwm.js:348
+Con 1 kΩ en serie y 1 µF a GND: de 0 a 3,3 V.	Mit 1 kΩ in Reihe und 1 µF gegen GND: 0 bis 3,3 V.
+
+#: apps/pwm/web/pwm.js:364
+sin pin	kein Pin
+
+#: apps/pwm/web/pwm.js:365
+GPIO%d · pata %d (otro canal)	GPIO%d · Pin %d (anderer Kanal)
+
+#: apps/pwm/web/pwm.js:365
+GPIO%d · pata %d	GPIO%d · Pin %d
+
+#: apps/pwm/web/pwm.js:370
+real %s · %d bits	real %s · %d Bit
+
+#: apps/pwm/web/pwm.js:370
+apagado	aus
+
+#: apps/pwm/web/pwm.js:380
+entre %s y %s	zwischen %s und %s
+
+#: apps/pwm/web/pwm.js:421
+La app está abierta en la placa	Die App ist auf der Platine geöffnet
+
+#: apps/pwm/web/pwm.js:421
+La app no está abierta en la placa: las salidas están apagadas	Die App ist auf der Platine nicht geöffnet: Die Ausgänge sind aus
+
+#: apps/pwm/web/pwm.js:423
+Abierta en la placa	Auf der Platine geöffnet
+
+#: apps/pwm/web/pwm.js:423
+Abrir en la placa	Auf der Platine öffnen
+
+#: apps/pwm/web/pwm.js:424
+Apagar todo	Alles ausschalten
+
+#: apps/pwm/web/pwm.js:432
++ Canal	+ Kanal
+
+#: apps/pwm/web/pwm.js:438
+Ningún PWM encendido	Kein PWM an
+
+#: apps/pwm/web/pwm.js:439
+(%d de 3 frecuencias): el LEDC no da más de tres	(%d von 3 Frequenzen): Der LEDC kann nicht mehr als drei
+
+#: apps/pwm/web/pwm.js:439
+(%d de 3 frecuencias)	(%d von 3 Frequenzen)
+
+#: apps/pwm/web/pwm.js:450
+Guardar	Speichern
+
+#: apps/pwm/web/pwm.js:451
+Subir	Hochladen
+
+#: apps/pwm/web/pwm.js:454
+Cargar	Laden
+
+#: apps/pwm/web/pwm.js:455
+Bajar	Herunterladen
+
+#: apps/pwm/web/pwm.js:456
+Borrar	Löschen
+
+#: apps/pwm/web/pwm.js:457
+Todavía no hay presets.	Noch keine Presets.
+
+#: apps/pwm/web/pwm.js:464
+Guardado: %s	Gespeichert: %s
+
+#: apps/pwm/web/pwm.js:472
+el preset no tiene canales	das Preset hat keine Kanäle
+
+#: apps/pwm/web/pwm.js:474
+Cargado: %s	Geladen: %s
+
+#: apps/pwm/web/pwm.js:478
+¿Borrar el preset %s?	Preset %s löschen?
+
+#: apps/pwm/web/pwm.js:494
+Los canales de la app PWM de la placa, en vivo. Las perillas giran como en la placa (Mayúsculas o la rueda: más fino). Los patrones se ven animados acá con su forma, no con la fase de la placa.	Die Kanäle der PWM-App der Platine, live. Die Drehknöpfe drehen sich wie auf der Platine (Umschalttaste oder Mausrad: feiner). Muster werden hier mit ihrer Form animiert, nicht mit der Phase der Platine.
+
+#: apps/pwm/web/pwm.js:496
+Presets	Presets
+
+#: apps/pwm/web/pwm.js:498
+En /pwm de la tarjeta, una línea por canal. Al cargar uno, los canales encendidos se encienden en la placa.	In /pwm auf der Karte, eine Zeile pro Kanal. Beim Laden werden die eingeschalteten Kanäle auf der Platine eingeschaltet.

@@ -5,6 +5,9 @@
 const P = window.P4OS;
 const { main, h, put, $, api, post, toast, row, fmtBytes, fmtDate, fsPut, fsList, fsDelete, fsMkdir, fsUrl,
   fsText, fsBytes, openApp, saveBlob, fsSlug } = P;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 
 if (!document.getElementById('css-visor3d')) {
   const st = document.createElement('style');
@@ -97,7 +100,7 @@ function v3ReadOBJ(txt, mats) {
  * and each material's base colour (linear in glTF: to sRGB for the screen). */
 function v3ReadGLB(buf) {
   const dv = new DataView(buf);
-  if (buf.byteLength < 20 || dv.getUint32(0, true) !== 0x46546C67) throw new Error('no es un GLB');
+  if (buf.byteLength < 20 || dv.getUint32(0, true) !== 0x46546C67) throw new Error(tr('no es un GLB'));
   let off = 12, json = null, bin = null;
   while (off + 8 <= buf.byteLength) {
     const len = dv.getUint32(off, true), type = dv.getUint32(off + 4, true);
@@ -105,8 +108,8 @@ function v3ReadGLB(buf) {
     else if (type === 0x004E4942) bin = new DataView(buf, off + 8, len);
     off += 8 + len;
   }
-  if (!json || !bin) throw new Error('no es un GLB');
-  if ((json.extensionsUsed || []).includes('KHR_draco_mesh_compression')) throw new Error('un GLB comprimido con Draco no se puede leer');
+  if (!json || !bin) throw new Error(tr('no es un GLB'));
+  if ((json.extensionsUsed || []).includes('KHR_draco_mesh_compression')) throw new Error(tr('un GLB comprimido con Draco no se puede leer'));
   const accessor = i => {
     const a = json.accessors[i], bv = json.bufferViews[a.bufferView];
     const n = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4 }[a.type];
@@ -161,10 +164,10 @@ function v3ReadGLB(buf) {
 /* An M3D from the card, for the preview. */
 function v3ReadM3D(buf) {
   const dv = new DataView(buf);
-  if (buf.byteLength < 16 || dv.getUint32(0, true) !== 0x3144334D) throw new Error('no es un M3D');
+  if (buf.byteLength < 16 || dv.getUint32(0, true) !== 0x3144334D) throw new Error(tr('no es un M3D'));
   const nv = dv.getUint32(4, true), nt = dv.getUint32(8, true), fl = dv.getUint32(12, true);
   const o1 = 16 + nv * 12, o2 = o1 + nt * 12;
-  if (o2 + (fl & 1 ? nt * 2 : 0) > buf.byteLength) throw new Error('el M3D está cortado');
+  if (o2 + (fl & 1 ? nt * 2 : 0) > buf.byteLength) throw new Error(tr('el M3D está cortado'));
   const v = new Float32Array(buf.slice(16, o1)), idx = new Uint32Array(buf.slice(o1, o2));
   return { v, idx, col: fl & 1 ? new Uint16Array(buf.slice(o2, o2 + nt * 2)) : null, nt, nv };
 }
@@ -350,13 +353,15 @@ async function pageVisor3d() {
   const info = h('div', { class: 'note', style: 'white-space:pre-line;margin:12px 0 0' });
   const bar = h('div', { class: 'prog', style: 'display:none' }, h('div'));
   const cap = h('input', { type: 'range', min: 5000, max: V3_BUDGET, step: 5000, value: V3_BUDGET });
-  const capv = h('b', {}, V3_BUDGET.toLocaleString('es-AR'));
+  const capv = h('b', {}, V3_BUDGET.toLocaleString(LOC));
   const color = h('input', { type: 'color', value: V3_BASE, class: 'v3color' });
-  const conv = h('button', { class: 'btn pri', disabled: true, onclick: () => save(false) }, 'Convertir y guardar en la placa');
-  const rawBtn = h('button', { class: 'btn', style: 'display:none', onclick: () => save(true) }, 'Subir el STL tal cual');
+  const conv = h('button', { class: 'btn pri', disabled: true, onclick: () => save(false) }, tr('Convertir y guardar en la placa'));
+  const rawBtn = h('button', { class: 'btn', style: 'display:none', onclick: () => save(true) }, tr('Subir el STL tal cual'));
   const input = h('input', { type: 'file', multiple: true, accept: '.stl,.obj,.mtl,.glb', style: 'display:none', onchange: e => read([...e.target.files]) });
-  const drop = h('div', { class: 'drop', style: 'margin-top:0' }, 'Soltá acá un STL, un OBJ (con su .mtl) o un GLB, o ',
-    h('a', { href: '#3d', onclick: e => { e.preventDefault(); input.click(); } }, 'elegilo'), '.', input);
+  /* one sentence with the link inside: split where the link goes */
+  const dropTxt = tr('Soltá acá un STL, un OBJ (con su .mtl) o un GLB, o %s.', '\x01').split('\x01');
+  const drop = h('div', { class: 'drop', style: 'margin-top:0' }, dropTxt[0],
+    h('a', { href: '#3d', onclick: e => { e.preventDefault(); input.click(); } }, tr('elegilo')), dropTxt[1] || '', input);
   drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
   drop.ondragleave = () => drop.classList.remove('over');
   drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); read([...e.dataTransfer.files]); };
@@ -371,28 +376,33 @@ async function pageVisor3d() {
       h('div', { class: 'ico' }, /\.m3d$/i.test(f.name) ? '◆' : '◇'),
       h('div', { class: 'grow' }, h('div', { class: 'mono ell' }, f.name), h('div', { class: 'muted small' }, fmtBytes(f.size) + (f.mtime ? ' · ' + fmtDate(f.mtime) : ''))),
       h('div', { class: 'btns' },
-        h('button', { class: 'btn', onclick: () => preview(f) }, 'Ver'),
-        h('a', { class: 'btn', href: fsUrl(V3_DIR + '/' + f.name, true) }, 'Bajar'),
+        h('button', { class: 'btn', onclick: () => preview(f) }, tr('Ver')),
+        h('a', { class: 'btn', href: fsUrl(V3_DIR + '/' + f.name, true) }, tr('Bajar')),
         h('button', { class: 'btn red', onclick: async () => {
-          if (!confirm(`¿Borrar ${f.name} de la placa?`)) return;
-          try { await fsDelete(V3_DIR + '/' + f.name); toast('Borrado ' + f.name); load(); } catch (e) { toast(e.message, true); }
-        } }, 'Borrar')))) :
-      h('div', { class: 'row muted' }, 'Todavía no hay modelos en la placa.'));
+          if (!confirm(tr('¿Borrar %s de la placa?', f.name))) return;
+          try { await fsDelete(V3_DIR + '/' + f.name); toast(tr('Borrado %s', f.name)); load(); } catch (e) { toast(e.message, true); }
+        } }, tr('Borrar'))))) :
+      h('div', { class: 'row muted' }, tr('Todavía no hay modelos en la placa.')));
   }
 
   /* one on the card, drawn as the viewer will (an STL welded and, past the budget, reduced) */
   async function preview(f) {
     src = null; rawStl = null; conv.disabled = true; rawBtn.style.display = 'none';
-    say('Leyendo ' + f.name + '…');
+    say(tr('Leyendo %s…', f.name));
     try {
       const buf = await fsBytes(V3_DIR + '/' + f.name);
       await wait();
-      if (/\.m3d$/i.test(f.name)) { model = v3ReadM3D(buf); say(`${f.name}: ${model.nt.toLocaleString('es-AR')} triángulos, ${model.nv.toLocaleString('es-AR')} vértices${model.col ? ', con colores' : ''}.`); }
-      else {
+      const fmt = x => x.toLocaleString(LOC);
+      if (/\.m3d$/i.test(f.name)) {
+        model = v3ReadM3D(buf);
+        say(model.col ? tr('%s: %s triángulos, %s vértices, con colores.', f.name, fmt(model.nt), fmt(model.nv))
+          : tr('%s: %s triángulos, %s vértices.', f.name, fmt(model.nt), fmt(model.nv)));
+      } else {
         const s = v3ReadSTL(buf), n = s.pos.length / 9;
-        say(`${f.name}: soldando ${n.toLocaleString('es-AR')} triángulos…`); await wait();
+        say(tr('%s: soldando %s triángulos…', f.name, fmt(n))); await wait();
         model = v3Reduce(s, V3_BUDGET);
-        say(`${f.name}: ${n.toLocaleString('es-AR')} triángulos en el archivo` + (model.nt < n - n / 50 ? `, ${model.nt.toLocaleString('es-AR')} al reducirlo` : '') + '.');
+        say(model.nt < n - n / 50 ? tr('%s: %s triángulos en el archivo, %s al reducirlo.', f.name, fmt(n), fmt(model.nt))
+          : tr('%s: %s triángulos en el archivo.', f.name, fmt(n)));
       }
       v3View = { yaw: 0.6, pitch: 0.35, zoom: 1, spin: true };
       draw();
@@ -402,39 +412,46 @@ async function pageVisor3d() {
   async function read(fs) {
     src = null; model = null; rawStl = null; raw = null; conv.disabled = true; rawBtn.style.display = 'none';
     if (!fs.length) { say(''); draw(); return; }
-    say('Leyendo…');
+    say(tr('Leyendo…'));
     try {
       const mtl = fs.find(f => /\.mtl$/i.test(f.name)), m = fs.find(f => /\.(stl|obj|glb)$/i.test(f.name));
-      if (!m) throw new Error('hace falta un .stl, un .obj o un .glb');
+      if (!m) throw new Error(tr('hace falta un .stl, un .obj o un .glb'));
       name = fsSlug(m.name.replace(/\.[^.]+$/, ''), 40, 'modelo');
       const ext = m.name.split('.').pop().toLowerCase();
       if (ext === 'stl') { rawStl = await m.arrayBuffer(); src = v3ReadSTL(rawStl); raw = m.name; }
       else if (ext === 'obj') src = v3ReadOBJ(await m.text(), mtl ? v3ReadMTL(await mtl.text()) : null);
       else src = v3ReadGLB(await m.arrayBuffer());
-      if (!src.pos.length) throw new Error('no tiene triángulos');
+      if (!src.pos.length) throw new Error(tr('no tiene triángulos'));
       await process();
       conv.disabled = false;
       if (rawStl) rawBtn.style.display = '';
-    } catch (e) { say('No se pudo leer: ' + (e.message || e), true); draw(); }
+    } catch (e) { say(tr('No se pudo leer: %s', e.message || e), true); draw(); }
   }
 
   async function process() {
     if (!src) return;
     const n = src.pos.length / 9, c = +cap.value;
-    say(n > c ? 'Reduciendo…' : 'Soldando…');
+    say(n > c ? tr('Reduciendo…') : tr('Soldando…'));
     await wait();
     model = v3Reduce(src, c);
     stats = v3Orient(model);
-    const fmt = x => x.toLocaleString('es-AR');
-    say(`${fmt(n)} triángulos en el archivo → ${fmt(model.nt)}${n > c ? ' al reducir' : ', sin reducir'}, ${fmt(model.nv)} vértices${src.col ? ', con colores' : ''}.\n` +
-      `${fmt(stats.pieces)} ${stats.pieces === 1 ? 'pieza' : 'piezas'} (${fmt(stats.open)} abiertas), ${fmt(stats.flipped)} triángulos dados vuelta hacia afuera.`);
+    const fmt = x => x.toLocaleString(LOC);
+    const l1 = n > c
+      ? (src.col ? tr('%s triángulos en el archivo → %s al reducir, %s vértices, con colores.', fmt(n), fmt(model.nt), fmt(model.nv))
+        : tr('%s triángulos en el archivo → %s al reducir, %s vértices.', fmt(n), fmt(model.nt), fmt(model.nv)))
+      : (src.col ? tr('%s triángulos en el archivo → %s, sin reducir, %s vértices, con colores.', fmt(n), fmt(model.nt), fmt(model.nv))
+        : tr('%s triángulos en el archivo → %s, sin reducir, %s vértices.', fmt(n), fmt(model.nt), fmt(model.nv)));
+    const l2 = stats.pieces === 1
+      ? tr('%s pieza (%s abiertas), %s triángulos dados vuelta hacia afuera.', fmt(stats.pieces), fmt(stats.open), fmt(stats.flipped))
+      : tr('%s piezas (%s abiertas), %s triángulos dados vuelta hacia afuera.', fmt(stats.pieces), fmt(stats.open), fmt(stats.flipped));
+    say(l1 + '\n' + l2);
     v3View = { yaw: 0.6, pitch: 0.35, zoom: 1, spin: true };
     draw();
   }
 
   async function save(asIs) {
     const file = name + (asIs ? '.stl' : '.m3d');
-    if (files.some(f => f.name === file) && !confirm(`Ya hay un ${file} en la placa. ¿Reemplazarlo?`)) return;
+    if (files.some(f => f.name === file) && !confirm(tr('Ya hay un %s en la placa. ¿Reemplazarlo?', file))) return;
     let body;
     if (asIs) body = rawStl;
     else {
@@ -447,14 +464,14 @@ async function pageVisor3d() {
     try {
       await fsMkdir(V3_DIR);
       await fsPut(V3_DIR + '/' + file, body, f => { bar.firstChild.style.width = (f * 100) + '%'; });
-      toast('Guardado ' + V3_DIR + '/' + file + ' (' + fmtBytes(body.byteLength) + ')');
+      toast(tr('Guardado %s (%s)', V3_DIR + '/' + file, fmtBytes(body.byteLength)));
       load();
     } catch (e) { toast(e.message, true); }
     conv.disabled = false;
     bar.style.display = 'none';
   }
 
-  cap.oninput = () => { capv.textContent = (+cap.value).toLocaleString('es-AR'); };
+  cap.oninput = () => { capv.textContent = (+cap.value).toLocaleString(LOC); };
   cap.onchange = () => { if (src) process(); };
   color.oninput = draw;
   let drag = null;
@@ -468,22 +485,22 @@ async function pageVisor3d() {
   cv.onwheel = e => { e.preventDefault(); v3View.zoom = Math.max(0.4, Math.min(4, v3View.zoom * Math.exp(-e.deltaY * 0.0015))); draw(); };
   cv.ondblclick = () => { v3View = { yaw: 0.6, pitch: 0.35, zoom: 1, spin: true }; draw(); };
 
-  put(main, h('h1', {}, 'Visor 3D'),
+  put(main, h('h1', {}, tr('Visor 3D')),
     h('div', { class: 'btns', style: 'margin-bottom:14px' },
-      h('button', { class: 'btn pri', onclick: () => openApp('demo.visor3d').then(() => toast('Abriendo el Visor 3D en la placa'), e => toast(e.message, true)) }, 'Abrir el Visor 3D en la placa'),
-      h('span', { class: 'muted small' }, 'Los modelos van en /3d de la tarjeta, STL o M3D.')),
+      h('button', { class: 'btn pri', onclick: () => openApp('demo.visor3d').then(() => toast(tr('Abriendo el Visor 3D en la placa')), e => toast(e.message, true)) }, tr('Abrir el Visor 3D en la placa')),
+      h('span', { class: 'muted small' }, tr('Los modelos van en /3d de la tarjeta, STL o M3D.'))),
     list,
-    h('h2', {}, 'Agregar un modelo'),
+    h('h2', {}, tr('Agregar un modelo')),
     h('div', { class: 'v3cols' },
       h('div', { class: 'card pad' }, drop,
-        h('label', { class: 'f' }, 'Triángulos como máximo: ', capv),
+        h('label', { class: 'f' }, tr('Triángulos como máximo:'), ' ', capv),
         cap,
-        h('p', { class: 'note', style: 'margin:4px 0 0' }, 'El visor dibuja hasta 150 000; más que eso lo reduciría él mismo al abrirlo. Menos triángulos es más fluido al girar.'),
-        h('label', { class: 'f' }, 'Color, si el archivo no trae'), color,
+        h('p', { class: 'note', style: 'margin:4px 0 0' }, tr('El visor dibuja hasta 150 000; más que eso lo reduciría él mismo al abrirlo. Menos triángulos es más fluido al girar.')),
+        h('label', { class: 'f' }, tr('Color, si el archivo no trae')), color,
         info, bar,
         h('div', { class: 'btns', style: 'margin-top:14px' }, conv, rawBtn)),
-      h('div', { class: 'v3view' }, cv, h('p', { class: 'note' }, 'Vista previa, con la luz de la placa: arrastrá para girar, la rueda acerca, doble clic vuelve al principio.'))),
-    h('p', { class: 'note' }, 'Todo se hace en este navegador: el STL, el OBJ o el GLB se leen, se sueldan, cada pieza suelta se orienta hacia afuera (el visor no dibuja la cara de atrás de un modelo cerrado) y se guarda un .m3d con sus colores. De un GLB se toma el color base de cada material; las texturas no.'));
+      h('div', { class: 'v3view' }, cv, h('p', { class: 'note' }, tr('Vista previa, con la luz de la placa: arrastrá para girar, la rueda acerca, doble clic vuelve al principio.')))),
+    h('p', { class: 'note' }, tr('Todo se hace en este navegador: el STL, el OBJ o el GLB se leen, se sueldan, cada pieza suelta se orienta hacia afuera (el visor no dibuja la cara de atrás de un modelo cerrado) y se guarda un .m3d con sus colores. De un GLB se toma el color base de cada material; las texturas no.')));
   draw();
   load();
   cancelAnimationFrame(v3Loop);
@@ -500,4 +517,4 @@ async function pageVisor3d() {
   v3Loop = requestAnimationFrame(spin);
 }
 
-P.registerPage({ id: '3d', name: 'Visor 3D', icon: '◆', render: () => { pageVisor3d(); } });
+P.registerPage({ id: '3d', name: tr('Visor 3D'), icon: '◆', render: () => { pageVisor3d(); } });

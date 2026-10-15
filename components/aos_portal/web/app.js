@@ -8,6 +8,50 @@ const main = $('#main');
 /* replaceChildren without the null/false holes a conditional leaves */
 const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(k => k != null && k !== false));
 
+/* ---- languages (docs/PORTAL-PAGES.md, "Languages") ----
+ * The portal is written in Spanish and its texts are the keys, as on the
+ * board: tr('...') looks one up in the catalogs of the board's language and
+ * gives the Spanish back when there is none. They come from the card, in the
+ * packs' format: /lang/<code>/_portal.lang for this file and
+ * web.<page>.lang for each app's page (tools/gen_lang.py writes them). %s
+ * and %d take the arguments in order. N_() only marks a text that a tr()
+ * translates later (a table). tr and not t: t is a local all over the file. */
+let LANG = 'es', LOCALE = 'es-AR';
+const TR = new Map();
+function tr(s, ...a) {
+  const r = TR.has(s) ? TR.get(s) : s;
+  if (!a.length) return r;
+  let i = 0;
+  return r.replace(/%[sd%]/g, m => m === '%%' ? '%' : String(a[i++]));
+}
+const N_ = s => s;
+/* a number for the eye: the decimal comma in Spanish and German, the point in English */
+const num = (v, d) => v == null || Number.isNaN(v) ? '--' : v.toLocaleString(LOCALE, { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: false });
+const unesc = s => s.replace(/\\(.)/g, (_, c) => c === 'n' ? '\n' : c === 't' ? '\t' : c);
+async function loadCatalog(file) {
+  if (LANG === 'es') return;
+  try {
+    const r = await fetch(`/lang/${LANG}/${file}`, { cache: 'no-store' });
+    if (!r.ok) return;
+    for (const line of (await r.text()).split('\n')) {
+      if (!line || line[0] === '#') continue;
+      const tab = line.indexOf('\t');
+      if (tab > 0 && tab < line.length - 1) TR.set(unesc(line.slice(0, tab)), unesc(line.slice(tab + 1).replace(/\r$/, '')));
+    }
+  } catch {}
+}
+/* the menu that index.html brings, translated where it stands */
+const NAV_NAMES = [N_('Pantalla'), N_('Inicio'), N_('Wi-Fi'), N_('Red'), N_('Terminal'), N_('Programador'), N_('Banco'),
+  N_('Macro pad'), N_('Expansión'), N_('Archivos'), N_('Ajustes'), N_('Firmware'), N_('Registro')];
+async function setLang(code) {
+  LANG = /^[a-z]{2,8}$/.test(code || '') ? code : 'es';
+  LOCALE = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[LANG] || LANG;
+  document.documentElement.lang = LANG;
+  await loadCatalog('_portal.lang');
+  if (TR.size) for (const sp of document.querySelectorAll('#nav a > span:last-child'))
+    if (NAV_NAMES.includes(sp.textContent)) sp.textContent = tr(sp.textContent);
+}
+
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs || {})) {
@@ -27,7 +71,7 @@ async function api(path, opts = {}) {
   let j;
   try { j = JSON.parse(t); } catch { j = t; }
   if (r.status === 401 && j && j.login) loginScreen();
-  if (!r.ok) throw new Error((j && j.error) || r.statusText);
+  if (!r.ok) { const err = new Error((j && j.error) || r.statusText); err.status = r.status; throw err; }
   return j;
 }
 const post = (path, body) => api(path, { method: 'POST', body: body == null ? '' : JSON.stringify(body) });
@@ -42,8 +86,8 @@ function toast(msg, bad) {
   toastT = setTimeout(() => t.classList.remove('on'), 2400);
 }
 
-const fmtBytes = b => b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(1).replace('.', ',') + ' KB'
-  : b < 1073741824 ? (b / 1048576).toFixed(1).replace('.', ',') + ' MB' : (b / 1073741824).toFixed(1).replace('.', ',') + ' GB';
+const fmtBytes = b => b < 1024 ? b + ' B' : b < 1048576 ? num(b / 1024, 1) + ' KB'
+  : b < 1073741824 ? num(b / 1048576, 1) + ' MB' : num(b / 1073741824, 1) + ' GB';
 const fmtUptime = s => s < 3600 ? Math.floor(s / 60) + ' min' : Math.floor(s / 3600) + ' h ' + Math.floor(s % 3600 / 60) + ' min';
 const row = (label, value, cls) => h('div', { class: 'row' }, h('div', { class: 'grow' }, label), h('div', { class: 'val ' + (cls || '') }, value));
 
@@ -53,12 +97,12 @@ async function refreshInfo() {
   try {
     info = await api('info');
     $('#devname').textContent = info.name;
-    $('#devsub').textContent = (info.ip || 'sin red') + ' · ' + info.firmware;
+    $('#devsub').textContent = (info.ip || tr('sin red')) + ' · ' + info.firmware;
     $('#dot').className = 'dot on';
     document.title = info.name + ' · P4OS';
   } catch {
     $('#dot').className = 'dot off';
-    $('#devsub').textContent = 'sin conexión';
+    $('#devsub').textContent = tr('sin conexión');
   }
 }
 
@@ -66,7 +110,7 @@ async function refreshInfo() {
 let live = false, liveT, shotBusy = false;
 
 function pagePantalla() {
-  const img = h('img', { alt: 'pantalla', draggable: 'false' });
+  const img = h('img', { alt: tr('pantalla'), draggable: 'false' });
   const busy = h('div', { class: 'busy' });
   const shot = async () => {
     if (shotBusy) return;
@@ -107,7 +151,7 @@ function pagePantalla() {
     c.getContext('2d').drawImage(img, 0, 0);
     c.toBlob(b => { const a = h('a', { href: URL.createObjectURL(b), download: `${info.name || 'p4os'}-${Date.now()}.png` }); a.click(); });
   };
-  const liveBtn = h('button', { class: 'btn', onclick: () => setLive(!live) }, 'En vivo');
+  const liveBtn = h('button', { class: 'btn', onclick: () => setLive(!live) }, tr('En vivo'));
   const setLive = on => {
     live = on;
     liveBtn.className = 'btn' + (on ? ' pri' : '');
@@ -115,28 +159,28 @@ function pagePantalla() {
     if (on) liveT = setInterval(() => { if (!document.hidden && location.hash === '#pantalla') shot(); }, 1200);
   };
   const apps = h('select', { onchange: async e => { if (!e.target.value) return; await api('open?id=' + encodeURIComponent(e.target.value), { method: 'POST' }); e.target.value = ''; after(); } },
-    h('option', { value: '' }, 'Abrir una app…'));
+    h('option', { value: '' }, tr('Abrir una app…')));
   api('apps').then(list => list.sort((a, b) => a.name.localeCompare(b.name)).forEach(a => apps.append(h('option', { value: a.id }, a.name)))).catch(() => {});
   const side = h('div', { class: 'side' },
     h('div', { class: 'btns' },
-      h('button', { class: 'btn', onclick: nav('home') }, 'Inicio'),
-      h('button', { class: 'btn', onclick: nav('back') }, 'Atrás'),
-      h('button', { class: 'btn', onclick: nav('rotate') }, 'Girar'),
+      h('button', { class: 'btn', onclick: nav('home') }, tr('Inicio')),
+      h('button', { class: 'btn', onclick: nav('back') }, tr('Atrás')),
+      h('button', { class: 'btn', onclick: nav('rotate') }, tr('Girar')),
       liveBtn,
-      h('button', { class: 'btn', onclick: save }, 'Guardar PNG')),
+      h('button', { class: 'btn', onclick: save }, tr('Guardar PNG'))),
     h('div', { style: 'margin-top:12px' }, apps),
-    h('p', { class: 'note' }, 'Un clic es un toque; arrastrar es deslizar. Desde el borde de abajo hacia arriba vas al inicio, como en la placa.'),
-    h('h2', {}, 'La placa'),
+    h('p', { class: 'note' }, tr('Un clic es un toque; arrastrar es deslizar. Desde el borde de abajo hacia arriba vas al inicio, como en la placa.')),
+    h('h2', {}, tr('La placa')),
     h('div', { class: 'card', id: 'infocard' }));
-  put(main, h('h1', {}, 'Pantalla'), h('div', { class: 'screen-wrap' }, h('div', { class: 'screen' }, img, busy), side));
+  put(main, h('h1', {}, tr('Pantalla')), h('div', { class: 'screen-wrap' }, h('div', { class: 'screen' }, img, busy), side));
   const card = $('#infocard');
   const fill = () => put(card, 
-    row('Nombre', info.name + '.local'), row('Placa', info.board), row('Firmware', info.firmware),
-    row('Dirección', info.ip || 'sin red'), row('Red', info.ssid ? `${info.ssid} (${info.rssi} dBm)` : '—'),
-    row('Encendida hace', fmtUptime(info.uptime_s || 0)),
-    row('Memoria libre', `${Math.round((info.heap_internal || 0) / 1024)} KB internos · ${fmtBytes(info.heap_psram || 0)} PSRAM`),
-    row('microSD', info.sd_total ? `${fmtBytes(info.sd_free)} libres de ${fmtBytes(info.sd_total)}` : 'sin tarjeta'),
-    row('Hora', info.time || 'sin hora'));
+    row(tr('Nombre'), info.name + '.local'), row(tr('Placa'), info.board), row('Firmware', info.firmware),
+    row(tr('Dirección'), info.ip || tr('sin red')), row(tr('Red'), info.ssid ? `${info.ssid} (${info.rssi} dBm)` : '—'),
+    row(tr('Encendida hace'), fmtUptime(info.uptime_s || 0)),
+    row(tr('Memoria libre'), tr('%s KB internos · %s PSRAM', Math.round((info.heap_internal || 0) / 1024), fmtBytes(info.heap_psram || 0))),
+    row('microSD', info.sd_total ? tr('%s libres de %s', fmtBytes(info.sd_free), fmtBytes(info.sd_total)) : tr('sin tarjeta')),
+    row(tr('Hora'), info.time || tr('sin hora')));
   refreshInfo().then(fill);
   shot();
   setLive(live);
@@ -145,44 +189,44 @@ function pagePantalla() {
 /* ---- Wi-Fi ---- */
 async function pageWifi() {
   const st = h('div', { class: 'card' });
-  const list = h('div', { class: 'card' }, h('div', { class: 'row muted' }, 'Tocá Buscar redes.'));
+  const list = h('div', { class: 'card' }, h('div', { class: 'row muted' }, tr('Tocá Buscar redes.')));
   const form = h('div');
   const load = async () => {
     const w = await api('wifi');
     const color = w.state === 'connected' ? 'ok' : w.state === 'failed' ? 'bad' : 'muted';
-    const names = { connected: 'Conectada', connecting: 'Conectando…', failed: 'Sin conexión', off: 'Apagado' };
-    put(st, row('Estado', names[w.state] || w.state, color), row('Red', w.ssid || '—'),
-      row('Dirección', w.ip || '—'), row('Señal', w.state === 'connected' ? w.rssi + ' dBm' : '—'),
-      w.has_credentials ? h('div', { class: 'row click', onclick: async () => { if (!confirm('¿Olvidar esta red?')) return; await post('wifi/forget'); toast('Red olvidada'); load(); } },
-        h('div', { class: 'grow bad' }, 'Olvidar esta red')) : null);
+    const names = { connected: tr('Conectada'), connecting: tr('Conectando…'), failed: tr('Sin conexión'), off: tr('Apagado') };
+    put(st, row(tr('Estado'), names[w.state] || w.state, color), row(tr('Red'), w.ssid || '—'),
+      row(tr('Dirección'), w.ip || '—'), row(tr('Señal'), w.state === 'connected' ? w.rssi + ' dBm' : '—'),
+      w.has_credentials ? h('div', { class: 'row click', onclick: async () => { if (!confirm(tr('¿Olvidar esta red?'))) return; await post('wifi/forget'); toast(tr('Red olvidada')); load(); } },
+        h('div', { class: 'grow bad' }, tr('Olvidar esta red'))) : null);
   };
   const join = (ssid, secure) => {
-    const pass = h('input', { type: 'password', placeholder: 'contraseña', autocomplete: 'off' });
+    const pass = h('input', { type: 'password', placeholder: tr('contraseña'), autocomplete: 'off' });
     const go = async () => {
-      try { await post('wifi', { ssid, pass: pass.value }); toast('Conectando a ' + ssid + '…'); put(form); setTimeout(load, 4000); }
+      try { await post('wifi', { ssid, pass: pass.value }); toast(tr('Conectando a %s…', ssid)); put(form); setTimeout(load, 4000); }
       catch (e) { toast(e.message, true); }
     };
-    put(form, h('h2', {}, 'Unirse a ' + ssid), h('div', { class: 'card pad' },
-      secure ? h('div', {}, h('label', { class: 'f' }, 'Contraseña'), pass) : h('p', { class: 'muted' }, 'Red abierta.'),
-      h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', onclick: go }, 'Unirse'),
-        h('button', { class: 'btn', onclick: () => put(form) }, 'Cancelar'))));
+    put(form, h('h2', {}, tr('Unirse a %s', ssid)), h('div', { class: 'card pad' },
+      secure ? h('div', {}, h('label', { class: 'f' }, tr('Contraseña')), pass) : h('p', { class: 'muted' }, tr('Red abierta.')),
+      h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', onclick: go }, tr('Unirse')),
+        h('button', { class: 'btn', onclick: () => put(form) }, tr('Cancelar')))));
     if (secure) { pass.focus(); pass.onkeydown = e => { if (e.key === 'Enter') go(); }; }
   };
   const scan = async btn => {
     btn.disabled = true;
-    put(list, h('div', { class: 'row muted' }, 'Buscando…'));
+    put(list, h('div', { class: 'row muted' }, tr('Buscando…')));
     try {
       const aps = await api('wifi/scan');
       put(list, ...(aps.length ? aps.map(a => h('div', { class: 'row click', onclick: () => join(a.ssid, a.secure) },
-        h('div', { class: 'grow' }, (a.secure ? '🔒 ' : '') + a.ssid), h('div', { class: 'val' }, a.rssi + ' dBm'))) : [h('div', { class: 'row muted' }, 'No se encontraron redes.')]));
+        h('div', { class: 'grow' }, (a.secure ? '🔒 ' : '') + a.ssid), h('div', { class: 'val' }, a.rssi + ' dBm'))) : [h('div', { class: 'row muted' }, tr('No se encontraron redes.'))]));
     } catch (e) { put(list, h('div', { class: 'row bad' }, e.message)); }
     btn.disabled = false;
   };
-  const manual = () => join(prompt('Nombre de la red (SSID)') || '', true);
-  const sb = h('button', { class: 'btn pri', onclick: e => scan(e.target) }, 'Buscar redes');
-  put(main, h('h1', {}, 'Wi-Fi'), st, form, h('h2', {}, 'Redes'),
-    h('div', { class: 'btns', style: 'margin-bottom:10px' }, sb, h('button', { class: 'btn', onclick: manual }, 'Red oculta…')), list,
-    h('p', { class: 'note' }, 'La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.'));
+  const manual = () => join(prompt(tr('Nombre de la red (SSID)')) || '', true);
+  const sb = h('button', { class: 'btn pri', onclick: e => scan(e.target) }, tr('Buscar redes'));
+  put(main, h('h1', {}, tr('Wi-Fi')), st, form, h('h2', {}, tr('Redes')),
+    h('div', { class: 'btns', style: 'margin-bottom:10px' }, sb, h('button', { class: 'btn', onclick: manual }, tr('Red oculta…'))), list,
+    h('p', { class: 'note' }, tr('La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.')));
   load();
 }
 
@@ -190,35 +234,35 @@ async function pageWifi() {
 async function pageHa() {
   const st = h('div', { class: 'card' });
   const url = h('input', { type: 'text', placeholder: 'http://192.168.1.10:8123' });
-  const token = h('input', { type: 'password', placeholder: 'pegá acá el token de larga duración', autocomplete: 'off' });
+  const token = h('input', { type: 'password', placeholder: tr('pegá acá el token de larga duración'), autocomplete: 'off' });
   const ents = h('div');
-  const names = { unconfigured: 'Sin configurar', waiting_net: 'Esperando el Wi-Fi', connecting: 'Conectando…', auth_failed: 'Token rechazado',
-    loading: 'Cargando…', ready: 'Conectado', error: 'Sin conexión' };
+  const names = { unconfigured: tr('Sin configurar'), waiting_net: tr('Esperando el Wi-Fi'), connecting: tr('Conectando…'), auth_failed: tr('Token rechazado'),
+    loading: tr('Cargando…'), ready: tr('Conectado'), error: tr('Sin conexión') };
   const load = async () => {
     const s = await api('ha');
     if (document.activeElement !== url) url.value = s.url || '';
-    put(st, row('Estado', names[s.state] || s.state, s.state === 'ready' ? 'ok' : s.state === 'auth_failed' || s.state === 'error' ? 'bad' : 'muted'),
-      row('Nombre de la casa', s.location), row('Token', s.has_token ? 'guardado' : 'falta', s.has_token ? 'ok' : 'warn'),
-      row('Entidades', s.entities ? `${s.entities} en ${s.areas} ambientes` : '—'),
+    put(st, row(tr('Estado'), names[s.state] || s.state, s.state === 'ready' ? 'ok' : s.state === 'auth_failed' || s.state === 'error' ? 'bad' : 'muted'),
+      row(tr('Nombre de la casa'), s.location), row('Token', s.has_token ? tr('guardado') : tr('falta'), s.has_token ? 'ok' : 'warn'),
+      row(tr('Entidades'), s.entities ? tr('%s en %s ambientes', s.entities, s.areas) : '—'),
       s.error && s.state !== 'ready' ? h('div', { class: 'row warn small' }, s.error) : null);
     return s;
   };
   const save = async () => {
-    try { await post('ha', { url: url.value.trim(), token: token.value.trim() }); token.value = ''; toast('Guardado, conectando…'); setTimeout(() => { load(); loadEnts(); }, 2500); }
+    try { await post('ha', { url: url.value.trim(), token: token.value.trim() }); token.value = ''; toast(tr('Guardado, conectando…')); setTimeout(() => { load(); loadEnts(); }, 2500); }
     catch (e) { toast(e.message, true); }
   };
-  const search = h('input', { type: 'search', placeholder: 'Buscar entidad…', oninput: () => drawEnts() });
+  const search = h('input', { type: 'search', placeholder: tr('Buscar entidad…'), oninput: () => drawEnts() });
   let all = [];
   const drawEnts = () => {
     const q = search.value.toLowerCase();
-    const by = {};
+    const by = {}, none = tr('Sin ambiente');
     for (const e of all) {
       if (q && !(e.name + ' ' + e.id).toLowerCase().includes(q)) continue;
-      (by[e.area || 'Sin ambiente'] ||= []).push(e);
+      (by[e.area || none] ||= []).push(e);
     }
-    const areas = Object.keys(by).sort((a, b) => a === 'Sin ambiente' ? 1 : b === 'Sin ambiente' ? -1 : a.localeCompare(b));
+    const areas = Object.keys(by).sort((a, b) => a === none ? 1 : b === none ? -1 : a.localeCompare(b));
     put(ents, ...areas.map(a => [h('h2', {}, a), h('div', { class: 'card ent' }, by[a].map(e => {
-      const star = h('span', { class: 'star' + (e.fav ? ' on' : ''), title: 'Favorito', onclick: async () => {
+      const star = h('span', { class: 'star' + (e.fav ? ' on' : ''), title: tr('Favorito'), onclick: async () => {
         e.fav = !e.fav; star.className = 'star' + (e.fav ? ' on' : ''); star.textContent = e.fav ? '★' : '☆';
         await api(`ha/fav?id=${encodeURIComponent(e.id)}&on=${e.fav ? 1 : 0}`, { method: 'POST' }); } }, e.fav ? '★' : '☆');
       return h('div', { class: 'row' }, star, h('div', { class: 'grow' }, e.name, ' ', h('span', { class: 'muted small' }, e.id)),
@@ -229,11 +273,11 @@ async function pageHa() {
   put(main, h('h1', {}, 'Home Assistant'), h('div', { class: 'grid2' },
     h('div', {}, st),
     h('div', { class: 'card pad' },
-      h('label', { class: 'f', style: 'margin-top:0' }, 'Dirección'), url,
+      h('label', { class: 'f', style: 'margin-top:0' }, tr('Dirección')), url,
       h('label', { class: 'f' }, 'Token'), token,
-      h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', onclick: save }, 'Guardar y conectar')),
-      h('p', { class: 'note', style: 'margin:12px 0 0' }, 'El token se crea en Home Assistant: tu perfil > Seguridad > Tokens de acceso de larga duración. Queda guardado en la placa; no se vuelve a mostrar.'))),
-    h('h2', {}, 'Favoritos'), h('p', { class: 'note' }, 'La estrella elige qué aparece en la página de favoritos y en el widget del inicio, en el orden en que las marcás.'),
+      h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', onclick: save }, tr('Guardar y conectar'))),
+      h('p', { class: 'note', style: 'margin:12px 0 0' }, tr('El token se crea en Home Assistant: tu perfil > Seguridad > Tokens de acceso de larga duración. Queda guardado en la placa; no se vuelve a mostrar.')))),
+    h('h2', {}, tr('Favoritos')), h('p', { class: 'note' }, tr('La estrella elige qué aparece en la página de favoritos y en el widget del inicio, en el orden en que las marcás.')),
     search, ents);
   await load();
   loadEnts();
@@ -251,12 +295,12 @@ function editor(path, text) {
     try {
       const r = await fetch('/api/fs/put?path=' + encodeURIComponent(path), { method: 'PUT', body: ta.value });
       if (!r.ok) throw new Error((await r.json()).error);
-      toast('Guardado ' + path); close(); pageArchivos();
+      toast(tr('Guardado %s', path)); close(); pageArchivos();
     } catch (e) { toast(e.message, true); }
   };
   const m = h('div', { class: 'modal', onclick: e => { if (e.target === m) close(); } },
     h('div', { class: 'box' }, h('div', { class: 'head' }, h('b', { class: 'grow' }, path)), ta,
-      h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, 'Cancelar'), h('button', { class: 'btn pri', onclick: save }, 'Guardar'))));
+      h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, tr('Cancelar')), h('button', { class: 'btn pri', onclick: save }, tr('Guardar')))));
   document.body.append(m);
   ta.focus();
   ta.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); save(); } });
@@ -275,53 +319,53 @@ function upload(files, bar) {
     x.open('PUT', '/api/fs/put?path=' + encodeURIComponent(dest));
     x.upload.onprogress = e => { bar.firstChild.style.width = (e.loaded / e.total * 100) + '%'; bar.dataset.name = f.name; };
     x.onload = () => { if (x.status !== 200) toast(f.name + ': ' + (JSON.parse(x.responseText).error || x.status), true); res(); };
-    x.onerror = () => { toast(f.name + ': se cortó', true); res(); };
+    x.onerror = () => { toast(f.name + ': ' + tr('se cortó'), true); res(); };
     x.send(f);
-  })), Promise.resolve()).then(() => { toast(list.length === 1 ? 'Subido ' + list[0].name : `Subidos ${list.length} archivos`); pageArchivos(); });
+  })), Promise.resolve()).then(() => { toast(list.length === 1 ? tr('Subido %s', list[0].name) : tr('Subidos %s archivos', list.length)); pageArchivos(); });
 }
 
 async function pageArchivos() {
   let d;
   try { d = await api('fs?path=' + encodeURIComponent(cwd)); }
-  catch (e) { if (cwd !== '/') { cwd = '/'; return pageArchivos(); } put(main, h('h1', {}, 'Archivos'), h('p', { class: 'bad' }, e.message)); return; }
+  catch (e) { if (cwd !== '/') { cwd = '/'; return pageArchivos(); } put(main, h('h1', {}, tr('Archivos')), h('p', { class: 'bad' }, e.message)); return; }
   const parts = cwd.split('/').filter(Boolean);
   const go = p => () => { cwd = p; pageArchivos(); };
   const crumbs = h('div', { class: 'crumbs' }, h('a', { href: '#archivos', onclick: go('/') }, 'microSD'),
     parts.map((p, i) => [' / ', h('a', { href: '#archivos', onclick: go('/' + parts.slice(0, i + 1).join('/')) }, p)]));
   const entries = d.entries.sort((a, b) => (b.dir - a.dir) || a.name.localeCompare(b.name));
   const full = n => (cwd === '/' ? '' : cwd) + '/' + n;
-  const del = e => async () => { if (!confirm(`¿Borrar ${e.name}${e.dir ? ' y todo lo que tiene adentro' : ''}?`)) return;
+  const del = e => async () => { if (!confirm(e.dir ? tr('¿Borrar %s y todo lo que tiene adentro?', e.name) : tr('¿Borrar %s?', e.name))) return;
     try { await api('fs/delete?path=' + encodeURIComponent(full(e.name)), { method: 'POST' }); pageArchivos(); } catch (er) { toast(er.message, true); } };
-  const ren = e => async () => { const n = prompt('Nuevo nombre', e.name); if (!n || n === e.name) return;
+  const ren = e => async () => { const n = prompt(tr('Nuevo nombre'), e.name); if (!n || n === e.name) return;
     try { await api(`fs/rename?path=${encodeURIComponent(full(e.name))}&to=${encodeURIComponent(full(n))}`, { method: 'POST' }); pageArchivos(); } catch (er) { toast(er.message, true); } };
   const table = h('div', { class: 'card ftable' }, entries.length ? entries.map(e => h('div', { class: 'row' + (e.dir ? ' click' : ''), onclick: e.dir ? go(full(e.name)) : null },
     h('div', { class: 'ico' }, e.dir ? '📁' : TEXT.test(e.name) ? '📄' : /\.(jpe?g|png|gif|bmp)$/i.test(e.name) ? '🖼' : /\.(mp3|wav)$/i.test(e.name) ? '🎵' : '▫'),
     h('div', { class: 'grow' }, e.name),
     h('div', { class: 'acts', onclick: ev => ev.stopPropagation() },
-      !e.dir && TEXT.test(e.name) ? h('button', { class: 'btn', onclick: () => openEditor(full(e.name)) }, 'Editar') : null,
-      !e.dir ? h('a', { class: 'btn', href: '/api/fs/get?attachment=1&path=' + encodeURIComponent(full(e.name)) }, 'Bajar') : null,
-      h('button', { class: 'btn', onclick: ren(e) }, 'Renombrar'), h('button', { class: 'btn red', onclick: del(e) }, 'Borrar')),
+      !e.dir && TEXT.test(e.name) ? h('button', { class: 'btn', onclick: () => openEditor(full(e.name)) }, tr('Editar')) : null,
+      !e.dir ? h('a', { class: 'btn', href: '/api/fs/get?attachment=1&path=' + encodeURIComponent(full(e.name)) }, tr('Bajar')) : null,
+      h('button', { class: 'btn', onclick: ren(e) }, tr('Renombrar')), h('button', { class: 'btn red', onclick: del(e) }, tr('Borrar'))),
     h('div', { class: 'size' }, e.dir ? '' : fmtBytes(e.size)),
-    h('div', { class: 'date' }, e.mtime ? new Date(e.mtime * 1000).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }) : ''),
+    h('div', { class: 'date' }, e.mtime ? new Date(e.mtime * 1000).toLocaleDateString(LOCALE, { day: '2-digit', month: 'short', year: 'numeric' }) : ''),
     h('button', { class: 'btn more', onclick: ev => { ev.stopPropagation(); ev.target.closest('.row').classList.toggle('sel'); } }, '⋯'))) :
-    h('div', { class: 'row muted' }, 'Carpeta vacía.'));
+    h('div', { class: 'row muted' }, tr('Carpeta vacía.')));
   const input = h('input', { type: 'file', multiple: true, style: 'display:none', onchange: e => upload(e.target.files, bar) });
   const bar = h('div', { class: 'prog' }, h('div'));
-  const drop = h('div', { class: 'drop' }, 'Soltá archivos acá para subirlos a ', h('b', {}, cwd), bar);
+  const drop = h('div', { class: 'drop' }, tr('Soltá archivos acá para subirlos a'), ' ', h('b', {}, cwd), bar);
   drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
   drop.ondragleave = () => drop.classList.remove('over');
   drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); upload(e.dataTransfer.files, bar); };
-  const mkdir = async () => { const n = prompt('Nombre de la carpeta'); if (!n) return;
+  const mkdir = async () => { const n = prompt(tr('Nombre de la carpeta')); if (!n) return;
     try { await api('fs/mkdir?path=' + encodeURIComponent(full(n)), { method: 'POST' }); pageArchivos(); } catch (er) { toast(er.message, true); } };
-  put(main, h('h1', {}, 'Archivos'),
+  put(main, h('h1', {}, tr('Archivos')),
     h('div', { class: 'btns', style: 'margin-bottom:14px' },
-      h('button', { class: 'btn pri', onclick: () => input.click() }, 'Subir…'), input,
-      h('button', { class: 'btn', onclick: mkdir }, 'Nueva carpeta'),
-      h('span', { class: 'muted small', style: 'margin-left:8px' }, 'Editar:'),
+      h('button', { class: 'btn pri', onclick: () => input.click() }, tr('Subir…')), input,
+      h('button', { class: 'btn', onclick: mkdir }, tr('Nueva carpeta')),
+      h('span', { class: 'muted small', style: 'margin-left:8px' }, tr('Editar:')),
       ['menu.txt', 'modules.txt', 'ha.txt', 'cameras.txt'].map(f => h('button', { class: 'btn', onclick: () => openEditor('/' + f) }, f)),
-      d.total ? h('span', { class: 'muted small', style: 'margin-left:auto' }, `${fmtBytes(d.free)} libres de ${fmtBytes(d.total)}`) : null),
+      d.total ? h('span', { class: 'muted small', style: 'margin-left:auto' }, tr('%s libres de %s', fmtBytes(d.free), fmtBytes(d.total))) : null),
     crumbs, table, drop,
-    h('p', { class: 'note' }, 'menu.txt ordena el inicio, modules.txt dice qué hay conectado al header; los dos se aplican al guardar. cameras.txt son las cámaras de la app Cámaras (y su Frigate), que la relee al guardar. El firmware para el Programador va en /firmware.'));
+    h('p', { class: 'note' }, tr('menu.txt ordena el inicio, modules.txt dice qué hay conectado al header; los dos se aplican al guardar. cameras.txt son las cámaras de la app Cámaras (y su Frigate), que la relee al guardar. El firmware para el Programador va en /firmware.')));
 }
 
 /* ---- Terminal ---- */
@@ -333,17 +377,17 @@ async function pageTerminal() {
   const view = h('div', { class: 'log', style: 'height:calc(100vh - 330px);min-height:260px' });
   const status = h('div', { class: 'note' });
   const chSel = h('select', { onchange: e => { termCh = +e.target.value; termNext = 0; termLines = []; put(view); termPort = null; load(true); } },
-    h('option', { value: 0, selected: termCh === 0 }, 'Canal A'), h('option', { value: 1, selected: termCh === 1 }, 'Canal B'));
+    h('option', { value: 0, selected: termCh === 0 }, tr('Canal A')), h('option', { value: 1, selected: termCh === 1 }, tr('Canal B')));
   const portSel = h('select'), baudSel = h('select', {}, TERM_BAUDS.map(b => h('option', { value: b, selected: b === 115200 }, b)));
-  const connBtn = h('button', { class: 'btn pri' }, 'Conectar');
-  const recBtn = h('button', { class: 'btn' }, 'Grabar');
-  const stampBtn = h('button', { class: 'btn' + (termStamps ? ' pri' : ''), onclick: () => { termStamps = !termStamps; stampBtn.className = 'btn' + (termStamps ? ' pri' : ''); redraw(); } }, 'Hora');
-  const followBtn = h('button', { class: 'btn pri', onclick: () => { termFollow = true; followBtn.className = 'btn pri'; view.scrollTop = view.scrollHeight; } }, 'Seguir');
-  const filter = h('input', { type: 'search', placeholder: 'Filtrar…', value: termFilter, style: 'max-width:240px', oninput: e => { termFilter = e.target.value; redraw(); } });
-  const eol = h('select', {}, [['\r\n', 'CR LF'], ['\n', 'LF'], ['\r', 'CR'], ['', 'nada']].map(([v, n]) => h('option', { value: v }, n)));
-  const input = h('input', { type: 'text', placeholder: 'Enviar al puerto…', style: 'font-family:ui-monospace,Menlo,monospace' });
+  const connBtn = h('button', { class: 'btn pri' }, tr('Conectar'));
+  const recBtn = h('button', { class: 'btn' }, tr('Grabar'));
+  const stampBtn = h('button', { class: 'btn' + (termStamps ? ' pri' : ''), onclick: () => { termStamps = !termStamps; stampBtn.className = 'btn' + (termStamps ? ' pri' : ''); redraw(); } }, tr('Hora'));
+  const followBtn = h('button', { class: 'btn pri', onclick: () => { termFollow = true; followBtn.className = 'btn pri'; view.scrollTop = view.scrollHeight; } }, tr('Seguir'));
+  const filter = h('input', { type: 'search', placeholder: tr('Filtrar…'), value: termFilter, style: 'max-width:240px', oninput: e => { termFilter = e.target.value; redraw(); } });
+  const eol = h('select', {}, [['\r\n', 'CR LF'], ['\n', 'LF'], ['\r', 'CR'], ['', tr('nada')]].map(([v, n]) => h('option', { value: v }, n)));
+  const input = h('input', { type: 'text', placeholder: tr('Enviar al puerto…'), style: 'font-family:ui-monospace,Menlo,monospace' });
   const trigList = h('div', { class: 'card' });
-  const trigIn = h('input', { type: 'text', placeholder: 'Avisar cuando aparezca…' });
+  const trigIn = h('input', { type: 'text', placeholder: tr('Avisar cuando aparezca…') });
   let st = null;
   const lineEl = ([t, f, text]) => {
     const d = h('div', {}, (termStamps ? (t / 1000).toFixed(3).padStart(9) + ' ' : '') + text);
@@ -367,24 +411,24 @@ async function pageTerminal() {
     try { st = await api('serial?ch=' + termCh); } catch { return; }
     if (full || !portSel.options.length) {
       put(portSel, st.ports.map(p => h('option', { value: p.name, selected: st.running ? p.name === st.port : p.name === (termPort || (termCh ? 'uart.a' : 'uart.b')) },
-        p.name + (p.desc ? ' · ' + p.desc : '') + (p.holder && !st.running ? ' · lo tiene ' + p.holder : ''))));
+        p.name + (p.desc ? ' · ' + p.desc : '') + (p.holder && !st.running ? ' · ' + tr('lo tiene %s', p.holder) : ''))));
       if (st.running) baudSel.value = st.baud;
     }
-    connBtn.textContent = st.running ? 'Detener' : 'Conectar';
+    connBtn.textContent = st.running ? tr('Detener') : tr('Conectar');
     connBtn.className = 'btn ' + (st.running ? 'red' : 'pri');
-    recBtn.textContent = st.recording ? '● Grabando' : 'Grabar';
+    recBtn.textContent = st.recording ? tr('● Grabando') : tr('Grabar');
     recBtn.className = 'btn' + (st.recording ? ' red' : '');
     const rec = st.rec_path ? '/logs/' + st.rec_path.split('/logs/').pop() : '';
-    put(status, st.running ? `${st.desc} · ${st.baud} · ${st.lines} líneas · ${fmtBytes(st.rx)} recibidos` : 'Sin conexión.',
-      st.recording && rec ? [' · grabando en ', h('a', { href: '/api/fs/get?attachment=1&path=' + encodeURIComponent(rec) }, rec), ' (' + fmtBytes(st.rec_bytes) + ')'] : null);
+    put(status, st.running ? `${st.desc} · ${st.baud} · ` + tr('%s líneas', st.lines) + ' · ' + tr('%s recibidos', fmtBytes(st.rx)) : tr('Sin conexión.'),
+      st.recording && rec ? [' · ' + tr('grabando en') + ' ', h('a', { href: '/api/fs/get?attachment=1&path=' + encodeURIComponent(rec) }, rec), ' (' + fmtBytes(st.rec_bytes) + ')'] : null);
     put(trigList, st.triggers.length ? st.triggers.map((t, i) => h('div', { class: 'row' },
-      h('div', { class: 'grow', style: 'font-family:ui-monospace,Menlo,monospace;color:#ffe08a;cursor:text', title: 'Tocá para cambiar el texto',
-        onclick: () => { const v = prompt('Avisar cuando aparezca…', t.text); if (v && v.trim() && v !== t.text) post('serial/trigger', { index: i, text: v.trim() }).then(() => load()).catch(e => toast(e.message, true)); } },
-        t.text, ' ', h('span', { class: 'muted small' }, t.hits === 1 ? '1 vez' : t.hits + ' veces')),
-      h('button', { class: 'btn' + (t.notify ? ' pri' : ''), onclick: () => post('serial/trigger', { index: i, flags: (t.notify ? 0 : 1) | (t.beep ? 2 : 0) }).then(() => load()) }, 'Aviso'),
-      h('button', { class: 'btn' + (t.beep ? ' pri' : ''), onclick: () => post('serial/trigger', { index: i, flags: (t.notify ? 1 : 0) | (t.beep ? 0 : 2) }).then(() => load()) }, 'Pitido'),
+      h('div', { class: 'grow', style: 'font-family:ui-monospace,Menlo,monospace;color:#ffe08a;cursor:text', title: tr('Tocá para cambiar el texto'),
+        onclick: () => { const v = prompt(tr('Avisar cuando aparezca…'), t.text); if (v && v.trim() && v !== t.text) post('serial/trigger', { index: i, text: v.trim() }).then(() => load()).catch(e => toast(e.message, true)); } },
+        t.text, ' ', h('span', { class: 'muted small' }, t.hits === 1 ? tr('1 vez') : tr('%s veces', t.hits))),
+      h('button', { class: 'btn' + (t.notify ? ' pri' : ''), onclick: () => post('serial/trigger', { index: i, flags: (t.notify ? 0 : 1) | (t.beep ? 2 : 0) }).then(() => load()) }, tr('Aviso')),
+      h('button', { class: 'btn' + (t.beep ? ' pri' : ''), onclick: () => post('serial/trigger', { index: i, flags: (t.notify ? 1 : 0) | (t.beep ? 0 : 2) }).then(() => load()) }, tr('Pitido')),
       h('button', { class: 'btn red', onclick: () => post('serial/trigger', { index: i, remove: true }).then(() => load()) }, '✕'))) :
-      [h('div', { class: 'row muted' }, 'Sin avisos.')]);
+      [h('div', { class: 'row muted' }, tr('Sin avisos.'))]);
   }
   async function poll() {
     if (location.hash !== '#terminal') return;
@@ -417,12 +461,12 @@ async function pageTerminal() {
   const send = async () => { try { await post('serial/send', { ch: termCh, text: input.value, eol: eol.value }); input.value = ''; } catch (e) { toast(e.message, true); } };
   input.onkeydown = e => { if (e.key === 'Enter') send(); };
   trigIn.onkeydown = async e => { if (e.key === 'Enter' && trigIn.value.trim()) { try { await post('serial/trigger', { add: trigIn.value.trim(), flags: 1 }); trigIn.value = ''; load(); } catch (er) { toast(er.message, true); } } };
-  put(main, h('h1', {}, 'Terminal'),
+  put(main, h('h1', {}, tr('Terminal')),
     h('div', { class: 'btns', style: 'margin-bottom:10px' }, chSel, portSel, baudSel, connBtn, recBtn, stampBtn, followBtn, filter,
-      h('button', { class: 'btn', onclick: () => { termLines = []; put(view); } }, 'Limpiar')),
+      h('button', { class: 'btn', onclick: () => { termLines = []; put(view); } }, tr('Limpiar'))),
     status, view,
-    h('div', { class: 'btns', style: 'margin-top:10px;flex-wrap:nowrap' }, eol, h('div', { style: 'flex:1' }, input), h('button', { class: 'btn pri', onclick: send }, 'Enviar')),
-    h('h2', {}, 'Avisos'), h('p', { class: 'note' }, 'Textos que se buscan en cada línea de los dos canales, sin importar mayúsculas: la línea se marca en ámbar y, con Aviso o Pitido, la placa avisa (una vez cada 10 s como mucho).'),
+    h('div', { class: 'btns', style: 'margin-top:10px;flex-wrap:nowrap' }, eol, h('div', { style: 'flex:1' }, input), h('button', { class: 'btn pri', onclick: send }, tr('Enviar'))),
+    h('h2', {}, tr('Avisos')), h('p', { class: 'note' }, tr('Textos que se buscan en cada línea de los dos canales, sin importar mayúsculas: la línea se marca en ámbar y, con Aviso o Pitido, la placa avisa (una vez cada 10 s como mucho).')),
     trigList, h('div', { style: 'margin-top:10px;max-width:420px' }, trigIn));
   termNext = 0; termLines = [];
   clearTimeout(termT);
@@ -432,9 +476,9 @@ async function pageTerminal() {
 }
 
 /* ---- Programador ---- */
-const PHASES = { idle: 'Listo', opening: 'Abriendo el puerto', connecting: 'Conectando con la placa', stub: 'Cargando el stub',
-  baud: 'Subiendo la velocidad', info: 'Leyendo el chip', erasing: 'Borrando', writing: 'Grabando', verifying: 'Verificando',
-  resetting: 'Reiniciando la placa', done: 'Grabación terminada', failed: 'Falló', cancelled: 'Cancelado' };
+const PHASES = { idle: N_('Listo'), opening: N_('Abriendo el puerto'), connecting: N_('Conectando con la placa'), stub: N_('Cargando el stub'),
+  baud: N_('Subiendo la velocidad'), info: N_('Leyendo el chip'), erasing: N_('Borrando'), writing: N_('Grabando'), verifying: N_('Verificando'),
+  resetting: N_('Reiniciando la placa'), done: N_('Grabación terminada'), failed: N_('Falló'), cancelled: N_('Cancelado') };
 let flashT, flashSel = '', flashPort = 'uart.b', flashLog = 0;
 const fmtMs = ms => { const s = Math.round(ms / 1000); return s < 60 ? s + ' s' : Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 
@@ -458,7 +502,7 @@ async function uploadFolder(files, bar) {
       x.send(f);
     });
   }
-  toast(`Subidos ${list.length} archivos a /firmware`);
+  toast(tr('Subidos %s archivos a /firmware', list.length));
 }
 
 async function pageProgramador() {
@@ -480,16 +524,16 @@ async function pageProgramador() {
     last = st;
     if (!portSel.options.length || force) {
       put(portSel, st.ports.map(p => h('option', { value: p.name, selected: p.name === flashPort },
-        p.name + (p.desc ? ' · ' + p.desc + ' · EN/BOOT por RTS/DTR' : p.lines ? ' · con EN/BOOT' : ' · sin EN/BOOT') + (p.holder ? ' · lo tiene ' + p.holder : ''))));
+        p.name + (p.desc ? ' · ' + p.desc + ' · ' + tr('EN/BOOT por RTS/DTR') : p.lines ? ' · ' + tr('con EN/BOOT') : ' · ' + tr('sin EN/BOOT')) + (p.holder ? ' · ' + tr('lo tiene %s', p.holder) : ''))));
     }
     const c = st.chip;
     put(target,
-      row('Placa', c ? `${c.name} ${c.revision || ''}` : 'sin detectar', c ? '' : 'muted'),
+      row(tr('Placa'), c ? `${c.name} ${c.revision || ''}` : tr('sin detectar'), c ? '' : 'muted'),
       c ? row('Flash', c.flash_size ? fmtBytes(c.flash_size) : '—') : null,
       c && c.mac ? row('MAC', c.mac) : null,
-      c && c.secure ? h('div', { class: 'row warn' }, 'Flash cifrada o arranque seguro: no se puede grabar desde acá') : null,
+      c && c.secure ? h('div', { class: 'row warn' }, tr('Flash cifrada o arranque seguro: no se puede grabar desde acá')) : null,
       h('div', { class: 'row' }, h('div', { class: 'grow' }, portSel),
-        h('button', { class: 'btn', disabled: st.busy, onclick: async () => { try { await post('flash/detect', { port: flashPort }); load(); } catch (e) { toast(e.message, true); } } }, 'Detectar')));
+        h('button', { class: 'btn', disabled: st.busy, onclick: async () => { try { await post('flash/detect', { port: flashPort }); load(); } catch (e) { toast(e.message, true); } } }, tr('Detectar'))));
     /* firmware on the card; redrawn only when it changes */
     const sig = JSON.stringify(st.sources.map(x => x.path + x.total)) + flashSel + st.busy;
     if (sig !== lastSources || force) {
@@ -500,22 +544,22 @@ async function pageProgramador() {
         return h('div', { class: 'row click' + (on ? ' sel' : ''), style: on ? 'background:var(--card2)' : '', onclick: () => { flashSel = x.path; load(true); } },
           h('div', { class: 'ico' }, on ? '●' : '○'),
           h('div', { class: 'grow' }, h('div', {}, x.name, x.version ? h('span', { class: 'muted small' }, '  ' + x.version) : null),
-            h('div', { class: 'small ' + (other ? 'warn' : 'muted') }, (x.chip ? (other ? 'para ' : '') + (x.chip_label || x.chip.toUpperCase()) : 'chip desconocido') + ' · ' +
-              x.files.length + (x.files.length === 1 ? ' archivo' : ' archivos') + ' · ' + fmtBytes(x.total)),
+            h('div', { class: 'small ' + (other ? 'warn' : 'muted') }, (x.chip ? (other ? tr('para %s', x.chip_label || x.chip.toUpperCase()) : (x.chip_label || x.chip.toUpperCase())) : tr('chip desconocido')) + ' · ' +
+              (x.files.length === 1 ? tr('1 archivo') : tr('%s archivos', x.files.length)) + ' · ' + fmtBytes(x.total)),
             on ? h('div', { class: 'small muted', style: 'font-family:ui-monospace,Menlo,monospace;margin-top:6px' },
               x.files.map(f => h('div', {}, f.offset + '  ' + f.name + '  (' + fmtBytes(f.size) + ')'))) : null));
-      }) : [h('div', { class: 'row muted' }, 'No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.')]);
+      }) : [h('div', { class: 'row muted' }, tr('No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.'))]);
     }
     /* the job */
     const done = st.phase === 'done', failed = st.phase === 'failed' || st.phase === 'cancelled';
     put(job, st.job === 'flash' || st.busy ? h('div', { class: 'card pad' },
-      h('div', { class: 'btns' }, h('b', { class: done ? 'ok' : failed ? 'bad' : '' }, PHASES[st.phase] || st.phase),
-        h('span', { class: 'muted small' }, st.source + (st.file_count ? ` · archivo ${st.file_index + 1} de ${st.file_count}: ${st.file_name}` : '')),
-        st.busy ? h('button', { class: 'btn red', style: 'margin-left:auto', onclick: () => post('flash/cancel') }, 'Cancelar') : null),
+      h('div', { class: 'btns' }, h('b', { class: done ? 'ok' : failed ? 'bad' : '' }, tr(PHASES[st.phase] || st.phase)),
+        h('span', { class: 'muted small' }, st.source + (st.file_count ? ' · ' + tr('archivo %s de %s: %s', st.file_index + 1, st.file_count, st.file_name) : '')),
+        st.busy ? h('button', { class: 'btn red', style: 'margin-left:auto', onclick: () => post('flash/cancel') }, tr('Cancelar')) : null),
       h('div', { class: 'prog', style: 'height:10px;margin-top:12px' }, h('div', { style: `width:${st.percent}%;${done ? 'background:var(--green)' : failed ? 'background:var(--red)' : ''}` })),
       h('div', { class: 'small muted', style: 'margin-top:8px' },
-        `${fmtBytes(st.done)} de ${fmtBytes(st.total)} · ${st.bytes_per_s ? fmtBytes(st.bytes_per_s) + '/s' : '—'} · ` +
-        (st.busy ? (st.eta_ms ? 'faltan ' + fmtMs(st.eta_ms) : '') : 'en ' + fmtMs(st.elapsed_ms)) + (done && st.verified ? ' · MD5 verificado' : '')),
+        tr('%s de %s', fmtBytes(st.done), fmtBytes(st.total)) + ` · ${st.bytes_per_s ? fmtBytes(st.bytes_per_s) + '/s' : '—'} · ` +
+        (st.busy ? (st.eta_ms ? tr('faltan %s', fmtMs(st.eta_ms)) : '') : tr('en %s', fmtMs(st.elapsed_ms))) + (done && st.verified ? ' · ' + tr('MD5 verificado') : '')),
       failed && st.error ? h('div', { class: 'bad small', style: 'margin-top:6px' }, st.error) : null) : null);
     startBtn.disabled = st.busy || !flashSel;
     /* its log */
@@ -527,16 +571,16 @@ async function pageProgramador() {
       if (stick) log.scrollTop = log.scrollHeight;
     }
   };
-  const startBtn = h('button', { class: 'btn pri', onclick: start }, 'Grabar');
-  put(main, h('h1', {}, 'Programador'),
+  const startBtn = h('button', { class: 'btn pri', onclick: start }, tr('Grabar firmware'));
+  put(main, h('h1', {}, tr('Programador')),
     h('div', { class: 'grid2' },
-      h('div', {}, h('h2', { style: 'margin-top:0' }, 'La placa a programar'), target,
-        h('p', { class: 'note' }, 'Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).')),
-      h('div', {}, h('h2', { style: 'margin-top:0' }, 'Firmware en la tarjeta'), srcs,
+      h('div', {}, h('h2', { style: 'margin-top:0' }, tr('La placa a programar')), target,
+        h('p', { class: 'note' }, tr('Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).'))),
+      h('div', {}, h('h2', { style: 'margin-top:0' }, tr('Firmware en la tarjeta')), srcs,
         h('div', { class: 'btns', style: 'margin-top:12px' }, startBtn,
-          h('button', { class: 'btn', onclick: () => pickDir.click() }, 'Subir carpeta de build…'), pickDir,
-          h('button', { class: 'btn', onclick: () => pickBin.click() }, 'Subir .bin…'), pickBin), bar)),
-    h('h2', {}, 'Grabación'), job, h('h2', {}, 'Registro del programador'), log);
+          h('button', { class: 'btn', onclick: () => pickDir.click() }, tr('Subir carpeta de build…')), pickDir,
+          h('button', { class: 'btn', onclick: () => pickBin.click() }, tr('Subir .bin…')), pickBin), bar)),
+    h('h2', {}, tr('Grabación')), job, h('h2', {}, tr('Registro del programador')), log);
   flashLog = 0;
   clearInterval(flashT);
   flashT = setInterval(() => { if (location.hash === '#programador') load(); else clearInterval(flashT); }, 700);
@@ -544,16 +588,16 @@ async function pageProgramador() {
 }
 
 /* ---- Ajustes ---- */
-const TZS = [['Buenos Aires (UTC−3)', '<-03>3'], ['Santiago (UTC−4/−3)', '<-04>4<-03>,M9.1.6/24,M4.1.6/24'], ['Ciudad de México (UTC−6)', 'CST6'],
-  ['Nueva York (UTC−5/−4)', 'EST5EDT,M3.2.0,M11.1.0'], ['Madrid (UTC+1/+2)', 'CET-1CEST,M3.5.0,M10.5.0/3'], ['Londres (UTC+0/+1)', 'GMT0BST,M3.5.0/1,M10.5.0/2'], ['UTC', 'UTC0']];
+const TZS = [['Buenos Aires (UTC−3)', '<-03>3'], ['Santiago (UTC−4/−3)', '<-04>4<-03>,M9.1.6/24,M4.1.6/24'], [N_('Ciudad de México (UTC−6)'), 'CST6'],
+  [N_('Nueva York (UTC−5/−4)'), 'EST5EDT,M3.2.0,M11.1.0'], ['Madrid (UTC+1/+2)', 'CET-1CEST,M3.5.0,M10.5.0/3'], [N_('Londres (UTC+0/+1)'), 'GMT0BST,M3.5.0/1,M10.5.0/2'], ['UTC', 'UTC0']];
 
 async function pageAjustes() {
   const s = await api('settings');
   const set = async (o, msg) => { try { await post('settings', o); if (msg) toast(msg); } catch (e) { toast(e.message, true); } };
   const name = h('input', { type: 'text', value: s.name });
-  const tz = h('select', { onchange: e => set({ tz: e.target.value }, 'Zona horaria cambiada') },
-    TZS.map(([n, v]) => h('option', { value: v, selected: v === s.tz }, n)), TZS.some(t => t[1] === s.tz) ? null : h('option', { value: s.tz, selected: true }, s.tz));
-  const lang = h('select', { onchange: e => set({ lang: e.target.value }, 'Idioma cambiado') },
+  const tz = h('select', { onchange: e => set({ tz: e.target.value }, tr('Zona horaria cambiada')) },
+    TZS.map(([n, v]) => h('option', { value: v, selected: v === s.tz }, tr(n))), TZS.some(t => t[1] === s.tz) ? null : h('option', { value: s.tz, selected: true }, s.tz));
+  const lang = h('select', { onchange: async e => { await set({ lang: e.target.value }); setTimeout(() => location.reload(), 600); } },
     (s.langs.length ? s.langs : [{ code: 'es', name: 'Español' }]).map(l => h('option', { value: l.code, selected: l.code === s.lang }, l.name)));
   const sw = h('div', { class: 'swatches' }, s.wallpapers.map((c, i) => {
     const [a, b] = c.split(',');
@@ -562,25 +606,25 @@ async function pageAjustes() {
     return el;
   }));
   const slider = (key, v) => h('input', { type: 'range', min: 1, max: 100, value: v, onchange: e => set({ [key]: +e.target.value }) });
-  put(main, h('h1', {}, 'Ajustes'), h('div', { class: 'grid2' },
+  put(main, h('h1', {}, tr('Ajustes')), h('div', { class: 'grid2' },
     h('div', { class: 'card pad' },
-      h('label', { class: 'f', style: 'margin-top:0' }, 'Nombre en la red'), h('div', { class: 'btns' }, h('div', { style: 'flex:1' }, name),
-        h('button', { class: 'btn pri', onclick: () => set({ name: name.value.trim() }, 'Ahora responde como ' + name.value.trim() + '.local') }, 'Cambiar')),
-      h('p', { class: 'note', style: 'margin:6px 0 0' }, 'Letras minúsculas, números y guiones. Es lo que responde como <nombre>.local.'),
-      h('label', { class: 'f' }, 'Zona horaria'), tz, h('label', { class: 'f' }, 'Idioma'), lang),
+      h('label', { class: 'f', style: 'margin-top:0' }, tr('Nombre en la red')), h('div', { class: 'btns' }, h('div', { style: 'flex:1' }, name),
+        h('button', { class: 'btn pri', onclick: () => set({ name: name.value.trim() }, tr('Ahora responde como %s.local', name.value.trim())) }, tr('Cambiar'))),
+      h('p', { class: 'note', style: 'margin:6px 0 0' }, tr('Letras minúsculas, números y guiones. Es lo que responde como <nombre>.local.')),
+      h('label', { class: 'f' }, tr('Zona horaria')), tz, h('label', { class: 'f' }, tr('Idioma')), lang),
     h('div', { class: 'card pad' },
-      h('label', { class: 'f', style: 'margin-top:0' }, 'Orientación'),
-      h('div', { class: 'btns' }, h('button', { class: 'btn' + (s.landscape ? '' : ' pri'), onclick: () => { set({ landscape: false }); setTimeout(pageAjustes, 600); } }, 'Vertical'),
-        h('button', { class: 'btn' + (s.landscape ? ' pri' : ''), onclick: () => { set({ landscape: true }); setTimeout(pageAjustes, 600); } }, 'Horizontal')),
-      h('label', { class: 'f' }, 'Brillo'), slider('brightness', s.brightness),
-      h('label', { class: 'f' }, 'Volumen'), slider('volume', s.volume))),
-    h('h2', {}, 'Fondo de pantalla'), h('div', { class: 'card pad' }, sw),
-    h('h2', {}, 'Seguridad'), h('div', { class: 'card pad' },
-      h('p', { style: 'margin-top:0' }, 'La contraseña, las redes de confianza y HTTPS se cambian sólo en la placa: Ajustes, Portal web.'),
-      h('div', { class: 'btns' }, h('a', { class: 'btn', href: '/api/tls/ca' }, 'Bajar la autoridad HTTPS de la placa')),
-      h('p', { class: 'note' }, 'Instalada una vez como confiable en la Mac (Acceso a Llaveros, "Confiar siempre") o en el iPhone (Ajustes, General, Información, Confianza de certificados), el navegador deja de avisar por https://' + (info.name || 'p4os') + '.local. Sólo sirve para nombres .local y direcciones de la red de casa.')),
-    h('h2', {}, 'Sistema'), h('div', { class: 'card pad' }, h('div', { class: 'btns' },
-      h('button', { class: 'btn red', onclick: async () => { if (confirm('¿Reiniciar la placa?')) { await post('restart'); toast('Reiniciando…'); } } }, 'Reiniciar'))));
+      h('label', { class: 'f', style: 'margin-top:0' }, tr('Orientación')),
+      h('div', { class: 'btns' }, h('button', { class: 'btn' + (s.landscape ? '' : ' pri'), onclick: () => { set({ landscape: false }); setTimeout(pageAjustes, 600); } }, tr('Vertical')),
+        h('button', { class: 'btn' + (s.landscape ? ' pri' : ''), onclick: () => { set({ landscape: true }); setTimeout(pageAjustes, 600); } }, tr('Horizontal'))),
+      h('label', { class: 'f' }, tr('Brillo')), slider('brightness', s.brightness),
+      h('label', { class: 'f' }, tr('Volumen')), slider('volume', s.volume))),
+    h('h2', {}, tr('Fondo de pantalla')), h('div', { class: 'card pad' }, sw),
+    h('h2', {}, tr('Seguridad')), h('div', { class: 'card pad' },
+      h('p', { style: 'margin-top:0' }, tr('La contraseña, las redes de confianza y HTTPS se cambian sólo en la placa: Ajustes, Portal web.')),
+      h('div', { class: 'btns' }, h('a', { class: 'btn', href: '/api/tls/ca' }, tr('Bajar la autoridad HTTPS de la placa'))),
+      h('p', { class: 'note' }, tr('Instalada una vez como confiable en la Mac (Acceso a Llaveros, "Confiar siempre") o en el iPhone (Ajustes, General, Información, Confianza de certificados), el navegador deja de avisar por https://%s.local. Sólo sirve para nombres .local y direcciones de la red de casa.', info.name || 'p4os'))),
+    h('h2', {}, tr('Sistema')), h('div', { class: 'card pad' }, h('div', { class: 'btns' },
+      h('button', { class: 'btn red', onclick: async () => { if (confirm(tr('¿Reiniciar la placa?'))) { await post('restart'); toast(tr('Reiniciando…')); } } }, tr('Reiniciar')))));
 }
 
 /* ---- Registro ----
@@ -602,7 +646,7 @@ function pageRegistro() {
   const render = () => {
     const sel = lines.filter(match);
     pre.replaceChildren(...sel.slice(-SHOW).map(lineEl));
-    count.textContent = sel.length + (filt ? ' de ' + lines.length : '') + ' líneas' + (sel.length > SHOW ? ' (se ven las últimas ' + SHOW + ')' : '');
+    count.textContent = (filt ? tr('%s de %s líneas', sel.length, lines.length) : tr('%s líneas', sel.length)) + (sel.length > SHOW ? ' ' + tr('(se ven las últimas %s)', SHOW) : '');
     pre.scrollTop = pre.scrollHeight;
   };
   const addText = t => {
@@ -614,27 +658,28 @@ function pageRegistro() {
     return fresh;
   };
   const count = h('span', { class: 'note' });
-  const pb = h('button', { class: 'btn', onclick: () => { logPaused = !logPaused; pb.textContent = logPaused ? 'Seguir' : 'Pausar'; } }, logPaused ? 'Seguir' : 'Pausar');
-  const fin = h('input', { type: 'text', placeholder: 'filtrar (texto o /regex/)', style: 'flex:1;min-width:160px', oninput: e => { filt = e.target.value; render(); } });
-  const which = h('button', { class: 'btn', onclick: () => { prev = !prev; which.textContent = prev ? 'Ver el arranque actual' : 'Ver el arranque anterior'; start(); } }, 'Ver el arranque anterior');
+  const pb = h('button', { class: 'btn', onclick: () => { logPaused = !logPaused; pb.textContent = logPaused ? tr('Seguir') : tr('Pausar'); } }, logPaused ? tr('Seguir') : tr('Pausar'));
+  const fin = h('input', { type: 'text', placeholder: tr('filtrar (texto o /regex/)'), style: 'flex:1;min-width:160px', oninput: e => { filt = e.target.value; render(); } });
+  const which = h('button', { class: 'btn', onclick: () => { prev = !prev; which.textContent = prev ? tr('Ver el arranque actual') : tr('Ver el arranque anterior'); start(); } }, tr('Ver el arranque anterior'));
   const dl = h('button', { class: 'btn', onclick: () => {
     const a = h('a', { href: URL.createObjectURL(new Blob([lines.join('\n') + '\n'], { type: 'text/plain' })),
       download: 'p4os-' + (prev ? 'arranque-anterior' : 'registro') + '-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-') + '.txt' });
     a.click();
-  } }, 'Descargar');
-  const title = h('h1', {}, 'Registro');
+  } }, tr('Descargar'));
+  const title = h('h1', {}, tr('Registro'));
   const sub = h('div', { class: 'note', style: 'margin:-6px 0 10px' });
   /* a crash's dump nobody has read yet */
   const dump = h('div');
   api('coredump').then(cd => {
     if (!cd.present || !cd.unread) return;
-    const fw = cd.version ? cd.version : cd.elf_sha ? 'ELF ' + cd.elf_sha : 'un firmware que no se sabe';
+    const fw = cd.version ? cd.version : cd.elf_sha ? 'ELF ' + cd.elf_sha : tr('un firmware que no se sabe');
     put(dump, h('div', { class: 'card pad warn', style: 'margin-bottom:10px' },
-      'La placa se cayó: hay un volcado sin leer (' + fw + (cd.seen ? ', visto ' + new Date(cd.seen * 1000).toLocaleString() : '') + '). ',
-      h('a', { href: '#firmware' }, 'Verlo en Firmware'), '.'));
+      (cd.seen ? tr('La placa se cayó: hay un volcado sin leer (%s, visto %s).', fw, new Date(cd.seen * 1000).toLocaleString(LOCALE))
+               : tr('La placa se cayó: hay un volcado sin leer (%s).', fw)) + ' ',
+      h('a', { href: '#firmware' }, tr('Verlo en Firmware')), '.'));
   }).catch(() => {});
   put(main, title, sub, dump, h('div', { class: 'btns', style: 'margin-bottom:10px;flex-wrap:wrap;gap:8px' }, pb,
-    h('button', { class: 'btn', onclick: () => { lines = []; render(); } }, 'Limpiar'), which, dl, fin), count, pre);
+    h('button', { class: 'btn', onclick: () => { lines = []; render(); } }, tr('Limpiar')), which, dl, fin), count, pre);
   const tick = async () => {
     if (location.hash !== '#registro' || prev) return;
     if (!logPaused) try {
@@ -647,7 +692,7 @@ function pageRegistro() {
           const stick = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 30;
           pre.append(...fresh.map(lineEl));
           while (pre.childElementCount > SHOW) pre.firstChild.remove();
-          count.textContent = lines.length + ' líneas';
+          count.textContent = tr('%s líneas', lines.length);
           if (stick) pre.scrollTop = pre.scrollHeight;
         }
         if (t.length >= 16000) { logT = setTimeout(tick, 50); return; }   /* more waiting: fetch it now */
@@ -658,8 +703,8 @@ function pageRegistro() {
   const start = async () => {
     clearTimeout(logT);
     lines = []; partial = ''; from = 0;
-    sub.textContent = prev ? 'Lo último que escribió el arranque anterior (se conserva al reiniciar, no al desenchufar).'
-                           : 'En vivo. El anillo guarda los últimos 256 KB.';
+    sub.textContent = prev ? tr('Lo último que escribió el arranque anterior (se conserva al reiniciar, no al desenchufar).')
+                           : tr('En vivo. El anillo guarda los últimos 256 KB.');
     if (!prev) { render(); tick(); return; }
     for (let i = 0; i < 8; i++) {
       const r = await fetch('/api/log?prev=1&from=' + from);
@@ -669,7 +714,7 @@ function pageRegistro() {
       if (t.length < 16000) break;
     }
     if (partial) { lines.push(partial); partial = ''; }
-    if (!lines.length) sub.textContent = 'No hay registro del arranque anterior: la placa se desenchufó, o arrancó un firmware distinto (el anillo cambia de lugar con cada compilación).';
+    if (!lines.length) sub.textContent = tr('No hay registro del arranque anterior: la placa se desenchufó, o arrancó un firmware distinto (el anillo cambia de lugar con cada compilación).');
     render();
   };
   start();
@@ -683,74 +728,73 @@ function pageRegistro() {
 async function pageFirmware() {
   let st, cd;
   try { [st, cd] = await Promise.all([api('ota'), api('coredump')]); }
-  catch (e) { put(main, h('h1', {}, 'Firmware'), h('div', { class: 'card pad' }, 'No se pudo leer: ' + e.message)); return; }
+  catch (e) { put(main, h('h1', {}, 'Firmware'), h('div', { class: 'card pad' }, tr('No se pudo leer: %s', e.message))); return; }
   const bar = h('div', { class: 'prog', style: 'margin:12px 0 6px' }, h('div'));
   const msg = h('div', { class: 'note' });
   const file = h('input', { type: 'file', accept: '.bin', style: 'display:none', onchange: e => upload(e.target.files[0]) });
-  const restartBtn = h('button', { class: 'btn pri', style: 'display:none', onclick: () => restartInto() }, 'Reiniciar con el firmware nuevo');
+  const restartBtn = h('button', { class: 'btn pri', style: 'display:none', onclick: () => restartInto() }, tr('Reiniciar con el firmware nuevo'));
   function upload(f) {
     if (!f) return;
-    if (!/\.bin$/i.test(f.name)) { toast('Tiene que ser el .bin del firmware (build/rev1_3/p4os.bin)', true); return; }
+    if (!/\.bin$/i.test(f.name)) { toast(tr('Tiene que ser el .bin del firmware (build/rev1_3/p4os.bin)'), true); return; }
     const x = new XMLHttpRequest();
     x.open('PUT', '/api/ota');
-    x.upload.onprogress = e => { if (e.lengthComputable) { bar.firstChild.style.width = (e.loaded * 100 / e.total).toFixed(1) + '%'; msg.textContent = 'Subiendo ' + fmtBytes(e.loaded) + ' de ' + fmtBytes(e.total) + '…'; } };
+    x.upload.onprogress = e => { if (e.lengthComputable) { bar.firstChild.style.width = (e.loaded * 100 / e.total).toFixed(1) + '%'; msg.textContent = tr('Subiendo %s de %s…', fmtBytes(e.loaded), fmtBytes(e.total)); } };
     x.onload = () => {
       let j = {};
       try { j = JSON.parse(x.responseText); } catch {}
-      if (x.status === 200 && j.ok) { msg.textContent = 'Listo: ' + fmtBytes(j.size) + ' escritos en ' + (j.ms / 1000).toFixed(1).replace('.', ',') + ' s. Arranca a prueba al reiniciar.'; restartBtn.style.display = ''; }
-      else { msg.textContent = 'Falló: ' + (j.error || x.statusText); bar.firstChild.style.width = '0%'; }
+      if (x.status === 200 && j.ok) { msg.textContent = tr('Listo: %s escritos en %s s. Arranca a prueba al reiniciar.', fmtBytes(j.size), num(j.ms / 1000, 1)); restartBtn.style.display = ''; }
+      else { msg.textContent = tr('Falló: %s', j.error || x.statusText); bar.firstChild.style.width = '0%'; }
     };
-    x.onerror = () => { msg.textContent = 'Se cortó la conexión'; };
+    x.onerror = () => { msg.textContent = tr('Se cortó la conexión'); };
     x.send(f);
   }
   async function restartInto() {
     const before = st.running;
     restartBtn.disabled = true;
     await post('ota/restart').catch(() => {});
-    msg.textContent = 'Reiniciando…';
+    msg.textContent = tr('Reiniciando…');
     for (let i = 0; i < 90; i++) {
       await new Promise(r => setTimeout(r, 1000));
       try {
         const s2 = await api('ota');
-        if (s2.running === before) { msg.textContent = 'Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranque anterior.'; restartBtn.disabled = false; return; }
-        msg.textContent = s2.trial ? 'Corriendo ' + s2.running + ' a prueba: se confirma a los 30 s…' : 'Confirmado: ' + s2.running + ' es el firmware ahora.';
+        if (s2.running === before) { msg.textContent = tr('Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranque anterior.'); restartBtn.disabled = false; return; }
+        msg.textContent = s2.trial ? tr('Corriendo %s a prueba: se confirma a los 30 s…', s2.running) : tr('Confirmado: %s es el firmware ahora.', s2.running);
         if (!s2.trial) { setTimeout(pageFirmware, 1500); return; }
       } catch {}
     }
-    msg.textContent = 'La placa no contestó en un minuto y medio: mirala.';
+    msg.textContent = tr('La placa no contestó en un minuto y medio: mirala.');
   }
   const o = st.other || {};
   put(main, h('h1', {}, 'Firmware'),
     h('div', { class: 'card pad' },
-      row('Versión', st.version), row('Compilado', (st.built || '') + ' ' + (st.time || '')), row('IDF', st.idf || ''), st.elf ? row('ELF', st.elf) : null,
-      row('Ranura', st.running + (st.trial ? ' (a prueba)' : ''), st.trial ? 'warn' : ''),
-      row('La otra ranura', o.slot ? o.slot + (o.version ? ' — ' + o.version + ', ' + (o.built || '') + (o.elf ? ', ELF ' + o.elf : '') + (o.state ? ' (' + o.state + ')' : '') : ' — vacía') : '—')),
-    h('h2', {}, 'Actualizar por Wi-Fi'),
+      row(tr('Versión'), st.version), row(tr('Compilado'), (st.built || '') + ' ' + (st.time || '')), row('IDF', st.idf || ''), st.elf ? row('ELF', st.elf) : null,
+      row(tr('Ranura'), st.running + (st.trial ? ' (' + tr('a prueba') + ')' : ''), st.trial ? 'warn' : ''),
+      row(tr('La otra ranura'), o.slot ? o.slot + (o.version ? ' — ' + o.version + ', ' + (o.built || '') + (o.elf ? ', ELF ' + o.elf : '') + (o.state ? ' (' + o.state + ')' : '') : ' — ' + tr('vacía')) : '—')),
+    h('h2', {}, tr('Actualizar por Wi-Fi')),
     h('div', { class: 'card pad' },
-      h('div', { class: 'note' }, 'Elegí build/rev1_3/p4os.bin. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.'),
-      h('div', { class: 'btns', style: 'margin-top:10px' }, h('button', { class: 'btn', onclick: () => file.click() }, 'Elegir el .bin…'), restartBtn,
-        o.version ? h('button', { class: 'btn', onclick: async () => { if (!confirm('¿Arrancar ' + o.slot + ' (' + o.version + ') en el próximo reinicio?')) return; try { await post('ota/other'); toast('Arranca ' + o.slot + ' al reiniciar'); } catch (e) { toast(e.message, true); } } }, 'Volver a la otra ranura') : null),
+      h('div', { class: 'note' }, tr('Elegí build/rev1_3/p4os.bin. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.')),
+      h('div', { class: 'btns', style: 'margin-top:10px' }, h('button', { class: 'btn', onclick: () => file.click() }, tr('Elegir el .bin…')), restartBtn,
+        o.version ? h('button', { class: 'btn', onclick: async () => { if (!confirm(tr('¿Arrancar %s (%s) en el próximo reinicio?', o.slot, o.version))) return; try { await post('ota/other'); toast(tr('Arranca %s al reiniciar', o.slot)); } catch (e) { toast(e.message, true); } } }, tr('Volver a la otra ranura')) : null),
       file, bar, msg),
-    h('h2', {}, 'Último cuelgue'),
+    h('h2', {}, tr('Último cuelgue')),
     h('div', { class: 'card pad' },
       cd.present ? [
-        row('Volcado', fmtBytes(cd.size) + (cd.valid ? '' : ' (dañado)')),
-        cd.task ? row('Tarea', cd.task) : null, cd.pc && cd.pc !== '0x00000000' ? row('PC / RA', cd.pc + ' / ' + cd.ra) : null,
-        row('Firmware', cd.elf_sha ? 'ELF ' + cd.elf_sha + ' — ' + (cd.slot === 'running' ? 'el de ahora' : cd.slot === 'other' ? 'el de la otra ranura' : 'ninguna de las dos ranuras: uno viejo') + (cd.version ? ' (' + cd.version + ')' : '') : 'no se sabe', cd.slot ? '' : 'warn'),
-        cd.seen ? row('Visto', new Date(cd.seen * 1000).toLocaleString()) : null,
-        cd.unread ? row('Estado', 'sin leer', 'warn') : null,
-        h('div', { class: 'note' }, 'Para ver funciones y líneas: tools/coredump.sh en la Mac. Decodifica sólo con la ELF de ese firmware (build/elf/<sha>.elf, que tools/ota.sh guarda en cada instalación); descargarlo entero cuenta como leído.'),
+        row(tr('Volcado'), fmtBytes(cd.size) + (cd.valid ? '' : ' (' + tr('dañado') + ')')),
+        cd.task ? row(tr('Tarea'), cd.task) : null, cd.pc && cd.pc !== '0x00000000' ? row('PC / RA', cd.pc + ' / ' + cd.ra) : null,
+        row('Firmware', cd.elf_sha ? 'ELF ' + cd.elf_sha + ' — ' + (cd.slot === 'running' ? tr('el de ahora') : cd.slot === 'other' ? tr('el de la otra ranura') : tr('ninguna de las dos ranuras: uno viejo')) + (cd.version ? ' (' + cd.version + ')' : '') : tr('no se sabe'), cd.slot ? '' : 'warn'),
+        cd.seen ? row(tr('Visto'), new Date(cd.seen * 1000).toLocaleString(LOCALE)) : null,
+        cd.unread ? row(tr('Estado'), tr('sin leer'), 'warn') : null,
+        h('div', { class: 'note' }, tr('Para ver funciones y líneas: tools/coredump.sh en la Mac. Decodifica sólo con la ELF de ese firmware (build/elf/<sha>.elf, que tools/ota.sh guarda en cada instalación); descargarlo entero cuenta como leído.')),
         h('div', { class: 'btns', style: 'margin-top:10px' },
-          h('a', { class: 'btn', href: '/api/coredump/elf', download: 'p4os-coredump-' + (cd.elf_sha || 'unknown') + '.elf' }, 'Descargar el volcado'),
-          cd.unread ? h('button', { class: 'btn', onclick: async () => { await post('coredump/read').catch(e => toast(e.message, true)); pageFirmware(); } }, 'Marcar como leído') : null,
-          h('button', { class: 'btn red', onclick: async () => { if (!confirm('¿Borrar el volcado?')) return; await post('coredump/erase').catch(e => toast(e.message, true)); pageFirmware(); } }, 'Borrar'),
-          h('button', { class: 'btn', onclick: () => { location.hash = '#registro'; } }, 'Ver el registro'))]
-      : h('div', { class: 'note' }, 'No hay: la placa no se colgó desde que se borró el último.')));
+          h('a', { class: 'btn', href: '/api/coredump/elf', download: 'p4os-coredump-' + (cd.elf_sha || 'unknown') + '.elf' }, tr('Descargar el volcado')),
+          cd.unread ? h('button', { class: 'btn', onclick: async () => { await post('coredump/read').catch(e => toast(e.message, true)); pageFirmware(); } }, tr('Marcar como leído')) : null,
+          h('button', { class: 'btn red', onclick: async () => { if (!confirm(tr('¿Borrar el volcado?'))) return; await post('coredump/erase').catch(e => toast(e.message, true)); pageFirmware(); } }, tr('Borrar')),
+          h('button', { class: 'btn', onclick: () => { location.hash = '#registro'; } }, tr('Ver el registro')))]
+      : h('div', { class: 'note' }, tr('No hay: la placa no se colgó desde que se borró el último.'))));
 }
 
 /* ---- Banco ---- */
 const CH_COLOR = ['#ffd60a', '#40c8e0', '#ff5ad2', '#3b82f6'];
-const num = (v, d) => v == null ? '--' : v.toFixed(d).replace('.', ',');
 function eng(v, unit) {
   if (v == null || !isFinite(v)) return '--';
   const P = [[1e6, 'M'], [1e3, 'k'], [1, ''], [1e-3, 'm'], [1e-6, 'µ'], [1e-9, 'n']];
@@ -759,7 +803,7 @@ function eng(v, unit) {
   if (k < 0 || a === 0) k = 2;
   if (unit !== 'Hz' && unit !== 's' && k < 2) k = 2;
   const s = v / P[k][0], as = Math.abs(s);
-  return s.toFixed(as >= 100 ? 1 : as >= 10 ? 2 : 3).replace('.', ',') + ' ' + P[k][1] + unit;
+  return num(s, as >= 100 ? 1 : as >= 10 ? 2 : 3) + ' ' + P[k][1] + unit;
 }
 /* the knobs go 1-2-5 */
 function step125(v, dir) {
@@ -777,7 +821,7 @@ async function pageBanco() {
   const scmd = cmd => post('bench/scope', { cmd }).catch(e => toast(e.message, true));
   /* supply */
   const rdV = h('div', { class: 'big' }), rdMode = h('span', { class: 'pill' }), rdIA = h('div', { class: 'mid' }), rdInfo = h('div', { class: 'note' });
-  const rdOut = h('button', { class: 'btn' }, 'Salida');
+  const rdOut = h('button', { class: 'btn' }, tr('Salida'));
   const vIn = h('input', { type: 'text', placeholder: 'V', style: 'width:90px' }), iIn = h('input', { type: 'text', placeholder: 'A', style: 'width:90px' });
   const parseNum = s => parseFloat(String(s).replace(',', '.'));
   const applyV = () => { const v = parseNum(vIn.value); if (isFinite(v)) post('bench/riden', { v }).then(() => { vIn.value = ''; }).catch(e => toast(e.message, true)); };
@@ -787,26 +831,26 @@ async function pageBanco() {
   rdOut.onclick = () => st && st.riden.ok && post('bench/riden', { on: !st.riden.on }).catch(e => toast(e.message, true));
   const rdSet = h('div', { class: 'note' });
   /* logger */
-  const lgState = h('div', { class: 'mid' }), lgInfo = h('div', { class: 'note' }), lgBtn = h('button', { class: 'btn' }, 'Grabar');
+  const lgState = h('div', { class: 'mid' }), lgInfo = h('div', { class: 'note' }), lgBtn = h('button', { class: 'btn' }, tr('Grabar'));
   const lgSeries = h('div', { class: 'btns', style: 'margin-top:8px' });
-  const lgIv = h('select', { style: 'width:auto' }, [[500, '0,5 s'], [1000, '1 s'], [2000, '2 s'], [5000, '5 s'], [10000, '10 s'], [30000, '30 s'], [60000, '1 min']].map(([v, n]) => h('option', { value: v }, n)));
+  const lgIv = h('select', { style: 'width:auto' }, [[500, num(0.5, 1) + ' s'], [1000, '1 s'], [2000, '2 s'], [5000, '5 s'], [10000, '10 s'], [30000, '30 s'], [60000, '1 min']].map(([v, n]) => h('option', { value: v }, n)));
   lgIv.onchange = () => post('bench/log', { interval: +lgIv.value }).then(load).catch(e => toast(e.message, true));
   lgBtn.onclick = () => post('bench/log', { start: !st.log.running }).then(() => setTimeout(load, 300)).catch(e => toast(e.message, true));
   /* scope */
-  const host = h('input', { type: 'text', placeholder: 'Dirección del osciloscopio (192.168.1.50)', style: 'max-width:320px' });
-  const conBtn = h('button', { class: 'btn pri' }, 'Conectar');
+  const host = h('input', { type: 'text', placeholder: tr('Dirección del osciloscopio (192.168.1.50)'), style: 'max-width:320px' });
+  const conBtn = h('button', { class: 'btn pri' }, tr('Conectar'));
   conBtn.onclick = () => post('bench/scope', st && (st.scope.connected || st.scope.connecting) ? { disconnect: true } : { connect: host.value.trim() }).then(() => setTimeout(load, 300)).catch(e => toast(e.message, true));
   const scStatus = h('div', { class: 'note' });
   const canvas = h('canvas', { class: 'scope', width: 1200, height: 800 });
   const chRow = h('div', { class: 'btns' }), tbRow = h('div', { class: 'btns' }), meas = h('div', { class: 'card' });
   const shotImg = h('img', { class: 'shot', alt: '' });
-  const shotBtn = h('button', { class: 'btn', onclick: () => post('bench/shot').then(() => toast('Pidiendo la captura…')).catch(e => toast(e.message, true)) }, 'Captura del osciloscopio');
+  const shotBtn = h('button', { class: 'btn', onclick: () => post('bench/shot').then(() => toast(tr('Pidiendo la captura…'))).catch(e => toast(e.message, true)) }, tr('Captura del osciloscopio'));
   const ctl = h('div', { class: 'btns' },
     h('button', { class: 'btn green', onclick: () => scmd(':RUN') }, 'Run'),
     h('button', { class: 'btn red', onclick: () => scmd(':STOP') }, 'Stop'),
     h('button', { class: 'btn', onclick: () => scmd(':SINGle') }, 'Single'),
     h('button', { class: 'btn', onclick: () => scmd(':AUToscale') }, 'Auto'),
-    h('button', { class: 'btn', onclick: () => scmd(':CLEar') }, 'Borrar'), shotBtn);
+    h('button', { class: 'btn', onclick: () => scmd(':CLEar') }, tr('Borrar')), shotBtn);
 
   function draw() {
     const c = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
@@ -849,11 +893,11 @@ async function pageBanco() {
       h('span', { class: 'val' }, eng(ch.scale, 'V')),
       h('button', { class: 'btn', onclick: () => scmd(`:CHANnel${k + 1}:SCALe ${step125(ch.scale, 1)}`) }, '+'))));
     put(tbRow,
-      h('span', { class: 'muted' }, 'Tiempo'),
+      h('span', { class: 'muted' }, tr('Tiempo')),
       h('button', { class: 'btn', onclick: () => scmd(`:TIMebase:MAIN:SCALe ${step125(s.timebase, -1)}`) }, '−'),
       h('span', { class: 'val' }, eng(s.timebase, 's') + '/div'),
       h('button', { class: 'btn', onclick: () => scmd(`:TIMebase:MAIN:SCALe ${step125(s.timebase, 1)}`) }, '+'),
-      h('span', { class: 'muted', style: 'margin-left:18px' }, 'Disparo CH' + s.trig_source),
+      h('span', { class: 'muted', style: 'margin-left:18px' }, tr('Disparo CH%s', s.trig_source)),
       h('button', { class: 'btn', onclick: () => scmd(`:TRIGger:EDGe:LEVel ${(s.trig_level - s.ch[s.trig_source - 1].scale / 5).toPrecision(4)}`) }, '−'),
       h('span', { class: 'val' }, eng(s.trig_level, 'V')),
       h('button', { class: 'btn', onclick: () => scmd(`:TRIGger:EDGe:LEVel ${(s.trig_level + s.ch[s.trig_source - 1].scale / 5).toPrecision(4)}`) }, '+'),
@@ -862,58 +906,58 @@ async function pageBanco() {
     const on = s.ch.map((c, k) => [c, k]).filter(([c]) => c.on);
     put(meas, on.length ? on.map(([c, k]) => h('div', { class: 'row' },
       h('div', { style: `color:${CH_COLOR[k]};width:50px;font-weight:600` }, 'CH' + (k + 1)),
-      ...[['Vpp', c.meas.vpp, 'V'], ['Vmáx', c.meas.vmax, 'V'], ['Vmín', c.meas.vmin, 'V'], ['Vmed', c.meas.vavg, 'V'], ['Vrms', c.meas.vrms, 'V'], ['Frec', c.meas.freq, 'Hz'], ['Período', c.meas.period, 's']]
+      ...[['Vpp', c.meas.vpp, 'V'], [tr('Vmáx'), c.meas.vmax, 'V'], [tr('Vmín'), c.meas.vmin, 'V'], [tr('Vmed'), c.meas.vavg, 'V'], ['Vrms', c.meas.vrms, 'V'], [tr('Frec'), c.meas.freq, 'Hz'], [tr('Período'), c.meas.period, 's']]
         .map(([n, v, u]) => h('div', { class: 'grow' }, h('div', { class: 'muted small' }, n), eng(v, u))))) :
-      [h('div', { class: 'row muted' }, 'Ningún canal encendido.')]);
+      [h('div', { class: 'row muted' }, tr('Ningún canal encendido.'))]);
   }
   async function load() {
     try { st = await api('bench'); } catch { return; }
     const r = st.riden, l = st.log, s = st.scope;
     /* supply */
-    rdV.textContent = r.ok ? num(r.v, 2) + ' V' : '--,-- V';
+    rdV.textContent = r.ok ? num(r.v, 2) + ' V' : (LANG === 'en' ? '--.--' : '--,--') + ' V';
     rdV.style.color = !r.ok || !r.on ? 'var(--dim)' : r.cc ? 'var(--orange)' : 'var(--green)';
-    rdMode.textContent = !r.ok ? '' : !r.on ? 'APAGADA' : r.protect === 1 ? 'OVP' : r.protect === 2 ? 'OCP' : r.cc ? 'CC' : 'CV';
+    rdMode.textContent = !r.ok ? '' : !r.on ? tr('APAGADA') : r.protect === 1 ? 'OVP' : r.protect === 2 ? 'OCP' : r.cc ? 'CC' : 'CV';
     rdIA.textContent = r.ok ? num(r.i, r.idec) + ' A   ·   ' + num(r.p, 2) + ' W' : '';
-    rdOut.textContent = r.ok && r.on ? 'Apagar la salida' : 'Encender la salida';
+    rdOut.textContent = r.ok && r.on ? tr('Apagar la salida') : tr('Encender la salida');
     rdOut.className = 'btn ' + (r.ok && r.on ? 'red' : 'green');
     rdOut.disabled = !r.ok;
-    put(rdSet, r.ok ? `Ajuste ${num(r.v_set, 2)} V · ${num(r.i_set, r.idec)} A · entrada ${num(r.v_in, 2)} V (tope ${num(Math.max(0, r.v_in - 1.01), 2)} V) · ${r.temp} °C · ${num(r.ah, 3)} Ah · ${num(r.wh, 3)} Wh` : '');
+    put(rdSet, r.ok ? tr('Ajuste %s V · %s A · entrada %s V (tope %s V)', num(r.v_set, 2), num(r.i_set, r.idec), num(r.v_in, 2), num(Math.max(0, r.v_in - 1.01), 2)) + ` · ${r.temp} °C · ${num(r.ah, 3)} Ah · ${num(r.wh, 3)} Wh` : '');
     put(rdInfo, (r.model ? 'RD' + r.model + ' · ' : '') + (r.where || '') + (r.error ? ' · ' + r.error : ''));
     if (lastWseq != null && r.wseq !== lastWseq && r.wmsg) toast(r.wmsg, true);
     lastWseq = r.wseq;
     /* logger */
     const e = l.elapsed;
-    lgState.textContent = l.running ? `● ${String(Math.floor(e / 3600)).padStart(2, '0')}:${String(Math.floor(e / 60) % 60).padStart(2, '0')}:${String(e % 60).padStart(2, '0')} · ${l.rows} filas` : 'Detenido';
+    lgState.textContent = l.running ? `● ${String(Math.floor(e / 3600)).padStart(2, '0')}:${String(Math.floor(e / 60) % 60).padStart(2, '0')}:${String(e % 60).padStart(2, '0')} · ` + tr('%s filas', l.rows) : tr('Detenido');
     lgState.style.color = l.running ? 'var(--red)' : '';
-    lgBtn.textContent = l.running ? 'Detener' : 'Grabar';
+    lgBtn.textContent = l.running ? tr('Detener') : tr('Grabar');
     lgBtn.className = 'btn ' + (l.running ? 'red' : 'pri');
     lgIv.value = l.interval; lgIv.disabled = l.running;
-    put(lgInfo, l.error ? h('span', { class: 'bad' }, l.error) : l.path ? ['Archivo: ', h('a', { href: '/api/fs/get?attachment=1&path=' + encodeURIComponent(l.path) }, l.path)] : 'Una fila por toma en un CSV de la carpeta logs de la tarjeta.');
+    put(lgInfo, l.error ? h('span', { class: 'bad' }, l.error) : l.path ? [tr('Archivo:') + ' ', h('a', { href: '/api/fs/get?attachment=1&path=' + encodeURIComponent(l.path) }, l.path)] : tr('Una fila por toma en un CSV de la carpeta logs de la tarjeta.'));
     put(lgSeries, l.series.map((x, i) => h('button', {
       class: 'btn', disabled: l.running,
       style: l.mask & (1 << i) ? `background:${x.color};color:#000` : '',
       onclick: () => post('bench/log', { mask: l.mask ^ (1 << i) }).then(load).catch(er => toast(er.message, true)) }, x.name)));
     /* scope */
     if (!host.matches(':focus') && s.host && !host.value) host.value = s.host;
-    conBtn.textContent = s.connected || s.connecting ? 'Desconectar' : 'Conectar';
+    conBtn.textContent = s.connected || s.connecting ? tr('Desconectar') : tr('Conectar');
     conBtn.className = 'btn ' + (s.connected || s.connecting ? '' : 'pri');
-    put(scStatus, s.connected ? `${s.idn} · ${s.trig || '--'} · ${s.fps.toFixed(1).replace('.', ',')} trazas/s` : s.connecting ? 'Conectando…' : s.error || 'Sin conectar.');
+    put(scStatus, s.connected ? `${s.idn} · ${s.trig || '--'} · ` + tr('%s trazas/s', num(s.fps, 1)) : s.connecting ? tr('Conectando…') : s.error || tr('Sin conectar.'));
     if (s.connected) chips(); else { put(chRow); put(tbRow); put(meas); }
     if (s.shot_seq !== benchShot && s.shot_seq) { benchShot = s.shot_seq; shotImg.src = '/api/bench/shot?s=' + s.shot_seq; shotImg.style.display = 'block'; }
   }
-  put(main, h('h1', {}, 'Banco'),
+  put(main, h('h1', {}, tr('Banco')),
     h('div', { class: 'grid2' },
-      h('div', { class: 'card pad' }, h('h2', { style: 'margin-top:0' }, 'Fuente Riden'),
+      h('div', { class: 'card pad' }, h('h2', { style: 'margin-top:0' }, tr('Fuente Riden')),
         h('div', { style: 'display:flex;align-items:baseline;gap:14px' }, rdV, rdMode), rdIA, rdSet,
-        h('div', { class: 'btns', style: 'margin-top:12px' }, rdOut, vIn, h('button', { class: 'btn', onclick: applyV }, 'Fijar V'), iIn, h('button', { class: 'btn', onclick: applyI }, 'Fijar A')),
+        h('div', { class: 'btns', style: 'margin-top:12px' }, rdOut, vIn, h('button', { class: 'btn', onclick: applyV }, tr('Fijar V')), iIn, h('button', { class: 'btn', onclick: applyI }, tr('Fijar A'))),
         rdInfo),
-      h('div', { class: 'card pad' }, h('h2', { style: 'margin-top:0' }, 'Registro a CSV'),
-        lgState, h('div', { class: 'btns', style: 'margin-top:10px' }, lgBtn, h('span', { class: 'muted' }, 'cada'), lgIv), lgSeries, lgInfo)),
-    h('h2', {}, 'Osciloscopio Rigol'),
+      h('div', { class: 'card pad' }, h('h2', { style: 'margin-top:0' }, tr('Registro a CSV')),
+        lgState, h('div', { class: 'btns', style: 'margin-top:10px' }, lgBtn, h('span', { class: 'muted' }, tr('cada')), lgIv), lgSeries, lgInfo)),
+    h('h2', {}, tr('Osciloscopio Rigol')),
     h('div', { class: 'btns', style: 'margin-bottom:8px' }, h('div', { style: 'flex:1;max-width:320px' }, host), conBtn), scStatus,
     h('div', { class: 'scopebox' }, canvas), ctl, h('div', { style: 'height:10px' }), chRow, h('div', { style: 'height:8px' }), tbRow,
-    h('h2', {}, 'Medidas'), meas, h('h2', {}, 'Captura'), h('p', { class: 'note' }, 'La pantalla del propio osciloscopio, tal cual.'), shotImg,
-    h('h2', {}, 'Generador'), h('div', { class: 'card pad muted' }, 'El UNI-T UTG932E habla USBTMC por USB y espera un hub USB con alimentación: el puerto OTG de la placa no da 5 V.'));
+    h('h2', {}, tr('Medidas')), meas, h('h2', {}, tr('Captura')), h('p', { class: 'note' }, tr('La pantalla del propio osciloscopio, tal cual.')), shotImg,
+    h('h2', {}, tr('Generador')), h('div', { class: 'card pad muted' }, tr('El UNI-T UTG932E habla USBTMC por USB y espera un hub USB con alimentación: el puerto OTG de la placa no da 5 V.')));
   draw();
   clearTimeout(benchT); clearTimeout(waveT);
   await load();
@@ -926,10 +970,10 @@ async function pageBanco() {
 let mqttT;
 async function pageMqtt() {
   let st = null, sel = null, field = null, topics = [];
-  const numES = v => v == null || !isFinite(v) ? '--' : String(+(+v).toFixed(3)).replace('.', ',');
-  const ago = ms => ms < 2000 ? 'recién' : ms < 60000 ? `hace ${Math.round(ms / 1000)} s` : ms < 3600000 ? `hace ${Math.round(ms / 60000)} min` : `hace ${Math.round(ms / 3600000)} h`;
-  const STATE = { off: ['Apagado', ''], unconfigured: ['Sin configurar', ''], waiting_net: ['Sin red', 'warn'], connecting: ['Conectando…', 'warn'],
-    refused: ['Rechazado', 'bad'], connected: ['Conectado', 'ok'], error: ['Sin conexión', 'bad'] };
+  const numES = v => v == null || !isFinite(v) ? '--' : (+v).toLocaleString(LOCALE, { maximumFractionDigits: 3, useGrouping: false });
+  const ago = ms => ms < 2000 ? tr('recién') : ms < 60000 ? tr('hace %s s', Math.round(ms / 1000)) : ms < 3600000 ? tr('hace %s min', Math.round(ms / 60000)) : tr('hace %s h', Math.round(ms / 3600000));
+  const STATE = { off: [tr('Apagado'), ''], unconfigured: [tr('Sin configurar'), ''], waiting_net: [tr('Sin red'), 'warn'], connecting: [tr('Conectando…'), 'warn'],
+    refused: [tr('Rechazado'), 'bad'], connected: [tr('Conectado'), 'ok'], error: [tr('Sin conexión'), 'bad'] };
   /* connection */
   const f = {};
   for (const k of ['host', 'port', 'user', 'pass', 'client_id', 'sub', 'keepalive']) f[k] = h('input', { type: k === 'pass' ? 'password' : 'text' });
@@ -939,7 +983,7 @@ async function pageMqtt() {
     const b = { host: f.host.value.trim(), port: +f.port.value || 1883, user: f.user.value.trim(), client_id: f.client_id.value.trim(),
       sub: f.sub.value.trim() || '#', keepalive: +f.keepalive.value || 30, enabled: en.checked };
     if (f.pass.value) b.pass = f.pass.value;
-    post('mqtt/config', b).then(() => { toast('Guardado'); f.pass.value = ''; setTimeout(load, 400); }).catch(e => toast(e.message, true));
+    post('mqtt/config', b).then(() => { toast(tr('Guardado')); f.pass.value = ''; setTimeout(load, 400); }).catch(e => toast(e.message, true));
   };
   en.onchange = save;
   /* publish */
@@ -948,21 +992,21 @@ async function pageMqtt() {
   const pq = h('select', { style: 'width:auto' }, h('option', { value: 0 }, 'QoS 0'), h('option', { value: 1 }, 'QoS 1'));
   const pr = h('input', { type: 'checkbox' });
   const pub = () => post('mqtt/publish', { topic: pt.value.trim(), payload: pp.value, qos: +pq.value, retain: pr.checked })
-    .then(r => toast(r.queued ? 'En cola: sale cuando haya conexión' : 'Publicado en ' + pt.value.trim())).catch(e => toast(e.message, true));
+    .then(r => toast(r.queued ? tr('En cola: sale cuando haya conexión') : tr('Publicado en %s', pt.value.trim()))).catch(e => toast(e.message, true));
   /* topics */
-  const filt = h('input', { type: 'search', placeholder: 'Filtrar tópicos', style: 'max-width:320px' });
+  const filt = h('input', { type: 'search', placeholder: tr('Filtrar tópicos'), style: 'max-width:320px' });
   const count = h('span', { class: 'muted small' });
   const list = h('div', { class: 'card mqlist' }), detail = h('div', { class: 'card pad mqdet' });
   filt.oninput = () => drawList();
   function drawList() {
     const q = filt.value.trim().toLowerCase();
     const shown = topics.filter(t => !q || t.t.toLowerCase().includes(q)).sort((a, b) => a.t < b.t ? -1 : 1);
-    count.textContent = `${shown.length} de ${topics.length} tópicos`;
+    count.textContent = tr('%s de %s tópicos', shown.length, topics.length);
     put(list, shown.slice(0, 400).map(t => h('div', { class: 'row click' + (t.t === sel ? ' sel' : ''), onclick: () => { sel = t.t; field = null; drawList(); loadTopic(); } },
-      h('div', { class: 'grow' }, h('div', { class: 'mono' }, t.t), h('div', { class: 'muted small mono ell' }, t.k === 4 ? `binario · ${t.len} bytes` : t.p || '(vacío)')),
+      h('div', { class: 'grow' }, h('div', { class: 'mono' }, t.t), h('div', { class: 'muted small mono ell' }, t.k === 4 ? tr('binario · %s bytes', t.len) : t.p || tr('(vacío)'))),
       t.r ? h('span', { class: 'pill' }, 'R') : null,
       h('div', { class: 'val small', style: 'width:92px' }, '×' + t.n, h('br'), ago(t.age)))),
-      shown.length ? null : h('div', { class: 'row muted' }, topics.length ? 'Ningún tópico coincide.' : 'Todavía no llegó nada.'));
+      shown.length ? null : h('div', { class: 'row muted' }, topics.length ? tr('Ningún tópico coincide.') : tr('Todavía no llegó nada.')));
   }
   function chart(fl) {
     const c = h('canvas', { width: 900, height: 260, class: 'scope' });
@@ -975,32 +1019,32 @@ async function pageMqtt() {
       v.forEach((x, i) => { const px = i * W / (v.length - 1), py = H - (x - lo) / (hi - lo) * H; i ? g.lineTo(px, py) : g.moveTo(px, py); });
       g.stroke();
       g.fillStyle = '#8e8e93'; g.font = '20px -apple-system,sans-serif';
-      g.fillText('máx ' + numES(Math.max(...v)), 8, 24); g.fillText('mín ' + numES(Math.min(...v)), 8, H - 10);
+      g.fillText(tr('máx %s', numES(Math.max(...v))), 8, 24); g.fillText(tr('mín %s', numES(Math.min(...v))), 8, H - 10);
     }
     return c;
   }
   const pretty = s => { try { return JSON.stringify(JSON.parse(s), null, 2); } catch { return s; } };
   async function loadTopic() {
-    if (!sel) { put(detail, h('div', { class: 'muted' }, 'Elegí un tópico de la lista.')); return; }
+    if (!sel) { put(detail, h('div', { class: 'muted' }, tr('Elegí un tópico de la lista.'))); return; }
     let t;
     try { t = await api('mqtt/topic?t=' + encodeURIComponent(sel)); } catch (e) { put(detail, h('div', { class: 'muted' }, e.message)); return; }
     const fl = t.fields.find(x => x.name === field) || t.fields[0];
     put(detail, h('div', { class: 'mono', style: 'font-size:17px;word-break:break-all' }, t.topic),
-      h('div', { class: 'btns', style: 'margin:10px 0' }, t.retained ? h('span', { class: 'pill', style: 'background:#6d28d9;color:#fff' }, 'Retenido') : null,
-        h('span', { class: 'pill' }, 'QoS ' + t.qos), h('span', { class: 'pill' }, t.count + ' mensajes'), h('span', { class: 'pill' }, ago(t.age)), h('span', { class: 'pill' }, fmtBytes(t.len))),
-      fl ? [h('div', { class: 'btns' }, t.fields.length > 1 || fl.name ? t.fields.map(x => h('button', { class: 'btn' + (x === fl ? ' pri' : ''), onclick: () => { field = x.name; loadTopic(); } }, x.name || 'valor')) : null),
+      h('div', { class: 'btns', style: 'margin:10px 0' }, t.retained ? h('span', { class: 'pill', style: 'background:#6d28d9;color:#fff' }, tr('Retenido')) : null,
+        h('span', { class: 'pill' }, 'QoS ' + t.qos), h('span', { class: 'pill' }, tr('%s mensajes', t.count)), h('span', { class: 'pill' }, ago(t.age)), h('span', { class: 'pill' }, fmtBytes(t.len))),
+      fl ? [h('div', { class: 'btns' }, t.fields.length > 1 || fl.name ? t.fields.map(x => h('button', { class: 'btn' + (x === fl ? ' pri' : ''), onclick: () => { field = x.name; loadTopic(); } }, x.name || tr('valor'))) : null),
         h('div', { class: 'big', style: 'color:#a78bfa;margin:6px 0' }, numES(fl.last)), h('div', { class: 'scopebox' }, chart(fl))] : null,
-      h('h2', {}, 'Mensaje'), h('pre', { class: 'log', style: 'height:auto;max-height:420px' }, t.kind === 4 ? '(binario)' : pretty(t.payload) + (t.len > t.payload.length ? `\n… (recortado: ${fmtBytes(t.len)} en total)` : '')),
-      h('div', { class: 'btns' }, h('button', { class: 'btn', onclick: () => { pt.value = t.topic; pp.value = t.payload; pr.checked = t.retained; pt.focus(); } }, 'Publicar en este tópico')));
+      h('h2', {}, tr('Mensaje')), h('pre', { class: 'log', style: 'height:auto;max-height:420px' }, t.kind === 4 ? tr('(binario)') : pretty(t.payload) + (t.len > t.payload.length ? '\n… ' + tr('(recortado: %s en total)', fmtBytes(t.len)) : '')),
+      h('div', { class: 'btns' }, h('button', { class: 'btn', onclick: () => { pt.value = t.topic; pp.value = t.payload; pr.checked = t.retained; pt.focus(); } }, tr('Publicar en este tópico'))));
   }
   async function load() {
     try { st = await api('mqtt'); } catch { return; }
     const c = st.config, [name, cls] = STATE[st.state] || [st.state, ''];
     put(stLine, h('span', { class: cls }, '● '), name, c.host ? h('span', { class: 'muted small' }, `  ${c.host}:${c.port}`) : null);
     const s = st.stats;
-    put(stNote, (st.error ? st.error + ' · ' : '') + `cliente ${st.client_id} · ${s.rx_msgs} recibidos · ${s.tx_msgs} enviados · ${fmtBytes(s.rx_bytes)} · ${s.connects} conexiones` + (s.ping_ms >= 0 && st.state === 'connected' ? ` · ping ${s.ping_ms} ms` : ''));
+    put(stNote, (st.error ? st.error + ' · ' : '') + tr('cliente %s', st.client_id) + ' · ' + tr('%s recibidos', s.rx_msgs) + ' · ' + tr('%s enviados', s.tx_msgs) + ` · ${fmtBytes(s.rx_bytes)} · ` + tr('%s conexiones', s.connects) + (s.ping_ms >= 0 && st.state === 'connected' ? ` · ping ${s.ping_ms} ms` : ''));
     for (const k of ['host', 'port', 'user', 'client_id', 'sub', 'keepalive']) if (!f[k].matches(':focus') && document.activeElement !== f[k] && !f[k].dataset.touched) f[k].value = c[k];
-    f.pass.placeholder = c.has_pass ? '(guardada; escribí otra para cambiarla)' : 'sin contraseña';
+    f.pass.placeholder = c.has_pass ? tr('(guardada; escribí otra para cambiarla)') : tr('sin contraseña');
     en.checked = c.enabled;
     try { topics = (await api('mqtt/topics')).topics; } catch {}
     drawList();
@@ -1010,19 +1054,19 @@ async function pageMqtt() {
   const lab = (t, el) => [h('label', { class: 'f' }, t), el];
   put(main, h('h1', {}, 'MQTT'),
     h('div', { class: 'grid2' },
-      h('div', { class: 'card pad' }, h('h2', { style: 'margin-top:0' }, 'Conexión'), stLine, stNote,
-        h('div', { class: 'mqform' }, h('div', {}, lab('Broker', f.host)), h('div', {}, lab('Puerto', f.port))),
-        h('div', { class: 'mqform' }, h('div', {}, lab('Usuario', f.user)), h('div', {}, lab('Contraseña', f.pass))),
-        h('div', { class: 'mqform' }, h('div', {}, lab('ID de cliente (vacío: automático)', f.client_id)), h('div', {}, lab('Keepalive (s)', f.keepalive))),
-        lab('Suscripción (separá con comas)', f.sub),
-        h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', onclick: () => { for (const k in f) delete f[k].dataset.touched; save(); } }, 'Guardar'),
-          h('button', { class: 'btn', onclick: () => post('mqtt/reconnect').then(() => toast('Reconectando…')) }, 'Reconectar'),
-          h('label', { class: 'muted' }, en, ' Encendido'))),
-      h('div', { class: 'card pad' }, h('h2', { style: 'margin-top:0' }, 'Publicar'), lab('Tópico', pt), lab('Mensaje', pp),
-        h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', onclick: pub }, 'Publicar'), pq, h('label', { class: 'muted' }, pr, ' Retener')),
-        h('p', { class: 'note' }, 'QoS 1 espera la confirmación del broker. Un mensaje vacío y retenido borra el retenido del tópico.'))),
-    h('h2', {}, 'Tópicos'),
-    h('div', { class: 'btns', style: 'margin-bottom:10px' }, filt, count, h('button', { class: 'btn', onclick: () => post('mqtt/clear').then(load) }, 'Vaciar la tabla')),
+      h('div', { class: 'card pad' }, h('h2', { style: 'margin-top:0' }, tr('Conexión')), stLine, stNote,
+        h('div', { class: 'mqform' }, h('div', {}, lab('Broker', f.host)), h('div', {}, lab(tr('Puerto'), f.port))),
+        h('div', { class: 'mqform' }, h('div', {}, lab(tr('Usuario'), f.user)), h('div', {}, lab(tr('Contraseña'), f.pass))),
+        h('div', { class: 'mqform' }, h('div', {}, lab(tr('ID de cliente (vacío: automático)'), f.client_id)), h('div', {}, lab('Keepalive (s)', f.keepalive))),
+        lab(tr('Suscripción (separá con comas)'), f.sub),
+        h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', onclick: () => { for (const k in f) delete f[k].dataset.touched; save(); } }, tr('Guardar')),
+          h('button', { class: 'btn', onclick: () => post('mqtt/reconnect').then(() => toast(tr('Reconectando…'))) }, tr('Reconectar')),
+          h('label', { class: 'muted' }, en, ' ' + tr('Encendido')))),
+      h('div', { class: 'card pad' }, h('h2', { style: 'margin-top:0' }, tr('Publicar')), lab(tr('Tópico'), pt), lab(tr('Mensaje'), pp),
+        h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', onclick: pub }, tr('Publicar')), pq, h('label', { class: 'muted' }, pr, ' ' + tr('Retener'))),
+        h('p', { class: 'note' }, tr('QoS 1 espera la confirmación del broker. Un mensaje vacío y retenido borra el retenido del tópico.')))),
+    h('h2', {}, tr('Tópicos')),
+    h('div', { class: 'btns', style: 'margin-bottom:10px' }, filt, count, h('button', { class: 'btn', onclick: () => post('mqtt/clear').then(load) }, tr('Vaciar la tabla'))),
     h('div', { class: 'mqcols' }, list, detail));
   clearTimeout(mqttT);
   await load();
@@ -1040,44 +1084,44 @@ async function pageClaude() {
   const bar = (name, w, now) => h('div', { class: 'row', style: 'flex-direction:column;align-items:stretch;gap:6px' },
     h('div', { class: 'btns', style: 'justify-content:space-between;flex-wrap:nowrap' },
       h('span', {}, name, ' ', h('b', {}, w ? w.pct.toFixed(0) + ' %' : '--')),
-      h('span', { class: 'muted small' }, w && w.resets ? 'se renueva en ' + fmtIn(w.resets - now) : '')),
+      h('span', { class: 'muted small' }, w && w.resets ? tr('se renueva en %s', fmtIn(w.resets - now)) : '')),
     h('div', { class: 'prog', style: 'height:12px;margin:0' }, h('div', { style: `width:${w ? Math.min(100, w.pct) : 0}%;background:${!w ? 'var(--dim)' : w.pct >= 90 ? 'var(--red)' : w.pct >= 75 ? 'var(--orange)' : '#d97757'}` })));
   async function load() {
     let st;
     try { st = await api('claude'); } catch { return; }
     const inn = st.state === 'ok' || st.state === 'error';
     put(status, h('div', { class: 'btns', style: 'justify-content:space-between' },
-        h('div', {}, h('b', {}, inn ? 'Sesión iniciada' : st.state === 'expired' ? 'La sesión venció' : 'Sin sesión'),
-          st.fetched ? h('span', { class: 'muted' }, st.now - st.fetched < 60 ? ' · recién leído' : ' · leído hace ' + fmtIn(st.now - st.fetched)) : null),
-        inn || st.state === 'expired' ? h('button', { class: 'btn', onclick: async () => { if (confirm('¿Cerrar la sesión de Claude en la placa?')) { await post('claude/logout'); load(); } } }, 'Cerrar sesión') : null),
+        h('div', {}, h('b', {}, inn ? tr('Sesión iniciada') : st.state === 'expired' ? tr('La sesión venció') : tr('Sin sesión')),
+          st.fetched ? h('span', { class: 'muted' }, ' · ' + (st.now - st.fetched < 60 ? tr('recién leído') : tr('leído hace %s', fmtIn(st.now - st.fetched)))) : null),
+        inn || st.state === 'expired' ? h('button', { class: 'btn', onclick: async () => { if (confirm(tr('¿Cerrar la sesión de Claude en la placa?'))) { await post('claude/logout'); load(); } } }, tr('Cerrar sesión')) : null),
       st.error ? h('p', { class: 'bad small' }, st.error) : null,
-      inn ? [bar('5 horas', st.five_hour, st.now), bar('Semana', st.seven_day, st.now),
-        st.seven_day_opus ? bar('Semana, Opus', st.seven_day_opus, st.now) : null,
-        st.seven_day_sonnet ? bar('Semana, Sonnet', st.seven_day_sonnet, st.now) : null,
-        st.extra_enabled && st.extra_pct != null ? bar('Uso extra', { pct: st.extra_pct }, st.now) : null] : null);
+      inn ? [bar(tr('5 horas'), st.five_hour, st.now), bar(tr('Semana'), st.seven_day, st.now),
+        st.seven_day_opus ? bar(tr('Semana, Opus'), st.seven_day_opus, st.now) : null,
+        st.seven_day_sonnet ? bar(tr('Semana, Sonnet'), st.seven_day_sonnet, st.now) : null,
+        st.extra_enabled && st.extra_pct != null ? bar(tr('Uso extra'), { pct: st.extra_pct }, st.now) : null] : null);
     signin.style.display = inn ? 'none' : '';
     if (st.state === 'waiting_code' || st.state === 'exchanging') step2.style.display = '';   /* back from Claude's page in this same tab */
   }
-  const code = h('input', { type: 'text', placeholder: 'Pegá acá el código (código#estado)', style: 'font-family:ui-monospace,Menlo,monospace' });
+  const code = h('input', { type: 'text', placeholder: tr('Pegá acá el código (código#estado)'), style: 'font-family:ui-monospace,Menlo,monospace' });
   const linkp = h('p', { class: 'note' });
   const step2 = h('div', { style: 'display:none;margin-top:14px' }, linkp,
-    h('p', {}, '2. En la página de Claude iniciá sesión y autorizá. Te va a mostrar un código: copialo y pegalo acá.'),
+    h('p', {}, tr('2. En la página de Claude iniciá sesión y autorizá. Te va a mostrar un código: copialo y pegalo acá.')),
     h('div', { class: 'btns', style: 'flex-wrap:nowrap' }, h('div', { style: 'flex:1' }, code),
       h('button', { class: 'btn pri', onclick: async () => {
-        try { await post('claude/code', { code: code.value.trim() }); toast('Verificando…'); code.value = ''; setTimeout(load, 1500); setTimeout(load, 4000); }
+        try { await post('claude/code', { code: code.value.trim() }); toast(tr('Verificando…')); code.value = ''; setTimeout(load, 1500); setTimeout(load, 4000); }
         catch (e) { toast(e.message, true); }
-      } }, 'Listo')));
-  put(signin, h('h2', { style: 'margin-top:0' }, 'Iniciar sesión'),
-    h('p', { class: 'note' }, 'La placa tiene su propio inicio de sesión con tu cuenta de Claude: no usa ni toca el de Claude Code en ninguna computadora, y los números son los de la cuenta. Los toma del mismo lugar que el /usage de Claude Code, que no es una API pública de Anthropic: puede cambiar sin aviso.'),
-    h('p', {}, '1. Abrí la página de inicio de sesión de Claude.'),
+      } }, tr('Confirmar'))));
+  put(signin, h('h2', { style: 'margin-top:0' }, tr('Iniciar sesión')),
+    h('p', { class: 'note' }, tr('La placa tiene su propio inicio de sesión con tu cuenta de Claude: no usa ni toca el de Claude Code en ninguna computadora, y los números son los de la cuenta. Los toma del mismo lugar que el /usage de Claude Code, que no es una API pública de Anthropic: puede cambiar sin aviso.')),
+    h('p', {}, tr('1. Abrí la página de inicio de sesión de Claude.')),
     h('button', { class: 'btn pri', onclick: async () => {
       try {
         const r = await post('claude/login');
-        put(linkp, 'Si no se abrió una pestaña nueva: ', h('a', { href: r.url, target: '_blank', rel: 'noopener', id: 'claude-login' }, 'abrí la página de Claude acá'), '.');
+        put(linkp, tr('Si no se abrió una pestaña nueva:') + ' ', h('a', { href: r.url, target: '_blank', rel: 'noopener', id: 'claude-login' }, tr('abrí la página de Claude acá')), '.');
         window.open(r.url, '_blank', 'noopener'); step2.style.display = ''; code.focus();
       }
       catch (e) { toast(e.message, true); }
-    } }, 'Iniciar sesión con Claude'), step2);
+    } }, tr('Iniciar sesión con Claude')), step2);
   put(main, h('h1', {}, 'Claude'), status, h('div', { style: 'height:16px' }), signin);
   clearTimeout(claudeT);
   await load();
@@ -1090,14 +1134,14 @@ async function pageClaude() {
  * The glyphs are Material Design Icons, the same set the board draws with:
  * the browser takes the webfont from jsdelivr when it can, and shows the
  * names when it cannot (the board never needs it). */
-const MP_TYPES = [['key', 'Atajo de teclado'], ['text', 'Escribir un texto'], ['seq', 'Secuencia'], ['ha', 'Home Assistant'], ['mqtt', 'Publicar MQTT'], ['app', 'Abrir una app']];
+const MP_TYPES = [['key', N_('Atajo de teclado')], ['text', N_('Escribir un texto')], ['seq', N_('Secuencia')], ['ha', 'Home Assistant'], ['mqtt', N_('Publicar MQTT')], ['app', N_('Abrir una app')]];
 const MP_SWATCHES = ['#0A84FF', '#5E5CE6', '#BF5AF2', '#FF375F', '#FF453A', '#FF9F0A', '#FFD60A', '#30D158', '#10B981', '#40C8E0', '#0E7490', '#A2845E', '#D97757', '#8E8E93', '#3A3A3C', '#F2F2F7'];
 const MP_KEYS = ['cmd+c', 'cmd+v', 'cmd+x', 'cmd+z', 'cmd+shift+z', 'cmd+s', 'cmd+space', 'cmd+tab', 'cmd+shift+4', 'cmd+shift+3', 'ctrl+cmd+q',
   'cmd+w', 'cmd+t', 'ctrl+alt+t', 'ctrl+c', 'ctrl+v', 'alt+tab', 'alt+f4', 'win+l', 'win+d', 'ctrl+]', 'play', 'next', 'prev', 'mute', 'volup', 'voldown',
   'brightup', 'brightdown', 'f5', 'enter', 'esc', 'tab', 'up', 'down', 'left', 'right', 'pgup', 'pgdn', 'home', 'end'];
 const mpIcon = g => 'mdi mdi-' + String(g || '').toLowerCase().replace(/_/g, '-');
 const mpInk = hex => { const v = parseInt(String(hex || '#3A3A3C').slice(1), 16) || 0; return (0.299 * (v >> 16 & 255) + 0.587 * (v >> 8 & 255) + 0.114 * (v & 255)) > 170 ? '#111' : '#fff'; };
-const mpWhat = b => !b ? '' : b.type === 'key' ? b.key : b.type === 'text' ? '“' + (b.text || '') + '”' : b.type === 'seq' ? (b.seq || '').split('\n').filter(l => l.trim() && !l.trim().startsWith('#')).length + ' pasos'
+const mpWhat = b => !b ? '' : b.type === 'key' ? b.key : b.type === 'text' ? '“' + (b.text || '') + '”' : b.type === 'seq' ? tr('%s pasos', (b.seq || '').split('\n').filter(l => l.trim() && !l.trim().startsWith('#')).length)
   : b.type === 'ha' ? (b.service ? b.service + ' ' : '') + (b.entity || '') : b.type === 'mqtt' ? (b.topic || '') + ' ← ' + (b.payload || '') : b.type === 'app' ? b.app : '';
 let mpT, mpIconsOk = false;
 
@@ -1116,9 +1160,9 @@ async function pageMacropad() {
   const tabs = h('div', { class: 'btns mptabs' });
   const grid = h('div', { class: 'mpgrid' });
   const form = h('div', { class: 'card pad mpform' });
-  const saveBtn = h('button', { class: 'btn pri', disabled: true, onclick: () => save() }, 'Guardar');
-  const undoBtn = h('button', { class: 'btn', disabled: true, onclick: () => { dirty = false; load(true); } }, 'Descartar cambios');
-  const setDirty = () => { dirty = true; saveBtn.disabled = undoBtn.disabled = false; saveBtn.textContent = 'Guardar cambios'; };
+  const saveBtn = h('button', { class: 'btn pri', disabled: true, onclick: () => save() }, tr('Guardar'));
+  const undoBtn = h('button', { class: 'btn', disabled: true, onclick: () => { dirty = false; load(true); } }, tr('Descartar cambios'));
+  const setDirty = () => { dirty = true; saveBtn.disabled = undoBtn.disabled = false; saveBtn.textContent = tr('Guardar cambios'); };
   const pages = () => doc.pages;
   const buttons = () => { const p = pages()[page]; if (!p.buttons) p.buttons = []; return p.buttons; };
   const btnAt = i => buttons()[i] || null;
@@ -1133,20 +1177,20 @@ async function pageMacropad() {
     if (!force && doc && r.version === version) return;
     doc = r.layout; glyphs = r.glyphs; version = r.version;
     if (page >= pages().length) page = pages().length - 1;
-    dirty = false; saveBtn.disabled = undoBtn.disabled = true; saveBtn.textContent = 'Guardar';
+    dirty = false; saveBtn.disabled = undoBtn.disabled = true; saveBtn.textContent = tr('Guardar');
     render();
   }
   function showStatus(r) {
-    const usb = { ready: ['La computadora tiene el teclado y el mouse', 'ok'], busy: ['El USB se está preparando…', 'warn'],
-      waiting: ['Esperando a la computadora: conectá el puerto OTG', 'warn'], off: ['USB apagado: se prende al abrir el Macro pad o al tocar un atajo', ''] }[r.usb] || ['?', ''];
+    const usb = { ready: [tr('La computadora tiene el teclado y el mouse'), 'ok'], busy: [tr('El USB se está preparando…'), 'warn'],
+      waiting: [tr('Esperando a la computadora: conectá el puerto OTG'), 'warn'], off: [tr('USB apagado: se prende al abrir el Macro pad o al tocar un atajo'), ''] }[r.usb] || ['?', ''];
     put(statusBox, h('div', { class: 'row' }, h('div', { class: 'grow' }, h('b', {}, 'USB · '), h('span', { class: usb[1] }, usb[0])),
-        h('div', { class: 'muted small' }, r.saved ? 'en la tarjeta: macropad.json' : h('span', { class: 'warn' }, 'sin tarjeta: sólo en memoria'))),
-      r.status && r.status.msg ? h('div', { class: 'row' }, h('div', { class: 'grow' }, 'Último envío: ', h('span', { class: r.status.ok ? 'ok' : 'bad' }, r.status.msg))) : null);
+        h('div', { class: 'muted small' }, r.saved ? tr('en la tarjeta: macropad.json') : h('span', { class: 'warn' }, tr('sin tarjeta: sólo en memoria')))),
+      r.status && r.status.msg ? h('div', { class: 'row' }, h('div', { class: 'grow' }, tr('Último envío:') + ' ', h('span', { class: r.status.ok ? 'ok' : 'bad' }, r.status.msg))) : null);
   }
   async function save() {
     try {
       await api('macropad', { method: 'PUT', body: JSON.stringify(doc, null, 1) });
-      dirty = false; toast('Guardado: la placa ya lo muestra');
+      dirty = false; toast(tr('Guardado: la placa ya lo muestra'));
       await load(true);
     } catch (e) { toast(e.message, true); }
   }
@@ -1156,8 +1200,8 @@ async function pageMacropad() {
   }
   function renderTabs() {
     const ps = pages();
-    put(tabs, ps.map((p, i) => h('button', { class: 'btn' + (i === page ? ' pri' : ''), onclick: () => { page = i; sel = -1; render(); } }, p.name || '(sin nombre)')),
-      ps.length < 8 ? h('button', { class: 'btn', onclick: () => { ps.push({ name: 'Página ' + (ps.length + 1), buttons: [] }); page = ps.length - 1; sel = -1; setDirty(); render(); } }, '+ Página') : null);
+    put(tabs, ps.map((p, i) => h('button', { class: 'btn' + (i === page ? ' pri' : ''), onclick: () => { page = i; sel = -1; render(); } }, p.name || tr('(sin nombre)'))),
+      ps.length < 8 ? h('button', { class: 'btn', onclick: () => { ps.push({ name: tr('Página %s', ps.length + 1), buttons: [] }); page = ps.length - 1; sel = -1; setDirty(); render(); } }, tr('+ Página')) : null);
   }
   function tile(i) {
     const b = btnAt(i);
@@ -1166,7 +1210,7 @@ async function pageMacropad() {
     if (b) {
       t.style.background = b.color || '#3A3A3C';
       t.style.color = mpInk(b.color);
-      t.append(icon(b.glyph, 'mpglyph'), h('div', { class: 'mplabel' }, b.label || '(sin nombre)'), h('div', { class: 'mpwhat' }, mpWhat(b)));
+      t.append(icon(b.glyph, 'mpglyph'), h('div', { class: 'mplabel' }, b.label || tr('(sin nombre)')), h('div', { class: 'mpwhat' }, mpWhat(b)));
     } else t.append(h('div', { class: 'mpplus' }, '+'));
     t.addEventListener('dragstart', e => { dragFrom = i; e.dataTransfer.effectAllowed = 'move'; });
     t.addEventListener('dragover', e => { e.preventDefault(); t.classList.add('over'); });
@@ -1186,25 +1230,25 @@ async function pageMacropad() {
     const p = pages()[page];
     put(grid, [...Array(15).keys()].map(tile));
     if (p.auto === 'ha' && !buttons().length)
-      grid.prepend(h('div', { class: 'note', style: 'grid-column:1/-1' }, 'Esta página se llena sola con las escenas y luces de Home Assistant la primera vez que la placa conecte con HA. Si agregás botones a mano, deja de hacerlo.'));
+      grid.prepend(h('div', { class: 'note', style: 'grid-column:1/-1' }, tr('Esta página se llena sola con las escenas y luces de Home Assistant la primera vez que la placa conecte con HA. Si agregás botones a mano, deja de hacerlo.')));
   }
 
   function field(label, input, note) { return h('div', {}, h('label', { class: 'f' }, label), input, note ? h('div', { class: 'note' }, note) : null); }
   function renderForm() {
     const p = pages()[page];
     const pageTools = h('div', {},
-      h('h2', { style: 'margin-top:0' }, 'Página'),
-      field('Nombre', h('input', { type: 'text', value: p.name || '', maxlength: 20, oninput: e => { p.name = e.target.value; setDirty(); renderTabs(); } })),
+      h('h2', { style: 'margin-top:0' }, tr('Página')),
+      field(tr('Nombre'), h('input', { type: 'text', value: p.name || '', maxlength: 20, oninput: e => { p.name = e.target.value; setDirty(); renderTabs(); } })),
       h('div', { class: 'btns', style: 'margin-top:12px' },
-        h('button', { class: 'btn', disabled: page === 0, onclick: () => { const ps = pages(); [ps[page - 1], ps[page]] = [ps[page], ps[page - 1]]; page--; setDirty(); render(); } }, '← Mover'),
-        h('button', { class: 'btn', disabled: page === pages().length - 1, onclick: () => { const ps = pages(); [ps[page + 1], ps[page]] = [ps[page], ps[page + 1]]; page++; setDirty(); render(); } }, 'Mover →'),
-        h('button', { class: 'btn red', disabled: pages().length < 2, onclick: () => { if (!confirm('¿Borrar la página «' + p.name + '» con sus botones?')) return; pages().splice(page, 1); page = Math.max(0, page - 1); sel = -1; setDirty(); render(); } }, 'Borrar página')));
+        h('button', { class: 'btn', disabled: page === 0, onclick: () => { const ps = pages(); [ps[page - 1], ps[page]] = [ps[page], ps[page - 1]]; page--; setDirty(); render(); } }, tr('← Mover')),
+        h('button', { class: 'btn', disabled: page === pages().length - 1, onclick: () => { const ps = pages(); [ps[page + 1], ps[page]] = [ps[page], ps[page + 1]]; page++; setDirty(); render(); } }, tr('Mover →')),
+        h('button', { class: 'btn red', disabled: pages().length < 2, onclick: () => { if (!confirm(tr('¿Borrar la página «%s» con sus botones?', p.name))) return; pages().splice(page, 1); page = Math.max(0, page - 1); sel = -1; setDirty(); render(); } }, tr('Borrar página'))));
     const b = sel >= 0 ? btnAt(sel) : null;
-    if (!b) { put(form, pageTools, h('p', { class: 'note', style: 'margin-top:22px' }, 'Tocá un botón para editarlo, o un lugar vacío para crear uno. Arrastrá los botones para cambiarlos de lugar.')); return; }
+    if (!b) { put(form, pageTools, h('p', { class: 'note', style: 'margin-top:22px' }, tr('Tocá un botón para editarlo, o un lugar vacío para crear uno. Arrastrá los botones para cambiarlos de lugar.'))); return; }
     const upd = () => { setDirty(); renderGrid(); };
     const inp = (k, ph, extra) => h('input', Object.assign({ type: 'text', value: b[k] || '', placeholder: ph || '', oninput: e => { b[k] = e.target.value; upd(); } }, extra || {}));
     /* the glyph picker: a search box over the grid of icons */
-    const gsearch = h('input', { type: 'search', placeholder: 'Buscar un ícono…' });
+    const gsearch = h('input', { type: 'search', placeholder: tr('Buscar un ícono…') });
     const gbox = h('div', { class: 'mpglyphs' });
     const fillGlyphs = () => put(gbox, glyphs.filter(g => g.toLowerCase().includes(gsearch.value.toLowerCase().replace(/[ -]/g, '_'))).map(g =>
       h('button', { class: 'mpg' + (g === b.glyph ? ' on' : ''), title: g.toLowerCase().replace(/_/g, '-'), onclick: () => { b.glyph = g; upd(); fillGlyphs(); } }, icon(g))));
@@ -1213,61 +1257,61 @@ async function pageMacropad() {
     const color = h('input', { type: 'color', value: (b.color || '#0A84FF').toLowerCase(), oninput: e => { b.color = e.target.value.toUpperCase(); upd(); } });
     const swatches = h('div', { class: 'swatches' }, MP_SWATCHES.map(c => h('div', { class: 'mpsw' + ((b.color || '').toUpperCase() === c ? ' on' : ''), style: 'background:' + c,
       onclick: () => { b.color = c; color.value = c.toLowerCase(); upd(); renderForm(); } })));
-    const typeSel = h('select', { onchange: e => { b.type = e.target.value; upd(); renderForm(); } }, MP_TYPES.map(([v, n]) => h('option', { value: v, selected: b.type === v }, n)));
+    const typeSel = h('select', { onchange: e => { b.type = e.target.value; upd(); renderForm(); } }, MP_TYPES.map(([v, n]) => h('option', { value: v, selected: b.type === v }, tr(n))));
     let params;
     if (b.type === 'key') {
       const valid = h('div', { class: 'note' });
       const check = async () => {
-        if (!b.key) { valid.textContent = 'Modificadores cmd, ctrl, alt, shift con + y una tecla. Medios: play, next, prev, mute, volup, voldown.'; valid.className = 'note'; return; }
-        try { const r = await api('macropad/key?name=' + encodeURIComponent(b.key)); valid.textContent = r.valid ? 'La placa conoce esa tecla.' : 'La placa no conoce esa tecla.'; valid.className = 'note ' + (r.valid ? 'ok' : 'bad'); } catch {}
+        if (!b.key) { valid.textContent = tr('Modificadores cmd, ctrl, alt, shift con + y una tecla. Medios: play, next, prev, mute, volup, voldown.'); valid.className = 'note'; return; }
+        try { const r = await api('macropad/key?name=' + encodeURIComponent(b.key)); valid.textContent = r.valid ? tr('La placa conoce esa tecla.') : tr('La placa no conoce esa tecla.'); valid.className = 'note ' + (r.valid ? 'ok' : 'bad'); } catch {}
       };
       const k = inp('key', 'cmd+shift+4', { list: 'mp-keys', oninput: e => { b.key = e.target.value.trim(); upd(); check(); } });
-      params = [field('Combinación', k), h('datalist', { id: 'mp-keys' }, MP_KEYS.map(v => h('option', { value: v }))), valid];
+      params = [field(tr('Combinación'), k), h('datalist', { id: 'mp-keys' }, MP_KEYS.map(v => h('option', { value: v }))), valid];
       check();
     } else if (b.type === 'text') {
-      params = [field('Texto', h('textarea', { rows: 3, oninput: e => { b.text = e.target.value; upd(); } }, b.text || ''), 'Se escribe como un teclado de EE. UU.: los acentos y la ñ no llegan.')];
+      params = [field(tr('Texto'), h('textarea', { rows: 3, oninput: e => { b.text = e.target.value; upd(); } }, b.text || ''), tr('Se escribe como un teclado de EE. UU.: los acentos y la ñ no llegan.'))];
     } else if (b.type === 'seq') {
-      params = [field('Pasos', h('textarea', { rows: 9, class: 'mono', spellcheck: 'false', oninput: e => { b.seq = e.target.value; upd(); } }, b.seq || ''),
-        h('span', {}, 'Una orden por línea: ', h('code', {}, 'STRING texto'), ' · ', h('code', {}, 'KEY cmd+c'), ' · ', h('code', {}, 'DELAY 300'), ' · ', h('code', {}, 'MOUSE dx dy'), ' · ',
-          h('code', {}, 'SCROLL n'), ' · ', h('code', {}, 'CLICK 1|2'), ' · ', h('code', {}, 'REPEAT n'), ' · ', h('code', {}, 'HA entidad'), ' o ', h('code', {}, 'HA dominio.servicio entidad {json}'),
-          ' · ', h('code', {}, 'MQTT tópico mensaje'), ' · ', h('code', {}, 'OPEN aos.bench'), '. Las líneas con # son comentarios.'))];
+      params = [field(tr('Pasos'), h('textarea', { rows: 9, class: 'mono', spellcheck: 'false', oninput: e => { b.seq = e.target.value; upd(); } }, b.seq || ''),
+        h('span', {}, tr('Una orden por línea:') + ' ', h('code', {}, tr('STRING texto')), ' · ', h('code', {}, 'KEY cmd+c'), ' · ', h('code', {}, 'DELAY 300'), ' · ', h('code', {}, 'MOUSE dx dy'), ' · ',
+          h('code', {}, 'SCROLL n'), ' · ', h('code', {}, 'CLICK 1|2'), ' · ', h('code', {}, 'REPEAT n'), ' · ', h('code', {}, tr('HA entidad')), ' ' + tr('o') + ' ', h('code', {}, tr('HA dominio.servicio entidad {json}')),
+          ' · ', h('code', {}, tr('MQTT tópico mensaje')), ' · ', h('code', {}, 'OPEN aos.bench'), '. ' + tr('Las líneas con # son comentarios.')))];
     } else if (b.type === 'ha') {
       const dom = (b.entity || '').split('.')[0];
       const svcs = dom ? [dom + '.toggle', dom + '.turn_on', dom + '.turn_off'].concat(dom === 'scene' || dom === 'script' ? [dom + '.turn_on'] : dom === 'cover' ? ['cover.open_cover', 'cover.close_cover'] : dom === 'button' ? ['button.press'] : dom === 'media_player' ? ['media_player.media_play_pause', 'media_player.volume_up', 'media_player.volume_down'] : []) : [];
-      params = [field('Entidad', inp('entity', 'light.taller', { list: 'mp-ents', onchange: e => {
+      params = [field(tr('Entidad'), inp('entity', 'light.taller', { list: 'mp-ents', onchange: e => {
           const en = ents.find(x => x.id === e.target.value);
           if (en && !b.label) { b.label = en.name; }
           const G = { light: 'LIGHTBULB', switch: 'TOGGLE_SWITCH', fan: 'FAN', cover: 'BLINDS', scene: 'AUTO_FIX', script: 'SCRIPT_TEXT', lock: 'LOCK', media_player: 'PLAY_PAUSE', climate: 'THERMOMETER', sensor: 'GAUGE' };
           if (en && G[en.domain]) b.glyph = G[en.domain];
           upd(); renderForm();
-        } }), ents.length ? null : 'Home Assistant no está conectado: la lista de entidades aparece cuando la placa lo tenga.'),
+        } }), ents.length ? null : tr('Home Assistant no está conectado: la lista de entidades aparece cuando la placa lo tenga.')),
         h('datalist', { id: 'mp-ents' }, ents.map(e => h('option', { value: e.id }, e.name + (e.area ? ' · ' + e.area : '')))),
-        field('Servicio', inp('service', 'vacío: lo de siempre (prender/apagar, abrir, ejecutar)', { list: 'mp-svc' })), h('datalist', { id: 'mp-svc' }, [...new Set(svcs)].map(v => h('option', { value: v }))),
-        field('Datos del servicio (JSON, opcional)', inp('data', '{"brightness_pct": 40}', { class: 'mono' })),
-        h('div', { class: 'note' }, 'El botón muestra el estado de la entidad: una luz prendida se ve llena de color; un sensor, su valor.')];
+        field(tr('Servicio'), inp('service', tr('vacío: lo de siempre (prender/apagar, abrir, ejecutar)'), { list: 'mp-svc' })), h('datalist', { id: 'mp-svc' }, [...new Set(svcs)].map(v => h('option', { value: v }))),
+        field(tr('Datos del servicio (JSON, opcional)'), inp('data', '{"brightness_pct": 40}', { class: 'mono' })),
+        h('div', { class: 'note' }, tr('El botón muestra el estado de la entidad: una luz prendida se ve llena de color; un sensor, su valor.'))];
     } else if (b.type === 'mqtt') {
-      params = [field('Tópico', inp('topic', 'cmnd/soldador/POWER', { class: 'mono' })), field('Mensaje', inp('payload', 'TOGGLE', { class: 'mono' })),
-        field('Tópico de estado (opcional)', inp('state', 'stat/soldador/POWER', { class: 'mono' }), 'Si lo tiene, el botón se prende y apaga con lo que llegue ahí (ON/OFF, 1/0, {"state":"ON"}).'),
+      params = [field(tr('Tópico'), inp('topic', 'cmnd/soldador/POWER', { class: 'mono' })), field(tr('Mensaje'), inp('payload', 'TOGGLE', { class: 'mono' })),
+        field(tr('Tópico de estado (opcional)'), inp('state', 'stat/soldador/POWER', { class: 'mono' }), tr('Si lo tiene, el botón se prende y apaga con lo que llegue ahí (ON/OFF, 1/0, {"state":"ON"}).')),
         h('div', { class: 'btns', style: 'margin-top:12px' },
-          h('label', {}, h('input', { type: 'checkbox', checked: !!b.retain, onchange: e => { b.retain = e.target.checked; upd(); } }), ' Retenido'),
+          h('label', {}, h('input', { type: 'checkbox', checked: !!b.retain, onchange: e => { b.retain = e.target.checked; upd(); } }), ' ' + tr('Retenido')),
           h('label', { style: 'display:flex;align-items:center;gap:8px' }, 'QoS', h('select', { style: 'width:auto', onchange: e => { b.qos = +e.target.value; upd(); } }, h('option', { value: 0, selected: !b.qos }, '0'), h('option', { value: 1, selected: b.qos === 1 }, '1'))))];
     } else if (b.type === 'app') {
       params = [field('App', h('select', { onchange: e => { b.app = e.target.value; const a = apps.find(x => x.id === b.app); if (a && !b.label) b.label = a.name; upd(); renderForm(); } },
-        h('option', { value: '' }, 'Elegí una app…'), apps.filter(a => a.id !== 'aos.macropad').sort((x, y) => x.name.localeCompare(y.name)).map(a => h('option', { value: a.id, selected: a.id === b.app }, a.name))))];
+        h('option', { value: '' }, tr('Elegí una app…')), apps.filter(a => a.id !== 'aos.macropad').sort((x, y) => x.name.localeCompare(y.name)).map(a => h('option', { value: a.id, selected: a.id === b.app }, a.name))))];
     }
     put(form,
-      h('div', { class: 'btns', style: 'justify-content:space-between' }, h('h2', { style: 'margin:0' }, 'Botón ' + (sel + 1)),
+      h('div', { class: 'btns', style: 'justify-content:space-between' }, h('h2', { style: 'margin:0' }, tr('Botón %s', sel + 1)),
         h('div', { class: 'btns' },
           h('button', { class: 'btn', onclick: async () => {
             try { if (dirty) await save(); await api(`macropad/run?page=${page}&slot=${sel}`, { method: 'POST' }); setTimeout(() => load(), 500); setTimeout(() => load(), 1500); }
             catch (e) { toast(e.message, true); }
-          } }, 'Probar en la placa'),
-          h('button', { class: 'btn', onclick: () => { const i = [...Array(15).keys()].find(k => !btnAt(k)); if (i == null) { toast('La página está llena', true); return; } setBtn(i, JSON.parse(JSON.stringify(b))); sel = i; setDirty(); render(); } }, 'Duplicar'),
-          h('button', { class: 'btn red', onclick: () => { setBtn(sel, null); sel = -1; setDirty(); render(); } }, 'Borrar'))),
-      field('Nombre', inp('label', 'Copiar', { maxlength: 30 })),
-      field('Acción', typeSel), params,
-      h('label', { class: 'f' }, 'Color'), h('div', { class: 'btns' }, swatches, color),
-      h('label', { class: 'f' }, 'Ícono'), gsearch, gbox,
+          } }, tr('Probar en la placa')),
+          h('button', { class: 'btn', onclick: () => { const i = [...Array(15).keys()].find(k => !btnAt(k)); if (i == null) { toast(tr('La página está llena'), true); return; } setBtn(i, JSON.parse(JSON.stringify(b))); sel = i; setDirty(); render(); } }, tr('Duplicar')),
+          h('button', { class: 'btn red', onclick: () => { setBtn(sel, null); sel = -1; setDirty(); render(); } }, tr('Borrar')))),
+      field(tr('Nombre'), inp('label', tr('Copiar'), { maxlength: 30 })),
+      field(tr('Acción'), typeSel), params,
+      h('label', { class: 'f' }, tr('Color')), h('div', { class: 'btns' }, swatches, color),
+      h('label', { class: 'f' }, tr('Ícono')), gsearch, gbox,
       h('div', { style: 'height:18px' }), pageTools);
   }
   function rawEditor() {
@@ -1276,22 +1320,22 @@ async function pageMacropad() {
     const close = () => m.remove();
     const m = h('div', { class: 'modal', onclick: e => { if (e.target === m) close(); } },
       h('div', { class: 'box' }, h('div', { class: 'head' }, h('b', { class: 'grow' }, 'macropad.json')), ta,
-        h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, 'Cancelar'),
+        h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, tr('Cancelar')),
           h('button', { class: 'btn pri', onclick: async () => {
-            try { await api('macropad', { method: 'PUT', body: ta.value }); toast('Guardado'); close(); dirty = false; load(true); } catch (e) { toast(e.message, true); }
-          } }, 'Guardar'))));
+            try { await api('macropad', { method: 'PUT', body: ta.value }); toast(tr('Guardado')); close(); dirty = false; load(true); } catch (e) { toast(e.message, true); }
+          } }, tr('Guardar')))));
     document.body.append(m);
     ta.focus();
   }
-  put(main, h('h1', {}, 'Macro pad'), statusBox,
+  put(main, h('h1', {}, tr('Macro pad')), statusBox,
     h('div', { class: 'btns', style: 'margin:18px 0 12px;justify-content:space-between' }, tabs,
       h('div', { class: 'btns' }, undoBtn, saveBtn,
         h('button', { class: 'btn', onclick: () => rawEditor() }, 'JSON'),
-        h('button', { class: 'btn', onclick: async () => { if (!confirm('¿Volver a la botonera de fábrica? Se pierde la actual.')) return; await post('macropad/reset'); dirty = false; load(true); } }, 'De fábrica'))),
-    h('div', { class: 'mpcols' }, h('div', {}, grid, h('p', { class: 'note' }, 'En la placa: 3×5 parada, 5×3 acostada, en este mismo orden. Arrastrá para mover; el cambio llega a la placa al guardar.')), form));
+        h('button', { class: 'btn', onclick: async () => { if (!confirm(tr('¿Volver a la botonera de fábrica? Se pierde la actual.'))) return; await post('macropad/reset'); dirty = false; load(true); } }, tr('De fábrica')))),
+    h('div', { class: 'mpcols' }, h('div', {}, grid, h('p', { class: 'note' }, tr('En la placa: 3×5 parada, 5×3 acostada, en este mismo orden. Arrastrá para mover; el cambio llega a la placa al guardar.'))), form));
   api('ha/entities').then(l => { ents = l.sort((a, b) => a.id.localeCompare(b.id)); if (doc && sel >= 0) renderForm(); }).catch(() => {});
   api('apps').then(l => { apps = l; if (doc && sel >= 0) renderForm(); }).catch(() => {});
-  window.onbeforeunload = () => dirty && location.hash === '#macropad' ? 'Hay cambios sin guardar' : undefined;
+  window.onbeforeunload = () => dirty && location.hash === '#macropad' ? tr('Hay cambios sin guardar') : undefined;
   await load(true);
   /* ?mp=<page>.<slot> opens that button (a link to one, or a screenshot) */
   const want = new URLSearchParams(location.search).get('mp');
@@ -1305,10 +1349,10 @@ async function pageMacropad() {
 }
 
 /* ---- Expansión ---- */
-const XP_CLS = { '5v': ['#dc2626', '5 V'], '3v3': ['#f97316', '3V3'], gnd: ['#3f3f46', 'GND'], free: ['#16a34a', 'libre'],
-  adc: ['#0d9488', 'ADC'], port: ['#2563eb', 'en un puerto'], taken: ['#9333ea', 'tomado'], board: ['#db2777', 'de la placa'],
-  care: ['#a16207', 'con cuidado'], rsv: ['#52525b', 'reservado'] };
-const xpNum = (v, d) => v.toFixed(d).replace('.', ',');
+const XP_CLS = { '5v': ['#dc2626', '5 V'], '3v3': ['#f97316', '3V3'], gnd: ['#3f3f46', 'GND'], free: ['#16a34a', N_('libre')],
+  adc: ['#0d9488', 'ADC'], port: ['#2563eb', N_('en un puerto')], taken: ['#9333ea', N_('tomado')], board: ['#db2777', N_('de la placa')],
+  care: ['#a16207', N_('con cuidado')], rsv: ['#52525b', N_('reservado')] };
+const xpNum = (v, d) => num(v, d);
 function xpFmt(q, v) {
   if (v == null) return '--';
   const a = Math.abs(v);
@@ -1336,17 +1380,17 @@ async function pageExpansion() {
   const chTitle = h('div', { class: 'muted small' }), chVal = h('div', { class: 'big' }), chRange = h('div', { class: 'note' });
   const canvas = h('canvas', { class: 'xp-chart', width: 1100, height: 260 });
   const portSt = h('div', { class: 'note' }), sens = h('div', { class: 'xp-sens' }), cands = h('div');
-  const rescan = h('button', { class: 'btn', onclick: () => post('sensors/rescan').then(() => toast('Buscando sensores…')).catch(e => toast(e.message, true)) }, 'Buscar de nuevo');
+  const rescan = h('button', { class: 'btn', onclick: () => post('sensors/rescan').then(() => toast(tr('Buscando sensores…'))).catch(e => toast(e.message, true)) }, tr('Buscar de nuevo'));
   /* ports */
   const ports = h('div', { class: 'grid2' });
   /* modules.txt */
   const ta = h('textarea', { class: 'xp-ta', spellcheck: 'false' }), ck = h('div', { class: 'grow small' });
   const src = h('div', { class: 'note' });
-  const save = h('button', { class: 'btn pri' }, 'Guardar');
-  const revert = h('button', { class: 'btn' }, 'Descartar cambios');
+  const save = h('button', { class: 'btn pri' }, tr('Guardar'));
+  const revert = h('button', { class: 'btn' }, tr('Descartar cambios'));
   const fKind = h('select', { style: 'width:auto' }), fPort = h('select', { style: 'width:auto' }), fAddr = h('select', { style: 'width:auto' }), fOpt = h('select', { style: 'width:auto' });
   const fLine = h('code', { class: 'mono xp-line' });
-  const fAdd = h('button', { class: 'btn' }, 'Agregar al texto');
+  const fAdd = h('button', { class: 'btn' }, tr('Agregar al texto'));
 
   function freeName(base) {
     const used = new Set((ex ? ex.modules : []).map(m => m.name));
@@ -1364,8 +1408,8 @@ async function pageExpansion() {
   function showCheck(c) {
     if (!c.ok) { ck.className = 'grow small bad'; ck.textContent = c.error; save.disabled = true; return; }
     save.disabled = false;
-    if (c.warnings.length) { ck.className = 'grow small warn'; ck.textContent = 'Se puede guardar, pero: ' + c.warnings.map(w => w.msg).join(' · '); }
-    else { ck.className = 'grow small ok'; ck.textContent = `Bien: ${c.ports} puertos y ${c.modules} módulos`; }
+    if (c.warnings.length) { ck.className = 'grow small warn'; ck.textContent = tr('Se puede guardar, pero:') + ' ' + c.warnings.map(w => w.msg).join(' · '); }
+    else { ck.className = 'grow small ok'; ck.textContent = tr('Bien: %s puertos y %s módulos', c.ports, c.modules); }
   }
   ta.oninput = () => check();
   ta.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); doSave(); } });
@@ -1373,8 +1417,8 @@ async function pageExpansion() {
     try {
       const r = await api('expansion/save', { method: 'POST', body: ta.value });
       showCheck(r);
-      if (!r.saved) { toast(r.error || 'No se guardó', true); return; }
-      toast(`Guardado: ${r.ports} puertos, ${r.modules} módulos`);
+      if (!r.saved) { toast(r.error || tr('No se guardó'), true); return; }
+      toast(tr('Guardado: %s puertos, %s módulos', r.ports, r.modules));
       loadEx(true);
     } catch (e) { toast(e.message, true); }
   }
@@ -1398,15 +1442,15 @@ async function pageExpansion() {
     fAddr.style.display = rs ? 'none' : '';
     if (!rs) put(fAddr, c.addrs.map(a => h('option', { value: a }, hex(a))));
     const opts = rs ? [[9600, '9600'], [19200, '19200'], [38400, '38400'], [115200, '115200']]
-      : c.shunt ? [[100, 'shunt 0,1 Ω (R100)'], [50, 'shunt 0,05 Ω (R050)'], [10, 'shunt 0,01 Ω (R010)']]
-      : c.gain ? [[4096, '±4,096 V'], [6144, '±6,144 V'], [2048, '±2,048 V'], [1024, '±1,024 V']] : [];
+      : c.shunt ? [[100, `shunt ${num(0.1, 1)} Ω (R100)`], [50, `shunt ${num(0.05, 2)} Ω (R050)`], [10, `shunt ${num(0.01, 2)} Ω (R010)`]]
+      : c.gain ? [[4096, `±${num(4.096, 3)} V`], [6144, `±${num(6.144, 3)} V`], [2048, `±${num(2.048, 3)} V`], [1024, `±${num(1.024, 3)} V`]] : [];
     fOpt.style.display = opts.length ? '' : 'none';
     put(fOpt, opts.map(([v, n]) => h('option', { value: v }, n)));
     formLine();
   }
   function formLine() {
     const rs = fKind.value === 'rs485', c = ex.chips.find(x => x.id === fKind.value);
-    if (!fPort.value) { fLine.textContent = rs ? 'No hay puertos UART.' : 'No hay puertos I2C.'; fAdd.disabled = true; return; }
+    if (!fPort.value) { fLine.textContent = rs ? tr('No hay puertos UART.') : tr('No hay puertos I2C.'); fAdd.disabled = true; return; }
     fAdd.disabled = false;
     let l = `module ${freeName(rs ? 'rs485' : c.id)} ${fPort.value}`;
     if (rs) l += ` baud=${fOpt.value}`;
@@ -1425,12 +1469,12 @@ async function pageExpansion() {
     const [col, name] = XP_CLS[p.cls] || ['#555', p.cls];
     const mods = p.port ? ex.modules.filter(m => m.port === p.port).map(m => m.name) : [];
     put(pinInfo, h('div', { class: 'mid' }, `Pin ${p.pin} · ${p.label}`),
-      h('div', { class: 'btns', style: 'margin:8px 0' }, h('span', { class: 'pill', style: `background:${col};color:#fff` }, name), p.flags.map(f => h('span', { class: 'pill' }, f))),
-      row('GPIO', p.gpio >= 0 ? 'GPIO' + p.gpio : 'no es un GPIO'),
-      p.note ? row('Qué es', p.note) : null,
-      p.gpio >= 0 ? row('Lo tiene', p.owner || 'nadie, ahora') : null,
-      p.gpio >= 0 ? row('Puerto', p.port ? `${p.port} · ${p.role}` : 'ninguno en modules.txt') : null,
-      p.port ? row('Módulos', mods.join(', ') || 'ninguno') : null);
+      h('div', { class: 'btns', style: 'margin:8px 0' }, h('span', { class: 'pill', style: `background:${col};color:#fff` }, tr(name)), p.flags.map(f => h('span', { class: 'pill' }, f))),
+      row('GPIO', p.gpio >= 0 ? 'GPIO' + p.gpio : tr('no es un GPIO')),
+      p.note ? row(tr('Qué es'), p.note) : null,
+      p.gpio >= 0 ? row(tr('Lo tiene'), p.owner || tr('nadie, ahora')) : null,
+      p.gpio >= 0 ? row(tr('Puerto'), p.port ? `${p.port} · ${p.role}` : tr('ninguno en modules.txt')) : null,
+      p.port ? row(tr('Módulos'), mods.join(', ') || tr('ninguno')) : null);
   }
   function drawHeader() {
     const cell = (p, side) => {
@@ -1449,7 +1493,7 @@ async function pageExpansion() {
     put(hdr, h('div', { class: 'xp-body' }), rows);
     const count = {};
     ex.header.forEach(p => { count[p.cls] = (count[p.cls] || 0) + 1; });
-    put(legend, Object.entries(XP_CLS).filter(([k]) => count[k]).map(([k, [c, n]]) => h('span', { class: 'xp-key' }, h('i', { style: `background:${c}` }), `${n} ${count[k]}`)));
+    put(legend, Object.entries(XP_CLS).filter(([k]) => count[k]).map(([k, [c, n]]) => h('span', { class: 'xp-key' }, h('i', { style: `background:${c}` }), `${tr(n)} ${count[k]}`)));
   }
   function drawPorts() {
     put(ports, ex.ports.map(p => {
@@ -1459,22 +1503,22 @@ async function pageExpansion() {
       return h('div', { class: 'card' },
         h('div', { class: 'row' }, h('b', { class: 'grow', style: 'font-size:19px' }, p.name), h('span', { class: 'muted' }, kind)),
         h('div', { class: 'row' }, h('div', { class: 'btns' }, p.pins.map(x => h('span', { class: 'pill' }, `${x.role} GPIO${x.gpio} · pin ${x.pin}`)))),
-        p.owner ? h('div', { class: 'row warn small' }, 'Ahora lo usa: ' + p.owner) : null,
+        p.owner ? h('div', { class: 'row warn small' }, tr('Ahora lo usa: %s', p.owner)) : null,
         mods.map(m => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('b', {}, m.name), m.chip && m.chip.toLowerCase() !== m.name ? h('span', { class: 'muted' }, '  ' + m.chip) : null),
           h('code', { class: 'mono muted' }, m.args))),
-        !mods.length ? h('div', { class: 'row muted small' }, 'Sin módulos declarados en este puerto.') : null,
-        det.length ? h('div', { class: 'row small', style: 'color:#93c5fd' }, 'Detectados ahora: ' + det.map(s => `${s.chip} ${hex(s.addr)}`).join(', ')) : null);
+        !mods.length ? h('div', { class: 'row muted small' }, tr('Sin módulos declarados en este puerto.')) : null,
+        det.length ? h('div', { class: 'row small', style: 'color:#93c5fd' }, tr('Detectados ahora: %s', det.map(s => `${s.chip} ${hex(s.addr)}`).join(', '))) : null);
     }));
   }
   async function loadEx(text) {
     try { ex = await api('expansion'); } catch (e) { put(hdr, h('p', { class: 'bad' }, e.message)); return; }
     drawHeader(); drawPorts();
     if (xpPin) { const p = ex.header.find(x => x.pin === xpPin); if (p) pinShow(p); }
-    else put(pinInfo, h('div', { class: 'muted' }, 'Tocá un pin para ver qué es, quién lo tiene y a qué puerto pertenece.'));
+    else put(pinInfo, h('div', { class: 'muted' }, tr('Tocá un pin para ver qué es, quién lo tiene y a qué puerto pertenece.')));
     if (text || !dirty()) {
       ta.value = loaded = ex.text || '';
-      src.textContent = !ex.card ? 'No hay tarjeta: no se puede guardar.' : ex.file ? 'modules.txt, en la raíz de la tarjeta. Se aplica al guardar.'
-        : 'No hay modules.txt en la tarjeta: esto es el perfil por defecto. Al guardar se crea el archivo.';
+      src.textContent = !ex.card ? tr('No hay tarjeta: no se puede guardar.') : ex.file ? tr('modules.txt, en la raíz de la tarjeta. Se aplica al guardar.')
+        : tr('No hay modules.txt en la tarjeta: esto es el perfil por defecto. Al guardar se crea el archivo.');
       if (ex.check) showCheck(ex.check);
       formFill(true);
     }
@@ -1497,7 +1541,7 @@ async function pageExpansion() {
     c.stroke();
     c.fillStyle = '#8e8e93'; c.font = '20px -apple-system,sans-serif';
     c.fillText(xpFmt(xpSel.q, hi), 8, 22); c.fillText(xpFmt(xpSel.q, lo), 8, H - 8);
-    chRange.textContent = `mín ${xpFmt(xpSel.q, Math.min(...vals))} · máx ${xpFmt(xpSel.q, Math.max(...vals))} · últimos ${hist.length >= 120 ? Math.floor(hist.length / 60) + ' min' : hist.length + ' s'}`;
+    chRange.textContent = tr('mín %s · máx %s · últimos %s', xpFmt(xpSel.q, Math.min(...vals)), xpFmt(xpSel.q, Math.max(...vals)), hist.length >= 120 ? Math.floor(hist.length / 60) + ' min' : hist.length + ' s');
   }
   async function loadHist() {
     if (!se || !xpSel) return;
@@ -1513,26 +1557,26 @@ async function pageExpansion() {
       const s = se.sensors.find(s => s.values.some(v => v.q === 0)) || se.sensors.find(s => s.values.length);
       xpSel = s ? { name: s.name, key: (s.values.find(v => v.q === 0) || s.values[0]).key, q: 0 } : null;
     }
-    put(portSt, se.ports.map(p => h('div', {}, p.state === 'busy' ? `${p.port}: los pines los tiene ${p.owner}` : p.state === 'err' ? `${p.port}: no se pudo abrir`
-      : `${p.port}: ${p.found} sensores` + (p.scan_age_ms != null ? ` · buscó hace ${Math.round(p.scan_age_ms / 1000)} s` : ''))));
+    put(portSt, se.ports.map(p => h('div', {}, p.port + ': ' + (p.state === 'busy' ? tr('los pines los tiene %s', p.owner) : p.state === 'err' ? tr('no se pudo abrir')
+      : tr('%s sensores', p.found) + (p.scan_age_ms != null ? ' · ' + tr('buscó hace %s s', Math.round(p.scan_age_ms / 1000)) : '')))));
     put(sens, se.sensors.length ? se.sensors.map(s => h('div', { class: 'card pad xp-s' },
       h('div', { class: 'btns', style: 'justify-content:space-between' }, h('b', { style: 'font-size:18px' }, s.name),
-        h('span', { class: 'muted small' }, `${s.chip} · ${s.port} ${hex(s.addr)} · `, h('span', { style: s.declared ? '' : 'color:#93c5fd' }, s.declared ? 'modules.txt' : 'detectado'))),
+        h('span', { class: 'muted small' }, `${s.chip} · ${s.port} ${hex(s.addr)} · `, h('span', { style: s.declared ? '' : 'color:#93c5fd' }, s.declared ? 'modules.txt' : tr('detectado')))),
       h('div', { class: 'xp-vals' }, s.values.map(v => h('div', { class: 'xp-v' + (xpSel && xpSel.name === s.name && xpSel.key === v.key ? ' sel' : ''),
         onclick: () => { xpSel = { name: s.name, key: v.key, q: v.q }; drawSensors(); loadHist(); } },
         h('div', { class: 'muted small' }, v.name), h('div', { class: 'mid' }, xpFmt(v.q, v.v))))),
-      h('div', { class: 'small ' + (s.state === 'ok' ? 'muted' : 'bad') }, s.state === 'ok' ? `${s.reads} lecturas · ${s.errors} errores` : s.msg || 'Esperando la primera lectura'))) :
-      h('div', { class: 'card pad muted' }, 'No hay sensores. Conectá uno a i2c.ext: SDA al GPIO21 (pin 15), SCL al GPIO22 (pin 17), 3V3 (pin 18) y GND (pin 19). Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos.'));
-    put(cands, se.candidates.length ? [h('h2', {}, 'Parece que hay'), h('div', { class: 'card' }, se.candidates.map(c => h('div', { class: 'row' },
-      h('code', { class: 'mono', style: 'color:#f59e0b' }, hex(c.addr)), h('div', { class: 'grow' }, `¿Es un ${(ex && ex.chips.find(x => x.id === c.chip) || {}).name || c.chip}? `, h('span', { class: 'muted small' }, `${c.port} · ${c.guess || 'no dice qué es'}`)),
+      h('div', { class: 'small ' + (s.state === 'ok' ? 'muted' : 'bad') }, s.state === 'ok' ? tr('%s lecturas · %s errores', s.reads, s.errors) : s.msg || tr('Esperando la primera lectura')))) :
+      h('div', { class: 'card pad muted' }, tr('No hay sensores. Conectá uno a i2c.ext: SDA al GPIO21 (pin 15), SCL al GPIO22 (pin 17), 3V3 (pin 18) y GND (pin 19). Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos.')));
+    put(cands, se.candidates.length ? [h('h2', {}, tr('Parece que hay')), h('div', { class: 'card' }, se.candidates.map(c => h('div', { class: 'row' },
+      h('code', { class: 'mono', style: 'color:#f59e0b' }, hex(c.addr)), h('div', { class: 'grow' }, tr('¿Es un %s?', (ex && ex.chips.find(x => x.id === c.chip) || {}).name || c.chip) + ' ', h('span', { class: 'muted small' }, `${c.port} · ${c.guess || tr('no dice qué es')}`)),
       h('button', { class: 'btn', onclick: async () => {
         ta.value = ta.value.replace(/\n*$/, '\n') + `module ${freeName(c.chip)} ${c.port} addr=${hex(c.addr)}\n`; await doSave();
-      } }, 'Agregar')))),
-      h('p', { class: 'note' }, 'Estos chips no tienen cómo decir qué son sin que alguien les escriba: agregalos a modules.txt si son lo que parecen.')] : []);
+      } }, tr('Agregar'))))),
+      h('p', { class: 'note' }, tr('Estos chips no tienen cómo decir qué son sin que alguien les escriba: agregalos a modules.txt si son lo que parecen.'))] : []);
     if (xpSel) {
       const s = se.sensors.find(s => s.name === xpSel.name), v = s && s.values.find(v => v.key === xpSel.key);
       if (v) { xpSel.q = v.q; chTitle.textContent = `${s.name} · ${v.name}`; chVal.textContent = xpFmt(v.q, v.v); }
-    } else { chTitle.textContent = 'Sin lecturas todavía'; chVal.textContent = '--'; chRange.textContent = ''; }
+    } else { chTitle.textContent = tr('Sin lecturas todavía'); chVal.textContent = '--'; chRange.textContent = ''; }
   }
   async function loadSensors() {
     try { se = await api('sensors'); } catch { return; }
@@ -1542,20 +1586,20 @@ async function pageExpansion() {
     loadHist();
   }
 
-  put(main, h('h1', {}, 'Expansión'),
+  put(main, h('h1', {}, tr('Expansión')),
     h('div', { class: 'xp-top' },
       h('div', {}, h('h2', { style: 'margin-top:0' }, 'Header J3'), legend, pinInfo, h('div', { class: 'card pad', style: 'margin-top:12px' }, hdr)),
       h('div', { class: 'xp-side' },
-        h('h2', { style: 'margin-top:0' }, 'Sensores'),
+        h('h2', { style: 'margin-top:0' }, tr('Sensores')),
         h('div', { class: 'card pad' }, chTitle, chVal, chRange, canvas),
         h('div', { class: 'btns', style: 'margin:10px 0' }, rescan, portSt),
         sens, cands)),
-    h('h2', {}, 'Puertos y módulos'), ports,
+    h('h2', {}, tr('Puertos y módulos')), ports,
     h('h2', {}, 'modules.txt'), src,
     h('div', { class: 'card' }, ta, h('div', { class: 'row' }, ck, revert, save)),
-    h('div', { class: 'card pad', style: 'margin-top:14px' }, h('b', {}, 'Agregar módulo'),
+    h('div', { class: 'card pad', style: 'margin-top:14px' }, h('b', {}, tr('Agregar módulo')),
       h('div', { class: 'btns', style: 'margin-top:10px' }, fKind, fPort, fAddr, fOpt, fAdd), h('div', { style: 'margin-top:10px' }, fLine)),
-    h('p', { class: 'note' }, 'Sintaxis: port <nombre> <pines> y module <nombre> <puerto> [addr= chip= shunt= gain=]. Los sensores que se reconocen solos no hace falta declararlos; declarados, se leen aunque no se identifiquen (docs/MODULES.md).'));
+    h('p', { class: 'note' }, tr('Sintaxis: port <nombre> <pines> y module <nombre> <puerto> [addr= chip= shunt= gain=]. Los sensores que se reconocen solos no hace falta declararlos; declarados, se leen aunque no se identifiquen (docs/MODULES.md).')));
   await loadEx(true);
   await loadSensors();
   clearTimeout(xpT);
@@ -1581,13 +1625,13 @@ async function pageExpansion() {
 const IN = { cols: 4, rows: 6, dock: 4, pages: 16, folders: 32, name: 39, fid: 15, id: 39, glyph: 31, wtype: 15, warg: 63,
   line: 191, lines: 256 * 2 + 32, file: 24 * 1024 };
 const IN_DEF_DOCK = ['aos.settings', 'aos.files', 'aos.music', 'aos.calc', 'aos.clock', 'aos.photos'];
-const IN_WIDGETS = { clock: 'Reloj', ha: 'Home Assistant', sysmon: 'Monitor', claude: 'Claude', weather: 'Clima' };
+const IN_WIDGETS = { clock: N_('Reloj'), ha: 'Home Assistant', sysmon: N_('Monitor'), claude: 'Claude', weather: N_('Clima') };
 const IN_SIZES = ['2x2', '4x2', '4x4'];
 const IN_PALETTES = [['5E6B80', '3A4150'], ['7B2FF7', 'F107A3'], ['0A84FF', '003C8A'], ['30D158', '0B6E2E'], ['FF9F0A', 'FF375F'],
   ['64D2FF', '5E5CE6'], ['FFD60A', 'FF9F0A'], ['3A3A3C', '1C1C1E'], ['FF453A', '8A0F0A']];
-const IN_FILLS = [['v', 'Degradé vertical'], ['d', 'Degradé diagonal'], ['r', 'Radial'], ['s', 'Liso']];
-const IN_GROUPS = { g_general: 'General', g_juegos: 'Juegos', g_media: 'Multimedia', g_herram: 'Herramientas', g_red: 'Red',
-  g_casa: 'Casa', g_salud: 'Salud', g_tiempo: 'Tiempo', g_varios: 'Varios' };
+const IN_FILLS = [['v', N_('Degradé vertical')], ['d', N_('Degradé diagonal')], ['r', N_('Radial')], ['s', N_('Liso')]];
+const IN_GROUPS = { g_general: N_('General'), g_juegos: N_('Juegos'), g_media: N_('Multimedia'), g_herram: N_('Herramientas'), g_red: N_('Red'),
+  g_casa: N_('Casa'), g_salud: N_('Salud'), g_tiempo: N_('Tiempo'), g_varios: N_('Varios') };
 const inBytes = s => new TextEncoder().encode(s).length;
 const inCut = (s, max) => { let a = Array.from(s); while (a.length && inBytes(a.join('')) > max) a.pop(); return a.join(''); };
 
@@ -1595,14 +1639,14 @@ const inCut = (s, max) => { let a = Array.from(s); while (a.length && inBytes(a.
  * entries in file order, or the first error the board would stop at (the
  * board then ignores the whole file). */
 function inParse(text) {
-  const fail = (n, why) => ({ ok: false, err: n ? `línea ${n}: ${why}` : why });
-  if (inBytes(text) > IN.file) return fail(0, 'el archivo pasa de 24 KB');
+  const fail = (n, why) => ({ ok: false, err: n ? tr('línea %s: %s', n, why) : why });
+  if (inBytes(text) > IN.file) return fail(0, tr('el archivo pasa de 24 KB'));
   const entries = [], head = [], ids = new Set(), src = text.split('\n');
   let open = -1, inDock = false, sawDock = false, folders = 0, count = 0, pre = [], started = false;
   if (src[src.length - 1] === '') src.pop();
   for (let i = 0; i < src.length; i++) {
     const n = i + 1;
-    if (inBytes(src[i]) > IN.line) return fail(n, 'línea demasiado larga');
+    if (inBytes(src[i]) > IN.line) return fail(n, tr('línea demasiado larga'));
     const line = src[i].replace(/[\r \t]+$/, '');
     let cur = line;
     const tok = () => { cur = cur.replace(/^[ \t]+/, ''); if (!cur) return null; const t = cur.match(/^[^ \t]+/)[0]; cur = cur.slice(t.length + 1); return t; };
@@ -1614,48 +1658,48 @@ function inParse(text) {
     const counted = () => ++count > IN.lines;
     if (kw === 'app' || kw === 'hide') {
       e.id = tok();
-      if (!e.id) return fail(n, kw + ' sin id de app');
-      if (inBytes(e.id) > IN.id) return fail(n, 'id de app demasiado largo');
-      if (counted()) return fail(n, 'demasiadas líneas');
+      if (!e.id) return fail(n, tr('%s sin id de app', kw));
+      if (inBytes(e.id) > IN.id) return fail(n, tr('id de app demasiado largo'));
+      if (counted()) return fail(n, tr('demasiadas líneas'));
       e.folder = kw === 'app' ? open : -1;
       e.dock = kw === 'app' && inDock;
     } else if (kw === 'dock') {
-      if (open >= 0 || inDock) return fail(n, 'dock adentro de una carpeta o del dock');
-      if (sawDock) return fail(n, 'dos secciones dock');
+      if (open >= 0 || inDock) return fail(n, tr('dock adentro de una carpeta o del dock'));
+      if (sawDock) return fail(n, tr('dos secciones dock'));
       inDock = sawDock = true;
     } else if (kw === 'page' || kw === 'widget') {
-      if (open >= 0 || inDock) return fail(n, 'page o widget adentro de una carpeta o del dock');
-      if (counted()) return fail(n, 'demasiadas líneas');
+      if (open >= 0 || inDock) return fail(n, tr('page o widget adentro de una carpeta o del dock'));
+      if (counted()) return fail(n, tr('demasiadas líneas'));
       if (kw === 'widget') {
         e.type = tok();
         const size = tok(), m = size && size.match(/^([+-]?\d+)x([+-]?\d+)/);
         e.w = m ? +m[1] : 0; e.h = m ? +m[2] : 0;
-        if (!e.type || !m || e.w < 1 || e.h < 1 || e.w > 8 || e.h > 8) return fail(n, 'el widget necesita un tipo y un tamaño como 2x2');
-        if (inBytes(e.type) > IN.wtype) return fail(n, 'tipo de widget demasiado largo');
+        if (!e.type || !m || e.w < 1 || e.h < 1 || e.w > 8 || e.h > 8) return fail(n, tr('el widget necesita un tipo y un tamaño como 2x2'));
+        if (inBytes(e.type) > IN.wtype) return fail(n, tr('tipo de widget demasiado largo'));
         e.arg = inCut(cur.replace(/^[ \t]+/, ''), IN.warg);
       }
     } else if (kw === 'folder') {
-      if (open >= 0 || inDock) return fail(n, 'una carpeta adentro de otra o del dock');
-      if (folders >= IN.folders) return fail(n, 'más de 32 carpetas');
-      if (counted()) return fail(n, 'demasiadas líneas');
+      if (open >= 0 || inDock) return fail(n, tr('una carpeta adentro de otra o del dock'));
+      if (folders >= IN.folders) return fail(n, tr('más de 32 carpetas'));
+      if (counted()) return fail(n, tr('demasiadas líneas'));
       const id = tok(), a = tok(), b = tok(), fl = tok(), glyph = tok(), gc = tok();
       const name = cur.replace(/^[ \t]+/, '');
-      if (!gc || !name) return fail(n, 'la carpeta necesita id, dos colores, relleno, glifo, color del glifo y nombre');
-      if (inBytes(id) > IN.fid) return fail(n, 'id de carpeta demasiado largo');
-      if (!/^[0-9a-fA-F]{6}$/.test(a) || !/^[0-9a-fA-F]{6}$/.test(b)) return fail(n, 'los colores son seis dígitos hexadecimales');
-      if (fl.length !== 1 || !'svdr'.includes(fl)) return fail(n, 'el relleno es s, v, d o r');
-      if (gc !== 'w' && gc !== 'b') return fail(n, 'el color del glifo es w o b');
-      if (ids.has(id)) return fail(n, 'dos carpetas con el mismo id');
+      if (!gc || !name) return fail(n, tr('la carpeta necesita id, dos colores, relleno, glifo, color del glifo y nombre'));
+      if (inBytes(id) > IN.fid) return fail(n, tr('id de carpeta demasiado largo'));
+      if (!/^[0-9a-fA-F]{6}$/.test(a) || !/^[0-9a-fA-F]{6}$/.test(b)) return fail(n, tr('los colores son seis dígitos hexadecimales'));
+      if (fl.length !== 1 || !'svdr'.includes(fl)) return fail(n, tr('el relleno es s, v, d o r'));
+      if (gc !== 'w' && gc !== 'b') return fail(n, tr('el color del glifo es w o b'));
+      if (ids.has(id)) return fail(n, tr('dos carpetas con el mismo id'));
       ids.add(id);
       Object.assign(e, { id, a: a.toUpperCase(), b: b.toUpperCase(), fill: fl, glyph: inCut(glyph, IN.glyph), dark: gc === 'b', name: inCut(name, IN.name), idx: folders });
       open = folders++;
     } else if (kw === 'end') {
-      if (open < 0 && !inDock) return fail(n, 'end sin carpeta ni dock');
+      if (open < 0 && !inDock) return fail(n, tr('end sin carpeta ni dock'));
       open = -1; inDock = false;
-    } else return fail(n, 'línea desconocida (app, folder, dock, page, widget, end, hide)');
+    } else return fail(n, tr('línea desconocida (app, folder, dock, page, widget, end, hide)'));
     entries.push(e);
   }
-  if (open >= 0 || inDock) return fail(src.length, 'la última carpeta o el dock no tiene end');
+  if (open >= 0 || inDock) return fail(src.length, tr('la última carpeta o el dock no tiene end'));
   return { ok: true, entries, head, tail: pre, sawDock, folders };
 }
 
@@ -1794,32 +1838,32 @@ function inText(m) {
 function inCheck(m, apps, text) {
   const err = [], warn = [];
   const dockOn = m.dock.filter(id => apps.has(id)).length;
-  if (dockOn > 6) err.push(`El dock tiene ${dockOn} apps: la placa muestra 4 parada y 6 acostada.`);
-  else if (dockOn > IN.dock) warn.push(`El dock tiene ${dockOn} apps: parada la placa muestra las 4 primeras.`);
+  if (dockOn > 6) err.push(tr('El dock tiene %s apps: la placa muestra 4 parada y 6 acostada.', dockOn));
+  else if (dockOn > IN.dock) warn.push(tr('El dock tiene %s apps: parada la placa muestra las 4 primeras.', dockOn));
   const folders = m.pages.flat().filter(it => it.t === 'folder'), fids = new Set();
-  if (folders.length > IN.folders) err.push(`Hay ${folders.length} carpetas: la placa lee 32 como mucho.`);
+  if (folders.length > IN.folders) err.push(tr('Hay %s carpetas: la placa lee 32 como mucho.', folders.length));
   for (const f of folders) {
-    const nm = `La carpeta «${f.name || f.id}»`;
-    if (!/^[^ \t]+$/.test(f.id) || inBytes(f.id) > IN.fid) err.push(`${nm}: el id va sin espacios y con hasta 15 caracteres.`);
-    if (fids.has(f.id)) err.push(`${nm}: hay dos carpetas con el id ${f.id}.`);
+    const nm = tr('La carpeta «%s»', f.name || f.id);
+    if (!/^[^ \t]+$/.test(f.id) || inBytes(f.id) > IN.fid) err.push(tr('%s: el id va sin espacios y con hasta 15 caracteres.', nm));
+    if (fids.has(f.id)) err.push(tr('%s: hay dos carpetas con el id %s.', nm, f.id));
     fids.add(f.id);
-    if (!f.name.trim()) err.push(`${nm} no tiene nombre.`);
-    if (inBytes(f.name) > IN.name) err.push(`${nm}: el nombre pasa de 39 bytes.`);
-    if (!/^[0-9A-F]{6}$/i.test(f.a) || !/^[0-9A-F]{6}$/i.test(f.b)) err.push(`${nm}: los colores son seis dígitos hexadecimales.`);
-    if (!/^[^ \t]+$/.test(f.glyph) || inBytes(f.glyph) > IN.glyph) err.push(`${nm}: el glifo no es válido.`);
+    if (!f.name.trim()) err.push(tr('%s no tiene nombre.', nm));
+    if (inBytes(f.name) > IN.name) err.push(tr('%s: el nombre pasa de 39 bytes.', nm));
+    if (!/^[0-9A-F]{6}$/i.test(f.a) || !/^[0-9A-F]{6}$/i.test(f.b)) err.push(tr('%s: los colores son seis dígitos hexadecimales.', nm));
+    if (!/^[^ \t]+$/.test(f.glyph) || inBytes(f.glyph) > IN.glyph) err.push(tr('%s: el glifo no es válido.', nm));
     const on = f.apps.filter(id => apps.has(id)).length;
-    if (on < 2) warn.push(`${nm} tiene ${on === 0 ? 'ninguna app' : 'una sola app'}: al editar el inicio en la placa, ${on === 0 ? 'desaparece' : 'se deshace'}.`);
+    if (on < 2) warn.push(on === 0 ? tr('%s tiene ninguna app: al editar el inicio en la placa, desaparece.', nm) : tr('%s tiene una sola app: al editar el inicio en la placa, se deshace.', nm));
   }
   for (const w of m.pages.flat().filter(it => it.t === 'widget')) {
-    if (!/^[^ \t]+$/.test(w.type) || inBytes(w.type) > IN.wtype) err.push(`El widget «${w.type}»: el tipo va sin espacios y con hasta 15 caracteres.`);
-    if (!(w.w >= 1 && w.w <= 8 && w.h >= 1 && w.h <= 8)) err.push(`El widget «${w.type}»: el tamaño va de 1x1 a 8x8.`);
-    if (inBytes(w.arg || '') > IN.warg) err.push(`El widget «${w.type}»: el dato pasa de 63 bytes.`);
+    if (!/^[^ \t]+$/.test(w.type) || inBytes(w.type) > IN.wtype) err.push(tr('El widget «%s»: el tipo va sin espacios y con hasta 15 caracteres.', w.type));
+    if (!(w.w >= 1 && w.w <= 8 && w.h >= 1 && w.h <= 8)) err.push(tr('El widget «%s»: el tamaño va de 1x1 a 8x8.', w.type));
+    if (inBytes(w.arg || '') > IN.warg) err.push(tr('El widget «%s»: el dato pasa de 63 bytes.', w.type));
   }
   const used = m.pages.filter(pg => pg.some(it => !inGhost(it, apps))).length;
-  if (used > IN.pages) err.push(`Hay ${used} páginas: la placa muestra 16 como mucho.`);
-  if (m.pages.some(pg => !pg.length) && m.pages.length > 1) warn.push('Las páginas vacías no se guardan.');
+  if (used > IN.pages) err.push(tr('Hay %s páginas: la placa muestra 16 como mucho.', used));
+  if (m.pages.some(pg => !pg.length) && m.pages.length > 1) warn.push(tr('Las páginas vacías no se guardan.'));
   const p = inParse(text);
-  if (!p.ok) err.push('El archivo no pasaría la lectura de la placa: ' + p.err + '.');
+  if (!p.ok) err.push(tr('El archivo no pasaría la lectura de la placa: %s.', p.err));
   return { err, warn };
 }
 
@@ -1974,8 +2018,8 @@ async function pageInicio() {
   const strip = h('div', { class: 'instrip' });
   const editor = h('div', { class: 'card pad' });
   const hidBox = h('div', { class: 'card inhid' });
-  const saveBtn = h('button', { class: 'btn pri', disabled: true, onclick: () => save() }, 'Guardar');
-  const undoBtn = h('button', { class: 'btn', disabled: true, onclick: () => { sel = null; load(); } }, 'Descartar cambios');
+  const saveBtn = h('button', { class: 'btn pri', disabled: true, onclick: () => save() }, tr('Guardar'));
+  const undoBtn = h('button', { class: 'btn', disabled: true, onclick: () => { sel = null; load(); } }, tr('Descartar cambios'));
   const text = () => inText(m);
   const dirty = () => m && text() !== base;
   const name = id => (apps.get(id) || {}).name || id;
@@ -1987,7 +2031,7 @@ async function pageInicio() {
       list = await api('apps');
       const r = await fetch('/api/fs/get?path=%2Fmenu.txt');
       if (r.ok) txt = await r.text();
-      else if (r.status !== 404) throw new Error('no se pudo leer menu.txt');
+      else if (r.status !== 404) throw new Error(tr('no se pudo leer menu.txt'));
       orig = r.ok ? txt : null;
     } catch (e) { put(status, h('div', { class: 'row bad' }, e.message)); return; }
     apps = new Map(list.map(a => [a.id, a]));
@@ -2004,21 +2048,21 @@ async function pageInicio() {
     try {
       const r0 = await fetch('/api/fs/get?path=%2Fmenu.txt');
       const now = r0.ok ? await r0.text() : null;
-      if (now !== orig && !confirm('menu.txt cambió en la placa desde que lo cargaste (¿lo editaste en la pantalla?). ¿Guardar igual y reemplazarlo?')) return;
+      if (now !== orig && !confirm(tr('menu.txt cambió en la placa desde que lo cargaste (¿lo editaste en la pantalla?). ¿Guardar igual y reemplazarlo?'))) return;
       const r = await fetch('/api/fs/put?path=%2Fmenu.txt', { method: 'PUT', body: t });
       if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || r.statusText);
       const back = await (await fetch('/api/fs/get?path=%2Fmenu.txt')).text();
-      if (back !== t) throw new Error('la placa guardó otra cosa');
+      if (back !== t) throw new Error(tr('la placa guardó otra cosa'));
       orig = base = t;
       bad = null;
       /* read back as the board will: it must come out the same */
       const again = inBuild(inParse(back), apps);
-      toast(inText(again) === t ? 'Guardado: la placa ya lo muestra' : 'Guardado, pero al releerlo no queda igual', inText(again) !== t);
+      toast(inText(again) === t ? tr('Guardado: la placa ya lo muestra') : tr('Guardado, pero al releerlo no queda igual'), inText(again) !== t);
       render();
     } catch (e) { toast(e.message, true); }
   }
   function download() {
-    if (orig == null) { toast('La tarjeta no tiene menu.txt todavía: la placa usa el orden de siempre', true); return; }
+    if (orig == null) { toast(tr('La tarjeta no tiene menu.txt todavía: la placa usa el orden de siempre'), true); return; }
     const d = new Date(), z = n => String(n).padStart(2, '0');
     const a = h('a', { href: URL.createObjectURL(new Blob([orig], { type: 'text/plain' })),
       download: `menu-${info.name || 'p4os'}-${d.getFullYear()}${z(d.getMonth() + 1)}${z(d.getDate())}-${z(d.getHours())}${z(d.getMinutes())}.txt` });
@@ -2029,13 +2073,13 @@ async function pageInicio() {
     ta.value = text();
     const close = () => md.remove();
     const md = h('div', { class: 'modal', onclick: e => { if (e.target === md) close(); } },
-      h('div', { class: 'box' }, h('div', { class: 'head' }, h('b', { class: 'grow' }, 'menu.txt'), h('span', { class: 'muted small' }, 'así se va a guardar')), ta,
-        h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, 'Cancelar'),
+      h('div', { class: 'box' }, h('div', { class: 'head' }, h('b', { class: 'grow' }, 'menu.txt'), h('span', { class: 'muted small' }, tr('así se va a guardar'))), ta,
+        h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, tr('Cancelar')),
           h('button', { class: 'btn pri', onclick: () => {
             const p = inParse(ta.value);
             if (!p.ok) { toast(p.err, true); return; }
             m = inBuild(p, apps); sel = null; close(); render();
-          } }, 'Aplicar'))));
+          } }, tr('Aplicar')))));
     document.body.append(md);
     ta.focus();
   }
@@ -2069,9 +2113,9 @@ async function pageInicio() {
   function move(d, t) {
     if (!d || (t.before && (t.before === d.obj || t.before === d.id || (d.id && t.before.t === 'app' && t.before.id === d.id)))) return;
     const isApp = !!d.id;
-    if (!isApp && t.to !== 'page') { toast('Ahí sólo van apps', true); return; }
-    if (t.to === 'dock' && !m.dock.includes(d.id) && dockOn() >= IN.dock) { toast('El dock admite 4 apps', true); return; }
-    if (t.to === 'newfolder' && allFolders().length >= IN.folders) { toast('La placa lee 32 carpetas como mucho', true); return; }
+    if (!isApp && t.to !== 'page') { toast(tr('Ahí sólo van apps'), true); return; }
+    if (t.to === 'dock' && !m.dock.includes(d.id) && dockOn() >= IN.dock) { toast(tr('El dock admite 4 apps'), true); return; }
+    if (t.to === 'newfolder' && allFolders().length >= IN.folders) { toast(tr('La placa lee 32 carpetas como mucho'), true); return; }
     const it = take(d);
     if (t.to === 'page') {
       while (m.pages.length <= t.p) m.pages.push([]);
@@ -2104,7 +2148,7 @@ async function pageInicio() {
     const used = new Set(allFolders().map(f => f.id));
     while (used.has('f' + n)) n++;
     const pal = IN_PALETTES[allFolders().length % IN_PALETTES.length];
-    return { t: 'folder', id: 'f' + n, a: pal[0], b: pal[1], fill: 'v', glyph: 'folder', dark: false, name: 'Carpeta', apps: ids, pre: [] };
+    return { t: 'folder', id: 'f' + n, a: pal[0], b: pal[1], fill: 'v', glyph: 'folder', dark: false, name: tr('Carpeta'), apps: ids, pre: [] };
   }
   function changed() { m.pages = inFlow(m.pages, apps); render(); }
 
@@ -2175,7 +2219,7 @@ async function pageInicio() {
     return h('div', { class: 'infold' }, on.slice(0, 9).map(id => icon(id, 13)));
   }
   function folderTile(f, p) {
-    const t = h('div', { class: 'intile' + (sel && sel.obj === f ? ' sel' : ''), title: `Carpeta ${f.name} · ${f.apps.length} apps`,
+    const t = h('div', { class: 'intile' + (sel && sel.obj === f ? ' sel' : ''), title: tr('Carpeta %s · %s apps', f.name, f.apps.length),
       onclick: e => { e.stopPropagation(); sel = { obj: f }; curPage = p; render(); } },
       folderIcon(f), h('div', { class: 'inname' }, f.name));
     dragSrc(t, { obj: f });
@@ -2189,7 +2233,7 @@ async function pageInicio() {
   function widgetTile(w, p, pos) {
     const t = h('div', { class: 'inwid' + (sel && sel.obj === w ? ' sel' : ''), style: `grid-row:${pos.r + 1}/span ${pos.h};grid-column:${pos.c + 1}/span ${pos.w}`,
       onclick: e => { e.stopPropagation(); sel = { obj: w }; curPage = p; render(); } },
-      h('b', {}, IN_WIDGETS[w.type] || w.type), h('span', { class: 'small' }, `widget ${w.w}×${w.h}` + (w.arg ? ' · ' + w.arg : '')));
+      h('b', {}, tr(IN_WIDGETS[w.type] || w.type)), h('span', { class: 'small' }, `widget ${w.w}×${w.h}` + (w.arg ? ' · ' + w.arg : '')));
     dragSrc(t, { obj: w });
     dropOn(t, e => { const z = zone(e, t, false); return { to: 'page', p, before: z === 'before' ? w : nextOf(m.pages[p], w), cls: z }; });
     return t;
@@ -2215,17 +2259,17 @@ async function pageInicio() {
         grid.append(cell);
       }
     const visible = pg.some(it => !inGhost(it, apps));
-    if (!visible) grid.prepend(h('div', { class: 'inblank' }, 'Página vacía: arrastrá algo acá. Vacía no se guarda.'));
+    if (!visible) grid.prepend(h('div', { class: 'inblank' }, tr('Página vacía: arrastrá algo acá. Vacía no se guarda.')));
     const ghosts = pg.filter(it => inGhost(it, apps)).length;
     const n = m.pages.length;
     const over = m.pages.slice(0, p + 1).filter(x => x.some(it => !inGhost(it, apps))).length > IN.pages && visible;
     const box = h('div', { class: 'inpage' + (over ? ' bad' : '') },
-      h('div', { class: 'inhead' }, h('b', { class: 'grow' }, `Página ${p + 1}`), ghosts ? h('span', { title: 'apps nombradas en menu.txt que no están instaladas' }, `+${ghosts} sin instalar`) : null,
-        over ? h('span', {}, 'la placa no la muestra') : null,
-        h('button', { class: 'btn', title: 'Mover a la izquierda', disabled: p === 0, onclick: () => { [m.pages[p - 1], m.pages[p]] = [m.pages[p], m.pages[p - 1]]; changed(); } }, '◀'),
-        h('button', { class: 'btn', title: 'Mover a la derecha', disabled: p === n - 1, onclick: () => { [m.pages[p + 1], m.pages[p]] = [m.pages[p], m.pages[p + 1]]; changed(); } }, '▶'),
-        h('button', { class: 'btn', title: 'Quitar la página', disabled: n === 1 && !visible, onclick: () => {
-          if (visible && !confirm(`¿Quitar la página ${p + 1}? Lo que tiene pasa a la página ${p ? p : 2}.`)) return;
+      h('div', { class: 'inhead' }, h('b', { class: 'grow' }, tr('Página %s', p + 1)), ghosts ? h('span', { title: tr('apps nombradas en menu.txt que no están instaladas') }, tr('+%s sin instalar', ghosts)) : null,
+        over ? h('span', {}, tr('la placa no la muestra')) : null,
+        h('button', { class: 'btn', title: tr('Mover a la izquierda'), disabled: p === 0, onclick: () => { [m.pages[p - 1], m.pages[p]] = [m.pages[p], m.pages[p - 1]]; changed(); } }, '◀'),
+        h('button', { class: 'btn', title: tr('Mover a la derecha'), disabled: p === n - 1, onclick: () => { [m.pages[p + 1], m.pages[p]] = [m.pages[p], m.pages[p + 1]]; changed(); } }, '▶'),
+        h('button', { class: 'btn', title: tr('Quitar la página'), disabled: n === 1 && !visible, onclick: () => {
+          if (visible && !confirm(tr('¿Quitar la página %s? Lo que tiene pasa a la página %s.', p + 1, p ? p : 2))) return;
           const items = m.pages.splice(p, 1)[0];
           if (!m.pages.length) m.pages.push([]);
           if (p > 0) m.pages[p - 1].push(...items); else m.pages[0].unshift(...items);
@@ -2237,26 +2281,26 @@ async function pageInicio() {
   }
   function renderDock() {
     const on = m.dock.filter(id => apps.has(id));
-    put(dockBox, on.map(id => appTile(id, { list: 'dock' })), on.length ? null : h('div', { class: 'inhint' }, 'El dock está vacío: arrastrá apps acá (hasta 4).'));
+    put(dockBox, on.map(id => appTile(id, { list: 'dock' })), on.length ? null : h('div', { class: 'inhint' }, tr('El dock está vacío: arrastrá apps acá (hasta 4).')));
   }
   function renderHidden() {
     const on = m.hidden.filter(id => apps.has(id)), off = m.hidden.length - on.length;
     put(hidBox, on.map(id => {
       const r = h('div', { class: 'row' }, icon(id, 30), h('div', { class: 'grow' }, name(id), ' ', h('span', { class: 'muted small' }, id)),
-        h('button', { class: 'btn', onclick: () => move({ id }, { to: 'page', p: m.pages.length - 1, before: null }) }, 'Mostrar'));
+        h('button', { class: 'btn', onclick: () => move({ id }, { to: 'page', p: m.pages.length - 1, before: null }) }, tr('Mostrar')));
       dragSrc(r, { id });
       return r;
-    }), on.length ? null : h('div', { class: 'row muted small' }, 'Ninguna. Arrastrá una app acá para sacarla del inicio sin desinstalarla.'),
-      off ? h('div', { class: 'row muted small' }, `${off} más ocultas que no están instaladas (se conservan).`) : null);
+    }), on.length ? null : h('div', { class: 'row muted small' }, tr('Ninguna. Arrastrá una app acá para sacarla del inicio sin desinstalarla.')),
+      off ? h('div', { class: 'row muted small' }, tr('%s más ocultas que no están instaladas (se conservan).', off)) : null);
   }
   const field = (label, input, note) => h('div', {}, h('label', { class: 'f' }, label), input, note ? h('div', { class: 'note' }, note) : null);
   function destinations(cur) {
     const o = [];
     if (cur !== 'dock') o.push(['dock', 'Dock']);
-    m.pages.forEach((_, p) => o.push(['p' + p, `Página ${p + 1}`]));
-    o.push(['p' + m.pages.length, 'Página nueva']);
-    for (const f of allFolders()) if (!(cur === 'folder' && sel.f === f)) o.push(['f:' + f.id, 'Carpeta ' + f.name]);
-    if (cur !== 'hidden') o.push(['hidden', 'Ocultas']);
+    m.pages.forEach((_, p) => o.push(['p' + p, tr('Página %s', p + 1)]));
+    o.push(['p' + m.pages.length, tr('Página nueva')]);
+    for (const f of allFolders()) if (!(cur === 'folder' && sel.f === f)) o.push(['f:' + f.id, tr('Carpeta %s', f.name)]);
+    if (cur !== 'hidden') o.push(['hidden', tr('Ocultas')]);
     return o;
   }
   function goTo(d, v) {
@@ -2291,40 +2335,40 @@ async function pageInicio() {
   }
   function renderEditorNow() {
     if (!sel) {
-      put(editor, h('h2', { style: 'margin-top:0' }, 'Cómo se usa'),
-        h('p', { class: 'small muted', style: 'margin:0' }, 'Arrastrá los íconos para cambiarlos de lugar, entre páginas y al dock. Soltá una app sobre otra para armar una carpeta, o en el centro de una carpeta para meterla. Tocá cualquier cosa para editarla. Nada llega a la placa hasta que tocás Guardar.'));
+      put(editor, h('h2', { style: 'margin-top:0' }, tr('Cómo se usa')),
+        h('p', { class: 'small muted', style: 'margin:0' }, tr('Arrastrá los íconos para cambiarlos de lugar, entre páginas y al dock. Soltá una app sobre otra para armar una carpeta, o en el centro de una carpeta para meterla. Tocá cualquier cosa para editarla. Nada llega a la placa hasta que tocás Guardar.')));
       return;
     }
-    const steps = d => [h('button', { class: 'btn', onclick: () => step(d, -1) }, '◀ Antes'), h('button', { class: 'btn', onclick: () => step(d, 1) }, 'Después ▶')];
+    const steps = d => [h('button', { class: 'btn', onclick: () => step(d, -1) }, tr('◀ Antes')), h('button', { class: 'btn', onclick: () => step(d, 1) }, tr('Después ▶'))];
     if (sel.id) {
       const id = sel.id, w = whereApp(id);
       if (!w) { sel = null; renderEditorNow(); return; }
-      const here = { dock: 'En el dock', hidden: 'Oculta', page: `En la página ${w.p + 1}`, folder: `En la carpeta «${w.f && w.f.name}», página ${w.p + 1}` }[w.in];
+      const here = { dock: tr('En el dock'), hidden: tr('Oculta'), page: tr('En la página %s', w.p + 1), folder: tr('En la carpeta «%s», página %s', w.f && w.f.name, w.p + 1) }[w.in];
       if (w.in === 'folder') sel.f = w.f;
-      const dest = h('select', { onchange: e => { if (e.target.value) goTo({ id }, e.target.value); } }, h('option', { value: '' }, 'Mover a…'),
+      const dest = h('select', { onchange: e => { if (e.target.value) goTo({ id }, e.target.value); } }, h('option', { value: '' }, tr('Mover a…')),
         destinations(w.in).map(([v, n]) => h('option', { value: v }, n)));
       put(editor, h('div', { class: 'btns', style: 'flex-wrap:nowrap' }, icon(id, 58), h('div', {}, h('b', {}, name(id)), h('div', { class: 'muted small mono' }, id), h('div', { class: 'small' }, here))),
         h('div', { class: 'btns', style: 'margin-top:14px' }, w.in === 'hidden' ? null : steps({ id }),
-          w.in === 'hidden' ? h('button', { class: 'btn', onclick: () => move({ id }, { to: 'page', p: m.pages.length - 1, before: null }) }, 'Mostrar')
-            : h('button', { class: 'btn', onclick: () => move({ id }, { to: 'hidden' }) }, 'Ocultar'),
-          w.in === 'folder' ? h('button', { class: 'btn', onclick: () => move({ id }, { to: 'page', p: w.p, before: nextOf(m.pages[w.p], w.f) }) }, 'Sacar de la carpeta') : null),
+          w.in === 'hidden' ? h('button', { class: 'btn', onclick: () => move({ id }, { to: 'page', p: m.pages.length - 1, before: null }) }, tr('Mostrar'))
+            : h('button', { class: 'btn', onclick: () => move({ id }, { to: 'hidden' }) }, tr('Ocultar')),
+          w.in === 'folder' ? h('button', { class: 'btn', onclick: () => move({ id }, { to: 'page', p: w.p, before: nextOf(m.pages[w.p], w.f) }) }, tr('Sacar de la carpeta')) : null),
         h('div', { style: 'margin-top:12px' }, dest),
-        w.in === 'hidden' ? h('p', { class: 'note' }, 'Oculta sigue instalada: se abre desde el portal o desde otra app, y no aparece en el inicio.') : null);
+        w.in === 'hidden' ? h('p', { class: 'note' }, tr('Oculta sigue instalada: se abre desde el portal o desde otra app, y no aparece en el inicio.')) : null);
       return;
     }
     const it = sel.obj;
     if (pageOf(it) < 0) { sel = null; renderEditorNow(); return; }
-    const pageSel = h('select', { onchange: e => { if (e.target.value) goTo({ obj: it }, e.target.value); } }, h('option', { value: '' }, 'Mover a…'),
-      m.pages.map((_, p) => h('option', { value: 'p' + p }, `Página ${p + 1}`)), h('option', { value: 'p' + m.pages.length }, 'Página nueva'));
+    const pageSel = h('select', { onchange: e => { if (e.target.value) goTo({ obj: it }, e.target.value); } }, h('option', { value: '' }, tr('Mover a…')),
+      m.pages.map((_, p) => h('option', { value: 'p' + p }, tr('Página %s', p + 1))), h('option', { value: 'p' + m.pages.length }, tr('Página nueva')));
     if (it.t === 'widget') {
       const known = Object.keys(IN_WIDGETS).includes(it.type) ? Object.keys(IN_WIDGETS) : [it.type, ...Object.keys(IN_WIDGETS)];
       const sizes = IN_SIZES.includes(`${it.w}x${it.h}`) ? IN_SIZES : [`${it.w}x${it.h}`, ...IN_SIZES];
       put(editor, h('h2', { style: 'margin-top:0' }, 'Widget'),
-        field('Tipo', h('select', { onchange: e => { it.type = e.target.value; changed(); } }, known.map(k => h('option', { value: k, selected: k === it.type }, IN_WIDGETS[k] ? `${IN_WIDGETS[k]} (${k})` : k)))),
-        field('Tamaño', h('select', { onchange: e => { [it.w, it.h] = e.target.value.split('x').map(Number); changed(); } }, sizes.map(s => h('option', { value: s, selected: s === `${it.w}x${it.h}` }, s.replace('x', ' × ') + ' celdas')))),
-        field('Dato (opcional)', h('input', { type: 'text', value: it.arg || '', placeholder: 'lo que el widget lea', onchange: e => { it.arg = inCut(e.target.value.replace(/[\r\n]/g, ' ').trim(), IN.warg); changed(); } }), 'Hasta 63 bytes. La mayoría de los widgets no lo usan.'),
+        field(tr('Tipo'), h('select', { onchange: e => { it.type = e.target.value; changed(); } }, known.map(k => h('option', { value: k, selected: k === it.type }, IN_WIDGETS[k] ? `${tr(IN_WIDGETS[k])} (${k})` : k)))),
+        field(tr('Tamaño'), h('select', { onchange: e => { [it.w, it.h] = e.target.value.split('x').map(Number); changed(); } }, sizes.map(s => h('option', { value: s, selected: s === `${it.w}x${it.h}` }, tr('%s celdas', s.replace('x', ' × ')))))),
+        field(tr('Dato (opcional)'), h('input', { type: 'text', value: it.arg || '', placeholder: tr('lo que el widget lea'), onchange: e => { it.arg = inCut(e.target.value.replace(/[\r\n]/g, ' ').trim(), IN.warg); changed(); } }), tr('Hasta 63 bytes. La mayoría de los widgets no lo usan.')),
         h('div', { class: 'btns', style: 'margin-top:14px' }, steps({ obj: it }), pageSel,
-          h('button', { class: 'btn red', onclick: () => { take({ obj: it }); sel = null; changed(); } }, 'Quitar widget')));
+          h('button', { class: 'btn red', onclick: () => { take({ obj: it }); sel = null; changed(); } }, tr('Quitar widget'))));
       return;
     }
     /* a folder */
@@ -2332,7 +2376,7 @@ async function pageInicio() {
     const count = h('span', { class: 'muted small' });
     const setCount = () => { const b = inBytes(f.name); count.textContent = `${b}/39 bytes`; count.className = b > IN.name ? 'bad small' : 'muted small'; };
     const nameIn = h('input', { type: 'text', value: f.name, oninput: e => { f.name = e.target.value.replace(/[\r\n]/g, ''); setCount(); renderSoft(); },
-      onchange: () => { f.name = f.name.trim() || 'Carpeta'; nameIn.value = f.name; changed(); } });
+      onchange: () => { f.name = f.name.trim() || tr('Carpeta'); nameIn.value = f.name; changed(); } });
     setCount();
     const prev = h('div', { class: 'inprev' });
     const drawPrev = () => { prev.style.background = inFillCss(f); prev.innerHTML = inGlyphSvg(f.glyph, f.dark ? '#000' : '#fff'); };
@@ -2341,14 +2385,15 @@ async function pageInicio() {
     const cb = h('input', { type: 'color', value: '#' + f.b.toLowerCase(), oninput: e => { f.b = e.target.value.slice(1).toUpperCase(); drawPrev(); renderSoft(); } });
     const pals = h('div', { class: 'btns' }, IN_PALETTES.map(([a, b]) => h('div', { class: 'mpsw' + (f.a === a && f.b === b ? ' on' : ''), style: `background:linear-gradient(#${a},#${b})`,
       onclick: () => { f.a = a; f.b = b; changed(); } })));
-    const gsearch = h('input', { type: 'search', placeholder: 'Buscar un glifo…' });
+    const gsearch = h('input', { type: 'search', placeholder: tr('Buscar un glifo…') });
     const gbox = h('div', { class: 'inglyphs' });
+    const group = g => IN_GROUPS[g.g] ? tr(IN_GROUPS[g.g]) : '';
     const fillGlyphs = () => {
       const q = gsearch.value.toLowerCase().trim();
-      const gl = (window.AOS_GLIFOS || []).filter(g => !q || g.n.includes(q) || (IN_GROUPS[g.g] || '').toLowerCase().includes(q));
-      put(gbox, gl.length ? gl.map(g => h('button', { class: 'mpg' + (g.n === f.glyph ? ' on' : ''), title: `${g.n} · ${IN_GROUPS[g.g] || ''}`, html: inGlyphSvg(g.n, 'currentColor'),
+      const gl = (window.AOS_GLIFOS || []).filter(g => !q || g.n.includes(q) || group(g).toLowerCase().includes(q));
+      put(gbox, gl.length ? gl.map(g => h('button', { class: 'mpg' + (g.n === f.glyph ? ' on' : ''), title: `${g.n} · ${group(g)}`, html: inGlyphSvg(g.n, 'currentColor'),
         onclick: () => { f.glyph = g.n; drawPrev(); fillGlyphs(); renderSoft(); } }))
-        : h('div', { class: 'muted small', style: 'grid-column:1/-1' }, window.AOS_GLIFOS ? 'Ninguno se llama así.' : 'Cargando los glifos…'));
+        : h('div', { class: 'muted small', style: 'grid-column:1/-1' }, window.AOS_GLIFOS ? tr('Ninguno se llama así.') : tr('Cargando los glifos…')));
     };
     gsearch.addEventListener('input', fillGlyphs);
     fillGlyphs();
@@ -2358,30 +2403,30 @@ async function pageInicio() {
     const listed = [...apps.values()].filter(a => { const w = whereApp(a.id); return !w || w.in !== 'hidden'; }).sort((x, y) => x.name.localeCompare(y.name));
     const checks = h('div', { class: 'inlist' }, listed.map(a => {
       const w = whereApp(a.id), inThis = w && w.in === 'folder' && w.f === f;
-      const other = w && !inThis ? (w.in === 'dock' ? 'dock' : w.in === 'folder' ? w.f.name : `pág. ${w.p + 1}`) : '';
+      const other = w && !inThis ? (w.in === 'dock' ? 'dock' : w.in === 'folder' ? w.f.name : tr('pág. %s', w.p + 1)) : '';
       return h('label', {}, h('input', { type: 'checkbox', checked: inThis, onchange: e => {
         const p = pageOf(f);
         if (e.target.checked) move({ id: a.id }, { to: 'folder', f, before: null });
         else move({ id: a.id }, { to: 'page', p, before: nextOf(m.pages[p], f) });
       } }), icon(a.id, 22), a.name, h('span', { class: 'muted' }, other));
     }));
-    put(editor, h('div', { class: 'btns', style: 'flex-wrap:nowrap;justify-content:space-between' }, h('h2', { style: 'margin:0' }, 'Carpeta'), h('span', { class: 'muted small mono' }, f.id)),
-      field('Nombre', nameIn), count,
-      h('label', { class: 'f' }, `Apps (${f.apps.length - off})` + (off ? ` · ${off} sin instalar, se conservan` : '')), fapps,
-      h('div', { class: 'note' }, 'Arrastrá para ordenarlas o para sacarlas a una página, o marcá cuáles van:'), checks,
-      h('label', { class: 'f' }, 'Color y glifo'),
+    put(editor, h('div', { class: 'btns', style: 'flex-wrap:nowrap;justify-content:space-between' }, h('h2', { style: 'margin:0' }, tr('Carpeta')), h('span', { class: 'muted small mono' }, f.id)),
+      field(tr('Nombre'), nameIn), count,
+      h('label', { class: 'f' }, `Apps (${f.apps.length - off})` + (off ? ' · ' + tr('%s sin instalar, se conservan', off) : '')), fapps,
+      h('div', { class: 'note' }, tr('Arrastrá para ordenarlas o para sacarlas a una página, o marcá cuáles van:')), checks,
+      h('label', { class: 'f' }, tr('Color y glifo')),
       h('div', { class: 'btns', style: 'flex-wrap:nowrap;align-items:flex-start' }, prev, h('div', {}, pals, h('div', { class: 'btns', style: 'margin-top:8px' }, ca, cb,
-        h('select', { style: 'width:auto', onchange: e => { f.fill = e.target.value; changed(); } }, IN_FILLS.map(([v, n]) => h('option', { value: v, selected: v === f.fill }, n))),
-        h('select', { style: 'width:auto', onchange: e => { f.dark = e.target.value === 'b'; changed(); } }, h('option', { value: 'w', selected: !f.dark }, 'Glifo blanco'), h('option', { value: 'b', selected: f.dark }, 'Glifo negro'))))),
-      h('div', { class: 'note' }, 'En P4OS la carpeta se ve esmerilada, como en el iPhone, y el glifo aparece mientras está vacía. Los colores quedan guardados en menu.txt.'),
+        h('select', { style: 'width:auto', onchange: e => { f.fill = e.target.value; changed(); } }, IN_FILLS.map(([v, n]) => h('option', { value: v, selected: v === f.fill }, tr(n)))),
+        h('select', { style: 'width:auto', onchange: e => { f.dark = e.target.value === 'b'; changed(); } }, h('option', { value: 'w', selected: !f.dark }, tr('Glifo blanco')), h('option', { value: 'b', selected: f.dark }, tr('Glifo negro')))))),
+      h('div', { class: 'note' }, tr('En P4OS la carpeta se ve esmerilada, como en el iPhone, y el glifo aparece mientras está vacía. Los colores quedan guardados en menu.txt.')),
       gsearch, gbox,
       h('div', { class: 'btns', style: 'margin-top:14px' }, steps({ obj: f }), pageSel,
         h('button', { class: 'btn red', onclick: () => {
-          if (!confirm(`¿Borrar la carpeta «${f.name}»? Sus apps vuelven a la página, donde estaba la carpeta.`)) return;
+          if (!confirm(tr('¿Borrar la carpeta «%s»? Sus apps vuelven a la página, donde estaba la carpeta.', f.name))) return;
           const p = pageOf(f), pg = m.pages[p];
           pg.splice(pg.indexOf(f), 1, ...f.apps.map((id, i) => ({ t: 'app', id, pre: i ? [] : f.pre })));
           sel = null; changed();
-        } }, 'Borrar carpeta')));
+        } }, tr('Borrar carpeta'))));
   }
   /* while typing: the grids and the status, not the editor under the cursor */
   function renderSoft() { renderDock(); put(strip, m.pages.map(pageBox)); renderStatus(); }
@@ -2389,13 +2434,13 @@ async function pageInicio() {
     const t = text(), chk = inCheck(m, apps, t), d = dirty();
     saveBtn.disabled = !d || chk.err.length > 0;
     undoBtn.disabled = !d;
-    saveBtn.textContent = d ? 'Guardar cambios' : 'Guardar';
+    saveBtn.textContent = d ? tr('Guardar cambios') : tr('Guardar');
     const on = [...apps.keys()].length, hid = m.hidden.filter(id => apps.has(id)).length;
     put(status,
-      h('div', { class: 'row' }, h('div', { class: 'grow' }, orig == null ? 'La tarjeta no tiene menu.txt: la placa muestra el orden de siempre.' : 'menu.txt en la tarjeta',
-        h('div', { class: 'muted small' }, `${on} apps instaladas · ${allFolders().length} carpetas · ${m.pages.filter(pg => pg.length).length} páginas · ${hid} ocultas · ${inBytes(t)} bytes`)),
-        h('div', { class: d ? 'warn' : 'muted small' }, d ? 'cambios sin guardar' : 'igual que en la placa')),
-      bad ? h('div', { class: 'row inerr small' }, `La placa ignora el menu.txt de la tarjeta (${bad}) y muestra el orden de siempre. Descargá el respaldo si lo querés; Guardar lo reemplaza.`) : null,
+      h('div', { class: 'row' }, h('div', { class: 'grow' }, orig == null ? tr('La tarjeta no tiene menu.txt: la placa muestra el orden de siempre.') : tr('menu.txt en la tarjeta'),
+        h('div', { class: 'muted small' }, tr('%s apps instaladas · %s carpetas · %s páginas · %s ocultas · %s bytes', on, allFolders().length, m.pages.filter(pg => pg.length).length, hid, inBytes(t)))),
+        h('div', { class: d ? 'warn' : 'muted small' }, d ? tr('cambios sin guardar') : tr('igual que en la placa'))),
+      bad ? h('div', { class: 'row inerr small' }, tr('La placa ignora el menu.txt de la tarjeta (%s) y muestra el orden de siempre. Descargá el respaldo si lo querés; Guardar lo reemplaza.', bad)) : null,
       chk.err.map(e => h('div', { class: 'row inerr small' }, e)),
       chk.warn.map(e => h('div', { class: 'row inwarn small' }, e)));
   }
@@ -2406,7 +2451,7 @@ async function pageInicio() {
   }
 
   const addFolder = () => {
-    if (allFolders().length >= IN.folders) { toast('La placa lee 32 carpetas como mucho', true); return; }
+    if (allFolders().length >= IN.folders) { toast(tr('La placa lee 32 carpetas como mucho'), true); return; }
     const f = newFolder([]);
     const p = Math.min(curPage, m.pages.length - 1);
     m.pages[p].push(f);
@@ -2421,7 +2466,7 @@ async function pageInicio() {
     changed();
   };
   const addPage = () => {
-    if (m.pages.length && !m.pages[m.pages.length - 1].some(it => !inGhost(it, apps))) { toast('Ya hay una página vacía al final', true); return; }
+    if (m.pages.length && !m.pages[m.pages.length - 1].some(it => !inGhost(it, apps))) { toast(tr('Ya hay una página vacía al final'), true); return; }
     m.pages.push([]);
     curPage = m.pages.length - 1;
     changed();
@@ -2429,23 +2474,23 @@ async function pageInicio() {
   };
   dropOn(hidBox, () => drag && drag.id ? { to: 'hidden', cls: 'over' } : null);
   dropOn(dockBox, () => drag && drag.id ? { to: 'dock', before: null, cls: 'over' } : null);
-  put(main, h('h1', {}, 'Inicio'), status,
+  put(main, h('h1', {}, tr('Inicio')), status,
     h('div', { class: 'btns', style: 'margin:18px 0 12px;justify-content:space-between' },
       h('div', { class: 'btns' },
-        h('button', { class: 'btn', onclick: addPage }, '+ Página'),
-        h('button', { class: 'btn', onclick: addFolder }, '+ Carpeta'),
+        h('button', { class: 'btn', onclick: addPage }, tr('+ Página')),
+        h('button', { class: 'btn', onclick: addFolder }, tr('+ Carpeta')),
         h('button', { class: 'btn', onclick: addWidget }, '+ Widget')),
       h('div', { class: 'btns' }, undoBtn, saveBtn,
-        h('button', { class: 'btn', onclick: () => { if (dirty() && !confirm('Hay cambios sin guardar. ¿Recargar desde la placa y perderlos?')) return; load(); } }, 'Recargar'),
-        h('button', { class: 'btn', onclick: download }, 'Descargar menu.txt'),
-        h('button', { class: 'btn', onclick: rawEditor }, 'Texto'))),
+        h('button', { class: 'btn', onclick: () => { if (dirty() && !confirm(tr('Hay cambios sin guardar. ¿Recargar desde la placa y perderlos?'))) return; load(); } }, tr('Recargar')),
+        h('button', { class: 'btn', onclick: download }, tr('Descargar menu.txt')),
+        h('button', { class: 'btn', onclick: rawEditor }, tr('Texto')))),
     h('div', { class: 'incols' },
       h('div', { style: 'min-width:0' },
         h('h2', { style: 'margin-top:0' }, 'Dock'), h('div', { class: 'indockwrap' }, dockBox),
-        h('h2', {}, 'Páginas'), strip,
-        h('p', { class: 'note' }, 'Parada, la placa muestra 4 × 6 íconos por página en este orden; acostada reparte el mismo orden en 7 × 3. Lo que no entra en una página pasa a la siguiente.')),
-      h('div', { class: 'inside' }, editor, h('div', {}, h('h2', { style: 'margin-top:0' }, 'Ocultas'), hidBox))));
-  window.onbeforeunload = () => dirty() && location.hash === '#inicio' ? 'Hay cambios sin guardar' : undefined;
+        h('h2', {}, tr('Páginas')), strip,
+        h('p', { class: 'note' }, tr('Parada, la placa muestra 4 × 6 íconos por página en este orden; acostada reparte el mismo orden en 7 × 3. Lo que no entra en una página pasa a la siguiente.'))),
+      h('div', { class: 'inside' }, editor, h('div', {}, h('h2', { style: 'margin-top:0' }, tr('Ocultas')), hidBox))));
+  window.onbeforeunload = () => dirty() && location.hash === '#inicio' ? tr('Hay cambios sin guardar') : undefined;
   await load();
 }
 
@@ -2462,14 +2507,14 @@ function fsPut(path, body, onProg) {
       try { m = JSON.parse(x.responseText).error || m; } catch {}
       bad(new Error(m));
     };
-    x.onerror = () => bad(new Error('se cortó la conexión con la placa'));
+    x.onerror = () => bad(new Error(tr('se cortó la conexión con la placa')));
     x.send(body);
   });
 }
 /* A folder's entries; a folder that is not there yet is empty. */
 async function fsList(path) {
   try { return (await api('fs?path=' + encodeURIComponent(path) + '&_=' + Date.now())).entries || []; }
-  catch (e) { if (/no existe/.test(e.message)) return []; throw e; }
+  catch (e) { if (e.status === 404 || /no existe/.test(e.message)) return []; throw e; }
 }
 const fsDelete = path => api('fs/delete?path=' + encodeURIComponent(path), { method: 'POST' });
 const fsMkdir = path => api('fs/mkdir?path=' + encodeURIComponent(path), { method: 'POST' }).catch(() => {});
@@ -2478,16 +2523,16 @@ const fsUrl = (path, dl) => '/api/fs/get?' + (dl ? 'attachment=1&' : '') + 'path
 async function fsText(path) {
   const r = await fetch(fsUrl(path) + '&_=' + Date.now(), { cache: 'no-store' });
   if (r.status === 404) return null;
-  if (!r.ok) throw new Error('no se pudo leer ' + path);
+  if (!r.ok) throw new Error(tr('no se pudo leer %s', path));
   return r.text();
 }
 async function fsBytes(path) {
   const r = await fetch(fsUrl(path) + '&_=' + Date.now(), { cache: 'no-store' });
-  if (!r.ok) throw new Error(r.status === 404 ? 'no existe ' + path : 'no se pudo leer ' + path);
+  if (!r.ok) throw new Error(r.status === 404 ? tr('no existe %s', path) : tr('no se pudo leer %s', path));
   return r.arrayBuffer();
 }
 const openApp = id => api('open?id=' + encodeURIComponent(id), { method: 'POST' });
-const fmtDate = s => s ? new Date(s * 1000).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+const fmtDate = s => s ? new Date(s * 1000).toLocaleDateString(LOCALE, { day: '2-digit', month: 'short', year: 'numeric' }) : '';
 function saveBlob(blob, name) {
   const a = h('a', { href: URL.createObjectURL(blob), download: name });
   document.body.append(a);
@@ -2509,9 +2554,9 @@ const RED_DIR = '/redes';
 const RED_PORTS = { 21: 'FTP', 22: 'SSH', 23: 'Telnet', 53: 'DNS', 80: 'HTTP', 139: 'NetBIOS', 443: 'HTTPS', 445: 'SMB',
   502: 'Modbus', 554: 'RTSP', 631: 'IPP', 1880: 'Node-RED', 1883: 'MQTT', 3000: 'Grafana', 3389: 'RDP', 5000: 'UPnP',
   5555: 'SCPI', 5900: 'VNC', 6053: 'ESPHome', 8000: 'HTTP', 8080: 'HTTP', 8081: 'HTTP', 8123: 'Home Assistant',
-  8443: 'HTTPS', 8554: 'RTSP', 8883: 'MQTT/TLS', 8888: 'HTTP', 9000: 'HTTP', 9100: 'Impresora', 32400: 'Plex' };
+  8443: 'HTTPS', 8554: 'RTSP', 8883: 'MQTT/TLS', 8888: 'HTTP', 9000: 'HTTP', 9100: N_('Impresora'), 32400: 'Plex' };
 const RED_WEB = new Set([80, 443, 3000, 5000, 8000, 8080, 8081, 8123, 8443, 8888, 9000]);
-const RED_PHASE = ['Ping', 'Puertos', 'Nombres y redes Wi-Fi'];
+const RED_PHASE = ['Ping', N_('Puertos'), N_('Nombres y redes Wi-Fi')];
 const ipNum = ip => (ip || '').split('.').reduce((a, b) => a * 256 + (parseInt(b, 10) || 0), 0);
 
 /* Who made a MAC, by its first three bytes. A short list lives here (from
@@ -2547,7 +2592,7 @@ function redVendor(mac) {
   const k = mac.slice(0, 8).toLowerCase();
   const v = (redOuiFile && redOuiFile[k]) || RED_OUI[k];
   if (v) return v;
-  return parseInt(mac[1], 16) & 2 ? 'MAC aleatoria' : '';
+  return parseInt(mac[1], 16) & 2 ? tr('MAC aleatoria') : '';
 }
 
 /* One survey, whatever the order of its lines; a line cut by a power loss is
@@ -2621,7 +2666,7 @@ function redChart(aps, band, mine) {
   const hi = band === 2 ? 15 : Math.max(...aps.map(w => redSpan(w).c + redSpan(w).half)) + 2;
   const X = c => 30 + (c - lo) / (hi - lo) * (W - 40);
   const Y = rssi => base - Math.max(0, Math.min(1, (rssi + 100) / 70)) * (base - top);
-  let svg = `<svg viewBox="0 0 ${W} ${H}" class="redchart" role="img" aria-label="Canales ${band === 2 ? '2,4' : '5'} GHz">`;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" class="redchart" role="img" aria-label="${tr('Canales %s GHz', band === 2 ? num(2.4, 1) : '5')}">`;
   for (const r of [-90, -70, -50]) svg += `<line x1="30" x2="${W - 10}" y1="${Y(r)}" y2="${Y(r)}" class="grid"/><text x="2" y="${Y(r) + 4}" class="ax">${r}</text>`;
   const ticks = band === 2 ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] : [...new Set(aps.map(w => w.canal))].sort((a, b) => a - b);
   for (const t of ticks) svg += `<text x="${X(t)}" y="${H - 8}" class="ax" text-anchor="middle">${t}</text>`;
@@ -2632,12 +2677,12 @@ function redChart(aps, band, mine) {
     const x0 = X(c - half), x1 = X(c + half), y = Y(w.rssi), k = (x1 - x0) * 0.32;
     const own = mine && w.ssid && w.ssid.startsWith(mine);     /* "Casa" and "Casa 5G" */
     const col = own ? 'var(--accent)' : `hsl(${(i * 67) % 360} 70% 60%)`;
-    svg += `<path d="M${x0} ${base} C${x0 + k} ${y} ${x1 - k} ${y} ${x1} ${base}" fill="${col}" fill-opacity="${own ? .28 : .1}" stroke="${col}" stroke-width="${own ? 2.5 : 1.3}"><title>${esc(w.ssid || 'oculta')} · canal ${w.canal} · ${w.rssi} dBm</title></path>`;
+    svg += `<path d="M${x0} ${base} C${x0 + k} ${y} ${x1 - k} ${y} ${x1} ${base}" fill="${col}" fill-opacity="${own ? .28 : .1}" stroke="${col}" stroke-width="${own ? 2.5 : 1.3}"><title>${esc(w.ssid || tr('oculta'))} · ${tr('canal %s', w.canal)} · ${w.rssi} dBm</title></path>`;
     /* a name over the strong ones, unless it would land on another */
-    const ly = Math.max(top, y - 5), lx = X(c), lw = (w.ssid || '(oculta)').length * 6.5;
+    const ly = Math.max(top, y - 5), lx = X(c), lw = (w.ssid || tr('(oculta)')).length * 6.5;
     if ((w.rssi > -82 || own) && !labels.some(l => Math.abs(l.x - lx) < (l.w + lw) / 2 && Math.abs(l.y - ly) < 13)) {
       labels.push({ x: lx, y: ly, w: lw });
-      svg += `<text x="${lx}" y="${ly}" text-anchor="middle" class="lab" fill="${col}">${esc(w.ssid || '(oculta)')}</text>`;
+      svg += `<text x="${lx}" y="${ly}" text-anchor="middle" class="lab" fill="${col}">${esc(w.ssid || tr('(oculta)'))}</text>`;
     }
   });
   return h('div', { class: 'redchartbox', html: svg + '</svg>' });
@@ -2667,18 +2712,18 @@ function pageRed() {
   const bar = h('div', { class: 'prog', style: 'display:none' }, h('div'));
   const msg = h('div', { class: 'muted small', style: 'margin-top:8px' });
   const live = h('div', { class: 'small', style: 'margin-top:6px' });
-  const go = h('button', { class: 'btn pri', onclick: () => start() }, 'Barrer la red');
-  const stop = h('button', { class: 'btn red', style: 'display:none', onclick: () => post('net', { do: 'stop' }).catch(e => toast(e.message, true)) }, 'Parar');
+  const go = h('button', { class: 'btn pri', onclick: () => start() }, tr('Barrer la red'));
+  const stop = h('button', { class: 'btn red', style: 'display:none', onclick: () => post('net', { do: 'stop' }).catch(e => toast(e.message, true)) }, tr('Parar'));
 
   put(scanCard,
     h('div', { class: 'btns' }, go, stop,
-      h('label', { class: 'small', style: 'display:flex;gap:6px;align-items:center' }, full, 'Completo: también los que no contestan el ping'),
-      h('button', { class: 'btn', onclick: () => openApp('aos.net').then(() => toast('Red abierta en la placa')).catch(e => toast(e.message, true)) }, 'Abrir Red en la placa')),
+      h('label', { class: 'small', style: 'display:flex;gap:6px;align-items:center' }, full, tr('Completo: también los que no contestan el ping')),
+      h('button', { class: 'btn', onclick: () => openApp('aos.net').then(() => toast(tr('Red abierta en la placa'))).catch(e => toast(e.message, true)) }, tr('Abrir Red en la placa'))),
     bar, msg, live);
 
   const label = f => {
     const m = /^(\d{4})(\d\d)(\d\d)-(\d\d)(\d\d)(\d\d)?/.exec(f.name);
-    return (m ? `${m[3]}/${m[2]}/${m[1]} ${m[4]}:${m[5]}` : f.name) + ' · ' + fmtBytes(f.size);
+    return (m ? new Date(+m[1], m[2] - 1, +m[3], +m[4], +m[5]).toLocaleString(LOCALE, { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }) : f.name) + ' · ' + fmtBytes(f.size);
   };
 
   async function loadList(pick) {
@@ -2686,7 +2731,7 @@ function pageRed() {
       .sort((a, b) => (b.mtime || 0) - (a.mtime || 0) || b.name.localeCompare(a.name));
     if (gone) return;
     if (!files.length) {
-      put(listCard, h('div', { class: 'card pad muted' }, 'Todavía no hay relevamientos guardados. Cada barrido de la red queda en la tarjeta: hacé uno con el botón de arriba o desde la pestaña Hosts de la app Red.'));
+      put(listCard, h('div', { class: 'card pad muted' }, tr('Todavía no hay relevamientos guardados. Cada barrido de la red queda en la tarjeta: hacé uno con el botón de arriba o desde la pestaña Hosts de la app Red.')));
       put(out);
       return;
     }
@@ -2694,18 +2739,18 @@ function pageRed() {
     sel.value = pick && files.some(f => f.name === pick) ? pick : files[0].name;
     put(listCard, h('div', { class: 'card pad' },
       h('div', { class: 'btns' }, sel,
-        h('button', { class: 'btn', onclick: () => location.href = fsUrl(RED_DIR + '/' + sel.value, true) }, 'Descargar'),
-        h('button', { class: 'btn', onclick: () => exportCsv('equipos') }, 'CSV de equipos'),
-        h('button', { class: 'btn', onclick: () => exportCsv('redes') }, 'CSV de redes'),
-        h('button', { class: 'btn red', onclick: remove }, 'Borrar')),
-      h('div', { class: 'btns', style: 'margin-top:10px' }, h('span', { class: 'muted small' }, 'Comparar con'), cmp)));
+        h('button', { class: 'btn', onclick: () => location.href = fsUrl(RED_DIR + '/' + sel.value, true) }, tr('Descargar')),
+        h('button', { class: 'btn', onclick: () => exportCsv('equipos') }, tr('CSV de equipos')),
+        h('button', { class: 'btn', onclick: () => exportCsv('redes') }, tr('CSV de redes')),
+        h('button', { class: 'btn red', onclick: remove }, tr('Borrar'))),
+      h('div', { class: 'btns', style: 'margin-top:10px' }, h('span', { class: 'muted small' }, tr('Comparar con')), cmp)));
     await show();
   }
 
   async function show() {
     curName = sel.value;
     const i = files.findIndex(f => f.name === curName);
-    put(cmp, h('option', { value: '' }, 'nada'), files.filter(f => f.name !== curName).map(f => h('option', { value: f.name }, label(f))));
+    put(cmp, h('option', { value: '' }, tr('nada')), files.filter(f => f.name !== curName).map(f => h('option', { value: f.name }, label(f))));
     cmp.value = files[i + 1] ? files[i + 1].name : '';         /* the one before, by default */
     const text = await fsText(RED_DIR + '/' + curName);
     if (gone || curName !== sel.value) return;
@@ -2720,14 +2765,14 @@ function pageRed() {
     const named = s.list.filter(x => x.name).length;
     const summary = h('div', { class: 'card pad' },
       h('div', { class: 'redstats' },
-        [[s.wifi.length, 'redes Wi-Fi'], [s.list.length, 'equipos'], [nports, 'puertos abiertos'], [named, 'con nombre']]
+        [[s.wifi.length, tr('redes Wi-Fi')], [s.list.length, tr('equipos')], [nports, tr('puertos abiertos')], [named, tr('con nombre')]]
           .map(([n, t]) => h('div', {}, h('b', {}, String(n)), h('span', { class: 'muted small' }, t)))),
       h('div', { class: 'muted small', style: 'margin-top:10px' },
-        [ini.fecha || 'sin fecha', ini.ssid ? `desde ${ini.ssid} (${ini.ip || '?'}${ini.rango ? ', ' + ini.rango : ''})` : 'sin red',
-          ini.completo ? 'barrido completo' : null,
-          fin ? (fin.ms / 1000).toFixed(1).replace('.', ',') + ' s' : null].filter(Boolean).join(' · '),
-        fin && fin.cortado ? h('span', { class: 'warn' }, ' · cortado a mitad') : null,
-        !fin ? h('span', { class: 'warn' }, ' · incompleto') : null));
+        [ini.fecha || tr('sin fecha'), ini.ssid ? tr('desde %s (%s)', ini.ssid, (ini.ip || '?') + (ini.rango ? ', ' + ini.rango : '')) : tr('sin red'),
+          ini.completo ? tr('barrido completo') : null,
+          fin ? num(fin.ms / 1000, 1) + ' s' : null].filter(Boolean).join(' · '),
+        fin && fin.cortado ? h('span', { class: 'warn' }, ' · ' + tr('cortado a mitad')) : null,
+        !fin ? h('span', { class: 'warn' }, ' · ' + tr('incompleto')) : null));
 
     let diffCard = null;
     if (cmp.value) {
@@ -2736,16 +2781,16 @@ function pageRed() {
       const d = redDiff(s, redParse(prevText || ''));
       const who = x => x.ip + (x.name ? ' · ' + x.name : x.que ? ' · ' + x.que : redVendor(x.mac) ? ' · ' + redVendor(x.mac) : '');
       const lines = [
-        ...d.nuevos.map(x => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'ok' }, '＋ '), who(x)), h('div', { class: 'val' }, 'equipo nuevo'))),
-        ...d.idos.map(x => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'bad' }, '－ '), who(x)), h('div', { class: 'val' }, 'ya no está'))),
-        ...d.movidos.map(({ x, antes }) => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'warn' }, '⇄ '), who(x)), h('div', { class: 'val' }, 'antes en ' + antes))),
+        ...d.nuevos.map(x => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'ok' }, '＋ '), who(x)), h('div', { class: 'val' }, tr('equipo nuevo')))),
+        ...d.idos.map(x => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'bad' }, '－ '), who(x)), h('div', { class: 'val' }, tr('ya no está')))),
+        ...d.movidos.map(({ x, antes }) => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'warn' }, '⇄ '), who(x)), h('div', { class: 'val' }, tr('antes en %s', antes)))),
         ...d.puertos.map(({ x, abiertos, cerrados }) => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'warn' }, '◆ '), who(x)),
-          h('div', { class: 'val' }, [abiertos.length ? 'abrió ' + abiertos.join(', ') : '', cerrados.length ? 'cerró ' + cerrados.join(', ') : ''].filter(Boolean).join(' · ')))),
-        ...d.redesNuevas.map(w => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'ok' }, '＋ '), (w.ssid || '(oculta)') + ' · canal ' + w.canal), h('div', { class: 'val' }, 'red nueva'))),
-        ...d.redesIdas.map(w => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'bad' }, '－ '), (w.ssid || '(oculta)') + ' · canal ' + w.canal), h('div', { class: 'val' }, 'red que no se ve'))),
+          h('div', { class: 'val' }, [abiertos.length ? tr('abrió %s', abiertos.join(', ')) : '', cerrados.length ? tr('cerró %s', cerrados.join(', ')) : ''].filter(Boolean).join(' · ')))),
+        ...d.redesNuevas.map(w => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'ok' }, '＋ '), (w.ssid || tr('(oculta)')) + ' · ' + tr('canal %s', w.canal)), h('div', { class: 'val' }, tr('red nueva')))),
+        ...d.redesIdas.map(w => h('div', { class: 'row' }, h('div', { class: 'grow' }, h('span', { class: 'bad' }, '－ '), (w.ssid || tr('(oculta)')) + ' · ' + tr('canal %s', w.canal)), h('div', { class: 'val' }, tr('red que no se ve')))),
       ];
-      diffCard = [h('h2', {}, 'Cambios desde el ' + label(files.find(f => f.name === cmp.value) || { name: cmp.value, size: 0 }).split(' · ')[0]),
-        h('div', { class: 'card' }, lines.length ? lines : h('div', { class: 'row muted' }, 'Nada cambió: los mismos equipos, puertos y redes.'))];
+      diffCard = [h('h2', {}, tr('Cambios desde el %s', label(files.find(f => f.name === cmp.value) || { name: cmp.value, size: 0 }).split(' · ')[0])),
+        h('div', { class: 'card' }, lines.length ? lines : h('div', { class: 'row muted' }, tr('Nada cambió: los mismos equipos, puertos y redes.')))];
     }
 
     let hostsCard = null;
@@ -2753,22 +2798,22 @@ function pageRed() {
       const anyMac = s.list.some(x => x.mac);
       const portChip = (ip, p) => {
         const name = RED_PORTS[p];
-        const txt = p + (name ? ' ' + name : '');
+        const txt = p + (name ? ' ' + tr(name) : '');
         return RED_WEB.has(p) ? h('a', { class: 'pill redport', href: `${p === 443 || p === 8443 ? 'https' : 'http'}://${ip}:${p}/`, target: '_blank', rel: 'noopener' }, txt)
           : h('span', { class: 'pill redport' }, txt);
       };
-      hostsCard = [h('h2', {}, 'Equipos'), h('div', { class: 'card redwrap' }, h('table', { class: 'redt' },
-        h('tr', {}, ['Dirección', 'Nombre', 'Qué es', 'Ping', 'Puertos', anyMac ? 'MAC' : null].filter(Boolean).map(t => h('th', {}, t))),
+      hostsCard = [h('h2', {}, tr('Equipos')), h('div', { class: 'card redwrap' }, h('table', { class: 'redt' },
+        h('tr', {}, [tr('Dirección'), tr('Nombre'), tr('Qué es'), 'Ping', tr('Puertos'), anyMac ? 'MAC' : null].filter(Boolean).map(t => h('th', {}, t))),
         s.list.map(x => h('tr', {},
-          h('td', { class: 'mono', style: 'white-space:nowrap;word-break:normal' }, h('b', {}, x.ip), x.yo ? h('div', { class: 'muted small' }, 'esta placa') : null),
+          h('td', { class: 'mono', style: 'white-space:nowrap;word-break:normal' }, h('b', {}, x.ip), x.yo ? h('div', { class: 'muted small' }, tr('esta placa')) : null),
           h('td', {}, x.name ? h('b', {}, x.name) : h('span', { class: 'muted' }, '—'), x.servicios.length ? h('div', { class: 'muted small' }, x.servicios.join(' · ')) : null),
           h('td', { class: 'muted' }, x.que || ''),
-          h('td', { class: 'muted', style: 'white-space:nowrap' }, x.yo ? '—' : x.ping ? (x.rtt != null ? x.rtt + ' ms' : 'sí') : x.arp ? 'sólo ARP' : 'no'),
-          h('td', {}, x.ports.length ? x.ports.map(p => portChip(x.ip, p)) : h('span', { class: 'muted' }, 'ninguno')),
+          h('td', { class: 'muted', style: 'white-space:nowrap' }, x.yo ? '—' : x.ping ? (x.rtt != null ? x.rtt + ' ms' : tr('sí')) : x.arp ? tr('sólo ARP') : tr('no')),
+          h('td', {}, x.ports.length ? x.ports.map(p => portChip(x.ip, p)) : h('span', { class: 'muted' }, tr('ninguno'))),
           anyMac ? h('td', { style: 'white-space:nowrap' }, h('span', { class: 'mono muted', style: 'word-break:normal' }, x.mac || '—'),
             redVendor(x.mac) ? h('div', { class: 'small' }, redVendor(x.mac)) : null) : null)))),
-        h('p', { class: 'note' }, '«Sólo ARP» es un equipo que no contestó el ping ni ningún puerto, pero sí quién tiene esa dirección: existe igual, con el firewall puesto (celulares, Windows). Una MAC aleatoria es la dirección privada de un teléfono: no tiene fabricante y puede cambiar. Los puertos web abren el equipo en otra pestaña.' +
-          (anyMac ? ' Para ver el fabricante de todas las MAC, poné la lista de la IEEE (oui.txt) en /redes de la tarjeta.' : ''))];
+        h('p', { class: 'note' }, tr('«Sólo ARP» es un equipo que no contestó el ping ni ningún puerto, pero sí quién tiene esa dirección: existe igual, con el firewall puesto (celulares, Windows). Una MAC aleatoria es la dirección privada de un teléfono: no tiene fabricante y puede cambiar. Los puertos web abren el equipo en otra pestaña.') +
+          (anyMac ? ' ' + tr('Para ver el fabricante de todas las MAC, poné la lista de la IEEE (oui.txt) en /redes de la tarjeta.') : ''))];
     }
 
     let wifiCard = null;
@@ -2777,23 +2822,24 @@ function pageRed() {
       const best = g24.length ? redBestChannel(g24, ini.ssid) : null;
       const ours = g24.find(w => w.ssid === ini.ssid);
       const advice = best && h('p', { class: 'note' },
-        `De los canales que no se pisan (1, 6 y 11), el menos cargado por los vecinos es el ${best[0].c}` +
-        (ours ? (ours.canal === best[0].c ? `, y es el que usa ${ini.ssid}.` : `; ${ini.ssid} está en el ${ours.canal}.`) : '.'));
-      wifiCard = [h('h2', {}, 'Redes Wi-Fi'),
-        g24.length ? h('div', { class: 'card pad' }, h('div', { class: 'muted small' }, '2,4 GHz'), redChart(g24, 2, ini.ssid), advice) : null,
+        !ours ? tr('De los canales que no se pisan (1, 6 y 11), el menos cargado por los vecinos es el %s.', best[0].c)
+          : ours.canal === best[0].c ? tr('De los canales que no se pisan (1, 6 y 11), el menos cargado por los vecinos es el %s, y es el que usa %s.', best[0].c, ini.ssid)
+          : tr('De los canales que no se pisan (1, 6 y 11), el menos cargado por los vecinos es el %s; %s está en el %s.', best[0].c, ini.ssid, ours.canal));
+      wifiCard = [h('h2', {}, tr('Redes Wi-Fi')),
+        g24.length ? h('div', { class: 'card pad' }, h('div', { class: 'muted small' }, num(2.4, 1) + ' GHz'), redChart(g24, 2, ini.ssid), advice) : null,
         g5.length ? h('div', { class: 'card pad', style: 'margin-top:12px' }, h('div', { class: 'muted small' }, '5 GHz'), redChart(g5, 5, ini.ssid)) : null,
         h('div', { class: 'card redwrap', style: 'margin-top:12px' }, h('table', { class: 'redt' },
-          h('tr', {}, ['Red', 'Señal', 'Canal', 'Ancho', 'Seguridad', 'BSSID'].map(t => h('th', {}, t))),
+          h('tr', {}, [tr('Red'), tr('Señal'), tr('Canal'), tr('Ancho'), tr('Seguridad'), 'BSSID'].map(t => h('th', {}, t))),
           s.wifi.map(w => h('tr', {},
-            h('td', {}, w.oculta || !w.ssid ? h('span', { class: 'muted' }, '(oculta)') : h('b', { class: w.ssid === ini.ssid ? 'ok' : '' }, w.ssid)),
+            h('td', {}, w.oculta || !w.ssid ? h('span', { class: 'muted' }, tr('(oculta)')) : h('b', { class: w.ssid === ini.ssid ? 'ok' : '' }, w.ssid)),
             h('td', { style: 'white-space:nowrap' }, h('span', { class: 'redsig', style: `width:${Math.max(4, Math.min(60, (w.rssi + 100) * 0.9))}px` }), ' ', h('span', { class: 'muted small' }, w.rssi + ' dBm')),
             h('td', {}, String(w.canal)), h('td', { class: 'muted' }, (w.ancho || 20) + ' MHz'),
-            h('td', { class: w.cifrado === 'abierta' ? 'warn' : 'muted' }, w.cifrado || ''),
+            h('td', { class: w.cifrado === 'abierta' ? 'warn' : 'muted' }, w.cifrado === 'abierta' ? tr('abierta') : w.cifrado || ''),
             h('td', { class: 'mono muted', style: 'white-space:nowrap;word-break:normal' }, w.bssid || '')))))];
     }
 
     put(out, summary, diffCard, hostsCard, wifiCard,
-      !s.list.length && !s.wifi.length ? h('div', { class: 'card pad muted' }, 'Este relevamiento no encontró nada.') : null);
+      !s.list.length && !s.wifi.length ? h('div', { class: 'card pad muted' }, tr('Este relevamiento no encontró nada.')) : null);
   }
 
   function exportCsv(kind) {
@@ -2806,8 +2852,8 @@ function pageRed() {
   }
 
   async function remove() {
-    if (!confirm('¿Borrar el relevamiento ' + label(files.find(f => f.name === sel.value)).split(' · ')[0] + '?')) return;
-    try { await fsDelete(RED_DIR + '/' + sel.value); toast('Borrado'); loadList(); }
+    if (!confirm(tr('¿Borrar el relevamiento %s?', label(files.find(f => f.name === sel.value)).split(' · ')[0]))) return;
+    try { await fsDelete(RED_DIR + '/' + sel.value); toast(tr('Borrado')); loadList(); }
     catch (e) { toast(e.message, true); }
   }
 
@@ -2821,12 +2867,12 @@ function pageRed() {
     full.disabled = busy;
     const pct = st.phase === 0 && st.total ? st.done / st.total * 33 : st.phase === 1 ? 45 : 80;
     bar.firstChild.style.width = pct + '%';
-    if (busy) msg.textContent = `${RED_PHASE[st.phase] || ''}… ${st.range || ''} · ${(st.elapsed_ms / 1000).toFixed(0)} s`;
-    else if (st.state === 'failed') msg.innerHTML = '', msg.append(h('span', { class: 'bad' }, st.error || 'El barrido falló'));
-    else if (st.state === 'done') msg.textContent = `Último barrido: ${st.hosts.length} equipo${st.hosts.length === 1 ? '' : 's'} en ${(st.elapsed_ms / 1000).toFixed(0)} s` + (st.file ? '. Guardado.' : '.');
-    else msg.textContent = 'Barre la red de la placa (su /24): quién contesta, qué puertos tiene abiertos y cómo se llama; al final mira las redes Wi-Fi de alrededor y lo guarda en la tarjeta.';
-    put(live, busy && st.hosts.length ? h('div', { class: 'muted' }, st.hosts.length + ' encontrados: ' +
-      st.hosts.slice(0, 40).map(x => x.name || x.ip).join(', ') + (st.hosts.length > 40 ? '…' : '')) : null);
+    if (busy) msg.textContent = `${tr(RED_PHASE[st.phase] || '')}… ${st.range || ''} · ${(st.elapsed_ms / 1000).toFixed(0)} s`;
+    else if (st.state === 'failed') msg.innerHTML = '', msg.append(h('span', { class: 'bad' }, st.error || tr('El barrido falló')));
+    else if (st.state === 'done') msg.textContent = (st.hosts.length === 1 ? tr('Último barrido: 1 equipo en %s s', (st.elapsed_ms / 1000).toFixed(0)) : tr('Último barrido: %s equipos en %s s', st.hosts.length, (st.elapsed_ms / 1000).toFixed(0))) + (st.file ? '. ' + tr('Guardado.') : '.');
+    else msg.textContent = tr('Barre la red de la placa (su /24): quién contesta, qué puertos tiene abiertos y cómo se llama; al final mira las redes Wi-Fi de alrededor y lo guarda en la tarjeta.');
+    put(live, busy && st.hosts.length ? h('div', { class: 'muted' }, tr('%s encontrados: %s', st.hosts.length,
+      st.hosts.slice(0, 40).map(x => x.name || x.ip).join(', ') + (st.hosts.length > 40 ? '…' : ''))) : null);
   }
   async function poll() {
     let st;
@@ -2836,7 +2882,7 @@ function pageRed() {
     if (lastFile === null) lastFile = st.file;
     if (st.state === 'busy') { if (!timer) timer = setInterval(poll, 1000); return; }
     clearInterval(timer); timer = null;
-    if (st.state === 'done' && st.file && st.file !== lastFile) { lastFile = st.file; toast('Barrido guardado'); loadList(st.file); }
+    if (st.state === 'done' && st.file && st.file !== lastFile) { lastFile = st.file; toast(tr('Barrido guardado')); loadList(st.file); }
   }
   async function start() {
     try { await post('net', { do: 'scan', full: full.checked }); } catch (e) { toast(e.message, true); return; }
@@ -2846,7 +2892,7 @@ function pageRed() {
 
   sel.onchange = show;
   cmp.onchange = render;
-  put(main, h('h1', {}, 'Red'), scanCard, h('h2', {}, 'Relevamientos guardados'), listCard, out);
+  put(main, h('h1', {}, tr('Red')), scanCard, h('h2', {}, tr('Relevamientos guardados')), listCard, out);
   poll();
   loadList().catch(e => toast(e.message, true));
   return () => { gone = true; clearInterval(timer); };
@@ -2880,6 +2926,9 @@ function navEntry(id, name, icon, bad) {
 window.P4OS = Object.freeze({
   version: 1,
   main, h, put, $, api, post, toast, row, fmtBytes, fmtDate,
+  /* languages: tr('...', ...) with the page's catalog (web.<page>.lang)
+   * already loaded, num(v, decimals) for the eye, lang() the board's code */
+  tr, N_, num, lang: () => LANG,
   /* the card: a missing file is null and a missing folder empty; fsPut
    * streams any size, with an optional progress callback (0..1) */
   fsText, fsBytes, fsList, fsPut, fsDelete, fsMkdir, fsUrl, fsSlug, saveBlob,
@@ -2887,11 +2936,11 @@ window.P4OS = Object.freeze({
   /* { id, name, icon, render(main) }: render may return a function, called
    * when the page is left (to stop its timers) */
   registerPage(pg) {
-    if (!pg || !/^[a-z0-9_-]+$/.test(pg.id || '') || typeof pg.render !== 'function') throw new Error('registerPage: id y render');
-    if (PAGES[pg.id] && !PAGES[pg.id].plugged) throw new Error(`registerPage: "${pg.id}" es del portal`);
+    if (!pg || !/^[a-z0-9_-]+$/.test(pg.id || '') || typeof pg.render !== 'function') throw new Error(tr('registerPage: id y render'));
+    if (PAGES[pg.id] && !PAGES[pg.id].plugged) throw new Error(tr('registerPage: "%s" es del portal', pg.id));
     const show = () => {
       try { return pg.render(main); } catch (e) {
-        put(main, h('h1', {}, pg.name || pg.id), h('div', { class: 'card' }, h('p', { class: 'note' }, 'La página falló: ' + e.message)));
+        put(main, h('h1', {}, pg.name || pg.id), h('div', { class: 'card' }, h('p', { class: 'note' }, tr('La página falló: %s', e.message))));
         console.error(e);
       }
     };
@@ -2905,13 +2954,15 @@ async function loadCardPages() {
   let files;
   try { files = (await fsList('/web')).filter(e => !e.dir && /^[A-Za-z0-9_-]+\.m?js$/.test(e.name)); }
   catch { return; }                 /* no card, or no /web */
+  /* each page's catalog before the page: it may translate as it loads */
+  await Promise.all(files.map(f => loadCatalog('web.' + f.name.replace(/\.m?js$/, '') + '.lang')));
   await Promise.all(files.map(async f => {
     try { await import(`/web/${f.name}?v=${f.mtime || 0}`); }
     catch (e) {
       const id = f.name.replace(/\.m?js$/, '').toLowerCase();
-      navEntry(id, id, '◇', 'No cargó: ' + e.message);
+      navEntry(id, id, '◇', tr('No cargó: %s', e.message));
       PAGES[id] = Object.assign(() => put(main, h('h1', {}, id),
-        h('div', { class: 'card' }, h('p', { class: 'note' }, `/web/${f.name} no cargó: ${e.message}`))), { plugged: true });
+        h('div', { class: 'card' }, h('p', { class: 'note' }, tr('/web/%s no cargó: %s', f.name, e.message)))), { plugged: true });
       console.error(f.name, e);
     }
   }));
@@ -2937,7 +2988,7 @@ function route() {
 let auth = null;
 function loginScreen(msg) {
   if (document.getElementById('login')) return;
-  const pw = h('input', { type: 'password', autocomplete: 'current-password', placeholder: 'contraseña', required: true });
+  const pw = h('input', { type: 'password', autocomplete: 'current-password', placeholder: tr('contraseña'), required: true });
   const err = h('p', { class: 'bad small', style: 'min-height:1.4em;margin:10px 0 0' }, msg || '');
   const go = async e => {
     e.preventDefault();
@@ -2953,13 +3004,13 @@ function loginScreen(msg) {
   document.body.append(h('div', { id: 'login', class: 'login' },
     h('form', { class: 'card pad', onsubmit: go },
       h('h1', {}, name),
-      h('p', { class: 'muted' }, 'Esta red pide la contraseña del portal.'),
+      h('p', { class: 'muted' }, tr('Esta red pide la contraseña del portal.')),
       /* for the browser's password manager: which device this is */
       h('input', { type: 'text', autocomplete: 'username', value: name, style: 'display:none', readonly: true }),
       pw, err,
-      h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', type: 'submit' }, 'Entrar')),
-      h('p', { class: 'note' }, 'Se pone, se cambia o se quita en la placa: Ajustes, Portal web. ',
-        h('a', { href: '/api/tls/ca' }, 'La autoridad HTTPS de la placa'), ', para que el navegador confíe en ella.'))));
+      h('div', { class: 'btns', style: 'margin-top:14px' }, h('button', { class: 'btn pri', type: 'submit' }, tr('Entrar'))),
+      h('p', { class: 'note' }, tr('Se pone, se cambia o se quita en la placa: Ajustes, Portal web.') + ' ',
+        h('a', { href: '/api/tls/ca' }, tr('La autoridad HTTPS de la placa')), tr(', para que el navegador confíe en ella.')))));
   pw.focus();
 }
 
@@ -2970,10 +3021,11 @@ async function logout() {
 
 (async () => {
   try { auth = await (await fetch('/api/auth')).json(); } catch { auth = null; }
+  await setLang(auth && auth.lang);
   if (auth && auth.need === 'login' && !auth.ok) { loginScreen(); return; }
   if (auth && auth.session)
     $('#nav').append(h('a', { href: '#', class: 'logout', onclick: e => { e.preventDefault(); logout(); } },
-      h('span', { class: 'ic' }, '⏻'), h('span', {}, 'Cerrar sesión')));
+      h('span', { class: 'ic' }, '⏻'), h('span', {}, tr('Cerrar sesión'))));
   window.addEventListener('hashchange', route);
   refreshInfo();
   setInterval(refreshInfo, 10000);

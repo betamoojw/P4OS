@@ -26,6 +26,7 @@
  * password are set only on the board (Settings, Portal): someone who got
  * into the portal cannot open it further.
  */
+#include "aos_i18n.h"
 #include "aos_portal_access.h"
 #include "aos_hal.h"
 #include "aos_access.h"
@@ -80,9 +81,12 @@ static void host_part(const char *s, const char **h, size_t *n)
 static void deny(aos_httpd_req_t *r, int status, const char *why)
 {
     aos_hal_log("portal", "refused %s %s: %s", aos_httpd_method(r), aos_httpd_path(r), why);
-    char json[160];
-    snprintf(json, sizeof json, "{\"error\":\"%s\"}", why);
-    aos_httpd_send_json(r, status, json);
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddStringToObject(o, "error", why);
+    char *s = cJSON_PrintUnformatted(o);
+    aos_httpd_send_json(r, status, s ? s : "{}");
+    free(s);
+    cJSON_Delete(o);
 }
 
 static int s_https_port;
@@ -159,6 +163,7 @@ static void api_auth(aos_httpd_req_t *r, aos_zone_t zone, aos_access_t need)
     cJSON_AddBoolToObject(o, "session", cookie(r, "p4s", id, sizeof id) && aos_access_session_ok(id));
     cJSON_AddBoolToObject(o, "has_password", aos_access_has_password());
     cJSON_AddStringToObject(o, "name", aos_hal_device_name());
+    cJSON_AddStringToObject(o, "lang", aos_i18n_current());    /* the portal's, before any login */
     send_cjson_access(r, 200, o, NULL);
 }
 
@@ -176,7 +181,7 @@ static void api_login(aos_httpd_req_t *r)
     cJSON *o = cJSON_CreateObject();
     if (!ok) {
         cJSON_AddBoolToObject(o, "ok", false);
-        cJSON_AddStringToObject(o, "error", wait ? "demasiados intentos: esperá un poco" : "contraseña incorrecta");
+        cJSON_AddStringToObject(o, "error", wait ? _("demasiados intentos: esperá un poco") : _("contraseña incorrecta"));
         if (wait) cJSON_AddNumberToObject(o, "wait_s", wait);
         send_cjson_access(r, 403, o, NULL);
         return;
@@ -214,7 +219,7 @@ bool aos_portal_access(aos_httpd_req_t *r)
         size_t n;
         host_part(host, &h, &n);
         if (!is_ip_literal(h, n) && !is_our_name(h, n)) {
-            deny(r, 421, "nombre desconocido: entrá por la IP de la placa o por su nombre .local");
+            deny(r, 421, _("nombre desconocido: entrá por la IP de la placa o por su nombre .local"));
             return false;
         }
     }
@@ -223,7 +228,7 @@ bool aos_portal_access(aos_httpd_req_t *r)
     /* only the portal's own pages call the API from a browser */
     const char *site = aos_httpd_header(r, "Sec-Fetch-Site");
     if (site && strcasecmp(site, "same-origin") && strcasecmp(site, "none")) {
-        deny(r, 403, "pedido desde otra página: rechazado");
+        deny(r, 403, _("pedido desde otra página: rechazado"));
         return false;
     }
     const char *origin = aos_httpd_header(r, "Origin");
@@ -237,11 +242,11 @@ bool aos_portal_access(aos_httpd_req_t *r)
         bool same = on == hn && !strncasecmp(oh, hh, on) &&
                     !strcmp(*op == ':' ? op : "", *hp == ':' ? hp : "");
         if (!same) {
-            deny(r, 403, "pedido desde otra página: rechazado");
+            deny(r, 403, _("pedido desde otra página: rechazado"));
             return false;
         }
     } else if (origin) {
-        deny(r, 403, "pedido sin origen: rechazado");      /* a sandboxed frame, a file:// page */
+        deny(r, 403, _("pedido sin origen: rechazado"));      /* a sandboxed frame, a file:// page */
         return false;
     }
     return true;
@@ -257,7 +262,7 @@ bool aos_portal_rules(aos_httpd_req_t *r)
     aos_access_t need = aos_access_need(zone);
     if (api && !strcmp(p, "/api/auth")) { api_auth(r, zone, need); return false; }
     if (need == AOS_ACCESS_CLOSED) {
-        if (api) deny(r, 403, "el portal está cerrado en esta red");
+        if (api) deny(r, 403, _("el portal está cerrado en esta red"));
         else aos_httpd_send(r, 403, "text/html; charset=utf-8", CLOSED_PAGE, sizeof CLOSED_PAGE - 1);
         return false;
     }
@@ -267,7 +272,7 @@ bool aos_portal_rules(aos_httpd_req_t *r)
         unsigned char *der = NULL;
         size_t len = 0;
         if (!aos_access_tls_ca(&der, &len)) {
-            deny(r, 404, "todavía no hay certificado: prendé HTTPS en Ajustes, Portal web, y reiniciá");
+            deny(r, 404, _("todavía no hay certificado: prendé HTTPS en Ajustes, Portal web, y reiniciá"));
             return false;
         }
         char extra[160];
@@ -293,7 +298,10 @@ bool aos_portal_rules(aos_httpd_req_t *r)
     if (api && !strcmp(p, "/api/login") && !strcmp(m, "POST")) { api_login(r); return false; }
     if (api && !strcmp(p, "/api/logout") && !strcmp(m, "POST")) { api_logout(r); return false; }
     if (need == AOS_ACCESS_LOGIN && api && !authed(r)) {
-        aos_httpd_send_json(r, 401, "{\"error\":\"hace falta entrar con la contraseña\",\"login\":true}");
+        cJSON *o = cJSON_CreateObject();
+        cJSON_AddStringToObject(o, "error", _("hace falta entrar con la contraseña"));
+        cJSON_AddTrueToObject(o, "login");
+        send_cjson_access(r, 401, o, NULL);
         return false;
     }
     return true;

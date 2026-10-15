@@ -56,7 +56,9 @@ FIRMWARE_DIRS = ["components/aos_ui", "components/aos_apps", "components/aos_dyn
                  "main",
                  # services whose messages an app shows: aos_flasher calls
                  # aos_tr() itself; the HAL cannot, and marks its keys N_()
-                 "components/aos_flasher", "components/aos_hal"]
+                 "components/aos_flasher", "components/aos_hal",
+                 # the API's messages, which the portal shows as they come
+                 "components/aos_portal"]
 
 # `_("...")` and `N_("...")`, allowing the adjacent-literal concatenation C
 # does for you:
@@ -300,6 +302,66 @@ def builtin_app_names():
     return names
 
 
+# The web portal (components/aos_portal/web/app.js) and the apps' pages
+# (apps/<app>/web/*.js) mark their texts tr('...') or N_('...') - P.tr('...')
+# in a page - with %s and %d for what goes in. Each has a catalog of its own,
+# loaded by the browser and never by the board: _portal.lang, and
+# web.<page>.lang for apps/<app>/web/<page>.js. A template literal or a
+# concatenation inside tr() cannot be read: they are reported. (tr and not t:
+# t is everywhere in the scripts as a local, and would hide it.)
+PORTAL_JS = "components/aos_portal/web/app.js"
+PORTAL_CATALOG = "_portal.lang"
+JS_MARKED = re.compile(
+    r"(?:(?<![A-Za-z0-9_$.])|(?<=P\.)|(?<=P4OS\.))(?:tr|N_)\(\s*"
+    r"('(?:[^'\\\n]|\\.)*'|\"(?:[^\"\\\n]|\\.)*\")\s*([,)+])")
+JS_UNREADABLE = re.compile(r"(?:(?<![A-Za-z0-9_$.])|(?<=P\.)|(?<=P4OS\.))(?:tr|N_)\(\s*`")
+
+
+def scan_js(path, warnings=None):
+    """tr('...') and N_('...') in one script, as {key: [file:line, ...]}."""
+    found = OrderedDict()
+    rel = os.path.relpath(path, REPO)
+    with open(path, encoding="utf-8", errors="replace") as fh:
+        text = fh.read()
+    # block comments out (their examples are not texts), the lines kept; a
+    # quoted '/*' (accept: 'image/*') is a string, not a comment's start
+    text = re.sub(r"""'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|`(?:[^`\\]|\\.)*`|/\*.*?\*/""",
+                  lambda c: c.group(0) if c.group(0)[0] in "'\"`" else "\n" * c.group(0).count("\n"),
+                  text, flags=re.S)
+    for m in JS_MARKED.finditer(text):
+        line = text.count("\n", 0, m.start()) + 1
+        if m.group(2) == "+":
+            if warnings is not None:
+                warnings.append((rel, line, m.group(1) + " + ..."))
+            continue
+        key = m.group(1)[1:-1]
+        if key:
+            found.setdefault(key, []).append("%s:%d" % (rel, line))
+    for m in JS_UNREADABLE.finditer(text):
+        if warnings is not None:
+            warnings.append((rel, text.count("\n", 0, m.start()) + 1, "`...`"))
+    return found
+
+
+def web_catalogs(warnings=None):
+    """The portal's catalog and each page's, as {filename: {key: refs}}."""
+    out = OrderedDict()
+    portal = os.path.join(REPO, PORTAL_JS)
+    if os.path.exists(portal):
+        out[PORTAL_CATALOG] = scan_js(portal, warnings)
+    apps = os.path.join(REPO, "apps")
+    for d in sorted(os.listdir(apps)):
+        web = os.path.join(apps, d, "web")
+        if not os.path.isdir(web):
+            continue
+        for f in sorted(os.listdir(web)):
+            if f.endswith((".js", ".mjs")):
+                marked = scan_js(os.path.join(web, f), warnings)
+                if marked:
+                    out["web.%s.lang" % f.rsplit(".", 1)[0]] = marked
+    return out
+
+
 def collect():
     """Everything, as an ordered {catalog filename: {key: [refs]}}."""
     catalogs = OrderedDict()
@@ -330,6 +392,7 @@ def collect():
 
     catalogs[SYSTEM_CATALOG] = system
     catalogs.move_to_end(SYSTEM_CATALOG, last=False)
+    catalogs.update(web_catalogs(warnings))
 
     if warnings:
         print("\nWARNING: %d calls to _() with a literal I could not read."
@@ -410,7 +473,7 @@ def cmd_template(args):
 
     total = done = 0
     for filename, entries in catalogs.items():
-        if not entries:
+        if not entries or (args.only and filename not in args.only):
             continue
         path = os.path.join(out_dir, filename)
         existing = read_pack(path)
@@ -703,6 +766,8 @@ def cmd_embed(args):
         for fn in sorted(os.listdir(d)):
             if not fn.endswith(".lang"):
                 continue
+            if fn == PORTAL_CATALOG or fn.startswith("web."):
+                continue        # the browser's, from the card: never in the firmware
             pairs = [(k, v) for k, v in read_pack(os.path.join(d, fn)).items()]
             if not pairs:
                 continue
@@ -849,6 +914,8 @@ def main():
 
     t = sub.add_parser("template", help="escribe o actualiza los templates")
     t.add_argument("code")
+    t.add_argument("--only", nargs="*", default=None,
+                   help="solo estos catalogos (p. ej. web.ble.lang _portal.lang)")
     t.set_defaults(func=cmd_template)
 
     c = sub.add_parser("check", help="compara un pack con las fuentes")

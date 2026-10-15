@@ -7,6 +7,7 @@
  *   POST /api/live?app=<id>             the body (1 KB at most) queued for the app
  */
 #include "aos_portal_live.h"
+#include "aos_i18n.h"
 #include "aos_hal.h"
 #include "cJSON.h"
 
@@ -16,9 +17,13 @@
 
 static void error(aos_httpd_req_t *r, int status, const char *text)
 {
-    char j[160];
-    snprintf(j, sizeof j, "{\"ok\":false,\"error\":\"%s\"}", text);
-    aos_httpd_send_json(r, status, j);
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddFalseToObject(o, "ok");
+    cJSON_AddStringToObject(o, "error", text);
+    char *s = cJSON_PrintUnformatted(o);
+    aos_httpd_send_json(r, status, s ? s : "{}");
+    free(s);
+    cJSON_Delete(o);
 }
 
 bool aos_portal_live(aos_httpd_req_t *r, const char *m, const char *p)
@@ -26,24 +31,24 @@ bool aos_portal_live(aos_httpd_req_t *r, const char *m, const char *p)
     if (strcmp(p, "live")) return false;
     char app[24] = "", key[16] = "";
     if (!aos_httpd_query(r, "app", app, sizeof app) || !app[0]) {
-        error(r, 400, "falta app");
+        error(r, 400, _("falta app"));
         return true;
     }
     if (!strcmp(m, "POST")) {
         long len = aos_httpd_body_len(r);
         if (len < 0 || len > AOS_LIVE_MSG_MAX) {
-            error(r, 413, "mensaje de 1 KB como mucho");
+            error(r, 413, _("mensaje de 1 KB como mucho"));
             return true;
         }
         char *body = aos_httpd_body_all(r, AOS_LIVE_MSG_MAX);
         bool ok = body && aos_hal_live_push(app, body, strlen(body));
         free(body);
         if (ok) aos_httpd_send_json(r, 200, "{\"ok\":true}");
-        else error(r, 503, "la cola de la app está llena");
+        else error(r, 503, _("la cola de la app está llena"));
         return true;
     }
     if (strcmp(m, "GET")) {
-        error(r, 405, "GET o POST");
+        error(r, 405, _("GET o POST"));
         return true;
     }
     if (!aos_httpd_query(r, "key", key, sizeof key) || !key[0]) {
@@ -67,13 +72,13 @@ bool aos_portal_live(aos_httpd_req_t *r, const char *m, const char *p)
     }
     void *buf = malloc(AOS_LIVE_BLOB_MAX);
     if (!buf) {
-        error(r, 500, "sin memoria");
+        error(r, 500, _("sin memoria"));
         return true;
     }
     char type[32];
     uint32_t seq = 0;
     int len = aos_hal_live_get(app, key, buf, AOS_LIVE_BLOB_MAX, type, sizeof type, &seq);
-    if (len < 0) error(r, 404, "no hay datos: ¿está abierta la app?");
+    if (len < 0) error(r, 404, _("no hay datos: ¿está abierta la app?"));
     else {
         char hdr[64];
         snprintf(hdr, sizeof hdr, "X-Live-Seq: %u\r\n", (unsigned)seq);

@@ -12,6 +12,7 @@
  * as a percentage with one decimal.
  */
 #include "aos_portal_sysmon.h"
+#include "aos_i18n.h"
 #include "aos_hal.h"
 #include "lvgl.h"
 #include "aos_retro.h"
@@ -264,7 +265,13 @@ bool aos_portal_sysmon(aos_httpd_req_t *r, const char *method, const char *p)
 {
     if (strcmp(p, "sysmon")) return false;
     if (strcmp(method, "GET")) {
-        aos_httpd_send_json(r, 405, "{\"ok\":false,\"error\":\"solo GET\"}");
+        cJSON *o = cJSON_CreateObject();
+        cJSON_AddFalseToObject(o, "ok");
+        cJSON_AddStringToObject(o, "error", _("solo GET"));
+        char *s = cJSON_PrintUnformatted(o);
+        aos_httpd_send_json(r, 405, s ? s : "{}");
+        free(s);
+        cJSON_Delete(o);
         return true;
     }
     api_sysmon(r);

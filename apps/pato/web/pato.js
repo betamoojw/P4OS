@@ -7,9 +7,12 @@
  * (one row per step) and a raw-text view, saved to the card.
  *
  * The .pato format is the contract shared with the app (apps/pato/main/pato.c);
- * both sides read and write the same text. The texts are in Spanish, like the
- * rest of the portal. */
+ * both sides read and write the same text. The page's texts are in Spanish,
+ * like the rest of the portal, and tr() puts them in the board's language
+ * (web.pato.lang); the script's commands (STRING, KEY, DELAY...) never. */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 const DIR = '/pato';
 
 /* a style sheet of our own, added once; classes prefixed 'pt' */
@@ -59,8 +62,8 @@ function ensureCss() {
 /* ---- the model: a step is { op, v, v2 } ---------------------------------- */
 const OPS = ['string', 'key', 'delay', 'mouse', 'scroll', 'click', 'repeat', 'com'];
 const OP_NAME = {
-  string: 'Escribir', key: 'Tecla', delay: 'Esperar', mouse: 'Mouse',
-  scroll: 'Rueda', click: 'Clic', repeat: 'Repetir', com: 'Comentario', raw: 'Otro',
+  string: N_('Escribir'), key: N_('Tecla'), delay: N_('Esperar'), mouse: N_('Mouse'),
+  scroll: N_('Rueda'), click: N_('Clic'), repeat: N_('Repetir'), com: N_('Comentario'), raw: N_('Otro'),
 };
 
 function parseText(txt) {
@@ -119,7 +122,7 @@ function cleanName(n) {
 
 P.registerPage({
   id: 'pato',
-  name: 'Pato goma',
+  name: tr('Pato goma'),
   icon: '\u{1F986}',   /* 🦆 */
   render(main) {
     ensureCss();
@@ -133,66 +136,61 @@ P.registerPage({
     /* ---------- elements ---------- */
     const listWrap = h('div', { class: 'ptlist' });
     const emptyMsg = h('p', { class: 'muted', style: 'margin-top:10px' },
-      'Todavía no hay scripts. Creá el primero con «Nuevo script».');
+      tr('Todavía no hay scripts. Creá el primero con «Nuevo script».'));
     const listView = h('div', {},
       h('div', { class: 'row' },
-        h('h2', { class: 'grow', style: 'margin:0' }, 'Scripts'),
-        h('button', { class: 'btn pri', onclick: () => newScript() }, 'Nuevo script')),
+        h('h2', { class: 'grow', style: 'margin:0' }, tr('Scripts')),
+        h('button', { class: 'btn pri', onclick: () => newScript() }, tr('Nuevo script'))),
       listWrap, emptyMsg);
 
-    const nameInput = h('input', { placeholder: 'Nombre del script', maxlength: 40 });
+    const nameInput = h('input', { placeholder: tr('Nombre del script'), maxlength: 40 });
     const statusEl = h('div', { class: 'ptstatus' });
     const stepsEl = h('div', { class: 'ptsteps' });
-    const typeSel = h('select', {}, ...OPS.map(op => h('option', { value: op }, OP_NAME[op])));
+    const typeSel = h('select', {}, ...OPS.map(op => h('option', { value: op }, tr(OP_NAME[op]))));
     const textEl = h('textarea', { id: 'pttext', spellcheck: 'false' });
 
-    const tabBuilder = h('button', { class: 'btn on', onclick: () => toBuilder() }, 'Constructor');
-    const tabText = h('button', { class: 'btn', onclick: () => toText() }, 'Texto');
+    const tabBuilder = h('button', { class: 'btn on', onclick: () => toBuilder() }, tr('Constructor'));
+    const tabText = h('button', { class: 'btn', onclick: () => toText() }, tr('Texto'));
 
     const builderBox = h('div', { id: 'ptvb' },
       stepsEl,
       h('div', { class: 'ptadd' }, typeSel,
-        h('button', { class: 'btn', onclick: () => addStep() }, 'Agregar paso')));
+        h('button', { class: 'btn', onclick: () => addStep() }, tr('Agregar paso'))));
     const textBox = h('div', { id: 'ptvt', style: 'display:none' }, textEl);
 
     const help = h('aside', { class: 'pthelp' },
-      h('h3', {}, 'Comandos'),
+      h('h3', {}, tr('Comandos')),
       h('dl', {},
-        h('dt', {}, 'Escribir'), h('dd', {}, 'teclea el texto'),
-        h('dt', {}, 'Tecla'), h('dd', { html: 'una tecla o combo: <code>enter</code>, <code>cmd+space</code>, <code>f5</code>' }),
-        h('dt', {}, 'Esperar'), h('dd', {}, 'milisegundos'),
-        h('dt', {}, 'Mouse'), h('dd', { html: 'mueve el puntero <code>dx dy</code>' }),
-        h('dt', {}, 'Rueda'), h('dd', {}, '+ arriba, − abajo'),
-        h('dt', {}, 'Clic'), h('dd', {}, 'izquierdo o derecho'),
-        h('dt', {}, 'Repetir'), h('dd', {}, 'repite el paso anterior n veces'),
-        h('dt', {}, 'Comentario'), h('dd', {}, 'no se ejecuta')),
+        h('dt', {}, tr(OP_NAME.string)), h('dd', {}, tr('teclea el texto')),
+        h('dt', {}, tr(OP_NAME.key)), h('dd', { html: tr('una tecla o combo: <code>enter</code>, <code>cmd+space</code>, <code>f5</code>') }),
+        h('dt', {}, tr(OP_NAME.delay)), h('dd', {}, tr('milisegundos')),
+        h('dt', {}, tr(OP_NAME.mouse)), h('dd', { html: tr('mueve el puntero <code>dx dy</code>') }),
+        h('dt', {}, tr(OP_NAME.scroll)), h('dd', {}, tr('+ arriba, − abajo')),
+        h('dt', {}, tr(OP_NAME.click)), h('dd', {}, tr('izquierdo o derecho')),
+        h('dt', {}, tr(OP_NAME.repeat)), h('dd', {}, tr('repite el paso anterior n veces')),
+        h('dt', {}, tr(OP_NAME.com)), h('dd', {}, tr('no se ejecuta'))),
       h('p', { class: 'small', style: 'margin-top:12px' },
-        'Prefijos de combo: cmd+ ctrl+ alt+ shift+ sobre una tecla.'));
+        tr('Prefijos de combo: cmd+ ctrl+ alt+ shift+ sobre una tecla.')));
 
     const editView = h('div', { style: 'display:none' },
       h('div', { class: 'pthead' },
-        h('button', { class: 'btn', onclick: () => showList() }, '← Scripts'),
+        h('button', { class: 'btn', onclick: () => showList() }, tr('← Scripts')),
         nameInput, statusEl),
       h('div', { class: 'pttabs' }, tabBuilder, tabText),
       h('div', { class: 'ptbody' }, h('div', { class: 'ptmain' }, builderBox, textBox), help),
       h('div', { class: 'btns', style: 'margin-top:16px' },
-        h('button', { class: 'btn pri', onclick: () => save() }, 'Guardar en la placa'),
-        h('button', { class: 'btn red', onclick: () => deleteCurrent() }, 'Borrar de la placa')));
+        h('button', { class: 'btn pri', onclick: () => save() }, tr('Guardar en la placa')),
+        h('button', { class: 'btn red', onclick: () => deleteCurrent() }, tr('Borrar de la placa'))));
 
     put(main,
-      h('h1', {}, 'Pato goma'),
+      h('h1', {}, tr('Pato goma')),
       h('p', { class: 'note' },
-        'Los scripts de teclado y mouse que la placa puede ejecutar por USB (o como ' +
-        'teclado Bluetooth) en la computadora. Se guardan en la tarjeta; en la placa ' +
-        'los elegís y confirmás antes de que se envíe nada. También podés editarlos ahí.'),
+        tr('Los scripts de teclado y mouse que la placa puede ejecutar por USB (o como teclado Bluetooth) en la computadora. Se guardan en la tarjeta; en la placa los elegís y confirmás antes de que se envíe nada. También podés editarlos ahí.')),
       listView, editView,
       h('p', { class: 'ptfoot' },
-        'Los archivos .pato viven en /pato de la tarjeta. No pongas contraseñas: ' +
-        'cualquier computadora lee lo que escribe un teclado USB.'),
+        tr('Los archivos .pato viven en /pato de la tarjeta. No pongas contraseñas: cualquier computadora lee lo que escribe un teclado USB.')),
       h('p', { class: 'ptfoot' },
-        'Esta app es sólo con fines educativos y demostrativos de las capacidades HID ' +
-        'de la placa. No nos hacemos responsables de los scripts que ejecuten terceros ' +
-        'ni de los malos usos que le puedan dar.'));
+        tr('Esta app es sólo con fines educativos y demostrativos de las capacidades HID de la placa. No nos hacemos responsables de los scripts que ejecuten terceros ni de los malos usos que le puedan dar.')));
 
     /* ---------- navigation ---------- */
     function showList() { listView.style.display = ''; editView.style.display = 'none'; loadList(); }
@@ -210,7 +208,7 @@ P.registerPage({
         return h('div', { class: 'ptrow' },
           h('b', {}, base),
           h('span', { class: 'meta' }, P.fmtBytes(f.size)),
-          h('button', { class: 'btn', onclick: () => open(f.name) }, 'Editar'),
+          h('button', { class: 'btn', onclick: () => open(f.name) }, tr('Editar')),
           h('button', { class: 'btn red', onclick: () => removeFile(f.name) }, '✕'));
       }));
       emptyMsg.style.display = files.length ? 'none' : '';
@@ -228,18 +226,18 @@ P.registerPage({
       put(stepsEl, ...steps.map((p, i) => {
         if (p.op === 'blank') return false;
         const opSel = h('select', { class: 'op' },
-          ...OPS.map(op => h('option', { value: op, selected: (op === (p.op === 'raw' ? 'com' : p.op)) }, OP_NAME[op])));
+          ...OPS.map(op => h('option', { value: op, selected: (op === (p.op === 'raw' ? 'com' : p.op)) }, tr(OP_NAME[op]))));
         opSel.onchange = () => { syncFromDom(); steps[i].op = opSel.value; paintSteps(); };
 
         let field;
-        if (p.op === 'string') field = h('input', { class: 'campo', 'data-f': 'v', placeholder: 'texto a escribir', value: p.v || '' });
+        if (p.op === 'string') field = h('input', { class: 'campo', 'data-f': 'v', placeholder: tr('texto a escribir'), value: p.v || '' });
         else if (p.op === 'key') field = h('input', { class: 'campo', 'data-f': 'v', placeholder: 'enter, cmd+space...', value: p.v || '' });
         else if (p.op === 'delay') field = h('span', {}, h('input', { class: 'num', type: 'number', min: 0, max: 60000, 'data-f': 'v', value: parseInt(p.v) || 0 }), ' ms');
         else if (p.op === 'mouse') field = h('span', {}, 'dx ', h('input', { class: 'num', type: 'number', 'data-f': 'v', value: parseInt(p.v) || 0 }), ' dy ', h('input', { class: 'num', type: 'number', 'data-f': 'v2', value: parseInt(p.v2) || 0 }));
         else if (p.op === 'scroll') field = h('input', { class: 'num', type: 'number', 'data-f': 'v', value: parseInt(p.v) || 0 });
-        else if (p.op === 'click') field = h('select', { 'data-f': 'v' }, h('option', { value: '1', selected: p.v !== 2 }, 'izquierdo'), h('option', { value: '2', selected: p.v === 2 }, 'derecho'));
+        else if (p.op === 'click') field = h('select', { 'data-f': 'v' }, h('option', { value: '1', selected: p.v !== 2 }, tr('izquierdo')), h('option', { value: '2', selected: p.v === 2 }, tr('derecho')));
         else if (p.op === 'repeat') field = h('input', { class: 'num', type: 'number', min: 1, max: 500, 'data-f': 'v', value: parseInt(p.v) || 1 });
-        else field = h('input', { class: 'campo', 'data-f': 'v', placeholder: 'nota', value: p.v || '' });
+        else field = h('input', { class: 'campo', 'data-f': 'v', placeholder: tr('nota'), value: p.v || '' });
 
         field.querySelectorAll ? field.querySelectorAll('[data-f]').forEach(inp => inp.oninput = () => { steps[i][inp.dataset.f] = inp.value; }) : null;
         if (field.dataset && field.dataset.f) field.oninput = () => { steps[i][field.dataset.f] = field.value; };
@@ -308,19 +306,19 @@ P.registerPage({
         textView = false; builderBox.style.display = ''; textBox.style.display = 'none';
         tabText.classList.remove('on'); tabBuilder.classList.add('on');
         paintSteps(); showEdit();
-      } catch (e) { P.toast('No se pudo leer el script: ' + e.message, true); }
+      } catch (e) { P.toast(tr('No se pudo leer el script: %s', e.message), true); }
     }
 
     async function save() {
       if (textView) steps = parseText(textEl.value); else syncFromDom();
       const name = cleanName(nameInput.value);
-      if (!name) { status('Ponele un nombre al script', 'bad'); return; }
+      if (!name) { status(tr('Ponele un nombre al script'), 'bad'); return; }
       const fileName = name + '.pato';
       if ((!original || original.toLowerCase() !== fileName.toLowerCase()) &&
           files.some(f => f.name.toLowerCase() === fileName.toLowerCase())) {
-        status('Ya hay un script con ese nombre', 'bad'); return;
+        status(tr('Ya hay un script con ese nombre'), 'bad'); return;
       }
-      status('Guardando…');
+      status(tr('Guardando…'));
       try {
         const body = serialize(steps).replace(/\n+$/, '') + '\n';
         await P.fsPut(DIR + '/' + fileName, body);
@@ -328,20 +326,20 @@ P.registerPage({
           await P.fsDelete(DIR + '/' + original);
         }
         original = fileName;
-        status('Guardado · ' + countSteps(steps) + ' pasos', 'ok');
+        status(tr('Guardado · %d pasos', countSteps(steps)), 'ok');
         files = (await P.fsList(DIR)).filter(f => !f.dir && /\.pato$/i.test(f.name));
-      } catch (e) { status('No se pudo guardar: ' + e.message, 'bad'); }
+      } catch (e) { status(tr('No se pudo guardar: %s', e.message), 'bad'); }
     }
 
     async function removeFile(fileName) {
-      if (!confirm('¿Borrar este script de la placa?')) return;
-      try { await P.fsDelete(DIR + '/' + fileName); P.toast('Borrado'); loadList(); }
+      if (!confirm(tr('¿Borrar este script de la placa?'))) return;
+      try { await P.fsDelete(DIR + '/' + fileName); P.toast(tr('Borrado')); loadList(); }
       catch (e) { P.toast(e.message, true); }
     }
     async function deleteCurrent() {
       if (!original) { showList(); return; }
-      if (!confirm('¿Borrar este script de la placa?')) return;
-      try { await P.fsDelete(DIR + '/' + original); P.toast('Borrado'); showList(); }
+      if (!confirm(tr('¿Borrar este script de la placa?'))) return;
+      try { await P.fsDelete(DIR + '/' + original); P.toast(tr('Borrado')); showList(); }
       catch (e) { P.toast(e.message, true); }
     }
 

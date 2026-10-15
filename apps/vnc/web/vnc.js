@@ -14,6 +14,8 @@
  * characters. */
 const P = window.P4OS;
 const { main, h, put, toast, fsText, fsPut, openApp } = P;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 
 if (!document.getElementById('css-vnc')) {
   const st = document.createElement('style');
@@ -38,8 +40,8 @@ if (!document.getElementById('css-vnc')) {
 
 const FILE = '/data/vnc.txt';
 const MAX = 16;
-const ENCS = [['auto', 'Automática (Tight, ZRLE, Hextile)'], ['tight', 'Tight (JPEG en las fotos)'],
-  ['zrle', 'ZRLE (la de la Mac)'], ['hextile', 'Hextile'], ['raw', 'Raw (sin comprimir)']];
+const ENCS = [['auto', N_('Automática (Tight, ZRLE, Hextile)')], ['tight', N_('Tight (JPEG en las fotos)')],
+  ['zrle', N_('ZRLE (la de la Mac)')], ['hextile', 'Hextile'], ['raw', N_('Raw (sin comprimir)')]];
 const HEADER = `# Computers for the VNC viewer of P4OS (apps/vnc). One block each:
 # [Name]  host, port (5900), pass, enc (auto tight zrle hextile raw),
 # depth (16 or 24), quality (0-9), view (1: look only),
@@ -85,17 +87,17 @@ function serialize(list) {
 function check(list) {
   const seen = new Set();
   for (const [i, c] of list.entries()) {
-    const n = c.name || `computadora ${i + 1}`;
-    if (!c.name || c.name.length > 47 || /[\[\]\n]/.test(c.name)) return `${n}: el nombre, de 1 a 47 caracteres y sin corchetes`;
-    if (seen.has(c.name.toLowerCase())) return `${c.name}: hay dos con ese nombre`;
+    const n = c.name || tr('computadora %d', i + 1);
+    if (!c.name || c.name.length > 47 || /[\[\]\n]/.test(c.name)) return tr('%s: el nombre, de 1 a 47 caracteres y sin corchetes', n);
+    if (seen.has(c.name.toLowerCase())) return tr('%s: hay dos con ese nombre', c.name);
     seen.add(c.name.toLowerCase());
-    if (!c.host || /\s/.test(c.host) || c.host.length > 95) return `${c.name}: falta la dirección (IP o nombre, sin espacios)`;
+    if (!c.host || /\s/.test(c.host) || c.host.length > 95) return tr('%s: falta la dirección (IP o nombre, sin espacios)', c.name);
     const p = +c.port;
-    if (!/^\d+$/.test(c.port) || p < 1 || p > 65535) return `${c.name}: el puerto va de 1 a 65535 (VNC suele ser 5900)`;
-    if (!/^\d$/.test(c.quality)) return `${c.name}: la calidad va de 0 a 9`;
-    if (/\n/.test(c.pass) || c.pass.length > 63) return `${c.name}: la contraseña es muy larga`;
+    if (!/^\d+$/.test(c.port) || p < 1 || p > 65535) return tr('%s: el puerto va de 1 a 65535 (VNC suele ser 5900)', c.name);
+    if (!/^\d$/.test(c.quality)) return tr('%s: la calidad va de 0 a 9', c.name);
+    if (/\n/.test(c.pass) || c.pass.length > 63) return tr('%s: la contraseña es muy larga', c.name);
     if (c.zone && !/^\d+,\d+,[1-9]\d*,[1-9]\d*$/.test(c.zone.replace(/\s/g, '')))
-      return `${c.name}: la zona va como x,y,ancho,alto (o vacía: toda la pantalla)`;
+      return tr('%s: la zona va como x,y,ancho,alto (o vacía: toda la pantalla)', c.name);
   }
   return null;
 }
@@ -103,8 +105,8 @@ function check(list) {
 function render() {
   let list = [], dirty = false;
   const listBox = h('div', { class: 'vnlist' });
-  const addBtn = h('button', { class: 'btn' }, '+ Agregar una computadora');
-  const saveBtn = h('button', { class: 'btn pri' }, 'Guardar en la tarjeta');
+  const addBtn = h('button', { class: 'btn' }, tr('+ Agregar una computadora'));
+  const saveBtn = h('button', { class: 'btn pri' }, tr('Guardar en la tarjeta'));
 
   const changed = () => { dirty = true; };
 
@@ -113,13 +115,13 @@ function render() {
     inp.oninput = () => {
       c[key] = key === 'pass' ? inp.value : inp.value.trim();
       changed();
-      if (key === 'name') inp.closest('.vncard').querySelector('.nm').textContent = c.name || 'Sin nombre';
+      if (key === 'name') inp.closest('.vncard').querySelector('.nm').textContent = c.name || tr('Sin nombre');
     };
     return h('label', { class: attrs.wide ? 'wide' : null }, label, inp);
   }
 
   function select(c, key, label, options) {
-    const sel = h('select', {}, options.map(([v, t]) => h('option', { value: v }, t)));
+    const sel = h('select', {}, options.map(([v, t]) => h('option', { value: v }, tr(t))));
     sel.value = c[key];
     sel.onchange = () => { c[key] = sel.value; changed(); };
     return h('label', {}, label, sel);
@@ -127,7 +129,7 @@ function render() {
 
   function paint() {
     if (!list.length) {
-      put(listBox, h('div', { class: 'vncard muted' }, 'Todavía no hay computadoras: agregá una.'));
+      put(listBox, h('div', { class: 'vncard muted' }, tr('Todavía no hay computadoras: agregá una.')));
     } else {
       put(listBox, list.map((c, i) => {
         const move = d => { const j = i + d; [list[i], list[j]] = [list[j], list[i]]; changed(); paint(); };
@@ -135,30 +137,30 @@ function render() {
         view.checked = c.view === '1';
         view.onchange = () => { c.view = view.checked ? '1' : '0'; changed(); };
         const show = h('input', { type: 'checkbox' });
-        const pass = input(c, 'pass', 'Contraseña VNC', { type: 'password', autocomplete: 'new-password', maxlength: 63 });
+        const pass = input(c, 'pass', tr('Contraseña VNC'), { type: 'password', autocomplete: 'new-password', maxlength: 63 });
         show.onchange = () => { pass.querySelector('input').type = show.checked ? 'text' : 'password'; };
         return h('div', { class: 'vncard' },
           h('div', { class: 'vnhead' },
-            h('span', { class: 'nm' }, c.name || 'Sin nombre'),
-            c.pass ? h('span', { class: 'tag' }, 'con contraseña') : null,
-            h('button', { class: 'btn', title: 'Subir', disabled: i === 0, onclick: () => move(-1) }, '↑'),
-            h('button', { class: 'btn', title: 'Bajar', disabled: i === list.length - 1, onclick: () => move(1) }, '↓'),
+            h('span', { class: 'nm' }, c.name || tr('Sin nombre')),
+            c.pass ? h('span', { class: 'tag' }, tr('con contraseña')) : null,
+            h('button', { class: 'btn', title: tr('Subir'), disabled: i === 0, onclick: () => move(-1) }, '↑'),
+            h('button', { class: 'btn', title: tr('Bajar'), disabled: i === list.length - 1, onclick: () => move(1) }, '↓'),
             h('button', { class: 'btn red', onclick: () => {
-              if (confirm(`¿Quitar ${c.name || 'esta computadora'}?`)) { list.splice(i, 1); changed(); paint(); }
-            } }, 'Quitar')),
+              if (confirm(c.name ? tr('¿Quitar %s?', c.name) : tr('¿Quitar esta computadora?'))) { list.splice(i, 1); changed(); paint(); }
+            } }, tr('Quitar'))),
           h('div', { class: 'vngrid' },
-            input(c, 'name', 'Nombre', { maxlength: 47, placeholder: 'Mac del estudio', wide: true }),
-            input(c, 'host', 'Dirección (IP o nombre)', { placeholder: '192.168.0.20', autocomplete: 'off' }),
-            input(c, 'port', 'Puerto', { inputmode: 'numeric', placeholder: '5900' }),
+            input(c, 'name', tr('Nombre'), { maxlength: 47, placeholder: tr('Mac del estudio'), wide: true }),
+            input(c, 'host', tr('Dirección (IP o nombre)'), { placeholder: '192.168.0.20', autocomplete: 'off' }),
+            input(c, 'port', tr('Puerto'), { inputmode: 'numeric', placeholder: '5900' }),
             pass,
-            h('label', { class: 'vncheck' }, show, 'Mostrar la contraseña'),
-            select(c, 'enc', 'Codificación', ENCS),
-            select(c, 'depth', 'Colores', [['16', '16 bits (rápido)'], ['24', '24 bits (exactos)']]),
-            select(c, 'quality', 'Calidad JPEG (Tight)', [...Array(10).keys()].map(q => [String(q), String(q)])),
-            h('label', { class: 'vncheck' }, view, 'Sólo mirar: no manda el mouse ni el teclado'),
-            input(c, 'zone', 'Monitor (zona x,y,ancho,alto; vacía: todos)',
-                  { placeholder: 'se elige en la app, con el botón de monitor', autocomplete: 'off', wide: true })),
-          h('div', { class: 'vnwarn' }, 'La contraseña queda en /data/vnc.txt de la tarjeta, legible. VNC usa sólo los primeros 8 caracteres.'));
+            h('label', { class: 'vncheck' }, show, tr('Mostrar la contraseña')),
+            select(c, 'enc', tr('Codificación'), ENCS),
+            select(c, 'depth', tr('Colores'), [['16', N_('16 bits (rápido)')], ['24', N_('24 bits (exactos)')]]),
+            select(c, 'quality', tr('Calidad JPEG (Tight)'), [...Array(10).keys()].map(q => [String(q), String(q)])),
+            h('label', { class: 'vncheck' }, view, tr('Sólo mirar: no manda el mouse ni el teclado')),
+            input(c, 'zone', tr('Monitor (zona x,y,ancho,alto; vacía: todos)'),
+                  { placeholder: tr('se elige en la app, con el botón de monitor'), autocomplete: 'off', wide: true })),
+          h('div', { class: 'vnwarn' }, tr('La contraseña queda en /data/vnc.txt de la tarjeta, legible. VNC usa sólo los primeros 8 caracteres.')));
       }));
     }
     addBtn.disabled = list.length >= MAX;
@@ -178,31 +180,31 @@ function render() {
     try {
       await fsPut(FILE, serialize(list));
       dirty = false;
-      toast('Guardado. La app lo toma sola.');
-    } catch (e) { toast('No se pudo guardar: ' + e.message, true); }
+      toast(tr('Guardado. La app lo toma sola.'));
+    } catch (e) { toast(tr('No se pudo guardar: %s', e.message), true); }
   };
 
   async function load() {
     try {
       list = parse(await fsText(FILE));
-    } catch (e) { toast('No se pudo leer ' + FILE + ': ' + e.message, true); }
+    } catch (e) { toast(tr('No se pudo leer %s: %s', FILE, e.message), true); }
     paint();
   }
 
   put(main,
-    h('h1', {}, 'VNC'),
+    h('h1', {}, tr('VNC')),
     h('div', { class: 'btns', style: 'margin-bottom:6px' },
-      h('button', { class: 'btn pri', onclick: () => openApp('aos.vnc').catch(e => toast(e.message, true)) }, 'Abrir VNC en la placa')),
-    h('h2', {}, 'Las computadoras'),
+      h('button', { class: 'btn pri', onclick: () => openApp('aos.vnc').catch(e => toast(e.message, true)) }, tr('Abrir VNC en la placa'))),
+    h('h2', {}, tr('Las computadoras')),
     listBox,
     h('div', { class: 'btns', style: 'margin-top:14px' }, addBtn, saveBtn),
-    h('h2', {}, 'Cómo prepararlas'),
-    h('p', { class: 'note' }, 'En una Mac: Ajustes del Sistema → General → Compartir → Compartir pantalla → (i) → «Los visores VNC pueden controlar la pantalla con contraseña», y una contraseña de hasta 8 caracteres. La Mac manda su resolución real (en una Retina, el doble): la placa la achica sola. En Windows o Linux, un servidor VNC como TightVNC, TigerVNC o x11vnc; Tight es la codificación más rápida con fotos y video.'),
-    h('p', { class: 'note' }, 'En la placa: un toque es un clic, arrastrar arrastra, dos dedos tocando son clic derecho, pellizcar hace zoom. El mouse y el teclado USB pasan directo.'));
+    h('h2', {}, tr('Cómo prepararlas')),
+    h('p', { class: 'note' }, tr('En una Mac: Ajustes del Sistema → General → Compartir → Compartir pantalla → (i) → «Los visores VNC pueden controlar la pantalla con contraseña», y una contraseña de hasta 8 caracteres. La Mac manda su resolución real (en una Retina, el doble): la placa la achica sola. En Windows o Linux, un servidor VNC como TightVNC, TigerVNC o x11vnc; Tight es la codificación más rápida con fotos y video.')),
+    h('p', { class: 'note' }, tr('En la placa: un toque es un clic, arrastrar arrastra, dos dedos tocando son clic derecho, pellizcar hace zoom. El mouse y el teclado USB pasan directo.')));
 
-  window.onbeforeunload = () => dirty && location.hash === '#vnc' ? 'Hay cambios sin guardar' : undefined;
+  window.onbeforeunload = () => dirty && location.hash === '#vnc' ? tr('Hay cambios sin guardar') : undefined;
   load();
   return () => { window.onbeforeunload = null; };
 }
 
-P.registerPage({ id: 'vnc', name: 'VNC', icon: '▣', render });
+P.registerPage({ id: 'vnc', name: tr('VNC'), icon: '▣', render });

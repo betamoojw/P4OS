@@ -16,6 +16,9 @@
  * opened there. The recordings are the CSVs in /can (SavvyCAN's format),
  * the saved frames /can/enviar.txt and the signals /can/senales.dbc. */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const APP_ID = 'aos.can';
 const CMD = '/data/can_cmd.txt';
 const LIVE = '/data/can_live.json';
@@ -47,16 +50,16 @@ if (!document.getElementById('css-can')) {
   document.head.append(st);
 }
 
-const STATE = { active: ['activo', 'var(--green)'], warning: ['con avisos', '#ffd60a'], passive: ['pasivo', 'var(--orange)'], bus_off: ['fuera del bus', 'var(--red)'] };
-const MODE = { listen: 'Solo escucha', normal: 'Normal', selftest: 'Autoprueba' };
+const STATE = { active: [N_('activo'), 'var(--green)'], warning: [N_('con avisos'), '#ffd60a'], passive: [N_('pasivo'), 'var(--orange)'], bus_off: [N_('fuera del bus'), 'var(--red)'] };
+const MODE = { listen: N_('Solo escucha'), normal: N_('Normal'), selftest: N_('Autoprueba') };
 const rate = r => r % 1000000 === 0 ? `${r / 1000000} Mbit/s` : r % 1000 === 0 ? `${r / 1000} kbit/s` : `${r} bit/s`;
-const when = t => t ? new Date(t * 1000).toLocaleString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+const when = t => t ? new Date(t * 1000).toLocaleString(LOC, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
 /* candump's form: 123#11223344, 18FEF100#FF00, 7DF#R */
 const FRAME_RE = /^([0-9a-f]{1,8})#(r[0-8]?|([0-9a-f]{2}[.:]?){0,8})$/i;
 
 P.registerPage({
   id: 'can',
-  name: 'CAN',
+  name: tr('CAN'),
   icon: '⇆',
   render(main) {
     const { h, put } = P;
@@ -85,7 +88,7 @@ P.registerPage({
     }
 
     /* ---- the state ---- */
-    const openBtn = () => h('button', { class: 'btn', onclick: () => P.openApp(APP_ID).then(() => P.toast('Abierta en la placa')).catch(e => P.toast(e.message, true)) }, 'Abrir CAN en la placa');
+    const openBtn = () => h('button', { class: 'btn', onclick: () => P.openApp(APP_ID).then(() => P.toast(tr('Abierta en la placa'))).catch(e => P.toast(e.message, true)) }, tr('Abrir CAN en la placa'));
     /* the numbers change every second, the buttons only with the state: they
      * are redrawn apart, so a click is not lost under a redraw */
     const sumInfo = h('div', {}), sumBtns = h('div', { class: 'btns', style: 'margin-top:12px' });
@@ -98,43 +101,44 @@ P.registerPage({
         btnKey = key;
         put(sumBtns,
           !stale && live.open && (live.rec
-            ? h('button', { class: 'btn red', onclick: () => order('rec off') }, 'Parar la grabación')
-            : h('button', { class: 'btn', onclick: () => order('rec on') }, 'Grabar')),
-          !stale && live.open && h('button', { class: 'btn', onclick: () => order('clear') }, 'Limpiar'),
+            ? h('button', { class: 'btn red', onclick: () => order('rec off') }, tr('Parar la grabación'))
+            : h('button', { class: 'btn', onclick: () => order('rec on') }, tr('Grabar'))),
+          !stale && live.open && h('button', { class: 'btn', onclick: () => order('clear') }, tr('Limpiar')),
           openBtn());
       }
       if (stale) {
         put(sumInfo,
-          h('div', { class: 'row', style: 'padding:0' }, h('span', { class: 'cndot' }), h('div', { class: 'grow' }, live ? 'La app dejó de contestar.' : 'Esperando a la app…')),
-          h('p', { class: 'note' }, 'La página ve el bus a través de la app CAN: tiene que estar abierta en la placa (al frente o atrás). El bus se conecta desde ahí.'));
+          h('div', { class: 'row', style: 'padding:0' }, h('span', { class: 'cndot' }), h('div', { class: 'grow' }, live ? tr('La app dejó de contestar.') : tr('Esperando a la app…'))),
+          h('p', { class: 'note' }, tr('La página ve el bus a través de la app CAN: tiene que estar abierta en la placa (al frente o atrás). El bus se conecta desde ahí.')));
         return;
       }
       const L = live;
-      const [sname, scolor] = L.open ? (STATE[L.state] || [L.state, 'var(--red)']) : ['desconectado', 'var(--dim)'];
+      const [sname0, scolor] = L.open ? (STATE[L.state] || [L.state, 'var(--red)']) : [N_('desconectado'), 'var(--dim)'];
+      const sname = tr(sname0);
       const head = L.open
-        ? `${rate(L.rate)} · ${MODE[L.mode] || L.mode} · ${L.tx === L.rx ? 'GPIO' + L.tx : `TX ${L.tx} · RX ${L.rx}`}`
-        : 'Sin bus: se conecta desde la app, tocando la conexión.';
+        ? `${rate(L.rate)} · ${MODE[L.mode] ? tr(MODE[L.mode]) : L.mode} · ${L.tx === L.rx ? 'GPIO' + L.tx : `TX ${L.tx} · RX ${L.rx}`}`
+        : tr('Sin bus: se conecta desde la app, tocando la conexión.');
       put(sumInfo,
         h('div', { class: 'row', style: 'padding:0' }, h('span', { class: 'cndot', style: `background:${scolor}` }), h('div', { class: 'grow' }, h('b', {}, sname), ' · ', head)),
         L.open && h('div', { class: 'cnsum', style: 'margin-top:10px' },
-          h('div', {}, h('b', {}, String(Math.round(L.fps))), ' ', h('span', { class: 'muted small' }, 'tramas/s')),
-          h('div', {}, h('b', {}, Math.round(L.load * 100) + ' %'), ' ', h('span', { class: 'muted small' }, 'de carga')),
-          h('div', {}, h('b', {}, String(L.rxn)), ' ', h('span', { class: 'muted small' }, 'recibidas')),
-          h('div', {}, h('b', {}, String(L.txn)), ' ', h('span', { class: 'muted small' }, 'enviadas')),
-          h('div', {}, h('b', {}, String(L.drop)), ' ', h('span', { class: 'muted small' }, 'perdidas')),
-          h('div', {}, h('b', {}, `${L.txe} / ${L.rxe}`), ' ', h('span', { class: 'muted small' }, 'errores TX / RX'))),
-        L.rec && h('p', { class: 'note' }, `Grabando ${L.rec}: ${L.recn} tramas.`),
-        L.replay && h('p', { class: 'note' }, `Repitiendo ${L.replay}.`));
+          h('div', {}, h('b', {}, String(Math.round(L.fps))), ' ', h('span', { class: 'muted small' }, tr('tramas/s'))),
+          h('div', {}, h('b', {}, Math.round(L.load * 100) + ' %'), ' ', h('span', { class: 'muted small' }, tr('de carga'))),
+          h('div', {}, h('b', {}, String(L.rxn)), ' ', h('span', { class: 'muted small' }, tr('recibidas'))),
+          h('div', {}, h('b', {}, String(L.txn)), ' ', h('span', { class: 'muted small' }, tr('enviadas'))),
+          h('div', {}, h('b', {}, String(L.drop)), ' ', h('span', { class: 'muted small' }, tr('perdidas'))),
+          h('div', {}, h('b', {}, `${L.txe} / ${L.rxe}`), ' ', h('span', { class: 'muted small' }, tr('errores TX / RX')))),
+        L.rec && h('p', { class: 'note' }, tr('Grabando %s: %d tramas.', L.rec, L.recn)),
+        L.replay && h('p', { class: 'note' }, tr('Repitiendo %s.', L.replay)));
     }
 
     function drawSpy() {
       if (!live || !live.ids?.length) {
-        put(ids, h('div', { class: 'row muted' }, live?.open ? 'Esperando tramas…' : 'Sin tramas.'));
+        put(ids, h('div', { class: 'row muted' }, live?.open ? tr('Esperando tramas…') : tr('Sin tramas.')));
         put(last);
         return;
       }
       put(ids, h('table', { class: 'cntbl' },
-        h('tr', {}, h('th', {}, 'id'), h('th', {}, 'n'), h('th', {}, 'datos'), h('th', { style: 'text-align:right' }, 'por s'), h('th', { style: 'text-align:right' }, 'vistas')),
+        h('tr', {}, h('th', {}, tr('id')), h('th', {}, tr('n')), h('th', {}, tr('datos')), h('th', { style: 'text-align:right' }, tr('por s')), h('th', { style: 'text-align:right' }, tr('vistas'))),
         live.ids.slice().sort((a, b) => a[1] - b[1] || parseInt(a[0], 16) - parseInt(b[0], 16)).map(([id, ext, len, data, recent, hz, n]) => h('tr', {},
           h('td', { class: 'mono id' }, id + (ext ? ' ·29' : '')),
           h('td', { class: 'num' }, String(len)),
@@ -166,32 +170,32 @@ P.registerPage({
       const m = live && staleFor < 5 ? (live.open ? live.mode : 'off') : 'none';
       hint.className = 'note' + (m === 'normal' ? '' : ' cnwarn');
       hint.textContent = {
-        none: 'La app no está contestando: lo que mandes se manda cuando vuelva.',
-        off: 'El bus está desconectado en la app.',
-        listen: 'La app está en Solo escucha: no sale nada. El modo se cambia en la placa.',
-        selftest: 'Autoprueba: vuelve sólo a la placa, no sale al bus.',
-        normal: 'Normal: sale al bus. Nunca al de un auto en marcha.',
+        none: tr('La app no está contestando: lo que mandes se manda cuando vuelva.'),
+        off: tr('El bus está desconectado en la app.'),
+        listen: tr('La app está en Solo escucha: no sale nada. El modo se cambia en la placa.'),
+        selftest: tr('Autoprueba: vuelve sólo a la placa, no sale al bus.'),
+        normal: tr('Normal: sale al bus. Nunca al de un auto en marcha.'),
       }[m];
     }
     const sendOne = fr => {
       fr = fr.trim();
-      if (!FRAME_RE.test(fr)) { P.toast('Como en candump: 123#11223344, 18FEF100#FF00 o 7DF#R', true); return; }
+      if (!FRAME_RE.test(fr)) { P.toast(tr('Como en candump: 123#11223344, 18FEF100#FF00 o 7DF#R'), true); return; }
       order('send ' + fr);
-      P.toast('Mandada a la app: ' + fr);
+      P.toast(tr('Mandada a la app: %s', fr));
     };
     function drawSaved(text) {
       const rows = (text || '').split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'))
         .map(l => { const [fr, per, ...name] = l.split(/\s+/); return { fr, per: +per || 0, name: name.join(' ') }; })
         .filter(r => FRAME_RE.test(r.fr));
       put(savedList, rows.length ? rows.map(r => h('div', { class: 'row' },
-        h('div', { class: 'grow' }, h('span', { class: 'mono' }, r.fr), ' ', h('span', { class: 'muted small' }, [r.name, r.per ? `cada ${r.per} ms (las periódicas se arrancan en la placa)` : ''].filter(Boolean).join(' · '))),
-        h('button', { class: 'btn', onclick: () => sendOne(r.fr) }, 'Mandar'))) : h('div', { class: 'row muted' }, 'Sin tramas guardadas.'));
+        h('div', { class: 'grow' }, h('span', { class: 'mono' }, r.fr), ' ', h('span', { class: 'muted small' }, [r.name, r.per ? tr('cada %d ms (las periódicas se arrancan en la placa)', r.per) : ''].filter(Boolean).join(' · '))),
+        h('button', { class: 'btn', onclick: () => sendOne(r.fr) }, tr('Mandar')))) : h('div', { class: 'row muted' }, tr('Sin tramas guardadas.')));
     }
     put(send,
       h('div', { class: 'row', style: 'gap:10px;flex-wrap:wrap' }, input,
-        h('button', { class: 'btn pri', onclick: () => sendOne(input.value) }, 'Mandar')),
+        h('button', { class: 'btn pri', onclick: () => sendOne(input.value) }, tr('Mandar'))),
       hint,
-      h('h3', {}, 'Guardadas en la placa'),
+      h('h3', {}, tr('Guardadas en la placa')),
       savedList);
     input.addEventListener('keydown', e => { if (e.key === 'Enter') sendOne(input.value); });
 
@@ -205,13 +209,13 @@ P.registerPage({
       put(recs, csv.length ? csv.map(f => h('div', { class: 'row' },
         h('div', { class: 'grow' }, h('span', { class: 'mono' }, f.name), ' ', h('span', { class: 'muted small' }, `${when(f.mtime)} · ${P.fmtBytes(f.size)}`)),
         h('div', { class: 'btns' },
-          h('a', { class: 'btn', href: P.fsUrl(`${DIR}/${f.name}`, true) }, 'Bajar'),
+          h('a', { class: 'btn', href: P.fsUrl(`${DIR}/${f.name}`, true) }, tr('Bajar')),
           h('button', { class: 'btn red', onclick: async () => {
-            if (live?.rec === f.name) { P.toast('Se está grabando: pararla primero', true); return; }
-            if (!confirm(`¿Borrar ${f.name}? No se puede deshacer.`)) return;
-            try { await P.fsDelete(`${DIR}/${f.name}`); P.toast('Borrada'); loadRecs(); } catch (e) { P.toast(e.message, true); }
-          } }, 'Borrar'))))
-        : h('div', { class: 'row muted' }, 'Todavía no hay grabaciones: se graba desde la placa o con el botón de arriba.'));
+            if (live?.rec === f.name) { P.toast(tr('Se está grabando: pararla primero'), true); return; }
+            if (!confirm(tr('¿Borrar %s? No se puede deshacer.', f.name))) return;
+            try { await P.fsDelete(`${DIR}/${f.name}`); P.toast(tr('Borrada')); loadRecs(); } catch (e) { P.toast(e.message, true); }
+          } }, tr('Borrar')))))
+        : h('div', { class: 'row muted' }, tr('Todavía no hay grabaciones: se graba desde la placa o con el botón de arriba.')));
     }
 
     /* ---- the files the app reads ---- */
@@ -224,25 +228,25 @@ P.registerPage({
               await P.fsMkdir(DIR).catch(() => {});
               await P.fsPut(path, ta.value.endsWith('\n') ? ta.value : ta.value + '\n');
               order('reload');
-              P.toast('Guardado: la app lo vuelve a leer');
+              P.toast(tr('Guardado: la app lo vuelve a leer'));
               after?.(ta.value);
             } catch (e) { P.toast(e.message, true); }
-          } }, 'Guardar')),
+          } }, tr('Guardar'))),
         ta);
       P.fsText(path).then(t => { ta.value = t ?? ''; after?.(t); }).catch(e => P.toast(e.message, true));
       return box;
     }
     put(files,
-      editor(SAVED, 'Tramas guardadas', 'can/enviar.txt: una por línea, la trama, el período en ms (0 a mano) y un nombre.', drawSaved),
-      editor(DBC, 'Señales', 'can/senales.dbc: un .dbc (BO_ y SG_; lo demás se saltea). La app las decodifica y grafica.'));
+      editor(SAVED, tr('Tramas guardadas'), tr('can/enviar.txt: una por línea, la trama, el período en ms (0 a mano) y un nombre.'), drawSaved),
+      editor(DBC, tr('Señales'), tr('can/senales.dbc: un .dbc (BO_ y SG_; lo demás se saltea). La app las decodifica y grafica.')));
 
     put(main,
-      h('h1', {}, 'CAN'), sum,
-      h('h2', {}, 'Por id'), ids,
-      h('h2', {}, 'Últimas tramas'), last,
-      h('h2', {}, 'Mandar'), send,
-      h('h2', {}, 'Grabaciones'), recs,
-      h('h2', {}, 'Archivos de la app'), files);
+      h('h1', {}, tr('CAN')), sum,
+      h('h2', {}, tr('Por id')), ids,
+      h('h2', {}, tr('Últimas tramas')), last,
+      h('h2', {}, tr('Mandar')), send,
+      h('h2', {}, tr('Grabaciones')), recs,
+      h('h2', {}, tr('Archivos de la app')), files);
 
     drawSummary();
     drawSendHint();

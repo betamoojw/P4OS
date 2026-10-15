@@ -11,6 +11,7 @@
  *   POST /api/bench/log {start:true|false} | {mask,interval}
  */
 #include "aos_portal_bench.h"
+#include "aos_i18n.h"
 #include "aos_hal.h"
 #include "aos_riden.h"
 #include "aos_scope.h"
@@ -185,7 +186,7 @@ static void api_shot(aos_httpd_req_t *r)
     const char *path = aos_scope_screenshot_file(&seq);
     struct stat st;
     FILE *f = path && !stat(path, &st) ? fopen(path, "rb") : NULL;
-    if (!f) { send_err(r, 404, "todavía no hay captura"); return; }
+    if (!f) { send_err(r, 404, _("todavía no hay captura")); return; }
     if (aos_httpd_begin(r, 200, "image/png", (long)st.st_size, "Cache-Control: no-store\r\n")) {
         char *buf = malloc(8192);
         size_t k;
@@ -199,7 +200,7 @@ static void api_shot(aos_httpd_req_t *r)
 static void api_riden(aos_httpd_req_t *r)
 {
     cJSON *b = body_json(r);
-    if (!b) { send_err(r, 400, "falta el cuerpo"); return; }
+    if (!b) { send_err(r, 400, _("falta el cuerpo")); return; }
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(b, "v"), *i = cJSON_GetObjectItemCaseSensitive(b, "i"),
                 *on = cJSON_GetObjectItemCaseSensitive(b, "on");
     bool ok = true;
@@ -209,13 +210,13 @@ static void api_riden(aos_httpd_req_t *r)
     if (cJSON_IsBool(on)) ok &= aos_riden_set_output(cJSON_IsTrue(on));
     cJSON_Delete(b);
     if (ok) aos_httpd_send_json(r, 200, "{\"ok\":true}");
-    else send_err(r, 503, "la fuente tiene la cola llena");
+    else send_err(r, 503, _("la fuente tiene la cola llena"));
 }
 
 static void api_scope(aos_httpd_req_t *r)
 {
     cJSON *b = body_json(r);
-    if (!b) { send_err(r, 400, "falta el cuerpo"); return; }
+    if (!b) { send_err(r, 400, _("falta el cuerpo")); return; }
     const cJSON *cmd = cJSON_GetObjectItemCaseSensitive(b, "cmd"), *con = cJSON_GetObjectItemCaseSensitive(b, "connect");
     bool ok = true;
     if (cJSON_IsString(con)) {
@@ -236,13 +237,13 @@ static void api_scope(aos_httpd_req_t *r)
     }
     cJSON_Delete(b);
     if (ok) aos_httpd_send_json(r, 200, "{\"ok\":true}");
-    else send_err(r, 400, "comando no válido o cola llena");
+    else send_err(r, 400, _("comando no válido o cola llena"));
 }
 
 static void api_log(aos_httpd_req_t *r)
 {
     cJSON *b = body_json(r);
-    if (!b) { send_err(r, 400, "falta el cuerpo"); return; }
+    if (!b) { send_err(r, 400, _("falta el cuerpo")); return; }
     const cJSON *start = cJSON_GetObjectItemCaseSensitive(b, "start"), *mask = cJSON_GetObjectItemCaseSensitive(b, "mask"),
                 *iv = cJSON_GetObjectItemCaseSensitive(b, "interval");
     bench_log_stat_t l;
@@ -256,7 +257,7 @@ static void api_log(aos_httpd_req_t *r)
     cJSON_Delete(b);
     if (ok) { aos_httpd_send_json(r, 200, "{\"ok\":true}"); return; }
     bench_log_stat(&l);
-    send_err(r, 400, l.err[0] ? l.err : "no se pudo empezar");
+    send_err(r, 400, l.err[0] ? l.err : _("no se pudo empezar"));
 }
 
 bool aos_portal_bench(aos_httpd_req_t *r, const char *m, const char *p)

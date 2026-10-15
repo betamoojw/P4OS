@@ -14,6 +14,7 @@
  * never holds up the thread that reads the broker.
  */
 #include "aos_portal_mqtt.h"
+#include "aos_i18n.h"
 #include "aos_hal.h"
 #include "aos_mqtt.h"
 #include "cJSON.h"
@@ -149,7 +150,7 @@ static void api_topics(aos_httpd_req_t *r)
 static void api_topic(aos_httpd_req_t *r)
 {
     char name[AOS_MQTT_TOPIC_MAX];
-    if (!aos_httpd_query(r, "t", name, sizeof name)) { send_err(r, 400, "falta t"); return; }
+    if (!aos_httpd_query(r, "t", name, sizeof name)) { send_err(r, 400, _("falta t")); return; }
     aos_mqtt_topic_t *t = malloc(sizeof *t);
     char (*names)[AOS_MQTT_FIELD_MAX] = malloc(AOS_MQTT_FIELDS * AOS_MQTT_FIELD_MAX);
     float *last = malloc(AOS_MQTT_FIELDS * sizeof *last);
@@ -158,7 +159,7 @@ static void api_topic(aos_httpd_req_t *r)
     int np[AOS_MQTT_FIELDS] = { 0 };
     if (!t || !names || !last || !v || !tm) {
         free(t); free(names); free(last); free(v); free(tm);
-        send_err(r, 500, "sin memoria");
+        send_err(r, 500, _("sin memoria"));
         return;
     }
     aos_mqtt_lock();
@@ -173,7 +174,7 @@ static void api_topic(aos_httpd_req_t *r)
     aos_mqtt_unlock();
     if (!e) {
         free(t); free(names); free(last); free(v); free(tm);
-        send_err(r, 404, "ese tópico no está en la tabla");
+        send_err(r, 404, _("ese tópico no está en la tabla"));
         return;
     }
     uint32_t now = (uint32_t)aos_hal_uptime_ms();
@@ -208,19 +209,19 @@ static void api_topic(aos_httpd_req_t *r)
 static void api_publish(aos_httpd_req_t *r)
 {
     cJSON *b = body_json(r);
-    if (!b) { send_err(r, 400, "falta el cuerpo"); return; }
+    if (!b) { send_err(r, 400, _("falta el cuerpo")); return; }
     const cJSON *t = cJSON_GetObjectItemCaseSensitive(b, "topic"), *p = cJSON_GetObjectItemCaseSensitive(b, "payload"),
                 *q = cJSON_GetObjectItemCaseSensitive(b, "qos");
     bool retain = cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(b, "retain"));
     const char *why = NULL;
     aos_mqtt_config_t c;
     aos_mqtt_config(&c);
-    if (!cJSON_IsString(t) || !t->valuestring[0]) why = "falta el tópico";
-    else if (strpbrk(t->valuestring, "+#")) why = "un tópico para publicar no lleva + ni #";
-    else if (!c.host[0]) why = "no hay broker configurado";
-    else if (!c.enabled) why = "MQTT está apagado";
+    if (!cJSON_IsString(t) || !t->valuestring[0]) why = _("falta el tópico");
+    else if (strpbrk(t->valuestring, "+#")) why = _("un tópico para publicar no lleva + ni #");
+    else if (!c.host[0]) why = _("no hay broker configurado");
+    else if (!c.enabled) why = _("MQTT está apagado");
     else if (!aos_mqtt_publish(t->valuestring, cJSON_IsString(p) ? p->valuestring : "", cJSON_IsNumber(q) ? q->valueint : 0, retain))
-        why = "mensaje demasiado largo o la cola está llena";
+        why = _("mensaje demasiado largo o la cola está llena");
     cJSON_Delete(b);
     if (why) send_err(r, 400, why);
     else aos_httpd_send_json(r, 200, aos_mqtt_state() == AOS_MQTT_CONNECTED ? "{\"ok\":true}" : "{\"ok\":true,\"queued\":true}");
@@ -239,7 +240,7 @@ static void copy_str(const cJSON *b, const char *k, char *out, size_t n)
 static void api_config(aos_httpd_req_t *r)
 {
     cJSON *b = body_json(r);
-    if (!b) { send_err(r, 400, "falta el cuerpo"); return; }
+    if (!b) { send_err(r, 400, _("falta el cuerpo")); return; }
     aos_mqtt_config_t c;
     aos_mqtt_config(&c);                        /* the password comes back as the placeholder: kept */
     copy_str(b, "host", c.host, sizeof c.host);

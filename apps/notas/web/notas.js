@@ -11,10 +11,14 @@
  * registerPage() would refuse it: so it registers only when the menu has no
  * Notas of its own, and the portal's goes on working meanwhile. */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 const { h, put, $, api, toast } = P;
-/* the portal's own helpers this page was written with, over P4OS */
-const fsText = path => P.fsText(path).catch(e => { if (/no existe/.test(e.message)) return null; throw e; });
-const fsList = path => P.fsList(path).catch(e => { if (/no existe/.test(e.message)) return []; throw e; });
+/* the portal's own helpers this page was written with, over P4OS: a missing
+ * file is already null and a missing folder empty (no test of the message,
+ * which follows the board's language) */
+const fsText = path => P.fsText(path);
+const fsList = path => P.fsList(path);
 const fsPut = (path, data) => P.fsPut(path, data);
 const fsDelete = path => P.fsDelete(path);
 const fsMkdir = path => P.fsMkdir(path);
@@ -90,6 +94,7 @@ const NT_TAGC = ['#8e8e93', '#ff453a', '#ff9f0a', '#ffd60a', '#30d158', '#40c8e0
 const NT_SZR = [1, 24 / 28, 36 / 28, 48 / 28];          /* size relative to the body's */
 const NT_BUL = ['-', '◦', '▪', '–', '→', '★', '✓', '◆'];
 const NT_BUL_SHOW = ['•', '◦', '▪', '–', '→', '★', '✓', '◆'];
+const NT_BUL_NAMES = [N_('Punto'), N_('Círculo'), N_('Cuadrado'), N_('Guion'), N_('Flecha'), N_('Estrella'), N_('Tilde'), N_('Rombo')];
 const NT_NUMS = ['1. 2. 3.', 'a) b) c)', 'A) B) C)', 'i. ii. iii.', 'I. II. III.'];
 const ntDark = () => !matchMedia('(prefers-color-scheme: light)').matches;
 const ntPal = () => NT_PAL[ntDark() ? 'dark' : 'light'];
@@ -324,7 +329,7 @@ function ntSafeName(t) {
   let s = [...(t || '')].map(c => c < ' ' || '/\\:*?"<>|'.includes(c) ? '-' : c).join('');
   while (new TextEncoder().encode(s).length > 64) s = [...s].slice(0, -1).join('');
   s = s.replace(/^[ .]+|[ .]+$/g, '');
-  return s || 'Sin título';
+  return s || tr('Sin título');
 }
 
 /* ---- the visual editor's DOM ---- */
@@ -474,7 +479,7 @@ function renderNotas(main) {
     let files = [];
     try { files = (await fsList(dir)).filter(f => !f.dir && /\.(md|txt)$/i.test(f.name) && f.name[0] !== '.'); }
     catch (e) { put(listBox, h('p', { class: 'bad' }, e.message)); return; }
-    put(listBox, h('p', { class: 'muted' }, 'Leyendo ' + files.length + ' notas…'));
+    put(listBox, h('p', { class: 'muted' }, tr('Leyendo %s notas…', files.length)));
     entries = [];
     for (const f of files) entries.push(await readEntry(dir, f));
     entries.sort((a, b) => (b.doc.meta.pinned - a.doc.meta.pinned) || (b.doc.meta.modified || '').localeCompare(a.doc.meta.modified || '') || b.mtime - a.mtime);
@@ -485,19 +490,19 @@ function renderNotas(main) {
   const fold = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   let trashCount = 0;
   const listBox = h('div', { class: 'ntcards' });
-  const search = h('input', { type: 'search', placeholder: 'Buscar', oninput: e => { query = e.target.value; draw(); } });
+  const search = h('input', { type: 'search', placeholder: tr('Buscar'), oninput: e => { query = e.target.value; draw(); } });
   const chips = h('div', { class: 'btns' });
   const trashBtn = h('button', { class: 'btn', onclick: () => { trashMode = !trashMode; load(); } });
 
   function draw() {
-    put(chips, [['all', 'Todas'], ['note', 'Notas'], ['tasks', 'Listas']].map(([k, l]) =>
+    put(chips, [['all', tr('Todas')], ['note', tr('Notas')], ['tasks', tr('Listas')]].map(([k, l]) =>
       h('button', { class: 'btn' + (filter === k ? ' pri' : ''), onclick: () => { filter = k; draw(); } }, l)));
-    trashBtn.textContent = trashMode ? '← Notas' : 'Papelera' + (trashCount ? ' (' + trashCount + ')' : '');
+    trashBtn.textContent = trashMode ? '← ' + tr('Notas') : trashCount ? tr('Papelera (%s)', trashCount) : tr('Papelera');
     const q = fold(query);
     const shown = entries.filter(e => (filter === 'all' || e.doc.meta.kind === filter) &&
       (!q || fold(e.doc.meta.title + '\n' + ntPlain(e.doc.blocks)).includes(q)));
     if (!shown.length) {
-      put(listBox, h('p', { class: 'muted' }, trashMode ? 'La papelera está vacía.' : q ? 'Nada coincide con la búsqueda.' : 'Todavía no hay notas.'));
+      put(listBox, h('p', { class: 'muted' }, trashMode ? tr('La papelera está vacía.') : q ? tr('Nada coincide con la búsqueda.') : tr('Todavía no hay notas.')));
       return;
     }
     put(listBox, shown.map(e => {
@@ -506,13 +511,13 @@ function renderNotas(main) {
       const body = tasks ? h('div', { class: 'ntprev' }, checks.slice(0, 6).map(b => h('div', { class: b.c ? 'done' : '' }, (b.c ? '☑ ' : '☐ ') + b.runs.map(r => r[0]).join(''))))
         : h('div', { class: 'ntprev' }, ntPlain(e.doc.blocks).slice(0, 400));
       const card = h('div', { class: 'ntcard', style: m.tag ? `--tag:${NT_TAGC[m.tag]}` : '' },
-        h('div', { class: 'ntct' }, m.pinned ? h('span', { class: 'ntpin', title: 'Fijada' }, '📌') : null, m.title || 'Sin título'),
+        h('div', { class: 'ntct' }, m.pinned ? h('span', { class: 'ntpin', title: tr('Fijada') }, '📌') : null, m.title || tr('Sin título')),
         body,
         h('div', { class: 'ntmeta' }, (m.modified || '').replace(/^\d{4}-/, '') +
-          (tasks && checks.length ? ' · ' + checks.filter(b => b.c).length + '/' + checks.length : ''), h('span', {}, tasks ? 'lista' : 'nota')));
+          (tasks && checks.length ? ' · ' + checks.filter(b => b.c).length + '/' + checks.length : ''), h('span', {}, tasks ? tr('lista') : tr('nota'))));
       if (trashMode) card.append(h('div', { class: 'btns', style: 'margin-top:10px' },
-        h('button', { class: 'btn', onclick: ev => { ev.stopPropagation(); restore(e); } }, 'Restaurar'),
-        h('button', { class: 'btn red', onclick: ev => { ev.stopPropagation(); purge(e); } }, 'Borrar para siempre')));
+        h('button', { class: 'btn', onclick: ev => { ev.stopPropagation(); restore(e); } }, tr('Restaurar')),
+        h('button', { class: 'btn red', onclick: ev => { ev.stopPropagation(); purge(e); } }, tr('Borrar para siempre'))));
       else card.onclick = () => open(e);
       return card;
     }));
@@ -522,13 +527,13 @@ function renderNotas(main) {
     try {
       const to = await freeName(NT_DIR, e.name.replace(/\.[^.]+$/, ''), null);
       await api('fs/rename?path=' + encodeURIComponent(NT_TRASH + '/' + e.name) + '&to=' + encodeURIComponent(NT_DIR + '/' + to), { method: 'POST' });
-      toast('Restaurada');
+      toast(tr('Restaurada'));
       load();
     } catch (err) { toast(err.message, true); }
   }
   async function purge(e) {
-    if (!confirm('¿Borrar "' + (e.doc.meta.title || e.name) + '" para siempre?')) return;
-    try { await fsDelete(NT_TRASH + '/' + e.name); toast('Borrada'); load(); } catch (err) { toast(err.message, true); }
+    if (!confirm(tr('¿Borrar "%s" para siempre?', e.doc.meta.title || e.name))) return;
+    try { await fsDelete(NT_TRASH + '/' + e.name); toast(tr('Borrada')); load(); } catch (err) { toast(err.message, true); }
   }
 
   async function freeName(dir, base, self) {
@@ -543,7 +548,7 @@ function renderNotas(main) {
   }
 
   /* ---- editing ---- */
-  const titleIn = h('input', { class: 'nttitle', placeholder: 'Título', oninput: () => touch() });
+  const titleIn = h('input', { class: 'nttitle', placeholder: tr('Título'), oninput: () => touch() });
   const tagBox = h('div', { class: 'nttags' });
   const pinBox = h('label', { class: 'small' });
   const ed = h('div', { class: 'ntdoc', contenteditable: 'true', spellcheck: 'true' });
@@ -551,7 +556,8 @@ function renderNotas(main) {
   const tasksBox = h('div', { class: 'nttasks' });
   const bar = h('div', { class: 'ntbar' });
   const modeBtn = h('button', { class: 'btn' });
-  const touch = () => { dirty = true; if (status.textContent.startsWith('Guardad')) say(''); };
+  /* 'ok' is only the saved message's class: the text is translated */
+  const touch = () => { dirty = true; if (status.classList.contains('ok')) say(''); };
 
   function open(e) {
     cur = { file: e ? e.name : '', meta: e ? { ...e.doc.meta } : null, blocks: e ? e.doc.blocks : null, mtime: e ? e.mtime : 0, size: e ? e.size : 0, mode: 'visual' };
@@ -566,18 +572,18 @@ function renderNotas(main) {
   }
 
   function drawMeta() {
-    put(tagBox, NT_TAGC.map((c, i) => h('button', { class: 'nttag' + (cur.meta.tag === i ? ' on' : ''), title: i ? NT_TAGS[i] : 'sin color',
+    put(tagBox, NT_TAGC.map((c, i) => h('button', { class: 'nttag' + (cur.meta.tag === i ? ' on' : ''), title: i ? NT_TAGS[i] : tr('sin color'),
       style: i ? `background:${c}` : '', onclick: () => { cur.meta.tag = i; touch(); drawMeta(); } }, i ? '' : '∅')));
-    put(pinBox, h('input', { type: 'checkbox', checked: cur.meta.pinned, onchange: e => { cur.meta.pinned = e.target.checked; touch(); } }), ' Fijada arriba');
+    put(pinBox, h('input', { type: 'checkbox', checked: cur.meta.pinned, onchange: e => { cur.meta.pinned = e.target.checked; touch(); } }), ' ' + tr('Fijada arriba'));
   }
 
   function showEditor() {
     dirty = false;
     titleIn.value = cur.meta.title;
     drawMeta();
-    say(cur.file ? 'notas/' + cur.file : 'Nueva: se guarda al tocar Guardar');
+    say(cur.file ? 'notas/' + cur.file : tr('Nueva: se guarda al tocar Guardar'));
     renderBody();
-    convBtn.textContent = cur.meta.kind === 'tasks' ? 'Convertir en nota' : 'Convertir en lista';
+    convBtn.textContent = cur.meta.kind === 'tasks' ? tr('Convertir en nota') : tr('Convertir en lista');
     listSec.style.display = 'none';
     edSec.style.display = '';
     window.scrollTo(0, 0);
@@ -589,7 +595,7 @@ function renderNotas(main) {
     ed.style.display = !tasks && cur.mode === 'visual' ? '' : 'none';
     raw.style.display = cur.mode === 'text' ? '' : 'none';
     tasksBox.style.display = tasks && cur.mode === 'visual' ? '' : 'none';
-    modeBtn.textContent = cur.mode === 'visual' ? 'Ver el Markdown' : (tasks ? 'Ver la lista' : 'Ver con formato');
+    modeBtn.textContent = cur.mode === 'visual' ? tr('Ver el Markdown') : (tasks ? tr('Ver la lista') : tr('Ver con formato'));
     if (cur.mode === 'text') raw.value = ntSerialize({ ...cur.meta, title: titleIn.value }, cur.blocks).replace(/^---\n[\s\S]*?\n---\n/, '');
     else if (tasks) drawTasks();
     else { put(ed, cur.blocks.map(ntBlockEl)); ntTidy(ed); }
@@ -652,37 +658,37 @@ function renderNotas(main) {
     ntTidy(ed); touch();
   }
 
-  const typeSel = h('select', { title: 'Estilo del párrafo', onchange: e => { setType(e.target.value, 0); ed.focus(); } },
-    [['p', 'Cuerpo'], ['h1', 'Título'], ['h2', 'Encabezado'], ['h3', 'Subtítulo'], ['quote', 'Cita']].map(([v, l]) => h('option', { value: v }, l)));
-  const sizeSel = h('select', { title: 'Tamaño', onchange: e => { fontSize(+e.target.value); e.target.value = ''; } },
-    h('option', { value: '' }, 'Tamaño'), [[1, 'Chica'], [0, 'Normal'], [2, 'Grande'], [3, 'Enorme']].map(([v, l]) => h('option', { value: v }, l)));
-  const bulSel = h('select', { title: 'Viñetas', onchange: e => { if (e.target.value !== '') setType('bullet', +e.target.value); e.target.value = ''; ed.focus(); } },
-    h('option', { value: '' }, '• Viñetas'), NT_BUL_SHOW.map((g, i) => h('option', { value: i }, g + '  ' + ['Punto', 'Círculo', 'Cuadrado', 'Guion', 'Flecha', 'Estrella', 'Tilde', 'Rombo'][i])));
-  const numSel = h('select', { title: 'Numeradas', onchange: e => { if (e.target.value !== '') setType('num', +e.target.value); e.target.value = ''; ed.focus(); } },
-    h('option', { value: '' }, '1. Numeradas'), NT_NUMS.map((g, i) => h('option', { value: i }, g)));
+  const typeSel = h('select', { title: tr('Estilo del párrafo'), onchange: e => { setType(e.target.value, 0); ed.focus(); } },
+    [['p', tr('Cuerpo')], ['h1', tr('Título')], ['h2', tr('Encabezado')], ['h3', tr('Subtítulo')], ['quote', tr('Cita')]].map(([v, l]) => h('option', { value: v }, l)));
+  const sizeSel = h('select', { title: tr('Tamaño'), onchange: e => { fontSize(+e.target.value); e.target.value = ''; } },
+    h('option', { value: '' }, tr('Tamaño')), [[1, tr('Chica')], [0, tr('Normal')], [2, tr('Grande')], [3, tr('Enorme')]].map(([v, l]) => h('option', { value: v }, l)));
+  const bulSel = h('select', { title: tr('Viñetas'), onchange: e => { if (e.target.value !== '') setType('bullet', +e.target.value); e.target.value = ''; ed.focus(); } },
+    h('option', { value: '' }, '• ' + tr('Viñetas')), NT_BUL_SHOW.map((g, i) => h('option', { value: i }, g + '  ' + tr(NT_BUL_NAMES[i]))));
+  const numSel = h('select', { title: tr('Numeradas'), onchange: e => { if (e.target.value !== '') setType('num', +e.target.value); e.target.value = ''; ed.focus(); } },
+    h('option', { value: '' }, '1. ' + tr('Numeradas')), NT_NUMS.map((g, i) => h('option', { value: i }, g)));
   const swatches = (kind, cb) => {
     const pal = ntPal()[kind];
-    return h('div', { class: 'ntsw' }, pal.map((c, i) => h('button', { class: 'ntswb', title: kind === 'fg' ? NT_FG[i] || 'normal' : NT_HL[i] || 'sin resaltado',
+    return h('div', { class: 'ntsw' }, pal.map((c, i) => h('button', { class: 'ntswb', title: kind === 'fg' ? NT_FG[i] || tr('normal') : NT_HL[i] || tr('sin resaltado'),
       style: c && i ? `background:${c}` : '', onmousedown: e => e.preventDefault(), onclick: () => cb(i) }, i ? '' : (kind === 'fg' ? 'A' : '∅'))));
   };
-  const fgBox = h('details', { class: 'ntpop' }, h('summary', { class: 'btn', title: 'Color del texto' }, h('b', { style: 'color:' + ntPal().fg[1] }, 'A')),
+  const fgBox = h('details', { class: 'ntpop' }, h('summary', { class: 'btn', title: tr('Color del texto') }, h('b', { style: 'color:' + ntPal().fg[1] }, 'A')),
     swatches('fg', i => { exec('foreColor', i ? ntPal().fg[i] : ntPal().fg[0]); fgBox.open = false; }));
-  const hlBox = h('details', { class: 'ntpop' }, h('summary', { class: 'btn', title: 'Resaltado' }, h('span', { style: 'background:' + ntPal().hl[1] + ';padding:0 4px;border-radius:3px' }, 'ab')),
+  const hlBox = h('details', { class: 'ntpop' }, h('summary', { class: 'btn', title: tr('Resaltado') }, h('span', { style: 'background:' + ntPal().hl[1] + ';padding:0 4px;border-radius:3px' }, 'ab')),
     swatches('hl', i => { exec('hiliteColor', i ? ntPal().hl[i] : 'transparent'); hlBox.open = false; }));
   const tb = (label, title, fn, style) => h('button', { class: 'btn ntb', title, style, onmousedown: e => e.preventDefault(), onclick: fn }, label);
   put(bar, typeSel,
-    tb('B', 'Negrita (⌘B)', () => exec('bold'), 'font-weight:800'),
-    tb('I', 'Cursiva (⌘I)', () => exec('italic'), 'font-style:italic'),
-    tb('U', 'Subrayado (⌘U)', () => exec('underline'), 'text-decoration:underline'),
-    tb('S', 'Tachado', () => exec('strikeThrough'), 'text-decoration:line-through'),
+    tb('B', tr('Negrita (⌘B)'), () => exec('bold'), 'font-weight:800'),
+    tb('I', tr('Cursiva (⌘I)'), () => exec('italic'), 'font-style:italic'),
+    tb('U', tr('Subrayado (⌘U)'), () => exec('underline'), 'text-decoration:underline'),
+    tb('S', tr('Tachado'), () => exec('strikeThrough'), 'text-decoration:line-through'),
     sizeSel, fgBox, hlBox, bulSel, numSel,
-    tb('☑', 'Casillas', () => setType('check', 0)),
-    tb('⇤', 'Menos sangría (⇧Tab)', () => indent(-1)),
-    tb('⇥', 'Más sangría (Tab)', () => indent(1)),
-    tb('—', 'Línea', insertRule),
-    tb('Tx', 'Borrar el formato', () => exec('removeFormat')),
-    tb('↶', 'Deshacer (⌘Z)', () => exec('undo')),
-    tb('↷', 'Rehacer', () => exec('redo')));
+    tb('☑', tr('Casillas'), () => setType('check', 0)),
+    tb('⇤', tr('Menos sangría (⇧Tab)'), () => indent(-1)),
+    tb('⇥', tr('Más sangría (Tab)'), () => indent(1)),
+    tb('—', tr('Línea'), insertRule),
+    tb('Tx', tr('Borrar el formato'), () => exec('removeFormat')),
+    tb('↶', tr('Deshacer (⌘Z)'), () => exec('undo')),
+    tb('↷', tr('Rehacer'), () => exec('redo')));
 
   function syncBar() {
     const bl = ntSelBlocks(ed);
@@ -781,19 +787,19 @@ function renderNotas(main) {
           for (let j = k + 1; j < bl.length && (bl[j].i || 0) > (b.i || 0); j++) bl[j].c = b.c;
           touch(); drawTasks(); } }),
         txt,
-        h('select', { class: 'ntprio', title: 'Prioridad', style: b.s ? 'color:' + ['', '#0a84ff', '#ff9f0a', '#ff453a'][b.s] : '',
+        h('select', { class: 'ntprio', title: tr('Prioridad'), style: b.s ? 'color:' + ['', '#0a84ff', '#ff9f0a', '#ff453a'][b.s] : '',
           onchange: e => { b.s = +e.target.value; touch(); drawTasks(); } },
           ['–', '!', '!!', '!!!'].map((l, i) => h('option', { value: i, selected: b.s === i }, l))),
-        h('button', { class: 'btn ntmini', title: 'Más afuera', onclick: () => { b.i = Math.max(0, (b.i || 0) - 1); touch(); drawTasks(); } }, '⇤'),
-        h('button', { class: 'btn ntmini', title: 'Más adentro', onclick: () => { b.i = Math.min(5, (b.i || 0) + 1); touch(); drawTasks(); } }, '⇥'),
-        h('button', { class: 'btn ntmini', title: 'Subir', disabled: k === 0, onclick: () => { bl.splice(k - 1, 0, bl.splice(k, 1)[0]); touch(); drawTasks(); } }, '↑'),
-        h('button', { class: 'btn ntmini', title: 'Bajar', disabled: k === bl.length - 1, onclick: () => { bl.splice(k + 1, 0, bl.splice(k, 1)[0]); touch(); drawTasks(); } }, '↓'),
-        h('button', { class: 'btn ntmini', title: 'Borrar', onclick: () => { bl.splice(k, 1); if (!bl.length) bl.push({ t: 'check', s: 0, i: 0, c: false, runs: [] }); touch(); drawTasks(); } }, '✕'));
+        h('button', { class: 'btn ntmini', title: tr('Más afuera'), onclick: () => { b.i = Math.max(0, (b.i || 0) - 1); touch(); drawTasks(); } }, '⇤'),
+        h('button', { class: 'btn ntmini', title: tr('Más adentro'), onclick: () => { b.i = Math.min(5, (b.i || 0) + 1); touch(); drawTasks(); } }, '⇥'),
+        h('button', { class: 'btn ntmini', title: tr('Subir'), disabled: k === 0, onclick: () => { bl.splice(k - 1, 0, bl.splice(k, 1)[0]); touch(); drawTasks(); } }, '↑'),
+        h('button', { class: 'btn ntmini', title: tr('Bajar'), disabled: k === bl.length - 1, onclick: () => { bl.splice(k + 1, 0, bl.splice(k, 1)[0]); touch(); drawTasks(); } }, '↓'),
+        h('button', { class: 'btn ntmini', title: tr('Borrar'), onclick: () => { bl.splice(k, 1); if (!bl.length) bl.push({ t: 'check', s: 0, i: 0, c: false, runs: [] }); touch(); drawTasks(); } }, '✕'));
     };
     for (const b of bl) if (b.t !== 'check') { b.t = 'check'; b.s = 0; b.c = false; }
     const pending = [], doneRows = [];
     bl.forEach((b, k) => (b.c ? doneRows : pending).push(rowOf(b, k)));
-    const add = h('input', { class: 'nttxt', placeholder: '+ Agregar tarea (Enter)', onkeydown: e => {
+    const add = h('input', { class: 'nttxt', placeholder: tr('+ Agregar tarea (Enter)'), onkeydown: e => {
       if (e.key !== 'Enter' || !e.target.value.trim()) return;
       const empty = bl.findIndex(b => !b.runs.length);
       if (empty >= 0) bl.splice(empty, 1);
@@ -804,9 +810,9 @@ function renderNotas(main) {
       touch(); drawTasks(); $('.nttask-add', tasksBox).focus(); } });
     add.classList.add('nttask-add');
     put(tasksBox,
-      total ? h('div', { class: 'ntprog' }, h('div', { class: 'ntbarfill', style: `width:${Math.round(done * 100 / total)}%` }), h('span', {}, `${done} de ${total}`)) : null,
+      total ? h('div', { class: 'ntprog' }, h('div', { class: 'ntbarfill', style: `width:${Math.round(done * 100 / total)}%` }), h('span', {}, tr('%s de %s', done, total))) : null,
       pending, h('div', { class: 'nttask' }, h('span', { style: 'width:20px' }), add),
-      doneRows.length ? [h('h2', {}, 'Completadas (' + doneRows.length + ')'), doneRows] : null);
+      doneRows.length ? [h('h2', {}, tr('Completadas (%s)', doneRows.length)), doneRows] : null);
   }
   const focusTask = k => { const el = tasksBox.querySelectorAll('.nttask .nttxt')[k]; if (el) el.focus(); };
 
@@ -815,16 +821,16 @@ function renderNotas(main) {
     if (saving) return false;
     collect();
     const empty = !cur.meta.title && cur.blocks.every(b => !b.runs.length && b.t !== 'rule');
-    if (empty) { say('La nota está vacía', 'bad'); return false; }
+    if (empty) { say(tr('La nota está vacía'), 'bad'); return false; }
     saving = true;
-    say('Guardando…');
+    say(tr('Guardando…'));
     try {
       await fsMkdir(NT_DIR);
       /* someone (the board) may have written it since we read it */
       if (cur.file) {
         const now = (await fsList(NT_DIR)).find(f => f.name === cur.file);
         if (now && (now.mtime !== cur.mtime || now.size !== cur.size) &&
-            !confirm('La nota cambió en la placa mientras la editabas. ¿Reemplazarla con esta versión?')) { say(''); return false; }
+            !confirm(tr('La nota cambió en la placa mientras la editabas. ¿Reemplazarla con esta versión?'))) { say(''); return false; }
       }
       cur.meta.modified = ntNow();
       if (!cur.meta.created) cur.meta.created = cur.meta.modified;
@@ -837,20 +843,20 @@ function renderNotas(main) {
       cur.mtime = st ? st.mtime : 0; cur.size = st ? st.size : 0;
       dirty = false;
       if (cur.meta.kind === 'tasks' && cur.mode === 'visual') drawTasks();
-      say('Guardada en notas/' + name, 'ok');
+      say(tr('Guardada en notas/%s', name), 'ok');
       return true;
-    } catch (e) { say('No se pudo guardar: ' + e.message, 'bad'); return false; }
+    } catch (e) { say(tr('No se pudo guardar: %s', e.message), 'bad'); return false; }
     finally { saving = false; }
   }
 
   async function del() {
     if (!cur.file) { back(true); return; }
-    if (!confirm('¿Mover "' + (titleIn.value || cur.file) + '" a la papelera?')) return;
+    if (!confirm(tr('¿Mover "%s" a la papelera?', titleIn.value || cur.file))) return;
     try {
       await fsMkdir(NT_TRASH);
       const to = await freeName(NT_TRASH, cur.file.replace(/\.[^.]+$/, ''), null);
       await api('fs/rename?path=' + encodeURIComponent(NT_DIR + '/' + cur.file) + '&to=' + encodeURIComponent(NT_TRASH + '/' + to), { method: 'POST' });
-      toast('Movida a la papelera');
+      toast(tr('Movida a la papelera'));
       back(true);
     } catch (e) { toast(e.message, true); }
   }
@@ -869,11 +875,11 @@ function renderNotas(main) {
     } else cur.meta.kind = 'note';
     touch();
     renderBody();
-    convBtn.textContent = cur.meta.kind === 'tasks' ? 'Convertir en nota' : 'Convertir en lista';
+    convBtn.textContent = cur.meta.kind === 'tasks' ? tr('Convertir en nota') : tr('Convertir en lista');
   }
 
   function back(force) {
-    if (!force && dirty && !confirm('Hay cambios sin guardar. ¿Volver igual?')) return;
+    if (!force && dirty && !confirm(tr('Hay cambios sin guardar. ¿Volver igual?'))) return;
     dirty = false;
     edSec.style.display = 'none';
     listSec.style.display = '';
@@ -882,18 +888,18 @@ function renderNotas(main) {
 
   async function uploadNotes(fl) {
     const list = [...fl].filter(f => /\.(md|txt)$/i.test(f.name));
-    if (!list.length) { toast('Sólo archivos .md o .txt', true); return; }
+    if (!list.length) { toast(tr('Sólo archivos .md o .txt'), true); return; }
     await fsMkdir(NT_DIR);
     for (const f of list) {
       try { await fsPut(NT_DIR + '/' + await freeName(NT_DIR, f.name.replace(/\.[^.]+$/, ''), null), f); }
       catch (e) { toast(f.name + ': ' + e.message, true); return; }
     }
-    toast(list.length === 1 ? 'Subida ' + list[0].name : `Subidas ${list.length} notas`);
+    toast(list.length === 1 ? tr('Subida %s', list[0].name) : tr('Subidas %s notas', list.length));
     load();
   }
 
   modeBtn.onclick = toggleMode;
-  const convBtn = h('button', { class: 'btn', onclick: convert }, 'Convertir');
+  const convBtn = h('button', { class: 'btn', onclick: convert }, tr('Convertir'));
   /* ⌘S / Ctrl+S while the editor is on screen, wherever the focus is */
   const onKey = e => {
     if ((e.metaKey || e.ctrlKey) && e.key === 's' && edSec.isConnected && edSec.style.display !== 'none') { e.preventDefault(); save(); }
@@ -904,35 +910,37 @@ function renderNotas(main) {
   });
 
   const input = h('input', { type: 'file', multiple: true, accept: '.md,.txt', style: 'display:none', onchange: e => uploadNotes(e.target.files) });
-  const drop = h('div', { class: 'drop' }, 'Soltá acá archivos .md o .txt para sumarlos a ', h('b', {}, NT_DIR));
+  /* the folder in bold wherever the language puts it in the sentence */
+  const dropTxt = tr('Soltá acá archivos .md o .txt para sumarlos a %s', '\x01').split('\x01');
+  const drop = h('div', { class: 'drop' }, dropTxt[0], h('b', {}, NT_DIR), dropTxt[1] || '');
   drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
   drop.ondragleave = () => drop.classList.remove('over');
   drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); uploadNotes(e.dataTransfer.files); };
 
   put(listSec,
     h('div', { class: 'btns', style: 'margin-bottom:14px' },
-      h('button', { class: 'btn pri', onclick: () => fresh('note') }, 'Nueva nota'),
-      h('button', { class: 'btn pri', onclick: () => fresh('tasks') }, 'Nueva lista'),
+      h('button', { class: 'btn pri', onclick: () => fresh('note') }, tr('Nueva nota')),
+      h('button', { class: 'btn pri', onclick: () => fresh('tasks') }, tr('Nueva lista')),
       search, trashBtn,
-      h('button', { class: 'btn', onclick: () => input.click() }, 'Subir…'), input,
-      h('button', { class: 'btn', onclick: () => openApp('aos.notas').then(() => toast('Abriendo Notas en la placa'), e => toast(e.message, true)) }, 'Abrir la app en la placa')),
+      h('button', { class: 'btn', onclick: () => input.click() }, tr('Subir…')), input,
+      h('button', { class: 'btn', onclick: () => openApp('aos.notas').then(() => toast(tr('Abriendo Notas en la placa')), e => toast(e.message, true)) }, tr('Abrir la app en la placa'))),
     chips, listBox, drop);
   put(edSec,
     h('div', { class: 'btns', style: 'margin-bottom:14px' },
-      h('button', { class: 'btn', onclick: () => back() }, '← Notas'), status),
+      h('button', { class: 'btn', onclick: () => back() }, '← ' + tr('Notas')), status),
     h('div', { class: 'card pad ntsheet' },
       titleIn,
       h('div', { class: 'btns', style: 'margin:6px 0 14px' }, tagBox, pinBox),
       bar, ed, tasksBox, raw),
     h('div', { class: 'btns', style: 'margin-top:14px' },
-      h('button', { class: 'btn pri', onclick: save }, 'Guardar en la placa'),
+      h('button', { class: 'btn pri', onclick: save }, tr('Guardar en la placa')),
       modeBtn, convBtn,
-      h('button', { class: 'btn', onclick: download }, 'Descargar .md'),
-      h('button', { class: 'btn red', onclick: del }, 'Mover a la papelera'),
-      h('span', { class: 'muted small' }, '⌘S / Ctrl+S guarda')));
-  put(main, h('h1', {}, 'Notas'), listSec, edSec,
-    h('p', { class: 'note' }, 'Las notas son archivos Markdown en /notas de la tarjeta, los mismos que abre la app. Si la app tiene abierta la nota que guardás acá, la vuelve a leer sola. Lo borrado va a /notas/papelera.'));
-  window.onbeforeunload = () => dirty && location.hash === '#notas' ? 'Hay cambios sin guardar' : undefined;
+      h('button', { class: 'btn', onclick: download }, tr('Descargar .md')),
+      h('button', { class: 'btn red', onclick: del }, tr('Mover a la papelera')),
+      h('span', { class: 'muted small' }, tr('⌘S / Ctrl+S guarda'))));
+  put(main, h('h1', {}, tr('Notas')), listSec, edSec,
+    h('p', { class: 'note' }, tr('Las notas son archivos Markdown en /notas de la tarjeta, los mismos que abre la app. Si la app tiene abierta la nota que guardás acá, la vuelve a leer sola. Lo borrado va a /notas/papelera.')));
+  window.onbeforeunload = () => dirty && location.hash === '#notas' ? tr('Hay cambios sin guardar') : undefined;
   load();
   /* the page is left */
   return () => {
@@ -944,7 +952,7 @@ function renderNotas(main) {
 
 if (P && P.version >= 1 && !document.querySelector('#nav a[data-p="notas"]')) {
   if (!document.getElementById('nt-style')) document.head.append(h('style', { id: 'nt-style' }, NT_CSS));
-  P.registerPage({ id: 'notas', name: 'Notas', icon: '✎', render: renderNotas });
+  P.registerPage({ id: 'notas', name: tr('Notas'), icon: '✎', render: renderNotas });
 } else {
   console.info('notas.js: the portal brings its own Notas page; this one waits for the firmware to drop it');
 }

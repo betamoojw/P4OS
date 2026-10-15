@@ -7378,3 +7378,91 @@ el C6 no activó la imagen	the C6 did not activate the image
 FM17522 (clon)	FM17522 (clone)
 FM17522E (clon)	FM17522E (clone)
 clon (sin marca)	clone (no brand)
+
+#: components/aos_portal (2026-10-15)
+falta id	id is missing
+sin ícono AIC	no AIC icon
+red o contraseña inválidas (WPA2: de 8 a 63 caracteres)	invalid network or password (WPA2: 8 to 63 characters)
+\"mode\": console o keys; \"host\": true o false; \"pins\": 21/23, 25/27 o both; \"layout\": latam o us	\"mode\": console or keys; \"host\": true or false; \"pins\": 21/23, 25/27 or both; \"layout\": latam or us
+el USB está cambiando de modo	the USB is switching modes
+falta \"on\", \"keyboard\", \"music\" o \"forget\"	missing \"on\", \"keyboard\", \"music\" or \"forget\"
+no hay una imagen del C6 en /firmware/c6.bin	there is no C6 image at /firmware/c6.bin
+no se pudo empezar (¿ya hay una en curso?)	could not start (is one already running?)
+la búsqueda falló	the scan failed
+la dirección empieza con http://	the address starts with http://
+sin tarjeta o ruta inválida	no card or invalid path
+ruta inválida	invalid path
+no existe	does not exist
+no se pudo leer	could not read
+menu.txt inválido: %s	invalid menu.txt: %s
+no se pudo abrir	could not open
+falta Content-Length	Content-Length is missing
+no entra en la tarjeta	it does not fit on the card
+no se pudo crear (¿existe la carpeta?)	could not create (does the folder exist?)
+se cortó la subida	the upload was cut off
+no se pudo guardar	could not save
+ya hay una grabación en curso	a flash is already in progress
+no se pudo empezar	could not start
+falta path	path is missing
+ya hay un trabajo en curso	a job is already running
+no se pudo abrir el puerto (¿lo tiene otra app?)	could not open the port (does another app have it?)
+el canal no está conectado	the channel is not connected
+hace falta el canal conectado y la tarjeta	needs the channel connected and a card
+texto vacío	empty text
+ya hay 8 avisos	there are already 8 alerts
+el nombre va con a-z, 0-9 y guiones	the name takes a-z, 0-9 and hyphens
+falta \"on\"	missing \"on\"
+la radio está ocupada	the radio is busy
+no hay enlace que congelar	there is no link to freeze
+demasiados intentos: esperá un poco	too many attempts: wait a little
+contraseña incorrecta	wrong password
+nombre desconocido: entrá por la IP de la placa o por su nombre .local	unknown name: use the board's IP or its .local name
+pedido desde otra página: rechazado	request from another page: refused
+pedido sin origen: rechazado	request with no origin: refused
+el portal está cerrado en esta red	the portal is closed on this network
+todavía no hay certificado: prendé HTTPS en Ajustes, Portal web, y reiniciá	no certificate yet: turn on HTTPS in Settings, Web portal, and restart
+hace falta entrar con la contraseña	you need to log in with the password
+todavía no hay captura	no screenshot yet
+falta el cuerpo	the body is missing
+la fuente tiene la cola llena	the power supply's queue is full
+comando no válido o cola llena	invalid command or queue full
+no se pudo armar el enlace	could not build the link
+eso no parece un código	that doesn't look like a code
+falta app	app is missing
+mensaje de 1 KB como mucho	1 KB message at most
+la cola de la app está llena	the app's queue is full
+GET o POST	GET or POST
+no hay datos: ¿está abierta la app?	no data: is the app open?
+sin cuerpo, o de más de 128 KB	no body, or over 128 KB
+page y slot	page and slot
+ese lugar está vacío (¿guardaste?)	that slot is empty (did you save?)
+falta el texto (8 KB como mucho)	the text is missing (8 KB at most)
+no se pudo escribir en la tarjeta	could not write to the card
+no hay tarjeta	no card
+falta t	t is missing
+ese tópico no está en la tabla	that topic is not in the table
+falta el tópico	the topic is missing
+un tópico para publicar no lleva + ni #	a topic to publish can't contain + or #
+no hay broker configurado	no broker configured
+MQTT está apagado	MQTT is off
+mensaje demasiado largo o la cola está llena	message too long or the queue is full
+ya hay un barrido en marcha	a sweep is already running
+no se pudo empezar el barrido	could not start the sweep
+\"do\" es scan o stop	\"do\" is scan or stop
+no hay memoria para la Red	not enough memory for Network
+el nombre tiene que tener entre 1 y 47 bytes	the name must be 1 to 47 bytes
+la dirección tiene que empezar con http:// o https://	the address must start with http:// or https://
+la dirección no es válida	the address is not valid
+falta \"do\"	missing \"do\"
+no existe esa tecla	that key does not exist
+teclas inválidas	invalid keys
+esa tecla está vacía	that key is empty
+falta \"v\"	missing \"v\"
+acción desconocida	unknown action
+solo GET	GET only
+se cortó la subida: %ld de %ld B (%s)	the upload was cut off: %ld of %ld B (%s)
+no hay volcado	no dump
+clave desconocida	unknown key
+se leen al arrancar: reiniciar para aplicar	read at boot: restart to apply
+la otra ranura no tiene una imagen	the other slot has no image
+no se pudo borrar	could not delete

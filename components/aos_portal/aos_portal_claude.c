@@ -11,6 +11,7 @@
  * a session.
  */
 #include "aos_portal_claude.h"
+#include "aos_i18n.h"
 #include "aos_claude.h"
 #include "cJSON.h"
 
@@ -64,7 +65,13 @@ bool aos_portal_claude(aos_httpd_req_t *r, const char *m, const char *p)
     if (get && !*p) { aos_claude_refresh_now(); api_status(r); return true; }
     if (post && !strcmp(p, "/login")) {
         char url[900];
-        if (!aos_claude_login_url(url, sizeof url)) { aos_httpd_send_json(r, 500, "{\"ok\":false,\"error\":\"no se pudo armar el enlace\"}"); return true; }
+        if (!aos_claude_login_url(url, sizeof url)) {
+            cJSON *o = cJSON_CreateObject();
+            cJSON_AddFalseToObject(o, "ok");
+            cJSON_AddStringToObject(o, "error", _("no se pudo armar el enlace"));
+            send_cjson(r, 500, o);
+            return true;
+        }
         cJSON *o = cJSON_CreateObject();
         cJSON_AddStringToObject(o, "url", url);
         send_cjson(r, 200, o);
@@ -83,7 +90,7 @@ bool aos_portal_claude(aos_httpd_req_t *r, const char *m, const char *p)
             aos_claude_status(&st);
             cJSON *o = cJSON_CreateObject();
             cJSON_AddFalseToObject(o, "ok");
-            cJSON_AddStringToObject(o, "error", st.error[0] ? st.error : "eso no parece un código");
+            cJSON_AddStringToObject(o, "error", st.error[0] ? st.error : _("eso no parece un código"));
             send_cjson(r, 400, o);
         }
         return true;

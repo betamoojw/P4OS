@@ -15,6 +15,8 @@
  * page shows them masked. */
 const P = window.P4OS;
 const { main, h, put, toast, fsText, fsPut, openApp } = P;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 
 if (!document.getElementById('css-camaras')) {
   const st = document.createElement('style');
@@ -108,16 +110,16 @@ const kindOf = url => /^rtsp:/i.test(url) ? 'RTSP' : /^https?:/i.test(url) ? 'HT
 function check(cams, frigate) {
   const seen = new Set();
   for (const [i, c] of cams.entries()) {
-    const n = `cámara ${i + 1}`;
-    if (!c.name || c.name.length > 31 || /[\[\]\n]/.test(c.name)) return `${n}: el nombre, de 1 a 31 caracteres y sin corchetes`;
-    if (seen.has(c.name.toLowerCase())) return `${c.name}: hay dos con ese nombre`;
-    if (c.name.toLowerCase() === 'frigate') return 'Frigate va en su propio lugar, abajo';
+    const n = tr('cámara %d', i + 1);
+    if (!c.name || c.name.length > 31 || /[\[\]\n]/.test(c.name)) return tr('%s: el nombre, de 1 a 31 caracteres y sin corchetes', n);
+    if (seen.has(c.name.toLowerCase())) return tr('%s: hay dos con ese nombre', c.name);
+    if (c.name.toLowerCase() === 'frigate') return tr('Frigate va en su propio lugar, abajo');
     seen.add(c.name.toLowerCase());
-    if (!/^(rtsp|https?):\/\/\S+$/i.test(c.url)) return `${c.name}: la dirección empieza con rtsp://, http:// o https://`;
-    if (c.full && !/^(rtsp|https?):\/\/\S+$/i.test(c.full)) return `${c.name}: la dirección de pantalla completa no es válida`;
-    if (c.refresh && !/^\d{1,4}$/.test(c.refresh)) return `${c.name}: el refresco es un número de segundos`;
+    if (!/^(rtsp|https?):\/\/\S+$/i.test(c.url)) return tr('%s: la dirección empieza con rtsp://, http:// o https://', c.name);
+    if (c.full && !/^(rtsp|https?):\/\/\S+$/i.test(c.full)) return tr('%s: la dirección de pantalla completa no es válida', c.name);
+    if (c.refresh && !/^\d{1,4}$/.test(c.refresh)) return tr('%s: el refresco es un número de segundos', c.name);
   }
-  if (frigate && !/^https?:\/\/\S+$/i.test(frigate)) return 'Frigate: la dirección empieza con http:// o https://';
+  if (frigate && !/^https?:\/\/\S+$/i.test(frigate)) return tr('Frigate: la dirección empieza con http:// o https://');
   return null;
 }
 
@@ -126,15 +128,15 @@ function render() {
   const listBox = h('div', { class: 'cmlist' });
   const frigateIn = h('input', { type: 'text', placeholder: 'http://192.168.0.20:5000' });
   frigateIn.oninput = () => { frigate = frigateIn.value.trim(); dirty = true; };
-  const addBtn = h('button', { class: 'btn' }, '+ Agregar una cámara');
-  const saveBtn = h('button', { class: 'btn pri' }, 'Guardar en la tarjeta');
+  const addBtn = h('button', { class: 'btn' }, tr('+ Agregar una cámara'));
+  const saveBtn = h('button', { class: 'btn pri' }, tr('Guardar en la tarjeta'));
 
   function field(c, key, label, attrs = {}) {
     const inp = h('input', Object.assign({ type: 'text', value: c[key] || '' }, attrs));
     inp.oninput = () => {
       c[key] = inp.value.trim();
       dirty = true;
-      if (key === 'name') inp.closest('.cmcard').querySelector('.nm').textContent = c.name || 'Sin nombre';
+      if (key === 'name') inp.closest('.cmcard').querySelector('.nm').textContent = c.name || tr('Sin nombre');
       if (key === 'url') inp.closest('.cmcard').querySelector('.kind').textContent = kindOf(c.url);
     };
     if (key === 'url' || key === 'full') inp.onchange = () => {
@@ -143,7 +145,7 @@ function render() {
         c[key] = sp.url;
         if (sp.user) c.user = sp.user;
         if (sp.pass) c.pass = sp.pass;
-        toast('Separé el usuario y la contraseña de la dirección');
+        toast(tr('Separé el usuario y la contraseña de la dirección'));
         paint();
       }
     };
@@ -153,38 +155,39 @@ function render() {
   function preview(c, box) {
     if (box.firstChild) { put(box); return; }
     if (!/^https?:/i.test(c.url)) {
-      put(box, h('div', { class: 'msg' }, 'RTSP no se puede ver en el navegador: miralo en la placa.'));
+      put(box, h('div', { class: 'msg' }, tr('RTSP no se puede ver en el navegador: miralo en la placa.')));
       return;
     }
     const img = h('img', { alt: '', src: c.url + (c.url.includes('?') ? '&' : '?') + '_=' + Date.now() });
-    img.onerror = () => put(box, h('div', { class: 'msg' },
-      'No se pudo ver desde este navegador' + (c.user ? ' (la cámara pide usuario y contraseña, que el navegador no manda en una imagen)' : '') + '.'));
+    img.onerror = () => put(box, h('div', { class: 'msg' }, c.user
+      ? tr('No se pudo ver desde este navegador (la cámara pide usuario y contraseña, que el navegador no manda en una imagen).')
+      : tr('No se pudo ver desde este navegador.')));
     put(box, img);
   }
 
   function paint() {
     if (!cams.length) {
-      put(listBox, h('div', { class: 'cmcard muted' }, 'Todavía no hay cámaras: agregá una.'));
+      put(listBox, h('div', { class: 'cmcard muted' }, tr('Todavía no hay cámaras: agregá una.')));
     } else {
       put(listBox, cams.map((c, i) => {
         const prev = h('div', { class: 'cmprev' });
         const move = d => { const j = i + d; [cams[i], cams[j]] = [cams[j], cams[i]]; dirty = true; paint(); };
         return h('div', { class: 'cmcard' },
           h('div', { class: 'cmhead' },
-            h('span', { class: 'nm' }, c.name || 'Sin nombre'), h('span', { class: 'kind' }, kindOf(c.url)),
-            h('button', { class: 'btn', title: 'Ver acá', onclick: () => preview(c, prev) }, '👁'),
-            h('button', { class: 'btn', title: 'Subir', disabled: i === 0, onclick: () => move(-1) }, '↑'),
-            h('button', { class: 'btn', title: 'Bajar', disabled: i === cams.length - 1, onclick: () => move(1) }, '↓'),
+            h('span', { class: 'nm' }, c.name || tr('Sin nombre')), h('span', { class: 'kind' }, kindOf(c.url)),
+            h('button', { class: 'btn', title: tr('Ver acá'), onclick: () => preview(c, prev) }, '👁'),
+            h('button', { class: 'btn', title: tr('Subir'), disabled: i === 0, onclick: () => move(-1) }, '↑'),
+            h('button', { class: 'btn', title: tr('Bajar'), disabled: i === cams.length - 1, onclick: () => move(1) }, '↓'),
             h('button', { class: 'btn red', onclick: () => {
-              if (confirm(`¿Quitar ${c.name || 'esta cámara'}?`)) { cams.splice(i, 1); dirty = true; paint(); }
-            } }, 'Quitar')),
+              if (confirm(c.name ? tr('¿Quitar %s?', c.name) : tr('¿Quitar esta cámara?'))) { cams.splice(i, 1); dirty = true; paint(); }
+            } }, tr('Quitar'))),
           h('div', { class: 'cmgrid' },
-            field(c, 'name', 'Nombre', { maxlength: 31, placeholder: 'Timbre' }),
-            field(c, 'refresh', 'Refresco (s, sólo para un JPEG suelto)', { placeholder: '–', inputmode: 'numeric' }),
-            field(c, 'url', 'Dirección (la grilla: el stream secundario)', { wide: true, placeholder: 'rtsp://192.168.0.10:554/Streaming/Channels/102' }),
-            field(c, 'full', 'Pantalla completa (opcional: el stream principal)', { wide: true, placeholder: 'rtsp://192.168.0.10:554/Streaming/Channels/101' }),
-            field(c, 'user', 'Usuario', { autocomplete: 'off' }),
-            field(c, 'pass', 'Contraseña', { type: 'password', autocomplete: 'new-password' })),
+            field(c, 'name', tr('Nombre'), { maxlength: 31, placeholder: tr('Timbre') }),
+            field(c, 'refresh', tr('Refresco (s, sólo para un JPEG suelto)'), { placeholder: '–', inputmode: 'numeric' }),
+            field(c, 'url', tr('Dirección (la grilla: el stream secundario)'), { wide: true, placeholder: 'rtsp://192.168.0.10:554/Streaming/Channels/102' }),
+            field(c, 'full', tr('Pantalla completa (opcional: el stream principal)'), { wide: true, placeholder: 'rtsp://192.168.0.10:554/Streaming/Channels/101' }),
+            field(c, 'user', tr('Usuario'), { autocomplete: 'off' }),
+            field(c, 'pass', tr('Contraseña'), { type: 'password', autocomplete: 'new-password' })),
           prev);
       }));
     }
@@ -206,33 +209,33 @@ function render() {
     try {
       await fsPut(FILE, serialize(cams, frigate));
       dirty = false;
-      toast('Guardado. La app lo lee al abrirse.');
-    } catch (e) { toast('No se pudo guardar: ' + e.message, true); }
+      toast(tr('Guardado. La app lo lee al abrirse.'));
+    } catch (e) { toast(tr('No se pudo guardar: %s', e.message), true); }
   };
 
   async function load() {
     try {
       ({ cams, frigate } = parse(await fsText(FILE)));
-    } catch (e) { toast('No se pudo leer ' + FILE + ': ' + e.message, true); }
+    } catch (e) { toast(tr('No se pudo leer %s: %s', FILE, e.message), true); }
     paint();
   }
 
   put(main,
-    h('h1', {}, 'Cámaras'),
+    h('h1', {}, tr('Cámaras')),
     h('div', { class: 'btns', style: 'margin-bottom:6px' },
-      h('button', { class: 'btn pri', onclick: () => openApp('aos.cameras').catch(e => toast(e.message, true)) }, 'Abrir Cámaras en la placa')),
-    h('h2', {}, 'Las cámaras'),
+      h('button', { class: 'btn pri', onclick: () => openApp('aos.cameras').catch(e => toast(e.message, true)) }, tr('Abrir Cámaras en la placa'))),
+    h('h2', {}, tr('Las cámaras')),
     listBox,
     h('div', { class: 'btns', style: 'margin-top:14px' }, addBtn, saveBtn),
     h('h2', {}, 'Frigate'),
     h('div', { class: 'card' }, h('div', { class: 'row' }, h('div', { class: 'grow' }, frigateIn))),
-    h('p', { class: 'note' }, 'Opcional: la pestaña Frigate de la app, con los eventos y los clips.'),
-    h('h2', {}, 'Qué puede mostrar la placa'),
-    h('p', { class: 'note' }, 'Directo de la cámara, con rtsp://: H.264 en perfil Baseline o MJPEG (en una Hikvision, el segundo stream: rtsp://IP/Streaming/Channels/102). Para todo lo demás, un transcodificador que lo entregue como MJPEG por http://, como go2rtc (el que trae Home Assistant): http://IP:1984/api/stream.mjpeg?src=NOMBRE. Si pegás una dirección con usuario y contraseña adentro, se separan solos. Las contraseñas quedan en /cameras.txt de la tarjeta, como las guarda la app.'));
+    h('p', { class: 'note' }, tr('Opcional: la pestaña Frigate de la app, con los eventos y los clips.')),
+    h('h2', {}, tr('Qué puede mostrar la placa')),
+    h('p', { class: 'note' }, tr('Directo de la cámara, con rtsp://: H.264 en perfil Baseline o MJPEG (en una Hikvision, el segundo stream: rtsp://IP/Streaming/Channels/102). Para todo lo demás, un transcodificador que lo entregue como MJPEG por http://, como go2rtc (el que trae Home Assistant): http://IP:1984/api/stream.mjpeg?src=NOMBRE. Si pegás una dirección con usuario y contraseña adentro, se separan solos. Las contraseñas quedan en /cameras.txt de la tarjeta, como las guarda la app.')));
 
-  window.onbeforeunload = () => dirty && location.hash === '#camaras' ? 'Hay cambios sin guardar' : undefined;
+  window.onbeforeunload = () => dirty && location.hash === '#camaras' ? tr('Hay cambios sin guardar') : undefined;
   load();
   return () => { window.onbeforeunload = null; };
 }
 
-P.registerPage({ id: 'camaras', name: 'Cámaras', icon: '◉', render });
+P.registerPage({ id: 'camaras', name: tr('Cámaras'), icon: '◉', render });

@@ -1,0 +1,168 @@
+# amoledos-lang 1   es -> de
+# web.eeprom.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/eeprom/web/eeprom.js:143
+lectura	gelesen
+
+#: apps/eeprom/web/eeprom.js:143
+antes de escribir	vor dem Schreiben
+
+#: apps/eeprom/web/eeprom.js:143
+escrita	geschrieben
+
+#: apps/eeprom/web/eeprom.js:143
+del portal	vom Portal
+
+#: apps/eeprom/web/eeprom.js:143
+guardada	gespeichert
+
+#: apps/eeprom/web/eeprom.js:153
+EEPROM	EEPROM
+
+#: apps/eeprom/web/eeprom.js:172
+La app todavía no escribió su chip.json: abrila en la placa.	Die App hat ihre chip.json noch nicht geschrieben: sie auf der Platine öffnen.
+
+#: apps/eeprom/web/eeprom.js:173
+#: apps/eeprom/web/eeprom.js:213
+trabajando	arbeitet
+
+#: apps/eeprom/web/eeprom.js:173
+abierta	geöffnet
+
+#: apps/eeprom/web/eeprom.js:174
+%d bytes sin escribir en la placa	%d Bytes auf der Platine noch nicht geschrieben
+
+#: apps/eeprom/web/eeprom.js:176
+Leer el chip	Chip lesen
+
+#: apps/eeprom/web/eeprom.js:176
+Leer el chip ahora	Chip jetzt lesen
+
+#: apps/eeprom/web/eeprom.js:177
+Abierta en la placa	Auf der Platine geöffnet
+
+#: apps/eeprom/web/eeprom.js:177
+Abrir la app	App öffnen
+
+#: apps/eeprom/web/eeprom.js:178
+Chip en la placa:	Chip auf der Platine:
+
+#: apps/eeprom/web/eeprom.js:179
+Cambiar el chip	Chip wechseln
+
+#: apps/eeprom/web/eeprom.js:193
+¿Escribir %s en el %s? Antes la placa guarda una copia de lo que tiene, y después lo verifica.	%s auf den %s schreiben? Die Platine sichert vorher eine Kopie des Inhalts und prüft danach alles.
+
+#: apps/eeprom/web/eeprom.js:200
+%s: esperando a la app…	%s: warte auf die App…
+
+#: apps/eeprom/web/eeprom.js:209
+La app no contestó. ¿Está la placa encendida?	Die App hat nicht geantwortet. Ist die Platine eingeschaltet?
+
+#: apps/eeprom/web/eeprom.js:218
+Listo.	Fertig.
+
+#: apps/eeprom/web/eeprom.js:218
+Falló.	Fehlgeschlagen.
+
+#: apps/eeprom/web/eeprom.js:237
+Elegí un chip.	Einen Chip wählen.
+
+#: apps/eeprom/web/eeprom.js:251
+archivo	Datei
+
+#: apps/eeprom/web/eeprom.js:254
+Comparar desde esta	Von dieser aus vergleichen
+
+#: apps/eeprom/web/eeprom.js:255
+Ver esta	Diese ansehen
+
+#: apps/eeprom/web/eeprom.js:258
+Ver	Ansehen
+
+#: apps/eeprom/web/eeprom.js:259
+#: apps/eeprom/web/eeprom.js:393
+Bajar	Herunterladen
+
+#: apps/eeprom/web/eeprom.js:260
+Nota	Notiz
+
+#: apps/eeprom/web/eeprom.js:261
+Escribir %s	%s schreiben
+
+#: apps/eeprom/web/eeprom.js:263
+En la placa está elegido otro chip	Auf der Platine ist ein anderer Chip gewählt
+
+#: apps/eeprom/web/eeprom.js:263
+Escribir en el chip	In den Chip schreiben
+
+#: apps/eeprom/web/eeprom.js:264
+Borrar	Löschen
+
+#: apps/eeprom/web/eeprom.js:268
+Versiones	Versionen
+
+#: apps/eeprom/web/eeprom.js:269
+%d en %s	%d in %s
+
+#: apps/eeprom/web/eeprom.js:271
+Subir un .bin	.bin hochladen
+
+#: apps/eeprom/web/eeprom.js:272
+Todavía no hay versiones de este chip. Cada lectura en la placa guarda una.	Noch keine Versionen dieses Chips. Jedes Lesen auf der Platine speichert eine.
+
+#: apps/eeprom/web/eeprom.js:276
+Nota de %s	Notiz zu %s
+
+#: apps/eeprom/web/eeprom.js:284
+¿Borrar %s de la tarjeta? No se puede deshacer.	%s von der Karte löschen? Das lässt sich nicht rückgängig machen.
+
+#: apps/eeprom/web/eeprom.js:298
+%s tiene %s y el %s %s: no se va a poder escribir. ¿Subirlo igual?	%s hat %s und der %s %s: lässt sich nicht schreiben. Trotzdem hochladen?
+
+#: apps/eeprom/web/eeprom.js:300
+subido: %s	hochgeladen: %s
+
+#: apps/eeprom/web/eeprom.js:305
+Subiendo %s	Lade hoch: %s
+
+#: apps/eeprom/web/eeprom.js:307
+✓ Subido como %s	✓ Hochgeladen als %s
+
+#: apps/eeprom/web/eeprom.js:324
+Tocá Ver en una versión para verla en hexa; con A y B, las diferencias.	In einer Version auf Ansehen klicken, um sie in Hex zu sehen; mit A und B die Unterschiede.
+
+#: apps/eeprom/web/eeprom.js:325
+#: apps/eeprom/web/eeprom.js:409
+Cargando…	Lädt…
+
+#: apps/eeprom/web/eeprom.js:372
+dirección (hexa)	Adresse (hex)
+
+#: apps/eeprom/web/eeprom.js:373
+texto o DE AD BE EF	Text oder DE AD BE EF
+
+#: apps/eeprom/web/eeprom.js:385
+No está	Nicht gefunden
+
+#: apps/eeprom/web/eeprom.js:391
+comparada con %s:	verglichen mit %s:
+
+#: apps/eeprom/web/eeprom.js:391
+%d bytes distintos en %d tramos	%d Bytes unterschiedlich in %d Bereichen
+
+#: apps/eeprom/web/eeprom.js:391
+iguales	gleich
+
+#: apps/eeprom/web/eeprom.js:392
+Buscar	Suchen
+
+#: apps/eeprom/web/eeprom.js:396
+y %d tramos más	und %d weitere Bereiche
+
+#: apps/eeprom/web/eeprom.js:404
+Las versiones están en la tarjeta, en /eeprom/<chip>. Cada lectura en la placa guarda una; antes de cada escritura se guarda lo que había.	Die Versionen liegen auf der Karte, in /eeprom/<chip>. Jedes Lesen auf der Platine speichert eine; vor jedem Schreiben wird der bisherige Inhalt gesichert.

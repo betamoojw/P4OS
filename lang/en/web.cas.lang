@@ -1,0 +1,127 @@
+# amoledos-lang 1   es -> en
+# web.cas.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/cas/web/cas.js:65
+columna %d	column %d
+
+#: apps/cas/web/cas.js:90
+No se pudo leer la pantalla (%s)	Could not read the screen (%s)
+
+#: apps/cas/web/cas.js:118
+#: apps/cas/web/cas.js:274
+CAS	CAS
+
+#: apps/cas/web/cas.js:126
+CAS abierta en la placa	CAS opened on the board
+
+#: apps/cas/web/cas.js:126
+Abrir CAS en la placa	Open CAS on the board
+
+#: apps/cas/web/cas.js:160
+Copiar abajo	Copy below
+
+#: apps/cas/web/cas.js:161
+Sumar al final de lo que escribís	Append to what you're typing
+
+#: apps/cas/web/cas.js:163
+calculando…	calculating…
+
+#: apps/cas/web/cas.js:164
+Todavía no hay cuentas.	No calculations yet.
+
+#: apps/cas/web/cas.js:189
+Abrí CAS en la placa primero	Open CAS on the board first
+
+#: apps/cas/web/cas.js:198
+Funciones enviadas	Functions sent
+
+#: apps/cas/web/cas.js:203
+Pegá una tabla (de una planilla, separada por comas, punto y coma o tabulaciones) o elegí un archivo .csv	Paste a table (from a spreadsheet, separated by commas, semicolons or tabs) or choose a .csv file
+
+#: apps/cas/web/cas.js:208
+No encontré columnas de números.	No columns of numbers found.
+
+#: apps/cas/web/cas.js:217
+Hay %d columnas: van las cuatro primeras.	There are %d columns: the first four are used.
+
+#: apps/cas/web/cas.js:218
+Cada lista toma hasta 500 valores.	Each list takes up to 500 values.
+
+#: apps/cas/web/cas.js:227
+No hay columnas de números para cargar	No columns of numbers to load
+
+#: apps/cas/web/cas.js:232
+Listas cargadas en la placa	Lists loaded on the board
+
+#: apps/cas/web/cas.js:232
+Listas guardadas: las ve CAS cuando abra Estadística	Lists saved: CAS sees them when Statistics opens
+
+#: apps/cas/web/cas.js:239
+Las listas están vacías	The lists are empty
+
+#: apps/cas/web/cas.js:248
+Guardar el gráfico como PNG	Save the graph as PNG
+
+#: apps/cas/web/cas.js:252
+La placa no muestra ningún gráfico ahora	The board is not showing a graph now
+
+#: apps/cas/web/cas.js:276
+En la placa	On the board
+
+#: apps/cas/web/cas.js:278
+Calculadora	Calculator
+
+#: apps/cas/web/cas.js:280
+Calcular	Calculate
+
+#: apps/cas/web/cas.js:281
+Sintaxis de Xcas: factor(x^4-1), int(sin(x)^2,x), solve(x^2=2,x), diff(f1(x),x), limit(sin(x)/x,x,0).	Xcas syntax: factor(x^4-1), int(sin(x)^2,x), solve(x^2=2,x), diff(f1(x),x), limit(sin(x)/x,x,0).
+
+#: apps/cas/web/cas.js:282
+La cuenta se hace en la placa y queda en su historial. ↑ y ↓ traen lo que escribiste antes; tocar una cuenta la copia abajo, tocar un resultado lo suma.	The calculation runs on the board and stays in its history. ↑ and ↓ bring back what you typed before; clicking a calculation copies it below, clicking a result appends it.
+
+#: apps/cas/web/cas.js:283
+Funciones del gráfico	Graph functions
+
+#: apps/cas/web/cas.js:286
+Enviar	Send
+
+#: apps/cas/web/cas.js:287
+Mostrar el gráfico en la placa	Show the graph on the board
+
+#: apps/cas/web/cas.js:288
+Listas de Estadística	Statistics lists
+
+#: apps/cas/web/cas.js:291
+Cargar en L1…L4	Load into L1…L4
+
+#: apps/cas/web/cas.js:292
+Bajar las listas (CSV)	Download the lists (CSV)
+
+#: apps/cas/web/cas.js:293
+Cargar reemplaza las cuatro listas de la placa.	Loading replaces the board's four lists.
+
+#: apps/cas/web/cas.js:294
+Imagen	Picture
+
+#: apps/cas/web/cas.js:295
+Lo que la placa muestra ahora: el gráfico solo (de Gráfico, Geometría, Estadística, Finanzas o Ciencias) o la pantalla entera.	What the board shows now: the graph alone (from Graph, Geometry, Statistics, Finance or Sciences) or the whole screen.
+
+#: apps/cas/web/cas.js:297
+Guardar la pantalla	Save the screen
+
+#: apps/cas/web/cas.js:328
+Abierta, arrancando el motor	Open, starting the engine
+
+#: apps/cas/web/cas.js:328
+Abierta, calculando	Open, calculating
+
+#: apps/cas/web/cas.js:328
+Abierta	Open
+
+#: apps/cas/web/cas.js:328
+Cerrada	Closed

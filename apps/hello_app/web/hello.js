@@ -9,13 +9,16 @@
  *   - a text file on the card, read and saved (P4OS.fsText, P4OS.fsPut),
  *   - opening the app on the board (P4OS.openApp),
  *   - a timer that stops when the page is left (render returns a function).
- * The texts are in Spanish, like the rest of the portal. */
+ * The texts are in Spanish, like the rest of the portal, and go through
+ * tr(): web.hello.lang has them in the board's language. */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 const FILE = '/data/hello.txt';
 
 P.registerPage({
   id: 'hola',
-  name: 'Hola',
+  name: tr('Hola'),
   icon: '☺',
   render(main) {
     const { h, put } = P;
@@ -25,23 +28,23 @@ P.registerPage({
       try {
         await P.fsMkdir('/data');
         await P.fsPut(FILE, text.value);
-        P.toast('Guardado en ' + FILE);
-      } catch (e) { P.toast('No se pudo guardar: ' + e.message, true); }
+        P.toast(tr('Guardado en %s', FILE));
+      } catch (e) { P.toast(tr('No se pudo guardar: %s', e.message), true); }
     };
     put(main,
-      h('h1', {}, 'Hola'),
+      h('h1', {}, tr('Hola')),
       h('div', { class: 'card' },
-        h('p', { class: 'note' }, 'Esta página la trae la app hello_app en su carpeta web/, y el portal la carga de la tarjeta: se actualiza sin tocar el firmware.'),
-        h('div', { class: 'row' }, h('div', { class: 'grow' }, 'Encendida hace'), up)),
+        h('p', { class: 'note' }, tr('Esta página la trae la app hello_app en su carpeta web/, y el portal la carga de la tarjeta: se actualiza sin tocar el firmware.')),
+        h('div', { class: 'row' }, h('div', { class: 'grow' }, tr('Encendida hace')), up)),
       h('div', { class: 'card' },
-        h('div', { class: 'row' }, h('div', { class: 'grow' }, 'Un archivo de la tarjeta: ' + FILE)),
+        h('div', { class: 'row' }, h('div', { class: 'grow' }, tr('Un archivo de la tarjeta: %s', FILE))),
         text,
         h('div', { class: 'row' },
-          h('button', { class: 'btn', onclick: save }, 'Guardar'),
-          h('button', { class: 'btn', onclick: () => P.openApp('demo.hello').then(() => P.toast('Abierta en la placa')) },
-            'Abrir la app en la placa'))));
-    P.fsText(FILE).then(t => { text.value = t ?? '¡Hola desde la tarjeta!'; }).catch(e => P.toast(e.message, true));
-    const tick = () => P.api('info').then(i => { up.textContent = Math.floor(i.uptime_s / 60) + ' min'; }).catch(() => {});
+          h('button', { class: 'btn', onclick: save }, tr('Guardar')),
+          h('button', { class: 'btn', onclick: () => P.openApp('demo.hello').then(() => P.toast(tr('Abierta en la placa'))) },
+            tr('Abrir la app en la placa')))));
+    P.fsText(FILE).then(t => { text.value = t ?? tr('¡Hola desde la tarjeta!'); }).catch(e => P.toast(e.message, true));
+    const tick = () => P.api('info').then(i => { up.textContent = tr('%s min', Math.floor(i.uptime_s / 60)); }).catch(() => {});
     tick();
     const t = setInterval(tick, 5000);
     return () => clearInterval(t);          /* the page is left: stop asking */

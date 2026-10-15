@@ -1,0 +1,180 @@
+# amoledos-lang 1   es -> en
+# web.mapas.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/mapas/web/mapas.js:340
+no es un AMP1	not an AMP1 file
+
+#: apps/mapas/web/mapas.js:429
+Acercar	Zoom in
+
+#: apps/mapas/web/mapas.js:429
+Alejar	Zoom out
+
+#: apps/mapas/web/mapas.js:459
+El mapa necesita internet en esta computadora (OpenFreeMap).	The map needs internet on this computer (OpenFreeMap).
+
+#: apps/mapas/web/mapas.js:588
+Buscar un lugar: ciudad, calle, barrio…	Search for a place: city, street, neighbourhood…
+
+#: apps/mapas/web/mapas.js:590
+#: apps/mapas/web/mapas.js:591
+Nombre de la zona	Zone name
+
+#: apps/mapas/web/mapas.js:592
+Calles, con sus nombres (lo más completo)	Streets, with their names (the most complete)
+
+#: apps/mapas/web/mapas.js:592
+Avenidas y barrios	Avenues and neighbourhoods
+
+#: apps/mapas/web/mapas.js:592
+Rutas y ciudades	Highways and cities
+
+#: apps/mapas/web/mapas.js:594
+Descargar y guardar en la placa	Download and save to the board
+
+#: apps/mapas/web/mapas.js:595
+#: apps/mapas/web/mapas.js:700
+Cancelar	Cancel
+
+#: apps/mapas/web/mapas.js:604
+Centro %s, %s · zoom %s en la placa	Centre %s, %s · zoom %s on the board
+
+#: apps/mapas/web/mapas.js:620
+No se encontró nada.	Nothing found.
+
+#: apps/mapas/web/mapas.js:657
+Enviado: la placa abre Mapas ahí	Sent: the board opens Maps there
+
+#: apps/mapas/web/mapas.js:664
+Ir	Go
+
+#: apps/mapas/web/mapas.js:665
+En la placa	On the board
+
+#: apps/mapas/web/mapas.js:667
+Nuevo nombre	New name
+
+#: apps/mapas/web/mapas.js:671
+Renombrar	Rename
+
+#: apps/mapas/web/mapas.js:673
+¿Borrar la zona «%s»?	Delete the zone "%s"?
+
+#: apps/mapas/web/mapas.js:677
+#: apps/mapas/web/mapas.js:732
+Borrar	Delete
+
+#: apps/mapas/web/mapas.js:678
+Todavía no hay zonas. Mové el mapa hasta un lugar y guardalo: en la placa aparece en el menú ☰ de la app.	No zones yet. Move the map to a place and save it: on the board it shows up in the app's ☰ menu.
+
+#: apps/mapas/web/mapas.js:687
+#: apps/mapas/web/mapas.js:788
+Primero ponele un nombre	Give it a name first
+
+#: apps/mapas/web/mapas.js:690
+Zona guardada	Zone saved
+
+#: apps/mapas/web/mapas.js:699
+nombre ⇥ lat×1e6 ⇥ lon×1e6 ⇥ zoom×10	name ⇥ lat×1e6 ⇥ lon×1e6 ⇥ zoom×10
+
+#: apps/mapas/web/mapas.js:704
+Una línea no es una zona y la app la va a ignorar:	One line is not a zone and the app will ignore it:
+
+#: apps/mapas/web/mapas.js:704
+%s líneas no son una zona y la app las va a ignorar:	%s lines are not zones and the app will ignore them:
+
+#: apps/mapas/web/mapas.js:705
+¿Guardar igual?	Save anyway?
+
+#: apps/mapas/web/mapas.js:706
+zones.txt guardado	zones.txt saved
+
+#: apps/mapas/web/mapas.js:707
+Guardar	Save
+
+#: apps/mapas/web/mapas.js:729
+¿Borrar «%s» de la placa?	Delete "%s" from the board?
+
+#: apps/mapas/web/mapas.js:730
+Borrado %s	Deleted %s
+
+#: apps/mapas/web/mapas.js:733
+No hay mapas guardados en la placa.	No maps saved on the board.
+
+#: apps/mapas/web/mapas.js:734
+/maps/cache: lo visto en línea, que la app guarda sola (se vacía desde su menú).	/maps/cache: what was seen online, which the app keeps by itself (cleared from its menu).
+
+#: apps/mapas/web/mapas.js:762
+%s teselas: demasiado grande. Acercá el mapa o elegí menos detalle.	%s tiles: too big. Zoom the map in or choose less detail.
+
+#: apps/mapas/web/mapas.js:764
+%s teselas del zoom %s al %s: calculando el tamaño…	%s tiles from zoom %s to %s: working out the size…
+
+#: apps/mapas/web/mapas.js:780
+%s teselas del zoom %s al %s: unos %s en la tarjeta (medido sobre %s teselas de muestra).	%s tiles from zoom %s to %s: about %s on the card (measured on %s sample tiles).
+
+#: apps/mapas/web/mapas.js:781
+%s teselas del zoom %s al %s. No se pudo calcular el tamaño (¿sin internet?).	%s tiles from zoom %s to %s. Could not work out the size (no internet?).
+
+#: apps/mapas/web/mapas.js:793
+Empezando…	Starting…
+
+#: apps/mapas/web/mapas.js:804
+No se pudo bajar la tesela %s	Could not download tile %s
+
+#: apps/mapas/web/mapas.js:812
+Descargando %s de %s teselas…	Downloading %s of %s tiles…
+
+#: apps/mapas/web/mapas.js:816
+Cancelado.	Cancelled.
+
+#: apps/mapas/web/mapas.js:818
+Guardado: %s teselas en %s (%s), %s nombres para buscar.	Saved: %s tiles in %s (%s), %s names to search.
+
+#: apps/mapas/web/mapas.js:830
+Armando el paquete…	Building the pack…
+
+#: apps/mapas/web/mapas.js:834
+#: apps/mapas/web/mapas.js:835
+Guardando en la placa: %s (%s)…	Saving to the board: %s (%s)…
+
+#: apps/mapas/web/mapas.js:836
+Guardando el índice de nombres…	Saving the name index…
+
+#: apps/mapas/web/mapas.js:851
+#: apps/mapas/web/mapas.js:879
+Mapas	Maps
+
+#: apps/mapas/web/mapas.js:852
+Buscar	Search
+
+#: apps/mapas/web/mapas.js:854
+Zonas	Zones
+
+#: apps/mapas/web/mapas.js:856
+Guardar lo que se ve como zona	Save the view as a zone
+
+#: apps/mapas/web/mapas.js:857
+Mostrarlo en la placa	Show it on the board
+
+#: apps/mapas/web/mapas.js:858
+Editar zones.txt	Edit zones.txt
+
+#: apps/mapas/web/mapas.js:859
+Sin conexión	Offline
+
+#: apps/mapas/web/mapas.js:861
+Se descarga lo que se ve en el mapa de arriba, con este nombre:	What the map above shows is downloaded, under this name:
+
+#: apps/mapas/web/mapas.js:862
+Hasta qué detalle	How much detail
+
+#: apps/mapas/web/mapas.js:866
+Todo se hace en este navegador: baja las teselas de OpenFreeMap, les quita lo que la placa no dibuja, arma el índice de nombres para buscar y las guarda en /maps de la tarjeta, un archivo por zona. En la app, lo guardado se usa antes que la red y lo que se ve en línea queda en la tarjeta para la próxima vez. Datos © colaboradores de OpenStreetMap, OpenMapTiles y OpenFreeMap; búsqueda de Photon (komoot).	Everything happens in this browser: it downloads the tiles from OpenFreeMap, strips what the board does not draw, builds the name index for searching and saves them in /maps on the card, one file per zone. In the app, what is saved is used before the network, and what is seen online stays on the card for next time. Data © OpenStreetMap contributors, OpenMapTiles and OpenFreeMap; search by Photon (komoot).
+
+#: apps/mapas/web/mapas.js:868
+Hay una descarga en curso	A download is in progress

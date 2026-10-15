@@ -110,7 +110,11 @@ jobs:
             mkdir -p out/lang && cp -r lang/en lang/de out/lang/
             for a in $NOT_IN_RELEASE; do
               for so in apps/$a/build/*.so; do [ -e "$so" ] && rm -f "out/apps/$(basename "$so")"; done
-              for js in apps/$a/web/*.js; do [ -e "$js" ] && rm -f "out/web/$(basename "$js")"; done
+              for js in apps/$a/web/*.js; do
+                [ -e "$js" ] || continue
+                rm -f "out/web/$(basename "$js")"
+                pg=$(basename "$js" .js); rm -f out/lang/en/web.$pg.lang out/lang/de/web.$pg.lang
+              done
               id=$(grep -ho '\.id *= *"[^"]*"' apps/$a/main/*.c | head -1 | sed 's/.*"\(.*\)"/\1/')
               [ -n "$id" ] && rm -f out/lang/en/$id.lang out/lang/de/$id.lang
               echo "left out of the release: $a ($id)"

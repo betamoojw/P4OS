@@ -23,6 +23,7 @@
  * the same through the catalogs).
  */
 #include "aos_portal_modules.h"
+#include "aos_i18n.h"
 #include "aos_hal.h"
 #include "aos_io.h"
 #include "aos_modules.h"
@@ -76,29 +77,29 @@ static void add_num(cJSON *o, const char *k, double v)
 static const char *pin_note(int pin)
 {
     switch (pin) {
-    case 1:  return "VCC_5V: vivo aun con la placa apagada";
-    case 2:  return "Buck de 3 A: se apaga con POWER";
-    case 4:  return "SDA del bus I2C de la placa (táctil, códecs)";
-    case 6:  return "SCL del bus I2C de la placa (táctil, códecs)";
-    case 7:  return "UART0 TX al CH343: la consola";
-    case 8:  return "La INT del táctil, si R108 está puesta";
-    case 9:  return "UART0 RX desde el CH343: la consola";
+    case 1:  return _("VCC_5V: vivo aun con la placa apagada");
+    case 2:  return _("Buck de 3 A: se apaga con POWER");
+    case 4:  return _("SDA del bus I2C de la placa (táctil, códecs)");
+    case 6:  return _("SCL del bus I2C de la placa (táctil, códecs)");
+    case 7:  return _("UART0 TX al CH343: la consola");
+    case 8:  return _("La INT del táctil, si R108 está puesta");
+    case 9:  return _("UART0 RX desde el CH343: la consola");
     case 11: return "JTAG MTDO";
     case 12: return "JTAG MTCK";
     case 14: return "JTAG MTDI";
-    case 15: return "ADC1 canal 5";
-    case 17: return "ADC1 canal 6";
-    case 21: return "USB-Serial-JTAG D−: libre si no se usa";
-    case 23: return "USB-Serial-JTAG D+: libre si no se usa";
-    case 25: case 27: return "USB 2.0 HS, en paralelo con el puerto OTG: no es un GPIO";
-    case 28: return "Strapping de la fuente del JTAG: usable después del arranque";
-    case 30: return "BOOT: strapping, con pull-up de 4,7K";
-    case 32: return "ADC2 canal 0";
-    case 34: return "ADC2 canal 1";
-    case 35: return "Dominio VO4: medí la tensión antes de usarlo";
-    case 36: return "ADC2 canal 2, comparador";
-    case 37: case 39: return "Dominio VO4";
-    case 38: return "ADC2 canal 3, comparador";
+    case 15: return _("ADC1 canal 5");
+    case 17: return _("ADC1 canal 6");
+    case 21: return _("USB-Serial-JTAG D−: libre si no se usa");
+    case 23: return _("USB-Serial-JTAG D+: libre si no se usa");
+    case 25: case 27: return _("USB 2.0 HS, en paralelo con el puerto OTG: no es un GPIO");
+    case 28: return _("Strapping de la fuente del JTAG: usable después del arranque");
+    case 30: return _("BOOT: strapping, con pull-up de 4,7K");
+    case 32: return _("ADC2 canal 0");
+    case 34: return _("ADC2 canal 1");
+    case 35: return _("Dominio VO4: medí la tensión antes de usarlo");
+    case 36: return _("ADC2 canal 2, comparador");
+    case 37: case 39: return _("Dominio VO4");
+    case 38: return _("ADC2 canal 3, comparador");
     default: return "";
     }
 }
@@ -107,24 +108,24 @@ static void fmt_msg(const aos_mod_msg_t *m, char *out, size_t n)
 {
     char t[128];
     switch (m->code) {
-    case AOS_MOD_E_LONG: snprintf(t, sizeof t, "la línea es demasiado larga"); break;
-    case AOS_MOD_E_SYNTAX: snprintf(t, sizeof t, "se esperaba «port» o «module», un nombre y lo demás"); break;
-    case AOS_MOD_E_TOO_MANY_PORTS: snprintf(t, sizeof t, "demasiados puertos (%d como mucho)", AOS_IO_PORT_MAX); break;
-    case AOS_MOD_E_PORT_NAME: snprintf(t, sizeof t, "el nombre del puerto es demasiado largo"); break;
-    case AOS_MOD_E_PORT_KIND: snprintf(t, sizeof t, "los puertos se llaman uart…, i2c…, spi… o gpio…"); break;
-    case AOS_MOD_E_NOT_HEADER: snprintf(t, sizeof t, "un GPIO que no está en el header"); break;
-    case AOS_MOD_E_RESERVED: snprintf(t, sizeof t, "un pin reservado (la consola o BOOT)"); break;
-    case AOS_MOD_E_MISSING_PIN: snprintf(t, sizeof t, "le falta un pin (tx/rx, sda/scl, sck/mosi o pin)"); break;
-    case AOS_MOD_E_DUP_PORT: snprintf(t, sizeof t, "hay dos puertos que se llaman %s", m->a); break;
-    case AOS_MOD_E_TOO_MANY_MODULES: snprintf(t, sizeof t, "demasiados módulos (%d como mucho)", AOS_IO_MODULE_MAX); break;
-    case AOS_MOD_E_MODULE_PORT: snprintf(t, sizeof t, "al módulo le falta el puerto"); break;
-    case AOS_MOD_E_UNKNOWN: snprintf(t, sizeof t, "no es ni «port» ni «module»"); break;
-    case AOS_MOD_W_PIN_TWICE: snprintf(t, sizeof t, "GPIO%d está en %s y en %s", m->gpio, m->a, m->b); break;
-    case AOS_MOD_W_NO_PORT: snprintf(t, sizeof t, "%s está en %s, que no está declarado", m->a, m->b); break;
-    case AOS_MOD_W_NOT_I2C: snprintf(t, sizeof t, "%s es un sensor I2C y %s no es un puerto I2C", m->a, m->b); break;
+    case AOS_MOD_E_LONG: snprintf(t, sizeof t, "%s", _("la línea es demasiado larga")); break;
+    case AOS_MOD_E_SYNTAX: snprintf(t, sizeof t, "%s", _("se esperaba «port» o «module», un nombre y lo demás")); break;
+    case AOS_MOD_E_TOO_MANY_PORTS: snprintf(t, sizeof t, _("demasiados puertos (%d como mucho)"), AOS_IO_PORT_MAX); break;
+    case AOS_MOD_E_PORT_NAME: snprintf(t, sizeof t, "%s", _("el nombre del puerto es demasiado largo")); break;
+    case AOS_MOD_E_PORT_KIND: snprintf(t, sizeof t, "%s", _("los puertos se llaman uart…, i2c…, spi… o gpio…")); break;
+    case AOS_MOD_E_NOT_HEADER: snprintf(t, sizeof t, "%s", _("un GPIO que no está en el header")); break;
+    case AOS_MOD_E_RESERVED: snprintf(t, sizeof t, "%s", _("un pin reservado (la consola o BOOT)")); break;
+    case AOS_MOD_E_MISSING_PIN: snprintf(t, sizeof t, "%s", _("le falta un pin (tx/rx, sda/scl, sck/mosi o pin)")); break;
+    case AOS_MOD_E_DUP_PORT: snprintf(t, sizeof t, _("hay dos puertos que se llaman %s"), m->a); break;
+    case AOS_MOD_E_TOO_MANY_MODULES: snprintf(t, sizeof t, _("demasiados módulos (%d como mucho)"), AOS_IO_MODULE_MAX); break;
+    case AOS_MOD_E_MODULE_PORT: snprintf(t, sizeof t, "%s", _("al módulo le falta el puerto")); break;
+    case AOS_MOD_E_UNKNOWN: snprintf(t, sizeof t, "%s", _("no es ni «port» ni «module»")); break;
+    case AOS_MOD_W_PIN_TWICE: snprintf(t, sizeof t, _("GPIO%d está en %s y en %s"), m->gpio, m->a, m->b); break;
+    case AOS_MOD_W_NO_PORT: snprintf(t, sizeof t, _("%s está en %s, que no está declarado"), m->a, m->b); break;
+    case AOS_MOD_W_NOT_I2C: snprintf(t, sizeof t, _("%s es un sensor I2C y %s no es un puerto I2C"), m->a, m->b); break;
     default: scpy(t, sizeof t, m->raw); break;
     }
-    if (m->line > 0) snprintf(out, n, "Línea %d: %s", m->line, t);
+    if (m->line > 0) snprintf(out, n, _("Línea %d: %s"), m->line, t);
     else scpy(out, n, t);
 }
 
@@ -132,23 +133,23 @@ static void fmt_err(const char *err, char *out, size_t n)
 {
     const char *d = strchr(err, ':');
     d = d ? d + 1 : "";
-    if (!strncmp(err, "nack", 4)) snprintf(out, n, "No contesta en esa dirección");
-    else if (!strncmp(err, "crc", 3)) snprintf(out, n, "Llegó una lectura con el CRC mal");
-    else if (!strncmp(err, "id", 2)) snprintf(out, n, "En esa dirección hay otro chip (dice %s)", d);
-    else if (!strncmp(err, "notready", 8)) snprintf(out, n, "Todavía no midió");
-    else if (!strncmp(err, "busy", 4)) snprintf(out, n, "Los pines los tiene %s", d);
-    else if (!strncmp(err, "port", 4)) snprintf(out, n, "No se pudo abrir el puerto");
-    else if (!strncmp(err, "board", 5)) snprintf(out, n, "Ahí está el %s de la placa", d);
+    if (!strncmp(err, "nack", 4)) snprintf(out, n, "%s", _("No contesta en esa dirección"));
+    else if (!strncmp(err, "crc", 3)) snprintf(out, n, "%s", _("Llegó una lectura con el CRC mal"));
+    else if (!strncmp(err, "id", 2)) snprintf(out, n, _("En esa dirección hay otro chip (dice %s)"), d);
+    else if (!strncmp(err, "notready", 8)) snprintf(out, n, "%s", _("Todavía no midió"));
+    else if (!strncmp(err, "busy", 4)) snprintf(out, n, _("Los pines los tiene %s"), d);
+    else if (!strncmp(err, "port", 4)) snprintf(out, n, "%s", _("No se pudo abrir el puerto"));
+    else if (!strncmp(err, "board", 5)) snprintf(out, n, _("Ahí está el %s de la placa"), d);
     else scpy(out, n, err);
 }
 
 static const char *key_name(const char *key)
 {
-    static const char *const K[][2] = { { "temp", "Temperatura" }, { "hum", "Humedad" }, { "press", "Presión" },
-                                        { "lux", "Luz" }, { "bus", "Tensión" }, { "current", "Corriente" },
-                                        { "power", "Potencia" }, { "shunt", "En el shunt" }, { "a0", "A0" },
+    static const char *const K[][2] = { { "temp", N_("Temperatura") }, { "hum", N_("Humedad") }, { "press", N_("Presión") },
+                                        { "lux", N_("Luz") }, { "bus", N_("Tensión") }, { "current", N_("Corriente") },
+                                        { "power", N_("Potencia") }, { "shunt", N_("En el shunt") }, { "a0", "A0" },
                                         { "a1", "A1" }, { "a2", "A2" }, { "a3", "A3" } };
-    for (size_t i = 0; i < sizeof K / sizeof K[0]; i++) if (!strcmp(K[i][0], key)) return K[i][1];
+    for (size_t i = 0; i < sizeof K / sizeof K[0]; i++) if (!strcmp(K[i][0], key)) return _(K[i][1]);
     return key;
 }
 
@@ -220,10 +221,10 @@ static void api_expansion(aos_httpd_req_t *r)
         cJSON *f = cJSON_AddArrayToObject(e, "flags");
         if (p->flags & AOS_PIN_ADC) cJSON_AddItemToArray(f, cJSON_CreateString("ADC"));
         if (p->flags & AOS_PIN_STRAPPING) cJSON_AddItemToArray(f, cJSON_CreateString("strapping"));
-        if (p->flags & AOS_PIN_VO4) cJSON_AddItemToArray(f, cJSON_CreateString("dominio VO4"));
+        if (p->flags & AOS_PIN_VO4) cJSON_AddItemToArray(f, cJSON_CreateString(_("dominio VO4")));
         if (p->flags & AOS_PIN_USB_JTAG) cJSON_AddItemToArray(f, cJSON_CreateString("USB-JTAG"));
-        if (p->flags & AOS_PIN_BOARD) cJSON_AddItemToArray(f, cJSON_CreateString("compartido con la placa"));
-        if ((p->flags & AOS_PIN_RESERVED) && p->gpio >= 0) cJSON_AddItemToArray(f, cJSON_CreateString("reservado"));
+        if (p->flags & AOS_PIN_BOARD) cJSON_AddItemToArray(f, cJSON_CreateString(_("compartido con la placa")));
+        if ((p->flags & AOS_PIN_RESERVED) && p->gpio >= 0) cJSON_AddItemToArray(f, cJSON_CreateString(_("reservado")));
         const char *ow = p->gpio >= 0 ? aos_io_owner(p->gpio) : NULL, *role = "";
         if (ow) cJSON_AddStringToObject(e, "owner", ow);
         const aos_io_port_t *pt = port_of(p->gpio, &role);
@@ -298,14 +299,14 @@ static void api_expansion(aos_httpd_req_t *r)
 static void api_check_or_save(aos_httpd_req_t *r, bool save)
 {
     char *b = aos_httpd_body_all(r, 8192);
-    if (!b) { send_err(r, 400, "falta el texto (8 KB como mucho)"); return; }
+    if (!b) { send_err(r, 400, _("falta el texto (8 KB como mucho)")); return; }
     aos_mod_check_t ck;
     bool ok = save ? aos_modules_save(b, strlen(b), &ck) : (aos_modules_check(b, strlen(b), &ck), ck.ok);
     free(b);
     cJSON *o = check_json(&ck);
     if (save) {
         cJSON_AddBoolToObject(o, "saved", ok);
-        if (!ok && ck.ok) cJSON_AddStringToObject(o, "error", aos_hal_path_sd_root() ? "no se pudo escribir en la tarjeta" : "no hay tarjeta");
+        if (!ok && ck.ok) cJSON_AddStringToObject(o, "error", aos_hal_path_sd_root() ? _("no se pudo escribir en la tarjeta") : _("no hay tarjeta"));
     }
     send_cjson(r, 200, o);
 }
@@ -384,12 +385,12 @@ static void api_hist(aos_httpd_req_t *r)
 {
     int i = (int)aos_httpd_query_int(r, "i", -1), k = (int)aos_httpd_query_int(r, "k", 0);
     float *h = malloc(sizeof(float) * AOS_SENSOR_HIST);
-    if (!h) { send_err(r, 500, "sin memoria"); return; }
+    if (!h) { send_err(r, 500, _("sin memoria")); return; }
     int n = aos_sensor_history(i, k, h, AOS_SENSOR_HIST);
     /* by hand: 300 numbers through cJSON cost more than the page wants to wait */
     size_t cap = (size_t)n * 12 + 32;
     char *out = malloc(cap);
-    if (!out) { free(h); send_err(r, 500, "sin memoria"); return; }
+    if (!out) { free(h); send_err(r, 500, _("sin memoria")); return; }
     size_t o = (size_t)snprintf(out, cap, "{\"v\":[");
     for (int j = 0; j < n && o + 14 < cap; j++) {
         if (isnan(h[j])) o += (size_t)snprintf(out + o, cap - o, "%snull", j ? "," : "");

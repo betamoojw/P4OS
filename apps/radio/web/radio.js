@@ -10,6 +10,9 @@
  * here" are the browser's own, straight to radio-browser and the stream. */
 const P = window.P4OS;
 const { main, h, put, api, post, toast, fsText, fsPut, fsDelete, fsMkdir, fsUrl, openApp } = P;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
+const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));
 
 if (!document.getElementById('css-radio')) {
   const st = document.createElement('style');
@@ -93,6 +96,9 @@ const DEFAULTS = [
 
 const KEYS = 9;
 const SERVERS = ['de1', 'de2', 'fi1', 'at1'];
+/* what the stream does, as the board says it (rd.state) */
+const RD_STATE = { connecting: N_('conectando'), buffering: N_('cargando'), playing: N_('en vivo'),
+  retrying: N_('reconectando'), failed: N_('falló'), off: N_('detenida') };
 
 /* What the board decodes: MP3 and AAC (HE-AAC is "AAC+" in radio-browser),
  * streamed or in HLS. An HLS station often says UNKNOWN: usually AAC in TS,
@@ -110,7 +116,7 @@ function render() {
   /* ---- what plays ---- */
   const nowLogo = h('div', { class: 'lg' }), nowSt = h('div', { class: 'st' }, '–'), nowTi = h('div', { class: 'ti' }),
     nowDe = h('div', { class: 'de' });
-  const bPlay = h('button', { class: 'btn pri', title: 'Reproducir o pausar' }, '▶');
+  const bPlay = h('button', { class: 'btn pri', title: tr('Reproducir o pausar') }, '▶');
   const vol = h('input', { type: 'range', min: 0, max: 100 });
   const art = h('input', { type: 'checkbox' });
   const keysBox = h('div', { class: 'rdkeys' });
@@ -129,18 +135,17 @@ function render() {
   function paintNow() {
     const rd = state.radio || {}, pl = state.player || {};
     const on = live();
-    nowSt.textContent = on ? (rd.station || '–') : (pl.state === 'playing' ? 'suena la música de la tarjeta' : 'no suena nada');
+    nowSt.textContent = on ? (rd.station || '–') : (pl.state === 'playing' ? tr('suena la música de la tarjeta') : tr('no suena nada'));
     nowTi.textContent = on ? (rd.title || rd.icy_name || '') : '';
     let de = '';
     if (on) {
-      de = pl.state === 'paused' ? 'en pausa' : ({ connecting: 'conectando', buffering: 'cargando', playing: 'en vivo',
-        retrying: 'reconectando', failed: 'falló', off: 'detenida' }[rd.state] || rd.state);
+      de = pl.state === 'paused' ? tr('en pausa') : (RD_STATE[rd.state] ? tr(RD_STATE[rd.state]) : rd.state);
       if (rd.kbps) de += ' · ' + (rd.codec || 'MP3') + (rd.hls ? ' HLS ' : ' ') + rd.kbps + ' kbps';
       if (rd.host) de += ' · ' + rd.host;
-      if (rd.state === 'playing') de += ' · búfer ' + (rd.buffer_ms / 1000).toFixed(1).replace('.', ',') + ' s';
+      if (rd.state === 'playing') de += ' · ' + tr('búfer %s s', num(rd.buffer_ms / 1000, 1));
       if (rd.error && (rd.state === 'failed' || rd.state === 'retrying')) de += ' · ' + rd.error;
     } else if (rd.state === 'failed' && rd.error) {
-      de = 'falló: ' + rd.error;
+      de = tr('falló: %s', rd.error);
     }
     nowDe.textContent = de;
     const k = on ? playingKey() : -1;
@@ -168,11 +173,11 @@ function render() {
         n.append(img);
       }
       const d = h('div', { class: 'rdkey' + (k.url ? '' : ' free') + (i === on ? ' on' : '') },
-        n, h('div', { class: 'nm' }, (i + 1) + '. ' + (k.url ? k.name : 'libre')),
+        n, h('div', { class: 'nm' }, (i + 1) + '. ' + (k.url ? k.name : tr('libre'))),
         k.url ? h('div', { class: 'ac' },
-          h('button', { class: 'btn pri', onclick: () => rpost({ do: 'play', k: i }).then(refresh).catch(e => say(e.message, true)) }, '▶ Poner'),
+          h('button', { class: 'btn pri', onclick: () => rpost({ do: 'play', k: i }).then(refresh).catch(e => say(e.message, true)) }, tr('▶ Poner')),
           h('button', { class: 'btn', onclick: () => rpost({ do: 'clear', k: i }).then(() => { logoGen = Date.now(); refresh(); })
-            .catch(e => say(e.message, true)) }, 'Vaciar')) : null);
+            .catch(e => say(e.message, true)) }, tr('Vaciar'))) : null);
       if (k.url) {
         d.draggable = true;
         d.ondragstart = ev => ev.dataTransfer.setData('text/p4-key', String(i));
@@ -233,9 +238,9 @@ function render() {
       else await fsDelete(`/radio/logo${k}.jpg`).catch(() => {});
       logoGen = Date.now();
       await rpost({ do: 'set', k, name: st.name.slice(0, 47), url: st.url });   /* the app reads the logo again */
-      say(`${st.name} quedó en la tecla ${k + 1}`);
+      say(tr('%s quedó en la tecla %d', st.name, k + 1));
     } catch (e) {
-      say(e.message || 'no se pudo hablar con la placa', true);
+      say(e.message || tr('no se pudo hablar con la placa'), true);
     }
     refresh();
   }
@@ -253,7 +258,7 @@ function render() {
     try {
       await fsMkdir('/radio');
       await fsPut('/radio/library.json', JSON.stringify({ v: 1, stations: list }));
-    } catch (e) { say('no se pudo guardar la lista: ' + e.message, true); }
+    } catch (e) { say(tr('no se pudo guardar la lista: %s', e.message), true); }
   }
 
   function listen(url, btn) {
@@ -275,12 +280,12 @@ function render() {
     const logo = st.favicon ? h('img', { class: 'lg', src: st.favicon, alt: '' }) : h('span', { class: 'lg' });
     if (st.favicon) logo.onerror = () => logo.replaceWith(h('span', { class: 'lg' }));
     const ok = plays(st);
-    const tag = h('span', { class: 'rdtag' + (ok ? '' : ' no'), title: ok ? '' : 'no suena en la placa' },
+    const tag = h('span', { class: 'rdtag' + (ok ? '' : ' no'), title: ok ? '' : tr('no suena en la placa') },
       (st.codec && st.codec !== 'UNKNOWN' ? st.codec : '?') + (st.hls ? ' HLS' : '') + (st.kbps ? ' ' + st.kbps : ''));
-    const ear = h('button', { class: 'btn', title: 'Escuchar acá' }, '🎧');
+    const ear = h('button', { class: 'btn', title: tr('Escuchar acá') }, '🎧');
     ear.onclick = () => listen(st.url, ear);
     const ac = h('span', { class: 'ac' }, ear,
-      ok ? h('button', { class: 'btn', title: 'Probar en la placa',
+      ok ? h('button', { class: 'btn', title: tr('Probar en la placa'),
         onclick: () => rpost({ do: 'test', name: st.name.slice(0, 47), url: st.url }).then(refresh).catch(e => say(e.message, true)) }, '▶') : null);
     const row = h('div', { class: 'row' }, logo, h('span', { class: 'nm' }, st.name), tag, ac,
       h('span', { class: 'in' }, [(st.cc || '').toUpperCase(), st.tags || '', st.url].filter(Boolean).join(' · ')));
@@ -290,25 +295,25 @@ function render() {
 
   function paintList() {
     if (!list.length) {
-      put(listBox, h('div', { class: 'row muted' }, 'La lista está vacía: buscá radios abajo.'));
+      put(listBox, h('div', { class: 'row muted' }, tr('La lista está vacía: buscá radios abajo.')));
       return;
     }
     put(listBox, list.map((st, i) => stationRow(st, (ac, row) => {
-      const sel = h('select', {}, h('option', { value: '' }, 'Tecla…'),
+      const sel = h('select', {}, h('option', { value: '' }, tr('Tecla…')),
         ...Array.from({ length: KEYS }, (_, n) => h('option', { value: n }, String(n + 1))));
       sel.onchange = () => { if (sel.value !== '') assign(st, +sel.value); sel.value = ''; };
       ac.append(sel, h('button', { class: 'btn', onclick: () => {
-        if (confirm('¿Quitar esta radio de tu lista?')) { list.splice(i, 1); paintList(); saveList(); }
-      } }, 'Quitar'));
+        if (confirm(tr('¿Quitar esta radio de tu lista?'))) { list.splice(i, 1); paintList(); saveList(); }
+      } }, tr('Quitar')));
       row.draggable = true;
-      row.title = 'Arrastrala a una tecla';
+      row.title = tr('Arrastrala a una tecla');
       row.ondragstart = ev => ev.dataTransfer.setData('text/p4-lib', String(i));
     })));
   }
 
   /* ---- the search ---- */
   const qName = h('input', { type: 'text', placeholder: 'rock, jazz, 95.1…' });
-  const qCountry = h('select', {}, h('option', { value: '' }, 'Todos'),
+  const qCountry = h('select', {}, h('option', { value: '' }, tr('Todos')),
     ...[['AR', 'Argentina'], ['UY', 'Uruguay'], ['CL', 'Chile'], ['BR', 'Brasil'], ['MX', 'México'], ['ES', 'España'],
       ['US', 'USA'], ['GB', 'UK'], ['FR', 'France'], ['DE', 'Deutschland'], ['IT', 'Italia'], ['CH', 'Schweiz']]
       .map(([v, n]) => h('option', { value: v, selected: v === 'AR' }, n)));
@@ -317,7 +322,7 @@ function render() {
 
   async function search(ev) {
     ev.preventDefault();
-    put(resBox, h('div', { class: 'row muted' }, 'buscando…'));
+    put(resBox, h('div', { class: 'row muted' }, tr('buscando…')));
     const only = qOnly.checked;
     const p = new URLSearchParams({ order: 'clickcount', reverse: 'true', limit: only ? '120' : '40', hidebroken: 'true' });
     if (qName.value.trim()) p.set('name', qName.value.trim());
@@ -330,7 +335,7 @@ function render() {
         if (r.ok) { res = await r.json(); break; }
       } catch { /* the next mirror */ }
     }
-    if (!res) { put(resBox, h('div', { class: 'row bad' }, 'radio-browser.info no contestó')); return; }
+    if (!res) { put(resBox, h('div', { class: 'row bad' }, tr('radio-browser.info no contestó'))); return; }
     const seen = new Set(), rows = [];
     for (const s of res) {
       const url = s.url_resolved || s.url;
@@ -341,23 +346,23 @@ function render() {
       if (only && !plays(st)) continue;
       rows.push(stationRow(st, ac => {
         const have = () => list.some(x => x.url === st.url);
-        const b = h('button', { class: 'btn pri', disabled: have() }, have() ? '✓ en tu lista' : '+ Agregar');
-        b.onclick = () => { list.push(st); paintList(); saveList(); b.textContent = '✓ en tu lista'; b.disabled = true; };
+        const b = h('button', { class: 'btn pri', disabled: have() }, have() ? tr('✓ en tu lista') : tr('+ Agregar'));
+        b.onclick = () => { list.push(st); paintList(); saveList(); b.textContent = tr('✓ en tu lista'); b.disabled = true; };
         ac.append(b);
       }));
     }
-    put(resBox, rows.length ? rows : h('div', { class: 'row muted' }, 'No se encontró nada.'));
+    put(resBox, rows.length ? rows : h('div', { class: 'row muted' }, tr('No se encontró nada.')));
   }
 
   /* ---- by hand ---- */
   const mName = h('input', { type: 'text', maxlength: 47, required: true });
   const mUrl = h('input', { type: 'text', maxlength: 255, required: true, placeholder: 'https://…/stream.mp3' });
   const hand = h('form', { class: 'rdhand', autocomplete: 'off' },
-    h('label', {}, 'Nombre', mName), h('label', {}, 'Dirección del stream', mUrl), h('button', { class: 'btn pri', type: 'submit' }, 'Agregar'));
+    h('label', {}, tr('Nombre'), mName), h('label', {}, tr('Dirección del stream'), mUrl), h('button', { class: 'btn pri', type: 'submit' }, tr('Agregar')));
   hand.onsubmit = ev => {
     ev.preventDefault();
     const url = mUrl.value.trim(), name = mName.value.trim();
-    if (!/^https?:\/\//.test(url)) { say('la dirección tiene que empezar con http:// o https://', true); return; }
+    if (!/^https?:\/\//.test(url)) { say(tr('la dirección tiene que empezar con http:// o https://'), true); return; }
     list.push({ name: name.slice(0, 47), url, favicon: '', cc: '', tags: '', codec: 'MP3' });
     paintList();
     saveList();
@@ -380,41 +385,41 @@ function render() {
   art.onchange = () => rpost({ do: 'art', on: art.checked }).catch(() => {});
 
   const searchForm = h('form', { class: 'rdsearch' },
-    h('label', {}, 'Nombre', qName), h('label', {}, 'País', qCountry), h('label', {}, 'Género', qTag),
-    h('button', { class: 'btn pri', type: 'submit' }, 'Buscar'),
+    h('label', {}, tr('Nombre'), qName), h('label', {}, tr('País'), qCountry), h('label', {}, tr('Género'), qTag),
+    h('button', { class: 'btn pri', type: 'submit' }, tr('Buscar')),
     h('label', { style: 'grid-column:1/-1;display:flex;gap:8px;align-items:center' }, qOnly,
-      ' Sólo las que suenan en la placa (MP3, AAC, HLS)'));
+      ' ' + tr('Sólo las que suenan en la placa (MP3, AAC, HLS)')));
   searchForm.onsubmit = search;
 
   put(main,
-    h('h1', {}, 'Radio'),
+    h('h1', {}, tr('Radio')),
     h('div', { class: 'btns', style: 'margin-bottom:6px' },
-      h('button', { class: 'btn pri', onclick: () => openApp('aos.radio').catch(e => say(e.message, true)) }, 'Abrir la Radio en la placa')),
-    h('h2', {}, 'En la placa ahora'),
+      h('button', { class: 'btn pri', onclick: () => openApp('aos.radio').catch(e => say(e.message, true)) }, tr('Abrir la Radio en la placa'))),
+    h('h2', {}, tr('En la placa ahora')),
     h('div', { class: 'card' },
       h('div', { class: 'rdnow' }, nowLogo, h('div', {}, nowSt, nowTi, nowDe)),
       h('div', { class: 'rdctl' },
-        h('button', { class: 'btn', title: 'Anterior', onclick: () => rpost({ do: 'prev' }).then(refresh).catch(() => {}) }, '⏮'),
+        h('button', { class: 'btn', title: tr('Anterior'), onclick: () => rpost({ do: 'prev' }).then(refresh).catch(() => {}) }, '⏮'),
         bPlay,
-        h('button', { class: 'btn', title: 'Siguiente', onclick: () => rpost({ do: 'next' }).then(refresh).catch(() => {}) }, '⏭'),
-        h('button', { class: 'btn', title: 'Detener', onclick: () => rpost({ do: 'stop' }).then(refresh).catch(() => {}) }, '⏹'),
-        h('span', { class: 'muted small' }, 'Volumen'), vol)),
-    h('h2', {}, 'Las teclas'),
-    h('p', { class: 'note' }, 'Arrastrá una radio de tu lista a una tecla, o una tecla sobre otra para cambiarlas de lugar.'),
+        h('button', { class: 'btn', title: tr('Siguiente'), onclick: () => rpost({ do: 'next' }).then(refresh).catch(() => {}) }, '⏭'),
+        h('button', { class: 'btn', title: tr('Detener'), onclick: () => rpost({ do: 'stop' }).then(refresh).catch(() => {}) }, '⏹'),
+        h('span', { class: 'muted small' }, tr('Volumen')), vol)),
+    h('h2', {}, tr('Las teclas')),
+    h('p', { class: 'note' }, tr('Arrastrá una radio de tu lista a una tecla, o una tecla sobre otra para cambiarlas de lugar.')),
     keysBox,
-    h('h2', {}, 'Mi lista'),
+    h('h2', {}, tr('Mi lista')),
     listBox,
-    h('h2', {}, 'Buscar radios'),
-    h('p', { class: 'note' }, 'En el directorio abierto de radio-browser.info, con más de 50.000 estaciones de todo el mundo.'),
+    h('h2', {}, tr('Buscar radios')),
+    h('p', { class: 'note' }, tr('En el directorio abierto de radio-browser.info, con más de 50.000 estaciones de todo el mundo.')),
     h('div', { class: 'card' }, searchForm),
     resBox,
-    h('h2', {}, 'Agregar a mano'),
+    h('h2', {}, tr('Agregar a mano')),
     h('div', { class: 'card' }, hand),
-    h('h2', {}, 'Ajustes'),
+    h('h2', {}, tr('Ajustes')),
     h('div', { class: 'card' }, h('div', { class: 'row' },
-      h('div', { class: 'grow' }, 'Tapas de los discos', h('div', { class: 'muted small' },
-        'Busca en iTunes la tapa del tema que suena. Lo único que sale de la placa es "artista tema".')), art)),
-    h('p', { class: 'note' }, 'Suenan MP3 y AAC (también HE-AAC) por http:// o https://, con redirecciones y listas .pls o .m3u, y HLS (.m3u8) con segmentos TS o AAC. Ogg, Opus, FLAC, HLS en fMP4 y HLS cifrado no: el buscador los marca. La radio sigue sonando con la app cerrada.'),
+      h('div', { class: 'grow' }, tr('Tapas de los discos'), h('div', { class: 'muted small' },
+        tr('Busca en iTunes la tapa del tema que suena. Lo único que sale de la placa es "artista tema".'))), art)),
+    h('p', { class: 'note' }, tr('Suenan MP3 y AAC (también HE-AAC) por http:// o https://, con redirecciones y listas .pls o .m3u, y HLS (.m3u8) con segmentos TS o AAC. Ogg, Opus, FLAC, HLS en fMP4 y HLS cifrado no: el buscador los marca. La radio sigue sonando con la app cerrada.')),
     audio);
 
   refresh();
@@ -423,4 +428,4 @@ function render() {
   return () => { clearInterval(t); audio.pause(); };
 }
 
-P.registerPage({ id: 'radio', name: 'Radio', icon: '♫', render });
+P.registerPage({ id: 'radio', name: tr('Radio'), icon: '♫', render });

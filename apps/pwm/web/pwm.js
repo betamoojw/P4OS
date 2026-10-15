@@ -16,14 +16,17 @@
  * where it is; Shift (or the wheel) goes ten times finer. A pattern is
  * animated here from its parameters, so its phase is not the board's. */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
+const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));
 const DIR = '/pwm';
 const STATE = DIR + '/_estado.txt';
 const REQ = DIR + '/_pedido.txt';
 const APP = 'aos.pwm';
 
-const MODES = [['pwm', 'PWM'], ['servo', 'Servo'], ['led', 'LED'], ['nivel', 'Nivel']];
-const PATS = [['fijo', 'Fijo'], ['respirar', 'Respirar'], ['barrido', 'Barrido'], ['estrobo', 'Estrobo'],
-  ['rampa', 'Rampa'], ['seno', 'Seno'], ['pasos', 'Pasos']];
+const MODES = [['pwm', N_('PWM')], ['servo', N_('Servo')], ['led', N_('LED')], ['nivel', N_('Nivel')]];
+const PATS = [['fijo', N_('Fijo')], ['respirar', N_('Respirar')], ['barrido', N_('Barrido')], ['estrobo', N_('Estrobo')],
+  ['rampa', N_('Rampa')], ['seno', N_('Seno')], ['pasos', N_('Pasos')]];
 const COLORS = { pwm: '#0a84ff', servo: '#ff9f0a', led: '#ffd60a', nivel: '#40c8e0' };
 /* the header's GPIOs an app can have, with their pin, in the connector's order */
 const PINS = [[2, 8], [5, 11], [3, 12], [4, 14], [21, 15], [28, 16], [22, 17], [29, 20], [24, 21], [30, 22],
@@ -77,7 +80,6 @@ function line(c) {
 /* ---------------------------------------------------------------- numbers */
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-const num = (v, d) => (+v).toFixed(d).replace('.', ',');
 function sig(v, unit) { const a = Math.abs(v); return num(v, a >= 100 ? 0 : a >= 10 ? 1 : 2) + ' ' + unit; }
 function fmtFreq(hz) { return hz >= 1e6 ? sig(hz / 1e6, 'MHz') : hz >= 1e3 ? sig(hz / 1e3, 'kHz') : Math.round(hz) + ' Hz'; }
 function fmtTime(s) { return s >= 1 ? sig(s, 's') : s >= 1e-3 ? sig(s * 1e3, 'ms') : s >= 1e-6 ? sig(s * 1e6, 'µs') : sig(s * 1e9, 'ns'); }
@@ -112,10 +114,10 @@ function duty(c, v) {
 }
 function fmtVal(c, v) {
   switch (c.mode) {
-    case 'pwm': return [num(v * 100, 1) + ' %', fmtFreq(c.rfreq || c.freq) + (c.bits ? ` · ${c.bits} bits` : '')];
+    case 'pwm': return [num(v * 100, 1) + ' %', c.bits ? tr('%s · %d bits', fmtFreq(c.rfreq || c.freq), c.bits) : fmtFreq(c.rfreq || c.freq)];
     case 'servo': return [Math.round(v * c.sdeg) + '°', Math.round(c.smin + v * (c.smax - c.smin)) + ' µs'];
-    case 'led': return [num(v * 100, v < 0.1 ? 1 : 0) + ' %', 'ciclo ' + num(Math.pow(v, c.gamma) * 100, 1) + ' %'];
-    default: return [num(v * 3.3, 2) + ' V', Math.round(v * 255) + ' de 255'];
+    case 'led': return [num(v * 100, v < 0.1 ? 1 : 0) + ' %', tr('ciclo %s', num(Math.pow(v, c.gamma) * 100, 1) + ' %')];
+    default: return [num(v * 3.3, 2) + ' V', tr('%d de 255', Math.round(v * 255))];
   }
 }
 function patAt(c, ph) {
@@ -220,7 +222,7 @@ function knob(onTurn) {
 
 P.registerPage({
   id: 'pwm',
-  name: 'Generador PWM',
+  name: tr('Generador PWM'),
   icon: '⎍',
   render(main) {
     const { h, put } = P;
@@ -232,7 +234,7 @@ P.registerPage({
     const status = h('div', { class: 'row' });
     const grid = h('div', { class: 'pwg' });
     const presets = h('div', { class: 'card pwpre' });
-    const pname = h('input', { type: 'text', placeholder: 'nombre del preset' });
+    const pname = h('input', { type: 'text', placeholder: tr('nombre del preset') });
 
     /* ---- talking to the app ---- */
     let made = null;
@@ -244,10 +246,10 @@ P.registerPage({
         seq++;
         const body = `pwm 1 seq=${seq}\n` + st.ch.map(line).join('\n') + '\n';
         try { await mkdir(); await P.fsPut(REQ, body); }
-        catch (e) { P.toast('No se pudo mandar: ' + e.message, true); }
+        catch (e) { P.toast(tr('No se pudo mandar: %s', e.message), true); }
         lastEdit = Date.now();
       }, 150);
-      if (!st.run && !warned) { warned = true; P.toast('La app no está abierta en la placa: lo toma al abrirla'); }
+      if (!st.run && !warned) { warned = true; P.toast(tr('La app no está abierta en la placa: lo toma al abrirla')); }
       paint();
     };
     const poll = async () => {
@@ -274,12 +276,12 @@ P.registerPage({
       const name = h('span', { class: 'grow muted small' });
       const sw = h('input', { type: 'checkbox', onchange: e => { c().on = e.target.checked; send(); } });
       const pin = h('select', { onchange: e => { c().gpio = +e.target.value; send(); } });
-      const del = h('button', { class: 'btn', title: 'Borrar el canal', onclick: () => {
+      const del = h('button', { class: 'btn', title: tr('Borrar el canal'), onclick: () => {
         if (st.ch.length < 2) return;
         st.ch.splice(i, 1); shape = ''; send();
       } }, '✕');
       const seg = h('div', { class: 'pwseg' }, MODES.map(([k, n]) =>
-        h('button', { 'data-k': k, onclick: () => { c().mode = k; shape = ''; send(); } }, n)));
+        h('button', { 'data-k': k, onclick: () => { c().mode = k; shape = ''; send(); } }, tr(n))));
       const kn = knob(d => {
         const ch = c();
         if (ch.pat !== 'fijo') return;
@@ -289,11 +291,11 @@ P.registerPage({
       const wave = h('canvas', { class: 'pwwave', width: 600, height: 128 });
       const freq = h('input', { type: 'number', min: 1, max: FREQ_MAX, onchange: e => { c().freq = niceFreq(+e.target.value); send(); } });
       const dec = k => () => { c().freq = niceFreq(c().freq * k); send(); };
-      const freqRow = h('div', { class: 'pwrow' }, h('span', {}, 'Frecuencia'), freq,
+      const freqRow = h('div', { class: 'pwrow' }, h('span', {}, tr('Frecuencia')), freq,
         h('button', { class: 'btn', onclick: dec(0.1) }, '÷10'), h('button', { class: 'btn', onclick: dec(10) }, '×10'));
       const real = h('div', { class: 'small muted' });
       const pat = h('select', { onchange: e => { c().pat = e.target.value; shape = ''; send(); } },
-        PATS.map(([k, n]) => h('option', { value: k }, n)));
+        PATS.map(([k, n]) => h('option', { value: k }, tr(n))));
       const per = h('input', { type: 'range', min: 0, max: 1000, oninput: e => {
         const x = +e.target.value / 1000;
         c().period = +(PER_MIN * Math.pow(PER_MAX / PER_MIN, x)).toFixed(3);
@@ -311,7 +313,7 @@ P.registerPage({
       const err = h('div', { class: 'pwerr' });
       put(el,
         h('div', { class: 'pwhd' }, h('b', {}, String(i + 1)), dot, name, h('label', { class: 'pwsw' }, sw, h('span')), del),
-        h('div', { class: 'pwrow' }, h('span', {}, 'Pin'), pin),
+        h('div', { class: 'pwrow' }, h('span', {}, tr('Pin')), pin),
         seg,
         h('div', { class: 'pwmid' }, kn, h('div', { class: 'pwside' },
           h('div', { class: 'btns' },
@@ -319,12 +321,12 @@ P.registerPage({
             h('button', { class: 'btn', onclick: () => { if (c().pat === 'fijo') { setVal(c(), val(c()) + 0.01); send(); } } }, '+')),
           wave, real)),
         freqRow,
-        h('div', { class: 'pwrow' }, h('span', {}, 'Patrón'), pat),
-        h('div', { class: 'pwrow pwper' }, h('span', {}, 'Período'), per, perTxt),
-        h('div', { class: 'pwrow pwspan' }, h('span', {}, 'Desde'), lo),
-        h('div', { class: 'pwrow pwspan' }, h('span', {}, 'Hasta'), hi),
+        h('div', { class: 'pwrow' }, h('span', {}, tr('Patrón')), pat),
+        h('div', { class: 'pwrow pwper' }, h('span', {}, tr('Período')), per, perTxt),
+        h('div', { class: 'pwrow pwspan' }, h('span', {}, tr('Desde')), lo),
+        h('div', { class: 'pwrow pwspan' }, h('span', {}, tr('Hasta')), hi),
         h('div', { class: 'pwrow pwspan small muted' }, span),
-        h('div', { class: 'pwrow pwsteps' }, h('span', {}, 'Pasos (%)'), steps),
+        h('div', { class: 'pwrow pwsteps' }, h('span', {}, tr('Pasos (%)')), steps),
         extra, err);
 
       /* the settings of each mode */
@@ -339,11 +341,11 @@ P.registerPage({
       const m = c().mode;
       if (m !== 'nivel') extra.append(h('label', { class: 'pwrow' },
         h('input', { type: 'checkbox', checked: c().inv, onchange: e => { c().inv = e.target.checked; send(); } }),
-        h('span', {}, 'Invertir la salida')));
-      if (m === 'servo') extra.append(numIn('smin', 10, 200, 2900, 'Mínimo', 'µs'), numIn('smax', 10, 300, 3000, 'Máximo', 'µs'),
-        numIn('sdeg', 10, 10, 360, 'Recorrido', '°'));
-      if (m === 'led') extra.append(numIn('gamma', 0.1, 1, 3, 'Gamma', ''));
-      if (m === 'nivel') extra.append(h('div', { class: 'small muted' }, 'Con 1 kΩ en serie y 1 µF a GND: de 0 a 3,3 V.'));
+        h('span', {}, tr('Invertir la salida'))));
+      if (m === 'servo') extra.append(numIn('smin', 10, 200, 2900, tr('Mínimo'), 'µs'), numIn('smax', 10, 300, 3000, tr('Máximo'), 'µs'),
+        numIn('sdeg', 10, 10, 360, tr('Recorrido'), '°'));
+      if (m === 'led') extra.append(numIn('gamma', 0.1, 1, 3, tr('Gamma'), ''));
+      if (m === 'nivel') extra.append(h('div', { class: 'small muted' }, tr('Con 1 kΩ en serie y 1 µF a GND: de 0 a 3,3 V.')));
 
       function update() {
         const ch = c();
@@ -354,18 +356,18 @@ P.registerPage({
         el.classList.toggle('on', on);
         dot.className = 'dot' + (on ? ' on' : ch.err ? ' bad' : '');
         sw.checked = ch.on;
-        name.textContent = (MODES.find(m => m[0] === ch.mode) || MODES[0])[1] +
-          (ch.pat !== 'fijo' ? ' · ' + (PATS.find(p => p[0] === ch.pat) || PATS[0])[1] : '');
+        name.textContent = tr((MODES.find(m => m[0] === ch.mode) || MODES[0])[1]) +
+          (ch.pat !== 'fijo' ? ' · ' + tr((PATS.find(p => p[0] === ch.pat) || PATS[0])[1]) : '');
         seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.k === ch.mode));
         if (document.activeElement !== pin) {
           const used = new Set(st.ch.filter((_, k) => k !== i).map(x => x.gpio));
-          put(pin, h('option', { value: -1 }, 'sin pin'), PINS.map(([g, p]) =>
-            h('option', { value: g, disabled: used.has(g) }, `GPIO${g} · pata ${p}${used.has(g) ? ' (otro canal)' : ''}`)));
+          put(pin, h('option', { value: -1 }, tr('sin pin')), PINS.map(([g, p]) =>
+            h('option', { value: g, disabled: used.has(g) }, used.has(g) ? tr('GPIO%d · pata %d (otro canal)', g, p) : tr('GPIO%d · pata %d', g, p))));
           pin.value = String(ch.gpio);
         }
         freqRow.style.display = hasFreq(ch.mode) ? '' : 'none';
         if (document.activeElement !== freq) freq.value = ch.freq;
-        real.textContent = ch.rfreq ? `real ${fmtFreq(ch.rfreq)} · ${ch.bits} bits` : ch.on ? '' : 'apagado';
+        real.textContent = ch.rfreq ? tr('real %s · %d bits', fmtFreq(ch.rfreq), ch.bits) : ch.on ? '' : tr('apagado');
         if (document.activeElement !== pat) pat.value = ch.pat;
         const pt = ch.pat !== 'fijo';
         el.querySelectorAll('.pwper').forEach(r => { r.style.display = pt ? '' : 'none'; });
@@ -375,7 +377,7 @@ P.registerPage({
         perTxt.textContent = fmtTime(ch.period);
         if (document.activeElement !== lo) lo.value = Math.round(ch.lo * 1000);
         if (document.activeElement !== hi) hi.value = Math.round(ch.hi * 1000);
-        span.textContent = `entre ${fmtVal(ch, ch.lo)[0]} y ${fmtVal(ch, ch.hi)[0]}`;
+        span.textContent = tr('entre %s y %s', fmtVal(ch, ch.lo)[0], fmtVal(ch, ch.hi)[0]);
         if (document.activeElement !== steps) steps.value = ch.steps.map(s => Math.round(s * 100)).join(', ');
         err.textContent = ch.err || '';
         animate();
@@ -416,10 +418,10 @@ P.registerPage({
     function paint() {
       put(status,
         h('span', { class: 'dot ' + (st.run ? 'on' : 'off') }),
-        h('div', { class: 'grow' }, st.run ? 'La app está abierta en la placa' : 'La app no está abierta en la placa: las salidas están apagadas',
+        h('div', { class: 'grow' }, st.run ? tr('La app está abierta en la placa') : tr('La app no está abierta en la placa: las salidas están apagadas'),
           h('div', { class: 'small muted' }, freqs())),
-        !st.run && h('button', { class: 'btn pri', onclick: () => P.openApp(APP).then(() => P.toast('Abierta en la placa')).catch(e => P.toast(e.message, true)) }, 'Abrir en la placa'),
-        h('button', { class: 'btn red', onclick: () => { st.ch.forEach(c => { c.on = false; }); send(); } }, 'Apagar todo'));
+        !st.run && h('button', { class: 'btn pri', onclick: () => P.openApp(APP).then(() => P.toast(tr('Abierta en la placa'))).catch(e => P.toast(e.message, true)) }, tr('Abrir en la placa')),
+        h('button', { class: 'btn red', onclick: () => { st.ch.forEach(c => { c.on = false; }); send(); } }, tr('Apagar todo')));
       const sh = st.ch.map(c => [c.mode, c.pat, c.smin, c.smax, c.sdeg, c.gamma, c.inv].join(',')).join('|');
       if (sh !== shape) {
         shape = sh;
@@ -427,14 +429,14 @@ P.registerPage({
         st.ch.forEach((_, i) => cards.push(channel(i)));
         put(grid, cards, st.ch.length < MAX_CH && h('button', { class: 'btn', style: 'align-self:start', onclick: () => {
           st.ch.push(DEF()); shape = ''; send();
-        } }, '+ Canal'));
+        } }, tr('+ Canal')));
       }
       cards.forEach(c => c.update());
     }
     function freqs() {
       const f = [...new Set(st.ch.filter(c => c.on && c.mode !== 'nivel').map(c => c.mode === 'servo' ? 50 : c.freq))];
-      if (!f.length) return 'Ningún PWM encendido';
-      return f.map(fmtFreq).join(' · ') + ` (${f.length} de 3 frecuencias)` + (f.length > 3 ? ': el LEDC no da más de tres' : '');
+      if (!f.length) return tr('Ningún PWM encendido');
+      return f.map(fmtFreq).join(' · ') + ' ' + (f.length > 3 ? tr('(%d de 3 frecuencias): el LEDC no da más de tres', f.length) : tr('(%d de 3 frecuencias)', f.length));
     }
 
     /* ---- presets ---- */
@@ -445,21 +447,21 @@ P.registerPage({
       files.sort((a, b) => a.name.localeCompare(b.name));
       put(presets,
         h('div', { class: 'row' }, h('div', { class: 'grow' }, pname),
-          h('button', { class: 'btn pri', onclick: savePreset }, 'Guardar'),
-          h('label', { class: 'btn' }, 'Subir', h('input', { type: 'file', accept: '.pwm', style: 'display:none', onchange: upload }))),
+          h('button', { class: 'btn pri', onclick: savePreset }, tr('Guardar')),
+          h('label', { class: 'btn' }, tr('Subir'), h('input', { type: 'file', accept: '.pwm', style: 'display:none', onchange: upload }))),
         files.length ? files.map(f => h('div', { class: 'row' },
           h('div', { class: 'grow' }, f.name.replace(/\.pwm$/, ''), h('div', { class: 'small muted' }, P.fmtDate(f.mtime))),
-          h('button', { class: 'btn', onclick: () => loadPreset(f.name) }, 'Cargar'),
-          h('a', { class: 'btn', href: P.fsUrl(DIR + '/' + f.name, true) }, 'Bajar'),
-          h('button', { class: 'btn red', onclick: () => delPreset(f.name) }, 'Borrar')))
-          : h('div', { class: 'row muted' }, 'Todavía no hay presets.'));
+          h('button', { class: 'btn', onclick: () => loadPreset(f.name) }, tr('Cargar')),
+          h('a', { class: 'btn', href: P.fsUrl(DIR + '/' + f.name, true) }, tr('Bajar')),
+          h('button', { class: 'btn red', onclick: () => delPreset(f.name) }, tr('Borrar'))))
+          : h('div', { class: 'row muted' }, tr('Todavía no hay presets.')));
     }
     async function savePreset() {
       const name = P.fsSlug(pname.value, 32, 'preset');
       try {
         await mkdir();
         await P.fsPut(`${DIR}/${name}.pwm`, '# P4OS, PWM generator (aos.pwm)\npwm 1\n' + st.ch.map(line).join('\n') + '\n');
-        P.toast('Guardado: ' + name);
+        P.toast(tr('Guardado: %s', name));
         pname.value = '';
         listPresets();
       } catch (e) { P.toast(e.message, true); }
@@ -467,13 +469,13 @@ P.registerPage({
     async function loadPreset(file) {
       try {
         const s = parse(await P.fsText(`${DIR}/${file}`));
-        if (!s.ch.length) throw new Error('el preset no tiene canales');
+        if (!s.ch.length) throw new Error(tr('el preset no tiene canales'));
         st.ch = s.ch; shape = ''; send();
-        P.toast('Cargado: ' + file.replace(/\.pwm$/, ''));
+        P.toast(tr('Cargado: %s', file.replace(/\.pwm$/, '')));
       } catch (e) { P.toast(e.message, true); }
     }
     async function delPreset(file) {
-      if (!confirm(`¿Borrar el preset ${file.replace(/\.pwm$/, '')}?`)) return;
+      if (!confirm(tr('¿Borrar el preset %s?', file.replace(/\.pwm$/, '')))) return;
       try { await P.fsDelete(`${DIR}/${file}`); listPresets(); } catch (e) { P.toast(e.message, true); }
     }
     async function upload(e) {
@@ -487,13 +489,13 @@ P.registerPage({
     }
 
     put(main,
-      h('h1', {}, 'Generador PWM'),
+      h('h1', {}, tr('Generador PWM')),
       h('div', { class: 'card' }, status),
-      h('p', { class: 'note' }, 'Los canales de la app PWM de la placa, en vivo. Las perillas giran como en la placa (Mayúsculas o la rueda: más fino). Los patrones se ven animados acá con su forma, no con la fase de la placa.'),
+      h('p', { class: 'note' }, tr('Los canales de la app PWM de la placa, en vivo. Las perillas giran como en la placa (Mayúsculas o la rueda: más fino). Los patrones se ven animados acá con su forma, no con la fase de la placa.')),
       grid,
-      h('h2', {}, 'Presets'),
+      h('h2', {}, tr('Presets')),
       presets,
-      h('p', { class: 'note' }, 'En /pwm de la tarjeta, una línea por canal. Al cargar uno, los canales encendidos se encienden en la placa.'));
+      h('p', { class: 'note' }, tr('En /pwm de la tarjeta, una línea por canal. Al cargar uno, los canales encendidos se encienden en la placa.')));
     poll();
     listPresets();
     const tp = setInterval(poll, 1000);

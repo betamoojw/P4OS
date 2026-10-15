@@ -20,6 +20,7 @@
  * the browser drew). Clearing or swapping keys takes their logos along.
  */
 #include "aos_portal_radio.h"
+#include "aos_i18n.h"
 #include "aos_hal.h"
 #include "cJSON.h"
 
@@ -103,11 +104,11 @@ static bool text_ok(const char *s)
 static const char *check_station(const char *name, const char *url)
 {
     if (!name || !name[0] || strlen(name) >= sizeof(((aos_radio_station_t *)0)->name) || !text_ok(name))
-        return "el nombre tiene que tener entre 1 y 47 bytes";
+        return _("el nombre tiene que tener entre 1 y 47 bytes");
     if (!url || (strncmp(url, "http://", 7) && strncmp(url, "https://", 8)))
-        return "la dirección tiene que empezar con http:// o https://";
+        return _("la dirección tiene que empezar con http:// o https://");
     if (strlen(url) >= sizeof(((aos_radio_station_t *)0)->url) || strlen(url) < 11 || !text_ok(url) || strchr(url, ' '))
-        return "la dirección no es válida";
+        return _("la dirección no es válida");
     return NULL;
 }
 
@@ -214,7 +215,7 @@ static void api_post(aos_httpd_req_t *r)
     const char *what = b ? jstr(b, "do") : NULL;
     if (!what) {
         cJSON_Delete(b);
-        reply(r, "falta \"do\"");
+        reply(r, _("falta \"do\""));
         return;
     }
     int k = jint(b, "k", -1);
@@ -232,7 +233,7 @@ static void api_post(aos_httpd_req_t *r)
             if (what[0] == 't') {
                 aos_hal_radio_play(&st, 1, 0);
             } else if (!key_ok) {
-                err = "no existe esa tecla";
+                err = _("no existe esa tecla");
             } else {
                 key_store(k, &st);
                 bump_gen();
@@ -241,7 +242,7 @@ static void api_post(aos_httpd_req_t *r)
         }
     } else if (!strcmp(what, "clear")) {
         if (!key_ok) {
-            err = "no existe esa tecla";
+            err = _("no existe esa tecla");
         } else {
             key_store(k, NULL);
             char p[96];
@@ -251,7 +252,7 @@ static void api_post(aos_httpd_req_t *r)
     } else if (!strcmp(what, "swap")) {
         int a = jint(b, "a", -1), c = jint(b, "b", -1);
         if (a < 0 || a >= KEYS || c < 0 || c >= KEYS || a == c) {
-            err = "teclas inválidas";
+            err = _("teclas inválidas");
         } else {
             aos_radio_station_t sa, sb;
             key_load(a, &sa);
@@ -270,11 +271,11 @@ static void api_post(aos_httpd_req_t *r)
         }
     } else if (!strcmp(what, "play")) {
         aos_radio_station_t st;
-        if (!key_ok || !key_load(k, &st)) err = "esa tecla está vacía";
+        if (!key_ok || !key_load(k, &st)) err = _("esa tecla está vacía");
         else play_keys(k);
     } else if (!strcmp(what, "vol")) {
         int v = jint(b, "v", -1);
-        if (v < 0) err = "falta \"v\"";
+        if (v < 0) err = _("falta \"v\"");
         else aos_hal_volume_set(v > 100 ? 100 : v);
     } else if (!strcmp(what, "art")) {
         aos_hal_pref_set_i32("rad_art", cJSON_IsTrue(cJSON_GetObjectItem(b, "on")) ? 1 : 0);
@@ -289,7 +290,7 @@ static void api_post(aos_httpd_req_t *r)
     } else if (!strcmp(what, "prev")) {
         aos_hal_player_prev();
     } else {
-        err = "acción desconocida";
+        err = _("acción desconocida");
     }
     cJSON_Delete(b);
     reply(r, err);

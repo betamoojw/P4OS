@@ -8,8 +8,11 @@
  * ("calc <expr>", "graph <n> <expr>", "stats", "view <n>") and reads
  * "state" (the view, the engine, where the plot on screen is), "hist" and
  * "graph". With the app closed it reads the same files the app keeps in
- * /data. The texts are in Spanish, like the rest of the portal. */
+ * /data. The texts are in Spanish, the keys of the page's catalog
+ * (web.cas.lang), as in the rest of the portal. */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 const APP = 'aos.cas';
 const LIVE = 'live?app=' + APP;
 const V_GRAPH = 1;
@@ -59,7 +62,7 @@ function parseTable(text) {
   const cols = [];
   for (let c = 0; c < width; c++) {
     const v = rows.map(r => (c < r.length ? num(r[c]) : NaN)).filter(x => !isNaN(x));
-    if (v.length) cols.push({ name: names[c] || 'columna ' + (c + 1), v });
+    if (v.length) cols.push({ name: names[c] || tr('columna %d', c + 1), v });
   }
   return { cols };
 }
@@ -84,7 +87,7 @@ function readLists(text) {
 /* the portal's screenshot: BMP, RGB565, rows top-down (aos_portal.c) */
 async function screenCanvas(crop) {
   const r = await fetch('/api/screen.bmp', { cache: 'no-store' });
-  if (!r.ok) throw new Error('No se pudo leer la pantalla (' + r.status + ')');
+  if (!r.ok) throw new Error(tr('No se pudo leer la pantalla (%s)', r.status));
   const b = await r.arrayBuffer(), dv = new DataView(b);
   const off = dv.getUint32(10, true), w = dv.getInt32(18, true), hRaw = dv.getInt32(22, true);
   const h = Math.abs(hRaw), stride = ((w * 2 + 3) & ~3), topDown = hRaw < 0;
@@ -112,7 +115,7 @@ async function screenCanvas(crop) {
 
 P.registerPage({
   id: 'cas',
-  name: 'CAS',
+  name: tr('CAS'),
   icon: '∑',
   render(main) {
     const { h, put } = P;
@@ -120,7 +123,7 @@ P.registerPage({
     let alive = true, open = false, state = null, histSeq = '', graphSeq = '', table = null, recall = [], ri = -1;
 
     const pill = h('span', { class: 'pill' }, '…');
-    const openBtn = h('button', { class: 'btn', onclick: () => P.openApp(APP).then(() => P.toast('CAS abierta en la placa')).catch(e => P.toast(e.message, true)) }, 'Abrir CAS en la placa');
+    const openBtn = h('button', { class: 'btn', onclick: () => P.openApp(APP).then(() => P.toast(tr('CAS abierta en la placa'))).catch(e => P.toast(e.message, true)) }, tr('Abrir CAS en la placa'));
     const send = text => P.api(LIVE, { method: 'POST', body: text });
 
     /* the console */
@@ -154,11 +157,11 @@ P.registerPage({
     });
     const showHist = list => {
       put(hist, ...(list.length ? list.map(e => h('div', { class: 'cs-e' },
-        h('div', { class: 'cs-in', title: 'Copiar abajo', onclick: () => { input.value = e.in; input.focus(); } }, e.in),
-        h('div', { class: 'cs-out' + (e.out == null ? ' wait' : e.err ? ' err' : ''), title: 'Sumar al final de lo que escribís',
+        h('div', { class: 'cs-in', title: tr('Copiar abajo'), onclick: () => { input.value = e.in; input.focus(); } }, e.in),
+        h('div', { class: 'cs-out' + (e.out == null ? ' wait' : e.err ? ' err' : ''), title: tr('Sumar al final de lo que escribís'),
           onclick: () => { if (e.out) { input.value += e.out; input.focus(); } } },
-          e.out == null ? 'calculando…' : e.out, e.ms ? h('span', { class: 'cs-ms' }, e.ms + ' ms') : null)))
-        : [h('p', { class: 'note' }, 'Todavía no hay cuentas.')]));
+          e.out == null ? tr('calculando…') : e.out, e.ms ? h('span', { class: 'cs-ms' }, e.ms + ' ms') : null)))
+        : [h('p', { class: 'note' }, tr('Todavía no hay cuentas.'))]));
       hist.scrollTop = hist.scrollHeight;
     };
 
@@ -183,7 +186,7 @@ P.registerPage({
       ferr[i].textContent = f.err || '';
     });
     const applyFns = async () => {
-      if (!open) { P.toast('Abrí CAS en la placa primero', true); return; }
+      if (!open) { P.toast(tr('Abrí CAS en la placa primero'), true); return; }
       try {
         for (let i = 0; i < 6; i++) {
           const v = fin[i].value.trim();
@@ -192,17 +195,17 @@ P.registerPage({
           canon[i] = null;
           await send('graph ' + (i + 1) + ' ' + v);
         }
-        P.toast('Funciones enviadas');
+        P.toast(tr('Funciones enviadas'));
       } catch (e) { P.toast(e.message, true); }
     };
 
     /* the lists */
-    const csvText = h('textarea', { rows: 5, style: 'width:100%', placeholder: 'Pegá una tabla (de una planilla, separada por comas, punto y coma o tabulaciones) o elegí un archivo .csv' });
+    const csvText = h('textarea', { rows: 5, style: 'width:100%', placeholder: tr('Pegá una tabla (de una planilla, separada por comas, punto y coma o tabulaciones) o elegí un archivo .csv') });
     const csvFile = h('input', { type: 'file', accept: '.csv,.txt,.tsv,text/csv,text/plain' });
     const preview = h('div');
     const showPreview = () => {
       table = parseTable(csvText.value);
-      if (!table.cols.length) { put(preview, csvText.value.trim() ? h('p', { class: 'note' }, 'No encontré columnas de números.') : null); return; }
+      if (!table.cols.length) { put(preview, csvText.value.trim() ? h('p', { class: 'note' }, tr('No encontré columnas de números.')) : null); return; }
       const cols = table.cols.slice(0, 4), n = Math.max(...cols.map(c => c.v.length));
       const rows = [];
       for (let r = 0; r < Math.min(n, 6); r++) rows.push(h('tr', {}, ...cols.map(c => h('td', {}, r < c.v.length ? String(c.v[r]) : ''))));
@@ -211,8 +214,8 @@ P.registerPage({
           h('tr', {}, ...cols.map((c, i) => h('th', {}, 'L' + (i + 1) + ' · ' + c.name + ' (' + c.v.length + ')'))),
           ...rows,
           n > 6 ? h('tr', {}, ...cols.map(() => h('td', {}, '…'))) : null),
-        table.cols.length > 4 ? h('p', { class: 'note' }, 'Hay ' + table.cols.length + ' columnas: van las cuatro primeras.') : null,
-        cols.some(c => c.v.length > 500) ? h('p', { class: 'note' }, 'Cada lista toma hasta 500 valores.') : null);
+        table.cols.length > 4 ? h('p', { class: 'note' }, tr('Hay %d columnas: van las cuatro primeras.', table.cols.length)) : null,
+        cols.some(c => c.v.length > 500) ? h('p', { class: 'note' }, tr('Cada lista toma hasta 500 valores.')) : null);
     };
     csvText.addEventListener('input', showPreview);
     csvFile.addEventListener('change', () => {
@@ -221,19 +224,19 @@ P.registerPage({
       f.text().then(t => { csvText.value = t; showPreview(); });
     });
     const loadLists = async () => {
-      if (!table || !table.cols.length) { P.toast('No hay columnas de números para cargar', true); return; }
+      if (!table || !table.cols.length) { P.toast(tr('No hay columnas de números para cargar'), true); return; }
       try {
         await P.fsMkdir('/data').catch(() => {});
         await P.fsPut('/data/cas_stats.txt', listsText(table.cols));
         if (open) await send('stats');
-        P.toast(open ? 'Listas cargadas en la placa' : 'Listas guardadas: las ve CAS cuando abra Estadística');
+        P.toast(open ? tr('Listas cargadas en la placa') : tr('Listas guardadas: las ve CAS cuando abra Estadística'));
       } catch (e) { P.toast(e.message, true); }
     };
     const downloadLists = async () => {
       try {
         const L = readLists(await P.fsText('/data/cas_stats.txt'));
         const n = Math.max(0, ...L.map(l => l.length));
-        if (!n) { P.toast('Las listas están vacías', true); return; }
+        if (!n) { P.toast(tr('Las listas están vacías'), true); return; }
         let s = 'L1,L2,L3,L4\n';
         for (let r = 0; r < n; r++) s += L.map(l => (r < l.length ? l[r] : '')).join(',') + '\n';
         P.saveBlob(new Blob([s], { type: 'text/csv' }), 'listas.csv');
@@ -242,11 +245,11 @@ P.registerPage({
 
     /* the picture */
     const shotImg = h('div');
-    const plotBtn = h('button', { class: 'btn pri', onclick: () => shot(true) }, 'Guardar el gráfico como PNG');
+    const plotBtn = h('button', { class: 'btn pri', onclick: () => shot(true) }, tr('Guardar el gráfico como PNG'));
     const shot = async onlyPlot => {
       try {
         const crop = onlyPlot && state && state.plot ? state.plot : null;
-        if (onlyPlot && !crop) { P.toast('La placa no muestra ningún gráfico ahora', true); return; }
+        if (onlyPlot && !crop) { P.toast(tr('La placa no muestra ningún gráfico ahora'), true); return; }
         /* the buttons that float over the plot hidden for the picture */
         let cleaned = false;
         if (crop && open) {
@@ -268,31 +271,30 @@ P.registerPage({
     };
 
     put(main,
-      h('h1', {}, 'CAS'),
+      h('h1', {}, tr('CAS')),
       h('div', { class: 'card' },
-        h('div', { class: 'row' }, h('div', { class: 'grow' }, 'En la placa'), pill),
+        h('div', { class: 'row' }, h('div', { class: 'grow' }, tr('En la placa')), pill),
         h('div', { class: 'btns' }, openBtn)),
-      h('div', { class: 'card' }, h('h2', {}, 'Calculadora'),
+      h('div', { class: 'card' }, h('h2', {}, tr('Calculadora')),
         hist,
-        h('div', { class: 'cs-line' }, input, h('button', { class: 'btn pri', onclick: calc }, 'Calcular')),
-        h('p', { class: 'note' }, 'Sintaxis de Xcas: factor(x^4-1), int(sin(x)^2,x), solve(x^2=2,x), diff(f1(x),x), limit(sin(x)/x,x,0). ',
-          'La cuenta se hace en la placa y queda en su historial. ↑ y ↓ traen lo que escribiste antes; ',
-          'tocar una cuenta la copia abajo, tocar un resultado lo suma.')),
-      h('div', { class: 'card' }, h('h2', {}, 'Funciones del gráfico'),
+        h('div', { class: 'cs-line' }, input, h('button', { class: 'btn pri', onclick: calc }, tr('Calcular'))),
+        h('p', { class: 'note' }, tr('Sintaxis de Xcas: factor(x^4-1), int(sin(x)^2,x), solve(x^2=2,x), diff(f1(x),x), limit(sin(x)/x,x,0).'), ' ',
+          tr('La cuenta se hace en la placa y queda en su historial. ↑ y ↓ traen lo que escribiste antes; tocar una cuenta la copia abajo, tocar un resultado lo suma.'))),
+      h('div', { class: 'card' }, h('h2', {}, tr('Funciones del gráfico')),
         ...fnRows,
         h('div', { class: 'btns' },
-          h('button', { class: 'btn pri', onclick: applyFns }, 'Enviar'),
-          h('button', { class: 'btn', onclick: () => send('view ' + V_GRAPH).catch(e => P.toast(e.message, true)) }, 'Mostrar el gráfico en la placa'))),
-      h('div', { class: 'card' }, h('h2', {}, 'Listas de Estadística'),
+          h('button', { class: 'btn pri', onclick: applyFns }, tr('Enviar')),
+          h('button', { class: 'btn', onclick: () => send('view ' + V_GRAPH).catch(e => P.toast(e.message, true)) }, tr('Mostrar el gráfico en la placa')))),
+      h('div', { class: 'card' }, h('h2', {}, tr('Listas de Estadística')),
         csvFile, csvText, preview,
         h('div', { class: 'btns' },
-          h('button', { class: 'btn pri', onclick: loadLists }, 'Cargar en L1…L4'),
-          h('button', { class: 'btn', onclick: downloadLists }, 'Bajar las listas (CSV)')),
-        h('p', { class: 'note' }, 'Cargar reemplaza las cuatro listas de la placa.')),
-      h('div', { class: 'card' }, h('h2', {}, 'Imagen'),
-        h('p', { class: 'note' }, 'Lo que la placa muestra ahora: el gráfico solo (de Gráfico, Geometría, Estadística, Finanzas o Ciencias) o la pantalla entera.'),
+          h('button', { class: 'btn pri', onclick: loadLists }, tr('Cargar en L1…L4')),
+          h('button', { class: 'btn', onclick: downloadLists }, tr('Bajar las listas (CSV)'))),
+        h('p', { class: 'note' }, tr('Cargar reemplaza las cuatro listas de la placa.'))),
+      h('div', { class: 'card' }, h('h2', {}, tr('Imagen')),
+        h('p', { class: 'note' }, tr('Lo que la placa muestra ahora: el gráfico solo (de Gráfico, Geometría, Estadística, Finanzas o Ciencias) o la pantalla entera.')),
         h('div', { class: 'btns' }, plotBtn,
-          h('button', { class: 'btn', onclick: () => shot(false) }, 'Guardar la pantalla')),
+          h('button', { class: 'btn', onclick: () => shot(false) }, tr('Guardar la pantalla'))),
         shotImg));
 
     /* with the app closed: its files */
@@ -323,7 +325,7 @@ P.registerPage({
       } catch {
         if (open || pill.textContent === '…') { open = false; state = null; fromFiles(); }
       }
-      pill.textContent = open ? (state && !state.ready ? 'Abierta, arrancando el motor' : state && state.busy ? 'Abierta, calculando' : 'Abierta') : 'Cerrada';
+      pill.textContent = open ? (state && !state.ready ? tr('Abierta, arrancando el motor') : state && state.busy ? tr('Abierta, calculando') : tr('Abierta')) : tr('Cerrada');
       pill.style.color = open ? 'var(--green)' : 'var(--dim)';
       openBtn.style.display = open ? 'none' : '';
       plotBtn.disabled = !(state && state.plot);

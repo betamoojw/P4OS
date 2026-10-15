@@ -7,8 +7,11 @@
  * file the same way, so it seeks without downloading it all. The app looks
  * at its folder every two seconds, so a recording deleted here leaves its
  * list too. The list here follows the card every five seconds, while
- * nothing plays. */
+ * nothing plays. Texts in Spanish, through tr() (web.recorder.lang). */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const DIR = '/recordings';
 const APP_ID = 'app.recorder';
 
@@ -28,13 +31,14 @@ if (!document.getElementById('css-recorder')) {
   document.head.append(st);
 }
 
-/* "grabacion_0007.wav" -> "Grabación 0007", as the app shows it */
+/* "grabacion_0007.wav" -> "Grabación 0007", as the app shows it (the word
+ * in the board's language, like rec_files_pretty) */
 const pretty = n => {
   let s = n.replace(/\.wav$/i, '').replace(/_/g, ' ');
   s = s.charAt(0).toUpperCase() + s.slice(1);
-  return s.replace(/^Grabacion /, 'Grabación ');
+  return s.replace(/^Grabacion /, () => tr('Grabación') + ' ');
 };
-const when = t => t ? new Date(t * 1000).toLocaleString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+const when = t => t ? new Date(t * 1000).toLocaleString(LOC, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
 const mmss = s => s == null ? '…' : `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
 /* The WAV's duration from its first bytes: 'fmt ' gives the byte rate,
@@ -60,7 +64,7 @@ async function duration(path, size) {
 
 P.registerPage({
   id: 'grabadora',
-  name: 'Grabadora',
+  name: tr('Grabadora'),
   icon: '●',
   render(main) {
     const { h, put } = P;
@@ -74,24 +78,24 @@ P.registerPage({
       const bytes = files.reduce((a, f) => a + f.size, 0);
       put(sum,
         h('div', { class: 'rcsum' },
-          h('div', {}, h('b', {}, String(files.length)), ' ', h('span', { class: 'muted small' }, files.length === 1 ? 'grabación' : 'grabaciones')),
-          h('div', {}, h('b', {}, mmss(total)), ' ', h('span', { class: 'muted small' }, 'en total')),
-          h('div', {}, h('b', {}, P.fmtBytes(bytes)), ' ', h('span', { class: 'muted small' }, 'en la tarjeta'))),
+          h('div', {}, h('b', {}, String(files.length)), ' ', h('span', { class: 'muted small' }, files.length === 1 ? tr('grabación') : tr('grabaciones'))),
+          h('div', {}, h('b', {}, mmss(total)), ' ', h('span', { class: 'muted small' }, tr('en total'))),
+          h('div', {}, h('b', {}, P.fmtBytes(bytes)), ' ', h('span', { class: 'muted small' }, tr('en la tarjeta')))),
         h('div', { class: 'btns', style: 'margin-top:12px' },
-          h('button', { class: 'btn', onclick: () => P.openApp(APP_ID).then(() => P.toast('Abierta en la placa')).catch(e => P.toast(e.message, true)) }, 'Abrir la Grabadora en la placa'),
-          h('button', { class: 'btn', onclick: () => load(true) }, 'Actualizar')),
-        h('p', { class: 'note' }, 'Se graba desde la placa. Acá se escuchan, se bajan como WAV y se borran; la app ve los cambios sola.'));
+          h('button', { class: 'btn', onclick: () => P.openApp(APP_ID).then(() => P.toast(tr('Abierta en la placa'))).catch(e => P.toast(e.message, true)) }, tr('Abrir la Grabadora en la placa')),
+          h('button', { class: 'btn', onclick: () => load(true) }, tr('Actualizar'))),
+        h('p', { class: 'note' }, tr('Se graba desde la placa. Acá se escuchan, se bajan como WAV y se borran; la app ve los cambios sola.')));
     };
 
     const remove = async f => {
-      if (!confirm(`¿Borrar ${pretty(f.name)}? No se puede deshacer.`)) return;
-      try { await P.fsDelete(`${DIR}/${f.name}`); P.toast('Borrada'); load(true); }
+      if (!confirm(tr('¿Borrar %s? No se puede deshacer.', pretty(f.name)))) return;
+      try { await P.fsDelete(`${DIR}/${f.name}`); P.toast(tr('Borrada')); load(true); }
       catch (e) { P.toast(e.message, true); }
     };
 
     const draw = () => {
       if (!files.length) {
-        put(list, h('div', { class: 'row muted' }, 'Todavía no hay grabaciones. Se graban desde la app en la placa.'));
+        put(list, h('div', { class: 'row muted' }, tr('Todavía no hay grabaciones. Se graban desde la app en la placa.')));
         summary();
         return;
       }
@@ -106,8 +110,8 @@ P.registerPage({
             h('span', { class: 'muted small' }, `${when(f.mtime)} · ${P.fmtBytes(f.size)}`), dur),
           h('audio', { controls: true, preload: 'none', src: P.fsUrl(path) }),
           h('div', { class: 'btns' },
-            h('a', { class: 'btn', href: P.fsUrl(path, true) }, 'Bajar'),
-            h('button', { class: 'btn red', onclick: () => remove(f) }, 'Borrar')));
+            h('a', { class: 'btn', href: P.fsUrl(path, true) }, tr('Bajar')),
+            h('button', { class: 'btn red', onclick: () => remove(f) }, tr('Borrar'))));
       }));
       summary();
     };
@@ -128,7 +132,7 @@ P.registerPage({
       draw();
     }
 
-    put(main, h('h1', {}, 'Grabadora'), sum, h('h2', {}, 'Grabaciones'), list);
+    put(main, h('h1', {}, tr('Grabadora')), sum, h('h2', {}, tr('Grabaciones')), list);
     summary();
     load(true);
     const t = setInterval(load, 5000);

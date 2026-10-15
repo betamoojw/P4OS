@@ -5,6 +5,8 @@
 const P = window.P4OS;
 const { main, h, put, $, api, post, toast, row, fmtBytes, fmtDate, fsPut, fsList, fsDelete, fsMkdir, fsUrl,
   fsText, fsBytes, openApp, saveBlob, fsSlug } = P;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 
 if (!document.getElementById('css-pixel')) {
   const st = document.createElement('style');
@@ -175,30 +177,30 @@ async function pagePixel() {
   const pal = h('div', { class: 'pxpal' }), strip = h('div', { class: 'pxstrip' });
   const delay = h('input', { type: 'range', min: 50, max: 1000, step: 10 }), delayv = h('span', { class: 'muted small', style: 'min-width:60px;text-align:right' });
   const playBtn = h('button', { class: 'btn' }, '▶');
-  const undoBtn = h('button', { class: 'btn' }, 'Deshacer'), delFrame = h('button', { class: 'btn red' }, 'Borrar cuadro');
+  const undoBtn = h('button', { class: 'btn' }, tr('Deshacer')), delFrame = h('button', { class: 'btn red' }, tr('Borrar cuadro'));
   const sizeSel = h('select', { style: 'width:auto', onchange: e => { side = +e.target.value; } },
     [256, 512, 1024].map(s => h('option', { value: s, selected: s === side }, s + ' px')));
-  const tools = { pen: h('button', { class: 'btn pri' }, 'Lápiz'), fill: h('button', { class: 'btn' }, 'Rellenar'), pick: h('button', { class: 'btn' }, 'Tomar color') };
+  const tools = { pen: h('button', { class: 'btn pri' }, tr('Lápiz')), fill: h('button', { class: 'btn' }, tr('Rellenar')), pick: h('button', { class: 'btn' }, tr('Tomar color')) };
   const say = (t, cls) => { status.textContent = t; status.className = 'small ' + (cls || 'muted'); };
 
   /* ---- the gallery ---- */
-  async function read(name) { const d = pxParse(await fsBytes(PX_DIR + '/' + name)); if (!d) throw new Error(name + ' no se lee'); return d; }
+  async function read(name) { const d = pxParse(await fsBytes(PX_DIR + '/' + name)); if (!d) throw new Error(tr('%s no se lee', name)); return d; }
   async function load() {
     try { files = await fsList(PX_DIR); } catch (e) { put(slots, h('p', { class: 'bad' }, e.message)); return; }
     const anim = [];
     put(slots, Array.from({ length: PX_SLOTS }, (_, i) => {
       const n = i + 1, f = files.find(a => a.name === pxSlotName(n));
-      if (!f) return h('div', { class: 'pxslot', onclick: () => ask(n) }, h('div', { class: 'pxplus' }, '+'), h('b', {}, 'Lienzo ' + n), h('span', { class: 'muted small' }, 'vacío'));
+      if (!f) return h('div', { class: 'pxslot', onclick: () => ask(n) }, h('div', { class: 'pxplus' }, '+'), h('b', {}, tr('Lienzo %d', n)), h('span', { class: 'muted small' }, tr('vacío')));
       const c = h('canvas', { width: 128, height: 128 }), sub = h('span', { class: 'muted small' }, '…');
       const acts = h('div', { class: 'btns pxacts', onclick: e => e.stopPropagation() });
       read(f.name).then(d => {
         pxPaint(c, d, 0, false);
-        sub.textContent = `${d.size}×${d.size} · ${d.frames.length} ${d.frames.length === 1 ? 'cuadro' : 'cuadros'}`;
+        sub.textContent = d.frames.length === 1 ? tr('%d×%d · %d cuadro', d.size, d.size, d.frames.length) : tr('%d×%d · %d cuadros', d.size, d.size, d.frames.length);
         if (d.frames.length > 1) anim.push({ c, d, f: 0, t: 0 });
         put(acts, h('button', { class: 'btn', onclick: async () => saveBlob(await pxPng(d, 0, side), `lienzo${n}.png`) }, 'PNG'),
           d.frames.length > 1 ? h('button', { class: 'btn', onclick: () => saveBlob(pxGif(d, side), `lienzo${n}.gif`) }, 'GIF') : null);
       }).catch(e => { sub.textContent = e.message; sub.className = 'bad small'; });
-      return h('div', { class: 'pxslot', onclick: () => open(n) }, c, h('b', {}, 'Lienzo ' + n), sub, acts);
+      return h('div', { class: 'pxslot', onclick: () => open(n) }, c, h('b', {}, tr('Lienzo %d', n)), sub, acts);
     }));
     /* the thumbnails of the animations play, each at its own speed */
     clearInterval(pxPlayT);
@@ -212,22 +214,22 @@ async function pagePixel() {
     put(exports, ex.length ? ex.map(a => h('div', { class: 'row' },
       h('img', { class: 'pxthumb', src: fsUrl(PX_DIR + '/' + a.name) + '&_=' + (a.mtime || a.size), alt: '', loading: 'lazy' }),
       h('div', { class: 'grow' }, h('div', { class: 'mono ell' }, a.name), h('div', { class: 'muted small' }, fmtBytes(a.size) + (a.mtime ? ' · ' + fmtDate(a.mtime) : ''))),
-      h('div', { class: 'btns' }, h('a', { class: 'btn', href: fsUrl(PX_DIR + '/' + a.name, true) }, 'Bajar'),
+      h('div', { class: 'btns' }, h('a', { class: 'btn', href: fsUrl(PX_DIR + '/' + a.name, true) }, tr('Bajar')),
         h('button', { class: 'btn red', onclick: async () => {
-          if (!confirm(`¿Borrar ${a.name}?`)) return;
+          if (!confirm(tr('¿Borrar %s?', a.name))) return;
           try { await fsDelete(PX_DIR + '/' + a.name); load(); } catch (e) { toast(e.message, true); }
-        } }, 'Borrar')))) :
-      h('div', { class: 'row muted' }, 'Todavía no hay nada exportado. Desde el menú de la app en la placa, o con PNG y GIF de acá.'));
+        } }, tr('Borrar'))))) :
+      h('div', { class: 'row muted' }, tr('Todavía no hay nada exportado. Desde el menú de la app en la placa, o con PNG y GIF de acá.')));
   }
   /* an empty slot asks for the size */
   function ask(n) {
     const close = () => md.remove();
     const md = h('div', { class: 'modal', onclick: e => { if (e.target === md) close(); } },
-      h('div', { class: 'box', style: 'width:min(420px,100%)' }, h('div', { class: 'head' }, h('b', { class: 'grow' }, 'Lienzo ' + n + ' nuevo')),
+      h('div', { class: 'box', style: 'width:min(420px,100%)' }, h('div', { class: 'head' }, h('b', { class: 'grow' }, tr('Lienzo %d nuevo', n))),
         h('div', { class: 'pad btns', style: 'justify-content:center' }, PX_SIZES.map(s => h('button', { class: 'btn pri', style: 'padding:16px 20px;font-size:17px', onclick: () => {
           close(); edit(n, { size: s, delay: 200, frames: [new Uint8Array(s * s)] }, true);
         } }, s + ' × ' + s))),
-        h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, 'Cancelar'))));
+        h('div', { class: 'foot' }, h('button', { class: 'btn', onclick: close }, tr('Cancelar')))));
     document.body.append(md);
   }
   async function open(n) {
@@ -238,20 +240,20 @@ async function pagePixel() {
     const list = [...fl];
     for (const f of list) {
       const n = Array.from({ length: PX_SLOTS }, (_, i) => i + 1).find(k => !files.some(a => a.name === pxSlotName(k)));
-      if (!n) { toast('No hay lienzos libres: borrá uno primero', true); return; }
+      if (!n) { toast(tr('No hay lienzos libres: borrá uno primero'), true); return; }
       try {
         if (/\.pix$/i.test(f.name)) {
           const buf = await f.arrayBuffer(), d = pxParse(buf);
-          if (!d) throw new Error('no es un .pix que se pueda leer');
+          if (!d) throw new Error(tr('no es un .pix que se pueda leer'));
           await fsMkdir(PX_DIR);
           await fsPut(PX_DIR + '/' + pxSlotName(n), pxBuild(d));
           files.push({ name: pxSlotName(n) });
-          toast(f.name + ' → lienzo ' + n);
+          toast(tr('%s → lienzo %d', f.name, n));
         } else if (/^image\//.test(f.type)) {
           edit(n, await pxFromImage(f), true);
-          say(`${f.name}, pasado a la paleta: guardalo si te gusta`);
+          say(tr('%s, pasado a la paleta: guardalo si te gusta', f.name));
           return;
-        } else throw new Error('sólo .pix o imágenes');
+        } else throw new Error(tr('sólo .pix o imágenes'));
       } catch (e) { toast(f.name + ': ' + e.message, true); return; }
     }
     load();
@@ -261,11 +263,11 @@ async function pagePixel() {
   function redraw() {
     pxPaint(cv, doc, cur, true);
     paintStrip();
-    title.textContent = `Lienzo ${slot} · ${doc.size}×${doc.size} · cuadro ${cur + 1}/${doc.frames.length}`;
+    title.textContent = tr('Lienzo %d · %d×%d · cuadro %d/%d', slot, doc.size, doc.size, cur + 1, doc.frames.length);
     delay.value = doc.delay; delayv.textContent = doc.delay + ' ms';
     delFrame.disabled = doc.frames.length < 2;
     undoBtn.disabled = !undo.length;
-    if (dirty && !status.textContent) say('cambios sin guardar');
+    if (dirty && !status.textContent) say(tr('cambios sin guardar'));
   }
   function paintStrip() {
     put(strip, doc.frames.map((f, i) => {
@@ -276,7 +278,7 @@ async function pagePixel() {
     const on = strip.querySelector('.on');
     if (on) on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
-  const mark = () => { dirty = true; say('cambios sin guardar'); };
+  const mark = () => { dirty = true; say(tr('cambios sin guardar')); };
   const keepUndo = () => { undo.push(new Uint8Array(doc.frames[cur])); if (undo.length > 50) undo.shift(); undoBtn.disabled = false; };
   function cellOf(ev) {
     const r = cv.getBoundingClientRect();
@@ -340,13 +342,13 @@ async function pagePixel() {
   undoBtn.onclick = () => { if (!undo.length) return; doc.frames[cur] = undo.pop(); mark(); redraw(); };
   function insert(f) {
     stop();
-    if (doc.frames.length >= PX_FRAMES) { toast('16 cuadros como máximo', true); return; }
+    if (doc.frames.length >= PX_FRAMES) { toast(tr('16 cuadros como máximo'), true); return; }
     doc.frames.splice(cur + 1, 0, f); cur++; undo = []; mark(); redraw();
   }
   delFrame.onclick = () => { stop(); if (doc.frames.length < 2) return; doc.frames.splice(cur, 1); cur = Math.min(cur, doc.frames.length - 1); undo = []; mark(); redraw(); };
   delay.oninput = () => { doc.delay = +delay.value; delayv.textContent = doc.delay + ' ms'; mark(); if (playing) { stop(); play(); } };
   function play() {
-    if (doc.frames.length < 2) { toast('Hace falta más de un cuadro', true); return; }
+    if (doc.frames.length < 2) { toast(tr('Hace falta más de un cuadro'), true); return; }
     playBtn.textContent = '■';
     playing = setInterval(() => { if (!cv.isConnected) { stop(); return; } cur = (cur + 1) % doc.frames.length; redraw(); }, doc.delay);
   }
@@ -354,18 +356,22 @@ async function pagePixel() {
   playBtn.onclick = () => { if (playing) stop(); else play(); };
   async function save() {
     stop();
-    say('guardando…');
+    say(tr('guardando…'));
     try {
       await fsMkdir(PX_DIR);
       await fsPut(PX_DIR + '/' + pxSlotName(slot), pxBuild(doc));
       dirty = false;
-      say('guardado en la placa', 'ok');
-    } catch (e) { say('no se pudo guardar: ' + e.message, 'bad'); }
+      say(tr('guardado en la placa'), 'ok');
+    } catch (e) { say(tr('no se pudo guardar: %s', e.message), 'bad'); }
   }
   async function delCanvas() {
     stop();
-    if (!confirm(`¿Borrar el lienzo ${slot} de la placa?`)) return;
-    try { await fsDelete(PX_DIR + '/' + pxSlotName(slot)).catch(e => { if (!/no existe|No such/.test(e.message)) throw e; }); dirty = false; toast('Lienzo ' + slot + ' borrado'); back(true); }
+    if (!confirm(tr('¿Borrar el lienzo %d de la placa?', slot))) return;
+    /* a canvas that was never saved is not on the card: if the file is gone
+     * after a failed delete, that is what was wanted (by the file, not by the
+     * error's words, which follow the board's language) */
+    const path = PX_DIR + '/' + pxSlotName(slot);
+    try { await fsDelete(path).catch(async e => { if (await fsText(path).catch(() => '') !== null) throw e; }); dirty = false; toast(tr('Lienzo %d borrado', slot)); back(true); }
     catch (e) { toast(e.message, true); }
   }
   function edit(n, d, isNew) {
@@ -376,44 +382,44 @@ async function pagePixel() {
     window.scrollTo(0, 0);
   }
   function back(force) {
-    if (dirty && !force && !confirm('Hay cambios sin guardar. ¿Salir igual?')) return;
+    if (dirty && !force && !confirm(tr('Hay cambios sin guardar. ¿Salir igual?'))) return;
     stop(); doc = null; dirty = false;
     editor.style.display = 'none'; gallery.style.display = '';
     load();
   }
 
   const input = h('input', { type: 'file', multiple: true, accept: '.pix,image/*', style: 'display:none', onchange: e => uploadPx(e.target.files) });
-  const drop = h('div', { class: 'drop' }, 'Soltá acá un .pix, o una imagen para pasarla a la paleta (a 8, 16, 32 o 64 de lado)');
+  const drop = h('div', { class: 'drop' }, tr('Soltá acá un .pix, o una imagen para pasarla a la paleta (a 8, 16, 32 o 64 de lado)'));
   drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
   drop.ondragleave = () => drop.classList.remove('over');
   drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); uploadPx(e.dataTransfer.files); };
   put(gallery, h('div', { class: 'btns', style: 'margin-bottom:14px' },
-      h('button', { class: 'btn pri', onclick: () => openApp('aos.pixel').then(() => toast('Abriendo Pixel Art en la placa'), e => toast(e.message, true)) }, 'Abrir Pixel Art en la placa'),
-      h('button', { class: 'btn', onclick: () => input.click() }, 'Subir…'), input,
-      h('span', { class: 'muted small' }, 'PNG y GIF de:'), sizeSel),
-    slots, drop, h('h2', {}, 'Exportados en la tarjeta'), exports);
-  put(editor, h('div', { class: 'btns', style: 'margin-bottom:14px' }, h('button', { class: 'btn', onclick: () => back(false) }, '← Lienzos'), title, status),
+      h('button', { class: 'btn pri', onclick: () => openApp('aos.pixel').then(() => toast(tr('Abriendo Pixel Art en la placa')), e => toast(e.message, true)) }, tr('Abrir Pixel Art en la placa')),
+      h('button', { class: 'btn', onclick: () => input.click() }, tr('Subir…')), input,
+      h('span', { class: 'muted small' }, tr('PNG y GIF de:')), sizeSel),
+    slots, drop, h('h2', {}, tr('Exportados en la tarjeta')), exports);
+  put(editor, h('div', { class: 'btns', style: 'margin-bottom:14px' }, h('button', { class: 'btn', onclick: () => back(false) }, tr('← Lienzos')), title, status),
     h('div', { class: 'pxcols' },
       h('div', { style: 'min-width:0' }, cv),
       h('div', { class: 'pxside' },
         h('div', { class: 'btns' }, tools.pen, tools.fill, tools.pick, undoBtn),
         pal,
-        h('div', { class: 'card pad' }, h('h2', { style: 'margin:0 0 8px' }, 'Cuadros'), strip,
+        h('div', { class: 'card pad' }, h('h2', { style: 'margin:0 0 8px' }, tr('Cuadros')), strip,
           h('div', { class: 'btns', style: 'margin-top:8px' },
-            h('button', { class: 'btn', onclick: () => insert(new Uint8Array(doc.frames[cur])) }, 'Duplicar'),
-            h('button', { class: 'btn', onclick: () => insert(new Uint8Array(doc.size * doc.size)) }, 'En blanco'),
-            h('button', { class: 'btn', onclick: () => { stop(); keepUndo(); doc.frames[cur].fill(0); mark(); redraw(); } }, 'Limpiar'), delFrame),
-          h('div', { class: 'btns', style: 'margin-top:12px;flex-wrap:nowrap' }, h('span', { class: 'muted small' }, 'Velocidad'), delay, delayv, playBtn)),
+            h('button', { class: 'btn', onclick: () => insert(new Uint8Array(doc.frames[cur])) }, tr('Duplicar')),
+            h('button', { class: 'btn', onclick: () => insert(new Uint8Array(doc.size * doc.size)) }, tr('En blanco')),
+            h('button', { class: 'btn', onclick: () => { stop(); keepUndo(); doc.frames[cur].fill(0); mark(); redraw(); } }, tr('Limpiar')), delFrame),
+          h('div', { class: 'btns', style: 'margin-top:12px;flex-wrap:nowrap' }, h('span', { class: 'muted small' }, tr('Velocidad')), delay, delayv, playBtn)),
         h('div', { class: 'btns' },
-          h('button', { class: 'btn pri', onclick: save }, 'Guardar en la placa'),
+          h('button', { class: 'btn pri', onclick: save }, tr('Guardar en la placa')),
           h('button', { class: 'btn', onclick: async () => saveBlob(await pxPng(doc, cur, side), `lienzo${slot}-${cur + 1}.png`) }, 'PNG'),
           h('button', { class: 'btn', onclick: () => saveBlob(pxGif(doc, side), `lienzo${slot}.gif`) }, 'GIF'),
           h('button', { class: 'btn', onclick: () => saveBlob(new Blob([pxBuild(doc)]), pxSlotName(slot)) }, '.pix'),
-          h('button', { class: 'btn red', onclick: delCanvas }, 'Borrar de la placa')))));
-  put(main, h('h1', {}, 'Pixel Art'), gallery, editor,
-    h('p', { class: 'note' }, 'Los .pix viven en /pixel de la tarjeta, doce lienzos de 8, 16, 32 o 64 de lado con hasta 16 cuadros. La app los relee sola cuando cambian: si la tenés abierta en ese lienzo, se actualiza en la pantalla. Los de 8 y 16 pasan tal cual a un reloj con AmoledOS.'));
-  window.onbeforeunload = () => dirty && location.hash === '#pixel' ? 'Hay cambios sin guardar' : undefined;
+          h('button', { class: 'btn red', onclick: delCanvas }, tr('Borrar de la placa'))))));
+  put(main, h('h1', {}, tr('Pixel Art')), gallery, editor,
+    h('p', { class: 'note' }, tr('Los .pix viven en /pixel de la tarjeta, doce lienzos de 8, 16, 32 o 64 de lado con hasta 16 cuadros. La app los relee sola cuando cambian: si la tenés abierta en ese lienzo, se actualiza en la pantalla. Los de 8 y 16 pasan tal cual a un reloj con AmoledOS.')));
+  window.onbeforeunload = () => dirty && location.hash === '#pixel' ? tr('Hay cambios sin guardar') : undefined;
   load();
 }
 
-P.registerPage({ id: 'pixel', name: 'Pixel Art', icon: '▚', render: () => { pagePixel(); } });
+P.registerPage({ id: 'pixel', name: tr('Pixel Art'), icon: '▚', render: () => { pagePixel(); } });

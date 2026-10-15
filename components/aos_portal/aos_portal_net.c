@@ -16,6 +16,7 @@
  * polls it and stops when the page is closed.
  */
 #include "aos_portal_net.h"
+#include "aos_i18n.h"
 #include "../aos_apps/aos_nettools.h"     /* the Red app's service, private to aos_apps */
 #include "aos_hal.h"
 #include "cJSON.h"
@@ -86,12 +87,12 @@ static void api_post(aos_httpd_req_t *r)
             nt_lock();
             bool busy = nt_scan()->state == NT_BUSY;
             nt_unlock();
-            err = busy ? "ya hay un barrido en marcha" : "no se pudo empezar el barrido";
+            err = busy ? _("ya hay un barrido en marcha") : _("no se pudo empezar el barrido");
         }
     } else if (!strcmp(what, "stop")) {
         nt_scan_stop();
     } else {
-        err = "\"do\" es scan o stop";
+        err = _("\"do\" es scan o stop");
     }
     cJSON_Delete(b);
     cJSON *o = cJSON_CreateObject();
@@ -104,7 +105,9 @@ bool aos_portal_net(aos_httpd_req_t *r, const char *m, const char *p)
 {
     if (strcmp(p, "net")) return false;
     if (!nt_init()) {
-        aos_httpd_send_json(r, 500, "{\"error\":\"no hay memoria para la Red\"}");
+        cJSON *o = cJSON_CreateObject();
+        cJSON_AddStringToObject(o, "error", _("no hay memoria para la Red"));
+        send_cjson(r, 500, o);
         return true;
     }
     if (!strcmp(m, "GET")) api_get(r);

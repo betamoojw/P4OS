@@ -1,0 +1,153 @@
+# amoledos-lang 1   es -> en
+# web.pixel.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/pixel/web/pixel.js:180
+Deshacer	Undo
+
+#: apps/pixel/web/pixel.js:180
+Borrar cuadro	Delete frame
+
+#: apps/pixel/web/pixel.js:183
+Lápiz	Pencil
+
+#: apps/pixel/web/pixel.js:183
+Rellenar	Fill
+
+#: apps/pixel/web/pixel.js:183
+Tomar color	Pick colour
+
+#: apps/pixel/web/pixel.js:187
+%s no se lee	%s is unreadable
+
+#: apps/pixel/web/pixel.js:193
+#: apps/pixel/web/pixel.js:203
+Lienzo %d	Canvas %d
+
+#: apps/pixel/web/pixel.js:193
+vacío	empty
+
+#: apps/pixel/web/pixel.js:198
+%d×%d · %d cuadro	%d×%d · %d frame
+
+#: apps/pixel/web/pixel.js:198
+%d×%d · %d cuadros	%d×%d · %d frames
+
+#: apps/pixel/web/pixel.js:217
+Bajar	Download
+
+#: apps/pixel/web/pixel.js:219
+¿Borrar %s?	Delete %s?
+
+#: apps/pixel/web/pixel.js:221
+Borrar	Delete
+
+#: apps/pixel/web/pixel.js:222
+Todavía no hay nada exportado. Desde el menú de la app en la placa, o con PNG y GIF de acá.	Nothing exported yet. Use the app's menu on the board, or PNG and GIF here.
+
+#: apps/pixel/web/pixel.js:228
+Lienzo %d nuevo	New canvas %d
+
+#: apps/pixel/web/pixel.js:232
+Cancelar	Cancel
+
+#: apps/pixel/web/pixel.js:243
+No hay lienzos libres: borrá uno primero	No free canvases: delete one first
+
+#: apps/pixel/web/pixel.js:247
+no es un .pix que se pueda leer	not a readable .pix
+
+#: apps/pixel/web/pixel.js:251
+%s → lienzo %d	%s → canvas %d
+
+#: apps/pixel/web/pixel.js:254
+%s, pasado a la paleta: guardalo si te gusta	%s, mapped to the palette: save it if you like it
+
+#: apps/pixel/web/pixel.js:256
+sólo .pix o imágenes	.pix or pictures only
+
+#: apps/pixel/web/pixel.js:266
+Lienzo %d · %d×%d · cuadro %d/%d	Canvas %d · %d×%d · frame %d/%d
+
+#: apps/pixel/web/pixel.js:270
+#: apps/pixel/web/pixel.js:281
+cambios sin guardar	unsaved changes
+
+#: apps/pixel/web/pixel.js:345
+16 cuadros como máximo	16 frames at most
+
+#: apps/pixel/web/pixel.js:351
+Hace falta más de un cuadro	It takes more than one frame
+
+#: apps/pixel/web/pixel.js:359
+guardando…	saving…
+
+#: apps/pixel/web/pixel.js:364
+guardado en la placa	saved to the board
+
+#: apps/pixel/web/pixel.js:365
+no se pudo guardar: %s	could not save: %s
+
+#: apps/pixel/web/pixel.js:369
+¿Borrar el lienzo %d de la placa?	Delete canvas %d from the board?
+
+#: apps/pixel/web/pixel.js:374
+Lienzo %d borrado	Canvas %d deleted
+
+#: apps/pixel/web/pixel.js:385
+Hay cambios sin guardar. ¿Salir igual?	There are unsaved changes. Leave anyway?
+
+#: apps/pixel/web/pixel.js:392
+Soltá acá un .pix, o una imagen para pasarla a la paleta (a 8, 16, 32 o 64 de lado)	Drop a .pix here, or a picture to map to the palette (at 8, 16, 32 or 64 a side)
+
+#: apps/pixel/web/pixel.js:397
+Abriendo Pixel Art en la placa	Opening Pixel Art on the board
+
+#: apps/pixel/web/pixel.js:397
+Abrir Pixel Art en la placa	Open Pixel Art on the board
+
+#: apps/pixel/web/pixel.js:398
+Subir…	Upload…
+
+#: apps/pixel/web/pixel.js:399
+PNG y GIF de:	PNG and GIF at:
+
+#: apps/pixel/web/pixel.js:400
+Exportados en la tarjeta	Exported on the card
+
+#: apps/pixel/web/pixel.js:401
+← Lienzos	← Canvases
+
+#: apps/pixel/web/pixel.js:407
+Cuadros	Frames
+
+#: apps/pixel/web/pixel.js:409
+Duplicar	Duplicate
+
+#: apps/pixel/web/pixel.js:410
+En blanco	Blank
+
+#: apps/pixel/web/pixel.js:411
+Limpiar	Clear
+
+#: apps/pixel/web/pixel.js:412
+Velocidad	Speed
+
+#: apps/pixel/web/pixel.js:414
+Guardar en la placa	Save to the board
+
+#: apps/pixel/web/pixel.js:418
+Borrar de la placa	Delete from the board
+
+#: apps/pixel/web/pixel.js:419
+#: apps/pixel/web/pixel.js:425
+Pixel Art	Pixel Art
+
+#: apps/pixel/web/pixel.js:420
+Los .pix viven en /pixel de la tarjeta, doce lienzos de 8, 16, 32 o 64 de lado con hasta 16 cuadros. La app los relee sola cuando cambian: si la tenés abierta en ese lienzo, se actualiza en la pantalla. Los de 8 y 16 pasan tal cual a un reloj con AmoledOS.	The .pix files live in /pixel on the card: twelve canvases of 8, 16, 32 or 64 a side with up to 16 frames. The app reloads them by itself when they change: if it is open on that canvas, the screen updates. The 8 and 16 ones go as they are to a watch running AmoledOS.
+
+#: apps/pixel/web/pixel.js:421
+Hay cambios sin guardar	There are unsaved changes

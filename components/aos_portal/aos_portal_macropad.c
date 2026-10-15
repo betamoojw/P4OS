@@ -12,6 +12,7 @@
  * the app on the screen notices the new version and redraws.
  */
 #include "aos_portal_macropad.h"
+#include "aos_i18n.h"
 #include "aos_macropad.h"
 #include "aos_hal.h"
 #include "cJSON.h"
@@ -71,7 +72,7 @@ bool aos_portal_macropad(aos_httpd_req_t *r, const char *m, const char *p)
     if ((put || post) && !*p) {
         char *b = aos_httpd_body_all(r, 128 * 1024);
         char err[96];
-        if (!b) { send_err(r, 400, "sin cuerpo, o de más de 128 KB"); return true; }
+        if (!b) { send_err(r, 400, _("sin cuerpo, o de más de 128 KB")); return true; }
         bool ok = aos_macropad_replace(b, err, sizeof err);
         free(b);
         if (!ok) { send_err(r, 400, err); return true; }
@@ -85,11 +86,11 @@ bool aos_portal_macropad(aos_httpd_req_t *r, const char *m, const char *p)
     if (post && !strcmp(p, "/reset")) { aos_macropad_reset(); aos_httpd_send_json(r, 200, "{\"ok\":true}"); return true; }
     if (post && !strcmp(p, "/run")) {
         long page = aos_httpd_query_int(r, "page", -1), slot = aos_httpd_query_int(r, "slot", -1);
-        if (page < 0 || page >= AOS_MP_PAGES || slot < 0 || slot >= AOS_MP_SLOTS) { send_err(r, 400, "page y slot"); return true; }
+        if (page < 0 || page >= AOS_MP_PAGES || slot < 0 || slot >= AOS_MP_SLOTS) { send_err(r, 400, _("page y slot")); return true; }
         aos_macropad_lock();
         bool there = aos_macropad_button((int)page, (int)slot) != NULL;
         aos_macropad_unlock();
-        if (!there) { send_err(r, 404, "ese lugar está vacío (¿guardaste?)"); return true; }
+        if (!there) { send_err(r, 404, _("ese lugar está vacío (¿guardaste?)")); return true; }
         aos_macropad_request_run((int)page, (int)slot);
         aos_httpd_send_json(r, 200, "{\"ok\":true}");
         return true;

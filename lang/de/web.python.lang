@@ -1,0 +1,295 @@
+# amoledos-lang 1   es -> de
+# web.python.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/python/web/python.js:49
+Programas	Programme
+
+#: apps/python/web/python.js:49
+Corren en la consola de la placa.	Laufen in der Konsole der Platine.
+
+#: apps/python/web/python.js:50
+Apps	Apps
+
+#: apps/python/web/python.js:50
+Cada .py es una app del inicio (desde el próximo arranque) que dibuja con aos.	Jede .py ist eine App auf dem Startbildschirm (ab dem nächsten Start), die mit aos zeichnet.
+
+#: apps/python/web/python.js:51
+Bibliotecas	Bibliotheken
+
+#: apps/python/web/python.js:51
+Lo que import encuentra; mip instala acá.	Was import findet; mip installiert hierhin.
+
+#: apps/python/web/python.js:80
+Dos maneras	Zwei Wege
+
+#: apps/python/web/python.js:80
+la app las llama en cada cuadro; también init(), touch(x, y, ev), gesture(ev, x, y, …), resize(w, h)	die App ruft sie in jedem Frame auf; außerdem init(), touch(x, y, ev), gesture(ev, x, y, …), resize(w, h)
+
+#: apps/python/web/python.js:81
+un bucle propio: frame() muestra lo dibujado y espera el cuadro siguiente	eine eigene Schleife: frame() zeigt das Gezeichnete und wartet auf den nächsten Frame
+
+#: apps/python/web/python.js:82
+El módulo aos	Das Modul aos
+
+#: apps/python/web/python.js:82
+el lienzo: 240 × 426 parado, a ×3	die Zeichenfläche: 240 × 426 im Hochformat, mit ×3
+
+#: apps/python/web/python.js:82
+colores 0xRRGGBB	Farben 0xRRGGBB
+
+#: apps/python/web/python.js:83
+#: apps/python/web/python.js:84
+relleno / contorno	gefüllt / Umriss
+
+#: apps/python/web/python.js:83
+esquinas mordidas	abgerundete Ecken
+
+#: apps/python/web/python.js:84
+oscurece (f<0) o aclara	dunkelt ab (f<0) oder hellt auf
+
+#: apps/python/web/python.js:85
+8×8, ASCII; devuelve el ancho	8×8, ASCII; gibt die Breite zurück
+
+#: apps/python/web/python.js:85
+píxeles RGB565	RGB565-Pixel
+
+#: apps/python/web/python.js:86
+lo dibujado queda de fondo	das Gezeichnete bleibt als Hintergrund
+
+#: apps/python/web/python.js:86
+lo que llegó con el cuadro	was mit dem Frame ankam
+
+#: apps/python/web/python.js:86
+x, y, apoyado	x, y, berührt
+
+#: apps/python/web/python.js:88
+el framebuf de MicroPython sobre el lienzo; aos.rgb565(c)	der framebuf von MicroPython auf der Zeichenfläche; aos.rgb565(c)
+
+#: apps/python/web/python.js:89
+En las primeras líneas	In den ersten Zeilen
+
+#: apps/python/web/python.js:89
+el del inicio	der auf dem Startbildschirm
+
+#: apps/python/web/python.js:89
+otro lienzo, a la escala entera que entre	eine andere Zeichenfläche, im größten ganzzahligen Maßstab, der passt
+
+#: apps/python/web/python.js:90
+o landscape: gira la pantalla	oder landscape: dreht den Bildschirm
+
+#: apps/python/web/python.js:92
+La consola	Die Konsole
+
+#: apps/python/web/python.js:92
+salen y entran por la consola de la placa	Aus- und Eingabe über die Konsole der Platine
+
+#: apps/python/web/python.js:92
+la tarjeta es /, se arranca en /python	die Karte ist /, gestartet wird in /python
+
+#: apps/python/web/python.js:93
+la red de la placa, https con sus certificados	das Netzwerk der Platine, https mit ihren Zertifikaten
+
+#: apps/python/web/python.js:93
+mip.install('nombre') baja de micropython-lib a /python/lib	mip.install('name') lädt aus micropython-lib nach /python/lib
+
+#: apps/python/web/python.js:94
+y help('modules') para el resto	und help('modules') für den Rest
+
+#: apps/python/web/python.js:94
+#: apps/python/web/python.js:181
+Detener	Stopp
+
+#: apps/python/web/python.js:94
+KeyboardInterrupt en lo que corre	KeyboardInterrupt im laufenden Code
+
+#: apps/python/web/python.js:103
+una línea de Python, y Enter	eine Zeile Python, dann Enter
+
+#: apps/python/web/python.js:109
+lista	bereit
+
+#: apps/python/web/python.js:109
+corriendo…	läuft…
+
+#: apps/python/web/python.js:109
+esperando input()	wartet auf input()
+
+#: apps/python/web/python.js:109
+sin intérprete	kein Interpreter
+
+#: apps/python/web/python.js:109
+cerrada	geschlossen
+
+#: apps/python/web/python.js:128
+La consola no está abierta en la placa. «Abrir en la placa», o escribí una línea: se abre sola.	Die Konsole ist auf der Platine nicht geöffnet. «Auf der Platine öffnen» drücken oder eine Zeile eingeben: Sie öffnet sich von selbst.
+
+#: apps/python/web/python.js:162
+Está corriendo: Detener, o esperá a que termine	Es läuft gerade etwas: Stoppen oder warten, bis es fertig ist
+
+#: apps/python/web/python.js:182
+Limpiar	Leeren
+
+#: apps/python/web/python.js:183
+Abriendo la consola en la placa	Konsole wird auf der Platine geöffnet
+
+#: apps/python/web/python.js:183
+Abrir en la placa	Auf der Platine öffnen
+
+#: apps/python/web/python.js:189
+Hay algo corriendo en la consola: Detener primero	In der Konsole läuft etwas: zuerst stoppen
+
+#: apps/python/web/python.js:190
+Corriendo %s en la consola	%s läuft in der Konsole
+
+#: apps/python/web/python.js:220
+La app está abierta y no imprimió nada.	Die App ist geöffnet und hat nichts ausgegeben.
+
+#: apps/python/web/python.js:224
+La app no está abierta en la placa. Lo que imprima con print() y sus errores salen acá.	Die App ist auf der Platine nicht geöffnet. Was sie mit print() ausgibt, und ihre Fehler erscheinen hier.
+
+#: apps/python/web/python.js:251
+nombre.py	name.py
+
+#: apps/python/web/python.js:270
+carpeta	Ordner
+
+#: apps/python/web/python.js:270
+nueva: en el inicio después de reiniciar	neu: nach einem Neustart auf dem Startbildschirm
+
+#: apps/python/web/python.js:275
+Correr	Ausführen
+
+#: apps/python/web/python.js:276
+Abrir	Öffnen
+
+#: apps/python/web/python.js:277
+Bajar	Herunterladen
+
+#: apps/python/web/python.js:278
+Editar	Bearbeiten
+
+#: apps/python/web/python.js:279
+Borrar	Löschen
+
+#: apps/python/web/python.js:282
+Vacía.	Leer.
+
+#: apps/python/web/python.js:288
+¿Borrar %s y todo lo que tiene de la placa?	%s mit dem gesamten Inhalt von der Platine löschen?
+
+#: apps/python/web/python.js:288
+#: apps/python/web/python.js:379
+¿Borrar %s de la placa?	%s von der Platine löschen?
+
+#: apps/python/web/python.js:289
+#: apps/python/web/python.js:380
+Borrado %s	%s gelöscht
+
+#: apps/python/web/python.js:295
+%s es nueva: aparece en el inicio de la placa después de reiniciarla	%s ist neu: Sie erscheint nach einem Neustart auf dem Startbildschirm der Platine
+
+#: apps/python/web/python.js:297
+Abriendo %s en la placa	%s wird auf der Platine geöffnet
+
+#: apps/python/web/python.js:318
+Lo que imprime la app en la placa	Was die App auf der Platine ausgibt
+
+#: apps/python/web/python.js:327
+No existe %s	%s existiert nicht
+
+#: apps/python/web/python.js:344
+Hay cambios sin guardar. ¿Volver igual?	Es gibt ungespeicherte Änderungen. Trotzdem zurück?
+
+#: apps/python/web/python.js:352
+Un nombre con letras sin acento, dígitos, _ - y punto, terminado en .py	Ein Name aus Buchstaben ohne Akzente, Ziffern, _ - und Punkt, endend auf .py
+
+#: apps/python/web/python.js:353
+Empieza con _: es un módulo para las otras apps, no una app	Beginnt mit _: ein Modul für die anderen Apps, keine App
+
+#: apps/python/web/python.js:355
+¿Guardarlo como %s? (el viejo se borra)	Als %s speichern? (die alte Datei wird gelöscht)
+
+#: apps/python/web/python.js:358
+Ya hay un %s en %s. ¿Reemplazarlo?	Es gibt schon %s in %s. Ersetzen?
+
+#: apps/python/web/python.js:360
+Guardando…	Wird gespeichert…
+
+#: apps/python/web/python.js:368
+Guardado: si la app está abierta, la placa la vuelve a correr	Gespeichert: Ist die App geöffnet, führt die Platine sie neu aus
+
+#: apps/python/web/python.js:368
+Guardado en la placa	Auf der Platine gespeichert
+
+#: apps/python/web/python.js:370
+No se pudo guardar: %s	Speichern fehlgeschlagen: %s
+
+#: apps/python/web/python.js:410
+Sólo archivos .py, .mpy y .aic	Nur .py-, .mpy- und .aic-Dateien
+
+#: apps/python/web/python.js:416
+Subido %s	%s hochgeladen
+
+#: apps/python/web/python.js:416
+Subidos %s archivos	%s Dateien hochgeladen
+
+#: apps/python/web/python.js:421
+Soltá acá archivos .py, .mpy o .aic para subirlos	.py-, .mpy- oder .aic-Dateien zum Hochladen hier ablegen
+
+#: apps/python/web/python.js:430
+Un nombre de paquete de micropython-lib, o github:usuario/repo	Ein Paketname aus micropython-lib oder github:benutzer/repo
+
+#: apps/python/web/python.js:431
+La consola está ocupada	Die Konsole ist beschäftigt
+
+#: apps/python/web/python.js:433
+Instalando %s: mirá la consola	%s wird installiert: siehe Konsole
+
+#: apps/python/web/python.js:441
+Consola	Konsole
+
+#: apps/python/web/python.js:441
+la de la placa: lo que escribas acá corre allá	die der Platine: Was hier eingegeben wird, läuft dort
+
+#: apps/python/web/python.js:444
+Nuevo programa	Neues Programm
+
+#: apps/python/web/python.js:445
+Nueva app	Neue App
+
+#: apps/python/web/python.js:447
+Subir a	Hochladen nach
+
+#: apps/python/web/python.js:448
+Subir…	Hochladen…
+
+#: apps/python/web/python.js:450
+Instalar una biblioteca	Bibliothek installieren
+
+#: apps/python/web/python.js:450
+con mip, desde micropython-lib, a /python/lib	mit mip, aus micropython-lib, nach /python/lib
+
+#: apps/python/web/python.js:451
+Instalar	Installieren
+
+#: apps/python/web/python.js:460
+Guardar en la placa	Auf der Platine speichern
+
+#: apps/python/web/python.js:461
+Guardar y correr	Speichern und ausführen
+
+#: apps/python/web/python.js:462
+Borrar de la placa	Von der Platine löschen
+
+#: apps/python/web/python.js:463
+⌘S guarda · ⌘↩ guarda y corre	⌘S speichert · ⌘↩ speichert und führt aus
+
+#: apps/python/web/python.js:467
+MicroPython 1.29 en la placa. Los programas viven en /python de la tarjeta y corren en su consola; las apps, en /python/apps, y cada una es una app del inicio que dibuja con el módulo aos (aparece después del próximo arranque). Mientras una app está abierta, la placa vigila su archivo y la vuelve a correr cuando cambia: guardar acá alcanza. Un error no reinicia nada: sale en la pantalla y acá, con su línea.	MicroPython 1.29 auf der Platine. Programme liegen in /python auf der Karte und laufen in ihrer Konsole; Apps liegen in /python/apps, und jede ist eine App auf dem Startbildschirm, die mit dem Modul aos zeichnet (sie erscheint nach dem nächsten Start). Solange eine App geöffnet ist, überwacht die Platine ihre Datei und führt sie bei jeder Änderung neu aus: Hier speichern genügt. Ein Fehler startet nichts neu: Er erscheint auf dem Bildschirm und hier, mit seiner Zeile.
+
+#: apps/python/web/python.js:468
+Hay cambios sin guardar	Es gibt ungespeicherte Änderungen

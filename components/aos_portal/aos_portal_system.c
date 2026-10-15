@@ -34,6 +34,7 @@
  * tools/ota.sh builds, uploads, restarts and checks that the slot changed.
  */
 #include "aos_portal_system.h"
+#include "aos_i18n.h"
 #include "aos_hal.h"
 #include "cJSON.h"
 
@@ -108,10 +109,10 @@ static void api_ota_status(aos_httpd_req_t *r)
 static void api_ota_put(aos_httpd_req_t *r)
 {
     long len = aos_httpd_body_len(r);
-    if (len <= 0) { send_err(r, 400, "falta Content-Length"); return; }
+    if (len <= 0) { send_err(r, 400, _("falta Content-Length")); return; }
     if (!aos_hal_ota_begin((size_t)len)) { send_err(r, 409, aos_hal_ota_error()); return; }
     char *buf = malloc(CHUNK);
-    if (!buf) { aos_hal_ota_abort(); send_err(r, 500, "sin memoria"); return; }
+    if (!buf) { aos_hal_ota_abort(); send_err(r, 500, _("sin memoria")); return; }
     long done = 0;
     int n = 0;
     uint64_t t0 = aos_hal_uptime_ms();
@@ -123,7 +124,7 @@ static void api_ota_put(aos_httpd_req_t *r)
     if (done != len) {
         aos_hal_ota_abort();
         char m[96];
-        snprintf(m, sizeof m, "se cortó la subida: %ld de %ld B (%s)", done, len, aos_hal_ota_error());
+        snprintf(m, sizeof m, _("se cortó la subida: %ld de %ld B (%s)"), done, len, aos_hal_ota_error());
         send_err(r, 500, m);
         return;
     }
@@ -175,9 +176,9 @@ static void api_coredump(aos_httpd_req_t *r)
 static void api_coredump_elf(aos_httpd_req_t *r)
 {
     aos_coredump_info_t ci;
-    if (!aos_hal_coredump_info(&ci) || !ci.present) { send_err(r, 404, "no hay volcado"); return; }
+    if (!aos_hal_coredump_info(&ci) || !ci.present) { send_err(r, 404, _("no hay volcado")); return; }
     char *buf = malloc(CHUNK);
-    if (!buf) { send_err(r, 500, "sin memoria"); return; }
+    if (!buf) { send_err(r, 500, _("sin memoria")); return; }
     char disp[96];
     snprintf(disp, sizeof disp, "Content-Disposition: attachment; filename=\"p4os-coredump-%s.elf\"\r\n",
              ci.elf_sha[0] ? ci.elf_sha : "unknown");
@@ -356,10 +357,10 @@ static void api_tune(aos_httpd_req_t *r, bool set)
         aos_httpd_query(r, "key", key, sizeof key);
         bool known = false;
         for (size_t i = 0; i < sizeof TUNE_KEYS / sizeof TUNE_KEYS[0]; i++) known |= !strcmp(key, TUNE_KEYS[i]);
-        if (!known) { send_err(r, 400, "clave desconocida"); return; }
+        if (!known) { send_err(r, 400, _("clave desconocida")); return; }
         char v[16] = "";
         if (!aos_httpd_query(r, "value", v, sizeof v)) { aos_hal_pref_erase(key); }
-        else if (!aos_hal_pref_set_i32(key, (int32_t)strtol(v, NULL, 10))) { send_err(r, 500, "no se pudo guardar"); return; }
+        else if (!aos_hal_pref_set_i32(key, (int32_t)strtol(v, NULL, 10))) { send_err(r, 500, _("no se pudo guardar")); return; }
     }
     cJSON *o = cJSON_CreateObject();
     for (size_t i = 0; i < sizeof TUNE_KEYS / sizeof TUNE_KEYS[0]; i++) {
@@ -367,7 +368,7 @@ static void api_tune(aos_httpd_req_t *r, bool set)
         if (aos_hal_pref_get_i32(TUNE_KEYS[i], &v)) cJSON_AddNumberToObject(o, TUNE_KEYS[i], v);
         else cJSON_AddNullToObject(o, TUNE_KEYS[i]);
     }
-    cJSON_AddStringToObject(o, "note", "se leen al arrancar: reiniciar para aplicar");
+    cJSON_AddStringToObject(o, "note", _("se leen al arrancar: reiniciar para aplicar"));
     send_cjson(r, 200, o);
 }
 
@@ -381,7 +382,7 @@ bool aos_portal_system(aos_httpd_req_t *r, const char *m, const char *p)
         aos_hal_thread_start("ota_rst", restart_soon, NULL, 3072, 5);
     } else if (post && !strcmp(p, "ota/other")) {
         if (aos_hal_ota_boot_other()) aos_httpd_send_json(r, 200, "{\"ok\":true}");
-        else send_err(r, 409, aos_hal_ota_error()[0] ? aos_hal_ota_error() : "la otra ranura no tiene una imagen");
+        else send_err(r, 409, aos_hal_ota_error()[0] ? aos_hal_ota_error() : _("la otra ranura no tiene una imagen"));
     } else if (get && !strcmp(p, "coredump")) api_coredump(r);
     else if (get && !strcmp(p, "coredump/elf")) api_coredump_elf(r);
     else if (get && !strcmp(p, "display/bench")) api_display_bench(r);
@@ -400,7 +401,7 @@ bool aos_portal_system(aos_httpd_req_t *r, const char *m, const char *p)
         aos_hal_coredump_test_panic(ms < 200 ? 200 : ms);
     } else if (post && !strcmp(p, "coredump/erase")) {
         if (aos_hal_coredump_erase()) aos_httpd_send_json(r, 200, "{\"ok\":true}");
-        else send_err(r, 500, "no se pudo borrar");
+        else send_err(r, 500, _("no se pudo borrar"));
     } else return false;
     return true;
 }

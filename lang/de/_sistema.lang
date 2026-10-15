@@ -7378,3 +7378,91 @@ el C6 no activó la imagen	der C6 hat das Image nicht aktiviert
 FM17522 (clon)	FM17522 (Klon)
 FM17522E (clon)	FM17522E (Klon)
 clon (sin marca)	Klon (ohne Marke)
+
+#: components/aos_portal (2026-10-15)
+falta id	id fehlt
+sin ícono AIC	kein AIC-Icon
+red o contraseña inválidas (WPA2: de 8 a 63 caracteres)	ungültiges Netzwerk oder Passwort (WPA2: 8 bis 63 Zeichen)
+\"mode\": console o keys; \"host\": true o false; \"pins\": 21/23, 25/27 o both; \"layout\": latam o us	\"mode\": console oder keys; \"host\": true oder false; \"pins\": 21/23, 25/27 oder both; \"layout\": latam oder us
+el USB está cambiando de modo	der USB wechselt gerade den Modus
+falta \"on\", \"keyboard\", \"music\" o \"forget\"	\"on\", \"keyboard\", \"music\" oder \"forget\" fehlt
+no hay una imagen del C6 en /firmware/c6.bin	kein C6-Image unter /firmware/c6.bin
+no se pudo empezar (¿ya hay una en curso?)	konnte nicht starten (läuft schon eines?)
+la búsqueda falló	die Suche ist fehlgeschlagen
+la dirección empieza con http://	die Adresse beginnt mit http://
+sin tarjeta o ruta inválida	keine Karte oder ungültiger Pfad
+ruta inválida	ungültiger Pfad
+no existe	existiert nicht
+no se pudo leer	konnte nicht gelesen werden
+menu.txt inválido: %s	ungültige menu.txt: %s
+no se pudo abrir	konnte nicht geöffnet werden
+falta Content-Length	Content-Length fehlt
+no entra en la tarjeta	passt nicht auf die Karte
+no se pudo crear (¿existe la carpeta?)	konnte nicht angelegt werden (gibt es den Ordner?)
+se cortó la subida	der Upload wurde unterbrochen
+no se pudo guardar	konnte nicht gespeichert werden
+ya hay una grabación en curso	es läuft bereits ein Flashvorgang
+no se pudo empezar	konnte nicht starten
+falta path	path fehlt
+ya hay un trabajo en curso	es läuft bereits ein Auftrag
+no se pudo abrir el puerto (¿lo tiene otra app?)	Port konnte nicht geöffnet werden (belegt ihn eine andere App?)
+el canal no está conectado	der Kanal ist nicht verbunden
+hace falta el canal conectado y la tarjeta	Kanal muss verbunden und eine Karte drin sein
+texto vacío	leerer Text
+ya hay 8 avisos	es gibt bereits 8 Alarme
+el nombre va con a-z, 0-9 y guiones	der Name darf nur a-z, 0-9 und Bindestriche enthalten
+falta \"on\"	\"on\" fehlt
+la radio está ocupada	das Funkmodul ist belegt
+no hay enlace que congelar	keine Verbindung zum Einfrieren
+demasiados intentos: esperá un poco	zu viele Versuche: warte etwas
+contraseña incorrecta	falsches Passwort
+nombre desconocido: entrá por la IP de la placa o por su nombre .local	unbekannter Name: über die IP der Platine oder ihren .local-Namen aufrufen
+pedido desde otra página: rechazado	Anfrage von einer anderen Seite: abgelehnt
+pedido sin origen: rechazado	Anfrage ohne Herkunft: abgelehnt
+el portal está cerrado en esta red	das Portal ist in diesem Netzwerk gesperrt
+todavía no hay certificado: prendé HTTPS en Ajustes, Portal web, y reiniciá	noch kein Zertifikat: HTTPS in Einstellungen, Webportal, einschalten und neu starten
+hace falta entrar con la contraseña	Anmeldung mit dem Passwort nötig
+todavía no hay captura	noch kein Bildschirmfoto
+falta el cuerpo	der Request-Body fehlt
+la fuente tiene la cola llena	die Warteschlange des Netzteils ist voll
+comando no válido o cola llena	ungültiger Befehl oder Warteschlange voll
+no se pudo armar el enlace	der Link konnte nicht erstellt werden
+eso no parece un código	das sieht nicht wie ein Code aus
+falta app	app fehlt
+mensaje de 1 KB como mucho	Nachricht höchstens 1 KB
+la cola de la app está llena	die Warteschlange der App ist voll
+GET o POST	GET oder POST
+no hay datos: ¿está abierta la app?	keine Daten: ist die App offen?
+sin cuerpo, o de más de 128 KB	kein Body oder über 128 KB
+page y slot	page und slot
+ese lugar está vacío (¿guardaste?)	dieser Platz ist leer (gespeichert?)
+falta el texto (8 KB como mucho)	Text fehlt (höchstens 8 KB)
+no se pudo escribir en la tarjeta	konnte nicht auf die Karte schreiben
+no hay tarjeta	keine Karte
+falta t	t fehlt
+ese tópico no está en la tabla	dieses Topic ist nicht in der Tabelle
+falta el tópico	Topic fehlt
+un tópico para publicar no lleva + ni #	ein Topic zum Senden darf kein + oder # enthalten
+no hay broker configurado	kein Broker eingerichtet
+MQTT está apagado	MQTT ist aus
+mensaje demasiado largo o la cola está llena	Nachricht zu lang oder Warteschlange voll
+ya hay un barrido en marcha	es läuft bereits ein Scan
+no se pudo empezar el barrido	Scan konnte nicht gestartet werden
+\"do\" es scan o stop	\"do\" ist scan oder stop
+no hay memoria para la Red	nicht genug Speicher für Netzwerk
+el nombre tiene que tener entre 1 y 47 bytes	der Name muss 1 bis 47 Bytes lang sein
+la dirección tiene que empezar con http:// o https://	die Adresse muss mit http:// oder https:// beginnen
+la dirección no es válida	die Adresse ist ungültig
+falta \"do\"	\"do\" fehlt
+no existe esa tecla	diese Taste gibt es nicht
+teclas inválidas	ungültige Tasten
+esa tecla está vacía	diese Taste ist leer
+falta \"v\"	\"v\" fehlt
+acción desconocida	unbekannte Aktion
+solo GET	nur GET
+se cortó la subida: %ld de %ld B (%s)	Upload unterbrochen: %ld von %ld B (%s)
+no hay volcado	kein Abbild
+clave desconocida	unbekannter Schlüssel
+se leen al arrancar: reiniciar para aplicar	werden beim Start gelesen: zum Übernehmen neu starten
+la otra ranura no tiene una imagen	der andere Slot enthält kein Image
+no se pudo borrar	konnte nicht gelöscht werden

@@ -14,6 +14,8 @@
  * The browser computes an upload's CRC-32, MD5 and SHA-256 itself: the
  * portal is plain HTTP, where crypto.subtle does not exist. */
 const P = window.P4OS;
+const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
+const N_ = s => s;
 const DIR = '/eeprom';
 const APP_ID = 'aos.eeprom';
 const CHIPS = ['24LC01', '24LC02', '24LC04', '24LC08', '24LC16', '24LC32', '24LC64', '24LC128', '24LC256', '24LC512',
@@ -138,7 +140,7 @@ function sha256(b) {
 
 const hex2 = v => v.toString(16).toUpperCase().padStart(2, '0');
 const sizeText = n => n >= 1048576 && !(n % 1048576) ? n / 1048576 + ' MB' : n >= 1024 && !(n % 1024) ? n / 1024 + ' KB' : n + ' B';
-const SRC = { lectura: 'lectura', antes: 'antes de escribir', escrita: 'escrita', portal: 'del portal', vista: 'guardada' };
+const SRC = { lectura: N_('lectura'), antes: N_('antes de escribir'), escrita: N_('escrita'), portal: N_('del portal'), vista: N_('guardada') };
 const stamp = () => {
   const d = new Date(), p = n => String(n).padStart(2, '0');
   return { file: `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`,
@@ -148,7 +150,7 @@ const readJson = async path => { try { const t = await P.fsText(path); return t 
 
 P.registerPage({
   id: 'eeprom',
-  name: 'EEPROM',
+  name: tr('EEPROM'),
   icon: '▦',
   render(main) {
     const { h, put } = P;
@@ -167,14 +169,14 @@ P.registerPage({
       put(head,
         h('div', { class: 'eehead' },
           h('b', {}, c ? c.chip : 'EEPROM'),
-          c ? h('span', { class: 'muted' }, `${c.familia} · ${sizeText(c.tamano)} · ${c.conexion}`) : h('span', { class: 'muted' }, 'La app todavía no escribió su chip.json: abrila en la placa.'),
-          c && c.abierta ? h('span', { class: 'pill' }, c.ocupada ? 'trabajando' : 'abierta') : null,
-          c && c.cambios ? h('span', { class: 'pill', style: 'color:var(--orange)' }, `${c.cambios} bytes sin escribir en la placa`) : null),
+          c ? h('span', { class: 'muted' }, `${c.familia} · ${sizeText(c.tamano)} · ${c.conexion}`) : h('span', { class: 'muted' }, tr('La app todavía no escribió su chip.json: abrila en la placa.')),
+          c && c.abierta ? h('span', { class: 'pill' }, c.ocupada ? tr('trabajando') : tr('abierta')) : null,
+          c && c.cambios ? h('span', { class: 'pill', style: 'color:var(--orange)' }, tr('%d bytes sin escribir en la placa', c.cambios)) : null),
         h('div', { class: 'btns', style: 'margin-top:12px' },
-          h('button', { class: 'btn pri', onclick: () => ask({ op: 'leer' }, 'Leer el chip') }, 'Leer el chip ahora'),
-          h('button', { class: 'btn', onclick: () => P.openApp(APP_ID).then(() => P.toast('Abierta en la placa')).catch(e => P.toast(e.message, true)) }, 'Abrir la app'),
-          h('label', { class: 'muted small' }, 'Chip en la placa: ',
-            h('select', { onchange: e => ask({ op: 'chip', chip: e.target.value }, 'Cambiar el chip') },
+          h('button', { class: 'btn pri', onclick: () => ask({ op: 'leer' }, tr('Leer el chip')) }, tr('Leer el chip ahora')),
+          h('button', { class: 'btn', onclick: () => P.openApp(APP_ID).then(() => P.toast(tr('Abierta en la placa'))).catch(e => P.toast(e.message, true)) }, tr('Abrir la app')),
+          h('label', { class: 'muted small' }, tr('Chip en la placa:') + ' ',
+            h('select', { onchange: e => ask({ op: 'chip', chip: e.target.value }, tr('Cambiar el chip')) },
               ...CHIPS.map(n => h('option', { value: n, selected: c && c.chip === n ? '' : null }, n))))),
         status, bar);
     };
@@ -188,14 +190,14 @@ P.registerPage({
 
     /* A request: open the app, leave the file, follow its answer. */
     const ask = async (req, what) => {
-      if (req.op === 'escribir' && !confirm(`Escribir ${req.archivo} en el ${req.chip}? Antes la placa guarda una copia de lo que tiene, y después lo verifica.`)) return;
+      if (req.op === 'escribir' && !confirm(tr('¿Escribir %s en el %s? Antes la placa guarda una copia de lo que tiene, y después lo verifica.', req.archivo, req.chip))) return;
       reqId = Math.random().toString(36).slice(2, 10);
       try {
         await P.openApp(APP_ID);
         await P.fsMkdir(DIR);
         await P.fsPut(DIR + '/pedido.json', JSON.stringify({ id: reqId, ...req }));
       } catch (e) { P.toast(e.message, true); reqId = null; return; }
-      put(status, h('span', { class: 'muted' }, `${what}: esperando a la app…`));
+      put(status, h('span', { class: 'muted' }, tr('%s: esperando a la app…', what)));
       bar.style.display = '';
       bar.firstChild.style.width = '0';
       clearInterval(poll);
@@ -204,16 +206,16 @@ P.registerPage({
         if (gone) return clearInterval(poll);
         const s = await readJson(DIR + '/estado.json');
         if (!s || s.id !== reqId) {
-          if (Date.now() - t0 > 8000) { clearInterval(poll); put(status, h('span', { class: 'bad' }, 'La app no contestó. ¿Está la placa encendida?')); bar.style.display = 'none'; }
+          if (Date.now() - t0 > 8000) { clearInterval(poll); put(status, h('span', { class: 'bad' }, tr('La app no contestó. ¿Está la placa encendida?'))); bar.style.display = 'none'; }
           return;
         }
         bar.firstChild.style.width = Math.round((s.progreso || 0) * 100) + '%';
-        if (s.estado === 'trabajando') { put(status, h('span', {}, `${what}: ${s.fase || 'trabajando'} ${Math.round((s.progreso || 0) * 100)} %`)); return; }
+        if (s.estado === 'trabajando') { put(status, h('span', {}, what + ': ' + (s.fase || tr('trabajando')) + ' ' + Math.round((s.progreso || 0) * 100) + ' %')); return; }
         clearInterval(poll);
         bar.style.display = 'none';
         reqId = null;
         const ok = s.estado === 'listo';
-        put(status, h('span', { class: ok ? 'ok' : 'bad' }, (ok ? '✓ ' : '✗ ') + (s.mensaje || (ok ? 'Listo.' : 'Falló.')).replace(/\n/g, ' ')));
+        put(status, h('span', { class: ok ? 'ok' : 'bad' }, (ok ? '✓ ' : '✗ ') + (s.mensaje || (ok ? tr('Listo.') : tr('Falló.'))).replace(/\n/g, ' ')));
         await refreshBoard();
         if (req.op === 'chip') { chip = req.chip; await loadFolders(); }
         await loadList();
@@ -232,7 +234,7 @@ P.registerPage({
     };
 
     const loadList = async () => {
-      if (!chip) { put(listCard, h('div', { class: 'pad muted' }, 'Elegí un chip.')); return; }
+      if (!chip) { put(listCard, h('div', { class: 'pad muted' }, tr('Elegí un chip.'))); return; }
       let files = [];
       try { files = (await P.fsList(`${DIR}/${chip}`)).filter(f => !f.dir && /\.bin$/i.test(f.name) && !f.name.startsWith('.')); } catch { }
       files.sort((x, y) => y.name.localeCompare(x.name));
@@ -246,32 +248,32 @@ P.registerPage({
       const rows = vers.map(v => {
         const m = v.meta, src = m.source || '';
         return h('div', { class: 'eever' + (v.name === b || v.name === a ? ' sel' : '') },
-          h('span', { class: 'eesrc ' + src }, SRC[src] || src || 'archivo'),
+          h('span', { class: 'eesrc ' + src }, SRC[src] ? tr(SRC[src]) : src || tr('archivo')),
           h('span', { class: 'nm' }, m.date || v.name.replace(/\.bin$/i, '')),
           h('span', { class: 'eeab' },
-            h('label', { title: 'Comparar desde esta' }, h('input', { type: 'radio', name: 'eeA', checked: v.name === a ? '' : null, onchange: () => { a = v.name; showView(); drawList(); } }), 'A'),
-            h('label', { title: 'Ver esta' }, h('input', { type: 'radio', name: 'eeB', checked: v.name === b ? '' : null, onchange: () => { b = v.name; showView(); drawList(); } }), 'B')),
+            h('label', { title: tr('Comparar desde esta') }, h('input', { type: 'radio', name: 'eeA', checked: v.name === a ? '' : null, onchange: () => { a = v.name; showView(); drawList(); } }), 'A'),
+            h('label', { title: tr('Ver esta') }, h('input', { type: 'radio', name: 'eeB', checked: v.name === b ? '' : null, onchange: () => { b = v.name; showView(); drawList(); } }), 'B')),
           h('div', { class: 'sub' }, `${sizeText(v.size)} · CRC32 ${m.crc32 || '—'}${m.note ? ' · ' + m.note : ''}`),
           h('div', { class: 'btns' },
-            h('button', { class: 'btn', onclick: () => { b = v.name; showView(); drawList(); } }, 'Ver'),
-            h('a', { class: 'btn', href: P.fsUrl(`${DIR}/${chip}/${v.name}`, true), download: `${chip}-${v.name}` }, 'Bajar'),
-            h('button', { class: 'btn', onclick: () => editNote(v) }, 'Nota'),
-            h('button', { class: 'btn', onclick: () => ask({ op: 'escribir', chip, archivo: v.name }, 'Escribir ' + v.name),
+            h('button', { class: 'btn', onclick: () => { b = v.name; showView(); drawList(); } }, tr('Ver')),
+            h('a', { class: 'btn', href: P.fsUrl(`${DIR}/${chip}/${v.name}`, true), download: `${chip}-${v.name}` }, tr('Bajar')),
+            h('button', { class: 'btn', onclick: () => editNote(v) }, tr('Nota')),
+            h('button', { class: 'btn', onclick: () => ask({ op: 'escribir', chip, archivo: v.name }, tr('Escribir %s', v.name)),
               disabled: board && board.chip === chip && v.size === board.tamano ? null : '',
-              title: board && board.chip !== chip ? 'En la placa está elegido otro chip' : '' }, 'Escribir en el chip'),
-            h('button', { class: 'btn red', onclick: () => remove(v) }, 'Borrar')));
+              title: board && board.chip !== chip ? tr('En la placa está elegido otro chip') : '' }, tr('Escribir en el chip')),
+            h('button', { class: 'btn red', onclick: () => remove(v) }, tr('Borrar'))));
       });
       put(listCard,
         h('div', { class: 'eetools' },
-          h('b', {}, 'Versiones'), pick,
-          h('span', { class: 'muted small' }, `${vers.length} en ${DIR}/${chip}`),
+          h('b', {}, tr('Versiones')), pick,
+          h('span', { class: 'muted small' }, tr('%d en %s', vers.length, `${DIR}/${chip}`)),
           h('span', { style: 'flex:1' }),
-          h('button', { class: 'btn', onclick: () => up.click() }, 'Subir un .bin'), up),
-        ...(rows.length ? rows : [h('div', { class: 'pad muted' }, 'Todavía no hay versiones de este chip. Cada lectura en la placa guarda una.')]));
+          h('button', { class: 'btn', onclick: () => up.click() }, tr('Subir un .bin')), up),
+        ...(rows.length ? rows : [h('div', { class: 'pad muted' }, tr('Todavía no hay versiones de este chip. Cada lectura en la placa guarda una.'))]));
     };
 
     const editNote = async v => {
-      const note = prompt('Nota de ' + v.name, v.meta.note || '');
+      const note = prompt(tr('Nota de %s', v.name), v.meta.note || '');
       if (note === null) return;
       const m = { ...v.meta, note };
       try { await P.fsPut(`${DIR}/${chip}/${v.name.replace(/\.bin$/i, '.json')}`, JSON.stringify(m) + '\n'); loadList(); }
@@ -279,7 +281,7 @@ P.registerPage({
     };
 
     const remove = async v => {
-      if (!confirm(`Borrar ${v.name} de la tarjeta? No se puede deshacer.`)) return;
+      if (!confirm(tr('¿Borrar %s de la tarjeta? No se puede deshacer.', v.name))) return;
       try {
         await P.fsDelete(`${DIR}/${chip}/${v.name}`);
         await P.fsDelete(`${DIR}/${chip}/${v.name.replace(/\.bin$/i, '.json')}`).catch(() => {});
@@ -293,16 +295,16 @@ P.registerPage({
       if (!file || !chip) return;
       const bytes = new Uint8Array(await file.arrayBuffer());
       const want = board && board.chip === chip ? board.tamano : null;
-      if (want && bytes.length !== want && !confirm(`${file.name} tiene ${sizeText(bytes.length)} y el ${chip} ${sizeText(want)}: no se va a poder escribir. ¿Subirlo igual?`)) return;
+      if (want && bytes.length !== want && !confirm(tr('%s tiene %s y el %s %s: no se va a poder escribir. ¿Subirlo igual?', file.name, sizeText(bytes.length), chip, sizeText(want)))) return;
       const st = stamp(), name = `${st.file}-portal.bin`;
-      const meta = { chip, size: bytes.length, date: st.date, source: 'portal', note: 'subido: ' + file.name,
+      const meta = { chip, size: bytes.length, date: st.date, source: 'portal', note: tr('subido: %s', file.name),
         crc32: crc32(bytes), md5: md5(bytes), sha256: sha256(bytes) };
       try {
         await P.fsMkdir(DIR);
         await P.fsMkdir(`${DIR}/${chip}`);
-        await P.fsPut(`${DIR}/${chip}/${name}`, new Blob([bytes]), f => put(status, h('span', { class: 'muted' }, `Subiendo ${Math.round(f * 100)} %`)));
+        await P.fsPut(`${DIR}/${chip}/${name}`, new Blob([bytes]), f => put(status, h('span', { class: 'muted' }, tr('Subiendo %s', Math.round(f * 100) + ' %'))));
         await P.fsPut(`${DIR}/${chip}/${name.replace(/\.bin$/, '.json')}`, JSON.stringify(meta) + '\n');
-        put(status, h('span', { class: 'ok' }, `✓ Subido como ${name}`));
+        put(status, h('span', { class: 'ok' }, tr('✓ Subido como %s', name)));
         b = name;
         await loadList();
         showView();
@@ -319,8 +321,8 @@ P.registerPage({
     };
 
     const showView = async () => {
-      if (!b) { put(viewCard, h('div', { class: 'pad muted' }, 'Tocá Ver en una versión para verla en hexa; con A y B, las diferencias.')); return; }
-      put(viewCard, h('div', { class: 'pad muted' }, 'Cargando…'));
+      if (!b) { put(viewCard, h('div', { class: 'pad muted' }, tr('Tocá Ver en una versión para verla en hexa; con A y B, las diferencias.'))); return; }
+      put(viewCard, h('div', { class: 'pad muted' }, tr('Cargando…')));
       let B, A = null;
       try { B = await bytesOf(b); if (a && a !== b) A = await bytesOf(a); }
       catch (e) { put(viewCard, h('div', { class: 'pad bad' }, e.message)); return; }
@@ -367,8 +369,8 @@ P.registerPage({
         draw();
       };
       box.addEventListener('scroll', draw);
-      const addr = h('input', { type: 'text', placeholder: 'dirección (hexa)', onkeydown: e => { if (e.key === 'Enter') { const v = parseInt(addr.value.replace(/^0x/i, ''), 16); if (v >= 0 && v < B.length) go(v); } } });
-      const find = h('input', { type: 'text', placeholder: 'texto o DE AD BE EF' });
+      const addr = h('input', { type: 'text', placeholder: tr('dirección (hexa)'), onkeydown: e => { if (e.key === 'Enter') { const v = parseInt(addr.value.replace(/^0x/i, ''), 16); if (v >= 0 && v < B.length) go(v); } } });
+      const find = h('input', { type: 'text', placeholder: tr('texto o DE AD BE EF') });
       const search = () => {
         const q = find.value.trim();
         if (!q) return;
@@ -380,18 +382,18 @@ P.registerPage({
           for (let j = 0; m && j < pat.length; j++) m = B[i + j] === pat[j];
           if (m) return go(i, pat.length);
         }
-        P.toast('No está', true);
+        P.toast(tr('No está'), true);
       };
       find.addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
       const sums = h('div', { class: 'pad mono eesums muted' }, `CRC32 ${crc32(B)} · MD5 ${md5(B)} · SHA-256 ${sha256(B)}`);
       put(viewCard,
         h('div', { class: 'eetools' },
-          h('b', {}, b), A ? h('span', { class: 'muted' }, `comparada con ${a}: `, h('span', { class: ndiff ? 'bad' : 'ok' }, ndiff ? `${ndiff} bytes distintos en ${diff.length} tramos` : 'iguales')) : null,
-          h('span', { style: 'flex:1' }), addr, find, h('button', { class: 'btn', onclick: search }, 'Buscar'),
-          h('a', { class: 'btn', href: P.fsUrl(`${DIR}/${chip}/${b}`, true), download: `${chip}-${b}` }, 'Bajar')),
+          h('b', {}, b), A ? h('span', { class: 'muted' }, tr('comparada con %s:', a) + ' ', h('span', { class: ndiff ? 'bad' : 'ok' }, ndiff ? tr('%d bytes distintos en %d tramos', ndiff, diff.length) : tr('iguales'))) : null,
+          h('span', { style: 'flex:1' }), addr, find, h('button', { class: 'btn', onclick: search }, tr('Buscar')),
+          h('a', { class: 'btn', href: P.fsUrl(`${DIR}/${chip}/${b}`, true), download: `${chip}-${b}` }, tr('Bajar'))),
         diff.length ? h('div', { class: 'eeranges' }, ...diff.slice(0, 300).map(([s, e]) =>
           h('a', { href: '#eeprom', onclick: ev => { ev.preventDefault(); go(s, e - s); } }, `${s.toString(16).toUpperCase()}${e - s > 1 ? '–' + (e - 1).toString(16).toUpperCase() : ''}`)),
-          diff.length > 300 ? h('span', { class: 'muted small' }, `y ${diff.length - 300} tramos más`) : null) : null,
+          diff.length > 300 ? h('span', { class: 'muted small' }, tr('y %d tramos más', diff.length - 300)) : null) : null,
         box, sums);
       requestAnimationFrame(draw);
     };
@@ -399,12 +401,12 @@ P.registerPage({
     put(main,
       h('h1', {}, 'EEPROM'),
       head,
-      h('p', { class: 'note' }, 'Las versiones están en la tarjeta, en /eeprom/<chip>. Cada lectura en la placa guarda una; antes de cada escritura se guarda lo que había.'),
+      h('p', { class: 'note' }, tr('Las versiones están en la tarjeta, en /eeprom/<chip>. Cada lectura en la placa guarda una; antes de cada escritura se guarda lo que había.')),
       listCard,
       h('div', { style: 'height:16px' }),
       viewCard);
     drawHead();
-    put(listCard, h('div', { class: 'pad muted' }, 'Cargando…'));
+    put(listCard, h('div', { class: 'pad muted' }, tr('Cargando…')));
     showView();
     refreshBoard().then(async () => { if (!chip) { await loadFolders(); chip = pick.value; loadList(); } });
     const t = setInterval(() => { if (!reqId) refreshBoard(); }, 4000);

@@ -18,28 +18,30 @@ ESP32-P4 rev 1.3 at 360 MHz, E1L1 of the shareware, the time the game's core
 spends on one frame: the game's logic, the renderer, the palette pass and the
 sound mix together (the log line's `frame N ms of game`).
 
-| Mode | Frame | Frame rate | Screen |
-|---|---|---|---|
-| 320x200 | 16 ms | 30 fps (the game's own rate; 59 uncapped) | clean |
-| 480x300 | 29 ms | 30 fps | clean |
-| 640x400 | 50 ms | 20 fps | flashes |
-| 640x480 | 57 ms | 17 fps | flashes |
+| Mode | Frame | Frame rate |
+|---|---|---|
+| 320x200 | 16 ms | 30 fps (the game's own rate; 59 uncapped) |
+| 480x300 | 29 ms | 30 fps (34 uncapped) |
+| 640x400 | 50-69 ms | 15-21 fps |
+| 640x480 | 57 ms | 15-18 fps |
 
 - **One frame per step of the game's logic.** Duke moves the world 30 times
   a second and draws without interpolating, so the port waits for the next
   step before drawing again. Uncapped, E1L1 drew 56 frames a second at
   320x200 and the menu 78, half of them copies.
-- **The limit is PSRAM, not the CPU.** Building the renderer at `-O2`
-  instead of `-Os` moved nothing (640x400: 48-52 ms). Build draws walls a
-  column at a time, reading textures from a 6.6 MB tile cache and writing an
-  8-bit frame, all in PSRAM.
-- **640x400 and up flash the screen.** At those sizes the game's core reads
-  and writes PSRAM without a pause, and the panel, which refreshes from its
-  own framebuffer in the same PSRAM, starves for a moment: the screen
-  flashes cyan (docs/MEMORY.md, "PSRAM bandwidth"). So Duke's video menu
-  offers 320x200, 400x250 and 480x300. A firmware-side remedy is an open
-  question; a bigger L2 cache is not one (it is carved out of the internal
-  RAM, which the board has none of to spare).
+- **Not the instructions.** Building the renderer at `-O2` instead of `-Os`
+  moved nothing (640x400: 48-52 ms). Build draws walls a column at a time,
+  reading textures from a 6.6 MB tile cache and writing an 8-bit frame, all
+  in PSRAM: the time goes in waiting for memory.
+- **640x400 and 640x480 use all of core 0**, and on the firmware of 0.15.1
+  that flashed the screen blue a few times a minute. It looked like PSRAM
+  bandwidth and was not: the task watchdog found core 0's idle task starved
+  and printed its dump from its interrupt, and the panel's refresh, which an
+  interrupt restarts every frame within the vertical blanking, came late. The
+  firmware no longer watches core 0's idle task and has a wider blanking
+  (51 Hz instead of 55) since `8b3dde5` and `fcde1e5` (docs/MEMORY.md, "Not
+  every blue flash is bandwidth"); with it every mode plays clean. **On an
+  older firmware, stay at 480x300.**
 - **The sound**, effects and music together, takes 7 to 14 % of core 0, the
   music most of it (OPL3, see below).
 - **Loading** to the title takes about 2 s; a level, under a second.
@@ -271,6 +273,11 @@ The app's `CMakeLists.txt` adds `-fcommon -fwrapv -fwrapv-pointer
   `KB_KeyWaiting()` without a frame drawn: past 64 the game is waiting, the
   pad sends keys, and each call sleeps a millisecond and mixes (a loop that
   never blocks on core 0 starves the idle task).
+- **The blue flashes were not the PSRAM.** Uncapped at 320x200 and at
+  640x400 the screen flashed; both use all of core 0, and the culprit was
+  the task watchdog's report from its interrupt delaying the panel's restart
+  (see the measurements above). The cap to the game's 30 fps is still right,
+  for its own reason: the frames beyond it were copies.
 - **Doubles.** The Apogee mixer of Chocolate mixes in `double`, which the
   P4 does in software; it is `float` here, with the hardware's FPU.
 - **libgcc.** `__ashrdi3` (a 64-bit shift, from the fixed-point maths) and

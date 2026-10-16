@@ -25,10 +25,11 @@
   DBOPL, through Apogee's own AdLib driver), the touch pad of Doom with Duke's
   buttons (jump, crouch, items), a USB gamepad, saves, and the shareware or
   the full game's `DUKE3D.GRP` in the card's `duke3d/` (none is included).
-  640x400 runs at 20 fps but its PSRAM traffic starves the panel's refresh
-  and the screen flashes, so the video menu stops at 480x300. GPL v2, and the
-  Build licence for its engine; the details and the traps (int32_t as long,
-  1996 C under gcc 14, a pixel budget that ran out) in its README.
+  640x400 and 640x480 too, at 15-21 and 15-18 fps, clean with the panel's
+  fixes above (they use all of core 0, which flashed the screen before them).
+  GPL v2, and the Build licence for its engine; the details and the traps
+  (int32_t as long, 1996 C under gcc 14, a pixel budget that ran out) in its
+  README.
 
 ## 0.15.1 — 2026-10-15
 

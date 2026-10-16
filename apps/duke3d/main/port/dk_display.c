@@ -201,16 +201,17 @@ static void present(void)
  * Video modes
  * -------------------------------------------------------------------------- */
 
-/* What the video menu offers, 16:10 with even widths; the app scales each
- * to the landscape screen. Measured in E1L1 (the game's whole frame on core
- * 0: logic, renderer, palette pass, sound): 320x200 16 ms, 480x300 29 ms,
- * 640x400 50 ms, 640x480 57 ms. The bigger two run (20 and 17 fps) but
- * keep the core reading textures from PSRAM and writing the frame there
- * without a pause, and the panel's refresh, which reads its own framebuffer
- * from the same PSRAM, starves: the screen flashes (docs/MEMORY.md, "PSRAM
- * bandwidth"). 480x300 was tried and does not. So the menu stops there. */
+/* What the video menu offers; the app scales each to the landscape screen
+ * keeping its shape. Measured in E1L1 (the game's whole frame on core 0:
+ * logic, renderer, palette pass, sound): 320x200 16 ms, 480x300 29 ms,
+ * 640x400 50 ms, 640x480 57 ms; at the two big ones the game uses all of
+ * core 0 and runs at 17-21 fps. That used to flash the screen blue: the task
+ * watchdog found core 0's idle task starved and printed from its interrupt,
+ * which made the panel's per-frame restart late. The firmware stopped
+ * watching core 0's idle task and widened the vertical blanking (8b3dde5,
+ * fcde1e5, docs/MEMORY.md); with it every mode here plays clean. */
 static const int MODES[][2] = {
-    { 320, 200 }, { 400, 250 }, { 480, 300 },
+    { 320, 200 }, { 400, 250 }, { 480, 300 }, { 640, 400 }, { 640, 480 },
 };
 
 void getvalidvesamodes(void)
@@ -390,11 +391,10 @@ void dk_running(void);
 /* One frame per step of the game's logic. Duke moves the world 30 times a
  * second (TICRATE 120, TICSPERFRAME 4, duke3d.h) and draws without
  * interpolating, so any frame beyond that is the same picture again: the
- * engine measured 56 fps in E1L1 and 78 in the menu, half of them copies.
- * And each one costs the PPA 1.15 MB written to PSRAM, which at those rates
- * starved the panel's refresh and flashed the screen (docs/MEMORY.md,
- * "PSRAM bandwidth"). So a frame waits here until the clock has moved a
- * step since the last one, mixing sound meanwhile. */
+ * engine measured 56 fps in E1L1 and 78 in the menu, half of them copies,
+ * and each one a PPA pass and a whole core 0 for nothing. So a frame waits
+ * here until the clock has moved a step since the last one, mixing sound
+ * meanwhile, and at 320x200 core 0 rests half of the time. */
 #define TICS_PER_FRAME  4
 
 /* What a frame costs the game's core, the wait for the next step left out:

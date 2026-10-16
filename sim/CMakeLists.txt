@@ -72,6 +72,17 @@ foreach(a ${P4OS_SIM_APPS})
     list(APPEND AOS_DYNAPP_SRC ${_src})
 endforeach()
 
+# An app that builds more than main/*.c (libraries of its own, C++,
+# third-party code with its own flags) brings apps/<app>/sim.cmake: it makes
+# its static libraries and appends their targets to AOS_SIM_APP_LIBS, which
+# the simulator links. The Emulador's consoles are the first.
+set(AOS_SIM_APP_LIBS "")
+foreach(a ${P4OS_SIM_APPS})
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../apps/${a}/sim.cmake)
+        include(${CMAKE_CURRENT_SOURCE_DIR}/../apps/${a}/sim.cmake)
+    endif()
+endforeach()
+
 # El interprete de apps/lua vive un nivel mas abajo que ese glob, que no es
 # recursivo. Se compila como biblioteca aparte y no dentro del ejecutable
 # porque es codigo de terceros: no le caben nuestras -Wall -Wextra (Lua sale
@@ -247,6 +258,7 @@ target_link_libraries(p4os_sim PRIVATE lvgl ${SDL2_LIBRARIES} m aos_cjson
     $<$<BOOL:${AOS_UPY_SRC}>:aos_upy>
     $<$<BOOL:${AOS_DOOM_SRC}>:aos_doom>
     $<$<BOOL:${AOS_RTLSDR_SRC}>:aos_rtlsdr>
+    ${AOS_SIM_APP_LIBS}
     ${MBEDTLS_LIB} ${MBEDX509_LIB} ${MBEDCRYPTO_LIB} ${AVCODEC_LIBRARIES})
 target_link_directories(p4os_sim PRIVATE ${SDL2_LIBRARY_DIRS} ${AVCODEC_LIBRARY_DIRS})
 

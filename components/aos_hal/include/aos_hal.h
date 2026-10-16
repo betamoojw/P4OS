@@ -78,6 +78,23 @@ int  aos_hal_screen_h(void);        /* logical height, 1280 or 720 */
  * effect immediately: the HAL rotates the output and the touch, the caller
  * (aos_ui) re-lays out whatever is on screen. */
 void aos_hal_display_set_rotation(int degrees);
+
+/* The panel's refresh reads its framebuffer from PSRAM and nothing waits for
+ * it: when other traffic (a game's textures through the cache) starves it, the
+ * DSI bridge runs dry and the screen flashes blue. aos_hal_panel_underruns()
+ * counts those since boot. The AXI interconnect arbitrates PSRAM between its
+ * masters with a priority each (0-15, all 0 at reset): 'dma' is the DW-GDMA
+ * port that feeds the panel, 'cache' the CPUs' cache. Set at boot from the
+ * prefs; aos_hal_panel_qos_set(.., save) keeps them (docs/MEMORY.md). */
+uint32_t aos_hal_panel_underruns(void);
+/* frames refreshed, restarts that came late (a blank, blue frame each) and
+ * the longest gap between two, since boot */
+void     aos_hal_panel_frames(uint32_t *frames, uint32_t *late, uint32_t *max_gap_us);
+/* the uptimes (ms) of the last late restarts and of the last task-watchdog
+ * triggers, up to 'max' each, oldest first; returns nothing else */
+void     aos_hal_panel_stamps(uint32_t *late, int *nlate, uint32_t *wdt, int *nwdt, int max);
+void     aos_hal_panel_qos_get(int *dma, int *cache);
+bool     aos_hal_panel_qos_set(int dma, int cache, bool save);
 int  aos_hal_display_get_rotation(void);
 
 /* What LVGL has sent to the panel since boot: pixels and frames. The Monitor

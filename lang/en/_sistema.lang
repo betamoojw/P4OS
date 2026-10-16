@@ -7466,3 +7466,6 @@ clave desconocida	unknown key
 se leen al arrancar: reiniciar para aplicar	read at boot: restart to apply
 la otra ranura no tiene una imagen	the other slot has no image
 no se pudo borrar	could not delete
+
+#: components/aos_portal/aos_portal_sysmon.c
+dma y cache van de 0 a 15, vfp de 8 a 600	dma and cache go from 0 to 15, vfp from 8 to 600

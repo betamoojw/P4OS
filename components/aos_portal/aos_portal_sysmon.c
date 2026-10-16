@@ -127,6 +127,26 @@ static void api_sysmon(aos_httpd_req_t *r)
     cJSON_AddStringToObject(sy, "board", aos_hal_board_name());
     cJSON_AddStringToObject(sy, "firmware", aos_hal_firmware_version());
     cJSON_AddNumberToObject(sy, "uptime_s", (double)(aos_hal_uptime_ms() / 1000));
+    /* the panel's refresh starved of PSRAM (a blue flash each), and the bus' QoS */
+    {
+        int qd = 0, qc = 0;
+        aos_hal_panel_qos_get(&qd, &qc);
+        cJSON *pn = cJSON_AddObjectToObject(sy, "panel");
+        cJSON_AddNumberToObject(pn, "underruns", aos_hal_panel_underruns());
+        uint32_t fr = 0, late = 0, gap = 0;
+        aos_hal_panel_frames(&fr, &late, &gap);
+        cJSON_AddNumberToObject(pn, "frames", fr);
+        cJSON_AddNumberToObject(pn, "late", late);
+        cJSON_AddNumberToObject(pn, "max_gap_ms", gap / 1000.0);
+        uint32_t la[8], wd[8];
+        int nl = 0, nw = 0;
+        aos_hal_panel_stamps(la, &nl, wd, &nw, 8);
+        cJSON *jl = cJSON_AddArrayToObject(pn, "late_at_ms"), *jw = cJSON_AddArrayToObject(pn, "wdt_at_ms");
+        for (int i = 0; i < nl; i++) cJSON_AddItemToArray(jl, cJSON_CreateNumber(la[i]));
+        for (int i = 0; i < nw; i++) cJSON_AddItemToArray(jw, cJSON_CreateNumber(wd[i]));
+        cJSON_AddNumberToObject(pn, "qos_dma", qd);
+        cJSON_AddNumberToObject(pn, "qos_cache", qc);
+    }
     if (have_si) {
         add_str_or_null(sy, "chip", si.chip);
         cJSON_AddNumberToObject(sy, "chip_rev", si.chip_rev);
@@ -261,8 +281,36 @@ static void api_sysmon(aos_httpd_req_t *r)
     cJSON_Delete(o);
 }
 
+/* POST /api/panel/qos?dma=0..15&cache=0..15[&save=1]: the AXI arbiter's
+ * priorities for the panel's DMA and the cache (aos_hal.h), to try them live
+ * while something heavy runs; save=1 keeps them for the next boots. */
+static void api_panel_qos(aos_httpd_req_t *r)
+{
+    int qd = 0, qc = 0;
+    aos_hal_panel_qos_get(&qd, &qc);
+    qd = aos_httpd_query_int(r, "dma", qd);
+    qc = aos_httpd_query_int(r, "cache", qc);
+    bool ok = aos_hal_panel_qos_set(qd, qc, aos_httpd_query_int(r, "save", 0) != 0);
+    /* &vfp=N: the panel's vertical front porch in lines, for the next boot */
+    int vfp = aos_httpd_query_int(r, "vfp", -1);
+    if (vfp >= 8 && vfp <= 600) aos_hal_pref_set_i32("pnl_vfp", vfp);
+    else if (vfp != -1) ok = false;
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddBoolToObject(o, "ok", ok);
+    if (!ok) cJSON_AddStringToObject(o, "error", _("dma y cache van de 0 a 15, vfp de 8 a 600"));
+    aos_hal_panel_qos_get(&qd, &qc);
+    cJSON_AddNumberToObject(o, "dma", qd);
+    cJSON_AddNumberToObject(o, "cache", qc);
+    cJSON_AddNumberToObject(o, "underruns", aos_hal_panel_underruns());
+    char *s = cJSON_PrintUnformatted(o);
+    aos_httpd_send_json(r, ok ? 200 : 400, s ? s : "{}");
+    free(s);
+    cJSON_Delete(o);
+}
+
 bool aos_portal_sysmon(aos_httpd_req_t *r, const char *method, const char *p)
 {
+    if (!strcmp(p, "panel/qos") && !strcmp(method, "POST")) { api_panel_qos(r); return true; }
     if (strcmp(p, "sysmon")) return false;
     if (strcmp(method, "GET")) {
         cJSON *o = cJSON_CreateObject();

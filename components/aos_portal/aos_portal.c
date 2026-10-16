@@ -39,6 +39,7 @@
  *   GET  /api/claude ...               the Claude plan's usage and its sign-in (aos_portal_claude.c)
  *   GET  /api/mqtt ...                 MQTT: the topics seen, publish, settings (aos_portal_mqtt.c)
  *   GET  /api/sysmon[?hist=0]          the Monitor: CPU, tasks, memory, network, card (aos_portal_sysmon.c)
+ *   POST /api/panel/qos?dma=&cache=[&save=1]  the AXI arbiter's priorities for the panel's refresh (aos_portal_sysmon.c)
  *   GET  /api/macropad ...             the Macro pad's layout, trying a button (aos_portal_macropad.c)
  *   GET  /api/expansion ...  /api/sensors ...  the header, modules.txt, the sensors (aos_portal_modules.c)
  *   GET  /api/log?from=                the log ring since a position

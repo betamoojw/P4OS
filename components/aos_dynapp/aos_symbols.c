@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3363 simbolos.
+ * Total: 3368 simbolos.
  */
 
 #include <stddef.h>
@@ -443,9 +443,13 @@ extern int aos_hal_ota_running_slot;
 extern int aos_hal_ota_write;
 extern int aos_hal_p256_ecdh;
 extern int aos_hal_p256_keypair;
+extern int aos_hal_panel_frames;
 extern int aos_hal_panel_hw_reset;
+extern int aos_hal_panel_qos_get;
+extern int aos_hal_panel_qos_set;
 extern int aos_hal_panel_sleep_enable;
 extern int aos_hal_panel_sleep_enabled;
+extern int aos_hal_panel_underruns;
 extern int aos_hal_path_apps;
 extern int aos_hal_path_data;
 extern int aos_hal_path_icons;
@@ -1197,6 +1201,7 @@ extern int dsps_fird_init_s16;
 extern int dsps_fird_s16_aexx_free;
 extern int dsps_fird_s16_ansi;
 extern int dsps_fird_s16_arp4;
+extern int esp_task_wdt_isr_user_handler;
 extern int exp2f;
 extern int expf;
 extern int fabsf;
@@ -3809,9 +3814,13 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_ota_write),
     ESP_ELFSYM_EXPORT(aos_hal_p256_ecdh),
     ESP_ELFSYM_EXPORT(aos_hal_p256_keypair),
+    ESP_ELFSYM_EXPORT(aos_hal_panel_frames),
     ESP_ELFSYM_EXPORT(aos_hal_panel_hw_reset),
+    ESP_ELFSYM_EXPORT(aos_hal_panel_qos_get),
+    ESP_ELFSYM_EXPORT(aos_hal_panel_qos_set),
     ESP_ELFSYM_EXPORT(aos_hal_panel_sleep_enable),
     ESP_ELFSYM_EXPORT(aos_hal_panel_sleep_enabled),
+    ESP_ELFSYM_EXPORT(aos_hal_panel_underruns),
     ESP_ELFSYM_EXPORT(aos_hal_path_apps),
     ESP_ELFSYM_EXPORT(aos_hal_path_data),
     ESP_ELFSYM_EXPORT(aos_hal_path_icons),
@@ -4563,6 +4572,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(dsps_fird_s16_aexx_free),
     ESP_ELFSYM_EXPORT(dsps_fird_s16_ansi),
     ESP_ELFSYM_EXPORT(dsps_fird_s16_arp4),
+    ESP_ELFSYM_EXPORT(esp_task_wdt_isr_user_handler),
     ESP_ELFSYM_EXPORT(exp2f),
     ESP_ELFSYM_EXPORT(expf),
     ESP_ELFSYM_EXPORT(fabsf),

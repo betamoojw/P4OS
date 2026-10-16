@@ -562,6 +562,8 @@ static int s_brightness = 80;
 static bool IRAM_ATTR on_frame(esp_lcd_panel_handle_t panel, esp_lcd_dpi_panel_event_data_t *e, void *ctx)
 {
     /* the DMA has just started the next refresh from the buffer asked for */
+    extern void aos_p4_panel_frame(void);       /* aos_panel_p4.c: a late restart is a blank frame */
+    aos_p4_panel_frame();
     s_scan = s_req;
     BaseType_t woken = pdFALSE;
     xSemaphoreGiveFromISR(s_frame_sem, &woken);
@@ -604,6 +606,34 @@ static void cache_flush(const void *p, size_t len)
     esp_cache_msync((void *)a, b - a, ESP_CACHE_MSYNC_FLAG_DIR_C2M | ESP_CACHE_MSYNC_FLAG_UNALIGNED);
 }
 
+static esp_err_t panel_init(void);
+
+/* The panel is brought up from core 1, so that IDF allocates its interrupts
+ * there: the refresh is not a free-running DMA, the DW-GDMA's end-of-frame
+ * interrupt restarts it every frame (esp_lcd_panel_dpi.c,
+ * mipi_dsi_dma_trans_done_cb), within a vertical blanking of about half a
+ * millisecond, and an interrupt is serviced by the core that allocated it.
+ * Core 0 is the apps' workers', which may use all of it. (The blue flashes
+ * under Duke Nukem 3D at 640x400 were the task watchdog's, not this:
+ * sdkconfig.defaults and docs/MEMORY.md.) The task is gone once the panel is
+ * up; its stack is internal for that while only. */
+static void panel_init_task(void *arg)
+{
+    panel_init();
+    xTaskNotifyGive((TaskHandle_t)arg);
+    vTaskDelete(NULL);
+}
+
+static void panel_init_on_core1(void)
+{
+    if (xTaskCreatePinnedToCore(panel_init_task, "panel-up", 6144, xTaskGetCurrentTaskHandle(), 10, NULL, 1) != pdPASS) {
+        ESP_LOGW(TAG, "panel: no task on core 1, brought up here (core %d)", xPortGetCoreID());
+        panel_init();
+        return;
+    }
+    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+}
+
 static esp_err_t panel_init(void)
 {
     ESP_ERROR_CHECK(bsp_display_brightness_init());
@@ -619,6 +649,15 @@ static esp_err_t panel_init(void)
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_dbi(bus, &dbi, &io));
 
     esp_lcd_dpi_panel_config_t dpi = HX8394_720_1280_PANEL_30HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    /* The refresh is restarted by an interrupt at the end of each frame, and
+     * it has to come within the vertical blanking: 38 lines at 13.8 us, about
+     * half a millisecond. Any interrupt latency beyond that on its core (a
+     * critical section, a cache operation, another handler) starts the next
+     * frame with no data, a blue one. More front porch widens that window,
+     * at the cost of the refresh rate (aos_panel_p4.c; "pnl_vfp" lines). */
+    int32_t vfp = dpi.video_timing.vsync_front_porch;
+    aos_hal_pref_get_i32("pnl_vfp", &vfp);
+    if (vfp >= 8 && vfp <= 600) dpi.video_timing.vsync_front_porch = (uint32_t)vfp;
     int32_t nfbs = 3;
     aos_hal_pref_get_i32("fbs", &nfbs);
     s_nfbs = nfbs == 1 ? 1 : 3;
@@ -645,6 +684,8 @@ static esp_err_t panel_init(void)
     memset(s_fb, 0, FB_BYTES);
     cache_flush(s_fb, FB_BYTES);
     esp_lcd_panel_disp_on_off(s_panel, true);
+    extern void aos_p4_panel_watch_init(void);         /* aos_panel_p4.c: underruns and the bus' QoS */
+    aos_p4_panel_watch_init();
     int32_t bl = 80;
     aos_hal_pref_get_i32("bright", &bl);
     aos_hal_brightness_set(bl);
@@ -1700,7 +1741,7 @@ bool aos_hal_init(void)
     aos_hal_boot_stage("card");
     sd_mount();
     aos_hal_boot_stage("panel");
-    panel_init();
+    panel_init_on_core1();
 
     s_lock = xSemaphoreCreateRecursiveMutex();
 

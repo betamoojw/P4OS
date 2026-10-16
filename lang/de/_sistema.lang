@@ -7466,3 +7466,6 @@ clave desconocida	unbekannter Schlüssel
 se leen al arrancar: reiniciar para aplicar	werden beim Start gelesen: zum Übernehmen neu starten
 la otra ranura no tiene una imagen	der andere Slot enthält kein Image
 no se pudo borrar	konnte nicht gelöscht werden
+
+#: components/aos_portal/aos_portal_sysmon.c
+dma y cache van de 0 a 15, vfp de 8 a 600	dma und cache gehen von 0 bis 15, vfp von 8 bis 600

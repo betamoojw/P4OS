@@ -15,6 +15,21 @@ __attribute__((weak)) int aos_hal_screen_h(void)
 __attribute__((weak)) void aos_hal_display_set_rotation(int degrees)
 { }
 
+__attribute__((weak)) uint32_t aos_hal_panel_underruns(void)
+{ uint32_t v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) void aos_hal_panel_frames(uint32_t *frames, uint32_t *late, uint32_t *max_gap_us)
+{ }
+
+__attribute__((weak)) void aos_hal_panel_stamps(uint32_t *late, int *nlate, uint32_t *wdt, int *nwdt, int max)
+{ }
+
+__attribute__((weak)) void aos_hal_panel_qos_get(int *dma, int *cache)
+{ }
+
+__attribute__((weak)) bool aos_hal_panel_qos_set(int dma, int cache, bool save)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
 __attribute__((weak)) int aos_hal_display_get_rotation(void)
 { int v; memset(&v, 0, sizeof v); return v; }
 

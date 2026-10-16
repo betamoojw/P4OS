@@ -71,6 +71,29 @@ So long sequential passes over PSRAM (scanning, big `memcpy`) should be split
 or spaced out. The Monitor now reads the high-water mark of **one** PSRAM
 stack per refresh, taking turns (`aos_tasks_p4.c`).
 
+**Not every blue flash is bandwidth** (2026-10-16). Duke Nukem 3D at 640x400
+flashed the screen blue a few times a minute, and more the longer the board
+was on. It was not the PSRAM: the bridge's raw underrun bit never latched,
+and raising the panel DMA's priority on the AXI interconnect changed
+nothing. The refresh is not a free-running DMA: the DW-GDMA's end-of-frame
+interrupt restarts it every frame, inside a vertical blanking of 38 lines
+(~0.5 ms at 58 MHz), and a restart that comes late leaves one frame blue.
+Each late restart came 30-37 ms after a task-watchdog trigger: the game's
+worker used all of core 0, the watchdog found IDLE0 starved every 5 s and
+printed its register dump from its interrupt. Core 0's idle task is not
+watched any more (`sdkconfig.defaults`); core 1, the interface's, still is.
+
+What stays, to see it next time (`aos_panel_p4.c`, `/api/sysmon` →
+`system.panel`): `underruns` (frames that ran dry, from the bridge's raw bit:
+IDF's own message only goes to the UART), `late` and `max_gap_ms` (each
+restart timed from its interrupt), and `late_at_ms` / `wdt_at_ms`, the
+uptimes of the last of each, to line them up. `POST /api/panel/qos` sets
+the interconnect's priorities live (`dma`, `cache`, 0-15) and the vertical
+front porch for the next boot (`vfp`, more lines = a wider window and a
+lower refresh rate). The panel comes up from core 1 and its interrupts are
+cache-safe (`CONFIG_LCD_DSI_ISR_CACHE_SAFE`): a flash operation suspends the
+cache on the P4, NVS reads included.
+
 ## What already lives in PSRAM
 
 | What | How |

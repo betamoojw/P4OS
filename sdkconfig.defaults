@@ -20,6 +20,18 @@ CONFIG_SPIRAM_USE_MALLOC=y
 CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY=y
 CONFIG_CACHE_L2_CACHE_256KB=y
 CONFIG_CACHE_L2_CACHE_LINE_128B=y
+# The panel's refresh is restarted by the DW-GDMA's end-of-frame interrupt.
+# Every flash operation (an NVS read too) suspends the cache on the P4, and
+# an interrupt not safe with the cache off waits for it to end: the restart
+# came late and the panel flashed blue for a frame (docs/MEMORY.md).
+CONFIG_LCD_DSI_ISR_CACHE_SAFE=y
+# Core 0 is the apps' workers' (a game uses all of it at 640x400), so its
+# idle task is not watched: the task watchdog went off every few seconds
+# under Duke Nukem 3D, and each time it printed its register dump from its
+# interrupt, the panel's refresh missed a restart and flashed blue (measured:
+# each late restart 30-37 ms after a watchdog, 2026-10-16). Core 1, the
+# interface's, keeps its check; P4OS's own hang watchdog covers the UI.
+CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0=n
 CONFIG_COMPILER_OPTIMIZATION_PERF=y
 CONFIG_ESP_MAIN_TASK_STACK_SIZE=16384
 CONFIG_FREERTOS_HZ=1000

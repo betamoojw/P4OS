@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **No more blue flashes when a game uses all of core 0.** Duke Nukem 3D at
+  640x400 flashed the screen a few times a minute, more the longer the
+  board was on: the task watchdog found core 0's idle task starved every
+  5 s, printed its register dump from its interrupt, and the panel's
+  refresh, restarted by an interrupt every frame, missed a restart. Core 0
+  is the apps' workers' and its idle task is not watched any more; core
+  1's is. Measured on the board: 3 flashes in two minutes, each 30-37 ms
+  after a watchdog trigger, then none. It was not PSRAM bandwidth.
+- **The panel's refresh, measured** (`/api/sysmon`, `system.panel`): frames
+  that ran dry, restarts that came late and when, and the watchdog's
+  triggers; `POST /api/panel/qos` tries the interconnect's priorities and
+  the vertical blanking (docs/MEMORY.md). The panel comes up from core 1,
+  and its interrupts run with the cache suspended (1.3 KB of internal RAM).
 - **Duke Nukem 3D** (`apps/duke3d`): Chocolate Duke3D, the Build engine and
   3D Realms' game, as an app from the card, no firmware changed. 30 fps at
   320x200 and 480x300 (the game's own rate; 59 and 34 uncapped), with the

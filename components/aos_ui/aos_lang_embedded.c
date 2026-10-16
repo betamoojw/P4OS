@@ -2513,6 +2513,7 @@ static const char blob_en__sistema_lang[] =
     "se leen al arrancar: reiniciar para aplicar\tread at boot: restart to apply\n"
     "la otra ranura no tiene una imagen\tthe other slot has no image\n"
     "no se pudo borrar\tcould not delete\n"
+    "dma y cache van de 0 a 15, vfp de 8 a 600\tdma and cache go from 0 to 15, vfp from 8 to 600\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -6312,6 +6313,29 @@ static const char blob_en_demo_doom_lang[] =
     "Falta memoria\tNot enough memory\n"
     ;
 
+static const char blob_en_demo_duke3d_lang[] =
+    "FUEGO\tFIRE\n"
+    "USAR\tUSE\n"
+    "SALTAR\tJUMP\n"
+    "AGACHAR\tCROUCH\n"
+    "MENÚ\tMENU\n"
+    "MAPA\tMAP\n"
+    "ÍTEM\tITEM\n"
+    "OTRO\tNEXT\n"
+    "ARMA\tGUN\n"
+    "LATERAL\tSTRAFE\n"
+    "No está DUKE3D.GRP\tDUKE3D.GRP is missing\n"
+    "Copiá DUKE3D.GRP (shareware o el juego completo) a la carpeta\tCopy DUKE3D.GRP (shareware or the full game) to the folder\n"
+    "Tocá para salir\tTap to leave\n"
+    "Duke Nukem 3D se detuvo\tDuke Nukem 3D stopped\n"
+    "Duke Nukem 3D se juega con la pantalla horizontal\tDuke Nukem 3D is played with the screen in landscape\n"
+    "Girá la pantalla para seguir\tTurn the screen to go on\n"
+    "Duke Nukem 3D corre en la placa, no en el simulador\tDuke Nukem 3D runs on the board, not in the simulator\n"
+    "Cargando...\tLoading...\n"
+    "Duke Nukem 3D no pudo arrancar\tDuke Nukem 3D could not start\n"
+    "Falta memoria\tNot enough memory\n"
+    ;
+
 static const char blob_en_demo_flappy_lang[] =
     "Tocá para empezar\\nRécord  %d\tTap to start\\nBest  %d\n"
     "¡Nuevo récord!\tNew best!\n"
@@ -7120,6 +7144,7 @@ static const aos_lang_file_t files_en[] = {
     { "demo.cjump.lang", blob_en_demo_cjump_lang },
     { "demo.claudito.lang", blob_en_demo_claudito_lang },
     { "demo.doom.lang", blob_en_demo_doom_lang },
+    { "demo.duke3d.lang", blob_en_demo_duke3d_lang },
     { "demo.flappy.lang", blob_en_demo_flappy_lang },
     { "demo.gemas.lang", blob_en_demo_gemas_lang },
     { "demo.golf.lang", blob_en_demo_golf_lang },
@@ -9633,6 +9658,7 @@ static const char blob_de__sistema_lang[] =
     "se leen al arrancar: reiniciar para aplicar\twerden beim Start gelesen: zum Übernehmen neu starten\n"
     "la otra ranura no tiene una imagen\tder andere Slot enthält kein Image\n"
     "no se pudo borrar\tkonnte nicht gelöscht werden\n"
+    "dma y cache van de 0 a 15, vfp de 8 a 600\tdma und cache gehen von 0 bis 15, vfp von 8 bis 600\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =
@@ -13432,6 +13458,29 @@ static const char blob_de_demo_doom_lang[] =
     "Falta memoria\tNicht genug Speicher\n"
     ;
 
+static const char blob_de_demo_duke3d_lang[] =
+    "FUEGO\tFEUER\n"
+    "USAR\tNUTZEN\n"
+    "SALTAR\tSPRINGEN\n"
+    "AGACHAR\tDUCKEN\n"
+    "MENÚ\tMENÜ\n"
+    "MAPA\tKARTE\n"
+    "ÍTEM\tITEM\n"
+    "OTRO\tNÄCHST\n"
+    "ARMA\tWAFFE\n"
+    "LATERAL\tSEITLICH\n"
+    "No está DUKE3D.GRP\tDUKE3D.GRP fehlt\n"
+    "Copiá DUKE3D.GRP (shareware o el juego completo) a la carpeta\tKopiere DUKE3D.GRP (Shareware oder das volle Spiel) in den Ordner\n"
+    "Tocá para salir\tTippen zum Beenden\n"
+    "Duke Nukem 3D se detuvo\tDuke Nukem 3D wurde beendet\n"
+    "Duke Nukem 3D se juega con la pantalla horizontal\tDuke Nukem 3D spielt man im Querformat\n"
+    "Girá la pantalla para seguir\tBildschirm drehen, um weiterzuspielen\n"
+    "Duke Nukem 3D corre en la placa, no en el simulador\tDuke Nukem 3D läuft auf der Platine, nicht im Simulator\n"
+    "Cargando...\tLädt...\n"
+    "Duke Nukem 3D no pudo arrancar\tDuke Nukem 3D konnte nicht starten\n"
+    "Falta memoria\tNicht genug Speicher\n"
+    ;
+
 static const char blob_de_demo_flappy_lang[] =
     "Tocá para empezar\\nRécord  %d\tZum Starten tippen\\nRekord  %d\n"
     "¡Nuevo récord!\tNeuer Rekord!\n"
@@ -14240,6 +14289,7 @@ static const aos_lang_file_t files_de[] = {
     { "demo.cjump.lang", blob_de_demo_cjump_lang },
     { "demo.claudito.lang", blob_de_demo_claudito_lang },
     { "demo.doom.lang", blob_de_demo_doom_lang },
+    { "demo.duke3d.lang", blob_de_demo_duke3d_lang },
     { "demo.flappy.lang", blob_de_demo_flappy_lang },
     { "demo.gemas.lang", blob_de_demo_gemas_lang },
     { "demo.golf.lang", blob_de_demo_golf_lang },
@@ -14254,7 +14304,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2499, 44, files_en, 45 },
-    { "de", "Deutsch", 2499, 44, files_de, 45 },
+    { "en", "English", 2500, 45, files_en, 46 },
+    { "de", "Deutsch", 2500, 45, files_de, 46 },
 };
 const int aos_lang_pack_count = 2;

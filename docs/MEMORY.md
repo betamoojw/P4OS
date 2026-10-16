@@ -82,6 +82,11 @@ Each late restart came 30-37 ms after a task-watchdog trigger: the game's
 worker used all of core 0, the watchdog found IDLE0 starved every 5 s and
 printed its register dump from its interrupt. Core 0's idle task is not
 watched any more (`sdkconfig.defaults`); core 1, the interface's, still is.
+With that alone, one late restart was still left in a few minutes at
+640x400 and no watchdog behind it: a smaller delay of that interrupt, past
+the half millisecond. The vertical front porch went from the module's 24
+lines to 120 (a ~1.9 ms window, 51 Hz instead of 55): then none at 640x400
+nor at 640x480, a couple of minutes of play each.
 
 What stays, to see it next time (`aos_panel_p4.c`, `/api/sysmon` →
 `system.panel`): `underruns` (frames that ran dry, from the bridge's raw bit:

@@ -655,7 +655,7 @@ static esp_err_t panel_init(void)
      * critical section, a cache operation, another handler) starts the next
      * frame with no data, a blue one. More front porch widens that window,
      * at the cost of the refresh rate (aos_panel_p4.c; "pnl_vfp" lines). */
-    int32_t vfp = dpi.video_timing.vsync_front_porch;
+    int32_t vfp = 120;      /* the module's 24 gave ~0.5 ms; 120 gives ~1.9 ms at 51 Hz (measured, docs/MEMORY.md) */
     aos_hal_pref_get_i32("pnl_vfp", &vfp);
     if (vfp >= 8 && vfp <= 600) dpi.video_timing.vsync_front_porch = (uint32_t)vfp;
     int32_t nfbs = 3;

@@ -9,7 +9,10 @@
   refresh, restarted by an interrupt every frame, missed a restart. Core 0
   is the apps' workers' and its idle task is not watched any more; core
   1's is. Measured on the board: 3 flashes in two minutes, each 30-37 ms
-  after a watchdog trigger, then none. It was not PSRAM bandwidth.
+  after a watchdog trigger, then none. It was not PSRAM bandwidth. The
+  panel's vertical blanking is wider too (120 lines of front porch instead
+  of 24: the refresh at 51 Hz instead of 55), for the smaller delays that
+  were left: none at 640x400 nor at 640x480 after that.
 - **The panel's refresh, measured** (`/api/sysmon`, `system.panel`): frames
   that ran dry, restarts that came late and when, and the watchdog's
   triggers; `POST /api/panel/qos` tries the interconnect's priorities and

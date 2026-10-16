@@ -43,6 +43,8 @@ hardware has to replace them.
 | What | Where | Licence | Notes |
 |---|---|---|---|
 | **doomgeneric** (`dcb7a8d`), Chocolate Doom 2.2.1's music player, DOSBox's DBOPL | **vendored**, `apps/doom/main/doomgeneric/` | **GPL-2.0-or-later** | modified, every change listed in [apps/doom/README.md](apps/doom/README.md). `doom.so` as a whole is GPL-2.0; the repository at the release's tag is its source. **No WAD is included.** |
+| **Chocolate Duke3D** (`1cfa190`): 3D Realms' Duke Nukem 3D source release and the Apogee Sound System | **vendored**, `apps/duke3d/main/game/` | **GPL-2.0-or-later** | modified, every change listed in [apps/duke3d/README.md](apps/duke3d/README.md). **No GRP is included.** |
+| **Build engine** (Ken Silverman), as Chocolate Duke3D carries it | **vendored**, `apps/duke3d/main/engine/` | **Build licence** (`BUILDLIC.TXT`, next to it) | modified, as above. Derived works only over the Internet, free of charge, never commercially, with that file and Ken Silverman's notice. |
 | **librtlsdr 2.0.3** | **vendored**, `apps/rf/main/rtlsdr/` | **GPL-2.0-or-later** | two small changes, listed in [apps/rf/README.md](apps/rf/README.md). `rf.so` as a whole is GPL-2.0-or-later; the repository at the release's tag is its source. |
 | **Giac 1.9** (as KhiCAS ships it for the NumWorks), **GMP 6.2.1**, **MPFR 4.1.0**, **MPFI 1.5.4** | **downloaded and built** by `apps/cas/engine/build_engine.sh` (checked by SHA-256), not in git | **GPL-3.0-or-later** (Giac), **LGPL-3.0-or-later** (GMP, MPFR, MPFI) | KhiCAS's interface (`kdisplay.cc`) is left out; its turtle commands are cut out of it unchanged. `cas.so` as a whole is GPL-3.0-or-later; the repository at the release's tag and the archives the script names are its source. Details in [apps/cas/README.md](apps/cas/README.md). |
 | **libstdc++, libsupc++ and libgcc's soft-fp** of **GCC 14.2.0** | **downloaded and built**, the same way | GPL-3.0 with the GCC Runtime Library Exception | rebuilt as position-independent code; `tzdb.cc` is replaced by an empty file |
@@ -54,9 +56,9 @@ hardware has to replace them.
 | **requests 1.1.1** and **mip 0.5.0** of **micropython-lib** (`90028be`) | **vendored** and frozen into `python.so`, `apps/python/frozen/` | MIT | one change in `requests` (reading a body whole), marked `P4OS:`; `apps/python/frozen/VENDOR.md` |
 | compact AES (forward cipher), after **tiny-AES-c** (kokke) | **vendored**, `apps/rf/main/aes.c` | public domain (the Unlicense) | the standard AES S-box and schedule, generalised to a runtime key size, for `rf_mesh.c`'s AES-CTR (reading a Meshtastic channel the user has the key to) |
 
-The firmware that loads `doom.so`, `rf.so` and `cas.so` stays MIT. The GPL
-applies to the Doom, RF and CAS apps and to any simulator build that compiles
-them in.
+The firmware that loads `doom.so`, `duke3d.so`, `rf.so` and `cas.so` stays MIT. The GPL
+applies to the Doom, Duke Nukem 3D, RF and CAS apps and to any simulator build that compiles
+them in; `duke3d.so` is also under the Build licence, for its engine.
 
 The simulator links the Mac's libusb (LGPL-2.1, from Homebrew, dynamically)
 when it is installed, for `P4_SIM_USB=1`; it is not part of anything the
@@ -103,7 +105,8 @@ What the board fetches at runtime:
 
 ## Names and marks
 
-Doom is a trademark of id Software.
+Doom is a trademark of id Software. Duke Nukem is a trademark of Gearbox
+Software; the Duke Nukem 3D app is unofficial.
 
 Claude and the Claude Code character are Anthropic's. The Claude app,
 Claudito and Claude Jump are unofficial and not endorsed by Anthropic, and

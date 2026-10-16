@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- **Duke Nukem 3D** (`apps/duke3d`): Chocolate Duke3D, the Build engine and
+  3D Realms' game, as an app from the card, no firmware changed. 30 fps at
+  320x200 and 480x300 (the game's own rate; 59 and 34 uncapped), with the
+  effects and the Sound Blaster's FM music synthesised on the board (OPL3 on
+  DBOPL, through Apogee's own AdLib driver), the touch pad of Doom with Duke's
+  buttons (jump, crouch, items), a USB gamepad, saves, and the shareware or
+  the full game's `DUKE3D.GRP` in the card's `duke3d/` (none is included).
+  640x400 runs at 20 fps but its PSRAM traffic starves the panel's refresh
+  and the screen flashes, so the video menu stops at 480x300. GPL v2, and the
+  Build licence for its engine; the details and the traps (int32_t as long,
+  1996 C under gcc 14, a pixel budget that ran out) in its README.
+
 ## 0.15.1 — 2026-10-15
 
 - **The web portal speaks the board's language.** The portal, the pages the

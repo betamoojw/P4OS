@@ -108,6 +108,7 @@ Fps measured with the app's own log line in `/api/log`.
 | App | Upright | Lying down | How it draws |
 |---|---|---|---|
 | Doom | – | 35 fps | 320×200 ×3 by the PPA into the free buffer, flipped |
+| Duke Nukem 3D | – | 30 fps (the game's rate) at 320×200 and 480×300; uncapped 59 and ~34. 640×400 20 fps but flashes the panel (PSRAM), so not offered | Build engine to an 8-bit frame, palette to RGB565, PPA into the free buffer, flipped (apps/duke3d/README.md) |
 | Video | 640×360: 30 fps; 720×1280: 24 fps | 1280×720: 20 fps | JPEG engine + `blit_fit` |
 | Visor 3D | ~28 fps with ~16 000 triangles; 13–15 fps with ~100 000 | same | rasteriser on both cores, adaptive size |
 | Monster Hop | 22 fps | ~20 fps (15.5 before the internal RAM audit) | bands on both cores, panel buffer + flip; lying down the PPA turns each band |

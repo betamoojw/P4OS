@@ -405,8 +405,9 @@ and their art comes in packs.
 |---|---|---|---|---|---|
 | <img src="docs/img/app-truco.png" width="125"> | <img src="docs/img/app-blackjack.jpg" width="125"> | <img src="docs/img/app-mines.png" width="125"> | <img src="docs/img/app-simon.png" width="125"> | <img src="docs/img/app-atasco.png" width="125"> | <img src="docs/img/app-claudito.png" width="125"> |
 
-There are also Flappy, Dice, and Doom (doomgeneric, with OPL2 music). Doom
-needs a WAD of your own, and none is included.
+There are also Flappy, Dice, Doom (doomgeneric, with OPL2 music) and Duke
+Nukem 3D (Chocolate Duke3D, with the Sound Blaster's FM music). Doom needs a
+WAD of your own and Duke a GRP (the shareware one works); neither is included.
 
 | Maps | Radio | Video | 3D Viewer | Pixel Art | Tuner |
 |---|---|---|---|---|---|
@@ -726,7 +727,9 @@ endorsed by the PSF. MicroPython is Damien George's project, MIT-licensed.
 MIT, see [LICENSE](LICENSE). Third-party code, fonts, icons and data keep
 their own licences; [THIRD-PARTY.md](THIRD-PARTY.md) lists each one and what
 it asks for. `apps/doom/` is Chocolate Doom through doomgeneric, under the
-GNU GPL v2, and no WAD is included.
+GNU GPL v2, and no WAD is included. `apps/duke3d/` is Chocolate Duke3D, under
+the GNU GPL v2 and, for its Build engine, Ken Silverman's Build licence; no
+GRP is included.
 
 ## En castellano
 

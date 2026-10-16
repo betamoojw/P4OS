@@ -8,12 +8,12 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and forty more on
+portrait or landscape. There are twenty-three built-in apps and forty-one more on
 the microSD, loaded as shared objects:
 
-- **Games:** twenty-one, among them Mila (a Sokoban with a black cat in
-  Blender 3D), Monster Hop, a racing game, golf, a robot RPG, and Doom at
-  35 fps.
+- **Games:** twenty-two, among them Mila (a Sokoban with a black cat in
+  Blender 3D), Monster Hop, a racing game, golf, a robot RPG, Doom at
+  35 fps and Duke Nukem 3D.
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
   a VNC viewer for a computer's screen, a computer algebra system with
@@ -547,6 +547,9 @@ reads them.
 - The Programmer flashing an ESP32 on a CP2102 (6.6 s), an ESP32-C3 on
   its own USB (1.5 s) and an ESP32-P4-Nano v3.1 with ESPHome, plugged into
   the USB host.
+- The panel's refresh under a game that uses all of core 0: Duke Nukem 3D
+  at 640x400 and 640x480 for minutes, no frame lost (`/api/sysmon`,
+  `system.panel`).
 - The workshop on the bench: PWM at three frequencies at once, a servo and
   the analog level; a WS2812B strip; infrared learned and sent; a 24LC256
   read, written and restored; CAN's self test with no transceiver.
@@ -715,7 +718,8 @@ Where something is a guess, it says so.
 Claude and the Claude Code character belong to Anthropic. The Claude app,
 Claudito and Claude Jump are an unofficial homage, made with affection for
 the character, and are not affiliated with or endorsed by Anthropic. Doom is
-id Software's, and Home Assistant is its owners'. The other products named
+id Software's, Duke Nukem is Gearbox Software's (the Duke Nukem 3D app is
+unofficial), and Home Assistant is its owners'. The other products named
 in the apps belong to their owners too.
 
 Python® is a registered trademark of the Python Software Foundation; the
@@ -741,7 +745,7 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 41 de la tarjeta (juegos, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 42 de la tarjeta (juegos, Doom y Duke Nukem 3D, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
 | Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
 | Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |

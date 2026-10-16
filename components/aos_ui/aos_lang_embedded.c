@@ -2514,6 +2514,7 @@ static const char blob_en__sistema_lang[] =
     "la otra ranura no tiene una imagen\tthe other slot has no image\n"
     "no se pudo borrar\tcould not delete\n"
     "dma y cache van de 0 a 15, vfp de 8 a 600\tdma and cache go from 0 to 15, vfp from 8 to 600\n"
+    "Duke Nukem 3D\tDuke Nukem 3D\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -9659,6 +9660,7 @@ static const char blob_de__sistema_lang[] =
     "la otra ranura no tiene una imagen\tder andere Slot enthält kein Image\n"
     "no se pudo borrar\tkonnte nicht gelöscht werden\n"
     "dma y cache van de 0 a 15, vfp de 8 a 600\tdma und cache gehen von 0 bis 15, vfp von 8 bis 600\n"
+    "Duke Nukem 3D\tDuke Nukem 3D\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =
@@ -14304,7 +14306,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2500, 45, files_en, 46 },
-    { "de", "Deutsch", 2500, 45, files_de, 46 },
+    { "en", "English", 2501, 45, files_en, 46 },
+    { "de", "Deutsch", 2501, 45, files_de, 46 },
 };
 const int aos_lang_pack_count = 2;

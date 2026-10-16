@@ -224,6 +224,12 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       apps y los mensajes de la API siguen el idioma de la placa; revisado
       en el simulador (38 páginas) y probado por el usuario en la placa
       ("anda bien").
+- [x] Destellos celestes del panel (2026-10-16): Duke a 640x400 los daba
+      varias veces por minuto. Medido en la placa: ni un underrun del puente,
+      la prioridad del bus no cambiaba nada; cada refresco atrasado venía
+      30-37 ms después de un disparo del task watchdog (IDLE0 sin correr).
+      Sin vigilar IDLE0 y con porch vertical 120: 640x400 y 640x480 sin
+      ninguno, y el usuario sin ver destellos (docs/MEMORY.md).
 - [ ] Sin Wi-Fi después de un reinicio por software (visto otra vez el
       2026-10-06, 1 vez en ~140 reinicios seguidos): la interfaz anda, el
       C6 no levanta la red, y no lo arreglan ni apagar y prender el Wi-Fi

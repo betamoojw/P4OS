@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.16.0 — 2026-10-16
 
 - **No more blue flashes when a game uses all of core 0.** Duke Nukem 3D at
   640x400 flashed the screen a few times a minute, more the longer the

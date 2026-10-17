@@ -656,9 +656,10 @@ static esp_err_t panel_init(void)
      * frame with no data, a blue one. More front porch widens that window,
      * at the cost of the refresh rate (aos_panel_p4.c; "pnl_vfp" lines). */
     /* The pixel clock: the module's 58 MHz is 60 from PLL_F240M (divider 4);
-     * "pnl_mhz" 80 (divider 3) makes room for 60 Hz with a wide blanking
-     * (aos_hal_display_refresh_request), to be measured on the board first. */
-    int32_t mhz = 60;
+     * 80 (divider 3) is the default since 2026-10-16: room for 60 Hz with a
+     * blanking of ~3.9 ms, measured clean under a game filling core 0
+     * (docs/MEMORY.md). "pnl_mhz" 60 goes back to the module's. */
+    int32_t mhz = 80;
     aos_hal_pref_get_i32("pnl_mhz", &mhz);
     if (mhz == 80) dpi.dpi_clock_freq_mhz = 80;
     /* 60 MHz: 24 lines gave ~0.5 ms of blanking, 120 give ~1.9 ms at 51 Hz.

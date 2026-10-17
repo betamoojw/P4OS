@@ -11,8 +11,10 @@
   CI packs; `aos_hal_usb_kbd_held()`, the USB keyboards' keys held right
   now; and `aos_hal_display_refresh_request()`, a refresh rate while the
   app is in front, the closest that keeps the panel's blanking wide enough.
-  The pixel clock can go to 80 MHz (`POST /api/panel/qos?mhz=80`, from the
-  next boot) to make room for 60 Hz.
+- **The panel at 60 Hz.** Its pixel clock is 80 MHz instead of 60, which
+  gives room for 60 Hz with ~3.9 ms of blanking for the refresh's restart,
+  twice 0.16.0's margin: measured with Duke Nukem 3D at 640x400 filling
+  core 0, no frame lost (`POST /api/panel/qos?mhz=60` goes back).
 
 ## 0.16.0 — 2026-10-16
 

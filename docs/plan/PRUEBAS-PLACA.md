@@ -24,7 +24,11 @@ se prueba.
   - Monster Hop, Turbo, Mila y Golf con arte HD de Blender;
   - Blackjack, Truco y Neon Snakes.
 - **Inicio:** carpetas completas (agregar, quitar, renombrar) y la página
-  `#inicio` del portal para ordenarlo desde la computadora.
+  `#inicio` del portal para ordenarlo desde la computadora. Probado por el
+  usuario el 2026-10-17: carpetas de 3×4, pasar apps y carpetas entre
+  páginas sin salir del modo edición (deslizar pasa de página, sostener un
+  instante toma el ícono) y el dock editable (reordenar, sacar, meter, y
+  con el dock lleno cambiar de lugar).
 - **Firmware por Wi-Fi:** `tools/ota.sh` o la página **Firmware** del portal,
   con arranque a prueba y vuelta sola a la imagen anterior; el registro del
   arranque anterior y el volcado del último cuelgue se leen desde el portal

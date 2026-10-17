@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+- **Home screen: edit mode without leaving it.** A swipe turns the page in
+  edit mode too, and an icon held still for a moment (150 ms) is the one
+  that drags; before, the pages did not scroll while editing, and taking a
+  second app back to the page it came from meant "Listo", a swipe and edit
+  mode again. A drop on another page now stays there: the item kept its old
+  page and the saved menu put it back where it came from (a folder or an
+  app alike).
+- **Home screen: the dock is edited too.** Its icons drag like the pages':
+  along the dock, out onto a page, and an app of a page goes in; in a full
+  dock it changes places with the one it was dropped on.
+- **Folders show twelve apps a page upright**, three across and four down,
+  instead of nine.
+- **No more `flash_mmap` errors at boot with a core dump in flash.** IDF's
+  summary of the dump maps its partition, which sits at 28 MB, beyond what
+  quad flash maps (16 MB); it was tried first every time and failed. The
+  dump is read with flash reads alone, as it already was after that.
+
 ## 0.17.0 — 2026-10-17
 
 - **Emulador** (`apps/emulador`): fourteen consoles as an app from the

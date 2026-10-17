@@ -10,10 +10,13 @@
  * today's ELF an old one looks like a new bug with the wrong lines (it
  * happened with the BLE scanner's panic of 0.12's first OTA). The firmware's
  * ELF sha is in the dump's own notes. esp_core_dump_get_summary() would give
- * it, but it maps the whole partition with esp_partition_mmap(), and on this
- * board that fails (it is tried first, and the error logged); so the notes,
- * the crashed task's TCB and the exception frame on its stack are read here
- * with esp_flash_read(), the way the summary walks them.
+ * it, but it maps the whole partition with esp_partition_mmap(), and that
+ * cannot work here: the partition starts at 28 MB, and with the bootloader
+ * mapping quad flash by 24-bit addresses nothing above 16 MB maps (IDF's
+ * flash_mmap logged "out of range" at every boot with a dump in flash, until
+ * 2026-10-17 it was no longer tried). So the notes, the crashed task's TCB
+ * and the exception frame on its stack are read here with esp_flash_read(),
+ * the way the summary walks them.
  *
  * At boot a dump not seen before is noted in the preferences as unread, with
  * the time it was first seen (filled in once the clock is set): the log and
@@ -175,35 +178,8 @@ static void cd_do(void *ctx)
         aos_coredump_info_t *o = j->info;
         o->present = true;
         o->size = size;
-        o->valid = esp_core_dump_image_check() == ESP_OK;
-        /* IDF's summary first; it maps the partition, which fails here */
-        static bool said;
-        esp_core_dump_summary_t *sm = calloc(1, sizeof *sm);
-        esp_err_t se = sm ? esp_core_dump_get_summary(sm) : ESP_ERR_NO_MEM;
-        if (se == ESP_OK) {
-            snprintf(o->task, sizeof o->task, "%.15s", sm->exc_task);
-            o->pc = sm->exc_pc;
-            o->ra = sm->ex_info.ra;
-            o->sp = sm->ex_info.sp;
-            o->mcause = sm->ex_info.mcause;
-            o->mtval = sm->ex_info.mtval;
-            snprintf(o->elf_sha, sizeof o->elf_sha, "%.16s", (const char *)sm->app_elf_sha256);
-        } else {
-            if (!said) {
-                /* ESP_FAIL says only that the map failed: say why */
-                const esp_partition_t *cp = esp_partition_find_first(ESP_PARTITION_TYPE_DATA,
-                                                                     ESP_PARTITION_SUBTYPE_DATA_COREDUMP, NULL);
-                const void *m = NULL;
-                esp_partition_mmap_handle_t mh;
-                esp_err_t me = cp ? esp_partition_mmap(cp, 0, cp->size, ESP_PARTITION_MMAP_DATA, &m, &mh) : ESP_ERR_NOT_FOUND;
-                if (me == ESP_OK) esp_partition_munmap(mh);
-                ESP_LOGW(TAG, "IDF's summary: %s (mapping the %u KB partition: %s); reading the dump's notes instead",
-                         esp_err_to_name(se), cp ? (unsigned)(cp->size / 1024) : 0, esp_err_to_name(me));
-            }
-            said = true;
-            parse(addr, size, o);
-        }
-        free(sm);
+        o->valid = esp_core_dump_image_check() == ESP_OK;     /* reads, does not map */
+        parse(addr, size, o);
         which_firmware(o);
         j->ok = true;
         return;

@@ -10,9 +10,12 @@
  *
  * The model is menu.txt (aos_menu.c, extended with dock / page / widget).
  * Folders open over the home screen as a panel with the apps inside, like
- * iOS. Edit mode (a long press) wiggles the icons; dragging one onto a slot
- * moves it, onto another app makes a folder with both, and "Listo" writes
- * menu.txt back.
+ * iOS. Edit mode (a long press) wiggles the icons; a swipe still turns the
+ * page, and an icon held still a moment drags: onto a slot it moves there
+ * (held against a side edge it takes the next page along), onto another app
+ * it makes a folder with both, onto the dock it goes in (in a full dock it
+ * changes places with the one it was dropped on), and the dock's own icons
+ * drag the same way. Each drop writes menu.txt back.
  *
  * Costs, from the watch: what an animation pays for is the area it pushes,
  * so the wiggle moves the icons a few pixels and nothing is scaled or faded
@@ -109,11 +112,19 @@ static struct {
 static char s_reopen[AOS_MENU_FOLDER_ID_MAX];   /* the folder to show again after saving */
 static bool s_editing;
 
+/* The dock's apps as placed items, so that they drag like the pages' ones;
+ * col is the index in s_dock, page -1. */
+static placed_t s_dock_items[AOS_MENU_DOCK_MAX];
+static bool is_dock_item(const placed_t *p) { return p >= s_dock_items && p < s_dock_items + AOS_MENU_DOCK_MAX; }
+
 /* dragging in edit mode */
+#define DRAG_HOLD_MS 150            /* held this still, an icon is taken; sooner, a swipe turns the page */
 static struct {
     placed_t *p;                    /* the item under the finger */
     lv_obj_t *ghost;
     bool moving;
+    bool claimed;                   /* the icon has the finger: the pages do not scroll under it */
+    uint32_t t0;
     lv_point_t start;
 } s_drag;
 
@@ -250,12 +261,76 @@ static placed_t *item_at_slot(int page, int row, int col)
     return NULL;
 }
 
+/* The dock's band, and a slot in it: the icons sit centred, one slot each. */
+static bool in_dock_band(lv_point_t pt) { return s_dock_panel && pt.y >= L.dock_y - 16; }
+
+static int dock_slot(lv_point_t pt, int n, bool between)
+{
+    lv_area_t a;
+    lv_obj_get_coords(s_dock_panel, &a);
+    int32_t dock_w = lv_area_get_width(&a), slot = dock_w / L.dock_n;
+    int32_t left = a.x1 + (dock_w - n * slot) / 2;
+    int i = (int)((pt.x - left + (between ? slot / 2 : 0)) / slot);
+    return LV_CLAMP(0, i, between ? n : n - 1);
+}
+
+/* Something dropped on the dock: an app of the pages goes in (in a full
+ * dock it changes places with the one where it was dropped), and one of the
+ * dock's own moves along it. Folders and widgets stay where they were. */
+static void dock_drop(placed_t *src, lv_point_t pt)
+{
+    if (is_dock_item(src)) {
+        int from = src->col;
+        if (from < 0 || from >= s_ndock) { build(); return; }
+        int to = dock_slot(pt, s_ndock, false);
+        if (to == from) { build(); return; }
+        const aos_app_t *a = s_dock[from];
+        if (to > from) memmove(&s_dock[from], &s_dock[from + 1], (size_t)(to - from) * sizeof s_dock[0]);
+        else memmove(&s_dock[to + 1], &s_dock[to], (size_t)(from - to) * sizeof s_dock[0]);
+        s_dock[to] = a;
+        save_model();
+        return;
+    }
+    if (src->it.kind != AOS_MENU_ITEM_APP || !src->it.app) { build(); return; }
+    if (s_ndock < L.dock_n) {
+        int to = dock_slot(pt, s_ndock, true);
+        memmove(&s_dock[to + 1], &s_dock[to], (size_t)(s_ndock - to) * sizeof s_dock[0]);
+        s_dock[to] = src->it.app;
+        s_ndock++;
+        src->it.kind = AOS_MENU_ITEM_PAGE;      /* a hole, dropped by save_model() */
+        src->it.w = 255;
+    } else {
+        int to = dock_slot(pt, s_ndock, false);
+        const aos_app_t *out = s_dock[to];
+        s_dock[to] = src->it.app;
+        src->it.app = out;                      /* the dock's goes where this one was */
+    }
+    save_model();
+}
+
 static void drag_drop(placed_t *src, lv_point_t pt)
 {
+    if (in_dock_band(pt)) { dock_drop(src, pt); return; }
+    if (is_dock_item(src)) {
+        /* out of the dock, onto the page: from here on, a page's app at the end */
+        int from = src->col;
+        if (from < 0 || from >= s_ndock || s_nitems >= MAX_ITEMS || s_page < 0) { build(); return; }
+        const aos_app_t *a = s_dock[from];
+        memmove(&s_dock[from], &s_dock[from + 1], (size_t)(s_ndock - from - 1) * sizeof s_dock[0]);
+        s_ndock--;
+        placed_t *np = &s_items[s_nitems++];
+        memset(np, 0, sizeof *np);
+        np->it.kind = AOS_MENU_ITEM_APP;
+        np->it.folder = -1;
+        np->it.app = a;
+        np->page = s_page;
+        np->row = np->col = -1;                 /* in no slot yet */
+        src = np;
+    }
     int row, col;
     slot_at(pt, &row, &col);
     placed_t *dst = item_at_slot(s_page, row, col);
-    if (dst == src) return;
+    if (dst == src) { build(); return; }
 
     int si = (int)(src - s_items);
     aos_menu_item_t moved = src->it;
@@ -302,6 +377,11 @@ static void drag_drop(placed_t *src, lv_point_t pt)
         if (di < 0) di = s_nitems;
     }
     placed_t tmp = *src;
+    /* the page it was dropped on: save_model() writes the page breaks from
+     * each item's page, and with the old one a drop on another page put a
+     * break before the item and sent it back where it came from. A full page
+     * lets its last item flow onto the next when the model is read again. */
+    tmp.page = s_page;
     if (di > si) {
         memmove(&s_items[si], &s_items[si + 1], (size_t)(di - si - 1) * sizeof(placed_t));
         s_items[di - 1] = tmp;
@@ -314,6 +394,14 @@ static void drag_drop(placed_t *src, lv_point_t pt)
 
 static lv_point_t s_press_pt;
 
+/* The finger let go of an icon: the pages scroll again. */
+static void drag_release(void)
+{
+    if (s_drag.claimed && s_pages) lv_obj_add_flag(s_pages, LV_OBJ_FLAG_SCROLLABLE);
+    s_drag.p = NULL;
+    s_drag.moving = s_drag.claimed = false;
+}
+
 static void cell_event(lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
@@ -323,12 +411,18 @@ static void cell_event(lv_event_t *e)
 
     if (code == LV_EVENT_PRESSED) {
         lv_indev_get_point(lv_indev_active(), &s_press_pt);
-        /* in edit mode a drag starts right away, as on iOS */
-        if (s_editing && p) { s_drag.p = p; s_drag.moving = false; s_drag.start = s_press_pt; }
+        /* in edit mode an icon held still a moment is taken by the finger */
+        if (s_editing && p) {
+            s_drag.p = p;
+            s_drag.moving = s_drag.claimed = false;
+            s_drag.t0 = lv_tick_get();
+            s_drag.start = s_press_pt;
+        }
         return;
     }
-    if (code == LV_EVENT_PRESS_LOST && s_drag.p == p && p && s_drag.moving) {
-        code = LV_EVENT_RELEASED;       /* finish the drop anyway */
+    if (code == LV_EVENT_PRESS_LOST && s_drag.p == p && p) {
+        if (s_drag.moving) code = LV_EVENT_RELEASED;    /* finish the drop anyway */
+        else { drag_release(); return; }
     }
     if (code == LV_EVENT_LONG_PRESSED) {
         /* entering edit mode rebuilds the page: the icon under the finger is
@@ -339,6 +433,16 @@ static void cell_event(lv_event_t *e)
     if (code == LV_EVENT_PRESSING && s_editing && s_drag.p == p && p) {
         lv_point_t pt;
         lv_indev_get_point(lv_indev_active(), &pt);
+        if (!s_drag.claimed) {
+            /* a swipe that began on an icon turns the page, as on iOS: the
+             * pages scroll in edit mode too, and an icon is taken only once
+             * held still for a moment (the dock's at once: nothing scrolls
+             * there). Taken, the pages stop scrolling until it is dropped. */
+            if (lv_indev_get_scroll_obj(lv_indev_active())) { s_drag.p = NULL; return; }
+            if (!is_dock_item(p) && lv_tick_elaps(s_drag.t0) < DRAG_HOLD_MS) return;
+            s_drag.claimed = true;
+            if (s_pages) lv_obj_remove_flag(s_pages, LV_OBJ_FLAG_SCROLLABLE);
+        }
         if (!s_drag.moving && (LV_ABS(pt.x - s_drag.start.x) > 12 || LV_ABS(pt.y - s_drag.start.y) > 12)) {
             s_drag.moving = true;
             /* transparent, not HIDDEN: hiding the pressed object makes LVGL
@@ -378,11 +482,11 @@ static void cell_event(lv_event_t *e)
             lv_indev_get_point(lv_indev_active(), &pt);
             lv_obj_delete(s_drag.ghost);
             s_drag.ghost = NULL;
-            s_drag.p = NULL;
+            drag_release();
             drag_drop(p, pt);       /* rebuilds the page */
             return;
         }
-        s_drag.p = NULL;
+        drag_release();
         return;
     }
     if (code != LV_EVENT_SHORT_CLICKED || s_editing) return;
@@ -664,8 +768,8 @@ static void build(void)
     lv_obj_add_flag(s_pages, LV_OBJ_FLAG_SCROLL_ONE);
     lv_obj_set_scrollbar_mode(s_pages, LV_SCROLLBAR_MODE_OFF);
     lv_obj_add_event_cb(s_pages, pages_scrolled, LV_EVENT_SCROLL, NULL);
-    /* while editing, a drag moves an icon; pages change by dropping at an edge */
-    if (s_editing) lv_obj_remove_flag(s_pages, LV_OBJ_FLAG_SCROLLABLE);
+    /* while editing too: a swipe turns the page, an icon held a moment drags
+     * (cell_event), and held against an edge it takes the next page along */
     lv_obj_add_event_cb(s_pages, long_press_empty, LV_EVENT_LONG_PRESSED, NULL);
 
     for (int i = 0; i < s_npages; i++) {
@@ -738,7 +842,15 @@ static void build(void)
     int32_t slot = dock_w / L.dock_n;
     int32_t used = s_ndock * slot, x0 = (dock_w - used) / 2;
     for (int i = 0; i < s_ndock; i++) {
-        lv_obj_t *c = cell_create(s_dock_panel, slot, L.dock_h, false, "", NULL, s_dock[i], -1);
+        placed_t *dp = &s_dock_items[i];
+        memset(dp, 0, sizeof *dp);
+        dp->it.kind = AOS_MENU_ITEM_APP;
+        dp->it.folder = -1;
+        dp->it.app = s_dock[i];
+        dp->page = -1;
+        dp->col = i;
+        lv_obj_t *c = cell_create(s_dock_panel, slot, L.dock_h, false, "", dp, s_dock[i], -1);
+        dp->cell = c;
         lv_obj_set_pos(c, x0 + i * slot, 0);
         s_dock_cells[i] = c;
         s_dock_badges[i] = badge_create(c, s_dock[i]->badge, (slot + L.icon) / 2, (L.dock_h - L.icon) / 2);
@@ -922,7 +1034,7 @@ static void folder_open(int folder, lv_obj_t *from)
     lv_obj_remove_flag(s_folder_ov, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_event_cb(s_folder_ov, folder_bg_clicked, LV_EVENT_CLICKED, NULL);
 
-    int cols = 3, rows = 3;
+    int cols = 3, rows = 4;         /* twelve a page upright; it fits under the name */
     int32_t cw = g->landscape ? 176 : 180, ch = g->landscape ? 170 : 196;
     int32_t pw = cols * cw + 48, ph = rows * ch + 48;
     if (g->landscape) { cols = 4; rows = 2; pw = cols * cw + 48; ph = rows * ch + 48; }

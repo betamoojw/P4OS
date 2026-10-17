@@ -333,33 +333,50 @@ aos_touch_gesture_t aos_hal_touch_gesture(void)
 /* Two fingers (docs/GESTURES.md). sim/main.c builds each sample from the
  * mouse, Option and the script and hands it over here; this side only keeps
  * the latest one and counts the new ones, like the board's HAL does. */
-static aos_touch_frame_t s_frame;
+static aos_touch_frame_t   s_frame;
+static aos_touch_frame_n_t s_frame_n;        /* every finger (AOS_TOUCH_MAX) */
 #define SIM_TOUCH_RING 16
-static aos_touch_frame_t s_ring[SIM_TOUCH_RING];
-static uint32_t          s_touch_samples;
+static aos_touch_frame_t   s_ring[SIM_TOUCH_RING];
+static aos_touch_frame_n_t s_ring_n[SIM_TOUCH_RING];
+static uint32_t            s_touch_samples;
 
-void aos_hal_sim_set_touch(int count, int x1, int y1, int x2, int y2)
+/* Up to AOS_TOUCH_MAX fingers: the full frames, and the first two into the
+ * two-finger ones, under one seq (as the board's HAL). */
+void aos_hal_sim_set_touch_n(int count, const int *xs, const int *ys)
 {
-    int16_t x[2] = { (int16_t)x1, (int16_t)x2 };
-    int16_t y[2] = { (int16_t)y1, (int16_t)y2 };
     if (count < 0) count = 0;
-    if (count > 2) count = 2;
-    bool changed = count != s_frame.count;
+    if (count > AOS_TOUCH_MAX) count = AOS_TOUCH_MAX;
+    bool changed = count != s_frame_n.count;
     for (int i = 0; i < count; i++) {
-        changed |= x[i] != s_frame.x[i] || y[i] != s_frame.y[i];
+        changed |= xs[i] != s_frame_n.x[i] || ys[i] != s_frame_n.y[i];
     }
     if (!changed) {
         return;
     }
-    s_frame.count = (uint8_t)count;
-    for (int i = 0; i < 2; i++) {
-        s_frame.x[i] = i < count ? x[i] : 0;
-        s_frame.y[i] = i < count ? y[i] : 0;
+    uint32_t seq = s_frame_n.seq + 1, t = (uint32_t)aos_hal_uptime_ms();
+    s_frame_n.count = (uint8_t)count;
+    for (int i = 0; i < AOS_TOUCH_MAX; i++) {
+        s_frame_n.x[i] = (int16_t)(i < count ? xs[i] : 0);
+        s_frame_n.y[i] = (int16_t)(i < count ? ys[i] : 0);
     }
-    s_frame.seq++;
-    s_frame.t_ms = (uint32_t)aos_hal_uptime_ms();
-    s_ring[s_frame.seq % SIM_TOUCH_RING] = s_frame;
+    s_frame_n.seq = seq;
+    s_frame_n.t_ms = t;
+    s_ring_n[seq % SIM_TOUCH_RING] = s_frame_n;
+    s_frame.count = (uint8_t)(count > 2 ? 2 : count);
+    for (int i = 0; i < 2; i++) {
+        s_frame.x[i] = s_frame_n.x[i];
+        s_frame.y[i] = s_frame_n.y[i];
+    }
+    s_frame.seq = seq;
+    s_frame.t_ms = t;
+    s_ring[seq % SIM_TOUCH_RING] = s_frame;
     s_touch_samples++;
+}
+
+void aos_hal_sim_set_touch(int count, int x1, int y1, int x2, int y2)
+{
+    int xs[2] = { x1, x2 }, ys[2] = { y1, y2 };
+    aos_hal_sim_set_touch_n(count > 2 ? 2 : count, xs, ys);
 }
 
 uint32_t aos_hal_touch_frames(uint32_t after_seq, aos_touch_frame_t *out,
@@ -376,6 +393,28 @@ uint32_t aos_hal_touch_frames(uint32_t after_seq, aos_touch_frame_t *out,
         out[n++] = s_ring[s % SIM_TOUCH_RING];
     }
     return n;
+}
+
+uint32_t aos_hal_touch_frames_n(uint32_t after_seq, aos_touch_frame_n_t *out,
+                                uint32_t max)
+{
+    uint32_t last = s_frame_n.seq, first = after_seq + 1, n = 0;
+    if (last >= SIM_TOUCH_RING && first <= last - SIM_TOUCH_RING) {
+        first = last - SIM_TOUCH_RING + 1;
+    }
+    if (last >= first && last - first + 1 > max) {
+        first = last - max + 1;
+    }
+    for (uint32_t s = first; s <= last && s != 0 && n < max; s++) {
+        out[n++] = s_ring_n[s % SIM_TOUCH_RING];
+    }
+    return n;
+}
+
+bool aos_hal_touch_frame_n(aos_touch_frame_n_t *out)
+{
+    *out = s_frame_n;
+    return true;
 }
 
 void aos_hal_touch_stats(uint32_t *reads, uint32_t *samples)

@@ -319,6 +319,21 @@ void     aos_hal_touch_stats(uint32_t *reads, uint32_t *samples);
 /* true = the hardware can report a second finger. */
 bool     aos_hal_touch_multi(void);
 
+/* P4OS (2026-10-17): every finger the chip reports, up to AOS_TOUCH_MAX
+ * (the GT911 tracks five), for a game pad that needs a d-pad and two or
+ * three buttons at once. The same samples, numbered with the same seq, as
+ * the two-finger frames above, which stay as they were for the apps built
+ * against them. */
+#define AOS_TOUCH_MAX 5
+typedef struct {
+    uint8_t  count;                         /* fingers in this sample: 0..5 */
+    int16_t  x[AOS_TOUCH_MAX], y[AOS_TOUCH_MAX];
+    uint32_t seq;
+    uint32_t t_ms;
+} aos_touch_frame_n_t;
+bool     aos_hal_touch_frame_n(aos_touch_frame_n_t *out);
+uint32_t aos_hal_touch_frames_n(uint32_t after_seq, aos_touch_frame_n_t *out, uint32_t max);
+
 /* The CST820's registers 0x00..0x0E as of the last read, for the raw view
  * (Settings -> Touch -> Raw view). Returns the sample counter, 0 = not a
  * CST820 (the v1 board, the simulator). */

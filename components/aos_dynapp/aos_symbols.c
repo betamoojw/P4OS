@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3375 simbolos.
+ * Total: 3378 simbolos.
  */
 
 #include <stddef.h>
@@ -569,7 +569,9 @@ extern int aos_hal_timezone_get;
 extern int aos_hal_timezone_set;
 extern int aos_hal_touch_counters;
 extern int aos_hal_touch_frame;
+extern int aos_hal_touch_frame_n;
 extern int aos_hal_touch_frames;
+extern int aos_hal_touch_frames_n;
 extern int aos_hal_touch_gesture;
 extern int aos_hal_touch_multi;
 extern int aos_hal_touch_reg_read;
@@ -1088,6 +1090,7 @@ extern int aos_tls_send;
 extern int aos_toast_show;
 extern int aos_toast_up;
 extern int aos_touch_points;
+extern int aos_touch_points_n;
 extern int aos_tr;
 extern int aos_trc;
 extern int aos_ui_alive;
@@ -3947,7 +3950,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_timezone_set),
     ESP_ELFSYM_EXPORT(aos_hal_touch_counters),
     ESP_ELFSYM_EXPORT(aos_hal_touch_frame),
+    ESP_ELFSYM_EXPORT(aos_hal_touch_frame_n),
     ESP_ELFSYM_EXPORT(aos_hal_touch_frames),
+    ESP_ELFSYM_EXPORT(aos_hal_touch_frames_n),
     ESP_ELFSYM_EXPORT(aos_hal_touch_gesture),
     ESP_ELFSYM_EXPORT(aos_hal_touch_multi),
     ESP_ELFSYM_EXPORT(aos_hal_touch_reg_read),
@@ -4466,6 +4471,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_toast_show),
     ESP_ELFSYM_EXPORT(aos_toast_up),
     ESP_ELFSYM_EXPORT(aos_touch_points),
+    ESP_ELFSYM_EXPORT(aos_touch_points_n),
     ESP_ELFSYM_EXPORT(aos_tr),
     ESP_ELFSYM_EXPORT(aos_trc),
     ESP_ELFSYM_EXPORT(aos_ui_alive),

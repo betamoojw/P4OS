@@ -20,7 +20,7 @@
  * of at least BAND_MIN for the thumbs. The scale is always a whole number
  * of sixteenths, the PPA's step, so it comes out exact.
  *
- * Fingers (aos_touch_points, two of them): each finger owns what it landed
+ * Fingers (aos_touch_points_n, up to five): each finger owns what it landed
  * on until it lifts. The d-pad follows the finger's angle from its centre,
  * eight ways, and keeps it when the thumb slides off; A and B are one
  * cluster, so a thumb between them presses both and a thumb rolling from
@@ -123,9 +123,9 @@ typedef struct emu_game {
     rect_t      pic;                /* where the picture goes (root coordinates) */
     int         fw, fh;             /* the last frame's size */
 
-    /* fingers */
-    uint8_t     fid[2];
-    int         fown[2];
+    /* fingers (AOS_TOUCH_MAX: the d-pad and two or three buttons at once) */
+    uint8_t     fid[AOS_TOUCH_MAX];
+    int         fown[AOS_TOUCH_MAX];
     uint32_t    touch_btn;
     uint32_t    lit;                /* what is drawn lit */
 
@@ -754,12 +754,12 @@ static void open_menu(emu_app_t *a);
 
 static void touch_poll(emu_app_t *a, game_t *g)
 {
-    aos_touch_point_t pts[2];
-    aos_touch_points(pts);
+    aos_touch_point_t pts[AOS_TOUCH_MAX];
+    aos_touch_points_n(pts, AOS_TOUCH_MAX);
     lv_area_t rc;
     lv_obj_get_coords(a->root, &rc);
     uint32_t b = 0;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < AOS_TOUCH_MAX; i++) {
         uint8_t id = pts[i].down ? pts[i].id : 0;
         int x = (int)pts[i].x - rc.x1, y = (int)pts[i].y - rc.y1;
         if (id != g->fid[i]) {
@@ -792,8 +792,10 @@ static void touch_poll(emu_app_t *a, game_t *g)
 
 static void touch_release(game_t *g)
 {
-    g->fid[0] = g->fid[1] = 0;
-    g->fown[0] = g->fown[1] = OWN_NONE;
+    for (int i = 0; i < AOS_TOUCH_MAX; i++) {
+        g->fid[i] = 0;
+        g->fown[i] = OWN_NONE;
+    }
     g->touch_btn = 0;
 }
 
@@ -1157,8 +1159,8 @@ static void game_frame(emu_app_t *a, game_t *g)
     if (g->failed) {
         /* a tap (down after up, so not the finger that opened the game) or
          * A / START on a pad goes back to the library */
-        aos_touch_point_t pts[2];
-        bool down = aos_touch_points(pts) > 0;
+        aos_touch_point_t pts[AOS_TOUCH_MAX];
+        bool down = aos_touch_points_n(pts, AOS_TOUCH_MAX) > 0;
         bool pressed = down && g->was_up;
         g->was_up = !down;
         bool combo = false;
@@ -1272,7 +1274,7 @@ bool emu_game_open(emu_app_t *a, const emu_game_t *gm)
     g->game.core = g->core;
     g->btns = g->core->buttons;
     g->skin = emu_skin(gm->core);
-    g->fown[0] = g->fown[1] = OWN_NONE;
+    for (int i = 0; i < AOS_TOUCH_MAX; i++) g->fown[i] = OWN_NONE;
     g->open = true;
     g->t_open = (uint32_t)aos_hal_uptime_ms();
 

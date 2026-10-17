@@ -1449,27 +1449,42 @@ static void touch_rotate(int px, int py, int16_t *x, int16_t *y)
     }
 }
 
-/* Two-finger frames for aos_gesture. The GT911 reports up to five points;
- * the first two are published, already in screen pixels (so
+/* Finger frames for aos_gesture. The GT911 reports up to five points:
+ * all of them go into the full frames, the first two into the two-finger
+ * ones the older apps read; both already in screen pixels (so
  * aos_ui_touch_map() is the identity on this board). Written and read from
  * the LVGL task only: the indev read and the recogniser's timer. */
 #define TOUCH_RING 16
-static aos_touch_frame_t s_tf, s_tring[TOUCH_RING];
+static aos_touch_frame_t   s_tf, s_tring[TOUCH_RING];
+static aos_touch_frame_n_t s_tfn, s_tringn[TOUCH_RING];     /* every finger */
+
 static uint32_t s_touch_reads, s_touch_samples;
 
+/* One sample, up to AOS_TOUCH_MAX fingers: into the full ring, and its
+ * first two into the two-finger ring the older apps read, under one seq. */
 static void touch_publish(int count, const int16_t *x, const int16_t *y)
 {
-    bool changed = count != s_tf.count;
-    for (int i = 0; i < count; i++) changed |= x[i] != s_tf.x[i] || y[i] != s_tf.y[i];
+    if (count > AOS_TOUCH_MAX) count = AOS_TOUCH_MAX;
+    bool changed = count != s_tfn.count;
+    for (int i = 0; i < count; i++) changed |= x[i] != s_tfn.x[i] || y[i] != s_tfn.y[i];
     if (!changed) return;
-    s_tf.count = (uint8_t)count;
-    for (int i = 0; i < 2; i++) {
-        s_tf.x[i] = i < count ? x[i] : 0;
-        s_tf.y[i] = i < count ? y[i] : 0;
+    uint32_t seq = s_tfn.seq + 1, t = (uint32_t)(esp_timer_get_time() / 1000);
+    s_tfn.count = (uint8_t)count;
+    for (int i = 0; i < AOS_TOUCH_MAX; i++) {
+        s_tfn.x[i] = i < count ? x[i] : 0;
+        s_tfn.y[i] = i < count ? y[i] : 0;
     }
-    s_tf.seq++;
-    s_tf.t_ms = (uint32_t)(esp_timer_get_time() / 1000);
-    s_tring[s_tf.seq % TOUCH_RING] = s_tf;
+    s_tfn.seq = seq;
+    s_tfn.t_ms = t;
+    s_tringn[seq % TOUCH_RING] = s_tfn;
+    s_tf.count = (uint8_t)(count > 2 ? 2 : count);
+    for (int i = 0; i < 2; i++) {
+        s_tf.x[i] = s_tfn.x[i];
+        s_tf.y[i] = s_tfn.y[i];
+    }
+    s_tf.seq = seq;
+    s_tf.t_ms = t;
+    s_tring[seq % TOUCH_RING] = s_tf;
     s_touch_samples++;
 }
 
@@ -1480,12 +1495,28 @@ bool aos_hal_touch_frame(aos_touch_frame_t *out)
     return true;
 }
 
+bool aos_hal_touch_frame_n(aos_touch_frame_n_t *out)
+{
+    if (!s_touch) return false;
+    *out = s_tfn;
+    return true;
+}
+
 uint32_t aos_hal_touch_frames(uint32_t after_seq, aos_touch_frame_t *out, uint32_t max)
 {
     uint32_t last = s_tf.seq, first = after_seq + 1, n = 0;
     if (last >= TOUCH_RING && first <= last - TOUCH_RING) first = last - TOUCH_RING + 1;
     if (last >= first && last - first + 1 > max) first = last - max + 1;
     for (uint32_t q = first; q <= last && q != 0 && n < max; q++) out[n++] = s_tring[q % TOUCH_RING];
+    return n;
+}
+
+uint32_t aos_hal_touch_frames_n(uint32_t after_seq, aos_touch_frame_n_t *out, uint32_t max)
+{
+    uint32_t last = s_tfn.seq, first = after_seq + 1, n = 0;
+    if (last >= TOUCH_RING && first <= last - TOUCH_RING) first = last - TOUCH_RING + 1;
+    if (last >= first && last - first + 1 > max) first = last - max + 1;
+    for (uint32_t q = first; q <= last && q != 0 && n < max; q++) out[n++] = s_tringn[q % TOUCH_RING];
     return n;
 }
 
@@ -1503,12 +1534,13 @@ static void touch_cb(lv_indev_t *indev, lv_indev_data_t *data)
     if (!s_touch) return;
     esp_lcd_touch_read_data(s_touch);
     s_touch_reads++;
-    esp_lcd_touch_point_data_t pt[2];
+    esp_lcd_touch_point_data_t pt[AOS_TOUCH_MAX];
     uint8_t n = 0;
-    esp_lcd_touch_get_data(s_touch, pt, &n, 2);
-    int16_t x[2], y[2];
-    for (int i = 0; i < n && i < 2; i++) touch_rotate(pt[i].x, pt[i].y, &x[i], &y[i]);
-    touch_publish(n > 2 ? 2 : n, x, y);
+    esp_lcd_touch_get_data(s_touch, pt, &n, AOS_TOUCH_MAX);
+    if (n > AOS_TOUCH_MAX) n = AOS_TOUCH_MAX;
+    int16_t x[AOS_TOUCH_MAX], y[AOS_TOUCH_MAX];
+    for (int i = 0; i < n; i++) touch_rotate(pt[i].x, pt[i].y, &x[i], &y[i]);
+    touch_publish(n, x, y);
     if (!n) return;
     data->point.x = x[0];
     data->point.y = y[0];

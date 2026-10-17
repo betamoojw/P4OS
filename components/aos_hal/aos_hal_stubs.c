@@ -129,6 +129,12 @@ __attribute__((weak)) void aos_hal_touch_stats(uint32_t *reads, uint32_t *sample
 __attribute__((weak)) bool aos_hal_touch_multi(void)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
+__attribute__((weak)) bool aos_hal_touch_frame_n(aos_touch_frame_n_t *out)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) uint32_t aos_hal_touch_frames_n(uint32_t after_seq, aos_touch_frame_n_t *out, uint32_t max)
+{ uint32_t v; memset(&v, 0, sizeof v); return v; }
+
 __attribute__((weak)) uint32_t aos_hal_touch_regs(uint8_t regs[AOS_TOUCH_REGS])
 { uint32_t v; memset(&v, 0, sizeof v); return v; }
 

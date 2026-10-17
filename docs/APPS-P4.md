@@ -326,6 +326,20 @@ takes is there for the apps, all in `aos_hal.h`:
   and the microphone go to and come from the card by themselves when the
   user has one plugged in.
 
+## Five fingers
+
+Since 2026-10-17 the GT911's five fingers reach the apps:
+`aos_touch_points_n(out, AOS_TOUCH_MAX)` (`aos_gesture.h`) hands out each
+finger in a slot of its own with an id that stays while it is down, and
+`aos_hal_touch_frames_n()` (`aos_hal.h`) the raw samples. The two-finger
+`aos_touch_points()` and `aos_hal_touch_frames()` stay as they were, for the
+apps built against them. A finger that lands beside others counts after a
+second sample or 30 ms of rest, whichever comes first: the chip sends a new
+sample only when something moves, and the old rule (a second sample) never
+accepted a finger resting on a button while another rested on the d-pad.
+The simulator's scripts have `fingers <ms> <x1> <y1> [<x2> <y2> ...]`, up to
+five fingers resting still.
+
 ## Emulators: code written at run time, modules, the keyboard's state, the refresh rate
 
 Asked by the emulator (`apps/emulador`, 2026-10-16), for anything like it:

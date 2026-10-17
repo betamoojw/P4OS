@@ -30,7 +30,10 @@
  * Commands, separated by ';':  wait <ms> | tap <x> <y> [ms] |
  * drag <x1> <y1> <x2> <y2> [ms] [rest_ms] | pinch <cx> <cy> <from> <to> [ms] |
  * key <k> | type <text> | enter | open <app id> | rotate | shot <file.png> |
- * pad <buttons> <x> <y> [ms] [hat] | quit
+ * pad <buttons> <x> <y> [ms] [hat] | fingers <ms> <x1> <y1> [<x2> <y2> ...] | quit
+ * (fingers: up to five fingers resting still for ms, published once, as the
+ *  chip does with fingers that do not move; it returns at once, so a later
+ *  'fingers' can add one while the first still rests)
  * (pad: a gamepad plugged in, holding <buttons> - hex, bit 0 = button 1 -
  * and the left stick at <x> <y> in -32767..32767 for ms, 150 by default,
  * and the hat (the d-pad: 0 up, 2 right, 4 down, 6 left; -1 none); then
@@ -242,9 +245,20 @@ static void pad_tick(void)
 void aos_hal_sim_set_touch(int count, int x1, int y1, int x2, int y2);
 
 static struct { bool on; int cx, cy, d0, d1; uint32_t t0, ms; } s_pinch;
+void aos_hal_sim_set_touch_n(int count, const int *xs, const int *ys);
+static struct { bool on; int n, x[5], y[5]; uint32_t until; } s_fingers;
 
 static void touch_frames_tick(void)
 {
+    if (s_fingers.on) {
+        if ((int32_t)(lv_tick_get() - s_fingers.until) >= 0) {
+            s_fingers.on = false;
+            aos_hal_sim_set_touch(0, 0, 0, 0, 0);
+        } else {
+            aos_hal_sim_set_touch_n(s_fingers.n, s_fingers.x, s_fingers.y);
+        }
+        return;
+    }
     if (s_pinch.on) {
         uint32_t el = lv_tick_get() - s_pinch.t0;
         if (el >= s_pinch.ms + 150) { s_pinch.on = false; aos_hal_sim_set_touch(0, 0, 0, 0, 0); return; }
@@ -330,6 +344,18 @@ static void script_step(void)
          * only arms on a press of the object it is attached to */
         aos_ui_inject_drag_rest(x - x2 / 2, y, x - y2 / 2, y, ms, 150);
         s_script_wait_until = lv_tick_get() + ms + 300;
+    } else if (!strncmp(c, "fingers ", 8)) {
+        int v[11], k = sscanf(c + 8, "%d %d %d %d %d %d %d %d %d %d %d", &v[0], &v[1], &v[2], &v[3], &v[4],
+                              &v[5], &v[6], &v[7], &v[8], &v[9], &v[10]);
+        if (k >= 3) {
+            s_fingers.on = true;
+            s_fingers.n = (k - 1) / 2;
+            for (int i = 0; i < s_fingers.n; i++) {
+                s_fingers.x[i] = v[1 + 2 * i];
+                s_fingers.y[i] = v[2 + 2 * i];
+            }
+            s_fingers.until = lv_tick_get() + (uint32_t)v[0];
+        }
     } else if (!strncmp(c, "type ", 5)) script_type(c + 5, false);
     else if (!strcmp(c, "enter")) script_type(NULL, true);
     else if (sscanf(c, "key %1s", a) == 1) do_key(a[0]);

@@ -127,6 +127,14 @@ typedef struct {
  * fingers are down. A finger keeps its slot while it stays down. */
 int aos_touch_points(aos_touch_point_t out[2]);
 
+/* P4OS (2026-10-17): every finger, up to 'max' (AOS_TOUCH_MAX, five, the
+ * most the GT911 tracks). The same fingers in the same slots as
+ * aos_touch_points(), which hands out slots 0 and 1 only: a third finger
+ * and on take slot 2 and up. For a game pad with a d-pad and two or three
+ * buttons at once. A finger that lands beside others counts once a second
+ * sample has it or it has rested TRACK_CONFIRM_MS (30 ms). */
+int aos_touch_points_n(aos_touch_point_t *out, int max);
+
 /* true = this hardware reports two fingers, so pinching is there to use.
  * Worth checking to decide whether to offer +/- buttons instead. */
 bool aos_gesture_multitouch(void);

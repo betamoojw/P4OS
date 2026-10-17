@@ -759,6 +759,20 @@ static void host_app_task(void *arg)
  * USB-Serial-JTAG goes back on GPIO24/25. */
 static esp_err_t host_uninstall(void)
 {
+    if (H.map & BIT0) {
+        /* The session overrides host_start forced on the High-Speed
+         * controller ("A-session valid": the host's side) outlive the host,
+         * and the OTG connector's device modes (keyboard, disk) share that
+         * controller: left on, it never pulled D+ up and the computer saw
+         * nothing (2026-10-16, the first disk mode since the host on 25/27).
+         * Back to their reset state, while the controller still has its
+         * clock. */
+        usb_dwc_dev_t *dwc = USB_DWC_LL_GET_HW(0);
+        dwc->gotgctl_reg.avalidovval = 0;
+        dwc->gotgctl_reg.avalidoven = 0;
+        dwc->gotgctl_reg.vbvalidovval = 0;
+        dwc->gotgctl_reg.vbvalidoven = 0;
+    }
     esp_err_t e = usb_host_uninstall();
     for (int c = 0; c < 2; c++)
         if (H.phy[c]) {

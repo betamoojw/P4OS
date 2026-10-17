@@ -25,6 +25,13 @@ taking it back is for Settings to do.
 The code is `components/aos_hal/aos_usb_p4.c`. Every step goes to the log,
 which the portal shows (**Registro**, filter `usb`).
 
+**When the computer sees nothing** (2026-10-16): the board says the disk is
+up, `/api/usb` says `"connected": false` and the Mac lists no device at all
+(`system_profiler SPUSBHostDataType`), not even a failed one: the cable.
+A charge-only cable, or one whose data lines are gone, looks exactly like
+this; another cable fixed it. With `"connected": true` the problem is
+elsewhere.
+
 ## Keyboard mode
 
 One composite device (VID 0x303A, PID 0x402C, class MISC/IAD), six

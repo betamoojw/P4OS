@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+- **Emulador** (`apps/emulador`): fourteen consoles as an app from the
+  card. The NES, Game Boy and Color, Game Boy Advance, Super Nintendo, Mega
+  Drive, Master System, Game Gear, ColecoVision, PC Engine, Neo Geo and the
+  Atari 2600, 7800 and Lynx, in eleven modules (`/apps/emulador/<core>.so`)
+  that load only while one of their games plays; the app finds them in
+  515 ms the first time and 31 ms after. A library that opens on the last
+  game and the picture it was left on, upright and lying down, each
+  console's own pad on the screen, USB gamepads and a second player on the
+  keyboard, four save states and an automatic one with pictures, `.sav`
+  battery saves, fast forward, and zipped games inflated once to the card.
+  A page in the portal takes games, BIOS files and saves, and opens a game
+  on the board. Measured there: the Game Boy Advance at 59.7 fps (5-7 ms a
+  frame) with gpSP's RISC-V recompiler, once the instructions that rev 1.3
+  lacks were left out, and Metal Slug at 59 fps (13-17 ms) with a sprite
+  cache in PSRAM that keeps what the frame on screen uses. Each core keeps
+  its own licence in its module; Snes9x and the Mega Drive's Z80 are
+  non-commercial ([apps/emulador/README.md](apps/emulador/README.md)).
+- **Touch: five fingers, and a finger resting beside another.** The GT911
+  reports five points and the HAL read two; now `aos_touch_points_n()` and
+  `aos_hal_touch_frames_n()` give up to `AOS_TOUCH_MAX` (5), and the
+  two-finger functions are as they were. A finger that lands while another
+  rests counts after 30 ms instead of waiting for the chip's next report,
+  which never came for fingers that do not move: the emulator's d-pad with
+  a button held did not work before it. The simulator's scripts take
+  `fingers <ms> x1 y1 [x2 y2 ...]` (docs/APPS-P4.md, "Five fingers").
 - **For emulators, four things in the firmware's table** (asked by
   `apps/emulador`; docs/APPS-P4.md, "Emulators"): `aos_hal_code_sync()`,
   code written at run time made visible to the instruction fetch (a

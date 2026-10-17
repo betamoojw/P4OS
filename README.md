@@ -8,12 +8,13 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and forty-one more on
+portrait or landscape. There are twenty-three built-in apps and forty-two more on
 the microSD, loaded as shared objects:
 
 - **Games:** twenty-two, among them Mila (a Sokoban with a black cat in
   Blender 3D), Monster Hop, a racing game, golf, a robot RPG, Doom at
-  35 fps and Duke Nukem 3D.
+  35 fps and Duke Nukem 3D; and an emulator of fourteen consoles, the
+  Game Boy Advance and the Neo Geo at full speed.
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
   a VNC viewer for a computer's screen, a computer algebra system with
@@ -387,6 +388,39 @@ when it ends. On the board: `fib(24)` in 481 ms, a megabyte downloaded and
 written to the card in 2 s, an app at 50 fps when only part of its canvas
 changes.
 
+### Emulador
+
+Fourteen consoles from the card ([apps/emulador/README.md](apps/emulador/README.md)):
+the NES, Game Boy and Game Boy Color, Game Boy Advance, Super Nintendo,
+Mega Drive, Master System, Game Gear, ColecoVision, PC Engine, Neo Geo, and
+the Atari 2600, 7800 and Lynx. Each console's core is a module of its own on
+the card, loaded only while one of its games plays.
+
+| The library | Super Nintendo | The menu | Game Boy Color | Mega Drive, lying down |
+|---|---|---|---|---|
+| <img src="docs/img/app-emulador-lib.png" width="125"> | <img src="docs/img/app-emulador-snes.png" width="125"> | <img src="docs/img/app-emulador-menu.png" width="125"> | <img src="docs/img/app-emulador-gbc.png" width="125"> | <img src="docs/img/land-emulador-md.png" width="222"> |
+
+- **The games** go in the card's `emulador/<console>/`, zipped or not, by
+  copying them, over USB disk mode or from the app's page in the portal,
+  which also takes the BIOS files and moves battery saves to and from other
+  emulators. None comes with it.
+- **Playing:** upright or lying down, turned while the game runs; each
+  console's own pad on the screen, up to five fingers at once; USB gamepads,
+  and a second player on a USB keyboard.
+- **The library** opens with the last game, on the picture it was left on.
+  Four save states and an automatic one, each with its picture; battery
+  saves as the usual `.sav`; fast forward; frame skip; the panel at the
+  console's own rate (60 Hz with its 80 MHz clock).
+- **On the board:** the Game Boy Advance at 59.7 fps with gpSP's recompiler
+  for RISC-V, and the Neo Geo's Metal Slug at 59 fps with a sprite cache in
+  PSRAM.
+
+The cores are other people's (nofrendo, gnuboy, gpSP, Snes9x, SMS Plus,
+pce-go, Gwenesis, gngeo, Stella, ProSystem, Handy), each with its licence in
+its module; Snes9x's and the Mega Drive's Z80 forbid commercial use
+([THIRD-PARTY.md](THIRD-PARTY.md)). The screenshots are of free homebrew
+games in the simulator.
+
 ### Apps from the card
 
 These are `.so` files that the firmware loads at boot. Their code runs
@@ -523,6 +557,10 @@ reads them.
   serial ports.
 - A generic USB gamepad in every game: the 22 games and Atrapa (Lua)
   played with it on the board.
+- The emulator's consoles, with games of the user's own: the GBA at
+  59.7 fps (5-7 ms a frame) and Metal Slug at 59 fps (13-17 ms), and its
+  pad with the d-pad and two buttons held at once, which needed the touch
+  to read more than two fingers.
 - The microSD, music and the speaker.
 - The games and most of the tools, in both orientations.
 - The BOOT button and safe mode.
@@ -608,7 +646,7 @@ The board-side checklist is in
 |---|---|
 | Board | [Waveshare ESP32-P4-WIFI6-Touch-LCD-5](https://www.waveshare.com/esp32-p4-wifi6-touch-lcd-5.htm), the model without a camera ([schematic and docs](https://docs.waveshare.com/ESP32-P4-WIFI6-Touch-LCD-5)) |
 | SoC | ESP32-P4, chip rev 1.3 here. Rev 3.x builds as a separate profile, and a binary for one does not boot on the other |
-| Display | 720×1280 MIPI-DSI (HX8394) with three frame buffers, and GT911 touch with two fingers |
+| Display | 720×1280 MIPI-DSI (HX8394) with three frame buffers, and GT911 touch with five fingers |
 | Memory | 768 KB internal RAM, 32 MB PSRAM, 32 MB flash |
 | Radio | ESP32-C6 over SDIO (esp_hosted 3.0.9): Wi-Fi 6 at 2.4 GHz |
 | Audio | ES8311 (speaker) + ES7210 (two microphones), full duplex |
@@ -702,6 +740,7 @@ Where something is a guess, it says so.
 | [C6.md](docs/C6.md) | the ESP32-C6's firmware: versions, updating it from the P4, throughput, recovery through J7 |
 | [EMOJI.md](docs/EMOJI.md) | the colour emoji pack and how a text gets them |
 | [MODULES.md](docs/MODULES.md) | the 40-pin header, `modules.txt`, I2C, SPI and GPIO from apps |
+| [apps/emulador/README.md](apps/emulador/README.md) | the emulator: the consoles, the card's folders, the modules, what was measured |
 | [apps/rf/README.md](apps/rf/README.md) | the software radio: receivers, the signal chain, what was measured, the decoders and their tests |
 | [PORTAL-PAGES.md](docs/PORTAL-PAGES.md) | an app's own page in the web portal, from the card, with no firmware |
 | [SECURITY.md](docs/SECURITY.md) | who may use the portal: trusted networks, the password, the token, and what is not covered |
@@ -745,8 +784,8 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 42 de la tarjeta (juegos, Doom y Duke Nukem 3D, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
-| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 43 de la tarjeta (juegos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
 | Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |
 | Cómo se instala | la primera vez por el CH340; después `tools/ota.sh p4os.local` o el portal |

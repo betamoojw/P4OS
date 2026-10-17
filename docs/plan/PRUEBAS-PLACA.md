@@ -230,6 +230,13 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       30-37 ms después de un disparo del task watchdog (IDLE0 sin correr).
       Sin vigilar IDLE0 y con porch vertical 120: 640x400 y 640x480 sin
       ninguno, y el usuario sin ver destellos (docs/MEMORY.md).
+- [x] Emulador (2026-10-17): GBA con el recompilador a 59,7 fps (5-7 ms por
+      cuadro) sin las instrucciones que el rev 1.3 no tiene; Metal Slug a
+      59 fps (13-17 ms, 98-99 % de la caché de sprites); los .zip del
+      usuario en la biblioteca; las catorce consolas en once módulos.
+- [x] Táctil con cinco dedos (2026-10-17, ddc159c): la cruceta con B (y con
+      R) a la vez en el emulador; antes un dedo quieto al lado de otro no
+      contaba nunca.
 - [ ] Sin Wi-Fi después de un reinicio por software (visto otra vez el
       2026-10-06, 1 vez en ~140 reinicios seguidos): la interfaz anda, el
       C6 no levanta la red, y no lo arreglan ni apagar y prender el Wi-Fi
@@ -725,6 +732,12 @@ por el Registro del portal sin cable serie)
 - [ ] Que el PPA acepte los buffers de LVGL.
 - [ ] Que no haya costuras entre franjas.
 - [ ] Jugar con dos dedos.
+
+**Emulador**
+- [ ] Anotar cuadros y tiempos de las otras consolas (NES, Game Boy, SNES,
+      Mega Drive, Master System, PC Engine, Ataris, Lynx).
+- [ ] Dos jugadores: uno en pantalla y otro en el teclado USB.
+- [ ] Joystick USB en el emulador, y SELECT+START para el menú.
 
 ## Pendientes anotados en la placa
 

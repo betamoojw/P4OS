@@ -1,9 +1,20 @@
 # Emulador
 
-Consoles of other times on the board, from the card: the **NES** and the
-**Game Boy Advance** for now, more to come (each console is a core behind
-one small table, `main/emu_core.h`). An app of the card (`emulador.so`); it
-needs no firmware of its own.
+Consoles of other times on the board, from the card: fourteen of them, from
+the Atari 2600 to the Neo Geo, each a core behind one small table
+(`main/emu_core.h`) and each core a module of its own on the card, loaded
+only while one of its games plays. An app of the card (`emulador.so`); what
+it takes from the firmware is in the firmware's table since commit
+`8bdf0da` (below).
+
+| The library | Super Nintendo | The menu | Game Boy Color |
+|---|---|---|---|
+| <img src="../../docs/img/app-emulador-lib.png" width="160"> | <img src="../../docs/img/app-emulador-snes.png" width="160"> | <img src="../../docs/img/app-emulador-menu.png" width="160"> | <img src="../../docs/img/app-emulador-gbc.png" width="160"> |
+
+<img src="../../docs/img/land-emulador-md.png" width="560">
+
+*The simulator, with free homebrew games: Breakout (SNES), uCity (GBC),
+Raposa do Sol (SMS) and Gentris (Mega Drive), lying down.*
 
 ## On the card
 
@@ -56,9 +67,15 @@ No game or BIOS comes with the app.
   and the console's pad is under it; **lying down** the picture is in the
   middle and the pad's halves are at the thumbs. The board turns without
   stopping the game.
-- **The pad on the screen** takes two fingers: the d-pad follows the
-  thumb's angle (eight ways, it keeps it while the thumb slides), and A/B
-  are one cluster, so a thumb between them presses both.
+- **The pad on the screen** is the console's own: one fire button for the
+  2600, B A side by side for the NES, Master System and PC Engine, B low
+  and A high for the Game Boys and the Lynx, the SNES's diamond, three or
+  six buttons for the Mega Drive, the Neo Geo's arc of four, and L/R where
+  the console has them, each in the console's colours. Up to five fingers
+  at once (the d-pad, two buttons and a shoulder): the d-pad follows the
+  thumb's angle (eight ways, it keeps it while the thumb slides), and two
+  neighbouring buttons are one cluster, so a thumb between them presses
+  both.
 - **⏸** opens the menu, **⏭** is fast forward (no sound, a third of the
   pictures).
 - **The menu:** Continue, Reset, Quit (the automatic state is saved), the
@@ -66,7 +83,9 @@ No game or BIOS comes with the app.
   and the options: the picture's size (fitted, whole multiples, stretched),
   frame skip, sound, frames a second on screen, resume on open, and the
   console's own (the NES palette, overscan and sprite limit; the GBA's
-  BIOS).
+  BIOS and colour correction; the Neo Geo's system, region and sprite
+  cache; the Mega Drive's pad of three or six buttons...), and the GBA's
+  recompiler.
 - **USB gamepads:** pad 1 is player 1 (together with the screen), pad 2
   player 2 (the NES has two). The buttons as a SNES-style pad numbers them:
   X=1, A=2, B=3, Y=4, L=5, R=6, SELECT=9, START=10, with X/Y doubling as
@@ -83,17 +102,21 @@ No game or BIOS comes with the app.
 | `main/em_lib.c` | the library |
 | `main/em_game.c` | the game screen: layout, the pad, gamepads, presenting frames |
 | `main/em_menu.c` | the pause menu |
-| `main/em_run.c` | the console in the worker (core 0): pacing by the speaker, frame skip, fast forward, frame slots, commands |
-| `main/em_files.c` | the card: folders, games, saves, states, thumbnails, recents, settings |
+| `main/em_run.c` | the console in the worker (core 0): pacing, frame skip, fast forward, frame slots, commands |
+| `main/em_files.c` | the card: folders, games, saves, states, thumbnails, recents, settings, each console's skin |
+| `main/emu_cores.c` | the consoles: their stable ids, finding the modules and keeping what they say |
+| `main/em_zip.c`, `em_tinfl.c` | zipped games, inflated once to the console's `.cache/` |
+| `main/em_strings.c` | the texts the cores show, for the language catalogs |
 | `main/emu_core.h` | **the contract with a console's core** |
 | `cores/<id>/` | a core: its sources, `board.cmake` and `sim.cmake` |
 | `sim.cmake` | the simulator's side (included by `sim/CMakeLists.txt`) |
 | `web/emulador.js` | the portal's page |
 
 **Threads.** The console runs in the HAL's worker on core 0 (LVGL is on core
-1). The speaker is the clock: the worker waits while more than three frames
-of sound are queued, so emulation and sound never drift; with the sound off
-it is the microsecond clock. When a frame runs late the next ones are not
+1). The microsecond clock sets each frame's deadline and the speaker's ring
+nudges it (an eighth of a frame earlier or later when it runs low or full),
+so emulation and sound never drift; with the sound off it is the clock
+alone. When a frame runs late the next ones are not
 drawn (up to three in a row) so the game keeps its speed. Frames go to the
 screen through three slots, as in Doom's and Duke's ports; the LVGL side
 blits the newest with the PPA into the panel's free buffer, brings the pad
@@ -111,6 +134,39 @@ implementing `emu_core_t`, `board.cmake` and `sim.cmake` (both globbed; set
 `EMU_CORE_IDS` for several consoles in one folder); for the simulator its
 id in `main/emu_cores.c`, and a skin in `em_files.c`. The texts it shows
 go in `main/em_strings.c` for the catalogs.
+
+**The picture** is scaled by the PPA, whose factor goes in steps of 1/16:
+each axis gets an exact step (`fit()` in `em_game.c`). A factor that the
+PPA rounds leaves its last column unpainted, the stripe of noise seen at
+the picture's right edge before 6fabed1.
+
+**Touch.** The pad reads every finger the GT911 reports
+(`aos_touch_points_n`, up to five, firmware ddc159c). A finger that lands
+while another rests counts after 30 ms, without waiting for the chip's
+next report, which never comes for fingers that do not move.
+
+## Measured on the board
+
+Chip rev 1.3, the panel's clock at 80 MHz (60 Hz). While a game plays the
+app logs its frame rates and times, with the core's own numbers (the
+recompiler's, the sprite cache's), and the menu's "frames per second"
+shows them over the game.
+
+| | |
+|---|---|
+| Game Boy Advance (Frogger, the recompiler on) | 59.7 fps, 5-7 ms a frame |
+| Neo Geo (Metal Slug) | 59 fps, 13-17 ms a frame, 98-99 % of sprite tiles from the cache |
+| The fourteen consoles in eleven modules | found in 515 ms the first time, 31 ms after (the catalog) |
+
+The other consoles were played on the board too, with no complaint about
+speed, and the pad with the d-pad and two buttons held at once; their frame
+times are not written down yet. Two traps found there and fixed: the GBA's recompiler hung the
+board with P4 instructions that the rev 1.3 chip lacks or that fault on a
+stack in PSRAM (`cores/gba/README.md`); and Neo Geo's sprite cache thrashed
+at 1.8 fps until it kept what the frame on screen uses
+(`cores/neogeo/README.md`). A Neo Geo game whose automatic state was saved
+on an error screen (MVS's "CALENDAR ERROR") keeps showing it: start it from
+the beginning (a long press).
 
 ## What it takes from the firmware
 

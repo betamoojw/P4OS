@@ -25,12 +25,20 @@ taking it back is for Settings to do.
 The code is `components/aos_hal/aos_usb_p4.c`. Every step goes to the log,
 which the portal shows (**Registro**, filter `usb`).
 
-**When the computer sees nothing** (2026-10-16): the board says the disk is
-up, `/api/usb` says `"connected": false` and the Mac lists no device at all
-(`system_profiler SPUSBHostDataType`), not even a failed one: the cable.
-A charge-only cable, or one whose data lines are gone, looks exactly like
-this; another cable fixed it. With `"connected": true` the problem is
-elsewhere.
+**When the computer sees nothing** (2026-10-16), two causes, in this order:
+
+- **The cable.** The board says the mode is up, `/api/usb` says
+  `"connected": false`, and the Mac lists no device at all
+  (`system_profiler SPUSBHostDataType`), not even a failed one: a
+  charge-only cable, or one whose data lines are gone. Another cable fixed
+  it.
+- **macOS asks first.** A Mac with Apple silicon asks "Allow accessory to
+  connect?" for every new USB device, and until the answer is Allow it
+  lists the device but does not configure it: `"connected": false` on the
+  board, no disk in Finder. Keyboard mode and disk mode are two devices to
+  it (product IDs `0x402C` and `0x4002`), so allowing one does not allow
+  the other. A denied one asks again only after System Settings, Privacy &
+  Security, "Allow accessories to connect".
 
 ## Keyboard mode
 

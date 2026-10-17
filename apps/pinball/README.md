@@ -289,7 +289,9 @@ the roulette, a disc ~17 kpx big whose frame changed every frame. Now the
 DMD redraws only the boxes of the dots that changed (strips of 16 columns),
 and a disc takes a new frame every other frame (35 a second, still
 smooth): Casino from 25 to 13-17 kpx a frame, its slot machine from 115 to
-17-32 kpx. Not measured on the board yet.
+17-32 kpx. On the board after it (the user playing Casino with its slot
+machine, 40 s): 63-70 fps, 2-4.3 ms drawing a frame, 11-22 kpx; copying
+to the panel is now the bigger half (5-6.5 ms for 290-370 rows).
 
 On 0.17.0 the first build loaded a table beside the carousel's cards and
 ran out of PSRAM: half the pack missing, and malloc() falling back to
@@ -305,5 +307,4 @@ tutorial, `PB_DEBUG=1` draws the physics' shapes over the picture,
 
 ## Pending
 
-- Measure on the board the DMD and roulette fix (Casino Real at 60 fps).
 - Tune the difficulty with real players (ball time, outlanes, missions).

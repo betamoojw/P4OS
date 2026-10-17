@@ -26,6 +26,7 @@ Prepared for public release: 03/21/2003 - Charlie Wiederhold, 3D Realms
 //-------------------------------------------------------------------------
 
 #include "duke3d.h"
+void _idle(void);	// P4OS: port/dk_display.c
 #include "filesystem.h"
 #include "game.h"
 
@@ -993,8 +994,15 @@ void newgame(uint8_t  vn,uint8_t  ln,uint8_t  sk)
     struct player_struct *p = &ps[0];
     short i;
 
+    // P4OS: the wait for the skill's voice ("Let's rock!") to end. On DOS
+    // the card's interrupt mixed it meanwhile and its end unlocked it; here
+    // the game's own task mixes, so the loop has to (_idle: the sound, the
+    // keys, a millisecond's sleep). Empty, it spun forever, which is also
+    // why Chocolate built this file at -O0: optimised, the load of lock
+    // left the loop.
     if(globalskillsound >= 0)
-        while(Sound[globalskillsound].lock>=200);
+        while(Sound[globalskillsound].lock>=200)
+            _idle();
     globalskillsound = -1;
 
     waitforeverybody();

@@ -216,7 +216,8 @@ change is marked `P4OS:` in the source.
 | `engine/engine.c` | the pixel budget refilled every frame; `-O2` |
 | `game/game.c` | `main()` renamed; the GRP the app found; no executable to checksum; no `d_namlen` |
 | `game/global.c` | `Error()` through the port; `FixFilePath` only turns backslashes |
-| `game/config.c` | mono 16-bit 22050 Hz, 16 voices; music on; 320x200 by default |
+| `game/config.c` | mono 16-bit 22050 Hz, 16 voices; music on; 320x200 by default; no startup pause |
+| `game/premap.c` | the wait for the skill's voice mixes the sound |
 | `game/control.c` | `ACTION()`, `CONTROL_ClearAction()` and `CONTROL_GetInput()` ask the port |
 | `game/player.c` | the stick's walking added after xDuke zeroes the mouse's |
 | `game/keyboard.c` | `KB_KeyWaiting()` tells the port the game waits for a key |
@@ -273,6 +274,18 @@ The app's `CMakeLists.txt` adds `-fcommon -fwrapv -fwrapv-pointer
   `KB_KeyWaiting()` without a frame drawn: past 64 the game is waiting, the
   pad sends keys, and each call sleeps a millisecond and mixes (a loop that
   never blocks on core 0 starves the idle task).
+- **Waits for the sound card.** Starting a game from the menu hung after
+  the skill: `newgame()` waits for the skill's voice ("Let's rock!") with
+  `while (Sound[x].lock >= 200);`, an empty loop that on DOS ended when the
+  card's interrupt mixed the sound to its end. Here the game's own task
+  mixes, so nothing ever did; and optimised, gcc reads `lock` once, which is
+  why Chocolate built `premap.c` at `-O0`. The loop calls `_idle()` now (the
+  sound, the keys, a millisecond's sleep). The waits built on `getpackets()`
+  (the end of episode 3 waits for four voices that way) are covered in
+  `sampletimer()`: called over and over without a frame, it mixes and
+  sleeps. A loop that never blocks also starves core 0, and the system's
+  hang watchdog notices. And `config.c` spun three quarters of a second at
+  startup for the DOS player to read a line: gone.
 - **The blue flashes were not the PSRAM.** Uncapped at 320x200 and at
   640x400 the screen flashed; both use all of core 0, and the culprit was
   the task watchdog's report from its interrupt delaying the panel's restart

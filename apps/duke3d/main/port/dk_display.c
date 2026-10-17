@@ -84,6 +84,7 @@ static int                s_shown = -1;         /* app side */
 
 static uint16_t          *s_pal;                /* 256 entries, internal RAM */
 static uint32_t           s_last_yield;
+static uint32_t           s_timer_calls;        /* sampletimer() since the last frame */
 
 static bool cas(volatile int *p, int from, int to)
 {
@@ -433,6 +434,7 @@ void _nextpage(void)
     uint64_t t1 = aos_hal_uptime_us();
     present();
     dk_frame_done();
+    s_timer_calls = 0;
     s_frame_end_us = aos_hal_uptime_us();
     s_busy_us += s_frame_end_us - t1;           /* the palette pass counts */
     dk_sound_update();
@@ -572,10 +574,23 @@ void uninittimer(void)
     timerticspersec = 0;
 }
 
+/* sampletimer() is the body of the game's waits: while (totalclock < t)
+ * getpackets(), while (Sound[x].lock >= 200) getpackets(). On DOS the timer
+ * and the sound card moved on by interrupts meanwhile; here the game's own
+ * task has to, and a loop that never blocks starves core 0 (the system's
+ * hang watchdog sees it). So, called over and over without a frame, it mixes
+ * the sound and sleeps a millisecond each time. Playing, it is called a
+ * few times a frame. */
+#define SPIN_CALLS  64
+
 void sampletimer(void)
 {
     if (!timerfreq) return;
     dk_pause_wait();
+    if (++s_timer_calls > SPIN_CALLS) {
+        dk_sound_update();
+        aos_hal_worker_sleep(1);
+    }
     int32_t n = ms_to_tics(dk_ticks_ms()) - timerlastsample;
     if (n > 0) {
         totalclock += n;

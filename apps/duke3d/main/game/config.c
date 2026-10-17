@@ -126,10 +126,9 @@ void CONFIG_GetSetupFilename( void )
    }
 
    printf("Using Setup file: '%s'\n",setupfilename);
-   i=clock()+(3*CLOCKS_PER_SEC/4);
-   while (clock()<i){
-      ;
-   }
+   // P4OS: a three-quarters of a second pause, spinning, so that the DOS
+   // player could read the line above; on the board nobody reads it there
+   (void)i;
 }
 
 /*

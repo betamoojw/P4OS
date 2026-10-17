@@ -82,6 +82,8 @@ typedef struct {
     int        ntoy[PB_MAX_TOY];
     pb_rect_t  toy_area[PB_MAX_TOY];
     int        toy_drawn[PB_MAX_TOY];     /* frame * 256 + opacity drawn     */
+    uint32_t   toy_when[PB_MAX_TOY];      /* the render frame it last changed */
+    uint32_t   frames;                    /* render frames drawn             */
     pb_spr_t   spin[PB_SPIN_FRAMES];
     int        nspin;
     int        spin_obj;

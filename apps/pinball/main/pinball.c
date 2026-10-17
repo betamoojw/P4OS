@@ -140,6 +140,7 @@ typedef struct {
 
     /* the log's line */
     uint32_t   perf_frames, perf_rows, perf_t0;
+    uint64_t   perf_px;         /* pixels composed again (the dirty rects) */
     uint64_t   perf_us, perf_draw_us, perf_push_us;
 } app_t;
 
@@ -901,11 +902,13 @@ static void perf(app_t *a, uint64_t us)
     if (now - a->perf_t0 < PERF_MS) return;
     float s = (float)(now - a->perf_t0) / 1000.0f;
     double n = a->perf_frames ? a->perf_frames : 1;
-    aos_hal_log("pinball", "%.1f fps, %.2f ms a frame (draw %.2f, push %.2f), %u rows/frame pushed, flip %d, %u KB art",
+    aos_hal_log("pinball", "%.1f fps, %.2f ms a frame (draw %.2f, push %.2f), %u rows/frame pushed, %u kpx drawn, "
+                "flip %d, %u KB art",
                 (double)(a->perf_frames / s), (double)(a->perf_us / 1000.0 / n), (double)(a->perf_draw_us / 1000.0 / n),
-                (double)(a->perf_push_us / 1000.0 / n), (unsigned)(a->perf_rows / n), a->flip_ok,
-                (unsigned)(a->rd.bytes / 1024));
+                (double)(a->perf_push_us / 1000.0 / n), (unsigned)(a->perf_rows / n), (unsigned)(a->perf_px / n / 1000),
+                a->flip_ok, (unsigned)(a->rd.bytes / 1024));
     a->perf_frames = a->perf_rows = 0;
+    a->perf_px = 0;
     a->perf_us = a->perf_draw_us = a->perf_push_us = 0;
     a->perf_t0 = now;
 }
@@ -963,6 +966,10 @@ static void game_frame(app_t *a, float dt)
     uint64_t t1 = aos_hal_uptime_us();
     pb_render_frame(&a->rd, &a->g, &a->ph, &ui);
     uint64_t t2 = aos_hal_uptime_us();
+    for (int i = 0; i < a->rd.ndirty; i++) {
+        const pb_rect_t *d = &a->rd.dirty[i];
+        a->perf_px += (uint32_t)((d->x1 - d->x0) * (d->y1 - d->y0));
+    }
     push(a, toast);
     a->rd.ndirty = 0;
     uint64_t t3 = aos_hal_uptime_us();

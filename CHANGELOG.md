@@ -16,7 +16,8 @@
   a Python module rendered in Blender through the game's camera, with its
   depth, so the ball passes behind ramps and toys; a new table is a module
   and a pack, with no new code. Measured on the board: 68-70 fps (3-6 ms a
-  frame), Casino Real 62 at the median with dips while its roulette spins.
+  frame); Casino Real dipped to 38-45 in its video mode until the DMD
+  redrew only the dots that change (not yet measured again on the board).
   PSRAM only; a table takes 10-11.6 MB of pictures
   ([apps/pinball/README.md](apps/pinball/README.md)). Its six art packs
   (`pinball_<table>_p4.pak`, 19 MB) are rendered on the author's machine:

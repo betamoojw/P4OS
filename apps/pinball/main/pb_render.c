@@ -668,6 +668,35 @@ static void draw_dmd(pb_render_t *r, const pb_rect_t *clip)
     }
 }
 
+/* only the dots that changed: a video mode animates a few things at a time,
+ * and the whole window again every frame (115 000 pixels) cost the board
+ * 10 ms a frame. The window is cut in strips of 16 columns, each with the
+ * box of its changed dots */
+static void dmd_dirty(pb_render_t *r)
+{
+    const float pitch = (float)(DMD_X1 - DMD_X0) / DMD_W;
+    for (int s0 = 0; s0 < DMD_W; s0 += 16) {
+        int c0 = DMD_W, c1 = -1, r0 = DMD_H, r1 = -1;
+        for (int y = 0; y < DMD_H; y++) {
+            const uint8_t *a = &r->dmd.px[y][s0], *b = &r->dmd_shown.px[y][s0];
+            if (!memcmp(a, b, 16)) continue;
+            if (y < r0) r0 = y;
+            r1 = y;
+            for (int x = 0; x < 16; x++) {
+                if (a[x] == b[x]) continue;
+                if (s0 + x < c0) c0 = s0 + x;
+                if (s0 + x > c1) c1 = s0 + x;
+            }
+        }
+        if (c1 < 0) continue;
+        pb_rect_t d = { (int16_t)(DMD_X0 + (int)(c0 * pitch) - 1), (int16_t)(DMD_Y0 + (int)(r0 * pitch) - 1),
+                        (int16_t)(DMD_X0 + (int)((c1 + 1) * pitch) + 2), (int16_t)(DMD_Y0 + (int)((r1 + 1) * pitch) + 2) };
+        pb_rect_t win = { DMD_X0, DMD_Y0, DMD_X1, DMD_Y1 };
+        rc_clip(&d, &win);
+        dirty(r, d);
+    }
+}
+
 static void draw_launch(pb_render_t *r, const pb_ui_t *ui, const pb_rect_t *clip)
 {
     if (!ui->launch_show) return;
@@ -758,6 +787,7 @@ static void draw_debug(pb_render_t *r, const pb_phys_t *ph)
 
 void pb_render_frame(pb_render_t *r, const pb_game_t *g, const pb_phys_t *ph, const pb_ui_t *ui)
 {
+    r->frames++;
     const pb_table_t *t = r->t;
     /* what changed since the frame before */
     for (int i = 0; i < t->nlamp; i++) {
@@ -821,8 +851,17 @@ void pb_render_frame(pb_render_t *r, const pb_game_t *g, const pb_phys_t *ph, co
             break;
         }
         int key = tf[k] < 0 ? -1 : tf[k] * 256 + to[k];
+        /* a disc turns all the time and is big (the roulette, ~17 000
+         * pixels): a new frame of it every other frame is still smooth and
+         * halves what it costs */
+        if (d->kind == TK_DISC && key != r->toy_drawn[k] && r->toy_drawn[k] >= 0 &&
+            r->frames - r->toy_when[k] < 2) {
+            key = r->toy_drawn[k];
+            tf[k] = key >> 8;
+        }
         if (key != r->toy_drawn[k]) {
             r->toy_drawn[k] = key;
+            r->toy_when[k] = r->frames;
             dirty(r, r->toy_area[k]);
         }
     }
@@ -876,12 +915,14 @@ void pb_render_frame(pb_render_t *r, const pb_game_t *g, const pb_phys_t *ph, co
         dirty(r, r->pause_rc);
     }
     pb_game_dmd((pb_game_t *)g, &r->dmd);
-    if (!r->dmd_valid || memcmp(&r->dmd, &r->dmd_shown, sizeof r->dmd)) {
-        r->dmd_shown = r->dmd;
-        r->dmd_valid = true;
+    if (!r->dmd_valid) {
         pb_rect_t a = { DMD_X0, DMD_Y0, DMD_X1, DMD_Y1 };
         dirty(r, a);
+    } else {
+        dmd_dirty(r);
     }
+    r->dmd_shown = r->dmd;
+    r->dmd_valid = true;
     if (ui->debug != r->debug) {
         r->debug = ui->debug;
         pb_render_full(r);

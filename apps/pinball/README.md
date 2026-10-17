@@ -281,9 +281,15 @@ panel's buffer. The log says every 5 s:
 With the toys and the new ramps (2026-10-17, the user playing, from the
 log): La Isla Pirata 67-69 fps, 5-6 ms a frame (draw 1.5-2); Casino Real
 62 fps at the median, 10-12 ms a frame (draw ~5), and down to 38-45 fps
-for a few seconds when drawing took 12-16 ms. The roulette is the likely
-cost: a 104 mm disc whose frame changes every frame, drawn with its depth,
-on top of whatever the ball dirties.
+for a few seconds when drawing took 12-16 ms. Two costs, found in the
+simulator with the log's `kpx drawn` (thousands of pixels composed again a
+frame): the DMD redrew its whole window (115 kpx) every frame a video mode
+or an animation changed a dot, and Casino's video mode is always lit; and
+the roulette, a disc ~17 kpx big whose frame changed every frame. Now the
+DMD redraws only the boxes of the dots that changed (strips of 16 columns),
+and a disc takes a new frame every other frame (35 a second, still
+smooth): Casino from 25 to 13-17 kpx a frame, its slot machine from 115 to
+17-32 kpx. Not measured on the board yet.
 
 On 0.17.0 the first build loaded a table beside the carousel's cards and
 ran out of PSRAM: half the pack missing, and malloc() falling back to
@@ -299,6 +305,5 @@ tutorial, `PB_DEBUG=1` draws the physics' shapes over the picture,
 
 ## Pending
 
-- Casino Real's dips under 60 fps: make the roulette cheaper to draw (only
-  the ring that changes, or fewer of its frames a second).
+- Measure on the board the DMD and roulette fix (Casino Real at 60 fps).
 - Tune the difficulty with real players (ball time, outlanes, missions).

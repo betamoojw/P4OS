@@ -751,7 +751,9 @@ por el Registro del portal sin cable serie)
 - [ ] Joystick USB en el emulador, y SELECT+START para el menú.
 
 **Pinball 3D**
-- [ ] Casino Real a 60 fps fijos (la ruleta, apps/pinball/README.md).
+- [ ] Casino Real a 60 fps fijos: medir en la placa el arreglo del DMD y la
+      ruleta (en el simulador, de 25 a 13-17 kpx por cuadro; el video de 115 a
+      17-32; apps/pinball/README.md).
 - [ ] Jugar las seis mesas con joystick USB.
 - [ ] Ajustar la dificultad con jugadores de verdad (tiempo por bola, outlanes).
 

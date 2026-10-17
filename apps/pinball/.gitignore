@@ -1,0 +1,4 @@
+# the renders and the packs are made by tools/ (README): never in git
+assets/
+build/
+*.pak

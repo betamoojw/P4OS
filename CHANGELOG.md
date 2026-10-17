@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.17.0 — 2026-10-17
 
 - **Emulador** (`apps/emulador`): fourteen consoles as an app from the
   card. The NES, Game Boy and Color, Game Boy Advance, Super Nintendo, Mega

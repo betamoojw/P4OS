@@ -758,8 +758,10 @@ Claude and the Claude Code character belong to Anthropic. The Claude app,
 Claudito and Claude Jump are an unofficial homage, made with affection for
 the character, and are not affiliated with or endorsed by Anthropic. Doom is
 id Software's, Duke Nukem is Gearbox Software's (the Duke Nukem 3D app is
-unofficial), and Home Assistant is its owners'. The other products named
-in the apps belong to their owners too.
+unofficial), and Home Assistant is its owners'. The consoles the Emulador
+plays are their makers' (Nintendo, Sega, SNK, NEC, Atari, Coleco), and the
+app is not affiliated with any of them. The other products named in the
+apps belong to their owners too.
 
 Python® is a registered trademark of the Python Software Foundation; the
 Python app uses the name to say what it runs, and is not affiliated with or
@@ -772,7 +774,11 @@ their own licences; [THIRD-PARTY.md](THIRD-PARTY.md) lists each one and what
 it asks for. `apps/doom/` is Chocolate Doom through doomgeneric, under the
 GNU GPL v2, and no WAD is included. `apps/duke3d/` is Chocolate Duke3D, under
 the GNU GPL v2 and, for its Build engine, Ken Silverman's Build licence; no
-GRP is included.
+GRP is included. `apps/emulador/` keeps each console's core in its own
+module under that core's licence (GPL, AGPL, and two non-commercial:
+Snes9x and the Mega Drive's Z80), listed in
+[apps/emulador/README.md](apps/emulador/README.md); no game or official
+BIOS is included.
 
 ## En castellano
 

@@ -27,6 +27,12 @@
   which never came for fingers that do not move: the emulator's d-pad with
   a button held did not work before it. The simulator's scripts take
   `fingers <ms> x1 y1 [x2 y2 ...]` (docs/APPS-P4.md, "Five fingers").
+- **Duke Nukem 3D: a new game from the menu no longer hangs.** After
+  choosing the skill, the game waited for its voice in an empty loop that
+  on DOS the sound card's interrupt ended; here the game's own task mixes
+  the sound, so it spun forever and starved core 0. The wait mixes the
+  sound now, and the startup's 0.75 s pause is gone
+  ([apps/duke3d/README.md](apps/duke3d/README.md)).
 - **For emulators, four things in the firmware's table** (asked by
   `apps/emulador`; docs/APPS-P4.md, "Emulators"): `aos_hal_code_sync()`,
   code written at run time made visible to the instruction fetch (a

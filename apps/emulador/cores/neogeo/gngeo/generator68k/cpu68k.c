@@ -51,8 +51,10 @@ t_ipclist **ipclist; /* P4OS: allocated by cpu68k_alloc() */
 /* P4OS: 2 MB (1 MB if the budget is short), allocated with the tables
  * by cpu68k_alloc(); RetroESP32 asked for 3.5 MB. A full pool is only
  * flushed and refilled. */
-#define IPC_POOL_MAX   (2048 * 1024)
-#define IPC_POOL_MIN   (1024 * 1024)
+/* P4OS: 1 MB, not 2: the sprite cache makes better use of the other MB
+ * (Metal Slug flushes the pool 3 times at 2 MB, measured 2026-10-17) */
+#define IPC_POOL_MAX   (1024 * 1024)
+#define IPC_POOL_MIN   (512 * 1024)
 static uint8 *ipc_pool      = NULL;   /* base of the pool                */
 static uint32 ipc_pool_used = 0;      /* bump pointer (bytes used so far) */
 static uint32 ipc_pool_size = 0;      /* actual allocated size            */

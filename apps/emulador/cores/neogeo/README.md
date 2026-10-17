@@ -270,3 +270,35 @@ drawing). The board is not measured.
   interprets RAM code without caching, as before).
 - The SD reads of the sprite cache go through stdio/FATFS: a seek backwards
   walks the file's cluster chain (FATFS's fast seek is off in the firmware).
+
+## Measured on the board: Metal Slug (2026-10-17)
+
+MAME `mslug.zip` (16 MB of sprite ROM, 8 MB of samples), MVS BIOS, the
+board with nothing else open (~17.5 MB of PSRAM free):
+
+| | sprite cache | hits | card reads | frames run / drawn a second | ms a frame |
+|---|---|---|---|---|---|
+| as ported | 4-5 MB | 52-66 % | ~600 a second | 1.8 / 0.9 | 560 |
+| frame-aware eviction | 5.5 MB | 91-96 % | ~400 a second | 17.8 / 4.8 | 55 |
+| + budget from the free PSRAM, 68k pool and sample cache 1 MB each | 7.9 MB | 97-99 % | 0-5 a second | 59.1 / 57-59 | 13-17 |
+
+What changed (all marked `P4OS`):
+
+- **Eviction** (`gngeo/video.c`): the cache replaced banks round-robin, so
+  a frame whose banks filled most of it (Metal Slug: ~900 of 1268-1390
+  slots) pushed out banks it was about to draw and read them back over and
+  over. Each slot now carries the number of the frame that last needed it
+  (the prefetch marks every bank the frame will draw), and eviction passes
+  over the slots of the frame being drawn.
+- **Budget** (`ng_platform.c`, `ng_core.c`): from the PSRAM free when the
+  game loads, minus 1.2 MB for the system (8 to 17 MB), instead of a fixed
+  15.5 MB; the sprite cache's "Automática" takes all that is left.
+- **Smaller neighbours:** the Generator 68000's block pool 1 MB (it was 2;
+  Metal Slug flushes it a few times either way), the ADPCM-A cache 1 MB
+  (it was 2).
+- **A cache that does not fit** is tried 2 MB smaller at a time, down to
+  1 MB (`ng_load.c`).
+
+A game started while the core was too slow (before these changes) may
+have saved the MVS BIOS's "CALENDAR ERROR" screen in its automatic state:
+start it from the beginning (a long press in the library).

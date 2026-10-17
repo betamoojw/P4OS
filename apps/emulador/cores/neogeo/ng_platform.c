@@ -112,10 +112,29 @@ void ng_fatal(int code)
 #endif
 
 static size_t s_used;
+static size_t s_budget = BUDGET;
+
+/* P4OS: the budget from what the board has free when a game loads, minus
+ * what the system keeps (its own tasks, the frontend's frames), between
+ * NG_BUDGET_MIN and NG_BUDGET_MAX. With nothing else open the board has
+ * ~17.5 MB of PSRAM free; another app alive in the background takes from
+ * it, and then the sprite cache is what gets smaller. */
+void ng_big_budget(size_t free_psram)
+{
+    /* what the core already holds is no longer in free_psram but is part
+     * of what it may use */
+    size_t b = s_used + (free_psram > NG_SYSTEM_KEEP ? free_psram - NG_SYSTEM_KEEP : 0);
+    if (b < NG_BUDGET_MIN) b = NG_BUDGET_MIN;
+    if (b > NG_BUDGET_MAX) b = NG_BUDGET_MAX;
+#if UINTPTR_MAX > 0xFFFFFFFFu
+    b += 1100u * 1024;
+#endif
+    s_budget = b;
+}
 
 void *ng_big_alloc(size_t n)
 {
-    if (n > BUDGET || s_used + n + HDR > BUDGET) return NULL;
+    if (n > s_budget || s_used + n + HDR > s_budget) return NULL;
     uint8_t *p = calloc(1, n + HDR);
     if (!p) return NULL;
     *(size_t *)p = n;
@@ -138,7 +157,7 @@ size_t ng_big_used(void)
 
 size_t ng_big_left(void)
 {
-    return s_used < BUDGET ? BUDGET - s_used : 0;
+    return s_used < s_budget ? s_budget - s_used : 0;
 }
 
 /* ---- save states ------------------------------------------------------------ */

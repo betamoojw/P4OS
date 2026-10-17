@@ -55,6 +55,11 @@ bool ng_bios_switch(const char *bios_dir, ng_system_t sys, int region, ng_system
  * room for the app and the system, and so the simulator (where malloc
  * never fails) decides the same things as the board. */
 #define NG_BUDGET (15u * 1024 * 1024 + 512u * 1024)
+/* P4OS: the budget follows the free PSRAM at load (ng_big_budget) */
+#define NG_BUDGET_MIN   (8u * 1024 * 1024)
+#define NG_BUDGET_MAX   (17u * 1024 * 1024)
+#define NG_SYSTEM_KEEP  (1228u * 1024)
+void ng_big_budget(size_t free_psram);
 void *ng_big_alloc(size_t n);       /* zeroed; NULL past the budget */
 void  ng_big_free(void *p);
 size_t ng_big_used(void);

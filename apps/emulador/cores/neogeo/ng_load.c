@@ -952,7 +952,9 @@ static bool load_inner(ld_t *L, const emu_load_t *req)
     left = ng_big_left();
     uint32_t adpcm_cache = 0;
     if (!va_ram && va) {
-        adpcm_cache = left > 24 * MB ? 4 * MB : 2 * MB;
+        /* P4OS: 1 MB of the samples; every other MB goes to the sprites,
+         * which the screen needs every frame */
+        adpcm_cache = left > 24 * MB ? 4 * MB : 1 * MB;
         if (!adpcm_stream(L, 0, vpath[0], va, adpcm_cache)) return false;
     }
     if (!vb_ram && vb) {
@@ -978,7 +980,9 @@ static bool load_inner(ld_t *L, const emu_load_t *req)
          * and bitmap. */
         size_t tables = (size_t)total_banks * sizeof(void *) + 512 * 4 + ((total_banks + 31) / 32) * 4 + 64 * 1024;
         size_t avail = left > tables + LOAD_SLACK ? left - tables - LOAD_SLACK : 0;
-        size_t want = o->spr_cache_mb ? (size_t)o->spr_cache_mb * MB : 12 * MB;
+        /* P4OS: "Automática" takes all there is (the frame-aware eviction
+         * in video.c makes every MB count) */
+        size_t want = o->spr_cache_mb ? (size_t)o->spr_cache_mb * MB : avail;
         if (want > avail) want = avail;
         if (want > tiles) want = tiles;
         want &= ~(size_t)(SPR_BANK - 1);

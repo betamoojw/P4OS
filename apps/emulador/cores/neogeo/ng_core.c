@@ -32,6 +32,9 @@
 
 #include "ng_core.h"
 
+/* the firmware's (aos_hal.h) */
+void aos_hal_heap_info(uint32_t *free_internal, uint32_t *free_psram);
+
 #ifndef N_
 #define N_(s) s
 #endif
@@ -498,6 +501,15 @@ static bool nc_load(const emu_host_t *host, const emu_load_t *req, char *err, si
         .spr_cache_mb = s_cache_mb[s_opt_cache],
         .sample_rate = s_rates[s_opt_rate],
     };
+    /* P4OS: the budget from what is free now (the board) */
+    {
+#if !defined(AOS_SIM) && !defined(AOS_SIM_BUILTIN)
+        uint32_t fi = 0, fp = 0;
+        aos_hal_heap_info(&fi, &fp);
+        ng_big_budget(fp);
+        ng_log("budget %u KB of %u KB free", (unsigned)(ng_big_left() / 1024), (unsigned)(fp / 1024));
+#endif
+    }
     if (!ng_load_game(host, req, &lo, &s_info, err, errlen)) {
         free_all();
         return false;

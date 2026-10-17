@@ -134,6 +134,33 @@ static Uint16 fix_addr[40][32];
 static Uint8 fix_shift[40];
 
 
+/* P4OS: which slots the frame being drawn needs. The cache used to evict
+ * round-robin, so when a frame's banks filled most of it (Metal Slug: ~900
+ * banks a frame against 1268 slots) each new bank pushed out one the same
+ * frame was about to draw, and the frame read its own banks back from the
+ * card over and over: 62 % hits, ~330 reads a frame, 1.8 fps on the board.
+ * Now each slot carries the number of the frame that last needed it, and
+ * eviction passes over the slots of the frame being drawn: only banks the
+ * frame does not use are replaced. */
+static Uint32 *spr_stamp;           /* per slot */
+static Uint32 spr_stamp_now = 1;
+static int spr_slot_shift;          /* log2(slot_size): a pointer's slot */
+
+static int spr_stamp_alloc(int slots) {
+	spr_stamp = ng_big_alloc((size_t)slots * sizeof(Uint32));
+	if (!spr_stamp) return 0;
+	memset(spr_stamp, 0, (size_t)slots * sizeof(Uint32));
+	spr_stamp_now = 1;
+	spr_slot_shift = 0;
+	while ((1u << spr_slot_shift) < memory.vid.spr_cache.slot_size) spr_slot_shift++;
+	return 1;
+}
+
+static void spr_stamp_free(void) {
+	ng_big_free(spr_stamp);
+	spr_stamp = NULL;
+}
+
 int init_sprite_cache(Uint32 size, Uint32 bsize) {
 	GFX_CACHE *gcache = &memory.vid.spr_cache;
 	int i;
@@ -179,11 +206,22 @@ int init_sprite_cache(Uint32 size, Uint32 bsize) {
 		return GN_FALSE;
 	}
 	gcache->hits = gcache->misses = gcache->reads = 0;
+	/* P4OS: the frame each slot was last needed in (see evict_slot) */
+	if (!spr_stamp_alloc(gcache->max_slot)) {
+		ng_big_free(gcache->usage);
+		ng_big_free(gcache->ptr);
+		ng_big_free(gcache->data);
+		gcache->usage = NULL;
+		gcache->ptr = NULL;
+		gcache->data = NULL;
+		return GN_FALSE;
+	}
 	return GN_TRUE;
 }
 
 void free_sprite_cache(void) {
 	GFX_CACHE *gcache = &memory.vid.spr_cache;
+	spr_stamp_free();
 	/* P4OS: ng_big_free (the blocks count in the core's budget) */
 	ng_big_free(gcache->data);
 	gcache->data = NULL;
@@ -197,6 +235,26 @@ void free_sprite_cache(void) {
 /* Shared eviction position for sprite cache (used by get_cached_sprite_ptr and prefetch) */
 static int spr_cache_evict_pos = 0;
 
+/* P4OS: the next slot to replace, passing over the ones the frame being
+ * drawn needs; when every slot is needed (a frame bigger than the cache),
+ * the next one round-robin, as before. */
+static int evict_slot(void) {
+	GFX_CACHE *gcache = &memory.vid.spr_cache;
+	for (int tries = 0; tries < gcache->max_slot; tries++) {
+		int a = spr_cache_evict_pos;
+		if (++spr_cache_evict_pos >= gcache->max_slot) spr_cache_evict_pos = 0;
+		if (!spr_stamp || spr_stamp[a] != spr_stamp_now) return a;
+	}
+	int a = spr_cache_evict_pos;
+	if (++spr_cache_evict_pos >= gcache->max_slot) spr_cache_evict_pos = 0;
+	return a;
+}
+
+static void spr_mark(Uint8 *p) {
+	GFX_CACHE *gcache = &memory.vid.spr_cache;
+	if (spr_stamp && p) spr_stamp[(p - gcache->data) >> spr_slot_shift] = spr_stamp_now;
+}
+
 Uint8 *get_cached_sprite_ptr(Uint32 tileno) {
 	GFX_CACHE *gcache = &memory.vid.spr_cache;
 	static int read_errors = 0;
@@ -209,10 +267,9 @@ Uint8 *get_cached_sprite_ptr(Uint32 tileno) {
 		/* The bank is present in the cache */
 		return gcache->ptr[bank];
 	}
-	/* We have to find a slot for this bank */
-	a = spr_cache_evict_pos;
-	spr_cache_evict_pos++;
-	if (spr_cache_evict_pos >= gcache->max_slot) spr_cache_evict_pos = 0;
+	/* We have to find a slot for this bank (P4OS: not one this frame needs) */
+	a = evict_slot();
+	if (spr_stamp) spr_stamp[a] = spr_stamp_now;
 
 	/* P4OS: one bank read with fread from the converted tile file;
 	 * a failed read leaves the bank blank rather than stopping the game.
@@ -454,6 +511,8 @@ static void prefetch_sprite_banks(void) {
 	int nmiss = 0;
 
 	memset(seen, 0, ((total_banks + 31) >> 5) * sizeof(Uint32));
+	/* P4OS: a new frame: its banks get this stamp as they are found */
+	if (++spr_stamp_now == 0) spr_stamp_now = 1;
 
 	int sx = 0, my = 0, rzx = 15;
 	for (int count = 0; count < 0x300; count += 2) {
@@ -511,6 +570,7 @@ static void prefetch_sprite_banks(void) {
 			seen[word] |= bit;
 			if (gcache->ptr[bank]) {
 				gcache->hits++;
+				spr_mark(gcache->ptr[bank]);
 				continue;
 			}
 			if (nmiss < PREFETCH_MAX) missing[nmiss++] = bank;
@@ -528,16 +588,19 @@ static void prefetch_sprite_banks(void) {
 	int i = 0;
 	while (i < nmiss) {
 		/* A run of consecutive banks, read in one call when the slots that
-		 * take them are consecutive too (no wrap of the eviction pointer). */
+		 * take them are consecutive too: the first slot from evict_slot(),
+		 * the next ones only while they are free to replace (P4OS). */
+		int a = evict_slot();
 		int run = 1;
 		while (i + run < nmiss && run < 16 &&
 		       missing[i + run] == missing[i] + run &&
-		       spr_cache_evict_pos + run < gcache->max_slot)
+		       a + run < gcache->max_slot &&
+		       (!spr_stamp || spr_stamp[a + run] != spr_stamp_now))
 			run++;
-
-		int a = spr_cache_evict_pos;
-		spr_cache_evict_pos += run;
-		if (spr_cache_evict_pos >= gcache->max_slot) spr_cache_evict_pos = 0;
+		if (a + run > spr_cache_evict_pos) {
+			spr_cache_evict_pos = a + run;
+			if (spr_cache_evict_pos >= gcache->max_slot) spr_cache_evict_pos = 0;
+		}
 
 		Uint8 *dest = gcache->data + a * gcache->slot_size;
 		gcache->reads++;
@@ -549,6 +612,7 @@ static void prefetch_sprite_banks(void) {
 				gcache->ptr[gcache->usage[a + k]] = 0;
 			gcache->usage[a + k] = missing[i + k];
 			gcache->ptr[missing[i + k]] = dest + k * gcache->slot_size;
+			if (spr_stamp) spr_stamp[a + k] = spr_stamp_now;
 		}
 		i += run;
 	}

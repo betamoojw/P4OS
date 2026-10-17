@@ -185,22 +185,37 @@ static int frame_h(const game_t *g)
 
 /* The picture for a w x h frame in a bw x bh box, centred, by the scale
  * setting. Sixteenths: the PPA's step. */
-static rect_t fit(int w, int h, int bx, int by, int bw, int bh)
+/* Where a w x h frame goes in a bw x bh box: its pixels 'ax' times as wide
+ * as they are high (wide pixels, emu_core_t.pixel_aspect / frame_aspect),
+ * centred, by the scale setting.
+ *
+ * The PPA scales in steps of 1/16 and comes out short when the size asked
+ * falls between two steps, leaving the last columns unwritten (they keep
+ * another frame's pixels: the Neo Geo's 304 wide at 37/16 is 703, which
+ * rounded to an even 702 dropped to 36/16 and left a stripe of noise on
+ * the right). So each axis gets a whole number of sixteenths that makes a
+ * whole size, and the width an even one. */
+static rect_t fit(int w, int h, float ax, int bx, int by, int bw, int bh)
 {
     int mode = emu_pref("scale", EMU_SCALE_FIT);
-    int pw, ph;
+    if (ax < 0.1f) ax = 1.0f;
+    int sx16, sy16;
     if (mode == EMU_SCALE_FILL) {
-        pw = bw;
-        ph = bh;
+        sx16 = bw * 16 / w;
+        sy16 = bh * 16 / h;
     } else {
-        int s16 = bw * 16 / w;
-        if (bh * 16 / h < s16) s16 = bh * 16 / h;
-        if (mode == EMU_SCALE_INT && s16 >= 16) s16 -= s16 % 16;
-        if (s16 < 4) s16 = 4;
-        pw = w * s16 / 16;
-        ph = h * s16 / 16;
+        sy16 = bh * 16 / h;
+        int fx = (int)(bw * 16 / (w * ax));
+        if (fx < sy16) sy16 = fx;
+        if (mode == EMU_SCALE_INT && sy16 >= 16) sy16 -= sy16 % 16;
+        while (sy16 > 4 && (h * sy16) % 16) sy16--;
+        sx16 = (int)(sy16 * ax);
     }
-    pw &= ~1;
+    while (sx16 > 4 && (w * sx16) % 32) sx16--;
+    while (sy16 > 4 && (h * sy16) % 16) sy16--;
+    if (sx16 < 4) sx16 = 4;
+    if (sy16 < 4) sy16 = 4;
+    int pw = w * sx16 / 16, ph = h * sy16 / 16;
     return (rect_t){ bx + (bw - pw) / 2, by + (bh - ph) / 2, pw, ph };
 }
 
@@ -329,11 +344,12 @@ static void layout(game_t *g)
     g->land = W > H;
     for (int i = 0; i < PK_N; i++) g->key[i].used = false;
     bool lr = has(g, EMU_BTN_L) || has(g, EMU_BTN_R);
-    int fh = frame_h(g), fw = shown_w(g, frame_w(g), fh);
+    int fh = frame_h(g), fw = frame_w(g);
+    float ax = (float)shown_w(g, fw, fh) / fw;
 
     if (!g->land) {
         int maxh = H * 52 / 100;
-        g->pic = fit(fw, fh, 0, 16, W, maxh);
+        g->pic = fit(fw, fh, ax, 0, 16, W, maxh);
         if (g->pic.y > 16) g->pic.y = 16;
         int cy = g->pic.y + g->pic.h + 16;
 
@@ -360,7 +376,7 @@ static void layout(game_t *g)
         int fwid = W / 2 - 40;
         face_place(g, W - 36 - fwid / 2, my, fwid, S, false);
     } else {
-        g->pic = fit(fw, fh, BAND_MIN, 0, W - 2 * BAND_MIN, H);
+        g->pic = fit(fw, fh, ax, BAND_MIN, 0, W - 2 * BAND_MIN, H);
         int band = g->pic.x;
         int rx = g->pic.x + g->pic.w;
         int rband = W - rx;

@@ -609,6 +609,11 @@ por el Registro del portal sin cable serie)
       desde Ajustes → USB; lectura 8,2 MB/s, escritura 3,3 MB/s, 64 MB
       íntegros, y expulsarla en la Mac la devuelve sola a la placa. Spotlight
       trababa la expulsión: ahora la placa deja `.metadata_never_index`.
+      2026-10-16: no montaba (la Mac con cientos de "transaction error" en
+      el OTG, también en Teclado) mientras había algo enchufado al zócalo
+      USB del header en 25/27, que son los mismos D+/D− del OTG. Sacado de
+      ahí, montó enseguida. Descartados el reloj del panel y los búferes de
+      TinyUSB en PSRAM (`docs/USB.md`, "When the computer sees nothing").
 - [x] **Mando, MIDI y red por el cable** (2026-09-30, `docs/USB.md`): el
       Macro pad suma las caras Mando y MIDI; la red da el portal en
       192.168.7.1 a 7,4 MB/s (4 veces el Wi-Fi). Tres arreglos de

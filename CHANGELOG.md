@@ -15,6 +15,13 @@
   gives room for 60 Hz with ~3.9 ms of blanking for the refresh's restart,
   twice 0.16.0's margin: measured with Duke Nukem 3D at 640x400 filling
   core 0, no frame lost (`POST /api/panel/qos?mhz=60` goes back).
+- **USB: the OTG port after the host.** Stopping the USB host now clears
+  the session overrides it had set on the High-Speed controller, which the
+  OTG modes inherited. And docs/USB.md, "When the computer sees nothing",
+  lists what kept a Mac from the board on 2026-10-16: a bad cable, macOS's
+  accessory prompt, and something plugged into header pins 25/27, the OTG
+  connector's own data lines, which spoiled every High-Speed transfer
+  until it was unplugged.
 
 ## 0.16.0 — 2026-10-16
 

@@ -25,7 +25,7 @@ taking it back is for Settings to do.
 The code is `components/aos_hal/aos_usb_p4.c`. Every step goes to the log,
 which the portal shows (**Registro**, filter `usb`).
 
-**When the computer sees nothing** (2026-10-16), two causes, in this order:
+**When the computer sees nothing** (2026-10-16), three causes, in this order:
 
 - **The cable.** The board says the mode is up, `/api/usb` says
   `"connected": false`, and the Mac lists no device at all
@@ -39,6 +39,19 @@ which the portal shows (**Registro**, filter `usb`).
   it (product IDs `0x402C` and `0x4002`), so allowing one does not allow
   the other. A denied one asks again only after System Settings, Privacy &
   Security, "Allow accessories to connect".
+- **Something on header pins 25/27.** Those pins are the OTG connector's
+  own D+ and D- (the High-Speed controller's, "The pendrive host" below),
+  so whatever hangs from them is a branch on a 480 Mbit/s line, even with
+  the host off. With the High-Speed USB socket wired to the header and
+  something plugged into it, the Mac enumerated the board and then logged
+  hundreds of "transaction error" (`0xe00002ed`) on endpoint 0 and on the
+  disk's bulk endpoint (`log show --predicate 'eventMessage CONTAINS
+  "P4OS"'`): keyboard mode looked connected but its HID did not start,
+  and disk mode answered three TEST UNIT READY and was reset until macOS
+  gave up ("persistent enumeration failures"). Unplugged from the header,
+  disk mode mounted at once. Neither the panel's clock (60 or 80 MHz) nor
+  TinyUSB's buffers (PSRAM or internal) changed it. Use the OTG connector
+  with nothing on 25/27, or the header with nothing on the OTG connector.
 
 ## Keyboard mode
 

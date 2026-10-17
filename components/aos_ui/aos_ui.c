@@ -577,6 +577,7 @@ static void leave_current(bool destroy_now)
     else if (app->root) lv_obj_add_flag(app->root, LV_OBJ_FLAG_HIDDEN);
     aos_hal_app_context_set(NULL);
     aos_hal_audio_foreground(NULL);
+    aos_hal_display_refresh_request(0);     /* a rate it asked for was its own */
     aos_i18n_app_unload();
     trim_for_memory();
 }

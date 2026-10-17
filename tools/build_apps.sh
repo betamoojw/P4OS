@@ -164,6 +164,37 @@ for app in ${(z)apps}; do
 
     printf "  ok  %s  %s  ABI %s  %s symbols\n" \
         $(basename $so) $(du -h $so | cut -f1) $abi $($NM -D -u $so | wc -l | tr -d ' ')
+
+    # Modules the app loads itself (aos_hal_module_open: an emulator's cores),
+    # built by the app into build/modules/ and installed in the card's
+    # apps/<app>/. Not apps: no aos_app_init. The same checks otherwise, and a
+    # name no app has (the loader keys modules by it, without ".so").
+    for mod in build/modules/*.so(N); do
+        mname=$(basename $mod)
+        if ls $ROOT/apps/*/build/$mname >/dev/null 2>&1; then
+            echo "  FAIL: module $mname is named as an app's .so: rename it"
+            problemas=$((problemas + 1)); continue
+        fi
+        if ! $RE -h $mod 2>/dev/null | grep Flags | grep -q "single-float ABI"; then
+            echo "  FAIL: module $mname is not single-float ABI"
+            problemas=$((problemas + 1)); continue
+        fi
+        faltan=""
+        for s in $($NM -D -u $mod | awk '{print $2}'); do
+            case "$LOADER_BUILTIN" in *" $s "*) continue ;; esac
+            grep -q "ESP_ELFSYM_EXPORT($s)" $TABLE || faltan="$faltan $s"
+        done
+        if [ -n "$faltan" ]; then
+            echo "  FAIL: module $mname uses symbols outside the firmware table:$faltan"
+            problemas=$((problemas + 1)); continue
+        fi
+        rutas=$(strings -n 6 $mod | grep -F -e "$ROOT" -e "$HOME" -e "$IDF_PATH" | head -3)
+        if [ -n "$rutas" ]; then
+            echo "  FAIL: module $mname carries local paths:"; echo "$rutas" | sed 's/^/        /'
+            problemas=$((problemas + 1)); continue
+        fi
+        printf "  ok  module %s/%s  %s  %s symbols\n" $app $mname $(du -h $mod | cut -f1) $($NM -D -u $mod | wc -l | tr -d ' ')
+    done
 done
 
 echo

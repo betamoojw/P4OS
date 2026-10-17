@@ -480,9 +480,38 @@ static void report_keyboard(hid_t *h, const uint8_t *r, int len, uint8_t id)
     }
     if (K.held_code && !memchr(now, K.held_code, n)) K.held_code = 0;
     K.held_mods = mods;
+    xSemaphoreTake(K.mx, portMAX_DELAY);       /* aos_hal_usb_kbd_held() reads them */
     memcpy(h->keys, now, n);
     h->nkeys = n;
     h->mods = mods;
+    xSemaphoreGive(K.mx);
+}
+
+/* The keys held right now on every keyboard together, as HID usages of the
+ * keyboard page, and the modifiers' byte (bit 0 left Ctrl .. bit 7 right
+ * GUI): a game's second player on the keyboard needs the state, not the
+ * events with their repeat. The events go on as ever. */
+int aos_hal_usb_kbd_held(uint8_t *usages, int max, uint8_t *mods)
+{
+    int n = 0;
+    uint8_t m = 0;
+    if (!K.mx) {
+        if (mods) *mods = 0;
+        return 0;
+    }
+    xSemaphoreTake(K.mx, portMAX_DELAY);
+    for (int i = 0; i < IF_MAX; i++) {
+        const hid_t *h = &K.h[i];
+        if (!h->dev || h->gone || !(h->apps & (1 << APP_KEYBOARD))) continue;
+        m |= h->mods;
+        for (int k = 0; k < h->nkeys; k++) {
+            if (n >= max || !usages) break;
+            if (!memchr(usages, h->keys[k], n)) usages[n++] = h->keys[k];
+        }
+    }
+    xSemaphoreGive(K.mx);
+    if (mods) *mods = m;
+    return n;
 }
 
 static void report_consumer(hid_t *h, const uint8_t *r, int len, uint8_t id)
@@ -874,6 +903,8 @@ static void client_event(const usb_host_client_event_msg_t *msg, void *arg)
             if (K.h[i].dev == msg->dev_gone.dev_hdl && !K.h[i].gone) {
                 ESP_LOGI(TAG, "HID \"%s\" interface %u gone", K.h[i].name, K.h[i].intf);
                 K.h[i].gone = true;
+                K.h[i].nkeys = 0;               /* its keys are not held any more */
+                K.h[i].mods = 0;
                 K.held_code = 0;
             }
     }

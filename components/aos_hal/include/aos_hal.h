@@ -86,6 +86,35 @@ void aos_hal_display_set_rotation(int degrees);
  * masters with a priority each (0-15, all 0 at reset): 'dma' is the DW-GDMA
  * port that feeds the panel, 'cache' the CPUs' cache. Set at boot from the
  * prefs; aos_hal_panel_qos_set(.., save) keeps them (docs/MEMORY.md). */
+/* A refresh rate for the panel while the app is in front (a console's 60 or
+ * 59.73 Hz, so that scrolling does not judder against the panel's own).
+ * The rate is made with the vertical blanking, which must stay wide enough
+ * for the refresh's restart (docs/MEMORY.md): what comes back is the rate
+ * set, the closest to 'hz' that keeps it, which with the default pixel
+ * clock is about 51 Hz at most. 0: the system's. The system takes its own
+ * back when the app leaves the front. */
+int aos_hal_display_refresh_request(int hz);
+
+/* Code an app writes at run time (a recompiler, a JIT): after writing it
+ * into a buffer of the PSRAM heap (heap_caps_aligned_alloc(256, n,
+ * MALLOC_CAP_SPIRAM), executable on the P4), this makes it visible to the
+ * instruction fetch: its lines written back, the instruction cache's copies
+ * dropped, fence.i. Call it before running the block, from the core that
+ * runs it. false: a bad range. */
+bool aos_hal_code_sync(void *code, size_t size);
+
+/* Modules an app loads itself: one .so per emulated console, say, in the
+ * card's apps/<app>/ ("/sdcard/apps/emulador/gba.so" or "/apps/emulador/
+ * gba.so"). The same loader and symbol table as the apps; dlsym finds
+ * functions only (a module exports one that returns its table). The loader
+ * keys modules by the file's name without ".so": a name an app already has
+ * is refused, and a module is open once at a time. NULL on failure, with
+ * the reason in err (translated). The app scan never looks into subfolders. */
+typedef struct aos_module aos_module_t;
+aos_module_t *aos_hal_module_open(const char *path, char *err, size_t errlen);
+void         *aos_hal_module_sym(aos_module_t *m, const char *name);
+void          aos_hal_module_close(aos_module_t *m);
+
 uint32_t aos_hal_panel_underruns(void);
 /* frames refreshed, restarts that came late (a blank, blue frame each) and
  * the longest gap between two, since boot */
@@ -2002,6 +2031,12 @@ typedef struct {
 } aos_kbd_event_t;
 enum { AOS_KBD_US = 0, AOS_KBD_LATAM = 1 };
 bool aos_hal_usb_kbd_read(aos_kbd_event_t *ev);         /* the next key, false if none (does not wait) */
+/* The keys held right now, every keyboard together: their HID usages (the
+ * keyboard page: 0x04 'a' .. 0x1D 'z', 0x4F-0x52 the arrows...) into usages[],
+ * up to max, and the modifiers' byte in *mods (bit 0 left Ctrl, 1 left
+ * Shift, 2 left Alt, 3 left GUI, 4-7 the right ones). Returns how many. For
+ * a game's player on the keyboard; the events above go on as ever. */
+int  aos_hal_usb_kbd_held(uint8_t *usages, int max, uint8_t *mods);
 int  aos_hal_usb_kbd_list(char names[][48], int max);   /* the keyboards connected, by name */
 int  aos_hal_usb_kbd_layout(void);                      /* AOS_KBD_LATAM (default) or _US */
 void aos_hal_usb_kbd_layout_set(int layout);

@@ -281,7 +281,7 @@ static void api_sysmon(aos_httpd_req_t *r)
     cJSON_Delete(o);
 }
 
-/* POST /api/panel/qos?dma=0..15&cache=0..15[&save=1]: the AXI arbiter's
+/* POST /api/panel/qos?dma=0..15&cache=0..15[&save=1][&vfp=][&mhz=][&hz=]: the AXI arbiter's
  * priorities for the panel's DMA and the cache (aos_hal.h), to try them live
  * while something heavy runs; save=1 keeps them for the next boots. */
 static void api_panel_qos(aos_httpd_req_t *r)
@@ -293,11 +293,20 @@ static void api_panel_qos(aos_httpd_req_t *r)
     bool ok = aos_hal_panel_qos_set(qd, qc, aos_httpd_query_int(r, "save", 0) != 0);
     /* &vfp=N: the panel's vertical front porch in lines, for the next boot */
     int vfp = aos_httpd_query_int(r, "vfp", -1);
-    if (vfp >= 8 && vfp <= 600) aos_hal_pref_set_i32("pnl_vfp", vfp);
+    if (vfp >= 8 && vfp <= 1000) aos_hal_pref_set_i32("pnl_vfp", vfp);
+    else if (vfp == 0) aos_hal_pref_erase("pnl_vfp");        /* the clock's default again */
     else if (vfp != -1) ok = false;
+    /* &mhz=60|80: the pixel clock, for the next boot */
+    int mhz = aos_httpd_query_int(r, "mhz", -1);
+    if (mhz == 60 || mhz == 80) aos_hal_pref_set_i32("pnl_mhz", mhz);
+    else if (mhz != -1) ok = false;
+    /* &hz=N: a refresh rate now, as an app would ask for it (0: the system's) */
+    int hz = aos_httpd_query_int(r, "hz", -1);
+    int hz_now = hz >= 0 ? aos_hal_display_refresh_request(hz) : -1;
     cJSON *o = cJSON_CreateObject();
+    if (hz_now >= 0) cJSON_AddNumberToObject(o, "hz", hz_now);
     cJSON_AddBoolToObject(o, "ok", ok);
-    if (!ok) cJSON_AddStringToObject(o, "error", _("dma y cache van de 0 a 15, vfp de 8 a 600"));
+    if (!ok) cJSON_AddStringToObject(o, "error", _("dma y cache van de 0 a 15, vfp de 8 a 1000, mhz 60 u 80"));
     aos_hal_panel_qos_get(&qd, &qc);
     cJSON_AddNumberToObject(o, "dma", qd);
     cJSON_AddNumberToObject(o, "cache", qc);

@@ -3591,3 +3591,31 @@ void aos_hal_image_free(void *px)
 {
     free(px);
 }
+
+/* ---- code written at run time, an app's own modules, the refresh rate ----
+ * (aos_hal.h). The Mac runs no recompiled RISC-V code and loads no .so of
+ * the card: an emulator's cores are linked into the app in the simulator
+ * (apps/<app>/sim.cmake). The panel is SDL's window: any rate goes. */
+bool aos_hal_code_sync(void *code, size_t size)
+{
+    (void)code;
+    (void)size;
+    return true;
+}
+
+aos_module_t *aos_hal_module_open(const char *path, char *err, size_t errlen)
+{
+    if (err && errlen) snprintf(err, errlen, "%s: in the simulator the modules are linked into the app", path ? path : "?");
+    return NULL;
+}
+
+void *aos_hal_module_sym(aos_module_t *m, const char *name)
+{
+    (void)m;
+    (void)name;
+    return NULL;
+}
+
+void aos_hal_module_close(aos_module_t *m) { (void)m; }
+
+int aos_hal_display_refresh_request(int hz) { return hz > 0 ? hz : 60; }

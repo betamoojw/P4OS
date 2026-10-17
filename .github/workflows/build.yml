@@ -105,11 +105,18 @@ jobs:
               partition_table/partition-table.bin ota_data_initial.bin flash_args)
           if [ "$p" = rev1_3 ]; then
             mkdir -p out/apps && cp apps/*/build/*.so out/apps/
+            # the modules an app loads itself (aos_hal_module_open), in apps/<app>/
+            for m in apps/*/build/modules; do
+              [ -d "$m" ] || continue
+              a=$(basename $(dirname $(dirname $m)))
+              mkdir -p out/apps/$a && cp $m/*.so out/apps/$a/ 2>/dev/null || true
+            done
             # the apps' own pages in the portal, for the card's /web (docs/PORTAL-PAGES.md)
             mkdir -p out/web && cp apps/*/web/*.js out/web/
             mkdir -p out/lang && cp -r lang/en lang/de out/lang/
             for a in $NOT_IN_RELEASE; do
               for so in apps/$a/build/*.so; do [ -e "$so" ] && rm -f "out/apps/$(basename "$so")"; done
+              rm -rf "out/apps/$a"
               for js in apps/$a/web/*.js; do
                 [ -e "$js" ] || continue
                 rm -f "out/web/$(basename "$js")"

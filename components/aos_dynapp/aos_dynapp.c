@@ -922,6 +922,81 @@ bool aos_dynapp_load(const char *filename)
     return true;
 }
 
+/* --------------------------------------------------------------------------
+ * Modules an app loads itself (aos_hal.h: aos_hal_module_open)
+ *
+ * An emulator's cores, one .so per console in the card's apps/<app>/: only
+ * the one playing in memory, each with its licence, and a console added
+ * without rebuilding the app. The same loader and resolver as the apps (the
+ * firmware's table, the code in PSRAM), apart from the apps' own count
+ * (module_release): the app opens and closes them.
+ *
+ * The loader keys its modules by the file's name without ".so": a core
+ * named as a card app would be handed that app's module. Refused here.
+ * -------------------------------------------------------------------------- */
+struct aos_module {
+    void *handle;
+    char  name[48];
+};
+
+aos_module_t *aos_hal_module_open(const char *path, char *err, size_t errlen)
+{
+    if (err && errlen) err[0] = 0;
+    if (!path || !*path) {
+        if (err) snprintf(err, errlen, "%s", _("sin ruta"));
+        return NULL;
+    }
+    /* the loader wants it from the card's root: "/apps/emulador/gba.so" */
+    const char *rel = path;
+    size_t mp = strlen(CONFIG_BSP_SD_MOUNT_POINT);
+    if (!strncmp(rel, CONFIG_BSP_SD_MOUNT_POINT, mp) && rel[mp] == '/') rel += mp;
+    const char *base = strrchr(rel, '/');
+    base = base ? base + 1 : rel;
+    size_t blen = strlen(base);
+    if (blen < 4 || strcmp(base + blen - 3, ".so")) {
+        if (err) snprintf(err, errlen, _("%s no es un .so"), base);
+        return NULL;
+    }
+    for (int i = 0; i < s_count; i++) {
+        if (s_apps[i].in_use && !strcmp(s_apps[i].file, base)) {
+            if (err) snprintf(err, errlen, _("%s se llama como una app de la tarjeta: renombralo"), base);
+            return NULL;
+        }
+    }
+    aos_module_t *m = heap_caps_calloc(1, sizeof *m, MALLOC_CAP_SPIRAM);
+    if (!m) {
+        if (err) snprintf(err, errlen, "%s", _("sin memoria"));
+        return NULL;
+    }
+    snprintf(m->name, sizeof m->name, "%.*s", (int)(blen - 3), base);
+    char full[160];
+    snprintf(full, sizeof full, "%s%s", rel[0] == '/' ? "" : "/", rel);
+    m->handle = dlopen(full, RTLD_NOW);
+    if (!m->handle) {
+        if (err) snprintf(err, errlen, _("no se pudo cargar %s: %s"), base, dlerror());
+        free(m);
+        return NULL;
+    }
+    ESP_LOGI(TAG, "module %s opened by an app (%s)", m->name, full);
+    return m;
+}
+
+void *aos_hal_module_sym(aos_module_t *m, const char *name)
+{
+    return m && m->handle && name ? dlsym(m->handle, name) : NULL;
+}
+
+void aos_hal_module_close(aos_module_t *m)
+{
+    if (!m) return;
+    if (m->handle) {
+        dlclose(m->handle);
+        ESP_LOGI(TAG, "module %s closed (executable free: %u B)", m->name,
+                 (unsigned)heap_caps_get_free_size(MALLOC_CAP_EXEC));
+    }
+    free(m);
+}
+
 bool aos_dynapp_unload(const char *app_id)
 {
     dynapp_t *app = find_by_id(app_id);

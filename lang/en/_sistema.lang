@@ -7468,5 +7468,11 @@ la otra ranura no tiene una imagen	the other slot has no image
 no se pudo borrar	could not delete
 
 #: components/aos_portal/aos_portal_sysmon.c
-dma y cache van de 0 a 15, vfp de 8 a 600	dma and cache go from 0 to 15, vfp from 8 to 600
+dma y cache van de 0 a 15, vfp de 8 a 1000, mhz 60 u 80	dma and cache go from 0 to 15, vfp from 8 to 1000, mhz 60 or 80
 Duke Nukem 3D	Duke Nukem 3D
+
+#: components/aos_dynapp/aos_dynapp.c (aos_hal_module_open)
+sin ruta	no path
+%s no es un .so	%s is not a .so
+%s se llama como una app de la tarjeta: renombralo	%s has the name of an app on the card: rename it
+no se pudo cargar %s: %s	could not load %s: %s

@@ -27,6 +27,7 @@
 #include "freertos/FreeRTOS.h"
 #include "hal/axi_icm_ll.h"
 #include "hal/mipi_dsi_brg_ll.h"
+#include "hal/mipi_dsi_host_ll.h"
 
 static const char *TAG = "panel";
 
@@ -69,6 +70,55 @@ void aos_hal_panel_stamps(uint32_t *late, int *nlate, uint32_t *wdt, int *nwdt, 
     *nwdt = nb;
 }
 
+/* ---- the refresh rate an app asks for ----
+ * The pixel clock is fixed (boot), so the rate is set by the vertical front
+ * porch: more lines, a slower refresh and a wider blanking for the restart
+ * (above). An app asks for a rate (a console's 60 Hz); the porch closest to
+ * it that still leaves MIN_WINDOW_US of blanking is written from the
+ * end-of-frame interrupt, right after the restart, as far from the next
+ * blanking as there is. 0 asks for the system's again, and aos_ui does it
+ * whenever the app in front changes. */
+#define MIN_WINDOW_US 1900          /* 120 lines at 60 MHz: measured clean (docs/MEMORY.md) */
+static DRAM_ATTR uint16_t s_vsw, s_vbp, s_vact, s_vfp_now, s_vfp_sys;
+static DRAM_ATTR volatile int16_t s_vfp_pending = -1;
+static uint32_t s_line_hz;          /* lines a second, measured in the first seconds */
+
+static int rate_of(int vfp)
+{
+    return s_line_hz ? (int)((s_line_hz + (s_vsw + s_vbp + s_vact + vfp) / 2) / (s_vsw + s_vbp + s_vact + vfp)) : 0;
+}
+
+int aos_hal_display_refresh_request(int hz)
+{
+    if (!s_line_hz || !s_vact) return rate_of(s_vfp_now);
+    int vfp = s_vfp_sys;
+    if (hz > 0) {
+        int lines = (int)((s_line_hz + hz / 2) / (uint32_t)hz);
+        vfp = lines - (s_vsw + s_vbp + s_vact);
+        int vmin = (int)(((uint64_t)s_line_hz * MIN_WINDOW_US + 999999) / 1000000) - (s_vsw + s_vbp);
+        if (vfp < vmin) vfp = vmin;
+        if (vfp > 1000) vfp = 1000;
+    }
+    if (vfp != s_vfp_now) {
+        s_vfp_pending = (int16_t)vfp;
+        aos_hal_log("panel", "refresh %d Hz asked: %d Hz (front porch %d lines)", hz, rate_of(vfp), vfp);
+    }
+    return rate_of(vfp);
+}
+
+static void IRAM_ATTR apply_pending_porch(void)
+{
+    int16_t vfp = s_vfp_pending;
+    if (vfp < 0) return;
+    s_vfp_pending = -1;
+    mipi_dsi_host_ll_dpi_set_vertical_timing(&MIPI_DSI_HOST, s_vsw, s_vbp, s_vact, (uint32_t)vfp);
+    mipi_dsi_brg_ll_set_vertical_timing(&MIPI_DSI_BRIDGE, s_vsw, s_vbp, s_vact, (uint32_t)vfp);
+    mipi_dsi_brg_ll_update_dpi_config(&MIPI_DSI_BRIDGE);
+    s_vfp_now = (uint16_t)vfp;
+    if (s_line_hz) s_frame_us = (uint32_t)((uint64_t)1000000 * (s_vsw + s_vbp + s_vact + vfp) / s_line_hz);
+    s_last_us = 0;                  /* the next gap is the new rate's */
+}
+
 void IRAM_ATTR aos_p4_panel_frame(void)
 {
     if (MIPI_DSI_BRIDGE.int_raw.underrun_int_raw) {
@@ -86,6 +136,7 @@ void IRAM_ATTR aos_p4_panel_frame(void)
     }
     s_last_us = now;
     s_frames++;
+    apply_pending_porch();
 }
 
 void aos_hal_panel_frames(uint32_t *frames, uint32_t *late, uint32_t *max_gap_us)
@@ -104,9 +155,11 @@ static void report_cb(void *arg)
     /* the first 5 s give the panel's real frame time */
     if (!rate_set && fr > frames0 + 10) {
         s_frame_us = 5000000u / (fr - frames0);
+        s_line_hz = (uint32_t)((uint64_t)(fr - frames0) * (s_vsw + s_vbp + s_vact + s_vfp_now) / 5);
         rate_set = true;
-        aos_hal_log("panel", "refresh at %u.%u Hz", (unsigned)(10000000u / s_frame_us / 10),
-                    (unsigned)(10000000u / s_frame_us % 10));
+        aos_hal_log("panel", "refresh at %u.%u Hz (%u lines a second, front porch %u)",
+                    (unsigned)(10000000u / s_frame_us / 10), (unsigned)(10000000u / s_frame_us % 10),
+                    (unsigned)s_line_hz, (unsigned)s_vfp_now);
         s_late = late = 0;
         s_max_gap_us = 0;
     }
@@ -154,9 +207,13 @@ bool aos_hal_panel_qos_set(int dma, int cache, bool save)
     return true;
 }
 
-/* aos_hal_p4.c, once the panel is up */
-void aos_p4_panel_watch_init(void)
+/* aos_hal_p4.c, once the panel is up, with its vertical timing */
+void aos_p4_panel_watch_init(int vsw, int vbp, int vact, int vfp)
 {
+    s_vsw = (uint16_t)vsw;
+    s_vbp = (uint16_t)vbp;
+    s_vact = (uint16_t)vact;
+    s_vfp_now = s_vfp_sys = (uint16_t)vfp;
     /* IDF masks underruns in the first h_size lines of a frame
      * (fifo_underrun_discard_vcnt = 720 of 1280): every line counts now. Its
      * interrupt goes off; aos_p4_panel_frame() reads the raw bit instead. */

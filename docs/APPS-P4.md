@@ -326,6 +326,41 @@ takes is there for the apps, all in `aos_hal.h`:
   and the microphone go to and come from the card by themselves when the
   user has one plugged in.
 
+## Emulators: code written at run time, modules, the keyboard's state, the refresh rate
+
+Asked by the emulator (`apps/emulador`, 2026-10-16), for anything like it:
+
+- **Code an app writes and runs** (a recompiler, a JIT): write it into a
+  block of the PSRAM heap (`heap_caps_aligned_alloc(256, n,
+  MALLOC_CAP_SPIRAM)`, executable on the P4, as the apps' own code is), then
+  `aos_hal_code_sync(code, size)` before jumping into it, from the core that
+  runs it: the lines written back, the instruction cache's copies dropped,
+  `fence.i`. Never the ROM's `Cache_*_All` (docs/MEMORY.md). The simulator
+  answers true and runs nothing recompiled.
+- **Modules of its own**: `aos_hal_module_open("/apps/<app>/<name>.so", err,
+  sizeof err)`, `aos_hal_module_sym(m, "fn")` and `aos_hal_module_close(m)`.
+  The apps' loader and symbol table; `dlsym` finds functions only, so a
+  module exports one that returns its table. The loader keys modules by the
+  file's name without `.so`: a module named as a card app is refused (and
+  `tools/build_apps.sh` fails on it), and one is open once at a time. The
+  app builds them into `build/modules/*.so`; `tools/build_apps.sh` checks
+  them like apps (float ABI, the firmware's table, no local paths),
+  `tools/install_apps.sh` puts them in the card's `apps/<app>/`, and the CI
+  in `apps.zip` the same way. The app scan never looks into those folders.
+  In the simulator they are linked into the app.
+- **The USB keyboard's state**: `aos_hal_usb_kbd_held(usages, max, &mods)`,
+  the keys held now on every keyboard (HID usages of the keyboard page) and
+  the modifiers' byte, for a player on the keyboard. The events
+  (`aos_hal_usb_kbd_read`, with their repeat) go on as before. The
+  simulator reads the Mac's keyboard.
+- **A refresh rate while in front**: `aos_hal_display_refresh_request(60)`
+  returns the rate set: the closest to the one asked that keeps the panel's
+  blanking wide enough for its restart (1.9 ms; docs/MEMORY.md, the blue
+  flashes). With the default pixel clock (60 MHz) that is about 51 Hz at
+  most; the 80 MHz one (`POST /api/panel/qos?mhz=80`, from the next boot)
+  makes room for 60 Hz. 0 asks for the system's, which comes back by itself
+  when the app leaves the front.
+
 ## Measuring on the board
 
 - **The log:** `GET /api/log?from=N` returns 16 KB at a time from the oldest

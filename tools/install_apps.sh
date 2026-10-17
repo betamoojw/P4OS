@@ -22,6 +22,8 @@
 # (docs/PORTAL-PAGES.md). The portal loads it from there: a page needs no
 # restart, only a reload of the portal in the browser, so when nothing but
 # pages goes up the board is not restarted.
+# And the modules an app loads itself, apps/<x>/build/modules/*.so, to the
+# card's apps/<x>/ (aos_hal_module_open: an emulator's cores).
 #
 # It speaks the P4 portal: PUT /api/fs/put?path= (the body is the file,
 # streamed, any size), POST /api/fs/delete?path=, POST /api/restart. The
@@ -40,6 +42,7 @@ B="http://$HOST"
 files=()
 paks=()
 webs=()
+mods=()
 for d in $ROOT/apps/*(/); do
     name=${d:t}
     (( ${#WANT[@]} )) && [[ ${WANT[(Ie)$name]} -eq 0 ]] && continue
@@ -50,8 +53,24 @@ for d in $ROOT/apps/*(/); do
         files+=($pak $pak.<1-99>(.N))
     done
     webs+=($d/web/*.(js|mjs)(.N))
+    # modules the app loads itself (aos_hal_module_open), for apps/<app>/
+    for m in $d/build/modules/*.so(.N); do mods+=("$name/${m:t}:$m"); done
 done
-(( ${#files[@]} + ${#webs[@]} )) || { echo "nothing built - run ./tools/build_apps.sh first"; exit 1; }
+(( ${#files[@]} + ${#webs[@]} + ${#mods[@]} )) || { echo "nothing built - run ./tools/build_apps.sh first"; exit 1; }
+
+if (( ${#mods[@]} )); then
+    echo "== ${#mods[@]} modules -> $HOST/apps/<app>/ =="
+    for e in $mods; do
+        dst=${e%%:*}; src=${e#*:}
+        curl -4 -s -o /dev/null --max-time 10 -X POST "$B/api/fs/mkdir?path=/apps/${dst%/*}" || true
+        code=$(curl -4 -sS -o /dev/null -w '%{http_code}' --max-time 600 \
+            -X PUT "$B/api/fs/put?path=/apps/$dst" --data-binary "@$src") || code=000
+        [[ $code == 2* ]] || { printf "   %-24s FAILED (HTTP %s)\n" $dst $code; exit 1; }
+        printf "   %-24s %9s B  ok\n" $dst $(wc -c < $src | tr -d ' ')
+    done
+    # a module is opened when its app wants it: no restart for these alone
+    (( ${#files[@]} + ${#webs[@]} )) || { echo "only modules: no restart needed"; exit 0; }
+fi
 
 if (( ${#webs[@]} )); then
     echo "== ${#webs[@]} portal pages -> $HOST/web =="

@@ -190,6 +190,23 @@ static void do_key(char k)
 static uint32_t s_pad_hold_until;
 static bool s_pad_scripted;
 
+/* aos_hal.h: the keys held on "the USB keyboard" are the Mac's, from SDL's
+ * state. SDL's scancodes are the HID keyboard page's usages (4..231), the
+ * modifiers 224..231 its byte's bits. */
+int aos_hal_usb_kbd_held(uint8_t *usages, int max, uint8_t *mods)
+{
+    int n = 0, nk = 0;
+    uint8_t m = 0;
+    const Uint8 *k = SDL_GetKeyboardState(&nk);
+    for (int sc = 4; sc < nk && sc <= 231; sc++) {
+        if (!k[sc]) continue;
+        if (sc >= 224) m |= (uint8_t)(1u << (sc - 224));
+        else if (usages && n < max) usages[n++] = (uint8_t)sc;
+    }
+    if (mods) *mods = m;
+    return n;
+}
+
 static void pad_tick(void)
 {
     if (s_pad_scripted) {

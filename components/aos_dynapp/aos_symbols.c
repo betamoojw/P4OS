@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3368 simbolos.
+ * Total: 3375 simbolos.
  */
 
 #include <stddef.h>
@@ -227,6 +227,7 @@ extern int aos_hal_bt_phone_battery;
 extern int aos_hal_bt_state;
 extern int aos_hal_button_is_down;
 extern int aos_hal_caps;
+extern int aos_hal_code_sync;
 extern int aos_hal_coredump_boot_check;
 extern int aos_hal_coredump_erase;
 extern int aos_hal_coredump_info;
@@ -254,6 +255,7 @@ extern int aos_hal_display_flush_count;
 extern int aos_hal_display_get_rotation;
 extern int aos_hal_display_is_on;
 extern int aos_hal_display_on;
+extern int aos_hal_display_refresh_request;
 extern int aos_hal_display_save;
 extern int aos_hal_display_set_rotation;
 extern int aos_hal_display_set_state;
@@ -371,6 +373,9 @@ extern int aos_hal_midi_last;
 extern int aos_hal_midi_read;
 extern int aos_hal_midi_send;
 extern int aos_hal_minute_history;
+extern int aos_hal_module_close;
+extern int aos_hal_module_open;
+extern int aos_hal_module_sym;
 extern int aos_hal_mutex_create;
 extern int aos_hal_mutex_lock;
 extern int aos_hal_mutex_unlock;
@@ -449,6 +454,7 @@ extern int aos_hal_panel_qos_get;
 extern int aos_hal_panel_qos_set;
 extern int aos_hal_panel_sleep_enable;
 extern int aos_hal_panel_sleep_enabled;
+extern int aos_hal_panel_stamps;
 extern int aos_hal_panel_underruns;
 extern int aos_hal_path_apps;
 extern int aos_hal_path_data;
@@ -591,6 +597,7 @@ extern int aos_hal_usb_host_on;
 extern int aos_hal_usb_host_port;
 extern int aos_hal_usb_host_port_set;
 extern int aos_hal_usb_host_set;
+extern int aos_hal_usb_kbd_held;
 extern int aos_hal_usb_kbd_layout;
 extern int aos_hal_usb_kbd_layout_set;
 extern int aos_hal_usb_kbd_list;
@@ -3598,6 +3605,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_bt_state),
     ESP_ELFSYM_EXPORT(aos_hal_button_is_down),
     ESP_ELFSYM_EXPORT(aos_hal_caps),
+    ESP_ELFSYM_EXPORT(aos_hal_code_sync),
     ESP_ELFSYM_EXPORT(aos_hal_coredump_boot_check),
     ESP_ELFSYM_EXPORT(aos_hal_coredump_erase),
     ESP_ELFSYM_EXPORT(aos_hal_coredump_info),
@@ -3625,6 +3633,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_display_get_rotation),
     ESP_ELFSYM_EXPORT(aos_hal_display_is_on),
     ESP_ELFSYM_EXPORT(aos_hal_display_on),
+    ESP_ELFSYM_EXPORT(aos_hal_display_refresh_request),
     ESP_ELFSYM_EXPORT(aos_hal_display_save),
     ESP_ELFSYM_EXPORT(aos_hal_display_set_rotation),
     ESP_ELFSYM_EXPORT(aos_hal_display_set_state),
@@ -3742,6 +3751,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_midi_read),
     ESP_ELFSYM_EXPORT(aos_hal_midi_send),
     ESP_ELFSYM_EXPORT(aos_hal_minute_history),
+    ESP_ELFSYM_EXPORT(aos_hal_module_close),
+    ESP_ELFSYM_EXPORT(aos_hal_module_open),
+    ESP_ELFSYM_EXPORT(aos_hal_module_sym),
     ESP_ELFSYM_EXPORT(aos_hal_mutex_create),
     ESP_ELFSYM_EXPORT(aos_hal_mutex_lock),
     ESP_ELFSYM_EXPORT(aos_hal_mutex_unlock),
@@ -3820,6 +3832,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_panel_qos_set),
     ESP_ELFSYM_EXPORT(aos_hal_panel_sleep_enable),
     ESP_ELFSYM_EXPORT(aos_hal_panel_sleep_enabled),
+    ESP_ELFSYM_EXPORT(aos_hal_panel_stamps),
     ESP_ELFSYM_EXPORT(aos_hal_panel_underruns),
     ESP_ELFSYM_EXPORT(aos_hal_path_apps),
     ESP_ELFSYM_EXPORT(aos_hal_path_data),
@@ -3962,6 +3975,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_usb_host_port),
     ESP_ELFSYM_EXPORT(aos_hal_usb_host_port_set),
     ESP_ELFSYM_EXPORT(aos_hal_usb_host_set),
+    ESP_ELFSYM_EXPORT(aos_hal_usb_kbd_held),
     ESP_ELFSYM_EXPORT(aos_hal_usb_kbd_layout),
     ESP_ELFSYM_EXPORT(aos_hal_usb_kbd_layout_set),
     ESP_ELFSYM_EXPORT(aos_hal_usb_kbd_list),

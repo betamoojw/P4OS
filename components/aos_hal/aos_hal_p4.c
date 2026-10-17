@@ -655,9 +655,15 @@ static esp_err_t panel_init(void)
      * critical section, a cache operation, another handler) starts the next
      * frame with no data, a blue one. More front porch widens that window,
      * at the cost of the refresh rate (aos_panel_p4.c; "pnl_vfp" lines). */
-    int32_t vfp = 120;      /* the module's 24 gave ~0.5 ms; 120 gives ~1.9 ms at 51 Hz (measured, docs/MEMORY.md) */
+    /* The pixel clock: the module's 58 MHz is 60 from PLL_F240M (divider 4);
+     * "pnl_mhz" 80 (divider 3) makes room for 60 Hz with a wide blanking
+     * (aos_hal_display_refresh_request), to be measured on the board first. */
+    int32_t mhz = 60;
+    aos_hal_pref_get_i32("pnl_mhz", &mhz);
+    if (mhz == 80) dpi.dpi_clock_freq_mhz = 80;
+    int32_t vfp = mhz == 80 ? 317 : 120;    /* 60 MHz: 24 gave ~0.5 ms, 120 gives ~1.9 ms at 51 Hz; 80 MHz: ~60 Hz, ~3.4 ms */
     aos_hal_pref_get_i32("pnl_vfp", &vfp);
-    if (vfp >= 8 && vfp <= 600) dpi.video_timing.vsync_front_porch = (uint32_t)vfp;
+    if (vfp >= 8 && vfp <= 1000) dpi.video_timing.vsync_front_porch = (uint32_t)vfp;
     int32_t nfbs = 3;
     aos_hal_pref_get_i32("fbs", &nfbs);
     s_nfbs = nfbs == 1 ? 1 : 3;
@@ -684,8 +690,9 @@ static esp_err_t panel_init(void)
     memset(s_fb, 0, FB_BYTES);
     cache_flush(s_fb, FB_BYTES);
     esp_lcd_panel_disp_on_off(s_panel, true);
-    extern void aos_p4_panel_watch_init(void);         /* aos_panel_p4.c: underruns and the bus' QoS */
-    aos_p4_panel_watch_init();
+    extern void aos_p4_panel_watch_init(int vsw, int vbp, int vact, int vfp);   /* aos_panel_p4.c */
+    aos_p4_panel_watch_init(dpi.video_timing.vsync_pulse_width, dpi.video_timing.vsync_back_porch,
+                            dpi.video_timing.v_size, dpi.video_timing.vsync_front_porch);
     int32_t bl = 80;
     aos_hal_pref_get_i32("bright", &bl);
     aos_hal_brightness_set(bl);

@@ -15,6 +15,21 @@ __attribute__((weak)) int aos_hal_screen_h(void)
 __attribute__((weak)) void aos_hal_display_set_rotation(int degrees)
 { }
 
+__attribute__((weak)) int aos_hal_display_refresh_request(int hz)
+{ int v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) bool aos_hal_code_sync(void *code, size_t size)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) aos_module_t * aos_hal_module_open(const char *path, char *err, size_t errlen)
+{ return NULL; }
+
+__attribute__((weak)) void * aos_hal_module_sym(aos_module_t *m, const char *name)
+{ return NULL; }
+
+__attribute__((weak)) void aos_hal_module_close(aos_module_t *m)
+{ }
+
 __attribute__((weak)) uint32_t aos_hal_panel_underruns(void)
 { uint32_t v; memset(&v, 0, sizeof v); return v; }
 
@@ -953,6 +968,9 @@ __attribute__((weak)) int aos_hal_usb_devices(aos_usb_dev_t *out, int max)
 
 __attribute__((weak)) bool aos_hal_usb_kbd_read(aos_kbd_event_t *ev)
 { bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) int aos_hal_usb_kbd_held(uint8_t *usages, int max, uint8_t *mods)
+{ int v; memset(&v, 0, sizeof v); return v; }
 
 __attribute__((weak)) int aos_hal_usb_kbd_list(char names[][48], int max)
 { int v; memset(&v, 0, sizeof v); return v; }

@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- **For emulators, four things in the firmware's table** (asked by
+  `apps/emulador`; docs/APPS-P4.md, "Emulators"): `aos_hal_code_sync()`,
+  code written at run time made visible to the instruction fetch (a
+  recompiler's output in the PSRAM heap); `aos_hal_module_open/sym/close()`,
+  .so modules of an app's own from the card's `apps/<app>/` (one core per
+  console), which `build_apps.sh` checks, `install_apps.sh` installs and the
+  CI packs; `aos_hal_usb_kbd_held()`, the USB keyboards' keys held right
+  now; and `aos_hal_display_refresh_request()`, a refresh rate while the
+  app is in front, the closest that keeps the panel's blanking wide enough.
+  The pixel clock can go to 80 MHz (`POST /api/panel/qos?mhz=80`, from the
+  next boot) to make room for 60 Hz.
+
 ## 0.16.0 — 2026-10-16
 
 - **No more blue flashes when a game uses all of core 0.** Duke Nukem 3D at

@@ -2513,8 +2513,12 @@ static const char blob_en__sistema_lang[] =
     "se leen al arrancar: reiniciar para aplicar\tread at boot: restart to apply\n"
     "la otra ranura no tiene una imagen\tthe other slot has no image\n"
     "no se pudo borrar\tcould not delete\n"
-    "dma y cache van de 0 a 15, vfp de 8 a 600\tdma and cache go from 0 to 15, vfp from 8 to 600\n"
+    "dma y cache van de 0 a 15, vfp de 8 a 1000, mhz 60 u 80\tdma and cache go from 0 to 15, vfp from 8 to 1000, mhz 60 or 80\n"
     "Duke Nukem 3D\tDuke Nukem 3D\n"
+    "sin ruta\tno path\n"
+    "%s no es un .so\t%s is not a .so\n"
+    "%s se llama como una app de la tarjeta: renombralo\t%s has the name of an app on the card: rename it\n"
+    "no se pudo cargar %s: %s\tcould not load %s: %s\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -6337,6 +6341,79 @@ static const char blob_en_demo_duke3d_lang[] =
     "Falta memoria\tNot enough memory\n"
     ;
 
+static const char blob_en_demo_emulador_lang[] =
+    "Juegos\tGames\n"
+    "Copiá acá los juegos de esta consola (también en subcarpetas).\\nbios/ guarda los archivos de sistema que la consola pueda usar;\\nsaves/ y states/ los escribe el emulador.\tCopy this console's games here (subfolders work too).\\nbios/ holds the system files the console may use;\\nsaves/ and states/ are written by the emulator.\n"
+    "Tocá para volver\tTap to go back\n"
+    "Cargando...\tLoading...\n"
+    "menos de 1 min\tunder 1 min\n"
+    "Empezar desde el principio borra el estado automático. Las partidas guardadas por el juego y las ranuras quedan.\tStarting from the beginning deletes the automatic state. The game's own saves and the slots stay.\n"
+    "Seguir donde quedó\tContinue where it was\n"
+    "Desde el principio\tFrom the beginning\n"
+    "CONTINUAR\tCONTINUE\n"
+    "JUGAR DE NUEVO\tPLAY AGAIN\n"
+    "Todos\tAll\n"
+    "Recientes\tRecent\n"
+    "A-Z\tA-Z\n"
+    "Todavía no hay juegos\tNo games yet\n"
+    "Copiá los juegos a la tarjeta, una carpeta por consola:\tCopy the games to the card, one folder per console:\n"
+    "También se pueden subir desde el portal web de la placa, en la página Emulador. Los archivos de sistema (como la BIOS de la GBA) van en la carpeta bios de cada consola.\tThey can also be uploaded from the board's web portal, on the Emulador page. System files (such as the GBA BIOS) go in each console's bios folder.\n"
+    "Emulador\tEmulator\n"
+    "%d juego\t%d game\n"
+    "%d juegos\t%d games\n"
+    "Ajustada\tFitted\n"
+    "Entera\tWhole multiples\n"
+    "Estirada\tStretched\n"
+    "Automático\tAutomatic\n"
+    "Nunca\tNever\n"
+    "1 de cada 2\t1 in 2\n"
+    "2 de cada 3\t2 in 3\n"
+    "No\tNo\n"
+    "Sí\tYes\n"
+    "Ranura %d\tSlot %d\n"
+    "vacía\tempty\n"
+    "guardado\tsaved\n"
+    "Guardando...\tSaving...\n"
+    "Continuar\tContinue\n"
+    "Reiniciar\tReset\n"
+    "Salir\tQuit\n"
+    "Estados\tStates\n"
+    "Guardar\tSave\n"
+    "Cargar\tLoad\n"
+    "Opciones\tOptions\n"
+    "Tamaño de la imagen\tPicture size\n"
+    "Saltear cuadros\tFrame skip\n"
+    "Sonido\tSound\n"
+    "Mostrar cuadros por segundo\tShow frames per second\n"
+    "Seguir donde quedó al abrir\tResume on open\n"
+    "Estado guardado\tState saved\n"
+    "No se pudo guardar el estado\tCould not save the state\n"
+    "No se pudo cargar el estado\tCould not load the state\n"
+    "No se pudo cargar el juego\tCould not load the game\n"
+    "Falta memoria\tNot enough memory\n"
+    "Otra app está usando el procesador\tAnother app is using the processor\n"
+    "Paleta\tPalette\n"
+    "Compuesta\tComposite\n"
+    "Suave\tSmooth\n"
+    "Recortar bordes\tCrop overscan\n"
+    "Recortar costados\tCrop sides\n"
+    "Límite de sprites\tSprite limit\n"
+    "No se pudo abrir el archivo\tCould not open the file\n"
+    "No es un juego de NES\tNot a NES game\n"
+    "El archivo es demasiado grande\tThe file is too big\n"
+    "No hay memoria\tOut of memory\n"
+    "Falta la BIOS del Famicom Disk System (disksys.rom)\tThe Famicom Disk System BIOS is missing (disksys.rom)\n"
+    "BIOS\tBIOS\n"
+    "Automática\tAutomatic\n"
+    "Integrada\tBuilt-in\n"
+    "Corrección de color\tColour correction\n"
+    "Mezcla de cuadros\tFrame blending\n"
+    "El archivo no es un juego de Game Boy Advance\tThe file is not a Game Boy Advance game\n"
+    "El juego es más grande que un cartucho de Game Boy Advance\tThe game is bigger than a Game Boy Advance cartridge\n"
+    "No hay memoria suficiente para el juego\tNot enough memory for the game\n"
+    "No se pudo abrir el juego\tCould not open the game\n"
+    ;
+
 static const char blob_en_demo_flappy_lang[] =
     "Tocá para empezar\\nRécord  %d\tTap to start\\nBest  %d\n"
     "¡Nuevo récord!\tNew best!\n"
@@ -7146,6 +7223,7 @@ static const aos_lang_file_t files_en[] = {
     { "demo.claudito.lang", blob_en_demo_claudito_lang },
     { "demo.doom.lang", blob_en_demo_doom_lang },
     { "demo.duke3d.lang", blob_en_demo_duke3d_lang },
+    { "demo.emulador.lang", blob_en_demo_emulador_lang },
     { "demo.flappy.lang", blob_en_demo_flappy_lang },
     { "demo.gemas.lang", blob_en_demo_gemas_lang },
     { "demo.golf.lang", blob_en_demo_golf_lang },
@@ -9659,8 +9737,12 @@ static const char blob_de__sistema_lang[] =
     "se leen al arrancar: reiniciar para aplicar\twerden beim Start gelesen: zum Übernehmen neu starten\n"
     "la otra ranura no tiene una imagen\tder andere Slot enthält kein Image\n"
     "no se pudo borrar\tkonnte nicht gelöscht werden\n"
-    "dma y cache van de 0 a 15, vfp de 8 a 600\tdma und cache gehen von 0 bis 15, vfp von 8 bis 600\n"
+    "dma y cache van de 0 a 15, vfp de 8 a 1000, mhz 60 u 80\tdma und cache gehen von 0 bis 15, vfp von 8 bis 1000, mhz 60 oder 80\n"
     "Duke Nukem 3D\tDuke Nukem 3D\n"
+    "sin ruta\tkein Pfad\n"
+    "%s no es un .so\t%s ist keine .so\n"
+    "%s se llama como una app de la tarjeta: renombralo\t%s heißt wie eine App auf der Karte: umbenennen\n"
+    "no se pudo cargar %s: %s\t%s konnte nicht geladen werden: %s\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =
@@ -13483,6 +13565,79 @@ static const char blob_de_demo_duke3d_lang[] =
     "Falta memoria\tNicht genug Speicher\n"
     ;
 
+static const char blob_de_demo_emulador_lang[] =
+    "Juegos\tSpiele\n"
+    "Copiá acá los juegos de esta consola (también en subcarpetas).\\nbios/ guarda los archivos de sistema que la consola pueda usar;\\nsaves/ y states/ los escribe el emulador.\tKopiere die Spiele dieser Konsole hierher (Unterordner gehen auch).\\nbios/ enthält Systemdateien, die die Konsole nutzen kann;\\nsaves/ und states/ schreibt der Emulator.\n"
+    "Tocá para volver\tTippen, um zurückzugehen\n"
+    "Cargando...\tWird geladen...\n"
+    "menos de 1 min\tunter 1 Min.\n"
+    "Empezar desde el principio borra el estado automático. Las partidas guardadas por el juego y las ranuras quedan.\tVon vorn beginnen löscht den automatischen Spielstand. Die Speicherstände des Spiels und die Slots bleiben.\n"
+    "Seguir donde quedó\tDort weiterspielen\n"
+    "Desde el principio\tVon vorn\n"
+    "CONTINUAR\tWEITERSPIELEN\n"
+    "JUGAR DE NUEVO\tNOCH EINMAL\n"
+    "Todos\tAlle\n"
+    "Recientes\tZuletzt\n"
+    "A-Z\tA-Z\n"
+    "Todavía no hay juegos\tNoch keine Spiele\n"
+    "Copiá los juegos a la tarjeta, una carpeta por consola:\tKopiere die Spiele auf die Karte, ein Ordner pro Konsole:\n"
+    "También se pueden subir desde el portal web de la placa, en la página Emulador. Los archivos de sistema (como la BIOS de la GBA) van en la carpeta bios de cada consola.\tSie lassen sich auch über das Webportal der Platine hochladen, auf der Seite Emulador. Systemdateien (etwa das GBA-BIOS) kommen in den bios-Ordner der jeweiligen Konsole.\n"
+    "Emulador\tEmulator\n"
+    "%d juego\t%d Spiel\n"
+    "%d juegos\t%d Spiele\n"
+    "Ajustada\tEingepasst\n"
+    "Entera\tGanzzahlig\n"
+    "Estirada\tGestreckt\n"
+    "Automático\tAutomatisch\n"
+    "Nunca\tNie\n"
+    "1 de cada 2\t1 von 2\n"
+    "2 de cada 3\t2 von 3\n"
+    "No\tNein\n"
+    "Sí\tJa\n"
+    "Ranura %d\tSlot %d\n"
+    "vacía\tleer\n"
+    "guardado\tgespeichert\n"
+    "Guardando...\tWird gespeichert...\n"
+    "Continuar\tWeiter\n"
+    "Reiniciar\tNeustart\n"
+    "Salir\tBeenden\n"
+    "Estados\tSpielstände\n"
+    "Guardar\tSpeichern\n"
+    "Cargar\tLaden\n"
+    "Opciones\tOptionen\n"
+    "Tamaño de la imagen\tBildgröße\n"
+    "Saltear cuadros\tBilder überspringen\n"
+    "Sonido\tTon\n"
+    "Mostrar cuadros por segundo\tBilder pro Sekunde zeigen\n"
+    "Seguir donde quedó al abrir\tBeim Öffnen fortsetzen\n"
+    "Estado guardado\tSpielstand gespeichert\n"
+    "No se pudo guardar el estado\tSpielstand konnte nicht gespeichert werden\n"
+    "No se pudo cargar el estado\tSpielstand konnte nicht geladen werden\n"
+    "No se pudo cargar el juego\tSpiel konnte nicht geladen werden\n"
+    "Falta memoria\tZu wenig Speicher\n"
+    "Otra app está usando el procesador\tEine andere App nutzt den Prozessor\n"
+    "Paleta\tPalette\n"
+    "Compuesta\tComposite\n"
+    "Suave\tWeich\n"
+    "Recortar bordes\tOverscan abschneiden\n"
+    "Recortar costados\tSeiten abschneiden\n"
+    "Límite de sprites\tSprite-Limit\n"
+    "No se pudo abrir el archivo\tDatei konnte nicht geöffnet werden\n"
+    "No es un juego de NES\tKein NES-Spiel\n"
+    "El archivo es demasiado grande\tDie Datei ist zu groß\n"
+    "No hay memoria\tKein Speicher frei\n"
+    "Falta la BIOS del Famicom Disk System (disksys.rom)\tDas BIOS des Famicom Disk System fehlt (disksys.rom)\n"
+    "BIOS\tBIOS\n"
+    "Automática\tAutomatisch\n"
+    "Integrada\tEingebaut\n"
+    "Corrección de color\tFarbkorrektur\n"
+    "Mezcla de cuadros\tBildüberblendung\n"
+    "El archivo no es un juego de Game Boy Advance\tDie Datei ist kein Game-Boy-Advance-Spiel\n"
+    "El juego es más grande que un cartucho de Game Boy Advance\tDas Spiel ist größer als ein Game-Boy-Advance-Modul\n"
+    "No hay memoria suficiente para el juego\tNicht genug Speicher für das Spiel\n"
+    "No se pudo abrir el juego\tSpiel konnte nicht geöffnet werden\n"
+    ;
+
 static const char blob_de_demo_flappy_lang[] =
     "Tocá para empezar\\nRécord  %d\tZum Starten tippen\\nRekord  %d\n"
     "¡Nuevo récord!\tNeuer Rekord!\n"
@@ -14292,6 +14447,7 @@ static const aos_lang_file_t files_de[] = {
     { "demo.claudito.lang", blob_de_demo_claudito_lang },
     { "demo.doom.lang", blob_de_demo_doom_lang },
     { "demo.duke3d.lang", blob_de_demo_duke3d_lang },
+    { "demo.emulador.lang", blob_de_demo_emulador_lang },
     { "demo.flappy.lang", blob_de_demo_flappy_lang },
     { "demo.gemas.lang", blob_de_demo_gemas_lang },
     { "demo.golf.lang", blob_de_demo_golf_lang },
@@ -14306,7 +14462,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2501, 45, files_en, 46 },
-    { "de", "Deutsch", 2501, 45, files_de, 46 },
+    { "en", "English", 2505, 46, files_en, 47 },
+    { "de", "Deutsch", 2505, 46, files_de, 47 },
 };
 const int aos_lang_pack_count = 2;

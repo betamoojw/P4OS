@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.18.0 — 2026-10-17
 
 - **Pinball 3D** (`apps/pinball`): a 3D pinball after Space Cadet, upright,
   with six tables chosen in a carousel: Noche de Zombis, Robots en Órbita,

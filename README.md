@@ -78,6 +78,16 @@ itself in Modules and by the scan in Bus, and the SPI loopback at 40 MHz
 
 The home screen has icon pages, folders, a dock and widgets.
 
+- **Arranging it** is as on an iPhone. A long press starts edit mode, where
+  a swipe still turns the page and an icon held still for a moment drags:
+  - onto another page;
+  - onto another app, to make a folder;
+  - into a folder;
+  - in or out of the dock, where the icons drag the same way.
+
+  Folders show twelve apps a page. The portal's `#inicio` page does the
+  same from a computer.
+
 - **Swiping down** from the top opens the control centre (Wi-Fi, Bluetooth,
   do not disturb, orientation, brightness, volume, the music playing on the
   board or on the iPhone) and the notifications, with the phone's own

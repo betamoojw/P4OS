@@ -11,85 +11,88 @@ Opcional: disksys.rom para el Famicom Disk System.	Optional: disksys.rom für da
 #: apps/emulador/web/emulador.js:25
 Opcional: gba_bios.bin (la BIOS original mejora la compatibilidad; sin ella se usa una libre que trae el emulador).	Optional: gba_bios.bin (das Original-BIOS verbessert die Kompatibilität; ohne es nutzt der Emulator ein freies).
 
-#: apps/emulador/web/emulador.js:83
-menos de 1 min	unter 1 Min.
+#: apps/emulador/web/emulador.js:26
+Necesaria: coleco.rom (o colecovision.rom), 8 KB.	Erforderlich: coleco.rom (oder colecovision.rom), 8 KB.
 
 #: apps/emulador/web/emulador.js:84
-%d min	%d Min.
+menos de 1 min	unter 1 Min.
 
 #: apps/emulador/web/emulador.js:85
+%d min	%d Min.
+
+#: apps/emulador/web/emulador.js:86
 %d h %d min	%d Std. %d Min.
 
-#: apps/emulador/web/emulador.js:150
-#: apps/emulador/web/emulador.js:297
+#: apps/emulador/web/emulador.js:151
+#: apps/emulador/web/emulador.js:298
 Emulador	Emulator
 
-#: apps/emulador/web/emulador.js:151
+#: apps/emulador/web/emulador.js:152
 Abrir en la placa	Auf der Platine öffnen
 
-#: apps/emulador/web/emulador.js:152
+#: apps/emulador/web/emulador.js:153
 Los juegos van en la tarjeta, una carpeta por consola (%s). También pueden ir en subcarpetas.	Die Spiele liegen auf der Karte, ein Ordner pro Konsole (%s). Unterordner gehen auch.
 
-#: apps/emulador/web/emulador.js:179
+#: apps/emulador/web/emulador.js:180
 %s no es un juego de %s (%s)	%s ist kein %s-Spiel (%s)
 
-#: apps/emulador/web/emulador.js:191
+#: apps/emulador/web/emulador.js:192
 %d archivos subidos	%d Dateien hochgeladen
 
-#: apps/emulador/web/emulador.js:207
+#: apps/emulador/web/emulador.js:208
 Leyendo la tarjeta...	Karte wird gelesen...
 
-#: apps/emulador/web/emulador.js:222
+#: apps/emulador/web/emulador.js:223
 Buscar	Suchen
 
-#: apps/emulador/web/emulador.js:227
+#: apps/emulador/web/emulador.js:228
 <b>Soltá acá juegos de %s</b> o tocá para elegirlos<br><span class="small">%s</span>	<b>%s-Spiele hier ablegen</b> oder klicken, um sie auszuwählen<br><span class="small">%s</span>
 
-#: apps/emulador/web/emulador.js:231
+#: apps/emulador/web/emulador.js:232
 1 juego	1 Spiel
 
-#: apps/emulador/web/emulador.js:231
+#: apps/emulador/web/emulador.js:232
 %d juegos	%d Spiele
 
-#: apps/emulador/web/emulador.js:233
+#: apps/emulador/web/emulador.js:234
 BIOS y archivos de sistema	BIOS und Systemdateien
 
-#: apps/emulador/web/emulador.js:235
+#: apps/emulador/web/emulador.js:236
 Los archivos de sistema que pida la consola (el emulador avisa cuáles).	Die Systemdateien, die die Konsole verlangt (der Emulator sagt, welche).
 
-#: apps/emulador/web/emulador.js:238
+#: apps/emulador/web/emulador.js:239
 ¿Borrar %s?	%s löschen?
 
-#: apps/emulador/web/emulador.js:239
-#: apps/emulador/web/emulador.js:279
+#: apps/emulador/web/emulador.js:240
+#: apps/emulador/web/emulador.js:280
 Borrar	Löschen
 
-#: apps/emulador/web/emulador.js:240
+#: apps/emulador/web/emulador.js:241
 Soltá acá los archivos de sistema	Systemdateien hier ablegen
 
-#: apps/emulador/web/emulador.js:252
+#: apps/emulador/web/emulador.js:253
 jugado %s	gespielt %s
 
-#: apps/emulador/web/emulador.js:253
+#: apps/emulador/web/emulador.js:254
 %d estados	%d Spielstände
 
-#: apps/emulador/web/emulador.js:257
+#: apps/emulador/web/emulador.js:258
 Partida guardada subida	Speicherstand hochgeladen
 
-#: apps/emulador/web/emulador.js:266
+#: apps/emulador/web/emulador.js:267
 Bajar partida	Speicherstand laden
 
-#: apps/emulador/web/emulador.js:267
+#: apps/emulador/web/emulador.js:268
 Subir partida	Speicherstand hochladen
 
-#: apps/emulador/web/emulador.js:269
+#: apps/emulador/web/emulador.js:270
 ¿Borrar los %d estados de %s?	Die %d Spielstände von %s löschen?
 
-#: apps/emulador/web/emulador.js:275
+#: apps/emulador/web/emulador.js:276
 Borrar estados	Spielstände löschen
 
-#: apps/emulador/web/emulador.js:277
+#: apps/emulador/web/emulador.js:278
 ¿Borrar %s de la tarjeta? Las partidas guardadas quedan.	%s von der Karte löschen? Die Speicherstände bleiben.
 
-#: apps/emulador/web/emulador.js:283
+#: apps/emulador/web/emulador.js:284
 Todavía no hay juegos de %s.	Noch keine %s-Spiele.

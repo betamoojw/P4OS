@@ -124,11 +124,18 @@ Since the firmware's commit `8bdf0da` (docs/APPS-P4.md, "Emulators"):
 
 ## Third-party code
 
-| Core | Source | License |
-|---|---|---|
-| NES | nofrendo, as Retro-Go carries it (`cores/nes/`) | GPL-2.0 (LGPL-2 headers), changes in `cores/nes/README.md` |
-| GBA | gpSP with the RV32 recompiler of gpsp-esp32 (`cores/gba/`) | GPL-2.0-or-later / GPL-3.0-or-later, changes in `cores/gba/README.md` |
+Each core is its own module and carries its own licence; the app
+(`emulador.so`: `main/`, `web/`) is MIT like the rest of the repository.
 
-`emulador.so` as a whole is GPL-3.0-or-later; the repository at the
-release's tag is its source. The app's own files (`main/`, `web/`) are MIT
-like the rest of the repository.
+| Module | Core | Licence |
+|---|---|---|
+| `nes.so` | nofrendo, as Retro-Go carries it | GPL-2.0 (LGPL-2 headers) |
+| `gb.so` | gnuboy, as Retro-Go carries it | GPL-2.0 |
+| `gba.so` | gpSP with gpsp-esp32's RV32 recompiler | GPL-2.0-or-later / GPL-3.0-or-later |
+| `snes.so` | Snes9x (snes9x2005 line), as Retro-Go carries it | **Snes9x licence, non-commercial** |
+| `sms.so` | SMS Plus, with a Z80 and SN76489 written for P4OS | GPL-2.0-or-later |
+| `pce.so` | pce-go, as Retro-Go carries it | GPL-2.0 |
+| `md.so` | Gwenesis (Musashi 68000, Marat Fayzullin's Z80) | **AGPL-3.0**; the Z80's notice forbids commercial distribution |
+
+Every change to a vendored core is listed in `cores/<dir>/README.md`. No
+game or official BIOS comes with any of them.

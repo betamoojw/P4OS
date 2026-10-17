@@ -91,6 +91,14 @@ typedef struct {
     void *(*exec_alloc)(size_t align, size_t size);
     void  (*exec_free)(void *code);
     bool  (*exec_publish)(void *code, size_t size);
+
+    /* The other CPU core: runs fn(arg, 1) on a helper pinned to the core
+     * the console does not run on and fn(arg, 0) on the caller, and
+     * returns when both are done (aos_hal_worker_split). The halves share
+     * nothing while they run; half 1 never calls the host back. In the
+     * simulator, or when the helper cannot start, the two run one after
+     * the other. Never NULL. */
+    void  (*parallel)(void (*fn)(void *arg, int half), void *arg);
 } emu_host_t;
 
 /* What the app asks a core to load. Every path is a full one on the
@@ -170,12 +178,24 @@ typedef struct emu_core {
     /* A line for the log about how the core runs (recompiler caches,
      * mapper...), or NULL. Called every few seconds while playing. */
     const char *(*stats)(void);
+
+    /* Optional (NULL: the table's 'buttons'). The buttons the console has
+     * now, when an option changes them (the Mega Drive's 3- or 6-button
+     * pad): read after load() and after every set_option(); the face
+     * layout follows them when 'face' is EMU_FACE_AUTO. */
+    uint32_t (*buttons_now)(void);
+
+    /* Optional (NULL: w * pixel_aspect / h). The shape a frame of w x h is
+     * shown at, width over height, for consoles whose pixels change with
+     * the video mode (the Mega Drive's 256 and 320 modes both fill a 4:3
+     * TV; the PC Engine's 256..352). */
+    float (*frame_aspect)(int w, int h);
 } emu_core_t;
 
 /* The version of this contract. A core built against another one is
  * refused by the app (main/emu_cores.c): bump it whenever emu_core_t,
  * emu_host_t or emu_load_t change. */
-#define EMU_CORE_ABI 2
+#define EMU_CORE_ABI 3
 
 /* On the board each cores/<dir> is a module of its own, the card's
  * apps/emulador/<dir>.so, loaded only while one of its consoles plays

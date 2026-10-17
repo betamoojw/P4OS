@@ -28,4 +28,21 @@ __attribute__((unused)) static const char *const CORE_TEXTS[] = {
     N_("El juego es más grande que un cartucho de Game Boy Advance"),
     N_("No hay memoria suficiente para el juego"),
     N_("No se pudo abrir el juego"), N_("No se pudo cargar el juego"),
+    /* Super Nintendo (cores/snes/snes_core.c) */
+    N_("Calidad del sonido"), N_("Alta"), N_("Normal"), N_("Rápida"), N_("Sin sonido"),
+    N_("No se pudo leer el archivo"), N_("No es un juego de Super Nintendo"),
+    N_("Este juego usa el chip Super FX, que el emulador no tiene"),
+    N_("Este juego usa el chip SA-1, que el emulador no tiene"),
+    N_("Este juego usa el chip S-DD1, que el emulador no tiene"),
+    N_("Este juego usa el chip SPC7110, que el emulador no tiene"),
+    /* Master System, Game Gear, ColecoVision, PC Engine (cores/sms, cores/pce) */
+    N_("Región"), N_("Estados Unidos"), N_("Europa"), N_("Japón"),
+    N_("Modos anchos"), N_("Proporción de TV"), N_("Píxeles enteros"), N_("Izq"), N_("Der"),
+    N_("No es un juego de Master System"), N_("No es un juego de Game Gear"),
+    N_("No es un juego de ColecoVision"), N_("No es un juego de PC Engine"),
+    N_("El juego es más grande que un cartucho de ColecoVision"),
+    N_("Falta la BIOS de ColecoVision (coleco.rom)"),
+    /* Mega Drive (cores/md/md_core.c) */
+    N_("Mando"), N_("3 botones"), N_("6 botones"), N_("América"), N_("Completo"), N_("Rápido"),
+    N_("Sin FM"), N_("No es un juego de Mega Drive"), N_("Los juegos de 32X no se pueden jugar"),
 };

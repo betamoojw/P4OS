@@ -23,6 +23,7 @@ const ROOT = '/emulador';
 const BIOS_NOTES = {
   nes: tr('Opcional: disksys.rom para el Famicom Disk System.'),
   gba: tr('Opcional: gba_bios.bin (la BIOS original mejora la compatibilidad; sin ella se usa una libre que trae el emulador).'),
+  col: tr('Necesaria: coleco.rom (o colecovision.rom), 8 KB.'),
 };
 let CONSOLES = [
   { id: 'nes', name: 'NES', exts: ['.nes', '.fds', '.nsf'] },

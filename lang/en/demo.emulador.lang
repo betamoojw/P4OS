@@ -11,12 +11,12 @@ Juegos	Games
 #: apps/emulador/main/em_files.c:100
 Copiá acá los juegos de esta consola (también en subcarpetas).\nbios/ guarda los archivos de sistema que la consola pueda usar;\nsaves/ y states/ los escribe el emulador.	Copy this console's games here (subfolders work too).\nbios/ holds the system files the console may use;\nsaves/ and states/ are written by the emulator.
 
-#: apps/emulador/main/em_game.c:1115
-#: apps/emulador/main/em_game.c:1246
+#: apps/emulador/main/em_game.c:1139
+#: apps/emulador/main/em_game.c:1281
 Tocá para volver	Tap to go back
 
-#: apps/emulador/main/em_game.c:1239
-#: apps/emulador/main/em_game.c:1292
+#: apps/emulador/main/em_game.c:1274
+#: apps/emulador/main/em_game.c:1327
 #: apps/emulador/main/em_menu.c:210
 Cargando...	Loading...
 
@@ -167,14 +167,14 @@ No se pudo guardar el estado	Could not save the state
 #: apps/emulador/main/em_menu.c:566
 No se pudo cargar el estado	Could not load the state
 
-#: apps/emulador/main/em_run.c:378
+#: apps/emulador/main/em_run.c:392
 #: apps/emulador/main/em_strings.c:30
 No se pudo cargar el juego	Could not load the game
 
-#: apps/emulador/main/em_run.c:561
+#: apps/emulador/main/em_run.c:576
 Falta memoria	Not enough memory
 
-#: apps/emulador/main/em_run.c:567
+#: apps/emulador/main/em_run.c:582
 Otra app está usando el procesador	Another app is using the processor
 
 #: apps/emulador/main/em_strings.c:14
@@ -260,6 +260,111 @@ No hay memoria suficiente para el juego	Not enough memory for the game
 
 #: apps/emulador/main/em_strings.c:30
 No se pudo abrir el juego	Could not open the game
+
+#: apps/emulador/main/em_strings.c:32
+Calidad del sonido	Sound quality
+
+#: apps/emulador/main/em_strings.c:32
+Alta	High
+
+#: apps/emulador/main/em_strings.c:32
+Normal	Normal
+
+#: apps/emulador/main/em_strings.c:32
+Rápida	Fast
+
+#: apps/emulador/main/em_strings.c:32
+Sin sonido	No sound
+
+#: apps/emulador/main/em_strings.c:33
+No se pudo leer el archivo	Could not read the file
+
+#: apps/emulador/main/em_strings.c:33
+No es un juego de Super Nintendo	Not a Super Nintendo game
+
+#: apps/emulador/main/em_strings.c:34
+Este juego usa el chip Super FX, que el emulador no tiene	This game uses the Super FX chip, which the emulator lacks
+
+#: apps/emulador/main/em_strings.c:35
+Este juego usa el chip SA-1, que el emulador no tiene	This game uses the SA-1 chip, which the emulator lacks
+
+#: apps/emulador/main/em_strings.c:36
+Este juego usa el chip S-DD1, que el emulador no tiene	This game uses the S-DD1 chip, which the emulator lacks
+
+#: apps/emulador/main/em_strings.c:37
+Este juego usa el chip SPC7110, que el emulador no tiene	This game uses the SPC7110 chip, which the emulator lacks
+
+#: apps/emulador/main/em_strings.c:39
+Región	Region
+
+#: apps/emulador/main/em_strings.c:39
+Estados Unidos	United States
+
+#: apps/emulador/main/em_strings.c:39
+Europa	Europe
+
+#: apps/emulador/main/em_strings.c:39
+Japón	Japan
+
+#: apps/emulador/main/em_strings.c:40
+Modos anchos	Wide modes
+
+#: apps/emulador/main/em_strings.c:40
+Proporción de TV	TV proportions
+
+#: apps/emulador/main/em_strings.c:40
+Píxeles enteros	Whole pixels
+
+#: apps/emulador/main/em_strings.c:40
+Izq	Left
+
+#: apps/emulador/main/em_strings.c:40
+Der	Right
+
+#: apps/emulador/main/em_strings.c:41
+No es un juego de Master System	Not a Master System game
+
+#: apps/emulador/main/em_strings.c:41
+No es un juego de Game Gear	Not a Game Gear game
+
+#: apps/emulador/main/em_strings.c:42
+No es un juego de ColecoVision	Not a ColecoVision game
+
+#: apps/emulador/main/em_strings.c:42
+No es un juego de PC Engine	Not a PC Engine game
+
+#: apps/emulador/main/em_strings.c:43
+El juego es más grande que un cartucho de ColecoVision	The game is bigger than a ColecoVision cartridge
+
+#: apps/emulador/main/em_strings.c:44
+Falta la BIOS de ColecoVision (coleco.rom)	The ColecoVision BIOS is missing (coleco.rom)
+
+#: apps/emulador/main/em_strings.c:46
+Mando	Pad
+
+#: apps/emulador/main/em_strings.c:46
+3 botones	3 buttons
+
+#: apps/emulador/main/em_strings.c:46
+6 botones	6 buttons
+
+#: apps/emulador/main/em_strings.c:46
+América	Americas
+
+#: apps/emulador/main/em_strings.c:46
+Completo	Full
+
+#: apps/emulador/main/em_strings.c:46
+Rápido	Fast
+
+#: apps/emulador/main/em_strings.c:47
+Sin FM	No FM
+
+#: apps/emulador/main/em_strings.c:47
+No es un juego de Mega Drive	Not a Mega Drive game
+
+#: apps/emulador/main/em_strings.c:47
+Los juegos de 32X no se pueden jugar	32X games cannot be played
 
 #: apps/emulador/main/emu_cores.c:378
 No está el módulo de esta consola	This console's module is missing

@@ -11,85 +11,88 @@ Opcional: disksys.rom para el Famicom Disk System.	Optional: disksys.rom for the
 #: apps/emulador/web/emulador.js:25
 Opcional: gba_bios.bin (la BIOS original mejora la compatibilidad; sin ella se usa una libre que trae el emulador).	Optional: gba_bios.bin (the original BIOS improves compatibility; without it the emulator's free one is used).
 
-#: apps/emulador/web/emulador.js:83
-menos de 1 min	under 1 min
+#: apps/emulador/web/emulador.js:26
+Necesaria: coleco.rom (o colecovision.rom), 8 KB.	Required: coleco.rom (or colecovision.rom), 8 KB.
 
 #: apps/emulador/web/emulador.js:84
-%d min	%d min
+menos de 1 min	under 1 min
 
 #: apps/emulador/web/emulador.js:85
+%d min	%d min
+
+#: apps/emulador/web/emulador.js:86
 %d h %d min	%d h %d min
 
-#: apps/emulador/web/emulador.js:150
-#: apps/emulador/web/emulador.js:297
+#: apps/emulador/web/emulador.js:151
+#: apps/emulador/web/emulador.js:298
 Emulador	Emulator
 
-#: apps/emulador/web/emulador.js:151
+#: apps/emulador/web/emulador.js:152
 Abrir en la placa	Open on the board
 
-#: apps/emulador/web/emulador.js:152
+#: apps/emulador/web/emulador.js:153
 Los juegos van en la tarjeta, una carpeta por consola (%s). También pueden ir en subcarpetas.	Games go on the card, one folder per console (%s). Subfolders work too.
 
-#: apps/emulador/web/emulador.js:179
+#: apps/emulador/web/emulador.js:180
 %s no es un juego de %s (%s)	%s is not a %s game (%s)
 
-#: apps/emulador/web/emulador.js:191
+#: apps/emulador/web/emulador.js:192
 %d archivos subidos	%d files uploaded
 
-#: apps/emulador/web/emulador.js:207
+#: apps/emulador/web/emulador.js:208
 Leyendo la tarjeta...	Reading the card...
 
-#: apps/emulador/web/emulador.js:222
+#: apps/emulador/web/emulador.js:223
 Buscar	Search
 
-#: apps/emulador/web/emulador.js:227
+#: apps/emulador/web/emulador.js:228
 <b>Soltá acá juegos de %s</b> o tocá para elegirlos<br><span class="small">%s</span>	<b>Drop %s games here</b> or click to choose them<br><span class="small">%s</span>
 
-#: apps/emulador/web/emulador.js:231
+#: apps/emulador/web/emulador.js:232
 1 juego	1 game
 
-#: apps/emulador/web/emulador.js:231
+#: apps/emulador/web/emulador.js:232
 %d juegos	%d games
 
-#: apps/emulador/web/emulador.js:233
+#: apps/emulador/web/emulador.js:234
 BIOS y archivos de sistema	BIOS and system files
 
-#: apps/emulador/web/emulador.js:235
+#: apps/emulador/web/emulador.js:236
 Los archivos de sistema que pida la consola (el emulador avisa cuáles).	The system files the console asks for (the emulator says which).
 
-#: apps/emulador/web/emulador.js:238
+#: apps/emulador/web/emulador.js:239
 ¿Borrar %s?	Delete %s?
 
-#: apps/emulador/web/emulador.js:239
-#: apps/emulador/web/emulador.js:279
+#: apps/emulador/web/emulador.js:240
+#: apps/emulador/web/emulador.js:280
 Borrar	Delete
 
-#: apps/emulador/web/emulador.js:240
+#: apps/emulador/web/emulador.js:241
 Soltá acá los archivos de sistema	Drop the system files here
 
-#: apps/emulador/web/emulador.js:252
+#: apps/emulador/web/emulador.js:253
 jugado %s	played %s
 
-#: apps/emulador/web/emulador.js:253
+#: apps/emulador/web/emulador.js:254
 %d estados	%d states
 
-#: apps/emulador/web/emulador.js:257
+#: apps/emulador/web/emulador.js:258
 Partida guardada subida	Save uploaded
 
-#: apps/emulador/web/emulador.js:266
+#: apps/emulador/web/emulador.js:267
 Bajar partida	Download save
 
-#: apps/emulador/web/emulador.js:267
+#: apps/emulador/web/emulador.js:268
 Subir partida	Upload save
 
-#: apps/emulador/web/emulador.js:269
+#: apps/emulador/web/emulador.js:270
 ¿Borrar los %d estados de %s?	Delete the %d states of %s?
 
-#: apps/emulador/web/emulador.js:275
+#: apps/emulador/web/emulador.js:276
 Borrar estados	Delete states
 
-#: apps/emulador/web/emulador.js:277
+#: apps/emulador/web/emulador.js:278
 ¿Borrar %s de la tarjeta? Las partidas guardadas quedan.	Delete %s from the card? Its saves stay.
 
-#: apps/emulador/web/emulador.js:283
+#: apps/emulador/web/emulador.js:284
 Todavía no hay juegos de %s.	No %s games yet.

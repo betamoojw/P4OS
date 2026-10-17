@@ -117,7 +117,21 @@ static void host_log(const char *fmt, ...)
     va_start(ap, fmt);
     vsnprintf(line, sizeof line, fmt, ap);
     va_end(ap);
-    aos_hal_log(EMU_TAG, "%s: %s", R.core ? R.core->id : "?", line);
+    /* the console's id first, unless the core already wrote it ("nes: ...") */
+    const char *id = R.core ? R.core->id : "?";
+    size_t n = strlen(id);
+    if (!strncmp(line, id, n) && line[n] == ':') aos_hal_log(EMU_TAG, "%s", line);
+    else aos_hal_log(EMU_TAG, "%s: %s", id, line);
+}
+
+/* The other core for a core's second half of a frame (emu_core.h); the two
+ * halves in series where there is no helper (the simulator). */
+static void host_parallel(void (*fn)(void *arg, int half), void *arg)
+{
+    if (!aos_hal_worker_split(fn, arg)) {
+        fn(arg, 1);
+        fn(arg, 0);
+    }
 }
 
 static int grab_slot(void)
@@ -553,6 +567,7 @@ bool emu_run_start(const emu_core_t *core, const emu_game_t *game)
         .video = host_video,
         .audio = host_audio,
         .log = host_log,
+        .parallel = host_parallel,
         .exec_alloc = emu_pref("jit", 1) ? EXEC_ALLOC : NULL,
         .exec_free = emu_pref("jit", 1) ? EXEC_FREE : NULL,
         .exec_publish = emu_pref("jit", 1) ? EXEC_PUBLISH : NULL,

@@ -42,6 +42,7 @@ typedef struct {
     FILE       *fp;
     int         n;
     pb_entry_t *e;
+    int         fails;      /* entries that could not be read (no memory)   */
 } pb_pak_t;
 
 bool pb_pak_open(pb_pak_t *p, const char *path);

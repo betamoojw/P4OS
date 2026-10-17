@@ -130,6 +130,7 @@ typedef struct {
     bool       debug;
     bool       button_pause;
     bool       saved_best;
+    bool       no_memory;
 
     /* page flipping */
     bool       flip_ok;
@@ -139,7 +140,7 @@ typedef struct {
 
     /* the log's line */
     uint32_t   perf_frames, perf_rows, perf_t0;
-    uint64_t   perf_us;
+    uint64_t   perf_us, perf_draw_us, perf_push_us;
 } app_t;
 
 static app_t *s_app;
@@ -378,10 +379,18 @@ static int copy_rows(app_t *a, uint16_t *b, const uint32_t *m)
         int k0 = k;
         while (k < n && (m[k >> 5] & (1u << (k & 31)))) k++;
         int y = k0 * ROW_TILE, h = (k - k0) * ROW_TILE;
-        if (!aos_hal_display_blit_into(b, 0, y, PB_SW, h, a->rd.fb + (size_t)y * PB_SW)) {
-            for (int j = y; j < y + h; j++) memcpy(b + (size_t)j * PB_SW, a->rd.fb + (size_t)j * PB_SW, PB_SW * 2);
-        }
         rows += h;
+        /* in pieces of 64 rows (90 KB): one DMA copy of a whole frame wants
+         * more link-list items than the driver has, and fails loudly */
+        while (h > 0) {
+            int part = h > 64 ? 64 : h;
+            if (!aos_hal_display_blit_into(b, 0, y, PB_SW, part, a->rd.fb + (size_t)y * PB_SW)) {
+                for (int j = y; j < y + part; j++)
+                    memcpy(b + (size_t)j * PB_SW, a->rd.fb + (size_t)j * PB_SW, PB_SW * 2);
+            }
+            y += part;
+            h -= part;
+        }
     }
     return rows;
 }
@@ -886,12 +895,13 @@ static void perf(app_t *a, uint64_t us)
     if (!a->perf_t0) a->perf_t0 = now;
     if (now - a->perf_t0 < PERF_MS) return;
     float s = (float)(now - a->perf_t0) / 1000.0f;
-    aos_hal_log("pinball", "%.1f fps, %.2f ms a frame, %u rows/frame pushed, flip %d, %u KB art",
-                (double)(a->perf_frames / s), (double)(a->perf_us / 1000.0 / (a->perf_frames ? a->perf_frames : 1)),
-                (unsigned)(a->perf_rows / (a->perf_frames ? a->perf_frames : 1)), a->flip_ok,
+    double n = a->perf_frames ? a->perf_frames : 1;
+    aos_hal_log("pinball", "%.1f fps, %.2f ms a frame (draw %.2f, push %.2f), %u rows/frame pushed, flip %d, %u KB art",
+                (double)(a->perf_frames / s), (double)(a->perf_us / 1000.0 / n), (double)(a->perf_draw_us / 1000.0 / n),
+                (double)(a->perf_push_us / 1000.0 / n), (unsigned)(a->perf_rows / n), a->flip_ok,
                 (unsigned)(a->rd.bytes / 1024));
     a->perf_frames = a->perf_rows = 0;
-    a->perf_us = 0;
+    a->perf_us = a->perf_draw_us = a->perf_push_us = 0;
     a->perf_t0 = now;
 }
 
@@ -945,10 +955,15 @@ static void game_frame(app_t *a, float dt)
     ui.launch_down = a->launch_down && ui.launch_show;
     ui.charge = a->charge;
     ui.debug = a->debug;
+    uint64_t t1 = aos_hal_uptime_us();
     pb_render_frame(&a->rd, &a->g, &a->ph, &ui);
+    uint64_t t2 = aos_hal_uptime_us();
     push(a, toast);
     a->rd.ndirty = 0;
-    perf(a, aos_hal_uptime_us() - t0);
+    uint64_t t3 = aos_hal_uptime_us();
+    a->perf_draw_us += t2 - t1;
+    a->perf_push_us += t3 - t2;
+    perf(a, t3 - t0);
 }
 
 static void timer_cb(lv_timer_t *tm)
@@ -979,6 +994,14 @@ static bool game_load(app_t *a, int idx)
         pb_phys_free(&a->ph);
         goto fail;
     }
+    if (a->pak.fails || !a->rd.nflip[0] || !a->rd.nflip[1]) {
+        /* half a table is no table: everything it loaded goes back */
+        aos_hal_log("pinball", "%s: %d entries did not fit in PSRAM", a->t->id, a->pak.fails);
+        pb_render_free(&a->rd);
+        pb_phys_free(&a->ph);
+        a->no_memory = true;
+        goto fail;
+    }
     pb_audio_set(a->sfx, a->music);
     pb_audio_open(&a->pak);
     pb_game_init(&a->g, a->t, &a->ph, best_get(a->t->id));
@@ -1000,24 +1023,31 @@ static void load_cb(lv_timer_t *tm)
     lv_timer_delete(tm);
     a->load_timer = NULL;
     int idx = a->sel;
-    if (!game_load(a, idx)) {
-        if (a->loading) lv_obj_delete(a->loading);
-        a->loading = NULL;
-        a->state = ST_CAROUSEL;
-        aos_ui_toast(_("No se pudo cargar la mesa"), 2500);
-        return;
-    }
-    if (a->loading) lv_obj_delete(a->loading);
-    a->loading = NULL;
-    /* the carousel's widgets go; its cards (logos, icons) stay for the panels */
+    /* the carousel's cards (4 MB) go before the table comes in */
     if (a->c_scroll) {
-        lv_obj_clean(a->root);
+        /* everything but the loading screen */
+        for (int32_t i = (int32_t)lv_obj_get_child_count(a->root) - 1; i >= 0; i--) {
+            lv_obj_t *c = lv_obj_get_child(a->root, i);
+            if (c != a->loading) lv_obj_delete(c);
+        }
         a->c_scroll = NULL;
+        a->c_play = NULL;
     }
     for (int i = 0; i < a->ncard; i++) {
         pb_free(a->card[i].thumb);
         a->card[i].thumb = NULL;
     }
+    a->no_memory = false;
+    if (!game_load(a, idx)) {
+        a->state = ST_CAROUSEL;
+        a->loading = NULL;
+        carousel_build(a);
+        aos_ui_toast(a->no_memory ? _("No hay memoria para la mesa: cerrá otras apps y probá de nuevo")
+                                  : _("No se pudo cargar la mesa"), 4000);
+        return;
+    }
+    if (a->loading) lv_obj_delete(a->loading);
+    a->loading = NULL;
     lv_obj_set_style_bg_color(a->root, C(0x000000), 0);
     a->canvas = lv_canvas_create(a->root);
     lv_canvas_set_buffer(a->canvas, a->rd.fb, PB_SW, PB_SH, LV_COLOR_FORMAT_RGB565);

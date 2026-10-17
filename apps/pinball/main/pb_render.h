@@ -70,8 +70,8 @@ typedef struct {
     const pb_table_t *t;
     uint16_t  *fb;              /* PB_SW x PB_SH, the frame                   */
     uint16_t  *zfb;             /* PB_SW x PB_TH, depth of the frame's pixels */
-    uint16_t  *base, *cur;      /* PB_SW x PB_TH                              */
-    uint16_t  *zbase, *zcur;
+    uint16_t  *base;            /* PB_SW x PB_TH, every lamp off              */
+    uint16_t  *zbase;
     uint16_t  *dmd_bg;          /* PB_SW x PB_TOP, or NULL                    */
     pb_spr_t   flip[2][PB_FLIP_FRAMES];
     int        nflip[2];

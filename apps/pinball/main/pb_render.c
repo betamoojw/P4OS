@@ -275,10 +275,8 @@ bool pb_render_init(pb_render_t *r, const pb_table_t *t, pb_pak_t *pak)
     size_t n = (size_t)PB_SW * PB_TH;
     r->fb = (uint16_t *)pb_calloc((size_t)PB_SW * PB_SH * 2);
     r->zfb = (uint16_t *)pb_malloc(n * 2);
-    r->cur = (uint16_t *)pb_malloc(n * 2);
-    r->zcur = (uint16_t *)pb_malloc(n * 2);
-    if (!r->fb || !r->zfb || !r->cur || !r->zcur) goto fail;
-    r->bytes += (uint32_t)(PB_SW * PB_SH * 2 + n * 6);
+    if (!r->fb || !r->zfb) goto fail;
+    r->bytes += (uint32_t)(PB_SW * PB_SH * 2 + n * 2);
 
     for (int y = 0; y < PB_SH; y++) {
         float z0 = pb_plane_depth(&t->cam, (float)y + 0.5f, 0) * 10.0f;
@@ -309,8 +307,6 @@ bool pb_render_init(pb_render_t *r, const pb_table_t *t, pb_pak_t *pak)
             for (int x = 0; x < PB_SW; x++) r->zbase[y * PB_SW + x] = r->zrow0[y + PB_TOP];
         }
     }
-    memcpy(r->cur, r->base, n * 2);
-    memcpy(r->zcur, r->zbase, n * 2);
     e = pb_pak_find(pak, "dmd");
     if (e && e->type == PK_RGB565 && e->w == PB_SW && e->h == PB_TOP) {
         r->dmd_bg = (uint16_t *)pb_pak_load(pak, e);
@@ -388,9 +384,7 @@ void pb_render_free(pb_render_t *r)
     pb_free(r->fb);
     pb_free(r->zfb);
     pb_free(r->base);
-    pb_free(r->cur);
     pb_free(r->zbase);
-    pb_free(r->zcur);
     pb_free(r->dmd_bg);
     for (int s = 0; s < 2; s++) {
         for (int f = 0; f < r->nflip[s]; f++) pb_free(r->flip[s][f].px);
@@ -413,19 +407,25 @@ void pb_render_full(pb_render_t *r)
     r->dmd_valid = false;
 }
 
-/* ---- the table's picture as its lamps and targets stand ----------------- */
+/* ---- the table's picture as its lamps and targets stand -----------------
+ *
+ * Into the frame and its depth, for a rectangle of the screen: the picture
+ * with every lamp off, the drop targets that are down, the light of the
+ * lamps that are on. Nothing keeps the result between frames: a copy of the
+ * whole table as it stands would be 3 MB more of PSRAM, and a rectangle is
+ * cheap to build again (few patches touch it). */
 
-static void recompose(pb_render_t *r, pb_rect_t a)
+static void compose_table(pb_render_t *r, const pb_rect_t *rc)
 {
-    /* a in table picture coordinates */
+    pb_rect_t a = { rc->x0, (int16_t)(rc->y0 - PB_TOP), rc->x1, (int16_t)(rc->y1 - PB_TOP) };
     pb_rect_t all = { 0, 0, PB_SW, PB_TH };
     rc_clip(&a, &all);
     if (rc_empty(&a)) return;
     const pb_table_t *t = r->t;
     for (int y = a.y0; y < a.y1; y++) {
         size_t o = (size_t)y * PB_SW + a.x0;
-        memcpy(r->cur + o, r->base + o, (size_t)(a.x1 - a.x0) * 2);
-        memcpy(r->zcur + o, r->zbase + o, (size_t)(a.x1 - a.x0) * 2);
+        memcpy(r->fb + (size_t)(y + PB_TOP) * PB_SW + a.x0, r->base + o, (size_t)(a.x1 - a.x0) * 2);
+        memcpy(r->zfb + o, r->zbase + o, (size_t)(a.x1 - a.x0) * 2);
     }
     for (int i = 0; i < t->nobj; i++) {
         const pb_patch_t *p = &r->drop[i];
@@ -437,8 +437,8 @@ static void recompose(pb_render_t *r, pb_rect_t a)
                 int k = (y - p->y) * p->w + (x - p->x);
                 if (!p->m[k]) continue;
                 size_t o = (size_t)y * PB_SW + x;
-                r->cur[o] = p->px[k];
-                r->zcur[o] = p->z[k];
+                r->fb[o + (size_t)PB_TOP * PB_SW] = p->px[k];
+                r->zfb[o] = p->z[k];
             }
         }
     }
@@ -449,7 +449,7 @@ static void recompose(pb_render_t *r, pb_rect_t a)
         rc_clip(&pr, &a);
         for (int y = pr.y0; y < pr.y1; y++) {
             const uint16_t *src = p->px + (y - p->y) * p->w + (pr.x0 - p->x);
-            uint16_t *dst = r->cur + (size_t)y * PB_SW + pr.x0;
+            uint16_t *dst = r->fb + (size_t)(y + PB_TOP) * PB_SW + pr.x0;
             for (int x = pr.x0; x < pr.x1; x++, src++, dst++) {
                 if (*src) *dst = add_sat(*dst, *src);
             }
@@ -459,10 +459,7 @@ static void recompose(pb_render_t *r, pb_rect_t a)
 
 static void patch_changed(pb_render_t *r, const pb_patch_t *p)
 {
-    pb_rect_t a = { p->x, p->y, (int16_t)(p->x + p->w), (int16_t)(p->y + p->h) };
-    recompose(r, a);
-    a.y0 += PB_TOP;
-    a.y1 += PB_TOP;
+    pb_rect_t a = { p->x, (int16_t)(p->y + PB_TOP), (int16_t)(p->x + p->w), (int16_t)(p->y + p->h + PB_TOP) };
     dirty(r, a);
 }
 
@@ -792,13 +789,7 @@ void pb_render_frame(pb_render_t *r, const pb_game_t *g, const pb_phys_t *ph, co
         const pb_rect_t *c = &r->dirty[k];
         if (c->y0 < PB_TOP) draw_dmd(r, c);
         if (c->y1 <= PB_TOP) continue;
-        int y0 = c->y0 < PB_TOP ? PB_TOP : c->y0;
-        size_t w = (size_t)(c->x1 - c->x0);
-        for (int y = y0; y < c->y1; y++) {
-            size_t o = (size_t)(y - PB_TOP) * PB_SW + c->x0;
-            memcpy(r->fb + (size_t)y * PB_SW + c->x0, r->cur + o, w * 2);
-            memcpy(r->zfb + o, r->zcur + o, w * 2);
-        }
+        compose_table(r, c);
         for (int i = 0; i < nb; i++) draw_shadow(r, &bv[i], c);
         for (int s = 0; s < 2; s++) {
             if (r->nflip[s]) draw_sprite(r, &r->flip[s][ff[s]], c, r->zrow_flip);

@@ -15,8 +15,10 @@
 void *pb_malloc(size_t n)
 {
 #if !defined(AOS_SIM) && !defined(AOS_SIM_BUILTIN)
-    void *p = heap_caps_malloc(n ? n : 1, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    return p ? p : malloc(n ? n : 1);
+    /* PSRAM or nothing: falling back to malloc() took the internal RAM the
+     * system's DMA lives on when a table did not fit (0.17.0, the board
+     * panicked) */
+    return heap_caps_malloc(n ? n : 1, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
 #else
     return malloc(n ? n : 1);
 #endif
@@ -138,7 +140,10 @@ void *pb_pak_load(pb_pak_t *p, const pb_entry_t *e)
 {
     if (!p->fp || !e) return NULL;
     uint8_t *raw = (uint8_t *)pb_malloc(e->rawlen + 1);
-    if (!raw) return NULL;
+    if (!raw) {
+        p->fails++;
+        return NULL;
+    }
     raw[e->rawlen] = 0;
     if (fseek(p->fp, (long)e->off, SEEK_SET) != 0) goto fail;
     if (e->clen == e->rawlen) {
@@ -152,5 +157,6 @@ void *pb_pak_load(pb_pak_t *p, const pb_entry_t *e)
     if (ok) return raw;
 fail:
     pb_free(raw);
+    p->fails++;
     return NULL;
 }

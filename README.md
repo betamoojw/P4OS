@@ -439,9 +439,14 @@ and their art comes in packs.
 |---|---|---|---|---|---|
 | <img src="docs/img/app-truco.png" width="125"> | <img src="docs/img/app-blackjack.jpg" width="125"> | <img src="docs/img/app-mines.png" width="125"> | <img src="docs/img/app-simon.png" width="125"> | <img src="docs/img/app-atasco.png" width="125"> | <img src="docs/img/app-claudito.png" width="125"> |
 
-There are also Flappy, Dice, Doom (doomgeneric, with OPL2 music) and Duke
-Nukem 3D (Chocolate Duke3D, with the Sound Blaster's FM music). Doom needs a
-WAD of your own and Duke a GRP (the shareware one works); neither is included.
+| Flappy | Dice | Doom | Duke Nukem 3D |
+|---|---|---|---|
+| <img src="docs/img/app-flappy.png" width="125"> | <img src="docs/img/app-dice.png" width="125"> | <img src="docs/img/land-doom.jpg" width="250"> | <img src="docs/img/land-duke3d.jpg" width="250"> |
+
+Doom is doomgeneric, with OPL2 music, and Duke Nukem 3D is Chocolate Duke3D,
+with the Sound Blaster's FM music; both on the board, from the shareware
+episodes. Doom needs a WAD of your own and Duke a GRP (the shareware one
+works); neither is included.
 
 | Maps | Radio | Video | 3D Viewer | Pixel Art | Tuner |
 |---|---|---|---|---|---|

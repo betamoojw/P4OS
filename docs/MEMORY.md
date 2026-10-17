@@ -88,6 +88,14 @@ the half millisecond. The vertical front porch went from the module's 24
 lines to 120 (a ~1.9 ms window, 51 Hz instead of 55): then none at 640x400
 nor at 640x480, a couple of minutes of play each.
 
+A pixel clock of 80 MHz instead of 60 (PLL_F240M divided by 3, preference
+`pnl_mhz`) makes room for 60 Hz with a wider window still: 100,200 lines a
+second, so 60 Hz with 376 lines of front porch leaves ~3.9 ms. Measured on
+2026-10-16: the panel looks right, and Duke at 640x400 with the panel at
+60 Hz for minutes, no late restart, no underrun, the game's frame rate
+unchanged. An app asks for a rate with `aos_hal_display_refresh_request()`
+(docs/APPS-P4.md).
+
 What stays, to see it next time (`aos_panel_p4.c`, `/api/sysmon` →
 `system.panel`): `underruns` (frames that ran dry, from the bridge's raw bit:
 IDF's own message only goes to the UART), `late` and `max_gap_ms` (each

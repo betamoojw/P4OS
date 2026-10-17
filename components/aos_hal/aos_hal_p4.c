@@ -661,7 +661,9 @@ static esp_err_t panel_init(void)
     int32_t mhz = 60;
     aos_hal_pref_get_i32("pnl_mhz", &mhz);
     if (mhz == 80) dpi.dpi_clock_freq_mhz = 80;
-    int32_t vfp = mhz == 80 ? 317 : 120;    /* 60 MHz: 24 gave ~0.5 ms, 120 gives ~1.9 ms at 51 Hz; 80 MHz: ~60 Hz, ~3.4 ms */
+    /* 60 MHz: 24 lines gave ~0.5 ms of blanking, 120 give ~1.9 ms at 51 Hz.
+     * 80 MHz: 100,200 lines a second (measured), 376 give 60 Hz and ~3.9 ms. */
+    int32_t vfp = mhz == 80 ? 376 : 120;
     aos_hal_pref_get_i32("pnl_vfp", &vfp);
     if (vfp >= 8 && vfp <= 1000) dpi.video_timing.vsync_front_porch = (uint32_t)vfp;
     int32_t nfbs = 3;

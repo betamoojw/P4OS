@@ -358,7 +358,8 @@ Asked by the emulator (`apps/emulador`, 2026-10-16), for anything like it:
   blanking wide enough for its restart (1.9 ms; docs/MEMORY.md, the blue
   flashes). With the default pixel clock (60 MHz) that is about 51 Hz at
   most; the 80 MHz one (`POST /api/panel/qos?mhz=80`, from the next boot)
-  makes room for 60 Hz. 0 asks for the system's, which comes back by itself
+  makes room for 60 Hz (measured with Duke Nukem 3D at 640x400 filling
+  core 0: no frame lost). 0 asks for the system's, which comes back by itself
   when the app leaves the front.
 
 ## Measuring on the board

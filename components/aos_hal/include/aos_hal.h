@@ -90,9 +90,9 @@ void aos_hal_display_set_rotation(int degrees);
  * 59.73 Hz, so that scrolling does not judder against the panel's own).
  * The rate is made with the vertical blanking, which must stay wide enough
  * for the refresh's restart (docs/MEMORY.md): what comes back is the rate
- * set, the closest to 'hz' that keeps it, which with the default pixel
- * clock is about 51 Hz at most. 0: the system's. The system takes its own
- * back when the app leaves the front. */
+ * set, the closest to 'hz' that keeps it: about 51 Hz at most with a 60 MHz
+ * pixel clock, 60 Hz and more with 80 MHz (preference pnl_mhz). 0: the
+ * system's. The system takes its own back when the app leaves the front. */
 int aos_hal_display_refresh_request(int hz);
 
 /* Code an app writes at run time (a recompiler, a JIT): after writing it

@@ -11,58 +11,58 @@ Juegos	Games
 #: apps/emulador/main/em_files.c:100
 Copiá acá los juegos de esta consola (también en subcarpetas).\nbios/ guarda los archivos de sistema que la consola pueda usar;\nsaves/ y states/ los escribe el emulador.	Copy this console's games here (subfolders work too).\nbios/ holds the system files the console may use;\nsaves/ and states/ are written by the emulator.
 
-#: apps/emulador/main/em_game.c:1140
-#: apps/emulador/main/em_game.c:1282
+#: apps/emulador/main/em_game.c:1136
+#: apps/emulador/main/em_game.c:1278
 Tocá para volver	Tap to go back
 
-#: apps/emulador/main/em_game.c:1275
-#: apps/emulador/main/em_game.c:1328
+#: apps/emulador/main/em_game.c:1271
+#: apps/emulador/main/em_game.c:1324
 #: apps/emulador/main/em_menu.c:210
 Cargando...	Loading...
 
-#: apps/emulador/main/em_lib.c:89
+#: apps/emulador/main/em_lib.c:90
 menos de 1 min	under 1 min
 
-#: apps/emulador/main/em_lib.c:215
+#: apps/emulador/main/em_lib.c:216
 Empezar desde el principio borra el estado automático. Las partidas guardadas por el juego y las ranuras quedan.	Starting from the beginning deletes the automatic state. The game's own saves and the slots stay.
 
-#: apps/emulador/main/em_lib.c:220
+#: apps/emulador/main/em_lib.c:221
 Seguir donde quedó	Continue where it was
 
-#: apps/emulador/main/em_lib.c:220
+#: apps/emulador/main/em_lib.c:221
 Desde el principio	From the beginning
 
-#: apps/emulador/main/em_lib.c:337
+#: apps/emulador/main/em_lib.c:347
 CONTINUAR	CONTINUE
 
-#: apps/emulador/main/em_lib.c:337
+#: apps/emulador/main/em_lib.c:347
 JUGAR DE NUEVO	PLAY AGAIN
 
-#: apps/emulador/main/em_lib.c:395
+#: apps/emulador/main/em_lib.c:405
 Todos	All
 
-#: apps/emulador/main/em_lib.c:405
+#: apps/emulador/main/em_lib.c:415
 Recientes	Recent
 
-#: apps/emulador/main/em_lib.c:405
+#: apps/emulador/main/em_lib.c:415
 A-Z	A-Z
 
-#: apps/emulador/main/em_lib.c:473
+#: apps/emulador/main/em_lib.c:483
 Todavía no hay juegos	No games yet
 
-#: apps/emulador/main/em_lib.c:481
+#: apps/emulador/main/em_lib.c:491
 Copiá los juegos a la tarjeta, una carpeta por consola:	Copy the games to the card, one folder per console:
 
-#: apps/emulador/main/em_lib.c:482
+#: apps/emulador/main/em_lib.c:492
 También se pueden subir desde el portal web de la placa, en la página Emulador. Los archivos de sistema (como la BIOS de la GBA) van en la carpeta bios de cada consola.	They can also be uploaded from the board's web portal, on the Emulador page. System files (such as the GBA BIOS) go in each console's bios folder.
 
-#: apps/emulador/main/em_lib.c:519
+#: apps/emulador/main/em_lib.c:529
 Emulador	Emulator
 
-#: apps/emulador/main/em_lib.c:550
+#: apps/emulador/main/em_lib.c:560
 %d juego	%d game
 
-#: apps/emulador/main/em_lib.c:550
+#: apps/emulador/main/em_lib.c:560
 %d juegos	%d games
 
 #: apps/emulador/main/em_menu.c:66
@@ -167,14 +167,14 @@ No se pudo guardar el estado	Could not save the state
 #: apps/emulador/main/em_menu.c:566
 No se pudo cargar el estado	Could not load the state
 
-#: apps/emulador/main/em_run.c:392
+#: apps/emulador/main/em_run.c:405
 #: apps/emulador/main/em_strings.c:30
 No se pudo cargar el juego	Could not load the game
 
-#: apps/emulador/main/em_run.c:576
+#: apps/emulador/main/em_run.c:589
 Falta memoria	Not enough memory
 
-#: apps/emulador/main/em_run.c:582
+#: apps/emulador/main/em_run.c:595
 Otra app está usando el procesador	Another app is using the processor
 
 #: apps/emulador/main/em_strings.c:14
@@ -400,12 +400,15 @@ Caché de sprites	Sprite cache
 No es un juego de Neo Geo conocido (el zip tiene que llamarse como en MAME)	Not a known Neo Geo game (the zip must be named as in MAME)
 
 #: apps/emulador/main/em_strings.c:53
+#: apps/emulador/main/em_zip.c:148
 No se pudo abrir el zip del juego	Could not open the game's zip
 
 #: apps/emulador/main/em_strings.c:53
 No se pudo leer el zip del juego	Could not read the game's zip
 
 #: apps/emulador/main/em_strings.c:54
+#: apps/emulador/main/em_zip.c:181
+#: apps/emulador/main/em_zip.c:198
 El zip del juego está dañado	The game's zip is damaged
 
 #: apps/emulador/main/em_strings.c:54
@@ -488,6 +491,13 @@ No es un juego de Atari Lynx	Not an Atari Lynx game
 
 #: apps/emulador/main/em_strings.c:68
 Tipo de cartucho no soportado	Cartridge type not supported
+
+#: apps/emulador/main/em_zip.c:154
+El zip no tiene un juego de esta consola	The zip has no game for this console
+
+#: apps/emulador/main/em_zip.c:189
+#: apps/emulador/main/em_zip.c:204
+No hay lugar en la tarjeta para descomprimir el juego	There is no room on the card to unzip the game
 
 #: apps/emulador/main/emu_cores.c:378
 No está el módulo de esta consola	This console's module is missing

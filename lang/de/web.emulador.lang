@@ -27,7 +27,7 @@ menos de 1 min	unter 1 Min.
 %d h %d min	%d Std. %d Min.
 
 #: apps/emulador/web/emulador.js:152
-#: apps/emulador/web/emulador.js:299
+#: apps/emulador/web/emulador.js:307
 Emulador	Emulator
 
 #: apps/emulador/web/emulador.js:153
@@ -67,7 +67,7 @@ Los archivos de sistema que pida la consola (el emulador avisa cuáles).	Die Sys
 ¿Borrar %s?	%s löschen?
 
 #: apps/emulador/web/emulador.js:241
-#: apps/emulador/web/emulador.js:281
+#: apps/emulador/web/emulador.js:289
 Borrar	Löschen
 
 #: apps/emulador/web/emulador.js:242
@@ -85,17 +85,23 @@ Partida guardada subida	Speicherstand hochgeladen
 #: apps/emulador/web/emulador.js:268
 Bajar partida	Speicherstand laden
 
-#: apps/emulador/web/emulador.js:269
-Subir partida	Speicherstand hochladen
+#: apps/emulador/web/emulador.js:274
+Abriendo %s en la placa	%s wird auf der Platine geöffnet
 
-#: apps/emulador/web/emulador.js:271
-¿Borrar los %d estados de %s?	Die %d Spielstände von %s löschen?
+#: apps/emulador/web/emulador.js:276
+Jugar en la placa	Auf der Platine spielen
 
 #: apps/emulador/web/emulador.js:277
-Borrar estados	Spielstände löschen
+Subir partida	Speicherstand hochladen
 
 #: apps/emulador/web/emulador.js:279
-¿Borrar %s de la tarjeta? Las partidas guardadas quedan.	%s von der Karte löschen? Die Speicherstände bleiben.
+¿Borrar los %d estados de %s?	Die %d Spielstände von %s löschen?
 
 #: apps/emulador/web/emulador.js:285
+Borrar estados	Spielstände löschen
+
+#: apps/emulador/web/emulador.js:287
+¿Borrar %s de la tarjeta? Las partidas guardadas quedan.	%s von der Karte löschen? Die Speicherstände bleiben.
+
+#: apps/emulador/web/emulador.js:293
 Todavía no hay juegos de %s.	Noch keine %s-Spiele.

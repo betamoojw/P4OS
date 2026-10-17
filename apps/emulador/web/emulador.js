@@ -266,6 +266,14 @@ function render(main) {
           h('div', { class: 's' }, info),
           h('div', { class: 'btns row' },
             sav ? h('a', { class: 'btn', href: fsUrl(ROOT + '/' + id + '/saves/' + base + '.sav', true) }, tr('Bajar partida')) : null,
+            h('button', { class: 'btn pri', onclick: async () => {
+              /* the app opens it from its library (em_lib.c, abrir.txt) */
+              try {
+                await fsPut(ROOT + '/abrir.txt', id + '/' + g.rel + '\n');
+                await openApp('demo.emulador');
+                toast(tr('Abriendo %s en la placa', g.title));
+              } catch (e) { toast(e.message, true); }
+            } }, tr('Jugar en la placa')),
             h('button', { class: 'btn', onclick: () => savInput.click() }, tr('Subir partida')), savInput,
             slots.length ? h('button', { class: 'btn', onclick: async () => {
               if (!confirm(tr('¿Borrar los %d estados de %s?', slots.length, g.title))) return;

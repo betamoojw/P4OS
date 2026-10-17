@@ -385,6 +385,19 @@ static void worker(void *arg)
     emu_console_dir(R.core, dir, sizeof dir);
     snprintf(bios, sizeof bios, "%.300s/bios", dir);
 
+    /* a zipped game, for a console whose core does not read zips itself */
+    char unz[EMU_PATH_MAX];
+    if (emu_is_zip(rom) && !emu_ext_match(R.core, rom)) {
+        char zerr[160] = "";
+        if (!emu_unzip_rom(&R.game, rom, unz, sizeof unz, zerr, sizeof zerr)) {
+            snprintf(R.err, sizeof R.err, "%s", zerr);
+            aos_hal_log(EMU_TAG, "unzip failed: %s (%s)", zerr, rom);
+            R.state = EMU_RUN_ERROR;
+            return;
+        }
+        snprintf(rom, sizeof rom, "%s", unz);
+    }
+
     emu_load_t req = { .rom = rom, .bios_dir = bios, .save = save };
     uint64_t t0 = aos_hal_uptime_us();
     char err[160] = "";

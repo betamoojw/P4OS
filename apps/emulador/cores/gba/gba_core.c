@@ -446,6 +446,7 @@ static bool gba_load(const emu_host_t *host, const emu_load_t *req, char *err, s
     retro_set_audio_sample_batch(gba_audio_cb);
     retro_set_input_poll(gba_input_poll_cb);
     retro_set_input_state(gba_input_state_cb);
+    host->log("gba: init (JIT %s)", gba_host && gba_host->exec_alloc ? "on" : "off");
     retro_init();
 
     if (!gamepak_buffer_count || !gba_screen_pixels) {

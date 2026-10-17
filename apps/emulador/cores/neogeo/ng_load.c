@@ -42,6 +42,9 @@
 #include "ym2610/ym2610.h"
 
 #include "ng_core.h"
+
+/* the firmware's (aos_hal.h), for the log when the PSRAM runs out */
+void aos_hal_heap_info(uint32_t *free_internal, uint32_t *free_psram);
 #include "ng_drivers.h"
 #include "ng_zip.h"
 
@@ -985,10 +988,27 @@ static bool load_inner(ld_t *L, const emu_load_t *req)
         }
         s_spr_scratch_seen = 512;
         s_spr_scratch = ng_big_alloc((512 + (total_banks + 31) / 32) * sizeof(Uint32));
-        if (!s_spr_scratch || init_sprite_cache((Uint32)want, SPR_BANK) != GN_TRUE) {
+        if (!s_spr_scratch) {
             set_err(L, "No hay memoria");
             return false;
         }
+        /* P4OS: the budget is not the heap. What is left of the board's
+         * PSRAM may be in pieces smaller than the cache wanted (seen with
+         * Metal Slug: the 12 MB block refused right after the conversion),
+         * so a smaller cache is tried, 2 MB at a time, down to 1 MB. */
+        size_t first = want;
+        while (init_sprite_cache((Uint32)want, SPR_BANK) != GN_TRUE) {
+            if (want <= 1 * MB) {
+                uint32_t fi = 0, fp = 0;
+                aos_hal_heap_info(&fi, &fp);
+                ng_log("no sprite cache even at 1 MB: %u KB of PSRAM free", (unsigned)(fp / 1024));
+                set_err(L, "No hay memoria");
+                return false;
+            }
+            want = want > 3 * MB ? want - 2 * MB : 1 * MB;
+            want &= ~(size_t)(SPR_BANK - 1);
+        }
+        if (want != first) ng_log("sprite cache %u MB (%u MB did not fit)", (unsigned)(want / MB), (unsigned)(first / MB));
         L->info->spr_cache_kb = (uint32_t)(want / 1024);
     }
 

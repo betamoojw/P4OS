@@ -118,7 +118,7 @@ bool emu_file_exists(const char *path, uint32_t *mtime)
  * Games
  * ------------------------------------------------------------------------ */
 
-static bool ext_match(const emu_core_t *core, const char *name)
+bool emu_ext_match(const emu_core_t *core, const char *name)
 {
     const char *dot = strrchr(name, '.');
     if (!dot || dot == name) return false;
@@ -222,7 +222,8 @@ static bool scan_cb(const aos_dir_entry_t *e, void *vctx)
         if (c->ndirs < 8) snprintf(c->dirs[c->ndirs++], EMU_NAME_MAX, "%s", e->name);
         return true;
     }
-    if (!ext_match(c->core, e->name)) return true;
+    /* the console's own files, and zips (em_zip.c inflates them) */
+    if (!emu_ext_match(c->core, e->name) && !emu_is_zip(e->name)) return true;
     /* system files that share the games' extension: the Neo Geo's BIOS sets */
     if (!strcasecmp(e->name, "neogeo.zip") || !strcasecmp(e->name, "aes.zip")) return true;
     char rel[EMU_PATH_MAX];

@@ -20,13 +20,19 @@
 #
 #   Zcb needs C and Zbb for some of its forms; the C switch is only for the
 #   recompiler (the compiler always has C, the firmware does too).
-set(EMU_GBA_ZBA       1)
-set(EMU_GBA_ZBB       1)
-set(EMU_GBA_ZBS       1)
-set(EMU_GBA_ZCB       1)
+#
+# P4OS, 2026-10-17: off until probed on the board. With them on, a GBA game
+# crashed the board at load: the first thing load() does is a PIE
+# instruction on the worker, whose stack is in PSRAM, and the panic came
+# from right there (core dump in the module, before retro_init()). C stays:
+# the firmware itself is built with it.
+set(EMU_GBA_ZBA       0)
+set(EMU_GBA_ZBB       0)
+set(EMU_GBA_ZBS       0)
+set(EMU_GBA_ZCB       0)
 set(EMU_GBA_RVC       1)
-set(EMU_GBA_XESPLOOP  1)
-set(EMU_GBA_AFFINE_PIE 1)
+set(EMU_GBA_XESPLOOP  0)
+set(EMU_GBA_AFFINE_PIE 0)
 
 # The recompiler's caches (KiB of executable PSRAM; chunks are allocated as
 # they fill, so a small game takes one chunk of each). Upstream's defaults.
@@ -100,7 +106,7 @@ if(EMU_GBA_AFFINE_PIE)
     list(APPEND _gba_vendored ${_gba_gp}/riscv/rv32_affine_pie.S)
 endif()
 
-emu_core_board_lib(gba ${_gba_dir}/gba_core.c ${_gba_vendored})
+emu_core_board_lib(gba ${_gba_dir}/gba_core.c ${_gba_dir}/gba_libgcc.c ${_gba_vendored})
 
 set(_gba_isa rv32imafc_zicsr_zifencei)
 foreach(_e ZBA ZBB ZBS ZCB XESPLOOP)

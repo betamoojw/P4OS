@@ -20,7 +20,11 @@ needs no firmware of its own.
 ```
 
 The app makes the folders (with a `LEEME.txt` in each) the first time it
-opens. Games go in by copying them to the card, over USB disk mode, or from
+opens. Games may come zipped: a `.zip` in a console's folder is that
+console's, and the file inside is inflated once into the folder's hidden
+`.cache/` (`main/em_zip.c`). A game asked for in `emulador/abrir.txt`
+("<console>/<path>") opens from the library: the portal's "Jugar en la
+placa" uses it. Games go in by copying them to the card, over USB disk mode, or from
 the **Emulador page of the portal** (`web/emulador.js`): drop the files on
 it. The page also shows each game with the picture it was left on, takes and
 gives battery saves (to bring a game from another emulator) and the BIOS
@@ -150,5 +154,7 @@ Each core is its own module and carries its own licence; the app
 | `a7800.so` | ProSystem | GPL-2.0-or-later |
 | `lynx.so` | Handy | Handy's licence (permissive) |
 
-Every change to a vendored core is listed in `cores/<dir>/README.md`. No
+The app itself carries miniz's inflate (`third/tinfl.c`, MIT, the VNC
+viewer's copy) for zipped games. Every change to a vendored core is listed
+in `cores/<dir>/README.md`. No
 game or official BIOS comes with any of them.

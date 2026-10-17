@@ -27,7 +27,7 @@ menos de 1 min	under 1 min
 %d h %d min	%d h %d min
 
 #: apps/emulador/web/emulador.js:152
-#: apps/emulador/web/emulador.js:299
+#: apps/emulador/web/emulador.js:307
 Emulador	Emulator
 
 #: apps/emulador/web/emulador.js:153
@@ -67,7 +67,7 @@ Los archivos de sistema que pida la consola (el emulador avisa cuáles).	The sys
 ¿Borrar %s?	Delete %s?
 
 #: apps/emulador/web/emulador.js:241
-#: apps/emulador/web/emulador.js:281
+#: apps/emulador/web/emulador.js:289
 Borrar	Delete
 
 #: apps/emulador/web/emulador.js:242
@@ -85,17 +85,23 @@ Partida guardada subida	Save uploaded
 #: apps/emulador/web/emulador.js:268
 Bajar partida	Download save
 
-#: apps/emulador/web/emulador.js:269
-Subir partida	Upload save
+#: apps/emulador/web/emulador.js:274
+Abriendo %s en la placa	Opening %s on the board
 
-#: apps/emulador/web/emulador.js:271
-¿Borrar los %d estados de %s?	Delete the %d states of %s?
+#: apps/emulador/web/emulador.js:276
+Jugar en la placa	Play on the board
 
 #: apps/emulador/web/emulador.js:277
-Borrar estados	Delete states
+Subir partida	Upload save
 
 #: apps/emulador/web/emulador.js:279
-¿Borrar %s de la tarjeta? Las partidas guardadas quedan.	Delete %s from the card? Its saves stay.
+¿Borrar los %d estados de %s?	Delete the %d states of %s?
 
 #: apps/emulador/web/emulador.js:285
+Borrar estados	Delete states
+
+#: apps/emulador/web/emulador.js:287
+¿Borrar %s de la tarjeta? Las partidas guardadas quedan.	Delete %s from the card? Its saves stay.
+
+#: apps/emulador/web/emulador.js:293
 Todavía no hay juegos de %s.	No %s games yet.

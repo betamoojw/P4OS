@@ -60,6 +60,7 @@ typedef struct emu_lib {
     aos_pad_t       pad;
 
     bool            dirty;          /* rebuild on the next tick */
+    uint32_t        req_ms;         /* abrir.txt last looked for */
     bool            play_req;       /* open this game on the next tick: never from */
     bool            play_fresh;     /* inside the event of an object the library */
     emu_game_t      play_game;      /* is about to delete */
@@ -623,10 +624,40 @@ void emu_lib_destroy(emu_app_t *a)
     a->L = NULL;
 }
 
+/* A game asked for from outside (the portal's "Jugar en la placa", a
+ * test): emulador/abrir.txt holds its key, "<console>/<path>". Looked for
+ * about once a second while the library is up; taken and deleted. */
+static bool open_request(emu_app_t *a, lib_t *l)
+{
+    uint32_t now = (uint32_t)aos_hal_uptime_ms();
+    if (now - l->req_ms < 1000) return false;
+    l->req_ms = now;
+    char path[EMU_PATH_MAX], key[EMU_PATH_MAX] = "";
+    snprintf(path, sizeof path, "%s/abrir.txt", emu_root());
+    FILE *f = fopen(path, "r");
+    if (!f) return false;
+    if (!fgets(key, sizeof key, f)) key[0] = 0;
+    fclose(f);
+    remove(path);
+    key[strcspn(key, "\r\n")] = 0;
+    for (int i = 0; i < l->games.n; i++) {
+        char k[EMU_PATH_MAX];
+        emu_game_key(&l->games.v[i], k, sizeof k);
+        if (!strcmp(k, key)) {
+            aos_hal_log(EMU_TAG, "asked to open %s", key);
+            play(a, &l->games.v[i], false);
+            return true;
+        }
+    }
+    aos_hal_log(EMU_TAG, "asked to open %s, which is not in the library", key);
+    return false;
+}
+
 void emu_lib_tick(emu_app_t *a)
 {
     lib_t *l = a->L;
     if (!l || !l->scr) return;
+    open_request(a, l);
     if (l->play_req) {
         l->play_req = false;
         emu_game_t g = l->play_game;

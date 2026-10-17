@@ -79,6 +79,14 @@ int  emu_games_scan(const emu_core_t *core, emu_games_t *out);
 void emu_games_sort(emu_games_t *g, bool by_recent);
 void emu_games_free(emu_games_t *g);
 
+/* Whether a file name has one of the console's extensions. */
+bool emu_ext_match(const emu_core_t *core, const char *name);
+
+/* Zipped games (em_zip.c): the console's file inside is inflated once into
+ * <console>/.cache/ and 'out' gets its path. */
+bool emu_is_zip(const char *path);
+bool emu_unzip_rom(const emu_game_t *g, const char *zip, char *out, size_t n, char *err, size_t errlen);
+
 /* A game's files. 'slot' 0 is the automatic state. */
 void emu_game_rom(const emu_game_t *g, char *out, size_t n);
 void emu_game_save(const emu_game_t *g, char *out, size_t n);

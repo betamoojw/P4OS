@@ -223,6 +223,8 @@ static bool scan_cb(const aos_dir_entry_t *e, void *vctx)
         return true;
     }
     if (!ext_match(c->core, e->name)) return true;
+    /* system files that share the games' extension: the Neo Geo's BIOS sets */
+    if (!strcasecmp(e->name, "neogeo.zip") || !strcasecmp(e->name, "aes.zip")) return true;
     char rel[EMU_PATH_MAX];
     if (c->sub[0]) {
         size_t a = strlen(c->sub), b = strlen(e->name);

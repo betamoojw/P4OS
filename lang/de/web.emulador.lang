@@ -14,85 +14,88 @@ Opcional: gba_bios.bin (la BIOS original mejora la compatibilidad; sin ella se u
 #: apps/emulador/web/emulador.js:26
 Necesaria: coleco.rom (o colecovision.rom), 8 KB.	Erforderlich: coleco.rom (oder colecovision.rom), 8 KB.
 
-#: apps/emulador/web/emulador.js:84
-menos de 1 min	unter 1 Min.
+#: apps/emulador/web/emulador.js:27
+Necesaria: neogeo.zip de MAME (sp-s2.sp1, sfix.sfix...). Los juegos van como zip de MAME, con su nombre corto.	Erforderlich: neogeo.zip von MAME (sp-s2.sp1, sfix.sfix...). Spiele als MAME-Zips mit ihrem Kurznamen.
 
 #: apps/emulador/web/emulador.js:85
-%d min	%d Min.
+menos de 1 min	unter 1 Min.
 
 #: apps/emulador/web/emulador.js:86
+%d min	%d Min.
+
+#: apps/emulador/web/emulador.js:87
 %d h %d min	%d Std. %d Min.
 
-#: apps/emulador/web/emulador.js:151
-#: apps/emulador/web/emulador.js:298
+#: apps/emulador/web/emulador.js:152
+#: apps/emulador/web/emulador.js:299
 Emulador	Emulator
 
-#: apps/emulador/web/emulador.js:152
+#: apps/emulador/web/emulador.js:153
 Abrir en la placa	Auf der Platine öffnen
 
-#: apps/emulador/web/emulador.js:153
+#: apps/emulador/web/emulador.js:154
 Los juegos van en la tarjeta, una carpeta por consola (%s). También pueden ir en subcarpetas.	Die Spiele liegen auf der Karte, ein Ordner pro Konsole (%s). Unterordner gehen auch.
 
-#: apps/emulador/web/emulador.js:180
+#: apps/emulador/web/emulador.js:181
 %s no es un juego de %s (%s)	%s ist kein %s-Spiel (%s)
 
-#: apps/emulador/web/emulador.js:192
+#: apps/emulador/web/emulador.js:193
 %d archivos subidos	%d Dateien hochgeladen
 
-#: apps/emulador/web/emulador.js:208
+#: apps/emulador/web/emulador.js:209
 Leyendo la tarjeta...	Karte wird gelesen...
 
-#: apps/emulador/web/emulador.js:223
+#: apps/emulador/web/emulador.js:224
 Buscar	Suchen
 
-#: apps/emulador/web/emulador.js:228
+#: apps/emulador/web/emulador.js:229
 <b>Soltá acá juegos de %s</b> o tocá para elegirlos<br><span class="small">%s</span>	<b>%s-Spiele hier ablegen</b> oder klicken, um sie auszuwählen<br><span class="small">%s</span>
 
-#: apps/emulador/web/emulador.js:232
+#: apps/emulador/web/emulador.js:233
 1 juego	1 Spiel
 
-#: apps/emulador/web/emulador.js:232
+#: apps/emulador/web/emulador.js:233
 %d juegos	%d Spiele
 
-#: apps/emulador/web/emulador.js:234
+#: apps/emulador/web/emulador.js:235
 BIOS y archivos de sistema	BIOS und Systemdateien
 
-#: apps/emulador/web/emulador.js:236
+#: apps/emulador/web/emulador.js:237
 Los archivos de sistema que pida la consola (el emulador avisa cuáles).	Die Systemdateien, die die Konsole verlangt (der Emulator sagt, welche).
 
-#: apps/emulador/web/emulador.js:239
+#: apps/emulador/web/emulador.js:240
 ¿Borrar %s?	%s löschen?
 
-#: apps/emulador/web/emulador.js:240
-#: apps/emulador/web/emulador.js:280
+#: apps/emulador/web/emulador.js:241
+#: apps/emulador/web/emulador.js:281
 Borrar	Löschen
 
-#: apps/emulador/web/emulador.js:241
+#: apps/emulador/web/emulador.js:242
 Soltá acá los archivos de sistema	Systemdateien hier ablegen
 
-#: apps/emulador/web/emulador.js:253
+#: apps/emulador/web/emulador.js:254
 jugado %s	gespielt %s
 
-#: apps/emulador/web/emulador.js:254
+#: apps/emulador/web/emulador.js:255
 %d estados	%d Spielstände
 
-#: apps/emulador/web/emulador.js:258
+#: apps/emulador/web/emulador.js:259
 Partida guardada subida	Speicherstand hochgeladen
 
-#: apps/emulador/web/emulador.js:267
+#: apps/emulador/web/emulador.js:268
 Bajar partida	Speicherstand laden
 
-#: apps/emulador/web/emulador.js:268
+#: apps/emulador/web/emulador.js:269
 Subir partida	Speicherstand hochladen
 
-#: apps/emulador/web/emulador.js:270
+#: apps/emulador/web/emulador.js:271
 ¿Borrar los %d estados de %s?	Die %d Spielstände von %s löschen?
 
-#: apps/emulador/web/emulador.js:276
+#: apps/emulador/web/emulador.js:277
 Borrar estados	Spielstände löschen
 
-#: apps/emulador/web/emulador.js:278
+#: apps/emulador/web/emulador.js:279
 ¿Borrar %s de la tarjeta? Las partidas guardadas quedan.	%s von der Karte löschen? Die Speicherstände bleiben.
 
-#: apps/emulador/web/emulador.js:284
+#: apps/emulador/web/emulador.js:285
 Todavía no hay juegos de %s.	Noch keine %s-Spiele.

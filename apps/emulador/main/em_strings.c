@@ -45,4 +45,18 @@ __attribute__((unused)) static const char *const CORE_TEXTS[] = {
     /* Mega Drive (cores/md/md_core.c) */
     N_("Mando"), N_("3 botones"), N_("6 botones"), N_("América"), N_("Completo"), N_("Rápido"),
     N_("Sin FM"), N_("No es un juego de Mega Drive"), N_("Los juegos de 32X no se pueden jugar"),
+    /* Neo Geo (cores/neogeo/ng_core.c) */
+    N_("Sistema"), N_("MVS (arcade)"), N_("AES (consola)"), N_("EE. UU."), N_("Asia"),
+    N_("Calidad de sonido"), N_("Alta (44 kHz)"), N_("Media (22 kHz)"), N_("Baja (11 kHz)"),
+    N_("Caché de sprites"),
+    N_("No es un juego de Neo Geo conocido (el zip tiene que llamarse como en MAME)"),
+    N_("No se pudo abrir el zip del juego"), N_("No se pudo leer el zip del juego"),
+    N_("El zip del juego está dañado"), N_("Falta un archivo del juego en el zip"),
+    N_("Falta el zip del juego original (este es una variante)"),
+    N_("Falta la BIOS de Neo Geo: neogeo.zip de MAME (sp-s2.sp1, sfix.sfix) en la carpeta bios"),
+    N_("Falta sfix.sfix (la BIOS de Neo Geo está incompleta)"),
+    N_("Este juego tiene los gráficos cifrados: hace falta su caché hecha en una computadora"),
+    N_("No hay lugar en la tarjeta para la caché del juego"),
+    N_("No se pudo escribir la caché del juego en la tarjeta"),
+    N_("No se pudo leer la caché del juego"),
 };

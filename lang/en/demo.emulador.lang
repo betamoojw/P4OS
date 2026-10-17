@@ -366,6 +366,72 @@ No es un juego de Mega Drive	Not a Mega Drive game
 #: apps/emulador/main/em_strings.c:47
 Los juegos de 32X no se pueden jugar	32X games cannot be played
 
+#: apps/emulador/main/em_strings.c:49
+Sistema	System
+
+#: apps/emulador/main/em_strings.c:49
+MVS (arcade)	MVS (arcade)
+
+#: apps/emulador/main/em_strings.c:49
+AES (consola)	AES (console)
+
+#: apps/emulador/main/em_strings.c:49
+EE. UU.	USA
+
+#: apps/emulador/main/em_strings.c:49
+Asia	Asia
+
+#: apps/emulador/main/em_strings.c:50
+Calidad de sonido	Sound quality
+
+#: apps/emulador/main/em_strings.c:50
+Alta (44 kHz)	High (44 kHz)
+
+#: apps/emulador/main/em_strings.c:50
+Media (22 kHz)	Medium (22 kHz)
+
+#: apps/emulador/main/em_strings.c:50
+Baja (11 kHz)	Low (11 kHz)
+
+#: apps/emulador/main/em_strings.c:51
+Caché de sprites	Sprite cache
+
+#: apps/emulador/main/em_strings.c:52
+No es un juego de Neo Geo conocido (el zip tiene que llamarse como en MAME)	Not a known Neo Geo game (the zip must be named as in MAME)
+
+#: apps/emulador/main/em_strings.c:53
+No se pudo abrir el zip del juego	Could not open the game's zip
+
+#: apps/emulador/main/em_strings.c:53
+No se pudo leer el zip del juego	Could not read the game's zip
+
+#: apps/emulador/main/em_strings.c:54
+El zip del juego está dañado	The game's zip is damaged
+
+#: apps/emulador/main/em_strings.c:54
+Falta un archivo del juego en el zip	A file of the game is missing from the zip
+
+#: apps/emulador/main/em_strings.c:55
+Falta el zip del juego original (este es una variante)	The original game's zip is missing (this is a variant)
+
+#: apps/emulador/main/em_strings.c:56
+Falta la BIOS de Neo Geo: neogeo.zip de MAME (sp-s2.sp1, sfix.sfix) en la carpeta bios	The Neo Geo BIOS is missing: MAME's neogeo.zip (sp-s2.sp1, sfix.sfix) in the bios folder
+
+#: apps/emulador/main/em_strings.c:57
+Falta sfix.sfix (la BIOS de Neo Geo está incompleta)	sfix.sfix is missing (the Neo Geo BIOS is incomplete)
+
+#: apps/emulador/main/em_strings.c:58
+Este juego tiene los gráficos cifrados: hace falta su caché hecha en una computadora	This game's graphics are encrypted: it needs its cache made on a computer
+
+#: apps/emulador/main/em_strings.c:59
+No hay lugar en la tarjeta para la caché del juego	There is no room on the card for the game's cache
+
+#: apps/emulador/main/em_strings.c:60
+No se pudo escribir la caché del juego en la tarjeta	Could not write the game's cache to the card
+
+#: apps/emulador/main/em_strings.c:61
+No se pudo leer la caché del juego	Could not read the game's cache
+
 #: apps/emulador/main/emu_cores.c:378
 No está el módulo de esta consola	This console's module is missing
 

@@ -297,10 +297,11 @@ static void face_place(game_t *g, int cx, int cy, int w, int h, bool band)
     }
     case EMU_FACE_ARC4: {
         static const int K[4] = { PK_A, PK_B, PK_C, PK_D };
-        if (band) {
-            /* two rows of two: C D over A B */
+        if (band || w < 4 * 96 + 5 * gap) {
+            /* two rows of two, C D over A B, where four in a row would
+             * come out small (a thumb's band, the upright pad) */
             d = (w - gap * 3) / 2;
-            if (d > 100) d = 100;
+            if (d > (band ? 100 : 112)) d = band ? 100 : 112;
             int o = d / 2 + gap / 2;
             face_at(g, PK_A, cx - o, cy + o, d);
             face_at(g, PK_B, cx + o, cy + o - d / 5, d);

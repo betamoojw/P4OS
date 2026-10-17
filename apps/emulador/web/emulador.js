@@ -24,6 +24,7 @@ const BIOS_NOTES = {
   nes: tr('Opcional: disksys.rom para el Famicom Disk System.'),
   gba: tr('Opcional: gba_bios.bin (la BIOS original mejora la compatibilidad; sin ella se usa una libre que trae el emulador).'),
   col: tr('Necesaria: coleco.rom (o colecovision.rom), 8 KB.'),
+  neogeo: tr('Necesaria: neogeo.zip de MAME (sp-s2.sp1, sfix.sfix...). Los juegos van como zip de MAME, con su nombre corto.'),
 };
 let CONSOLES = [
   { id: 'nes', name: 'NES', exts: ['.nes', '.fds', '.nsf'] },

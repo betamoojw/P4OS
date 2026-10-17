@@ -1,6 +1,7 @@
-"""El Templo de la Jungla: the lost temple. The temple's mouth swallows the
-ball on the left, the idols' drop targets stand in the middle, the river
-ramp winds down the right."""
+"""El Templo de la Jungla: the lost temple. A rope bridge crosses the gorge
+from the right to the left orbit, the boulder rolls under it, the idols'
+drop targets stand in the middle and the temple's mouth swallows the ball
+on the right."""
 from pbtable import Table, Camera, H
 
 LEAF = 0x6CE040
@@ -11,9 +12,9 @@ GOLD = 0xFFD050
 
 def build():
     t = Table('jungla', dict(es='El Templo de la Jungla', en='Jungle Temple', de='Dschungeltempel'), order=30,
-              desc=dict(es='Cruzá el río, despertá a los ídolos y encontrá el tesoro del templo.',
-                        en='Cross the river, wake the idols and find the temple treasure.',
-                        de='Überquere den Fluss, wecke die Götzen und finde den Tempelschatz.'))
+              desc=dict(es='Cruzá el puente colgante, despertá a los ídolos y encontrá el tesoro del templo.',
+                        en='Cross the rope bridge, wake the idols and find the temple treasure.',
+                        de='Überquere die Hängebrücke, wecke die Götzen und finde den Tempelschatz.'))
     t.theme.update(dmd=0xFFB030, bg=0x0C1A0A, accent=ORANGE, panel=0x1C2E14, text=0xF4F0D8,
                    flipper=0xF4ECD8, flipper_rubber=0x1E7A2A, cabinet=0x2A1C10, wood=0x4A3018, rail=0xC8B890,
                    plastic=LEAF, field=(0x2A6A26, 0x0E2A12), gi=ORANGE, ambient=0x1E3020, apron=0x3A2A18,
@@ -22,21 +23,23 @@ def build():
     t.standard_lower(sling_color=LEAF)
     t.top_lanes(colors=[ORANGE, TEAL, ORANGE])
 
-    # the bumpers: three stone heads, up on the left
-    t.bumper('bumper1', 160, 262, cap=ORANGE, body=0x5A5040)
-    t.bumper('bumper2', 246, 250, cap=TEAL, body=0x5A5040)
-    t.bumper('bumper3', 200, 334, cap=ORANGE, body=0x5A5040)
+    # the bumpers: three stone heads, up in the middle
+    t.bumper('bumper1', 170, 236, cap=ORANGE, body=0x5A5040)
+    t.bumper('bumper2', 246, 226, cap=TEAL, body=0x5A5040)
+    t.bumper('bumper3', 208, 296, cap=ORANGE, body=0x5A5040)
 
-    # the river ramp, right: up the middle-right and round, down to the right inlane
+    # THE ROPE BRIDGE: up a plank stair on the right, across the gorge on
+    # ropes hung between two towers, and down into the left orbit, whose way
+    # out feeds the upper flipper
     t.wall([(296, 520), (300, 472)], h=30, style='plastic', thick=5)
     t.wall([(350, 520), (346, 472)], h=30, style='plastic', thick=5)
     t.post(296, 522, r=5, name='rampLpost')
     t.post(350, 522, r=5, name='rampRpost')
     t.ramp('ramp1', (300, 472), (346, 472),
-           [(323, 472, 0), (322, 432, 14), (316, 392, 30), (318, 344, 46), (334, 300, 58), (364, 266, 66),
-            (400, 250, 70), (436, 262, 68), (454, 300, 62), (459, 370, 54), (458, 450, 46), (452, 530, 35),
-            (441, 605, 23), (431, 672, 11), (425, 712, 3), (425, 730, 0)],
-           color=TEAL, style='plastic')
+           [(323, 472, 0), (322, 444, 16), (318, 418, 34), (308, 398, 50), (296, 390, 56), (260, 380, 56),
+            (220, 368, 56), (180, 357, 56.5), (140, 345, 57), (104, 335, 57.5), (84, 330, 58), (62, 330, 55),
+            (42, 338, 48), (29, 356, 40), (24, 384, 30), (23, 420, 16), (23, 452, 5), (23, 472, 0)],
+           width=42, color=0x8A5A2A, style='bridge', towers=(4, 10))
     t.lamp('ramp1', 323, 545, 'arrow', 22, TEAL, 0)
 
     # the idols: three drop targets in the middle, facing the flippers
@@ -55,19 +58,22 @@ def build():
     t.lamp('target2', 410, 381, 'circle', 12, LEAF)
 
     # THE BOULDER (Indiana Jones): it rolls to and fro across the temple's
-    # courtyard; three hits stop it and open the Path of Adventure
-    t.toy('boulder', 'mover', 182, 428, 22, model='boulder', x1=262, y1=428, period=6.0, s=1.05)
-    t.lamp('toy', 222, 470, 'arrow', 18, ORANGE, 0)
+    # courtyard, under the bridge; three hits stop it and open the Path of
+    # Adventure
+    t.toy('boulder', 'mover', 182, 438, 22, model='boulder', x1=262, y1=438, period=6.0, s=1.05)
+    t.lamp('toy', 222, 480, 'arrow', 18, ORANGE, 0)
 
-    # the temple's mouth, left: up a vine-covered wire to the top lanes
-    t.habitrail('temple_wire', [(112, 440, 0), (108, 410, 20), (100, 360, 45), (96, 300, 62), (104, 232, 70),
-                                (126, 172, 64), (165, 126, 48), (205, 98, 28), (232, 88, 10), (240, 86, 2)])
-    t.saucer('saucer', 112, 440, eject_deg=55, eject_speed=2700, vuk='temple_wire')
-    t.lamp('video', 140, 470, 'star', 18, TEAL)
+    # the temple's mouth, right: up a vine-covered wire to the top lanes
+    # (it lets the ball down slowly into the right lane, not against a guide)
+    t.habitrail('temple_wire', [(380, 436, 0), (386, 410, 18), (396, 364, 42), (402, 306, 60), (400, 244, 68),
+                                (386, 184, 64), (364, 136, 52), (340, 104, 38), (316, 88, 24), (300, 88, 12),
+                                (294, 98, 4), (294, 110, 0)], exit_speed=500)
+    t.saucer('saucer', 380, 436, eject_deg=125, eject_speed=2500, vuk='temple_wire')
+    t.lamp('video', 396, 478, 'star', 18, TEAL)
 
     # an upper flipper on the left, fed by the left orbit
     t.flipper('L', 42, 640, length=55, r0=11, r1=6, rest=28, up=-22)
-    t.lamp('saucer', 132, 482, 'circle', 16, ORANGE)
+    t.lamp('saucer', 362, 478, 'circle', 16, ORANGE)
     t.lamp('lock', 286, 575, 'arrow', 18, TEAL, 20)
     t.lamp('extraball', 136, 522, 'circle', 14, GOLD)
     t.lamp('jackpot', 241, 600, 'star', 26, GOLD)
@@ -75,8 +81,8 @@ def build():
         t.lamp('mission%d' % (i + 1), x, y, 'circle', 14, ORANGE if i % 2 == 0 else TEAL)
     for i, (x, y) in enumerate([(196, 720), (226, 734), (256, 734), (286, 720)]):
         t.lamp('x%d' % (i + 2), x, y, 'rect', 13, GOLD)
-    t.flasher('flash1', 112, 400, z=60, color=ORANGE, size=80)
-    t.flasher('flash2', 400, 160, z=70, color=TEAL, size=80)
+    t.flasher('flash1', 84, 330, z=90, color=ORANGE, size=80)
+    t.flasher('flash2', 296, 390, z=90, color=TEAL, size=80)
 
 
     # the toys stand where the ball never goes: the cabinet's corners and
@@ -90,7 +96,7 @@ def build():
     t.deco('idol', 426, 1016, s=0.8, z=30)
 
     t.mission(dict(es='Despertá a los ídolos', en='Wake the idols', de='Wecke die Götzen'), 'drop', 6, 60, 300000)
-    t.mission(dict(es='Cruzá el río', en='Cross the river', de='Überquere den Fluss'), 'ramp', 3, 60, 400000)
+    t.mission(dict(es='Cruzá el puente', en='Cross the bridge', de='Über die Brücke'), 'ramp', 3, 60, 400000)
     t.mission(dict(es='Tambores de guerra', en='War drums', de='Kriegstrommeln'), 'bumper', 12, 45, 250000)
     t.mission(dict(es='Frená la roca', en='Stop the boulder', de='Halte den Felsen auf'), 'toy', 6, 50, 350000)
 

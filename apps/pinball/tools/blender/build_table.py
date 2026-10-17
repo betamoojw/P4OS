@@ -598,9 +598,177 @@ def build_wire(nm, v):
             cyl(nm + 'leg%d' % i, path[i][0], path[i][1], 1.6, 0, path[i][2], M_CHROME)
 
 
+def resample(path, step):
+    """(x, y, z) points every step mm along a path, the ends kept"""
+    out = [tuple(path[0])]
+    carry = 0.0
+    for a, b in zip(path, path[1:]):
+        L = math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2])
+        d = step - carry
+        while d < L:
+            k = d / L
+            out.append(tuple(a[i] + (b[i] - a[i]) * k for i in range(3)))
+            d += step
+        carry = L - (d - step)
+    if math.dist(out[-1], path[-1]) > step * 0.3:
+        out.append(tuple(path[-1]))
+    else:
+        out[-1] = tuple(path[-1])
+    return out
+
+
+def ramp_body(nm, path, w, mats, floor=0, side=lambda i: 1, wall_h=22):
+    """a ramp's floor and its two side walls; mats a list, floor and
+    side(i) (segment i) indices into it"""
+    pts2 = [(p[0], p[1]) for p in path]
+    L = offset(pts2, w)
+    R = offset(pts2, -w)
+    n = len(path)
+    verts, faces, fm = [], [], []
+    for i in range(n):
+        z = path[i][2]
+        verts += [V(L[i][0], L[i][1], z), V(R[i][0], R[i][1], z), V(L[i][0], L[i][1], z + wall_h),
+                  V(R[i][0], R[i][1], z + wall_h)]
+    for i in range(n - 1):
+        a, b = i * 4, (i + 1) * 4
+        faces += [(a, a + 1, b + 1, b), (a, b, b + 2, a + 2), (a + 1, a + 3, b + 3, b + 1)]
+        fm += [floor, side(i), side(i)]
+    me = bpy.data.meshes.new(nm)
+    me.from_pydata([tuple(v) for v in verts], [], faces)
+    me.update()
+    o = bpy.data.objects.new(nm, me)
+    for m in mats:
+        o.data.materials.append(m)
+    for p, k in zip(o.data.polygons, fm):
+        p.material_index = k
+    link(o)
+    mod = o.modifiers.new('solid', 'SOLIDIFY')
+    mod.thickness = 0.003
+    return L, R
+
+
+def ramp_legs(nm, path, L, R, mat, every=3, r=2.2):
+    for i in range(1, len(path) - 1, every):
+        if path[i][2] > 25:
+            cyl(nm + 'leg%d' % i, L[i][0], L[i][1], r, 0, path[i][2], mat)
+            cyl(nm + 'leg%db' % i, R[i][0], R[i][1], r, 0, path[i][2], mat)
+
+
+def build_bridge(nm, v):
+    """a rope bridge: planks on ropes, rope handrails, two wooden towers
+    (v['towers'], indices into the path)"""
+    path = v['path']
+    w = v['width'] / 2
+    planks = [m_('plank%d' % k, c, 0.75) for k, c in enumerate((0x8A5A2A, 0x6E4622, 0x9A6A36))]
+    rope = m_('rope', 0xC8A870, 0.9)
+    post = m_('towerwood', 0x4A2E16, 0.7)
+    pts = resample(path, 8.5)
+    p2 = [(p[0], p[1]) for p in pts]
+    L, R = offset(p2, w + 1), offset(p2, -w - 1)
+    for i, p in enumerate(pts):
+        a = pts[min(i + 1, len(pts) - 1)]
+        b = pts[max(i - 1, 0)]
+        ang = math.degrees(math.atan2(a[1] - b[1], a[0] - b[0]))
+        box(nm + 'p%d' % i, p[0], p[1], p[2] - 3, 6.5, w * 2 + 3 + (i * 7 % 5), 3, planks[(i * 5) % 3], rot=ang)
+    # the handrails hang from the towers' tops and sag between them
+    def arclen(ps):
+        out = [0.0]
+        for a, b in zip(ps, ps[1:]):
+            out.append(out[-1] + math.dist(a, b))
+        return out
+    sp, so = arclen(pts), arclen([tuple(p) for p in path])
+    tw = sorted(so[k] for k in v.get('towers', ()))
+    def hang(s):
+        if len(tw) < 2:
+            return 0.0
+        if s < tw[0]:
+            return 24 * (s / tw[0]) ** 2
+        if s > tw[1]:
+            return 24 * ((sp[-1] - s) / max(1.0, sp[-1] - tw[1])) ** 2
+        u = (s - tw[0]) / (tw[1] - tw[0])
+        return 24 * (1 - 4 * u * (1 - u))
+    for side, O in ((0, L), (1, R)):
+        tube(nm + 'rail%d' % side, [(O[i][0], O[i][1], pts[i][2] + 20 + hang(sp[i])) for i in range(len(pts))], 1.4,
+             rope)
+        tube(nm + 'foot%d' % side, [(O[i][0], O[i][1], pts[i][2] + 1) for i in range(len(pts))], 1.2, rope)
+        for i in range(0, len(pts), 3):
+            tube(nm + 'h%d_%d' % (side, i), [(O[i][0], O[i][1], pts[i][2] + 1),
+                                             (O[i][0], O[i][1], pts[i][2] + 20 + hang(sp[i]))], 0.7, rope)
+    # the towers: two posts and a beam over the deck
+    path2 = [(p[0], p[1]) for p in path]
+    TL, TR = offset(path2, w + 5), offset(path2, -w - 5)
+    for k in v.get('towers', ()):
+        z = path[k][2]
+        for j, O in enumerate((TL, TR)):
+            box(nm + 't%d_%d' % (k, j), O[k][0], O[k][1], 0, 7, 7, z + 44, post)
+            sphere(nm + 'tk%d_%d' % (k, j), O[k][0], O[k][1], z + 46, 4.5, post)
+        tube(nm + 'beam%d' % k, [(TL[k][0], TL[k][1], z + 40), (TR[k][0], TR[k][1], z + 40)], 2.6, post)
+        # guy ropes to the playfield
+        for O, s in ((TL, 1), (TR, -1)):
+            j = max(0, k - 2)
+            tube(nm + 'g%d_%d' % (k, s), [(O[k][0], O[k][1], z + 42), (O[j][0], O[j][1], 0)], 0.8, rope)
+
+
+def build_tent(nm, v):
+    """the big top: red (or the ramp's colour) and white stripes, gold
+    lips and poles"""
+    path = resample(v['path'], 11.0)
+    w = v['width'] / 2
+    color = v.get('color') or TH['accent']
+    c = principled('tent_%06x' % color, col(color, 0.8), rough=0.25, clear=0.6)
+    white = principled('tent_white', col(0xF4F0E8), rough=0.3, clear=0.6)
+    floor = principled('tentfloor_%06x' % color, col(color, 0.6), rough=0.12, clear=0.7, trans=0.4)
+    gold = m_('tentgold', 0xFFC840, 0.2, metal=0.9)
+    L, R = ramp_body(nm, path, w, [floor, c, white], 0, lambda i: 1 + (i // 2) % 2, wall_h=24)
+    n = len(path)
+    tube(nm + 'lipL', [(L[i][0], L[i][1], path[i][2] + 24) for i in range(n)], 1.8, gold)
+    tube(nm + 'lipR', [(R[i][0], R[i][1], path[i][2] + 24) for i in range(n)], 1.8, gold)
+    ramp_legs(nm, path, L, R, gold, every=5, r=2.0)
+
+
+def build_carpet(nm, v):
+    """the high rollers' ramp: red carpet between smoked glass, gold lips
+    and little lit posts along them"""
+    path = resample(v['path'], 10.0)
+    w = v['width'] / 2
+    carpet = principled('carpet', col(0x9A0A1C), rough=0.9, spec=0.2)
+    glass = principled('smoked', col(0x302820, 0.6), rough=0.08, clear=0.8, trans=0.6)
+    gold = m_('cgold2', 0xFFC840, 0.18, metal=1.0)
+    bulb = m_('cbulb', 0xFFE8A0, 0.3, emit_k=5)
+    L, R = ramp_body(nm, path, w, [carpet, glass], 0, lambda i: 1, wall_h=22)
+    n = len(path)
+    tube(nm + 'lipL', [(L[i][0], L[i][1], path[i][2] + 22) for i in range(n)], 1.8, gold)
+    tube(nm + 'lipR', [(R[i][0], R[i][1], path[i][2] + 22) for i in range(n)], 1.8, gold)
+    for i in range(2, n - 1, 4):
+        for O, k in ((L, 0), (R, 1)):
+            cyl(nm + 'st%d_%d' % (i, k), O[i][0], O[i][1], 1.6, path[i][2] + 22, path[i][2] + 30, gold)
+            sphere(nm + 'sb%d_%d' % (i, k), O[i][0], O[i][1], path[i][2] + 32, 3.2, bulb)
+    ramp_legs(nm, path, L, R, gold, every=5, r=2.2)
+
+
+def build_spiral(nm, v):
+    """the whirlpool: sea-blue plastic, foam-white lips, and a dark eye
+    where it swallows the ball"""
+    path = resample(v['path'], 9.0)
+    w = v['width'] / 2
+    color = v.get('color') or TH['accent']
+    m = principled('ramp_%06x' % color, col(color, 0.7), rough=0.12, clear=0.7, trans=0.4)
+    foam = m_('foam', 0xEAF6F8, 0.35)
+    wood = m_('spwood', 0x5A3A1C, 0.7)
+    L, R = ramp_body(nm, path, w, [m, m], 0, lambda i: 1, wall_h=22)
+    n = len(path)
+    tube(nm + 'lipL', [(L[i][0], L[i][1], path[i][2] + 22) for i in range(n)], 2.0, foam)
+    tube(nm + 'lipR', [(R[i][0], R[i][1], path[i][2] + 22) for i in range(n)], 2.0, foam)
+    ramp_legs(nm, path, L, R, wood, every=6, r=2.4)
+
+
 def build_ramp(nm, v):
-    if v.get('style') == 'wire':
+    style = v.get('style')
+    if style == 'wire':
         build_wire(nm, v)
+        return
+    if style in ('bridge', 'tent', 'carpet', 'spiral'):
+        globals()['build_' + style](nm, v)
         return
     path = v['path']
     w = v['width'] / 2
@@ -820,6 +988,12 @@ def deco_circo(nm, kind, x, y, s, rot, v):
         striped_cone(nm + 'roof', x, y, 24 * s, 38 * s, 34 * s, [red, white], 16)
         cyl(nm + 'pole', x, y, 1.2 * s, 58 * s, 72 * s, gold)
         o = box(nm + 'flag', x + 6 * s, y, 66 * s, 10 * s, 1, 6 * s, blue)
+    elif kind == 'pennant':
+        # the big top's centre pole, where the two ramps meet
+        cyl(nm + 'pole', x, y, 1.6 * s, 0, 64 * s, gold)
+        sphere(nm + 'knob', x, y, 66 * s, 3 * s, gold)
+        box(nm + 'flag', x + 8 * s, y, 50 * s, 15 * s, 1, 11 * s, red)
+        box(nm + 'flag2', x + 6 * s, y, 44 * s, 11 * s, 1, 5 * s, white)
     elif kind == 'ball':
         sphere(nm, x, y, 18 * s, 18 * s, red)
         torus(nm + 'b1', x, y, 18 * s, 17.6 * s, 3.5 * s, white, rot=(math.pi / 2, 0, 0.6))

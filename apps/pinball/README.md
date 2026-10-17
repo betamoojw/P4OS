@@ -10,10 +10,19 @@ in a carousel:
 |---|---|---|
 | Noche de Zombis | `zombis` | a graveyard at night; the crypt's ramp, the tombs' drop targets, the mausoleum's saucer |
 | Robots en Órbita | `robots` | a space station; the rocket ramp on the left, the reactor's drop targets, the launch pad |
-| El Templo de la Jungla | `jungla` | the lost temple; the temple's mouth on the left, the idols in the middle, the river ramp |
-| El Gran Circo | `circo` | the big top; the cannon's ramp, three rings of bumpers, jugglers on the orbit's wall |
-| Casino Real | `casino` | green felt; four cards, three dice, the roulette saucer, the high rollers' ramp |
-| La Isla Pirata | `piratas` | the treasure chest, the cannon ramp, the barrels |
+| El Templo de la Jungla | `jungla` | the lost temple; a rope bridge across the gorge, the idols in the middle, the temple's mouth on the right |
+| El Gran Circo | `circo` | the big top; two striped ramps that make the tent, the merry-go-round under it, jugglers on the orbit's wall |
+| Casino Real | `casino` | green felt; a straight ramp up to the slot machine, the roulette, five cards, three dice |
+| La Isla Pirata | `piratas` | the whirlpool's spiral ramp, the ghost ship, the treasure chest, the barrels |
+
+Their ramps are not alike either: the crypt's goes up the middle and round
+the top to the right inlane, the rocket's the same way to the left; the
+jungle's is a rope bridge hung between two towers, from the right across to
+the left orbit and the upper flipper; the circus' two climb from either side
+to the tent's peak and drop the ball into the middle top lane; the casino's
+runs dead straight up to the slot machine and drops the ball in its tray;
+the pirates' climbs onto a spiral and turns round and down into the
+whirlpool's eye, which swallows it (the sword duel) and spits it out.
 
 Each table has toys and tricks of its own, after the machines of the
 eighties and nineties:
@@ -23,9 +32,9 @@ eighties and nineties:
 | Noche de Zombis | **the zombie** on his grave: three hits send him under, he comes back harder; **Z-O-M-B-I** standups light the video mode; the mausoleum kicks the ball **up a wire** to the top lanes; video mode **Cazador de zombis** | Monster Bash, Addams Family |
 | Robots en Órbita | **the robot**: three hits open his chest, a ball shot into it is locked (he swallows it, two start multiball); the **tractor beam** (a magnet) grabs the ball and throws it at him; an **upper flipper**; R-O-B-O-T; video mode **Invasores** | Pinbot, Black Knight 2000 |
 | El Templo de la Jungla | **the boulder** rolling to and fro across the courtyard: three hits stop it; the temple kicks the ball **up a wire**; an **upper flipper** on the left; video mode **Camino de la aventura** | Indiana Jones |
-| El Gran Circo | **the human cannonball**: the ball down the left orbit drops into the cannon, it swings, the launch button fires it at the jugglers; the **merry-go-round** flings the ball; **the ringmaster** pops up; video mode **Globos** | Cirqus Voltaire, Funhouse |
+| El Gran Circo | **the human cannonball**: the ball down the right orbit drops into the cannon, it swings, the launch button fires it at the jugglers; the **merry-go-round** flings the ball; **the ringmaster** pops up; video mode **Globos** | Cirqus Voltaire, Funhouse |
 | Casino Real | **the roulette** turning on the table: the ball leaving it lands on a number, the lit colour pays, the zero pays a fortune; **the slot machine**: its reels on the DMD, each flipper stops one; five cards | Twilight Zone, Whirlwind, Royal Flush |
-| La Isla Pirata | **the ghost ship** sailing across the bay: four hits sink it; **the Kraken** grabs the ball and flings it; **the chest**: two hits open its lid, a ball in it is locked; video mode **Duelo** | Pirates of the Caribbean |
+| La Isla Pirata | **the ghost ship** sailing across the bay: four hits sink it; **the Kraken** grabs the ball and flings it; **the chest**: two hits open its lid, a ball in it is locked; the **whirlpool** swallows the ball for the video mode **Duelo** | Pirates of the Caribbean |
 
 Everything the player sees once a table is chosen is that table's: the
 DMD's colour, the launch button (a skull, a rocket, a tiki mask, a cannon, a
@@ -152,6 +161,13 @@ Things to keep, learned tuning these six:
   (`z=30`). A toy on the playfield would let the ball pass through it.
 - The inlane guide ends **tangent to the flipper's pivot** (`tangent_point`)
   or the ball sits in the notch.
+- **A ramp has no dips**: a ball that does not make it must roll back out,
+  so its height (plus how far up the table it goes) only rises to the top
+  and only falls after it; a sagging bridge traps a slow ball for good.
+  `Table.check()` refuses one. The sag can be in the ropes, not the deck.
+- **A wire lets the ball down gently**: one ending against a lane guide at
+  2 m/s bounced it round the arch and down the far orbit into the outlane
+  (`habitrail(..., exit_speed=500)`, ending pointed down a lane).
 
 ### Toys and attractions
 
@@ -169,7 +185,11 @@ so the ball passes in front of it or behind it:
 | `magnet` | when on, pulls the ball in, holds it, throws it towards `a0` at `x1` mm/s | none |
 
 `t.habitrail(name, path)` is a wire ramp nothing enters by itself, and
-`t.saucer(..., vuk=name)` kicks the ball up it. `t.flipper('L'|'R', ...)`
+`t.saucer(..., vuk=name)` kicks the ball up it. A ramp's `style` is only how
+Blender builds it: `plastic`, `wire`, `bridge` (planks on ropes, `towers=`
+two path indices), `tent` (stripes), `carpet` (red carpet, smoked glass,
+lit posts) or `spiral` (sea plastic, foam lips); a ramp ending on a saucer
+with a low `exit_speed` drops the ball in it. `t.flipper('L'|'R', ...)`
 after `standard_lower()` adds upper flippers (the same button moves every
 flipper of its side). `t.feat(kind, ...)` declares an attraction for the
 rules (`main/pb_game.c`, "Features"):

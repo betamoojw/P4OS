@@ -278,10 +278,11 @@ class Table:
         self.vis.append(dict(t='saucer', x=x, y=y, r=r))
         return o
 
-    def habitrail(self, name, path, color=0xC8CCD4):
-        """a wire ramp nothing enters by itself: a saucer kicks the ball up it"""
+    def habitrail(self, name, path, color=0xC8CCD4, exit_speed=0):
+        """a wire ramp nothing enters by itself: a saucer kicks the ball up
+        it; exit_speed (mm/s), when given, is how fast it leaves the end"""
         o = self._obj('ramp', name, 'none', min_speed=0)
-        self.ramps.append(dict(obj=o, path=[tuple(p) for p in path], exit_speed=0))
+        self.ramps.append(dict(obj=o, path=[tuple(p) for p in path], exit_speed=exit_speed))
         self.vis.append(dict(t='ramp', path=[tuple(p) for p in path], width=34, color=color, style='wire',
                              a=None, b=None))
         return o
@@ -316,15 +317,19 @@ class Table:
         return o
 
     def ramp(self, name, entry_a, entry_b, path, width=46, color=None, style='plastic', min_speed=700,
-             exit_speed=None):
+             exit_speed=None, **look):
         """entry_a -> entry_b is the mouth, crossed to its left (y down);
         path is (x, y, z) from the mouth's middle to where the ball comes
-        down again"""
+        down again. style is how Blender builds it (plastic, wire, bridge,
+        tent, spiral...); look is what that style needs (a bridge's
+        towers: indices into path), which the game never reads"""
         o = self._obj('ramp', name, 'ramp', min_speed=min_speed)
         self.trigs.append((entry_a[0], entry_a[1], entry_b[0], entry_b[1], o))
         self.ramps.append(dict(obj=o, path=[tuple(p) for p in path], exit_speed=exit_speed or 0))
-        self.vis.append(dict(t='ramp', path=[tuple(p) for p in path], width=width, color=color, style=style,
-                             a=entry_a, b=entry_b))
+        v = dict(t='ramp', path=[tuple(p) for p in path], width=width, color=color, style=style, a=entry_a,
+                 b=entry_b)
+        v.update(look)
+        self.vis.append(v)
         return o
 
     def flipper(self, side, x, y, length=76, r0=12.5, r1=6.5, rest=28, up=-26, lamp=None):
@@ -447,7 +452,20 @@ class Table:
                 return o['idx']
         raise KeyError(name)
 
+    def check_ramps(self, g_up=9600.0, tol=500.0):
+        """a ramp must not have a dip a slow ball can stop in: its height
+        (pb_phys.c's G_UP across the playfield, grav down the slope) only
+        rises to its top, and only falls after it"""
+        for r in self.ramps:
+            p = r['path']
+            u = [g_up * q[2] - self.grav * q[1] for q in p]
+            k = max(range(len(u)), key=lambda i: u[i])
+            for i in range(1, len(u)):
+                if (i <= k and u[i] < max(u[:i]) - tol) or (i > k and u[i] > min(u[k:i]) + tol):
+                    raise ValueError('%s: %s dips at point %d %s' % (self.id, self.objs[r['obj']]['name'], i, p[i]))
+
     def check(self):
+        self.check_ramps()
         names = [o['name'] for o in self.objs]
         assert len(names) == len(set(names)), [n for n in names if names.count(n) > 1]
         ln = [l['name'] for l in self.lamps]

@@ -1,6 +1,7 @@
-"""El Gran Circo: under the big top. The human cannonball's ramp on the left,
-the three rings of bumpers in the middle, the jugglers' drop targets on the
-right orbit's wall."""
+"""El Gran Circo: under the big top. Two striped ramps make the tent, one up
+each side to its peak; the merry-go-round turns under it, the jugglers'
+drop targets stand on the right orbit's wall and the cannon waits at the
+bottom of it."""
 from pbtable import Table, Camera, H, mirror_pts
 
 RED = 0xE8243C
@@ -26,10 +27,11 @@ def build():
     t.standard_lower(sling_color=RED)
     t.top_lanes(colors=[RED, GOLD, BLUE])
 
-    # the three rings: two bumpers and, in the middle, the merry-go-round
-    t.bumper('bumper1', 150, 252, cap=RED, body=0xF0E8D8)
-    t.bumper('bumper2', 330, 252, cap=BLUE, body=0xF0E8D8)
-    t.bumper('bumper3', 240, 226, cap=GOLD, body=0xF0E8D8)
+    # the three rings: a bumper on either side of the tent, one under its
+    # peak, and in the middle the merry-go-round
+    t.bumper('bumper1', 90, 240, cap=RED, body=0xF0E8D8)
+    t.bumper('bumper2', 392, 240, cap=BLUE, body=0xF0E8D8)
+    t.bumper('bumper3', 240, 214, cap=GOLD, body=0xF0E8D8)
     t.toy('carousel', 'disc', 240, 330, 46, model='carousel', a0=2.6, a1=4)
 
     # THE HUMAN CANNONBALL (Cirqus Voltaire): the ball coming down the right
@@ -41,17 +43,27 @@ def build():
     t.toy('ringmaster', 'bash', 240, 470, 19, model='ringmaster', s=1.6)
     t.lamp('toy', 240, 510, 'arrow', 18, RED, 0)
 
-    # the cannon's ramp, left
-    t.wall(M([(296, 520), (300, 472)]), h=30, style='plastic', thick=5)
-    t.wall(M([(350, 520), (346, 472)]), h=30, style='plastic', thick=5)
-    t.post(*M([(296, 522)])[0], r=5, name='rampLpost')
-    t.post(*M([(350, 522)])[0], r=5, name='rampRpost')
-    path = [(323, 472, 0), (326, 426, 18), (334, 374, 38), (346, 324, 54), (366, 280, 64), (398, 252, 70),
-            (432, 254, 68), (452, 290, 62), (458, 360, 54), (458, 440, 46), (452, 520, 36), (440, 600, 24),
-            (430, 670, 12), (425, 712, 3), (425, 730, 0)]
-    path = [(482 - x, y, z) for x, y, z in path]
-    t.ramp('ramp1', M([(346, 472)])[0], M([(300, 472)])[0], path, color=GOLD, style='plastic')
-    t.lamp('ramp1', *M([(323, 545)])[0], shape='arrow', size=22, color=GOLD, angle=0)
+    # THE BIG TOP: two striped ramps climb from either side of the ring and
+    # meet at the tent's peak, over the top lanes, where the ball drops out
+    # slowly into the middle one
+    for m in (False, True):
+        F = (lambda pts: M(pts)) if m else (lambda pts: pts)
+        t.wall(F([(186, 520), (182, 472)]), h=30, style='plastic', thick=5)
+        t.wall(F([(132, 520), (136, 472)]), h=30, style='plastic', thick=5)
+        t.post(*F([(186, 522)])[0], r=5, name='ramp%spost1' % 'LR'[m])
+        t.post(*F([(132, 522)])[0], r=5, name='ramp%spost2' % 'LR'[m])
+        path = [(159, 472, 0), (159, 440, 14), (159, 404, 30), (160, 364, 44), (162, 322, 56), (166, 280, 64),
+                (172, 240, 70), (182, 200, 72), (194, 164, 70), (206, 136, 62), (214, 118, 44), (222, 108, 22),
+                (232, 104, 0)]
+        mouth = [(136, 472), (182, 472)]
+        if m:
+            path = [(482 - x, y, z) for x, y, z in path]
+            mouth = M(mouth)[::-1]
+        t.ramp('ramp%d' % (m + 1), mouth[0], mouth[1], path, width=38, color=(BLUE if m else RED), style='tent',
+               exit_speed=100)
+        t.lamp('ramp%d' % (m + 1), *F([(159, 545)])[0], shape='arrow', size=20, color=(BLUE if m else RED),
+               angle=0)
+    t.deco('pennant', 241, 88, s=1.0)
 
     # the jugglers: three drop targets on the right orbit's wall, facing left
     t.drops('drop', (430, 316), (430, 410), 3, color=WHITE)
@@ -90,7 +102,7 @@ def build():
     t.deco('ball', 426, 1016, s=0.8, z=30)
 
     t.mission(dict(es='Malabares', en='Juggling act', de='Jonglage'), 'drop', 6, 60, 300000)
-    t.mission(dict(es='Hombre bala', en='Human cannonball', de='Kanonenkugel-Mensch'), 'ramp', 3, 60, 400000)
+    t.mission(dict(es='La punta de la carpa', en='Top of the tent', de='Hoch aufs Zelt'), 'ramp', 3, 60, 400000)
     t.mission(dict(es='Los tres anillos', en='Three rings', de='Drei Manegen'), 'bumper', 12, 45, 250000)
     t.mission(dict(es='Cuerda floja', en='Tightrope', de='Hochseil'), 'orbit', 3, 60, 400000)
     t.mission(dict(es='Domá a los leones', en='Tame the lions', de='Zähme die Löwen'), 'target', 4, 60, 350000)

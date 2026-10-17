@@ -377,6 +377,24 @@ def theme_jungla(t, img, d, rnd):
         d.polygon(ellipse_rot(x, y, L, L * 0.32, a), fill=c)
         d.line([(x - math.cos(a) * L, y - math.sin(a) * L), (x + math.cos(a) * L, y + math.sin(a) * L)],
                fill=tuple(min(255, v + 40) for v in c), width=3)
+    # the gorge the rope bridge crosses: a dark chasm with rocky edges
+    br = [v for v in t.vis if v['t'] == 'ramp' and v.get('style') == 'bridge']
+    if br:
+        path = br[0]['path']
+        i0, i1 = br[0].get('towers', (0, len(path) - 1))
+        mid = [P(p[0], p[1]) for p in path[i0:i1 + 1]]
+        for wd, c in ((150, (70, 60, 40)), (110, (40, 34, 24)), (70, (16, 14, 10))):
+            d.line(mid, fill=c, width=wd, joint='curve')
+        for i in range(70):
+            k = rnd.uniform(0, 1)
+            j = min(len(mid) - 2, int(k * (len(mid) - 1)))
+            (x0, y0), (x1, y1) = mid[j], mid[j + 1]
+            f = k * (len(mid) - 1) - j
+            l = math.hypot(x1 - x0, y1 - y0) or 1
+            side = rnd.choice((-1, 1)) * rnd.uniform(55, 80)
+            x, y = x0 + (x1 - x0) * f + (y1 - y0) / l * side, y0 + (y1 - y0) * f - (x1 - x0) / l * side
+            r = rnd.uniform(8, 20)
+            d.ellipse([x - r, y - r * 0.7, x + r, y + r * 0.7], fill=rnd.choice([(110, 100, 80), (90, 84, 66)]))
     # sun beams from the top
     glow(img, lambda m: [m.polygon([(w * 0.5 + k * 140, 0), (w * 0.5 + k * 140 + 90, 0),
                                     (w * 0.5 + k * 420 + 200, h * 0.7), (w * 0.5 + k * 420 - 100, h * 0.7)], fill=70)
@@ -425,8 +443,9 @@ def theme_casino(t, img, d, rnd):
         suit(d, rnd.choice(['heart', 'diamond', 'spade', 'club']), x, y, rnd.uniform(25, 45), (12, 90, 44))
     for m in (30, 60):
         d.rounded_rectangle([m, m, w - m, h - m], radius=120, outline=(230, 190, 70), width=8)
-    # the roulette's numbers round the saucer
-    cx, cy = P(240, 450)
+    # the roulette's numbers round the wheel
+    wheel = [y for y in t.toys if y['model'] == 'roulette']
+    cx, cy = P(wheel[0]['x'], wheel[0]['y']) if wheel else P(240, 450)
     for i in range(37):
         a0, a1 = i / 37 * 2 * math.pi, (i + 1) / 37 * 2 * math.pi
         pts = [(cx + 150 * math.cos(a0), cy + 150 * math.sin(a0)), (cx + 230 * math.cos(a0), cy + 230 * math.sin(a0)),
@@ -453,6 +472,23 @@ def theme_piratas(t, img, d, rnd):
     for i in range(80):
         x, y = rnd.uniform(0, w), rnd.uniform(0, h * 0.58)
         d.arc([x - 50, y - 12, x + 50, y + 12], 200, 340, fill=(200, 235, 245), width=4)
+    # the whirlpool under the spiral ramp: rings of foam winding into a
+    # dark eye
+    eye = [v.get('eye') for v in t.vis if v['t'] == 'ramp' and v.get('eye')]
+    if eye:
+        ex, ey = P(*eye[0])
+        for r in range(330, 20, -14):
+            k = r / 330
+            d.ellipse([ex - r, ey - r, ex + r, ey + r], fill=(int(10 + 30 * k), int(40 + 90 * k), int(70 + 110 * k)))
+        for arm in range(4):
+            pts = []
+            for i in range(60):
+                f = i / 59
+                a = arm * math.pi / 2 + f * 4.2
+                r = 320 * (1 - f) + 20
+                pts.append((ex + r * math.cos(a), ey + r * math.sin(a)))
+            d.line(pts, fill=(210, 240, 250), width=9, joint='curve')
+        d.ellipse([ex - 40, ey - 40, ex + 40, ey + 40], fill=(4, 14, 24))
     # planks at the bottom
     for i in range(int(h * 0.82), h, 70):
         d.rectangle([0, i, w, i + 64], fill=(110, 70, 36), outline=(70, 42, 20), width=4)

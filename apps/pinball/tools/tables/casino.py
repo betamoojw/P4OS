@@ -1,6 +1,6 @@
-"""Casino Real: green felt and gold. The roulette saucer in the middle, a
-bank of four cards, the dice targets, and the high rollers' ramp round the
-right."""
+"""Casino Real: green felt and gold. A straight ramp up to the slot machine
+on the left, the roulette turning on the right, a royal flush of drop
+targets on the right orbit's wall and the dice on the left one."""
 from pbtable import Table, Camera, H
 
 GOLD = 0xFFC830
@@ -22,31 +22,37 @@ def build():
     t.standard_lower(sling_color=RED)
     t.top_lanes(colors=[GOLD, RED, GOLD])
 
-    # the chips: three bumpers in an arc
-    t.bumper('bumper1', 168, 262, cap=RED, body=0xF0F0F0)
-    t.bumper('bumper2', 244, 240, cap=GOLD, body=0xF0F0F0)
-    t.bumper('bumper3', 314, 270, cap=0x2060E0, body=0xF0F0F0)
+    # the chips: three bumpers up in the middle
+    t.bumper('bumper1', 236, 236, cap=RED, body=0xF0F0F0)
+    t.bumper('bumper2', 312, 222, cap=GOLD, body=0xF0F0F0)
+    t.bumper('bumper3', 282, 296, cap=0x2060E0, body=0xF0F0F0)
 
-    # the high rollers' ramp, right
-    t.wall([(296, 520), (300, 472)], h=30, style='plastic', thick=5)
-    t.wall([(350, 520), (346, 472)], h=30, style='plastic', thick=5)
-    t.post(296, 522, r=5, name='rampLpost')
-    t.post(350, 522, r=5, name='rampRpost')
-    t.ramp('ramp1', (300, 472), (346, 472),
-           [(323, 472, 0), (325, 428, 16), (332, 380, 36), (346, 330, 54), (370, 288, 64), (402, 262, 70),
-            (436, 264, 68), (455, 300, 62), (459, 370, 54), (458, 450, 46), (452, 528, 35), (441, 604, 23),
-            (431, 672, 11), (425, 712, 3), (425, 730, 0)],
-           color=GOLD, style='plastic')
-    t.lamp('ramp1', 323, 545, 'arrow', 22, GOLD, 0)
+    # THE SLOT MACHINE (Twilight Zone), up on the left: the high rollers'
+    # ramp runs dead straight from the left of the ring up to it and drops
+    # the ball in its tray, which pulls the lever: the reels spin on the
+    # DMD, and each flipper stops one
+    # (a roof on its outline: a ball on top of it rolls off)
+    t.wall([(82, 250), (82, 226), (104, 212), (126, 226), (126, 250)], h=60, style='rail', thick=4, closed=True,
+           visible=False)
+    t.deco('slotbig', 104, 234, s=1.0)
+    t.saucer('saucer', 104, 274, eject_deg=14, eject_speed=1800)
+    t.wall([(186, 520), (182, 472)], h=30, style='plastic', thick=5)
+    t.wall([(132, 520), (136, 472)], h=30, style='plastic', thick=5)
+    t.post(186, 522, r=5, name='rampRpost')
+    t.post(132, 522, r=5, name='rampLpost')
+    a, b = (159, 472), (106, 278)
+    zs = (0, 14, 28, 41, 52, 60, 64, 62, 52, 34, 14, 0)
+    path = [(a[0] + (b[0] - a[0]) * k / 11, a[1] + (b[1] - a[1]) * k / 11, z) for k, z in enumerate(zs)]
+    t.ramp('ramp1', (136, 472), (182, 472), path, width=42, color=GOLD, style='carpet', exit_speed=300)
+    t.lamp('ramp1', 159, 545, 'arrow', 22, GOLD, 0)
+    t.lamp('saucer', 146, 300, 'circle', 14, GREEN)
+    t.lamp('video', 66, 290, 'star', 16, GOLD)
 
-    # a royal flush: five cards, drop targets on the left
-    t.wall([(140, 588), (248, 551)], h=34, style='rail', thick=5)
-    t.post(140, 590, r=5, name='dropLpost')
-    t.post(248, 553, r=5, name='dropRpost')
-    t.drops('drop', (244, 565), (146, 599), 5, color=WHITE)
+    # a royal flush: five cards, drop targets on the right orbit's wall,
+    # facing the ring
+    t.drops('drop', (430, 300), (430, 440), 5, color=WHITE)
     for i in range(5):
-        x = 234 - i * 19.6
-        t.lamp('drop%d' % (i + 1), x, 594 + i * 7, 'triangle', 11, RED, -18)
+        t.lamp('drop%d' % (i + 1), 406, 314 + i * 28, 'triangle', 11, RED, -90)
 
     # the dice: three standups on the left orbit's wall
     t.target('target1', (51, 312), (51, 340), color=WHITE)
@@ -55,28 +61,20 @@ def build():
     for i, y in enumerate((326, 364, 402)):
         t.lamp('target%d' % (i + 1), 72, y, 'circle', 11, GOLD)
 
-    # THE ROULETTE (Whirlwind's spinning discs): it turns on the table and
-    # flings the ball; where the ball leaves it is the number. The lit
-    # colour pays, the zero pays a fortune
-    t.toy('roulette', 'disc', 240, 420, 52, model='roulette', a0=2.2, a1=18)
-    t.lamp('red', 190, 488, 'shield', 16, RED)
-    t.lamp('black', 290, 488, 'shield', 16, 0x202020)
-
-    # THE SLOT MACHINE (Twilight Zone): a ball in its tray pulls the lever:
-    # the reels spin on the DMD, and each flipper stops one
-    t.wall([(80, 352), (124, 352), (124, 384), (80, 384)], h=60, style='rail', thick=4, closed=True, visible=False)
-    t.deco('slotbig', 102, 368, s=1.0)
-    t.saucer('saucer', 104, 412, eject_deg=60, eject_speed=1700)
-    t.lamp('saucer', 132, 448, 'circle', 16, GREEN)
-    t.lamp('video', 76, 448, 'star', 16, GOLD)
-    t.lamp('lock', 286, 575, 'arrow', 18, GOLD, 20)
+    # THE ROULETTE (Whirlwind's spinning discs): it turns on the right of
+    # the table and flings the ball; where the ball leaves it is the
+    # number. The lit colour pays, the zero pays a fortune
+    t.toy('roulette', 'disc', 318, 418, 52, model='roulette', a0=2.2, a1=18)
+    t.lamp('red', 280, 494, 'shield', 16, RED)
+    t.lamp('black', 356, 494, 'shield', 16, 0x202020)
+    t.lamp('lock', 220, 575, 'arrow', 18, GOLD, -10)
     t.lamp('extraball', 220, 520, 'circle', 14, GOLD)
     t.lamp('jackpot', 241, 640, 'star', 26, GOLD)
     for i, (x, y) in enumerate([(160, 668), (200, 650), (282, 650), (322, 668), (241, 690)]):
         t.lamp('mission%d' % (i + 1), x, y, 'circle', 14, [RED, GOLD, GOLD, RED, GREEN][i])
     for i, (x, y) in enumerate([(196, 726), (226, 740), (256, 740), (286, 726)]):
         t.lamp('x%d' % (i + 2), x, y, 'rect', 13, GOLD)
-    t.flasher('flash1', 100, 170, z=70, color=GOLD, size=80)
+    t.flasher('flash1', 52, 214, z=70, color=GOLD, size=80)
     t.flasher('flash2', 380, 180, z=70, color=RED, size=80)
 
 

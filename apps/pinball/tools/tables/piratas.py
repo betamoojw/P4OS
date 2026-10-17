@@ -1,5 +1,8 @@
-"""La Isla Pirata: the treasure chest on the right, the cannon ramp on the
-left, the barrels' drop targets in the middle."""
+"""La Isla Pirata: the whirlpool's spiral ramp on the left, the ghost ship
+and the cannonball bumpers on the right, the treasure chest and the
+barrels' drop targets in the middle, the kraken lurking below."""
+import math
+
 from pbtable import Table, Camera, H, mirror_pts
 
 GOLD = 0xFFC040
@@ -25,15 +28,15 @@ def build():
     t.standard_lower(sling_color=RED)
     t.top_lanes(colors=[GOLD, SEA, GOLD])
 
-    # three bumpers: cannonball stacks, in the corners of the bay
-    t.bumper('bumper1', 110, 232, cap=RED, body=0x3A2A1A)
-    t.bumper('bumper2', 372, 232, cap=GOLD, body=0x3A2A1A)
-    t.bumper('bumper3', 384, 300, cap=RED, body=0x3A2A1A)
+    # three bumpers: cannonball stacks, on the right of the bay
+    t.bumper('bumper1', 300, 316, cap=RED, body=0x3A2A1A)
+    t.bumper('bumper2', 374, 300, cap=GOLD, body=0x3A2A1A)
+    t.bumper('bumper3', 338, 374, cap=RED, body=0x3A2A1A)
 
     # THE GHOST SHIP (Pirates of the Caribbean): it sails to and fro across
-    # the bay; four hits sink it, and it opens the sword duel
-    t.toy('ship', 'mover', 158, 300, 26, model='ship', x1=300, y1=300, period=9.0, s=1.3)
-    t.lamp('toy', 229, 352, 'arrow', 18, GOLD, 0)
+    # the top of the bay; four hits sink it, and it opens the sword duel
+    t.toy('ship', 'mover', 250, 226, 26, model='ship', x1=340, y1=226, period=8.0, s=1.3)
+    t.lamp('toy', 300, 268, 'arrow', 18, GOLD, 0)
 
     # THE KRAKEN: now and then its tentacles grab the ball and fling it
     t.toy('kraken', 'magnet', 384, 548, 40, model='kraken', x1=2700, a0=-128)
@@ -46,17 +49,28 @@ def build():
     t.saucer('chestpen', 240, 452, eject_deg=95, eject_speed=1600, r=14, role='lock')
     t.lamp('lockpen', 240, 492, 'arrow', 16, GOLD, 0)
 
-    # the cannon's ramp, left
+    # THE WHIRLPOOL: a ramp from the left of the chest climbs onto a
+    # spiral that turns a whole turn, round and down into its eye,
+    # where the sea swallows the ball (the sword duel, when it is lit) and
+    # spits it out again
     t.wall(M([(296, 520), (300, 472)]), h=30, style='plastic', thick=5)
     t.wall(M([(350, 520), (346, 472)]), h=30, style='plastic', thick=5)
     t.post(*M([(296, 522)])[0], r=5, name='rampLpost')
     t.post(*M([(350, 522)])[0], r=5, name='rampRpost')
-    path = [(323, 472, 0), (322, 430, 15), (318, 388, 32), (322, 340, 48), (340, 296, 60), (372, 264, 68),
-            (408, 250, 70), (440, 262, 68), (455, 300, 62), (459, 370, 54), (458, 450, 46), (452, 528, 35),
-            (441, 604, 23), (431, 672, 11), (425, 712, 3), (425, 730, 0)]
-    path = [(482 - x, y, z) for x, y, z in path]
-    t.ramp('ramp1', M([(346, 472)])[0], M([(300, 472)])[0], path, color=RED, style='plastic')
+    cx, cy = 140, 340
+    path = [(159, 472, 0), (167, 446, 10), (178, 420, 20), (192, 392, 28)]
+    n = 24
+    for k in range(n + 1):
+        f = k / n
+        a = math.radians(14 - 374 * f)
+        r = 72 - 42 * f
+        z = 34 + 30 * math.sin(f / 0.4 * math.pi / 2) if f < 0.4 else 64 - 54 * (f - 0.4) / 0.6
+        path.append((cx + r * math.cos(a), cy + r * math.sin(a), z))
+    path.append((cx, cy, 0))
+    t.ramp('ramp1', M([(346, 472)])[0], M([(300, 472)])[0], path, width=32, color=SEA, style='spiral',
+           exit_speed=200, eye=(cx, cy))
     t.lamp('ramp1', *M([(323, 545)])[0], shape='arrow', size=22, color=RED, angle=0)
+    t.saucer('saucer', cx, cy, eject_deg=62, eject_speed=1700)
 
     # the barrels: drop targets in the middle, facing the flippers
     t.wall([(232, 536), (238, 522), (281, 508), (324, 522), (330, 536)], h=34, style='rail', thick=5)
@@ -72,10 +86,8 @@ def build():
     t.lamp('target1', 72, 335, 'circle', 12, SEA)
     t.lamp('target2', 72, 381, 'circle', 12, SEA)
 
-    # the captain's cabin: the sword duel
-    t.saucer('saucer', 372, 420, eject_deg=128, eject_speed=1650)
-    t.lamp('saucer', 344, 452, 'circle', 16, GOLD)
-    t.lamp('video', 330, 420, 'star', 18, RED)
+    t.lamp('saucer', 206, 476, 'circle', 16, GOLD)
+    t.lamp('video', 112, 476, 'star', 18, RED)
     t.lamp('lock', 196, 575, 'arrow', 18, RED, -20)
     t.lamp('extraball', 350, 520, 'circle', 14, GOLD)
     t.lamp('jackpot', 255, 610, 'star', 26, GOLD)
@@ -98,7 +110,7 @@ def build():
     t.deco('chest', 426, 1016, s=0.8, z=30, rot=90)
 
     t.mission(dict(es='Hundí la flota', en='Sink the fleet', de='Versenke die Flotte'), 'drop', 6, 60, 300000)
-    t.mission(dict(es='Fuego de cañón', en='Cannon fire', de='Kanonenfeuer'), 'ramp', 3, 60, 400000)
+    t.mission(dict(es='El remolino', en='The whirlpool', de='Der Strudel'), 'ramp', 3, 60, 400000)
     t.mission(dict(es='Seguí el mapa', en='Follow the map', de='Folge der Karte'), 'orbit', 3, 60, 400000)
     t.mission(dict(es='Abordaje', en='Boarding party', de='Entern'), 'bumper', 12, 45, 250000)
     t.mission(dict(es='Hundí al barco fantasma', en='Sink the ghost ship', de='Versenke das Geisterschiff'), 'toy',

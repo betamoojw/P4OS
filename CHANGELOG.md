@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **Pinball 3D** (`apps/pinball`): a 3D pinball after Space Cadet, upright,
+  with six tables chosen in a carousel: Noche de Zombis, Robots en Órbita,
+  El Templo de la Jungla, El Gran Circo, Casino Real and La Isla Pirata.
+  Each has its own layout and ramp (a loop to the right, the same to the
+  left, a rope bridge, the big top's two ramps, a straight one up to a slot
+  machine, a spiral into a whirlpool), toys after the machines of the
+  eighties and nineties (a zombie to beat, a robot that swallows the ball,
+  a rolling boulder, a human cannonball, a merry-go-round, a roulette, a
+  ghost ship, the Kraken), a video mode on the DMD, and its own launch and
+  pause buttons, sounds and music. Missions, locks and multiball, skill
+  shot, kickback, ball save and tilt; touch or a USB gamepad. Each table is
+  a Python module rendered in Blender through the game's camera, with its
+  depth, so the ball passes behind ramps and toys; a new table is a module
+  and a pack, with no new code. Measured on the board: 68-70 fps (3-6 ms a
+  frame), Casino Real 62 at the median with dips while its roulette spins.
+  PSRAM only; a table takes 10-11.6 MB of pictures
+  ([apps/pinball/README.md](apps/pinball/README.md)). Its six art packs
+  (`pinball_<table>_p4.pak`, 19 MB) are rendered on the author's machine:
+  attached by hand to the first release that has it, carried over after.
 - **Home screen: edit mode without leaving it.** A swipe turns the page in
   edit mode too, and an icon held still for a moment (150 ms) is the one
   that drags; before, the pages did not scroll while editing, and taking a

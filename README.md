@@ -8,13 +8,13 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and forty-two more on
+portrait or landscape. There are twenty-three built-in apps and forty-three more on
 the microSD, loaded as shared objects:
 
-- **Games:** twenty-two, among them Mila (a Sokoban with a black cat in
-  Blender 3D), Monster Hop, a racing game, golf, a robot RPG, Doom at
-  35 fps and Duke Nukem 3D; and an emulator of fourteen consoles, the
-  Game Boy Advance and the Neo Geo at full speed.
+- **Games:** twenty-three, among them Mila (a Sokoban with a black cat in
+  Blender 3D), Monster Hop, a racing game, golf, a robot RPG, a 3D pinball
+  with six tables, Doom at 35 fps and Duke Nukem 3D; and an emulator of
+  fourteen consoles, the Game Boy Advance and the Neo Geo at full speed.
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
   a VNC viewer for a computer's screen, a computer algebra system with
@@ -448,6 +448,32 @@ with the Sound Blaster's FM music; both on the board, from the shareware
 episodes. Doom needs a WAD of your own and Duke a GRP (the shareware one
 works); neither is included.
 
+### Pinball 3D
+
+Six tables, chosen in a carousel ([apps/pinball/README.md](apps/pinball/README.md)):
+Noche de Zombis, Robots en Órbita, El Templo de la Jungla, El Gran Circo,
+Casino Real and La Isla Pirata. Upright, a touch on either half of the
+screen moves that side's flippers, and the launch button comes up when a
+ball waits.
+
+| The carousel | Noche de Zombis | El Gran Circo | Casino Real | La Isla Pirata |
+|---|---|---|---|---|
+| <img src="docs/img/app-pinball-carousel.jpg" width="125"> | <img src="docs/img/app-pinball-zombis.jpg" width="125"> | <img src="docs/img/app-pinball-circo.jpg" width="125"> | <img src="docs/img/app-pinball-casino.jpg" width="125"> | <img src="docs/img/app-pinball-piratas.jpg" width="125"> |
+
+- **Each table its own:** its layout and ramp (a loop, a rope bridge, the
+  big top's two ramps, a straight one up to a slot machine, a spiral into a
+  whirlpool), its toys after the machines of the eighties and nineties (a
+  zombie to beat, a robot that swallows the ball, a rolling boulder, a
+  human cannonball and a merry-go-round, a roulette and a slot machine, a
+  ghost ship and the Kraken), a video mode on the DMD, and its own buttons,
+  sounds and music.
+- **The rules:** missions, locks and multiball, skill shot, kickback, ball
+  save, bonus multiplier, tilt, extra balls; a USB gamepad plays it too.
+- **How it is made:** each table is a Python module, rendered in Blender
+  through the game's own camera (the picture, its depth, the lamps, the
+  toys' frames), so the ball goes behind ramps and toys; a new table is a
+  module and a pack, no new code. 60-70 fps on the board.
+
 | Maps | Radio | Video | 3D Viewer | Pixel Art | Tuner |
 |---|---|---|---|---|---|
 | <img src="docs/img/app-mapas.jpg" width="125"> | <img src="docs/img/app-radio.png" width="125"> | <img src="docs/img/app-video.png" width="125"> | <img src="docs/img/app-visor3d.png" width="125"> | <img src="docs/img/app-pixel.png" width="125"> | <img src="docs/img/app-tuner.png" width="125"> |
@@ -746,6 +772,7 @@ Where something is a guess, it says so.
 | [EMOJI.md](docs/EMOJI.md) | the colour emoji pack and how a text gets them |
 | [MODULES.md](docs/MODULES.md) | the 40-pin header, `modules.txt`, I2C, SPI and GPIO from apps |
 | [apps/emulador/README.md](apps/emulador/README.md) | the emulator: the consoles, the card's folders, the modules, what was measured |
+| [apps/pinball/README.md](apps/pinball/README.md) | the pinball: the tables, the rules, adding a table, rendering and packing, what was measured |
 | [apps/rf/README.md](apps/rf/README.md) | the software radio: receivers, the signal chain, what was measured, the decoders and their tests |
 | [PORTAL-PAGES.md](docs/PORTAL-PAGES.md) | an app's own page in the web portal, from the card, with no firmware |
 | [SECURITY.md](docs/SECURITY.md) | who may use the portal: trusted networks, the password, the token, and what is not covered |
@@ -765,8 +792,10 @@ the character, and are not affiliated with or endorsed by Anthropic. Doom is
 id Software's, Duke Nukem is Gearbox Software's (the Duke Nukem 3D app is
 unofficial), and Home Assistant is its owners'. The consoles the Emulador
 plays are their makers' (Nintendo, Sega, SNK, NEC, Atari, Coleco), and the
-app is not affiliated with any of them. The other products named in the
-apps belong to their owners too.
+app is not affiliated with any of them. 3D Pinball Space Cadet is
+Microsoft's, and the machines the Pinball 3D tables take ideas from are
+their makers'; its tables, art and sounds are all its own. The other
+products named in the apps belong to their owners too.
 
 Python® is a registered trademark of the Python Software Foundation; the
 Python app uses the name to say what it runs, and is not affiliated with or
@@ -795,7 +824,7 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 43 de la tarjeta (juegos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 44 de la tarjeta (juegos, un pinball 3D de seis mesas, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
 | Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
 | Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |

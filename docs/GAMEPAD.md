@@ -47,6 +47,7 @@ by touch never sees it. Board games put a cursor on the board the same way.
 | Mila | D-pad a step at a time · B undo · R restart · L held shows the whole level · START pause · at home B pets her, R a toy, L the present |
 | Monster Hop | D-pad hops (held, it keeps hopping) · A action · START pause, Play on the title · L/R tabs and zones |
 | Neon Snakes | D-pad or stick turns · START pause |
+| Pinball 3D | L or left the left flippers, R or right the right ones · A launches (held, it charges) · up nudges · START pause · in the carousel left/right pick a table, A or START plays, up the settings |
 | Simon | the four directions are the four pads, clockwise from the top left (up green) · A or START starts |
 | Topos | D-pad moves a frame over the holes · A or B whacks · START pause |
 | Truco | D-pad over your cards and the calls · A lifts and plays a card, answers · B puts a lifted card back · START menu |

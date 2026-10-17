@@ -264,7 +264,7 @@ hit), `flash1..3` (flashers on big events), and for the attractions `toy`,
   16 kHz in the pack; a ten-voice mixer on the streaming speaker.
 
 Memory (PSRAM only: an allocation never falls back to internal RAM): a
-table takes ~10 MB of pictures (the frame and its depth, the table's
+table takes 10-11.6 MB of pictures (the frame and its depth, the table's
 picture and its depth, the art) and ~13 MB in all with its sounds; the
 carousel holds the six cards' thumbnails (~4 MB) only while it is up, and
 frees them before a table loads. Measured on the board (0.17.0, freshly
@@ -277,6 +277,13 @@ frames a second (the frame timer's 14 ms; the panel shows 60), 3-6 ms of
 work a frame, 1-2.5 ms drawing and 2-4 ms copying 110-220 rows to the
 panel's buffer. The log says every 5 s:
 `pinball: 69.6 fps, 3.37 ms a frame (draw 1.13, push 2.06), 113 rows/frame pushed, flip 1, 10122 KB art`.
+
+With the toys and the new ramps (2026-10-17, the user playing, from the
+log): La Isla Pirata 67-69 fps, 5-6 ms a frame (draw 1.5-2); Casino Real
+62 fps at the median, 10-12 ms a frame (draw ~5), and down to 38-45 fps
+for a few seconds when drawing took 12-16 ms. The roulette is the likely
+cost: a 104 mm disc whose frame changes every frame, drawn with its depth,
+on top of whatever the ball dirties.
 
 On 0.17.0 the first build loaded a table beside the carousel's cards and
 ran out of PSRAM: half the pack missing, and malloc() falling back to
@@ -292,4 +299,6 @@ tutorial, `PB_DEBUG=1` draws the physics' shapes over the picture,
 
 ## Pending
 
+- Casino Real's dips under 60 fps: make the roulette cheaper to draw (only
+  the ring that changes, or fewer of its frames a second).
 - Tune the difficulty with real players (ball time, outlanes, missions).

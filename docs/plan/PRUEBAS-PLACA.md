@@ -241,6 +241,13 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
 - [x] Táctil con cinco dedos (2026-10-17, ddc159c): la cruceta con B (y con
       R) a la vez en el emulador; antes un dedo quieto al lado de otro no
       contaba nunca.
+- [x] Pinball 3D (2026-10-17): seis mesas, cada una con su rampa, sus
+      juguetes y su modo de video; jugado por el usuario ("me gusta").
+      Medido del registro: 68-70 fps (3-6 ms por cuadro) en Zombis y
+      Piratas; Casino 62 fps de mediana con bajones a 38-45 mientras gira la
+      ruleta. La primera versión se quedaba sin PSRAM (una paleta sin
+      dibujar y después colgado): arreglado cargando sólo en PSRAM y
+      liberando las tarjetas del carrusel antes de la mesa.
 - [ ] Sin Wi-Fi después de un reinicio por software (visto otra vez el
       2026-10-06, 1 vez en ~140 reinicios seguidos): la interfaz anda, el
       C6 no levanta la red, y no lo arreglan ni apagar y prender el Wi-Fi
@@ -742,6 +749,11 @@ por el Registro del portal sin cable serie)
       Mega Drive, Master System, PC Engine, Ataris, Lynx).
 - [ ] Dos jugadores: uno en pantalla y otro en el teclado USB.
 - [ ] Joystick USB en el emulador, y SELECT+START para el menú.
+
+**Pinball 3D**
+- [ ] Casino Real a 60 fps fijos (la ruleta, apps/pinball/README.md).
+- [ ] Jugar las seis mesas con joystick USB.
+- [ ] Ajustar la dificultad con jugadores de verdad (tiempo por bola, outlanes).
 
 ## Pendientes anotados en la placa
 

@@ -1746,8 +1746,13 @@ def render_ball():
     sc.world = studio_world()
     r.resolution_x = r.resolution_y = 128
     no_border()
-    a = render(os.path.join(TMP, 'ball.exr'), max(64, args.samples), transparent=True)
-    write_png(a, os.path.join(args.out, 'ball.png'), alpha=True)
+    # no denoiser: on this little picture it sometimes gave back a black ball
+    for attempt in range(3):
+        a = render(os.path.join(TMP, 'ball.exr'), 384, denoise=False, transparent=True)
+        if float(np.nanmean(a[48:80, 48:80, :3])) > 0.1:
+            break
+        print('the ball came out dark, again')
+    write_png(np.nan_to_num(a), os.path.join(args.out, 'ball.png'), alpha=True)
     r.resolution_x, r.resolution_y = IMG_W, IMG_H
     sc.camera = cam
     sc.world = old_world

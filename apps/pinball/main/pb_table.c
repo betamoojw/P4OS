@@ -16,15 +16,16 @@
 
 static const char *const TYPES[OT_N] = {
     "wall", "post", "bumper", "sling", "drop", "target", "rollover", "spinner", "saucer", "ramp", "gate", "kickback",
-    "flipper",
+    "flipper", "toy",
 };
 static const char *const ROLES[RL_N] = {
     "none", "lane", "inlane", "outlane", "bumper", "sling", "drop", "target", "spinner", "saucer", "ramp", "orbit",
-    "kickback", "post",
+    "kickback", "post", "toy", "lock",
 };
 static const char *const GOALS[GL_N] = {
-    "bumper", "sling", "drop", "target", "spinner", "ramp", "orbit", "lane", "saucer", "any",
+    "bumper", "sling", "drop", "target", "spinner", "ramp", "orbit", "lane", "saucer", "any", "toy",
 };
+static const char *const TOYS[TK_N] = { "bash", "mover", "disc", "cannon", "magnet" };
 static const char *const LANGS[PB_LANGS] = { "es", "en", "de" };
 
 int pb_lang(void)
@@ -164,6 +165,7 @@ bool pb_table_parse(pb_table_t *t, const char *text, bool only_head)
             o->bank = 0;
             if (n >= 6) o->a = F(tok[5]);
             if (n >= 7) o->b = F(tok[6]);
+            if (n >= 8) o->c = F(tok[7]);
             if (o->type == OT_DROP && n >= 6) {
                 /* drop targets: banks by name */
                 int b = 0;
@@ -211,7 +213,7 @@ bool pb_table_parse(pb_table_t *t, const char *text, bool only_head)
             r->r = F(tok[3]);
             r->obj = (int16_t)I(tok[4]);
         } else if (!strcmp(k, "flipper") && n >= 9) {
-            if (t->nflip >= 2) continue;
+            if (t->nflip >= PB_MAX_FLIP) continue;
             pb_flipdef_t *f = &t->flip[t->nflip++];
             f->side = tok[1][0] == 'R';
             f->x = F(tok[2]);
@@ -247,6 +249,33 @@ bool pb_table_parse(pb_table_t *t, const char *text, bool only_head)
                 r->s[i] = s;
             }
             r->total = s;
+        } else if (!strcmp(k, "toy") && n >= 12) {
+            if (t->ntoy >= PB_MAX_TOY) continue;
+            pb_toydef_t *y = &t->toy[t->ntoy++];
+            y->obj = (int16_t)I(tok[1]);
+            int kd = lookup(TOYS, TK_N, tok[2]);
+            y->kind = (uint8_t)(kd < 0 ? TK_BASH : kd);
+            y->x = F(tok[3]);
+            y->y = F(tok[4]);
+            y->r = F(tok[5]);
+            y->x1 = F(tok[6]);
+            y->y1 = F(tok[7]);
+            y->a0 = F(tok[8]);
+            y->a1 = F(tok[9]);
+            y->period = F(tok[10]);
+            (void)tok[11];
+        } else if (!strcmp(k, "feat") && n >= 2) {
+            if (t->nfeat >= PB_MAX_FEAT) continue;
+            pb_feat_t *f = &t->feat[t->nfeat++];
+            copy(f->kind, tok[1], sizeof f->kind);
+            for (int i = 2; i < n && f->nargs < PB_FEAT_ARGS; i++) {
+                char *eq = strchr(tok[i], '=');
+                if (!eq) continue;
+                *eq = 0;
+                copy(f->key[f->nargs], tok[i], sizeof f->key[0]);
+                copy(f->val[f->nargs], eq + 1, sizeof f->val[0]);
+                f->nargs++;
+            }
         } else if (!strcmp(k, "lamp") && n >= 6) {
             if (t->nlamp >= PB_MAX_LAMP) continue;
             pb_lampdef_t *l = &t->lamp[t->nlamp++];
@@ -281,7 +310,7 @@ bool pb_table_parse(pb_table_t *t, const char *text, bool only_head)
     for (int i = 0; i < t->nobj; i++) {
         t->obj[i].lamp = (int16_t)pb_table_find_lamp(t, t->obj[i].name);
     }
-    if (t->nflip != 2 || t->cam.f <= 0 || t->w <= 0) {
+    if (t->nflip < 2 || t->cam.f <= 0 || t->w <= 0) {
         aos_hal_log("pinball", "table %s lacks flippers, camera or size", t->id);
         return false;
     }
@@ -294,6 +323,28 @@ int pb_table_find_obj(const pb_table_t *t, const char *name)
         if (!strcmp(t->obj[i].name, name)) return i;
     }
     return -1;
+}
+
+int pb_table_find_toy(const pb_table_t *t, const char *name)
+{
+    for (int i = 0; i < t->ntoy; i++) {
+        if (!strcmp(t->obj[t->toy[i].obj].name, name)) return i;
+    }
+    return -1;
+}
+
+const char *pb_feat_get(const pb_feat_t *f, const char *key, const char *def)
+{
+    for (int i = 0; i < f->nargs; i++) {
+        if (!strcmp(f->key[i], key)) return f->val[i];
+    }
+    return def;
+}
+
+int pb_feat_int(const pb_feat_t *f, const char *key, int def)
+{
+    const char *v = pb_feat_get(f, key, NULL);
+    return v ? (int)strtol(v, NULL, 10) : def;
 }
 
 int pb_table_find_lamp(const pb_table_t *t, const char *name)

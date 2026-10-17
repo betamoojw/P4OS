@@ -35,6 +35,7 @@
 #define PB_TH       (PB_SH - PB_TOP)
 #define PB_MAX_DIRTY 48
 #define PB_FLIP_FRAMES 24
+#define PB_TOY_FRAMES 24
 #define PB_SPIN_FRAMES 16
 #define PB_BALL_MIN 14
 #define PB_BALL_MAX 52
@@ -48,6 +49,7 @@ typedef struct {
     uint16_t *px;
     uint8_t  *a;
     uint8_t  *bump;             /* the ball: how far its surface stands out  */
+    uint16_t *z;                /* a toy's frame: the depth of its pixels    */
 } pb_spr_t;
 
 typedef struct {
@@ -73,9 +75,13 @@ typedef struct {
     uint16_t  *base;            /* PB_SW x PB_TH, every lamp off              */
     uint16_t  *zbase;
     uint16_t  *dmd_bg;          /* PB_SW x PB_TOP, or NULL                    */
-    pb_spr_t   flip[2][PB_FLIP_FRAMES];
-    int        nflip[2];
-    pb_rect_t  flip_area[2];
+    pb_spr_t   flip[PB_MAX_FLIP][PB_FLIP_FRAMES];
+    int        nflip[PB_MAX_FLIP];
+    pb_rect_t  flip_area[PB_MAX_FLIP];
+    pb_spr_t   toy[PB_MAX_TOY][PB_TOY_FRAMES];
+    int        ntoy[PB_MAX_TOY];
+    pb_rect_t  toy_area[PB_MAX_TOY];
+    int        toy_drawn[PB_MAX_TOY];     /* frame * 256 + opacity drawn     */
     pb_spr_t   spin[PB_SPIN_FRAMES];
     int        nspin;
     int        spin_obj;
@@ -99,7 +105,7 @@ typedef struct {
     int        ndirty;
     pb_rect_t  prev[PB_MAX_BALLS * 2];
     int        nprev;
-    int        flip_drawn[2], spin_drawn;
+    int        flip_drawn[PB_MAX_FLIP], spin_drawn;
     int        launch_drawn;    /* -1 hidden, else pressed * 100 + charge %  */
     bool       pause_drawn;
     pb_rect_t  launch_rc, pause_rc;

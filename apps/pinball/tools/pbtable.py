@@ -38,14 +38,18 @@ MATS = {'wall': 0, 'rubber': 1, 'post': 2, 'plastic': 3, 'metal': 4, 'flipper': 
 
 # object types the game knows (pb_table.h, OT_*)
 OT = {'wall': 0, 'post': 1, 'bumper': 2, 'sling': 3, 'drop': 4, 'target': 5, 'rollover': 6,
-      'spinner': 7, 'saucer': 8, 'ramp': 9, 'gate': 10, 'kickback': 11, 'flipper': 12}
+      'spinner': 7, 'saucer': 8, 'ramp': 9, 'gate': 10, 'kickback': 11, 'flipper': 12, 'toy': 13}
+
+# the toys (pb_table.h, TK_*) and how many frames Blender renders of each
+TOY_KINDS = ('bash', 'mover', 'disc', 'cannon', 'magnet')
+TOY_FRAMES = {'bash': 9, 'mover': 16, 'disc': 16, 'cannon': 9, 'magnet': 0}
 
 # roles the rules know (pb_game.c): what a hit means
 ROLES = ('none', 'lane', 'inlane', 'outlane', 'bumper', 'sling', 'drop', 'target', 'spinner',
-         'saucer', 'ramp', 'orbit', 'kickback', 'post')
+         'saucer', 'ramp', 'orbit', 'kickback', 'post', 'toy', 'lock')
 
 # what a mission can ask for (pb_game.c, the same names)
-GOALS = ('bumper', 'sling', 'drop', 'target', 'spinner', 'ramp', 'orbit', 'lane', 'saucer', 'any')
+GOALS = ('bumper', 'sling', 'drop', 'target', 'spinner', 'ramp', 'orbit', 'lane', 'saucer', 'any', 'toy')
 
 
 def arc(cx, cy, r, a0, a1, n=None):
@@ -173,6 +177,8 @@ class Table:
                           flipper=0xF0F0F0, flipper_rubber=0xD02020, cabinet=0x402010)
         self.paint = None               # fn(draw, img, px) painting the playfield's art
         self.decor = []
+        self.toys = []                  # name, kind, x, y, r, x1, y1, a0, a1, period, obj, model
+        self.feats = []
 
     # ---- objects -------------------------------------------------------
     def _obj(self, typ, name, role='none', **kw):
@@ -263,11 +269,37 @@ class Table:
         self.vis.append(dict(t='spinner', a=a, b=b, color=color))
         return o
 
-    def saucer(self, name, x, y, eject_deg, eject_speed=2200, r=16):
-        o = self._obj('saucer', name, 'saucer', eject=eject_deg, speed=eject_speed)
+    def saucer(self, name, x, y, eject_deg, eject_speed=2200, r=16, role='saucer', vuk=None):
+        """a hole that holds the ball and kicks it out at eject_deg; with
+        vuk (a habitrail's name) it kicks it up through that wire ramp to
+        somewhere else instead"""
+        o = self._obj('saucer', name, role, eject=eject_deg, speed=eject_speed, vuk=vuk)
         self.rolls.append((x, y, r, o))
         self.vis.append(dict(t='saucer', x=x, y=y, r=r))
         return o
+
+    def habitrail(self, name, path, color=0xC8CCD4):
+        """a wire ramp nothing enters by itself: a saucer kicks the ball up it"""
+        o = self._obj('ramp', name, 'none', min_speed=0)
+        self.ramps.append(dict(obj=o, path=[tuple(p) for p in path], exit_speed=0))
+        self.vis.append(dict(t='ramp', path=[tuple(p) for p in path], width=34, color=color, style='wire',
+                             a=None, b=None))
+        return o
+
+    def toy(self, name, kind, x, y, r, model, x1=0.0, y1=0.0, a0=0.0, a1=0.0, period=0.0, s=1.0, **kw):
+        """a toy that moves (TOY_KINDS); 'model' is what Blender builds
+        for it (the theme's DECO_TOYS)"""
+        assert kind in TOY_KINDS, kind
+        o = self._obj('toy', name, 'toy')
+        d = dict(name=name, kind=kind, x=x, y=y, r=r, x1=x1, y1=y1, a0=a0, a1=a1, period=period, obj=o,
+                 model=model, s=s, index=len(self.toys))
+        d.update(kw)
+        self.toys.append(d)
+        return o
+
+    def feat(self, kind, **kw):
+        """one of the table's attractions (pb_game.c, 'Features')"""
+        self.feats.append((kind, kw))
 
     def gate(self, name, a, b, vis=True):
         """one way: the ball passes going to the left of a -> b (y down)"""
@@ -409,6 +441,12 @@ class Table:
             self.post(x, y + 30, r=5, name='laneguide%d' % round(x))
 
     # ---- export ----------------------------------------------------------
+    def find(self, name):
+        for o in self.objs:
+            if o['name'] == name:
+                return o['idx']
+        raise KeyError(name)
+
     def check(self):
         names = [o['name'] for o in self.objs]
         assert len(names) == len(set(names)), [n for n in names if names.count(n) > 1]
@@ -444,7 +482,10 @@ class Table:
             elif o['type'] == 'sling':
                 extra = ' %d' % o['kick']
             elif o['type'] == 'saucer':
-                extra = ' %.1f %d' % (o['eject'], o['speed'])
+                vuk = 0
+                if o.get('vuk'):
+                    vuk = 1 + [r['obj'] for r in self.ramps].index(self.find(o['vuk']))
+                extra = ' %.1f %d %d' % (o['eject'], o['speed'], vuk)
             elif o['type'] == 'ramp':
                 extra = ' %d' % o['min_speed']
             elif o['type'] == 'kickback':
@@ -466,6 +507,11 @@ class Table:
         for r in self.ramps:
             pts = ' '.join('%.1f %.1f %.1f' % p for p in r['path'])
             L.append('ramp %d %d %d %s' % (r['obj'], r['exit_speed'], len(r['path']), pts))
+        for y in self.toys:
+            L.append('toy %d %s %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.2f 0' % (
+                y['obj'], y['kind'], y['x'], y['y'], y['r'], y['x1'], y['y1'], y['a0'], y['a1'], y['period']))
+        for kind, kw in self.feats:
+            L.append('feat %s %s' % (kind, ' '.join('%s=%s' % (k, v) for k, v in kw.items())))
         for l in self.lamps:
             sx, sy, _ = c.project(l['x'], l['y'], l.get('z', 0))
             L.append('lamp %s %s %d %d %06x' % (l['name'], l['kind'], round(sx), round(sy), l['color']))
@@ -479,7 +525,8 @@ class Table:
 
     def scene(self):
         return dict(id=self.id, W=W, H=H, ball_r=BALL_R, camera=self.camera.blender(), theme=self.theme,
-                    vis=self.vis, flippers=self.flippers, lamps=self.lamps, lane_x=LANE_X,
+                    vis=self.vis, flippers=self.flippers, lamps=self.lamps, lane_x=LANE_X, toys=self.toys,
+                    toy_frames=TOY_FRAMES,
                     objs=[dict(name=o['name'], type=o['type']) for o in self.objs])
 
     def save_scene(self, path):

@@ -147,10 +147,23 @@ void pb_phys_reset(pb_phys_t *p)
     memset(p->down, 0, sizeof p->down);
     memset(p->cool, 0, sizeof p->cool);
     memset(p->spin_vel, 0, sizeof p->spin_vel);
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < p->t->nflip; i++) {
         p->flip[i].ang = p->t->flip[i].rest;
         p->flip[i].omega = 0;
         p->flip[i].held = false;
+    }
+    memset(p->toy, 0, sizeof p->toy);
+    memset(p->keep, 0, sizeof p->keep);
+    for (int i = 0; i < p->t->ntoy; i++) {
+        const pb_toydef_t *d = &p->t->toy[i];
+        pb_toy_t *y = &p->toy[i];
+        y->up = true;
+        y->level = 1;
+        y->anim = 9;
+        y->x = d->x;
+        y->y = d->y;
+        if (d->kind == TK_DISC) y->omega = y->target = d->a0;
+        if (d->kind == TK_CANNON) y->phase = (d->a0 + d->a1) * 0.5f * PB_PI / 180.0f;
     }
     p->kickback_lit = false;
     p->tilted = false;
@@ -192,6 +205,7 @@ int pb_phys_serve(pb_phys_t *p)
         b->y = b->py = p->t->plunger_y;
         b->saucer = b->saucer_skip = -1;
         b->ramp = -1;
+        b->holder = b->on_disc = -1;
         return i;
     }
     return -1;
@@ -225,8 +239,75 @@ void pb_phys_nudge(pb_phys_t *p, float dx, float dy)
 void pb_phys_flipper(pb_phys_t *p, int side, bool held)
 {
     if (p->tilted) held = false;
-    if (held && !p->flip[side].held) event(p, EV_FLIP, -1, side, 0);
-    p->flip[side].held = held;
+    bool ev = false;
+    for (int i = 0; i < p->t->nflip; i++) {
+        if (p->t->flip[i].side != side) continue;
+        if (held && !p->flip[i].held) ev = true;
+        p->flip[i].held = held;
+    }
+    if (ev) event(p, EV_FLIP, -1, side, 0);
+}
+
+void pb_phys_toy_up(pb_phys_t *p, int toy, bool up)
+{
+    if (toy >= 0 && toy < p->t->ntoy) p->toy[toy].up = up;
+}
+
+void pb_phys_magnet(pb_phys_t *p, int toy, bool on)
+{
+    if (toy >= 0 && toy < p->t->ntoy) p->toy[toy].on = on;
+}
+
+void pb_phys_disc_speed(pb_phys_t *p, int toy, float rad_s)
+{
+    if (toy >= 0 && toy < p->t->ntoy) p->toy[toy].target = rad_s;
+}
+
+int pb_phys_cannon_loaded(const pb_phys_t *p)
+{
+    for (int i = 0; i < PB_MAX_BALLS; i++) {
+        const pb_ball_t *b = &p->ball[i];
+        if (b->state == BS_HELD && p->t->toy[b->holder].kind == TK_CANNON) return b->holder;
+    }
+    return -1;
+}
+
+static void throw_ball(pb_phys_t *p, int bi, float ang_rad, float speed, int evk)
+{
+    pb_ball_t *b = &p->ball[bi];
+    const pb_toydef_t *d = &p->t->toy[b->holder];
+    b->state = BS_FREE;
+    b->vx = cosf(ang_rad) * speed;
+    b->vy = sinf(ang_rad) * speed;
+    b->saucer_skip = d->obj;
+    event(p, evk, bi, d->obj, speed);
+    b->holder = -1;
+}
+
+void pb_phys_cannon_fire(pb_phys_t *p)
+{
+    for (int i = 0; i < PB_MAX_BALLS; i++) {
+        pb_ball_t *b = &p->ball[i];
+        if (b->state != BS_HELD || p->t->toy[b->holder].kind != TK_CANNON) continue;
+        const pb_toydef_t *d = &p->t->toy[b->holder];
+        throw_ball(p, i, p->toy[b->holder].phase, d->x1 > 0 ? d->x1 : 3000.0f, EV_CANNON_FIRE);
+    }
+}
+
+void pb_phys_saucer_keep(pb_phys_t *p, int obj, bool keep)
+{
+    if (obj >= 0 && obj < PB_MAX_OBJ) p->keep[obj] = keep;
+}
+
+int pb_phys_kept(const pb_phys_t *p)
+{
+    int n = 0;
+    for (int i = 0; i < PB_MAX_BALLS; i++) {
+        const pb_ball_t *b = &p->ball[i];
+        /* kept: held with no end (a lock), whatever the saucer does now */
+        n += b->state == BS_SAUCER && b->hold > 1e6f;
+    }
+    return n;
 }
 
 void pb_phys_drops_up(pb_phys_t *p, const char *bank)
@@ -247,6 +328,7 @@ void pb_phys_saucer_release(pb_phys_t *p)
 
 float pb_phys_flip_t(const pb_phys_t *p, int side)
 {
+    if (side >= p->t->nflip) return 0;
     const pb_flipdef_t *f = &p->t->flip[side];
     float t = (p->flip[side].ang - f->rest) / (f->up - f->rest);
     return t < 0 ? 0 : t > 1 ? 1 : t;
@@ -418,10 +500,10 @@ static void collide_balls(pb_phys_t *p)
     const float R2 = p->t->ball_r * 2;
     for (int i = 0; i < PB_MAX_BALLS; i++) {
         pb_ball_t *a = &p->ball[i];
-        if (a->state != BS_FREE && a->state != BS_PLUNGER && a->state != BS_SAUCER) continue;
+        if (a->state != BS_FREE && a->state != BS_PLUNGER && a->state != BS_SAUCER && a->state != BS_HELD) continue;
         for (int j = i + 1; j < PB_MAX_BALLS; j++) {
             pb_ball_t *c = &p->ball[j];
-            if (c->state != BS_FREE && c->state != BS_PLUNGER && c->state != BS_SAUCER) continue;
+            if (c->state != BS_FREE && c->state != BS_PLUNGER && c->state != BS_SAUCER && c->state != BS_HELD) continue;
             float dx = c->x - a->x, dy = c->y - a->y;
             float d2 = dx * dx + dy * dy;
             if (d2 >= R2 * R2 || d2 < 1e-6f) continue;
@@ -550,12 +632,168 @@ static void triggers(pb_phys_t *p, int bi)
             b->x = r->x;
             b->y = r->y;
             b->vx = b->vy = 0;
-            b->hold = p->saucer_hold;
+            b->hold = p->keep[r->obj] ? 1e9f : p->saucer_hold;
             event(p, EV_SAUCER, bi, r->obj, sp);
             return;
         }
         event(p, EV_ROLL, bi, r->obj, sp);
     }
+}
+
+
+/* ---- the toys ------------------------------------------------------------- */
+
+static void toys_step(pb_phys_t *p)
+{
+    const pb_table_t *t = p->t;
+    for (int i = 0; i < t->ntoy; i++) {
+        const pb_toydef_t *d = &t->toy[i];
+        pb_toy_t *y = &p->toy[i];
+        y->anim += STEP;
+        if (y->cool > 0) y->cool -= STEP;
+        float goal = y->up ? 1.0f : 0.0f;
+        if (y->level < goal) {
+            y->level += 2.5f * STEP;
+            if (y->level > goal) y->level = goal;
+        } else if (y->level > goal) {
+            y->level -= 2.5f * STEP;
+            if (y->level < goal) y->level = goal;
+        }
+        switch (d->kind) {
+        case TK_MOVER: {
+            float per = d->period > 0.5f ? d->period : 6.0f;
+            y->phase += STEP / per;
+            if (y->phase >= 1.0f) y->phase -= 1.0f;
+            float k = 0.5f - 0.5f * cosf(2 * PB_PI * y->phase);
+            y->x = d->x + (d->x1 - d->x) * k;
+            y->y = d->y + (d->y1 - d->y) * k;
+            break;
+        }
+        case TK_DISC: {
+            float dw = y->target - y->omega;
+            float step = 3.0f * STEP;
+            y->omega += dw > step ? step : dw < -step ? -step : dw;
+            y->phase += y->omega * STEP;
+            if (y->phase > 2 * PB_PI) y->phase -= 2 * PB_PI;
+            if (y->phase < 0) y->phase += 2 * PB_PI;
+            break;
+        }
+        case TK_CANNON:
+            if (pb_phys_cannon_loaded(p) == i) {
+                float per = d->period > 0.3f ? d->period : 2.4f;
+                float k = 0.5f - 0.5f * cosf(2 * PB_PI * y->anim / per);
+                y->phase = (d->a0 + (d->a1 - d->a0) * k) * PB_PI / 180.0f;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+/* what the toys do to a free ball this substep; false when one took it */
+static bool toys_ball(pb_phys_t *p, int bi)
+{
+    const pb_table_t *t = p->t;
+    pb_ball_t *b = &p->ball[bi];
+    const float R = t->ball_r;
+    for (int i = 0; i < t->ntoy; i++) {
+        const pb_toydef_t *d = &t->toy[i];
+        pb_toy_t *y = &p->toy[i];
+        float dx = b->x - y->x, dy = b->y - y->y;
+        float d2 = dx * dx + dy * dy;
+        switch (d->kind) {
+        case TK_BASH:
+        case TK_MOVER: {
+            if (y->level < 0.6f) break;
+            float lim = R + d->r;
+            if (d2 >= lim * lim) break;
+            float dd = sqrtf(d2);
+            float nx = dd > 1e-3f ? dx / dd : 0, ny = dd > 1e-3f ? dy / dd : 1;
+            b->x = y->x + nx * lim;
+            b->y = y->y + ny * lim;
+            /* a mover carries its speed into the knock */
+            float sx = 0, sy = 0;
+            if (d->kind == TK_MOVER) {
+                float per = d->period > 0.5f ? d->period : 6.0f;
+                float dk = PB_PI * sinf(2 * PB_PI * y->phase) / per;
+                sx = (d->x1 - d->x) * dk;
+                sy = (d->y1 - d->y) * dk;
+            }
+            float vn = bounce(b, nx, ny, sx, sy, 0.55f, 0.05f);
+            if (vn > 120 && y->cool <= 0) {
+                y->cool = 0.2f;
+                y->anim = 0;
+                event(p, EV_TOY_HIT, bi, d->obj, vn);
+            }
+            break;
+        }
+        case TK_DISC: {
+            bool in = d2 < d->r * d->r;
+            if (in) {
+                /* the disc's surface drags the ball along, and its spin
+                 * throws it outwards */
+                float sx = -y->omega * dy, sy = y->omega * dx;
+                float k = 3.0f * STEP;
+                b->vx += (sx - b->vx) * k;
+                b->vy += (sy - b->vy) * k;
+                if (b->on_disc != i) {
+                    b->on_disc = (int8_t)i;
+                    event(p, EV_DISC_IN, bi, d->obj, 0);
+                }
+            } else if (b->on_disc == i) {
+                b->on_disc = -1;
+                float a = atan2f(dy, dx) - y->phase;
+                while (a < 0) a += 2 * PB_PI;
+                while (a >= 2 * PB_PI) a -= 2 * PB_PI;
+                event(p, EV_DISC_OUT, bi, d->obj, a);
+            }
+            break;
+        }
+        case TK_CANNON:
+        case TK_MAGNET: {
+            if (b->saucer_skip == d->obj) {
+                if (d2 > (d->r + 10) * (d->r + 10)) b->saucer_skip = -1;
+                break;
+            }
+            if (d->kind == TK_MAGNET && !y->on) break;
+            if (d2 >= d->r * d->r) break;
+            if (d->kind == TK_MAGNET) {
+                float dd = sqrtf(d2);
+                float sp = sqrtf(b->vx * b->vx + b->vy * b->vy);
+                if (dd < 10.0f && sp < 900.0f) {
+                    b->state = BS_HELD;
+                    b->holder = (int8_t)i;
+                    b->hold = 1.4f;
+                    b->x = y->x;
+                    b->y = y->y;
+                    b->vx = b->vy = 0;
+                    event(p, EV_MAGNET_GRAB, bi, d->obj, sp);
+                    return false;
+                }
+                float pull = 9000.0f * (1.0f - dd / d->r) * STEP;
+                b->vx += -dx / (dd + 1e-3f) * pull;
+                b->vy += -dy / (dd + 1e-3f) * pull;
+                b->vx *= 1.0f - 2.5f * STEP;
+                b->vy *= 1.0f - 2.5f * STEP;
+            } else {
+                b->state = BS_HELD;
+                b->holder = (int8_t)i;
+                b->hold = 6.0f;
+                b->x = y->x;
+                b->y = y->y;
+                b->vx = b->vy = 0;
+                y->anim = 0;
+                event(p, EV_CANNON_IN, bi, d->obj, 0);
+                return false;
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    return true;
 }
 
 /* ---- one substep -------------------------------------------------------- */
@@ -574,6 +812,13 @@ static void step_ball(pb_phys_t *p, int bi)
         b->hold -= STEP;
         if (b->hold > 0) return;
         const pb_obj_t *o = &t->obj[b->saucer];
+        if (b->vanish) {
+            /* swallowed by the toy: off the table, without a drain */
+            b->state = BS_OFF;
+            b->vanish = false;
+            b->saucer = -1;
+            return;
+        }
         float a = (o->a + (frand(p) - 0.5f) * 8.0f) * PB_PI / 180.0f;
         float v = o->b > 0 ? o->b : 1800.0f;
         b->state = BS_FREE;
@@ -582,6 +827,13 @@ static void step_ball(pb_phys_t *p, int bi)
         b->saucer_skip = b->saucer;
         event(p, EV_EJECT, bi, b->saucer, v);
         b->saucer = -1;
+        if (o->c >= 1 && (int)o->c - 1 < t->nramp) {
+            /* a vertical up-kicker: up through a wire ramp to somewhere else */
+            b->state = BS_RAMP;
+            b->ramp = (int8_t)((int)o->c - 1);
+            b->rs = 0;
+            b->rv = v;
+        }
         return;
     }
     case BS_RAMP: {
@@ -629,6 +881,18 @@ static void step_ball(pb_phys_t *p, int bi)
         b->roll += fabsf(b->rv) * STEP;
         return;
     }
+    case BS_HELD: {
+        const pb_toydef_t *d = &t->toy[b->holder];
+        b->x = b->px = p->toy[b->holder].x;
+        b->y = b->py = p->toy[b->holder].y;
+        b->hold -= STEP;
+        if (b->hold > 0) return;
+        if (d->kind == TK_CANNON)
+            throw_ball(p, bi, p->toy[b->holder].phase, d->x1 > 0 ? d->x1 : 3000.0f, EV_CANNON_FIRE);
+        else
+            throw_ball(p, bi, d->a0 * PB_PI / 180.0f, d->x1 > 0 ? d->x1 : 2500.0f, EV_MAGNET_THROW);
+        return;
+    }
     case BS_FREE:
         break;
     default:
@@ -660,13 +924,11 @@ static void step_ball(pb_phys_t *p, int bi)
                 else collide_seg(p, bi, &t->seg[r]);
             }
         }
-        if (b->y > t->flip[0].y - 120) {
-            collide_flipper(p, bi, 0);
-            collide_flipper(p, bi, 1);
-        }
+        for (int f = 0; f < t->nflip; f++) collide_flipper(p, bi, f);
     }
     triggers(p, bi);
     if (b->state != BS_FREE) return;
+    if (!toys_ball(p, bi)) return;
     /* back to the plunger after a launch too weak to leave the lane */
     if (b->x > t->plunger_x - 12 && b->y > t->plunger_y - 3 && sp2 < 80.0f * 80.0f) {
         b->state = BS_PLUNGER;
@@ -700,7 +962,8 @@ void pb_phys_step(pb_phys_t *p, float dt)
     p->acc += dt;
     while (p->acc >= STEP) {
         p->acc -= STEP;
-        for (int s = 0; s < 2; s++) {
+        toys_step(p);
+        for (int s = 0; s < t->nflip; s++) {
             pb_flip_t *f = &p->flip[s];
             const pb_flipdef_t *d = &t->flip[s];
             float target = f->held ? d->up : d->rest;

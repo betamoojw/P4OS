@@ -5,6 +5,7 @@
 
 #include "aos_i18n.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -12,6 +13,7 @@ const char *const PB_SND_NAMES[SND_N] = {
     "flipper", "bumper", "sling", "drop", "bank", "target", "lane", "lanes", "spinner", "saucer", "eject",
     "ramp", "rampfail", "orbit", "launch", "drain", "save", "kickback", "mission", "missiondone", "jackpot",
     "multiball", "lock", "extra", "tiltwarn", "tilt", "skill", "bonus", "gameover", "start", "wall", "post",
+    "toyhit", "toydown", "video", "cannon", "magnet", "disc", "letter", "videohit",
 };
 
 #define BALL_SAVE_S     10.0f
@@ -19,6 +21,14 @@ const char *const PB_SND_NAMES[SND_N] = {
 #define SKILL_S         6.0f
 #define COMBO_S         3.0f
 #define ORBIT_S         2.5f
+
+static void feat_setup(pb_game_t *g);
+static void feat_reset(pb_game_t *g);
+static void feat_update(pb_game_t *g, float dt);
+static int  feat_lamp(const pb_game_t *g, const char *n);
+static void start_multiball(pb_game_t *g, bool wizard);
+static void jackpot(pb_game_t *g);
+static void mission_goal(pb_game_t *g, int goal);
 
 static const char *TX(const pb_game_t *g, const char *key, const char *fallback)
 {
@@ -84,6 +94,7 @@ void pb_game_init(pb_game_t *g, const pb_table_t *t, pb_phys_t *ph, uint32_t bes
     g->state = GS_ATTRACT;
     g->mission = g->mission_lit = -1;
     g->skill_lane = -1;
+    feat_setup(g);
 }
 
 static void new_ball(pb_game_t *g)
@@ -116,6 +127,7 @@ void pb_game_start(pb_game_t *g)
     g->jackpot = 100000;
     g->mission_next = 0;
     g->ph->kickback_lit = true;
+    feat_reset(g);
     new_ball(g);
     pb_game_say(g, TX(g, "start", _("¡A JUGAR!")), NULL, 2.0f, false);
     pb_game_sound(g, SND_START);
@@ -123,7 +135,8 @@ void pb_game_start(pb_game_t *g)
 
 bool pb_game_wants_launch(const pb_game_t *g)
 {
-    return g->state == GS_PLAY && pb_phys_on_plunger(g->ph) >= 0 && !g->auto_on_plunger;
+    if (g->state != GS_PLAY) return false;
+    return (pb_phys_on_plunger(g->ph) >= 0 && !g->auto_on_plunger) || pb_phys_cannon_loaded(g->ph) >= 0;
 }
 
 void pb_game_flipper(pb_game_t *g, int side)
@@ -242,6 +255,380 @@ static void light_mission(pb_game_t *g)
     }
 }
 
+
+/* ---- the table's own attractions ---------------------------------------------
+ *
+ * A table lists them in its definition ("feat <kind> key=value ..."):
+ *
+ *   bash     toy= hits= points= text= lights=video|lock|multiball
+ *            a toy to beat: hit it 'hits' times and it sinks (the zombie
+ *            back in its grave, the ship under the waves); it comes back
+ *            harder after a while
+ *   lockpen  saucer= toy=   a lock you can see: while the lock is lit and
+ *            the toy is down, the saucer keeps the ball, and a new one is
+ *            served; the second lock starts multiball and lets them go
+ *   letters  objs=a,b,c word=   spell the word with those targets or
+ *            rollovers: it lights the video mode
+ *   video    game= saucer= light=letters|bash|always   a DMD game played
+ *            while the ball waits in that saucer
+ *   roulette toy=   the ball leaving the spinning disc lands on a number:
+ *            the lit colour pays, the zero pays a lot
+ *   cannon   toy= targets=   the cannon swings with the ball in it; the
+ *            launch button fires; targets hit soon after pay more
+ *   magnet   toy= every= on= text=   on now and then; it grabs the ball,
+ *            pays, and throws it
+ *   disc     toy=   a turning platform that pays for every ride
+ */
+
+static const char *const FEATS[FK_N] = { "bash", "lockpen", "letters", "video", "roulette", "cannon", "magnet",
+                                         "disc" };
+
+static int obj_named(const pb_table_t *t, const char *name)
+{
+    return name ? pb_table_find_obj(t, name) : -1;
+}
+
+static void feat_setup(pb_game_t *g)
+{
+    const pb_table_t *t = g->t;
+    g->nfeat = 0;
+    g->video_feat = -1;
+    g->letters_feat = -1;
+    for (int i = 0; i < t->nfeat && g->nfeat < PB_MAX_FEAT; i++) {
+        const pb_feat_t *f = &t->feat[i];
+        int k = -1;
+        for (int j = 0; j < FK_N; j++) {
+            if (!strcmp(f->kind, FEATS[j])) k = j;
+        }
+        if (k < 0) continue;
+        pb_fstate_t *s = &g->feat[g->nfeat++];
+        memset(s, 0, sizeof *s);
+        s->kind = (uint8_t)k;
+        s->toy = (int16_t)pb_table_find_toy(t, pb_feat_get(f, "toy", ""));
+        s->obj = (int16_t)obj_named(t, pb_feat_get(f, "saucer", NULL));
+        s->need = s->need0 = pb_feat_int(f, "hits", 3);
+        s->need_lit = (uint8_t)pb_feat_int(f, "lit", 1);
+        s->points = (uint32_t)pb_feat_int(f, "points", 150000);
+        s->every = (float)pb_feat_int(f, "every", 25);
+        s->on_s = (float)pb_feat_int(f, "on", 8);
+        snprintf(s->text, sizeof s->text, "%s", pb_feat_get(f, "text", ""));
+        snprintf(s->text_hit, sizeof s->text_hit, "%s", pb_feat_get(f, "hit", "toyhit"));
+        snprintf(s->text_done, sizeof s->text_done, "%s", pb_feat_get(f, "done", "toydown"));
+        snprintf(s->text_back, sizeof s->text_back, "%s", pb_feat_get(f, "back", "toyback"));
+        const char *l = pb_feat_get(f, "lights", pb_feat_get(f, "light", ""));
+        s->lights = !strcmp(l, "video") || !strcmp(l, "letters") ? 1 : !strcmp(l, "lock") ? 2
+                  : !strcmp(l, "multiball") ? 3 : !strcmp(l, "always") ? 4 : !strcmp(l, "bash") ? 5 : 0;
+        snprintf(s->word, sizeof s->word, "%s", pb_feat_get(f, "word", ""));
+        if (k == FK_VIDEO) s->round = pb_video_kind(pb_feat_get(f, "game", "shoot"));
+        if (k == FK_LETTERS) g->letters_feat = g->nfeat - 1;
+        /* a list of objects: letters' targets, the cannon's */
+        char buf[24];
+        snprintf(buf, sizeof buf, "%s", pb_feat_get(f, k == FK_CANNON ? "targets" : "objs", ""));
+        for (char *a = buf; *a && s->nobjs < 8;) {
+            char *c = strchr(a, ',');
+            if (c) *c = 0;
+            int o = obj_named(t, a);
+            if (o >= 0) s->objs[s->nobjs++] = (int16_t)o;
+            if (!c) break;
+            a = c + 1;
+        }
+    }
+}
+
+static pb_fstate_t *feat_of(pb_game_t *g, int kind)
+{
+    for (int i = 0; i < g->nfeat; i++) {
+        if (g->feat[i].kind == kind) return &g->feat[i];
+    }
+    return NULL;
+}
+
+static void feat_reset(pb_game_t *g)
+{
+    for (int i = 0; i < g->nfeat; i++) {
+        pb_fstate_t *s = &g->feat[i];
+        s->count = 0;
+        s->round = s->kind == FK_VIDEO ? s->round : 0;
+        s->need = s->need0;
+        s->mask = 0;
+        s->t = 0;
+        if (s->toy >= 0) pb_phys_toy_up(g->ph, s->toy, true);
+        if (s->kind == FK_LOCKPEN && s->obj >= 0) pb_phys_saucer_keep(g->ph, s->obj, false);
+    }
+    g->video_lit = false;
+    g->video.on = false;
+    g->video_feat = -1;
+}
+
+static void feat_light(pb_game_t *g, int what)
+{
+    if (what == 1 || what == 5) {
+        if (!g->video_lit && feat_of(g, FK_VIDEO)) {
+            g->video_lit = true;
+            pb_game_say(g, _("MINIJUEGO LISTO"), _("TIRÁ AL EMBUDO"), 2.0f, false);
+        }
+    } else if (what == 2) {
+        if (!g->lock_lit && !g->multiball) {
+            g->lock_lit = true;
+            pb_game_say(g, _("TRABA LISTA"), NULL, 1.6f, false);
+        }
+    } else if (what == 3) {
+        if (!g->multiball) start_multiball(g, false);
+    }
+}
+
+static void feat_toy_hit(pb_game_t *g, int obj)
+{
+    const pb_table_t *t = g->t;
+    int toy = -1;
+    for (int i = 0; i < t->ntoy; i++) {
+        if (t->toy[i].obj == obj) toy = i;
+    }
+    pb_game_sound(g, SND_TOY_HIT);
+    mission_goal(g, GL_TOY);
+    points(g, 10000);
+    g->bonus += 1000;
+    for (int i = 0; i < g->nfeat; i++) {
+        pb_fstate_t *s = &g->feat[i];
+        if (s->kind != FK_BASH || s->toy != toy || !g->ph->toy[toy].up) continue;
+        if (++s->count < s->need) {
+            char a[24];
+            snprintf(a, sizeof a, "%d / %d", s->count, s->need);
+            pb_game_say(g, TX(g, s->text_hit, _("¡GOLPE!")), a, 0.9f, false);
+            continue;
+        }
+        /* beaten */
+        s->count = 0;
+        s->round++;
+        s->t = 12.0f;
+        pb_phys_toy_up(g->ph, toy, false);
+        char num[24];
+        uint32_t p = s->points * (uint32_t)s->round;
+        dmd_number(num, sizeof num, p);
+        points(g, p);
+        pb_game_say(g, TX(g, s->text_done, _("¡DERROTADO!")), num, 2.2f, false);
+        pb_game_sound(g, SND_TOY_DOWN);
+        big_flash(g);
+        if (s->lights) feat_light(g, s->lights);
+        if (g->multiball) jackpot(g);
+    }
+}
+
+/* the ball in a saucer: an attraction takes it, or false */
+static bool feat_saucer(pb_game_t *g, int obj, int ball)
+{
+    pb_ball_t *b = ball >= 0 ? &g->ph->ball[ball] : NULL;
+    for (int i = 0; i < g->nfeat; i++) {
+        pb_fstate_t *s = &g->feat[i];
+        if (s->obj != obj) continue;
+        if (s->kind == FK_LOCKPEN && g->ph->keep[obj]) {
+            /* locked: it sits there a moment, then the toy swallows it and a
+             * new ball comes; multiball brings them back */
+            pb_phys_saucer_keep(g->ph, obj, false);
+            g->lock_lit = false;
+            g->locks++;
+            g->targets = 0;
+            pb_game_sound(g, SND_LOCK);
+            if (b) b->hold = 1.6f;
+            if (g->locks >= 2) {
+                start_multiball(g, false);
+            } else {
+                char a[32];
+                snprintf(a, sizeof a, _("BOLA %d TRABADA"), g->locks);
+                pb_game_say(g, TX(g, "lock", _("BOLA TRABADA")), a, 2.0f, false);
+                if (b) b->vanish = true;
+                g->need_serve = true;
+                g->launched = false;
+            }
+            return true;
+        }
+        bool other = g->mission_lit >= 0 || g->extra_lit;     /* the saucer has something lit of its own */
+        if (s->kind == FK_VIDEO && s->round >= 0 && !g->multiball &&
+            (g->video_lit || (s->lights == 4 && !other))) {
+            g->video_lit = false;
+            g->video_feat = i;
+            g->video_ball = ball;
+            if (b) b->hold = 1e9f;
+            pb_video_start(&g->video, s->round, (uint32_t)(g->clock * 1000) + 77);
+            pb_game_sound(g, SND_VIDEO);
+            return true;
+        }
+    }
+    return false;
+}
+
+static void feat_obj(pb_game_t *g, int obj)
+{
+    /* letters: a target or rollover of the word */
+    if (g->letters_feat < 0) return;
+    pb_fstate_t *s = &g->feat[g->letters_feat];
+    for (int k = 0; k < s->nobjs; k++) {
+        if (s->objs[k] != obj || (s->mask >> k) & 1) continue;
+        s->mask |= 1u << k;
+        points(g, 15000);
+        pb_game_sound(g, SND_LETTER);
+        g->letters_show = 1.5f;
+        if (s->mask == (1u << s->nobjs) - 1) {
+            s->mask = 0;
+            points(g, 100000);
+            pb_game_say(g, s->word, _("¡COMPLETO!"), 2.0f, true);
+            big_flash(g);
+            feat_light(g, s->lights ? s->lights : 1);
+        }
+    }
+    /* the cannon's targets, soon after a shot */
+    pb_fstate_t *c = feat_of(g, FK_CANNON);
+    if (c && g->cannon_t > 0) {
+        for (int k = 0; k < c->nobjs; k++) {
+            if (c->objs[k] != obj) continue;
+            g->cannon_t = 0;
+            c->count++;
+            uint32_t p = 100000u * (uint32_t)c->count;
+            char num[24];
+            dmd_number(num, sizeof num, p);
+            points(g, p);
+            pb_game_say(g, TX(g, "cannon", _("¡BLANCO!")), num, 2.0f, false);
+            pb_game_sound(g, SND_JACKPOT);
+            big_flash(g);
+        }
+    }
+}
+
+/* where a roulette's ball lands */
+static const uint8_t WHEEL[37] = { 0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16,
+                                   33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26 };
+
+static bool red_number(int n)
+{
+    static const uint8_t RED[18] = { 1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36 };
+    for (int i = 0; i < 18; i++) {
+        if (RED[i] == n) return true;
+    }
+    return false;
+}
+
+static void feat_disc_out(pb_game_t *g, int obj, float ang)
+{
+    for (int i = 0; i < g->nfeat; i++) {
+        pb_fstate_t *s = &g->feat[i];
+        if (s->toy < 0 || g->t->toy[s->toy].obj != obj) continue;
+        if (s->kind == FK_DISC) {
+            s->count++;
+            points(g, 5000u * (uint32_t)s->count);
+            pb_game_sound(g, SND_DISC);
+            mission_goal(g, GL_TOY);
+        } else if (s->kind == FK_ROULETTE) {
+            int pocket = (int)(ang / (2 * 3.14159265f) * 37.0f) % 37;
+            int n = WHEEL[pocket];
+            char a[32], num[24];
+            bool red = red_number(n);
+            if (n == 0) {
+                points(g, 500000);
+                dmd_number(num, sizeof num, 500000);
+                pb_game_say(g, _("¡CERO!"), num, 2.4f, false);
+                pb_game_sound(g, SND_JACKPOT);
+                big_flash(g);
+            } else {
+                bool win = (red ? 0 : 1) == g->roulette_bet;
+                snprintf(a, sizeof a, "%s %d", red ? _("ROJO") : _("NEGRO"), n);
+                uint32_t p = win ? 60000 : 5000;
+                dmd_number(num, sizeof num, p);
+                points(g, p);
+                pb_game_say(g, a, win ? num : _("LA CASA GANA"), 1.6f, false);
+                pb_game_sound(g, win ? SND_LANES : SND_DISC);
+                if (win) flash_lamp(g, "flash1", 0.4f);
+            }
+            g->roulette_bet ^= 1;
+            mission_goal(g, GL_TOY);
+        }
+    }
+}
+
+static void feat_update(pb_game_t *g, float dt)
+{
+    if (g->letters_show > 0) g->letters_show -= dt;
+    if (g->cannon_t > 0) g->cannon_t -= dt;
+    for (int i = 0; i < g->nfeat; i++) {
+        pb_fstate_t *s = &g->feat[i];
+        if (s->kind == FK_BASH && s->toy >= 0 && !g->ph->toy[s->toy].up) {
+            s->t -= dt;
+            /* not over a ball locked inside it */
+            for (int k = 0; k < g->nfeat; k++) {
+                const pb_fstate_t *l = &g->feat[k];
+                if (l->kind != FK_LOCKPEN || l->toy != s->toy || l->obj < 0) continue;
+                for (int b = 0; b < PB_MAX_BALLS; b++) {
+                    if (g->ph->ball[b].state == BS_SAUCER && g->ph->ball[b].saucer == l->obj && s->t < 1) s->t = 1;
+                }
+            }
+            if (s->t <= 0) {
+                /* it is back, and takes one more */
+                pb_phys_toy_up(g->ph, s->toy, true);
+                if (s->need < 6) s->need++;
+                pb_game_say(g, TX(g, s->text_back, _("¡VOLVIÓ!")), NULL, 1.4f, true);
+            }
+        } else if (s->kind == FK_LOCKPEN && s->obj >= 0) {
+            /* the pen keeps a ball while the lock is lit and its door is open */
+            bool open = s->toy < 0 || !g->ph->toy[s->toy].up;
+            pb_phys_saucer_keep(g->ph, s->obj, (g->lock_lit || !s->need_lit) && open && !g->multiball);
+        } else if (s->kind == FK_MAGNET && s->toy >= 0) {
+            s->t += dt;
+            float cyc = s->every > 1 ? s->every : 25;
+            bool on = fmodf(s->t, cyc) > cyc - (s->on_s > 0 ? s->on_s : 8) || g->multiball;
+            pb_phys_magnet(g->ph, s->toy, on && !g->tilted);
+        }
+    }
+    if (g->video.on) {
+        if (!pb_video_step(&g->video, dt, g->in_lp, g->in_rp, g->in_lh, g->in_rh)) {
+            uint32_t p = g->video.score;
+            points(g, p);
+            char num[24];
+            dmd_number(num, sizeof num, p);
+            pb_game_say(g, _("MINIJUEGO"), num, 2.0f, false);
+            if (g->video_ball >= 0 && g->ph->ball[g->video_ball].state == BS_SAUCER) g->ph->ball[g->video_ball].hold = 0.4f;
+            g->video_feat = -1;
+        }
+    }
+    g->in_lp = g->in_rp = false;
+}
+
+static int feat_lamp(const pb_game_t *g, const char *n)
+{
+    if (!strcmp(n, "video")) return g->video_lit ? LM_FAST : g->video.on ? LM_ON : LM_OFF;
+    if (!strncmp(n, "letter", 6) && g->letters_feat >= 0) {
+        int k = n[6] - '1';
+        return (g->feat[g->letters_feat].mask >> k) & 1 ? LM_ON : LM_SLOW;
+    }
+    if (!strcmp(n, "lockpen")) return g->lock_lit ? LM_FAST : LM_OFF;
+    if (!strcmp(n, "cannon")) return pb_phys_cannon_loaded(g->ph) >= 0 ? LM_FAST : LM_OFF;
+    if (!strcmp(n, "magnet")) {
+        for (int i = 0; i < g->t->ntoy; i++) {
+            if (g->t->toy[i].kind == TK_MAGNET) return g->ph->toy[i].on ? LM_FAST : LM_OFF;
+        }
+    }
+    if (!strcmp(n, "red")) return g->roulette_bet == 0 ? LM_SLOW : LM_OFF;
+    if (!strcmp(n, "black")) return g->roulette_bet == 1 ? LM_SLOW : LM_OFF;
+    if (!strcmp(n, "toy")) {
+        for (int i = 0; i < g->nfeat; i++) {
+            const pb_fstate_t *s = &g->feat[i];
+            if (s->kind == FK_BASH && s->toy >= 0) return g->ph->toy[s->toy].up ? LM_SLOW : LM_OFF;
+        }
+    }
+    return -1;
+}
+
+bool pb_game_video(const pb_game_t *g)
+{
+    return g->video.on;
+}
+
+void pb_game_buttons(pb_game_t *g, bool lp, bool rp, bool lh, bool rh)
+{
+    g->in_lp |= lp;
+    g->in_rp |= rp;
+    g->in_lh = lh;
+    g->in_rh = rh;
+}
+
 static void on_ramp(pb_game_t *g, int obj)
 {
     (void)obj;
@@ -253,7 +640,7 @@ static void on_ramp(pb_game_t *g, int obj)
     mission_goal(g, GL_RAMP);
     if (g->multiball) {
         jackpot(g);
-    } else if (g->lock_lit) {
+    } else if (g->lock_lit && !feat_of(g, FK_LOCKPEN)) {
         g->locks++;
         g->lock_lit = false;
         g->targets = 0;
@@ -272,25 +659,30 @@ static void on_ramp(pb_game_t *g, int obj)
     }
 }
 
-static void on_saucer(pb_game_t *g)
+static void on_saucer(pb_game_t *g, int obj, int ball)
 {
     points(g, 5000);
     g->bonus += 1000;
     pb_game_sound(g, SND_SAUCER);
     mission_goal(g, GL_SAUCER);
     g->ph->saucer_hold = 1.2f;
+    if (feat_saucer(g, obj, ball)) return;
+    pb_ball_t *b = ball >= 0 ? &g->ph->ball[ball] : NULL;
+    if (b && b->hold < 100.0f) b->hold = 1.2f;
+    if (g->t->obj[obj].role != RL_SAUCER) return;
     if (g->extra_lit) {
         g->extra_lit = false;
         g->extra_given = true;
         g->extra_balls++;
         pb_game_say(g, _("¡BOLA EXTRA!"), NULL, 2.0f, true);
         pb_game_sound(g, SND_EXTRA);
-        g->ph->saucer_hold = 2.0f;
+        if (b) b->hold = 2.0f;
     }
     if (g->multiball) {
         jackpot(g);
     } else if (g->mission_lit >= 0) {
         mission_start(g, g->mission_lit);
+        if (b) b->hold = 2.4f;
     }
 }
 
@@ -443,7 +835,9 @@ static void on_hit(pb_game_t *g, int obj)
 
 static void drained(pb_game_t *g)
 {
-    int left = pb_phys_balls(g->ph) + g->to_serve;
+    /* balls locked in a toy are not in play */
+    int kept = pb_phys_kept(g->ph);
+    int left = pb_phys_balls(g->ph) - kept + g->to_serve;
     if (g->ball_save > 0 && !g->tilted) {
         /* saved: the same ball back, launched by itself */
         g->to_serve++;
@@ -480,7 +874,10 @@ static void lamps(pb_game_t *g, float dt)
     for (int i = 0; i < t->nlamp; i++) {
         const char *n = t->lamp[i].name;
         int m = LM_OFF;
-        if (g->state == GS_ATTRACT || g->state == GS_OVER) {
+        int fm = g->state == GS_PLAY ? feat_lamp(g, n) : -1;
+        if (fm >= 0) {
+            m = fm;
+        } else if (g->state == GS_ATTRACT || g->state == GS_OVER) {
             /* a chase round the table */
             int k = (int)(g->attract_t * 12.0f);
             m = ((i + k) % 6) < 2 ? LM_ON : LM_OFF;
@@ -555,9 +952,11 @@ void pb_game_update(pb_game_t *g, float dt)
         switch (e->kind) {
         case EV_HIT:
             on_hit(g, e->obj);
+            feat_obj(g, e->obj);
             break;
         case EV_ROLL:
             on_roll(g, e->obj, e->ball);
+            feat_obj(g, e->obj);
             break;
         case EV_SPIN:
             points(g, 200u * (uint32_t)g->spin_x);
@@ -565,8 +964,31 @@ void pb_game_update(pb_game_t *g, float dt)
             mission_goal(g, GL_SPINNER);
             break;
         case EV_SAUCER:
-            on_saucer(g);
+            on_saucer(g, e->obj, e->ball);
             break;
+        case EV_TOY_HIT:
+            feat_toy_hit(g, e->obj);
+            break;
+        case EV_DISC_OUT:
+            feat_disc_out(g, e->obj, e->speed);
+            break;
+        case EV_CANNON_IN:
+            pb_game_sound(g, SND_CANNON);
+            pb_game_say(g, TX(g, "cannonin", _("¡APUNTÁ!")), _("LANZÁ PARA DISPARAR"), 2.0f, false);
+            break;
+        case EV_CANNON_FIRE:
+            pb_game_sound(g, SND_CANNON);
+            g->cannon_t = 2.5f;
+            points(g, 10000);
+            break;
+        case EV_MAGNET_GRAB: {
+            pb_fstate_t *m = feat_of(g, FK_MAGNET);
+            pb_game_sound(g, SND_MAGNET);
+            points(g, m ? m->points : 50000);
+            pb_game_say(g, TX(g, m && m->text[0] ? m->text : "magnet", _("¡ATRAPADA!")), NULL, 1.4f, true);
+            mission_goal(g, GL_TOY);
+            break;
+        }
         case EV_EJECT:
             pb_game_sound(g, SND_EJECT);
             break;
@@ -644,6 +1066,7 @@ void pb_game_update(pb_game_t *g, float dt)
             g->bank_t -= dt;
             if (g->bank_t <= 0) pb_phys_drops_up(ph, g->bank_name);
         }
+        feat_update(g, dt);
     } else if (g->state == GS_BONUS) {
         g->end_t += dt;
         uint32_t total = g->tilted ? 0 : g->bonus * (uint32_t)g->bonus_x;
@@ -696,6 +1119,21 @@ void pb_game_dmd(pb_game_t *g, pb_dmd_t *d)
     dmd_clear(d);
     char num[24], line[64];
     int sh = g->scroll / 2;
+    if (g->video.on) {
+        pb_video_draw(&g->video, d, g->lang);
+        return;
+    }
+    if (g->letters_show > 0 && g->letters_feat >= 0 && !g->nmsg) {
+        const pb_fstate_t *s = &g->feat[g->letters_feat];
+        int n = (int)strlen(s->word);
+        int w = n * 18 - 4, x = (DMD_W - w) / 2;
+        for (int i = 0; i < n; i++) {
+            char c[2] = { s->word[i], 0 };
+            bool lit = i < s->nobjs && ((s->mask >> i) & 1);
+            dmd_text(d, x + i * 18, 9, c, 2, lit ? 15 : 3);
+        }
+        return;
+    }
     if (g->nmsg) {
         const pb_msg_t *m = &g->msg[0];
         bool vis = !m->blink || (((int)(g->msg_t * 6)) & 1);

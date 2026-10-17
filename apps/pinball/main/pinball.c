@@ -454,7 +454,9 @@ static void push(app_t *a, bool toast)
 static void launch_now(app_t *a, float power)
 {
     if (!pb_game_wants_launch(&a->g)) return;
-    pb_phys_launch(&a->ph, power);
+    /* the launch button also fires a loaded cannon */
+    if (pb_phys_cannon_loaded(&a->ph) >= 0) pb_phys_cannon_fire(&a->ph);
+    else pb_phys_launch(&a->ph, power);
 }
 
 static void finger_down(app_t *a, finger_t *f, int x, int y)
@@ -554,10 +556,13 @@ static void input(app_t *a, float dt)
         if (a->fin[i].on && a->fin[i].role == FR_LEFT) held[0] = true;
         if (a->fin[i].on && a->fin[i].role == FR_RIGHT) held[1] = true;
     }
+    bool video = pb_game_video(&a->g);
+    pb_game_buttons(&a->g, held[0] && !a->held[0], held[1] && !a->held[1], held[0], held[1]);
     for (int s = 0; s < 2; s++) {
-        if (held[s] && !a->held[s]) pb_game_flipper(&a->g, s);
+        if (held[s] && !a->held[s] && !video) pb_game_flipper(&a->g, s);
         a->held[s] = held[s];
-        pb_phys_flipper(&a->ph, s, held[s]);
+        /* during a video mode the buttons are the game's, the flippers rest */
+        pb_phys_flipper(&a->ph, s, held[s] && !video);
     }
     if (aos_pad_pressed(p, AOS_PAD_UP)) nudge(a, 0, -1);
     if (aos_pad_pressed(p, AOS_PAD_START) || a->button_pause) {

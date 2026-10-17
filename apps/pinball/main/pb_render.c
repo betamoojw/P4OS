@@ -135,7 +135,7 @@ static bool load_sprite(pb_render_t *r, pb_pak_t *pak, const char *name, pb_spr_
 {
     const pb_entry_t *e = pb_pak_find(pak, name);
     memset(s, 0, sizeof *s);
-    if (!e || e->type != PK_SPRITE) return false;
+    if (!e || (e->type != PK_SPRITE && e->type != PK_SPRITEZ)) return false;
     uint8_t *raw = (uint8_t *)pb_pak_load(pak, e);
     if (!raw) return false;
     s->x = e->x;
@@ -144,6 +144,7 @@ static bool load_sprite(pb_render_t *r, pb_pak_t *pak, const char *name, pb_spr_
     s->h = (int16_t)e->h;
     s->px = (uint16_t *)raw;
     s->a = raw + (size_t)e->w * e->h * 2;
+    if (e->type == PK_SPRITEZ) s->z = (uint16_t *)(raw + (size_t)e->w * e->h * 3);
     r->bytes += e->rawlen;
     return true;
 }
@@ -327,7 +328,7 @@ bool pb_render_init(pb_render_t *r, const pb_table_t *t, pb_pak_t *pak)
             r->spin_obj = i;
         }
     }
-    for (int s = 0; s < 2; s++) {
+    for (int s = 0; s < t->nflip; s++) {
         r->flip_area[s].x0 = r->flip_area[s].y0 = 32000;
         for (int f = 0; f < PB_FLIP_FRAMES; f++) {
             snprintf(name, sizeof name, "F%d_%02d", s, f);
@@ -337,6 +338,17 @@ bool pb_render_init(pb_render_t *r, const pb_table_t *t, pb_pak_t *pak)
             else rc_union(&r->flip_area[s], &a);
             r->nflip[s]++;
         }
+    }
+    for (int k = 0; k < t->ntoy; k++) {
+        for (int f = 0; f < PB_TOY_FRAMES; f++) {
+            snprintf(name, sizeof name, "T%d_%02d", k, f);
+            if (!load_sprite(r, pak, name, &r->toy[k][f])) break;
+            pb_rect_t a = spr_rect(&r->toy[k][f]);
+            if (f == 0) r->toy_area[k] = a;
+            else rc_union(&r->toy_area[k], &a);
+            r->ntoy[k]++;
+        }
+        r->toy_drawn[k] = -1;
     }
     for (int f = 0; f < PB_SPIN_FRAMES; f++) {
         snprintf(name, sizeof name, "S_%02d", f);
@@ -386,8 +398,11 @@ void pb_render_free(pb_render_t *r)
     pb_free(r->base);
     pb_free(r->zbase);
     pb_free(r->dmd_bg);
-    for (int s = 0; s < 2; s++) {
+    for (int s = 0; s < PB_MAX_FLIP; s++) {
         for (int f = 0; f < r->nflip[s]; f++) pb_free(r->flip[s][f].px);
+    }
+    for (int k = 0; k < PB_MAX_TOY; k++) {
+        for (int f = 0; f < r->ntoy[k]; f++) pb_free(r->toy[k][f].px);
     }
     for (int f = 0; f < r->nspin; f++) pb_free(r->spin[f].px);
     for (int d = 0; d <= PB_BALL_MAX; d++) pb_free(r->ball[d].px);
@@ -465,7 +480,42 @@ static void patch_changed(pb_render_t *r, const pb_patch_t *p)
 
 /* ---- drawing into the frame ---------------------------------------------- */
 
+static void draw_sprite_opa(pb_render_t *r, const pb_spr_t *s, const pb_rect_t *clip, const uint16_t *zrow,
+                            unsigned opa);
+
 static void draw_sprite(pb_render_t *r, const pb_spr_t *s, const pb_rect_t *clip, const uint16_t *zrow)
+{
+    draw_sprite_opa(r, s, clip, zrow, 255);
+}
+
+/* a frame with its own depth (a toy): it hides what is behind it, and is
+ * hidden by what is in front (a ramp over it) */
+static void draw_spritez(pb_render_t *r, const pb_spr_t *s, const pb_rect_t *clip, unsigned opa)
+{
+    if (!s->px || !s->z) return;
+    pb_rect_t a = spr_rect(s);
+    pb_rect_t tab = { 0, PB_TOP, PB_SW, PB_SH };
+    rc_clip(&a, clip);
+    rc_clip(&a, &tab);
+    if (rc_empty(&a)) return;
+    for (int y = a.y0; y < a.y1; y++) {
+        int k0 = (y - s->y) * s->w + (a.x0 - s->x);
+        uint16_t *d = r->fb + (size_t)y * PB_SW + a.x0;
+        uint16_t *z = r->zfb + (size_t)(y - PB_TOP) * PB_SW + a.x0;
+        for (int x = a.x0; x < a.x1; x++, k0++, d++, z++) {
+            unsigned al = s->a[k0];
+            if (!al) continue;
+            uint16_t sz = s->z[k0];
+            if (sz > *z + 20) continue;
+            al = (al * opa) >> 8;
+            *d = al >= 250 ? s->px[k0] : blend(*d, s->px[k0], al);
+            if (al >= 128) *z = sz;
+        }
+    }
+}
+
+static void draw_sprite_opa(pb_render_t *r, const pb_spr_t *s, const pb_rect_t *clip, const uint16_t *zrow,
+                            unsigned opa)
 {
     if (!s->px) return;
     pb_rect_t a = spr_rect(s);
@@ -478,7 +528,7 @@ static void draw_sprite(pb_render_t *r, const pb_spr_t *s, const pb_rect_t *clip
         uint16_t *z = y >= PB_TOP ? r->zfb + (size_t)(y - PB_TOP) * PB_SW + a.x0 : NULL;
         uint16_t zr = zrow ? zrow[y] : 0;
         for (int x = a.x0; x < a.x1; x++, sp++, sa++, d++) {
-            unsigned al = *sa;
+            unsigned al = opa >= 255 ? *sa : (*sa * opa) >> 8;
             if (al) {
                 *d = al >= 250 ? *sp : blend(*d, *sp, al);
                 if (zrow && z && al >= 128) z[x - a.x0] = zr;
@@ -695,7 +745,7 @@ static void draw_debug(pb_render_t *r, const pb_phys_t *ph)
         for (int k = 1; k < rp->n; k++)
             debug_line(r, rp->x[k - 1], rp->y[k - 1], rp->z[k - 1], rp->x[k], rp->y[k], rp->z[k], 0xF81F);
     }
-    for (int s = 0; s < 2; s++) {
+    for (int s = 0; s < t->nflip; s++) {
         const pb_flipdef_t *f = &t->flip[s];
         float a = ph->flip[s].ang;
         debug_line(r, f->x, f->y, 0, f->x + cosf(a) * f->len, f->y + sinf(a) * f->len, 0, 0x07E0);
@@ -721,8 +771,56 @@ void pb_render_frame(pb_render_t *r, const pb_game_t *g, const pb_phys_t *ph, co
             if (r->drop[i].px) patch_changed(r, &r->drop[i]);
         }
     }
-    int ff[2];
-    for (int s = 0; s < 2; s++) {
+    int ff[PB_MAX_FLIP];
+    int tf[PB_MAX_TOY], to[PB_MAX_TOY];
+    for (int k = 0; k < t->ntoy; k++) {
+        tf[k] = -1;
+        to[k] = 255;
+        int n = r->ntoy[k];
+        if (!n) continue;
+        const pb_toydef_t *d = &t->toy[k];
+        const pb_toy_t *y = &ph->toy[k];
+        switch (d->kind) {
+        case TK_BASH:
+            if (y->level >= 0.98f || n <= 4) {
+                static const uint8_t WOB[7] = { 1, 2, 3, 3, 2, 1, 0 };
+                int i = (int)(y->anim / 0.06f);
+                tf[k] = i < 7 ? WOB[i] : 0;
+                if (tf[k] >= n) tf[k] = 0;
+            } else {
+                int i = 4 + (int)((1.0f - y->level) * (n - 4));
+                tf[k] = i >= n ? n - 1 : i;
+            }
+            break;
+        case TK_MOVER: {
+            float kp = 0.5f - 0.5f * cosf(2 * PB_PI * y->phase);
+            tf[k] = (int)(kp * (n - 1) + 0.5f);
+            to[k] = (int)(y->level * 255);
+            break;
+        }
+        case TK_DISC: {
+            int i = (int)(y->phase / (2 * PB_PI) * n + 0.5f);
+            tf[k] = ((i % n) + n) % n;
+            break;
+        }
+        case TK_CANNON: {
+            float deg = y->phase * 180.0f / PB_PI;
+            float u = d->a1 != d->a0 ? (deg - d->a0) / (d->a1 - d->a0) : 0;
+            if (u < 0) u = 0;
+            if (u > 1) u = 1;
+            tf[k] = (int)(u * (n - 1) + 0.5f);
+            break;
+        }
+        default:
+            break;
+        }
+        int key = tf[k] < 0 ? -1 : tf[k] * 256 + to[k];
+        if (key != r->toy_drawn[k]) {
+            r->toy_drawn[k] = key;
+            dirty(r, r->toy_area[k]);
+        }
+    }
+    for (int s = 0; s < t->nflip; s++) {
         int n = r->nflip[s];
         ff[s] = n ? (int)(pb_phys_flip_t(ph, s) * (n - 1) + 0.5f) : 0;
         if (ff[s] != r->flip_drawn[s]) {
@@ -791,8 +889,19 @@ void pb_render_frame(pb_render_t *r, const pb_game_t *g, const pb_phys_t *ph, co
         if (c->y1 <= PB_TOP) continue;
         compose_table(r, c);
         for (int i = 0; i < nb; i++) draw_shadow(r, &bv[i], c);
-        for (int s = 0; s < 2; s++) {
-            if (r->nflip[s]) draw_sprite(r, &r->flip[s][ff[s]], c, r->zrow_flip);
+        /* the toys flat on the playfield (discs) first, then the rest */
+        for (int pass = 0; pass < 2; pass++) {
+            for (int k = 0; k < t->ntoy; k++) {
+                if (tf[k] < 0 || (t->toy[k].kind == TK_DISC) != (pass == 0)) continue;
+                const pb_spr_t *sp = &r->toy[k][tf[k]];
+                if (sp->z) draw_spritez(r, sp, c, (unsigned)to[k]);
+                else draw_sprite_opa(r, sp, c, r->zrow_flip, (unsigned)to[k]);
+            }
+            if (pass == 0) {
+                for (int s = 0; s < t->nflip; s++) {
+                    if (r->nflip[s]) draw_sprite(r, &r->flip[s][ff[s]], c, r->zrow_flip);
+                }
+            }
         }
         if (r->nspin) draw_sprite(r, &r->spin[sf], c, r->zrow_flip);
         for (int i = 0; i < nb; i++) draw_ball(r, &bv[order[i]], c);

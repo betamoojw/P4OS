@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "pinball.c" "pb_pak.c" "pb_table.c" "pb_phys.c" "pb_game.c" "pb_dmd.c" "pb_render.c" "pb_audio.c"
+    SRCS "pinball.c" "pb_pak.c" "pb_table.c" "pb_phys.c" "pb_game.c" "pb_dmd.c" "pb_render.c" "pb_audio.c" "pb_video.c"
     INCLUDE_DIRS "."
     REQUIRES lvgl
 )

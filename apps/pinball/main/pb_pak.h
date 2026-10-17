@@ -26,6 +26,7 @@ enum {
     PK_PATCH = 5,       /* a state: w*h RGB565, w*h u16 depth, w*h mask bytes */
     PK_PCM = 6,         /* mu-law 8-bit mono at 'extra' Hz                     */
     PK_ALPHA = 7,       /* w*h alpha (a shadow, a mask)                       */
+    PK_SPRITEZ = 8,     /* w*h RGB565, w*h alpha, w*h u16 depth (a toy's frame) */
 };
 
 #define PB_NAME_LEN 24

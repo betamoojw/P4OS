@@ -23,22 +23,26 @@
 #define PB_MAX_RAMP     4
 #define PB_MAX_RAMP_PTS 40
 #define PB_MAX_MISSION  8
+#define PB_MAX_FLIP     4
+#define PB_MAX_TOY      8
+#define PB_MAX_FEAT     12
+#define PB_FEAT_ARGS    10
 #define PB_MAX_TEXT     16
 #define PB_TXT          48          /* one line of a string, UTF-8 */
 #define PB_LANGS        3           /* es, en, de */
 
 enum {
     OT_WALL, OT_POST, OT_BUMPER, OT_SLING, OT_DROP, OT_TARGET, OT_ROLLOVER, OT_SPINNER, OT_SAUCER,
-    OT_RAMP, OT_GATE, OT_KICKBACK, OT_FLIPPER, OT_N
+    OT_RAMP, OT_GATE, OT_KICKBACK, OT_FLIPPER, OT_TOY, OT_N
 };
 
 enum {
     RL_NONE, RL_LANE, RL_INLANE, RL_OUTLANE, RL_BUMPER, RL_SLING, RL_DROP, RL_TARGET, RL_SPINNER,
-    RL_SAUCER, RL_RAMP, RL_ORBIT, RL_KICKBACK, RL_POST, RL_N
+    RL_SAUCER, RL_RAMP, RL_ORBIT, RL_KICKBACK, RL_POST, RL_TOY, RL_LOCK, RL_N
 };
 
 /* what a mission asks for */
-enum { GL_BUMPER, GL_SLING, GL_DROP, GL_TARGET, GL_SPINNER, GL_RAMP, GL_ORBIT, GL_LANE, GL_SAUCER, GL_ANY, GL_N };
+enum { GL_BUMPER, GL_SLING, GL_DROP, GL_TARGET, GL_SPINNER, GL_RAMP, GL_ORBIT, GL_LANE, GL_SAUCER, GL_ANY, GL_TOY, GL_N };
 
 /* physical materials (pb_phys.c has their restitution and friction) */
 enum { MT_WALL, MT_RUBBER, MT_POST, MT_PLASTIC, MT_METAL, MT_FLIPPER, MT_N };
@@ -50,7 +54,9 @@ typedef struct {
     int8_t  index;          /* among the objects of its role, in order      */
     int8_t  bank;           /* drop targets: which bank                    */
     int16_t lamp;           /* a lamp of the same name, or -1             */
-    float   a, b;           /* kick; eject angle and speed; ramp's min speed; kickback's vx, vy */
+    float   a, b, c;        /* kick; eject angle, speed and the ramp it ejects into
+                             * (+1, 0 none: a vertical up-kicker); ramp's min speed;
+                             * kickback's vx, vy                                      */
     char    name[16];
 } pb_obj_t;
 
@@ -83,6 +89,35 @@ typedef struct {
     float   x, y, len, r0, r1;
     float   rest, up;       /* direction pivot -> tip, radians, y down       */
 } pb_flipdef_t;
+
+/* the toys: things on the table that move (pb_phys.c has what each does) */
+enum {
+    TK_BASH,        /* a figure that takes hits, wobbles, and sinks when the rules say    */
+    TK_MOVER,       /* the same, going to and fro between two points                      */
+    TK_DISC,        /* a turning disc the ball rides and is flung from                    */
+    TK_CANNON,      /* catches the ball, swings, and fires it where it points             */
+    TK_MAGNET,      /* pulls the ball in, holds it, throws it                             */
+    TK_N
+};
+
+typedef struct {
+    int16_t obj;
+    uint8_t kind;
+    float   x, y, r;        /* centre (the mover's first end) and radius            */
+    float   x1, y1;         /* the mover's other end; the cannon's and the magnet's
+                             * throw: x1 speed (mm/s), y1 unused                     */
+    float   a0, a1;         /* the cannon's swing and the magnet's throw (degrees);
+                             * the disc's top speed (rad/s) in a0                    */
+    float   period;         /* the mover's and the cannon's, seconds                 */
+} pb_toydef_t;
+
+/* a table's own attraction (pb_game.c, "Features"): a kind and key=value words */
+typedef struct {
+    char kind[12];
+    int  nargs;
+    char key[PB_FEAT_ARGS][12];
+    char val[PB_FEAT_ARGS][24];
+} pb_feat_t;
 
 typedef struct {
     int16_t obj;
@@ -127,13 +162,15 @@ typedef struct {
     float    plunger_x, plunger_y;
     uint32_t c_dmd, c_bg, c_accent, c_panel, c_text;
 
-    int          nobj, nseg, ncirc, ntrig, nroll, nflip, nramp, nlamp, nmission, ntext;
+    int          nobj, nseg, ncirc, ntrig, nroll, nflip, nramp, nlamp, nmission, ntext, ntoy, nfeat;
     pb_obj_t     obj[PB_MAX_OBJ];
     pb_seg_t     seg[PB_MAX_SEG];
     pb_circ_t    circ[PB_MAX_CIRC];
     pb_trig_t    trig[PB_MAX_TRIG];
     pb_roll_t    roll[PB_MAX_ROLL];
-    pb_flipdef_t flip[2];
+    pb_flipdef_t flip[PB_MAX_FLIP];   /* 0 and 1 the main pair; then upper ones */
+    pb_toydef_t  toy[PB_MAX_TOY];
+    pb_feat_t    feat[PB_MAX_FEAT];
     pb_ramp_t    ramp[PB_MAX_RAMP];
     pb_lampdef_t lamp[PB_MAX_LAMP];
     pb_mission_t mission[PB_MAX_MISSION];
@@ -146,6 +183,10 @@ typedef struct {
 bool pb_table_parse(pb_table_t *t, const char *text, bool only_head);
 
 int  pb_table_find_obj(const pb_table_t *t, const char *name);
+int  pb_table_find_toy(const pb_table_t *t, const char *name);
+/* a feature's word, or 'def' */
+const char *pb_feat_get(const pb_feat_t *f, const char *key, const char *def);
+int  pb_feat_int(const pb_feat_t *f, const char *key, int def);
 int  pb_table_find_lamp(const pb_table_t *t, const char *name);
 const char *pb_table_text(const pb_table_t *t, const char *key, int lang);
 

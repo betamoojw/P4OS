@@ -23,10 +23,16 @@ def build():
     t.standard_lower(sling_color=GREEN)
     t.top_lanes(colors=[GREEN, PURPLE, GREEN])
 
-    # three pop bumpers: graves that spit
-    t.bumper('bumper1', 196, 282, cap=GREEN, body=0x303830)
-    t.bumper('bumper2', 288, 268, cap=PURPLE, body=0x303830)
-    t.bumper('bumper3', 246, 352, cap=GREEN, body=0x303830)
+    # three pop bumpers, graves that spit, up on the left
+    t.bumper('bumper1', 152, 258, cap=GREEN, body=0x303830)
+    t.bumper('bumper2', 222, 244, cap=PURPLE, body=0x303830)
+    t.bumper('bumper3', 188, 322, cap=GREEN, body=0x303830)
+
+    # THE ZOMBIE: he stands on his grave in the middle; three hits send him
+    # back under, and he comes back harder (Monster Bash's monsters)
+    t.toy('zombie', 'bash', 282, 336, 17, model='zombie')
+    t.deco('grave', 282, 336, s=1.0)
+    t.lamp('toy', 282, 380, 'arrow', 18, BLOOD, 0)
 
     # the crypt's ramp, right: up the middle-right, over the orbit and down
     # into the right inlane
@@ -49,14 +55,19 @@ def build():
     for i, (x, y) in enumerate(((190, 592), (168, 599), (146, 606))):
         t.lamp('drop%d' % (i + 1), x, y, 'triangle', 13, PURPLE, -18)
 
-    # two standups that light the lock: zombie heads by the bumpers
-    t.target('target1', (51, 318), (51, 352), color=GREEN)
-    t.target('target2', (51, 364), (51, 398), color=GREEN)
-    t.lamp('target1', 72, 335, 'circle', 12, GREEN)
-    t.lamp('target2', 72, 381, 'circle', 12, GREEN)
+    # Z-O-M-B-I: five standups on the orbits' walls light the video mode
+    for i, (x, y0) in enumerate(((51, 312), (51, 350), (51, 388), (431, 318), (431, 364))):
+        side = -1 if x < 240 else 1
+        t.target('t%s' % 'ZOMBI'[i], (x, y0), (x, y0 + 30), color=BONE)
+        t.lamp('letter%d' % (i + 1), x - side * 21, y0 + 15, 'rect', 13, GREEN)
 
+    # the mausoleum's saucer kicks the ball up a wire to the top lanes
+    t.habitrail('crypt_wire', [(240, 470, 0), (232, 455, 20), (214, 430, 40), (170, 396, 58), (122, 360, 68),
+                               (98, 300, 72), (100, 232, 72), (122, 172, 66), (180, 112, 42), (222, 92, 18),
+                               (240, 86, 3)])
     # the mausoleum: a saucer in the middle that starts the missions
-    t.saucer('saucer', 240, 470, eject_deg=118, eject_speed=1700)
+    t.saucer('saucer', 240, 470, eject_deg=118, eject_speed=2700, vuk='crypt_wire')
+    t.lamp('video', 210, 500, 'star', 18, PURPLE)
     t.lamp('saucer', 270, 505, 'circle', 16, BLOOD)
     t.lamp('lock', 286, 575, 'arrow', 18, PURPLE, 20)
     t.lamp('extraball', 240, 520, 'circle', 14, 0xFFB020)
@@ -87,7 +98,14 @@ def build():
     t.mission(dict(es='A la cripta', en='To the crypt', de='Zur Gruft'), 'ramp', 3, 60, 400000)
     t.mission(dict(es='Corré por el cementerio', en='Run through the graveyard', de='Lauf über den Friedhof'),
               'orbit', 3, 60, 400000)
-    t.mission(dict(es='Cazá cerebros', en='Hunt for brains', de='Gehirnjagd'), 'target', 4, 60, 350000)
+    t.mission(dict(es='Mandalo a la tumba', en='Back to the grave', de='Zurück ins Grab'), 'toy', 6, 50, 350000)
+
+    t.feat('bash', toy='zombie', hits=3, points=150000, lights='lock')
+    t.feat('letters', objs='tZ,tO,tM,tB,tI', word='ZOMBI', lights='video')
+    t.feat('video', game='shoot', saucer='saucer', light='letters')
+    t.text('toyhit', '¡TOMÁ!', 'TAKE THAT!', 'NIMM DAS!')
+    t.text('toydown', '¡A LA TUMBA!', 'BACK TO THE GRAVE!', 'INS GRAB!')
+    t.text('toyback', '¡RESUCITÓ!', 'HE RISES AGAIN!', 'ER IST ZURÜCK!')
 
     t.text('jackpot', '¡CEREBROS!', 'BRAINS!', 'GEHIRNE!')
     t.text('multiball', 'INVASIÓN ZOMBI', 'ZOMBIE INVASION', 'ZOMBIE-INVASION')

@@ -25,10 +25,24 @@ def build():
     t.standard_lower(sling_color=CYAN)
     t.top_lanes(colors=[CYAN, MAGENTA, CYAN])
 
-    # the bumpers: three reactors, a little to the right
-    t.bumper('bumper1', 230, 270, cap=CYAN, body=0x283048)
-    t.bumper('bumper2', 318, 262, cap=MAGENTA, body=0x283048)
-    t.bumper('bumper3', 278, 346, cap=CYAN, body=0x283048)
+    # the bumpers: three reactors, up on the right
+    t.bumper('bumper1', 300, 236, cap=CYAN, body=0x283048)
+    t.bumper('bumper2', 366, 262, cap=MAGENTA, body=0x283048)
+    t.bumper('bumper3', 322, 320, cap=CYAN, body=0x283048)
+
+    # THE ROBOT (Pinbot): three hits and his chest opens; with the lock lit,
+    # a ball shot into it stays there, where you can see it
+    t.toy('robot', 'bash', 232, 352, 22, model='robot')
+    t.saucer('chest', 232, 352, eject_deg=95, eject_speed=1600, r=14, role='lock')
+    t.lamp('toy', 232, 404, 'arrow', 18, ORANGE, 0)
+
+    # the tractor beam: now and then it pulls the ball in, holds it, and
+    # throws it straight at the robot
+    t.toy('beam', 'magnet', 241, 610, 42, model='beam', x1=2700, a0=-90)
+    t.lamp('magnet', 241, 610, 'circle', 22, CYAN)
+
+    # an upper flipper on the right, fed by the right orbit
+    t.flipper('R', 440, 640, length=55, r0=11, r1=6, rest=28, up=-22)
 
     # the rocket ramp, left: the mirror of the crypt's
     t.wall(M([(296, 520), (300, 472)]), h=30, style='plastic', thick=5)
@@ -57,11 +71,13 @@ def build():
     t.lamp('target1', 410, 335, 'circle', 12, CYAN)
     t.lamp('target2', 410, 381, 'circle', 12, CYAN)
 
-    # the launch pad
-    t.saucer('saucer', 242, 470, eject_deg=62, eject_speed=1700)
-    t.lamp('saucer', 212, 505, 'circle', 16, ORANGE)
+    # the launch pad: the invaders' video mode
+    t.saucer('saucer', 100, 420, eject_deg=40, eject_speed=1700)
+    t.lamp('saucer', 100, 462, 'circle', 16, ORANGE)
+    t.lamp('video', 132, 470, 'star', 18, MAGENTA)
     t.lamp('lock', 196, 575, 'arrow', 18, MAGENTA, -20)
-    t.lamp('extraball', 242, 520, 'circle', 14, 0xFFD040)
+    t.lamp('extraball', 272, 520, 'circle', 14, 0xFFD040)
+    t.lamp('lockpen', 200, 520, 'arrow', 16, ORANGE, 0)
     t.lamp('jackpot', 241, 590, 'star', 26, 0xFFE060)
     for i, (x, y) in enumerate([(160, 668), (200, 646), (241, 638), (282, 646), (322, 668)]):
         t.lamp('mission%d' % (i + 1), x, y, 'circle', 14, CYAN if i % 2 == 0 else MAGENTA)
@@ -79,6 +95,7 @@ def build():
     t.deco('dish', 91, 814, s=0.8, z=30, rot=30)
     t.deco('robot', 391, 814, s=0.7, z=30, rot=-20)
     t.deco('ufo', 56, 1016, s=0.8, z=30)
+    t.deco('pad', 100, 420, s=1.0)
     t.deco('robot', 426, 1016, s=0.8, z=30)
 
     t.mission(dict(es='Cargá el reactor', en='Charge the reactor', de='Lade den Reaktor'), 'bumper', 12, 45, 250000)
@@ -86,8 +103,17 @@ def build():
     t.mission(dict(es='Órbita baja', en='Low orbit', de='Niedriger Orbit'), 'orbit', 3, 60, 400000)
     t.mission(dict(es='Arreglá los circuitos', en='Fix the circuits', de='Repariere die Schaltkreise'), 'drop', 6,
               60, 300000)
-    t.mission(dict(es='Cazá al robot rebelde', en='Catch the rogue robot', de='Fang den Rebellen-Roboter'), 'target',
-              4, 60, 350000)
+    t.mission(dict(es='Desarmá al robot', en='Take the robot apart', de='Zerleg den Roboter'), 'toy', 6, 50, 350000)
+
+    t.feat('bash', toy='robot', hits=3, points=150000, lights='lock')
+    t.feat('lockpen', saucer='chest', toy='robot', lit=0)
+    t.feat('magnet', toy='beam', every=22, on=7, points=50000)
+    t.feat('letters', objs='drop1,drop2,drop3,target1,target2', word='ROBOT', lights='video')
+    t.feat('video', game='invaders', saucer='saucer', light='letters')
+    t.text('toyhit', '¡CHISPAS!', 'SPARKS!', 'FUNKEN!')
+    t.text('toydown', 'PECHO ABIERTO', 'CHEST OPEN', 'BRUST OFFEN')
+    t.text('toyback', 'REINICIADO', 'REBOOTED', 'NEU GESTARTET')
+    t.text('magnet', 'RAYO TRACTOR', 'TRACTOR BEAM', 'TRAKTORSTRAHL')
 
     t.text('jackpot', 'MEGA VOLTIOS', 'MEGAVOLTS', 'MEGAVOLT')
     t.text('multiball', 'LLUVIA DE ROBOTS', 'ROBOT STORM', 'ROBOTERSTURM')

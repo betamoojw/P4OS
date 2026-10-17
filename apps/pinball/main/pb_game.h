@@ -26,6 +26,7 @@
 #pragma once
 
 #include "pb_dmd.h"
+#include "pb_video.h"
 #include "pb_phys.h"
 #include "pb_table.h"
 
@@ -37,7 +38,8 @@ enum {
     SND_FLIPPER, SND_BUMPER, SND_SLING, SND_DROP, SND_BANK, SND_TARGET, SND_LANE, SND_LANES, SND_SPINNER,
     SND_SAUCER, SND_EJECT, SND_RAMP, SND_RAMP_FAIL, SND_ORBIT, SND_LAUNCH, SND_DRAIN, SND_SAVE, SND_KICKBACK,
     SND_MISSION, SND_MISSION_DONE, SND_JACKPOT, SND_MULTIBALL, SND_LOCK, SND_EXTRA, SND_TILT_WARN, SND_TILT,
-    SND_SKILL, SND_BONUS, SND_GAMEOVER, SND_START, SND_WALL, SND_POST, SND_N
+    SND_SKILL, SND_BONUS, SND_GAMEOVER, SND_START, SND_WALL, SND_POST,
+    SND_TOY_HIT, SND_TOY_DOWN, SND_VIDEO, SND_CANNON, SND_MAGNET, SND_DISC, SND_LETTER, SND_VIDEO_HIT, SND_N
 };
 extern const char *const PB_SND_NAMES[SND_N];
 
@@ -56,9 +58,40 @@ typedef struct {
     uint8_t blink;
 } pb_msg_t;
 
+/* the table's own attractions (its "feat" lines), as they stand in a game */
+enum { FK_BASH, FK_LOCKPEN, FK_LETTERS, FK_VIDEO, FK_ROULETTE, FK_CANNON, FK_MAGNET, FK_DISC, FK_N };
+
+typedef struct {
+    uint8_t  kind;
+    int16_t  toy, obj;          /* the toy, the saucer it uses                */
+    int      need, need0, count, round;
+    uint32_t points;
+    float    t;                 /* a timer of its own                         */
+    float    every, on_s;
+    uint32_t mask;              /* letters lit                                */
+    int      nobjs;
+    int16_t  objs[8];
+    char     word[12];
+    char     text[12];          /* the table's word for it (its "text" lines) */
+    char     text_hit[12], text_done[12], text_back[12];
+    uint8_t  lights;            /* what it lights: 0 none, 1 video, 2 lock, 3 multiball */
+    uint8_t  need_lit;          /* lockpen: only while the lock is lit        */
+} pb_fstate_t;
+
 typedef struct {
     const pb_table_t *t;
     pb_phys_t *ph;
+    pb_fstate_t feat[PB_MAX_FEAT];
+    int      nfeat;
+    pb_video_t video;
+    bool     video_lit;
+    int      video_feat;        /* the video feature playing, -1 none         */
+    int      video_ball;
+    bool     in_lp, in_rp, in_lh, in_rh;   /* the flipper buttons, for the video modes */
+    float    cannon_t;          /* since the cannon fired (its targets count)  */
+    int      roulette_bet;      /* 0 red, 1 black                              */
+    float    letters_show;      /* the word on the DMD for a moment            */
+    int      letters_feat;
     int      lang;
     int      state;
     float    clock;             /* seconds since the game began            */
@@ -129,7 +162,12 @@ void pb_game_flipper(pb_game_t *g, int side);
 bool pb_game_nudge(pb_game_t *g);
 /* what the DMD shows now */
 void pb_game_dmd(pb_game_t *g, pb_dmd_t *d);
-/* the plunger is waiting for the player (the launch button shows) */
+/* the plunger is waiting for the player (the launch button shows), or the
+ * cannon is loaded and waits to fire */
 bool pb_game_wants_launch(const pb_game_t *g);
+/* a video mode is on the DMD: the flipper buttons are its */
+bool pb_game_video(const pb_game_t *g);
+/* the flipper buttons this frame: went down, held */
+void pb_game_buttons(pb_game_t *g, bool lp, bool rp, bool lh, bool rh);
 void pb_game_sound(pb_game_t *g, int snd);
 void pb_game_say(pb_game_t *g, const char *a, const char *b, float secs, bool big);

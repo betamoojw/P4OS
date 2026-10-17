@@ -26,10 +26,20 @@ def build():
     t.standard_lower(sling_color=RED)
     t.top_lanes(colors=[RED, GOLD, BLUE])
 
-    # the three rings
-    t.bumper('bumper1', 178, 268, cap=RED, body=0xF0E8D8)
-    t.bumper('bumper2', 300, 268, cap=BLUE, body=0xF0E8D8)
-    t.bumper('bumper3', 239, 340, cap=GOLD, body=0xF0E8D8)
+    # the three rings: two bumpers and, in the middle, the merry-go-round
+    t.bumper('bumper1', 150, 252, cap=RED, body=0xF0E8D8)
+    t.bumper('bumper2', 330, 252, cap=BLUE, body=0xF0E8D8)
+    t.bumper('bumper3', 240, 226, cap=GOLD, body=0xF0E8D8)
+    t.toy('carousel', 'disc', 240, 330, 46, model='carousel', a0=2.6)
+
+    # THE HUMAN CANNONBALL (Cirqus Voltaire): the ball coming down the left
+    # orbit drops into the cannon; it swings, and the launch button fires
+    t.toy('cannon', 'cannon', 64, 626, 19, model='cannon', x1=3300, a0=-115, a1=-45, period=2.2)
+    t.lamp('cannon', 92, 676, 'arrow', 16, GOLD, 30)
+
+    # the ringmaster pops up in the middle: two hits send him down
+    t.toy('ringmaster', 'bash', 240, 470, 16, model='ringmaster')
+    t.lamp('toy', 240, 510, 'arrow', 18, RED, 0)
 
     # the cannon's ramp, left
     t.wall(M([(296, 520), (300, 472)]), h=30, style='plastic', thick=5)
@@ -54,11 +64,12 @@ def build():
     t.lamp('target1', 72, 335, 'circle', 12, RED)
     t.lamp('target2', 72, 381, 'circle', 12, RED)
 
-    # the ringmaster's podium
-    t.saucer('saucer', 270, 446, eject_deg=105, eject_speed=1700)
-    t.lamp('saucer', 300, 482, 'circle', 16, RED)
+    # the tent: the darts' video mode
+    t.saucer('saucer', 372, 440, eject_deg=120, eject_speed=1700)
+    t.lamp('saucer', 350, 478, 'circle', 16, RED)
+    t.lamp('video', 380, 482, 'star', 18, GOLD)
     t.lamp('lock', 196, 575, 'arrow', 18, GOLD, -20)
-    t.lamp('extraball', 300, 520, 'circle', 14, GOLD)
+    t.lamp('extraball', 300, 540, 'circle', 14, GOLD)
     t.lamp('jackpot', 241, 600, 'star', 26, GOLD)
     for i, (x, y) in enumerate([(160, 668), (200, 646), (241, 638), (282, 646), (322, 668)]):
         t.lamp('mission%d' % (i + 1), x, y, 'circle', 14, [RED, GOLD, BLUE, GOLD, RED][i])
@@ -83,6 +94,17 @@ def build():
     t.mission(dict(es='Los tres anillos', en='Three rings', de='Drei Manegen'), 'bumper', 12, 45, 250000)
     t.mission(dict(es='Cuerda floja', en='Tightrope', de='Hochseil'), 'orbit', 3, 60, 400000)
     t.mission(dict(es='Domá a los leones', en='Tame the lions', de='Zähme die Löwen'), 'target', 4, 60, 350000)
+    t.mission(dict(es='La calesita', en='Merry-go-round', de='Karussell'), 'toy', 6, 50, 300000)
+
+    t.feat('cannon', toy='cannon', targets='drop1,drop2,drop3,target1,target2')
+    t.feat('disc', toy='carousel')
+    t.feat('bash', toy='ringmaster', hits=2, points=120000, lights='video')
+    t.feat('video', game='darts', saucer='saucer', light='bash')
+    t.text('toyhit', '¡AY!', 'OUCH!', 'AUA!')
+    t.text('toydown', '¡FUERA DE PISTA!', 'OUT OF THE RING!', 'RAUS AUS DER MANEGE!')
+    t.text('toyback', 'EL PRESENTADOR', 'THE RINGMASTER', 'DER DIREKTOR')
+    t.text('cannonin', '¡HOMBRE BALA!', 'HUMAN CANNONBALL!', 'KANONENKUGEL!')
+    t.text('cannon', '¡BLANCO!', 'BULLSEYE!', 'VOLLTREFFER!')
 
     t.text('jackpot', '¡BRAVO!', 'BRAVO!', 'BRAVO!')
     t.text('multiball', 'GRAN FUNCIÓN', 'GRAND SHOW', 'GROSSE SHOW')

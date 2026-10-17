@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     pb_phys_init(&ph, &t);
     pb_game_init(&g, &t, &ph, 0);
     static uint32_t heat[260][130];
-    int ev[16] = { 0 };
+    int ev[32] = { 0 };
     int roles[RL_N] = { 0 };
     int out = 0, drains = 0, games = 0;
     int objc[PB_MAX_OBJ] = { 0 };
@@ -78,7 +78,18 @@ int main(int argc, char **argv)
     double score_sum = 0;
     uint32_t score_max = 0;
     int nstuck = 0;
+    double last_drain = 0;
     while (drains < balls) {
+        if (t_now - last_drain > 600) {
+            /* ten minutes without losing a ball: something holds it */
+            printf("STUCK at %.0f s: game state %d, need_serve %d, to_serve %d, video %d\n", t_now, g.state,
+                   g.need_serve, g.to_serve, g.video.on);
+            for (int i = 0; i < PB_MAX_BALLS; i++)
+                printf("  ball %d state %d at (%.0f, %.0f) v (%.0f, %.0f) hold %.1f holder %d saucer %d\n", i,
+                       ph.ball[i].state, ph.ball[i].x, ph.ball[i].y, ph.ball[i].vx, ph.ball[i].vy, ph.ball[i].hold,
+                       ph.ball[i].holder, ph.ball[i].saucer);
+            break;
+        }
         if (g.state == GS_ATTRACT || g.state == GS_OVER) {
             pb_game_start(&g);
             games++;
@@ -100,7 +111,18 @@ int main(int argc, char **argv)
             hold[s] -= dt;
             pb_phys_flipper(&ph, s, hold[s] > 0);
         }
-        if (pb_game_wants_launch(&g)) pb_phys_launch(&ph, 0.5f + frand() * 0.5f);
+        if (pb_phys_cannon_loaded(&ph) >= 0) {
+            if (frand() < 0.02f) pb_phys_cannon_fire(&ph);
+        } else if (pb_game_wants_launch(&g)) {
+            pb_phys_launch(&ph, 0.5f + frand() * 0.5f);
+        }
+        if (pb_game_video(&g)) {
+            static bool lh, rh;
+            bool l = frand() < 0.5f, r = frand() < 0.5f;
+            pb_game_buttons(&g, l && !lh && frand() < 0.3f, r && !rh && frand() < 0.3f, l, r);
+            lh = l;
+            rh = r;
+        }
         uint32_t k0 = ph.kicks;
         pb_phys_step(&ph, dt);
         if (ph.kicks != k0 && nstuck < 4096) {
@@ -110,7 +132,7 @@ int main(int argc, char **argv)
         }
         for (int i = 0; i < ph.nev; i++) {
             pb_event_t *e = &ph.ev[i];
-            if (e->kind < 16) ev[e->kind]++;
+            if (e->kind < 32) ev[e->kind]++;
             if (e->obj >= 0 && (e->kind == EV_HIT || e->kind == EV_ROLL)) {
                 roles[t.obj[e->obj].role]++;
                 objc[e->obj]++;
@@ -132,6 +154,7 @@ int main(int argc, char **argv)
                 }
             }
             if (e->kind == EV_DRAIN) {
+                last_drain = t_now;
                 drain_by[e->ball >= 0 ? last_role[e->ball] : 0]++;
                 drains++;
                 if (cur > longest) longest = cur;
@@ -224,6 +247,8 @@ int main(int argc, char **argv)
         }
         printf("\n");
     }
+    printf("toys: hits %d, beaten %d; video modes %d; cannon %d; magnet %d; disc %d\n", snd[SND_TOY_HIT],
+           snd[SND_TOY_DOWN], snd[SND_VIDEO], ev[EV_CANNON_FIRE], ev[EV_MAGNET_GRAB], ev[EV_DISC_OUT]);
     printf("missions %d started / %d done, locks %d, multiballs %d, jackpots %d, extra balls %d, skill shots %d, "
            "tilts %d, saves %d\n", snd[SND_MISSION], snd[SND_MISSION_DONE], snd[SND_LOCK], snd[SND_MULTIBALL],
            snd[SND_JACKPOT], snd[SND_EXTRA], snd[SND_SKILL], snd[SND_TILT], snd[SND_SAVE]);

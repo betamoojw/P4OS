@@ -90,6 +90,12 @@ void pb_audio_pause(bool paused)
 
 void pb_audio_play(int snd, int vol)
 {
+    /* a sound the pack lacks plays a cousin it has */
+    static const int8_t FALLBACK[SND_N] = {
+        [SND_TOY_HIT] = SND_TARGET, [SND_TOY_DOWN] = SND_JACKPOT, [SND_VIDEO] = SND_MISSION, [SND_CANNON] = SND_EJECT,
+        [SND_MAGNET] = SND_SAUCER, [SND_DISC] = SND_SPINNER, [SND_LETTER] = SND_LANE, [SND_VIDEO_HIT] = SND_TARGET,
+    };
+    if (snd >= 0 && snd < SND_N && !A.snd[snd] && FALLBACK[snd]) snd = FALLBACK[snd];
     if (!A.open || !A.sfx_on || snd < 0 || snd >= SND_N || !A.snd[snd]) return;
     /* the same sound again restarts its voice instead of piling up */
     int pick = -1;

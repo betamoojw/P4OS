@@ -69,6 +69,18 @@ static void mkdir_p(const char *path)
 void emu_folders_make(void)
 {
     mkdir_p(emu_root());
+    /* the consoles of this build, for the portal's page: "id<TAB>name<TAB>
+     * short name<TAB>extensions" a line */
+    char list[EMU_PATH_MAX];
+    snprintf(list, sizeof list, "%s/consolas.txt", emu_root());
+    FILE *lf = fopen(list, "w");
+    if (lf) {
+        for (int i = 0; emu_cores[i]; i++) {
+            const emu_core_t *c = emu_cores[i];
+            fprintf(lf, "%s\t%s\t%s\t%s\n", c->id, c->name, c->short_name ? c->short_name : c->name, c->exts);
+        }
+        fclose(lf);
+    }
     for (int i = 0; emu_cores[i]; i++) {
         const emu_core_t *c = emu_cores[i];
         char dir[EMU_PATH_MAX], sub[EMU_PATH_MAX + 16];
@@ -634,28 +646,37 @@ void emu_core_pref_set(const emu_core_t *core, const char *key, int value)
  * Skins: each console's colours, as the real thing.
  * ------------------------------------------------------------------------ */
 
-static const emu_skin_t SKIN_NES = {
-    .body = 0x2A2A2E, .body2 = 0x161618,
-    .key = 0x3C3C42, .key_lit = 0x6A6A74,
-    .a = 0xC8102E, .b = 0xC8102E,
-    .badge = 0xD62828, .label = 0xE8E2D6,
-};
-static const emu_skin_t SKIN_GBA = {
-    .body = 0x3B2A8C, .body2 = 0x1E154C,
-    .key = 0x2A2A3A, .key_lit = 0x585878,
-    .a = 0x6C6C80, .b = 0x6C6C80,
-    .badge = 0x6A4CE0, .label = 0xE6E2FF,
+/* each console's colours, after the real thing: body, body2, key, key lit,
+ * the face buttons A B X Y C Z D, the library's badge, the labels */
+#define FACE7(a, b, x, y, c, z, d) { a, b, x, y, c, z, d }
+static const struct {
+    const char *id;
+    emu_skin_t  s;
+} SKINS[] = {
+    { "nes",    { 0x2A2A2E, 0x161618, 0x3C3C42, 0x6A6A74, FACE7(0xC8102E, 0xC8102E, 0, 0, 0, 0, 0), 0xD62828, 0xE8E2D6 } },
+    { "snes",   { 0x2B2B33, 0x17171C, 0x45454F, 0x75757F, FACE7(0xD8352A, 0xF2B705, 0x2E5FD8, 0x2E9E48, 0, 0, 0), 0x6B5FB5, 0xE6E6EE } },
+    { "gb",     { 0xC4C1BC, 0x8A8780, 0x2D2D30, 0x5A5A60, FACE7(0x9C2A5E, 0x9C2A5E, 0, 0, 0, 0, 0), 0x8BAC0F, 0xE8E8EC } },
+    { "gbc",    { 0x5B3C88, 0x2E1E48, 0x3A3A40, 0x66666E, FACE7(0x3A3A40, 0x3A3A40, 0, 0, 0, 0, 0), 0x2FA8A0, 0xF0F0F0 } },
+    { "gba",    { 0x3B2A8C, 0x1E154C, 0x2A2A3A, 0x585878, FACE7(0x6C6C80, 0x6C6C80, 0, 0, 0, 0, 0), 0x6A4CE0, 0xE6E2FF } },
+    { "md",     { 0x1C1C1E, 0x0E0E10, 0x38383C, 0x66666C, FACE7(0x3A3A40, 0x3A3A40, 0x3A3A40, 0x3A3A40, 0x3A3A40, 0x3A3A40, 0), 0x1F5FD6, 0xF0F0F0 } },
+    { "sms",    { 0x1A1A1C, 0x0D0D0E, 0x34343A, 0x60606A, FACE7(0xD8252A, 0xD8252A, 0, 0, 0, 0, 0), 0xC81E1E, 0xF0F0F0 } },
+    { "gg",     { 0x26262C, 0x131316, 0x3A3A42, 0x66666F, FACE7(0x2D5DBF, 0x2D5DBF, 0, 0, 0, 0, 0), 0x2D5DBF, 0xF0F0F0 } },
+    { "col",    { 0x24242A, 0x121214, 0x3A3A42, 0x66666F, FACE7(0xC8962A, 0xC8962A, 0, 0, 0, 0, 0), 0xC8962A, 0xF0F0F0 } },
+    { "neogeo", { 0x1C1C1C, 0x0A0A0A, 0x34343A, 0x60606A, FACE7(0xD62828, 0xF2C200, 0, 0, 0x2EA84A, 0, 0x2E62D6), 0xC8A23C, 0xF0F0F0 } },
+    { "pce",    { 0x34343A, 0x1A1A1E, 0x4A4A52, 0x7A7A84, FACE7(0x3C3C44, 0x3C3C44, 0, 0, 0, 0, 0), 0xE04A1F, 0xF0F0F0 } },
+    { "a2600",  { 0x3A2414, 0x1C110A, 0x2A2A2A, 0x55554F, FACE7(0xC8102E, 0, 0, 0, 0, 0, 0), 0xA8642C, 0xF0E6D8 } },
+    { "a7800",  { 0x202024, 0x101012, 0x3A3A42, 0x66666F, FACE7(0xC8102E, 0xC8102E, 0, 0, 0, 0, 0), 0x9E2A2A, 0xF0F0F0 } },
+    { "lynx",   { 0x262628, 0x131314, 0x3A3A40, 0x66666C, FACE7(0x4A4A52, 0x4A4A52, 0, 0, 0, 0, 0), 0xE08A1E, 0xF0F0F0 } },
 };
 static const emu_skin_t SKIN_ANY = {
-    .body = 0x24243A, .body2 = 0x121220,
-    .key = 0x34344E, .key_lit = 0x5C5C80,
-    .a = 0xFF2D95, .b = 0x7B5CFF,
-    .badge = 0x7B5CFF, .label = 0xF2F2F7,
+    0x24243A, 0x121220, 0x34344E, 0x5C5C80,
+    FACE7(0xFF2D95, 0x7B5CFF, 0x30D158, 0xFFD60A, 0x40C8E0, 0xFF9F0A, 0xBF5AF2), 0x7B5CFF, 0xF2F2F7,
 };
 
 const emu_skin_t *emu_skin(const emu_core_t *core)
 {
-    if (core && !strcmp(core->id, "nes")) return &SKIN_NES;
-    if (core && !strcmp(core->id, "gba")) return &SKIN_GBA;
+    for (size_t i = 0; core && i < sizeof SKINS / sizeof SKINS[0]; i++) {
+        if (!strcmp(core->id, SKINS[i].id)) return &SKINS[i].s;
+    }
     return &SKIN_ANY;
 }

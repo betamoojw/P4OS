@@ -26,9 +26,20 @@
 
 #define EMU_TAG "emulador"
 
-/* The consoles this build has, ending with NULL (emu_cores.c). */
-extern const emu_core_t *const emu_cores[];
+/* The consoles there are, ending with NULL (emu_cores.c): on the board one
+ * "shadow" per table of every module on the card (metadata only, no
+ * functions), in the simulator the linked-in tables. emu_cores_scan()
+ * fills it when the app opens. */
+extern const emu_core_t *const *emu_cores;
+void emu_cores_scan(void);
+void emu_cores_free(void);
 const emu_core_t *emu_core_by_id(const char *id);
+/* The real table for a game: loads the console's module (the board), NULL
+ * with a reason in err. emu_core_close() lets it go: no pointer into it may
+ * outlive the game. */
+const emu_core_t *emu_core_open(const emu_core_t *shadow, char *err, size_t errlen);
+void emu_core_close(void);
+int emu_core_code(const emu_core_t *core);      /* stable: for settings, never 0 for a known one */
 
 /* Memory in PSRAM (malloc in the simulator); free() frees it. */
 void *emu_psram(size_t n);
@@ -127,6 +138,7 @@ bool emu_run_start(const emu_core_t *core, const emu_game_t *game);
  * unloads and stops the worker. Blocking; from LVGL's task. */
 void emu_run_stop(bool save_auto);
 emu_run_state_t emu_run_state(void);
+float emu_run_fps(void);        /* the game's frames a second, once RUNNING */
 const char *emu_run_error(void);
 
 void emu_run_pause(bool paused);
@@ -214,10 +226,10 @@ struct emu_app {
 
 /* A console's colours: the library's badge and the pad's body. */
 typedef struct {
-    uint32_t body, body2;       /* pad background, top and bottom */
-    uint32_t key, key_lit;      /* d-pad and small keys            */
-    uint32_t a, b;              /* A and B                         */
-    uint32_t badge;             /* the library's chip              */
+    uint32_t body, body2;       /* pad background; body2 the badge's lower half */
+    uint32_t key, key_lit;      /* d-pad and small keys                         */
+    uint32_t face[7];           /* the face buttons: A B X Y C Z D              */
+    uint32_t badge;             /* the library's chip                           */
     uint32_t label;
 } emu_skin_t;
 const emu_skin_t *emu_skin(const emu_core_t *core);

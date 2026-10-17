@@ -103,8 +103,7 @@ static lv_obj_t *badge(lv_obj_t *parent, const emu_core_t *core, int w, int h)
     lv_obj_set_style_bg_grad_dir(b, LV_GRAD_DIR_VER, 0);
     lv_obj_set_style_bg_opa(b, LV_OPA_COVER, 0);
     lv_obj_remove_flag(b, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_t *l = text(b, !strcmp(core->id, "gba") ? "GBA" : !strcmp(core->id, "nes") ? "NES" : core->name,
-                       aos_font_label, 0xFFFFFF);
+    lv_obj_t *l = text(b, core->short_name ? core->short_name : core->name, aos_font_label, 0xFFFFFF);
     lv_obj_center(l);
     return b;
 }
@@ -160,7 +159,7 @@ static void play_now(emu_app_t *a, const emu_game_t *g, bool fresh)
         copy.has_auto = false;
     }
     emu_lib_hide(a);
-    emu_game_open(a, &copy);
+    if (!emu_game_open(a, &copy)) emu_lib_show(a);
 }
 
 static void play(emu_app_t *a, const emu_game_t *g, bool fresh)
@@ -265,7 +264,7 @@ static void chip_cb(lv_event_t *e)
     emu_app_t *a = lv_event_get_user_data(e);
     lib_t *l = L_of(a);
     l->filter = (int)(intptr_t)lv_obj_get_user_data(lv_event_get_current_target(e));
-    emu_pref_set("lib.filter", l->filter);
+    emu_pref_set("lib.filter", l->filter >= 0 ? emu_core_code(emu_cores[l->filter]) : 0);
     l->dirty = true;
 }
 
@@ -340,13 +339,15 @@ static void build_hero(emu_app_t *a, lib_t *l, lv_obj_t *col, int cw)
     lv_obj_t *t = text(c, g->title, aos_font_title, EMU_C_TEXT);
     lv_label_set_long_mode(t, LV_LABEL_LONG_MODE_DOTS);
     lv_obj_set_width(t, tw);
+    lv_obj_set_height(t, lv_font_get_line_height(aos_font_title));
     lv_obj_set_pos(t, tx, 44);
     char p[64], sub[120];
     played_text(g->played_s, p, sizeof p);
-    snprintf(sub, sizeof sub, "%s  ·  %s", g->core->name, p);
+    snprintf(sub, sizeof sub, "%s  ·  %s", g->core->short_name ? g->core->short_name : g->core->name, p);
     lv_obj_t *s = text(c, sub, aos_font_small, EMU_C_DIM);
     lv_label_set_long_mode(s, LV_LABEL_LONG_MODE_DOTS);
     lv_obj_set_width(s, tw);
+    lv_obj_set_height(s, lv_font_get_line_height(aos_font_small));
     lv_obj_set_pos(s, tx, 96);
 
     lv_obj_t *go = plain(c);
@@ -396,7 +397,9 @@ static void build_chips(emu_app_t *a, lib_t *l, lv_obj_t *col)
     for (int i = 0; emu_cores[i]; i++) {
         int n = 0;
         for (int j = 0; j < l->games.n; j++) n += l->games.v[j].core == emu_cores[i];
-        snprintf(t, sizeof t, "%s  %d", !strcmp(emu_cores[i]->id, "gba") ? "GBA" : emu_cores[i]->name, n);
+        /* only the consoles that have games, and the one chosen */
+        if (!n && l->filter != i) continue;
+        snprintf(t, sizeof t, "%s  %d", emu_cores[i]->short_name ? emu_cores[i]->short_name : emu_cores[i]->name, n);
         focus_add(l, chip(a, row, t, l->filter == i, emu_skin(emu_cores[i])->badge, i, chip_cb));
     }
     focus_add(l, chip(a, row, l->by_recent ? _("Recientes") : _("A-Z"), false, EMU_C_CARD2, 0, sort_cb));
@@ -428,20 +431,27 @@ static void build_row(emu_app_t *a, lib_t *l, lv_obj_t *list, int gi, int w)
     lv_obj_t *t = text(r, g->title, aos_font_body, EMU_C_TEXT);
     lv_label_set_long_mode(t, LV_LABEL_LONG_MODE_DOTS);
     lv_obj_set_width(t, tw);
+    lv_obj_set_height(t, lv_font_get_line_height(aos_font_body));
     lv_obj_set_pos(t, tx, 18);
-    char sub[160] = "", p[48];
+    /* the console (when all are listed), the tags, the time played: what
+     * there is, joined by dots */
+    char sub[160] = "", p[48] = "";
+    const char *parts[3] = { l->filter < 0 ? (g->core->short_name ? g->core->short_name : g->core->name) : NULL,
+                             g->tags[0] ? g->tags : NULL, NULL };
     if (g->last) {
         played_text(g->played_s, p, sizeof p);
-        snprintf(sub, sizeof sub, "%s%s%s  ·  %s", l->filter < 0 ? g->core->name : "",
-                 l->filter < 0 && g->tags[0] ? "  " : "", g->tags, p);
-    } else {
-        snprintf(sub, sizeof sub, "%s%s%s", l->filter < 0 ? g->core->name : "",
-                 l->filter < 0 && g->tags[0] ? "  " : "", g->tags);
+        parts[2] = p;
+    }
+    for (int i = 0; i < 3; i++) {
+        if (!parts[i]) continue;
+        size_t n = strlen(sub);
+        snprintf(sub + n, sizeof sub - n, "%s%s", n ? "  ·  " : "", parts[i]);
     }
     if (sub[0]) {
         lv_obj_t *s = text(r, sub, aos_font_caption, EMU_C_DIM);
         lv_label_set_long_mode(s, LV_LABEL_LONG_MODE_DOTS);
         lv_obj_set_width(s, tw);
+        lv_obj_set_height(s, lv_font_get_line_height(aos_font_caption));
         lv_obj_set_pos(s, tx, 60);
     } else {
         lv_obj_align(t, LV_ALIGN_LEFT_MID, tx, 0);
@@ -553,10 +563,12 @@ void emu_lib_show(emu_app_t *a)
         a->L->filter = -1;
     }
     lib_t *l = a->L;
-    l->filter = emu_pref("lib.filter", -1);
-    int nc = 0;
-    while (emu_cores[nc]) nc++;
-    if (l->filter >= nc) l->filter = -1;
+    /* the console chosen, kept by its stable code (0: all) */
+    int code = emu_pref("lib.filter", 0);
+    l->filter = -1;
+    for (int i = 0; code && emu_cores[i]; i++) {
+        if (emu_core_code(emu_cores[i]) == code) l->filter = i;
+    }
     l->by_recent = emu_pref("lib.recent", 1) != 0;
 
     if (!l->scr) {
@@ -646,7 +658,7 @@ void emu_lib_tick(emu_app_t *a)
         if (f < -1) f = nc - 1;
         if (f >= nc) f = -1;
         l->filter = f;
-        emu_pref_set("lib.filter", f);
+        emu_pref_set("lib.filter", f >= 0 ? emu_core_code(emu_cores[f]) : 0);
         l->dirty = true;
     }
 }

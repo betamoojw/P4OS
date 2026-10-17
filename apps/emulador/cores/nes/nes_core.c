@@ -509,11 +509,13 @@ static const char *nc_stats(void)
 const emu_core_t emu_core_nes = {
     .id = "nes",
     .name = "NES",
+    .short_name = "NES",
     .exts = ".nes .fds .nsf",
     .max_w = NES_SCREEN_WIDTH,
     .max_h = NES_SCREEN_HEIGHT,
     .players = 2,
     .buttons = EMU_BTN_DPAD | EMU_BTN_A | EMU_BTN_B | EMU_BTN_SELECT | EMU_BTN_START,
+    .face = EMU_FACE_ROW2,
     .options = s_options,
     .n_options = NES_N_OPTIONS,
     .load = nc_load,

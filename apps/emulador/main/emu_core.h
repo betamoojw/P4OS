@@ -13,10 +13,12 @@
  * calls at once and never from LVGL's task. The host's callbacks are
  * called back from inside them, on the same thread.
  *
- * The cores live in cores/<id>/, each built as a library of its own
- * (cores/<id>/board.cmake and sim.cmake), so a core's own globals never
- * meet another's except through the names below, which are the only ones
- * a core exports: emu_core_<id>.
+ * The cores live in cores/<dir>/, each built as a library of its own
+ * (cores/<dir>/board.cmake and sim.cmake), so a core's own globals never
+ * meet another's: the only names a core exports are its tables,
+ * emu_core_<id>. One library may bring several consoles (the Sega 8-bit
+ * core: sms, gg, col), each a table and a folder on the card of its own;
+ * its cmake files then set EMU_CORE_IDS to them.
  */
 #pragma once
 
@@ -47,7 +49,21 @@ enum {
     EMU_BTN_Z      = 1u << 13,
     EMU_BTN_L2     = 1u << 14,
     EMU_BTN_R2     = 1u << 15,
+    EMU_BTN_D      = 1u << 16,  /* Neo Geo */
 };
+#define EMU_BTN_COUNT 17
+
+/* How the face buttons sit on the screen's pad (emu_core_t.face). */
+typedef enum {
+    EMU_FACE_AUTO = 0,  /* from the buttons the console has                  */
+    EMU_FACE_ONE,       /* a single fire button (Atari 2600)                  */
+    EMU_FACE_ROW2,      /* B A side by side (NES, Master System, PC Engine)   */
+    EMU_FACE_DIAG2,     /* B low, A high (Game Boy, GBA, Lynx)                */
+    EMU_FACE_DIAMOND,   /* Y X B A as a diamond (SNES)                        */
+    EMU_FACE_ROW3,      /* A B C in a slanted row (Mega Drive, 3 buttons)     */
+    EMU_FACE_GRID6,     /* X Y Z over A B C (Mega Drive, 6 buttons)           */
+    EMU_FACE_ARC4,      /* A B C D on a rising arc (Neo Geo)                  */
+} emu_face_t;
 #define EMU_BTN_DPAD (EMU_BTN_UP | EMU_BTN_DOWN | EMU_BTN_LEFT | EMU_BTN_RIGHT)
 
 #define EMU_MAX_PLAYERS 4
@@ -102,11 +118,22 @@ typedef struct emu_core {
     const char *id;             /* "nes": the folder on the card, the prefs'
                                    prefix                                       */
     const char *name;           /* "NES", "Game Boy Advance": shown as is       */
+    const char *short_name;     /* "NES", "GBA", "MD": the library's chips and
+                                   badges, at most 6 characters (NULL: name)    */
     const char *exts;           /* ROM extensions, lower case, with the dot,
                                    separated by spaces: ".nes .fds"            */
     int         max_w, max_h;   /* the largest picture it draws                 */
+    float       pixel_aspect;   /* a pixel's width over its height on the TV the
+                                   console was made for (0: square). The
+                                   picture is stretched by it: the Atari 2600's
+                                   160 pixels a line are wide ones.             */
     int         players;        /* how many pads it reads                       */
     uint32_t    buttons;        /* EMU_BTN_* the console has                    */
+    emu_face_t  face;           /* how the face buttons sit on the screen       */
+    /* What the console calls each button, indexed by its bit (EMU_BTN_A is
+     * bit 4): "1" and "2" on a Master System, "I" and "II" on a PC Engine,
+     * "RESET" for the 2600's START. NULL, or a NULL entry: the letter. */
+    const char *const *labels;
     const emu_option_t *options;
     int         n_options;
 
@@ -145,8 +172,21 @@ typedef struct emu_core {
     const char *(*stats)(void);
 } emu_core_t;
 
-extern const emu_core_t emu_core_nes;
-extern const emu_core_t emu_core_gba;
+/* The version of this contract. A core built against another one is
+ * refused by the app (main/emu_cores.c): bump it whenever emu_core_t,
+ * emu_host_t or emu_load_t change. */
+#define EMU_CORE_ABI 2
+
+/* On the board each cores/<dir> is a module of its own, the card's
+ * apps/emulador/<dir>.so, loaded only while one of its consoles plays
+ * (aos_hal_module_open). The firmware's loader finds functions only, so a
+ * module exports these two, which the build generates
+ * (cores/emu_module.c.in): */
+int               emu_module_abi(void);
+const emu_core_t *emu_module_core(int index);     /* NULL past the last */
+
+/* The tables are named emu_core_<id> (nes, snes, gb, gbc, gba, md, sms, gg,
+ * col, neogeo, pce, a2600, a7800, lynx...): main/emu_cores.c lists them. */
 
 #ifdef __cplusplus
 }

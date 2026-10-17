@@ -66,6 +66,7 @@ typedef struct emu_menu {
 static const char *const V_SCALE[] = { N_("Ajustada"), N_("Entera"), N_("Estirada"), NULL };
 static const char *const V_SKIP[]  = { N_("Automático"), N_("Nunca"), N_("1 de cada 2"), N_("2 de cada 3"), NULL };
 static const char *const V_ONOFF[] = { N_("No"), N_("Sí"), NULL };
+static const char *const V_PLAYER[] = { N_("Jugador 1"), N_("Jugador 2"), NULL };
 
 static menu_t *M_of(emu_app_t *a) { return a->M; }
 
@@ -460,6 +461,13 @@ static void build(emu_app_t *a)
     opt_row(a, m->col, OPT_APP, "sound", N_("Sonido"), V_ONOFF, 1);
     opt_row(a, m->col, OPT_APP, "fps", N_("Mostrar cuadros por segundo"), V_ONOFF, 0);
     opt_row(a, m->col, OPT_APP, "resume", N_("Seguir donde quedó al abrir"), V_ONOFF, 1);
+    opt_row(a, m->col, OPT_APP, "hz", N_("Pantalla al ritmo de la consola"), V_ONOFF, 1);
+    if (g->core->players > 1) {
+        opt_row(a, m->col, OPT_APP, "kbd_player", N_("El teclado USB juega como"), V_PLAYER, 1);
+    }
+    if (!strcmp(g->core->id, "gba")) {
+        opt_row(a, m->col, OPT_APP, "jit", N_("Recompilador (al abrir un juego)"), V_ONOFF, 1);
+    }
     if (g->core->n_options) {
         char t[64];
         snprintf(t, sizeof t, "%s", g->core->name);

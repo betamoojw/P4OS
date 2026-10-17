@@ -624,12 +624,14 @@ static const char *gba_stats(void)
 const emu_core_t emu_core_gba = {
     .id          = "gba",
     .name        = "Game Boy Advance",
+    .short_name  = "GBA",
     .exts        = ".gba .agb .bin",
     .max_w       = 240,
     .max_h       = 160,
     .players     = 1,
     .buttons     = EMU_BTN_DPAD | EMU_BTN_A | EMU_BTN_B | EMU_BTN_L | EMU_BTN_R |
                    EMU_BTN_SELECT | EMU_BTN_START,
+    .face        = EMU_FACE_DIAG2,
     .options     = gba_options,
     .n_options   = GBA_OPT_COUNT,
     .load        = gba_load,

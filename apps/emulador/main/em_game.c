@@ -60,10 +60,27 @@
 
 /* The keys on screen. */
 enum {
-    PK_DPAD = 0, PK_A, PK_B, PK_X, PK_Y, PK_L, PK_R, PK_SELECT, PK_START,
+    PK_DPAD = 0,
+    PK_A, PK_B, PK_X, PK_Y, PK_C, PK_Z, PK_D,       /* the face buttons, in FACE[]'s order */
+    PK_L, PK_R, PK_SELECT, PK_START,
     PK_MENU, PK_TURBO,
     PK_N
 };
+#define PK_FACE0 PK_A
+#define PK_FACE_N 7
+
+/* The face keys, their console button, letter and colour slot in the skin. */
+static const struct {
+    int         k;
+    uint32_t    btn;
+    const char *letter;
+} FACE[PK_FACE_N] = {
+    { PK_A, EMU_BTN_A, "A" }, { PK_B, EMU_BTN_B, "B" }, { PK_X, EMU_BTN_X, "X" },
+    { PK_Y, EMU_BTN_Y, "Y" }, { PK_C, EMU_BTN_C, "C" }, { PK_Z, EMU_BTN_Z, "Z" },
+    { PK_D, EMU_BTN_D, "D" },
+};
+
+static bool is_face(int k) { return k >= PK_A && k <= PK_D; }
 
 enum { OWN_NONE = -1, OWN_FACE = 100 };
 
@@ -87,7 +104,8 @@ typedef struct {
 
 typedef struct emu_game {
     emu_game_t          game;
-    const emu_core_t   *core;
+    const emu_core_t   *core;       /* the module's table, while the game is open */
+    const emu_core_t   *shadow;     /* the library's copy: outlives the module    */
     const emu_skin_t   *skin;
     bool                open;
     bool                running;    /* the worker has the game */
@@ -117,6 +135,8 @@ typedef struct emu_game {
 
     bool        turbo;
     bool        was_up, pad_up;         /* after an error: waiting for a fresh tap */
+    bool        kmenu, kff;             /* the keyboard's Esc and Tab, as last seen */
+    int         hz;                     /* the panel's rate we asked for */
     bool        blocked;
     uint32_t    over;
     bool        held;
@@ -143,6 +163,13 @@ static game_t *G_of(emu_app_t *a) { return a->G; }
  * ------------------------------------------------------------------------ */
 
 static int frame_w(const game_t *g) { return g->fw ? g->fw : g->core->max_w; }
+
+/* The picture's width as it is shown: the console's pixels may be wide. */
+static int shown_w(const game_t *g, int w)
+{
+    float pa = g->core->pixel_aspect;
+    return pa > 0.01f ? (int)(w * pa + 0.5f) : w;
+}
 static int frame_h(const game_t *g)
 {
     if (g->fh) return g->fh;
@@ -180,14 +207,104 @@ static void key_set(game_t *g, int k, int x, int y, int w, int h, bool round)
 
 static bool has(const game_t *g, uint32_t btn) { return (g->core->buttons & btn) != 0; }
 
+static emu_face_t face_kind(const game_t *g)
+{
+    if (g->core->face != EMU_FACE_AUTO) return g->core->face;
+    if (has(g, EMU_BTN_D)) return EMU_FACE_ARC4;
+    if (has(g, EMU_BTN_C)) return has(g, EMU_BTN_Z) ? EMU_FACE_GRID6 : EMU_FACE_ROW3;
+    if (has(g, EMU_BTN_X) || has(g, EMU_BTN_Y)) return EMU_FACE_DIAMOND;
+    if (!has(g, EMU_BTN_B)) return EMU_FACE_ONE;
+    return EMU_FACE_DIAG2;
+}
+
+static void face_at(game_t *g, int k, int cx, int cy, int d)
+{
+    key_set(g, k, cx - d / 2, cy - d / 2, d, d, true);
+}
+
+/* The face buttons around (cx, cy), in a box w wide and h high, as the
+ * console has them. 'band' is a thumb's band lying down: narrow, so the
+ * long rows fold in two. */
+static void face_place(game_t *g, int cx, int cy, int w, int h, bool band)
+{
+    int d, gap = 14;
+    switch (face_kind(g)) {
+    case EMU_FACE_ONE:
+        d = w * 55 / 100;
+        if (d > 150) d = 150;
+        face_at(g, PK_A, cx, cy, d);
+        break;
+    case EMU_FACE_ROW2:
+        d = (w - gap * 3) / 2;
+        if (d > 128) d = 128;
+        face_at(g, PK_B, cx - d / 2 - gap, cy + (band ? d / 3 : 10), d);
+        face_at(g, PK_A, cx + d / 2 + gap, cy - (band ? d / 3 : -10), d);
+        break;
+    case EMU_FACE_DIAG2:
+        d = (w - gap * 3) / 2;
+        if (d > 128) d = 128;
+        face_at(g, PK_B, cx - d / 2 - gap / 2, cy + d * 2 / 5, d);
+        face_at(g, PK_A, cx + d / 2 + gap / 2, cy - d * 2 / 5, d);
+        break;
+    case EMU_FACE_DIAMOND: {
+        d = w * 34 / 100;
+        if (d > 112) d = 112;
+        int o = d * 78 / 100;
+        face_at(g, PK_A, cx + o, cy, d);
+        face_at(g, PK_B, cx, cy + o, d);
+        face_at(g, PK_X, cx, cy - o, d);
+        face_at(g, PK_Y, cx - o, cy, d);
+        break;
+    }
+    case EMU_FACE_ROW3:
+    case EMU_FACE_GRID6: {
+        bool six = face_kind(g) == EMU_FACE_GRID6;
+        d = (w - gap * 4) / 3;
+        if (d > (six ? 104 : 120)) d = six ? 104 : 120;
+        int step = d + gap;
+        int lift = d / 4;                       /* the row climbs to the right */
+        int by = six ? cy + d * 6 / 10 : cy;
+        static const int LOW[3] = { PK_A, PK_B, PK_C }, HIGH[3] = { PK_X, PK_Y, PK_Z };
+        for (int i = 0; i < 3; i++) {
+            face_at(g, LOW[i], cx + (i - 1) * step, by + (1 - i) * lift, d);
+            if (six) face_at(g, HIGH[i], cx + (i - 1) * step, by - step + (1 - i) * lift, d);
+        }
+        break;
+    }
+    case EMU_FACE_ARC4: {
+        static const int K[4] = { PK_A, PK_B, PK_C, PK_D };
+        if (band) {
+            /* two rows of two: C D over A B */
+            d = (w - gap * 3) / 2;
+            if (d > 100) d = 100;
+            int o = d / 2 + gap / 2;
+            face_at(g, PK_A, cx - o, cy + o, d);
+            face_at(g, PK_B, cx + o, cy + o - d / 5, d);
+            face_at(g, PK_C, cx - o, cy - o + d / 5, d);
+            face_at(g, PK_D, cx + o, cy - o, d);
+        } else {
+            d = (w - gap * 5) / 4;
+            if (d > 96) d = 96;
+            static const int RISE[4] = { 40, 8, -14, -26 };    /* hundredths of d */
+            for (int i = 0; i < 4; i++) {
+                face_at(g, K[i], cx + (int)((i - 1.5f) * (d + gap)), cy + d * RISE[i] / 100 + d / 3, d);
+            }
+        }
+        break;
+    }
+    default:
+        break;
+    }
+    (void)h;
+}
+
 static void layout(game_t *g)
 {
     int W = g->w, H = g->h;
     g->land = W > H;
     for (int i = 0; i < PK_N; i++) g->key[i].used = false;
     bool lr = has(g, EMU_BTN_L) || has(g, EMU_BTN_R);
-    bool xy = has(g, EMU_BTN_X) || has(g, EMU_BTN_Y);
-    int fw = frame_w(g), fh = frame_h(g);
+    int fw = shown_w(g, frame_w(g)), fh = frame_h(g);
 
     if (!g->land) {
         int maxh = H * 52 / 100;
@@ -216,24 +333,9 @@ static void layout(game_t *g)
         if (S > 300) S = 300;
         if (S < 200) S = 200;
         key_set(g, PK_DPAD, 36, my - S / 2, S, S, false);
-        int d = S * 44 / 100;
-        if (d > 128) d = 128;
-        int fx = W - 36 - d / 2 - 8;            /* the rightmost button's centre */
-        if (xy) {
-            int c = fx - d * 3 / 4;
-            key_set(g, PK_A, c + d * 3 / 4 - d / 2, my - d / 2, d, d, true);
-            key_set(g, PK_B, c - d / 2, my + d * 3 / 4 - d / 2, d, d, true);
-            key_set(g, PK_X, c - d / 2, my - d * 3 / 4 - d / 2, d, d, true);
-            key_set(g, PK_Y, c - d * 3 / 4 - d / 2, my - d / 2, d, d, true);
-        } else if (!strcmp(g->core->id, "nes")) {
-            /* side by side, as on the NES pad */
-            key_set(g, PK_A, fx - d / 2, my - d / 2 + 10, d, d, true);
-            key_set(g, PK_B, fx - d - 30 - d / 2, my - d / 2 + 10, d, d, true);
-        } else {
-            /* the diagonal of a Game Boy */
-            key_set(g, PK_A, fx - d / 2, my - d / 2 - d * 2 / 5, d, d, true);
-            key_set(g, PK_B, fx - d - 22 - d / 2, my - d / 2 + d * 2 / 5, d, d, true);
-        }
+        /* the face buttons in the right half, centred under the thumb */
+        int fwid = W / 2 - 40;
+        face_place(g, W - 36 - fwid / 2, my, fwid, S, false);
     } else {
         g->pic = fit(fw, fh, BAND_MIN, 0, W - 2 * BAND_MIN, H);
         int band = g->pic.x;
@@ -258,20 +360,7 @@ static void layout(game_t *g)
         if (S > 280) S = 280;
         key_set(g, PK_DPAD, band / 2 - S / 2, my - S / 2, S, S, false);
 
-        int cx = rx + rband / 2;
-        int d = rband * 42 / 100;
-        if (d > 118) d = 118;
-        int o = d * 62 / 100;
-        if (xy) {
-            key_set(g, PK_A, cx + o - d / 2, my - d / 2, d, d, true);
-            key_set(g, PK_B, cx - d / 2, my + o - d / 2, d, d, true);
-            key_set(g, PK_X, cx - d / 2, my - o - d / 2, d, d, true);
-            key_set(g, PK_Y, cx - o - d / 2, my - d / 2, d, d, true);
-        } else {
-            int o2 = d * 52 / 100;
-            key_set(g, PK_A, cx + o2 - d / 2, my - o2 - d / 2 + 6, d, d, true);
-            key_set(g, PK_B, cx - o2 - d / 2, my + o2 - d / 2 - 6, d, d, true);
-        }
+        face_place(g, rx + rband / 2, my, rband - 20, S, true);
     }
 }
 
@@ -292,9 +381,8 @@ static uint32_t key_color(const game_t *g, int k, bool on)
 {
     const emu_skin_t *s = g->skin;
     switch (k) {
-    case PK_A: return on ? 0xFFFFFF : s->a;
-    case PK_B: return on ? 0xFFFFFF : s->b;
-    case PK_X: case PK_Y: return on ? 0xFFFFFF : s->key_lit;
+    case PK_A: case PK_B: case PK_X: case PK_Y: case PK_C: case PK_Z: case PK_D:
+        return on ? 0xFFFFFF : s->face[k - PK_A];
     case PK_TURBO: return on ? EMU_C_ACCENT : s->key;
     default: return on ? s->key_lit : s->key;
     }
@@ -306,9 +394,7 @@ static void key_paint(game_t *g, int k, bool on)
     if (!p->o) return;
     lv_obj_set_style_bg_color(p->o, lv_color_hex(key_color(g, k, on)), 0);
     if (p->lbl) {
-        bool face = k == PK_A || k == PK_B || k == PK_X || k == PK_Y;
-        uint32_t lc = face && on ? g->skin->a : g->skin->label;
-        if (face && on && k == PK_B) lc = g->skin->b;
+        uint32_t lc = is_face(k) && on ? g->skin->face[k - PK_A] : g->skin->label;
         lv_obj_set_style_text_color(p->lbl, lv_color_hex(lc), 0);
     }
 }
@@ -350,6 +436,7 @@ static void lit_update(game_t *g, uint32_t want_btn)
     g->lit = lit;
     static const struct { int k; uint32_t b; } MAP[] = {
         { PK_A, EMU_BTN_A }, { PK_B, EMU_BTN_B }, { PK_X, EMU_BTN_X }, { PK_Y, EMU_BTN_Y },
+        { PK_C, EMU_BTN_C }, { PK_Z, EMU_BTN_Z }, { PK_D, EMU_BTN_D },
         { PK_L, EMU_BTN_L }, { PK_R, EMU_BTN_R }, { PK_SELECT, EMU_BTN_SELECT },
         { PK_START, EMU_BTN_START },
     };
@@ -466,6 +553,15 @@ static void build_key(game_t *g, lv_obj_t *parent, int k, const char *text, cons
     key_paint(g, k, false);
 }
 
+/* What the console calls a button (emu_core_t.labels), or the default. */
+static const char *btn_label(const game_t *g, uint32_t btn, const char *def)
+{
+    int bit = 0;
+    while (bit < EMU_BTN_COUNT && !(btn & (1u << bit))) bit++;
+    if (g->core->labels && bit < EMU_BTN_COUNT && g->core->labels[bit]) return g->core->labels[bit];
+    return def;
+}
+
 static void pad_build(game_t *g)
 {
     lv_obj_t *s = g->scr;
@@ -491,14 +587,16 @@ static void pad_build(game_t *g)
 
     if (g->key[PK_DPAD].used) build_dpad(g, s, g->key[PK_DPAD].r);
     const lv_font_t *big = aos_font_title, *small = aos_font_caption;
-    if (g->key[PK_A].used) build_key(g, s, PK_A, "A", big);
-    if (g->key[PK_B].used) build_key(g, s, PK_B, "B", big);
-    if (g->key[PK_X].used) build_key(g, s, PK_X, "X", big);
-    if (g->key[PK_Y].used) build_key(g, s, PK_Y, "Y", big);
-    if (g->key[PK_L].used) build_key(g, s, PK_L, "L", aos_font_body);
-    if (g->key[PK_R].used) build_key(g, s, PK_R, "R", aos_font_body);
-    if (g->key[PK_SELECT].used) build_key(g, s, PK_SELECT, "SELECT", small);
-    if (g->key[PK_START].used) build_key(g, s, PK_START, "START", small);
+    for (int i = 0; i < PK_FACE_N; i++) {
+        int k = FACE[i].k;
+        if (!g->key[k].used) continue;
+        const char *t = btn_label(g, FACE[i].btn, FACE[i].letter);
+        build_key(g, s, k, t, strlen(t) > 2 ? aos_font_body : big);
+    }
+    if (g->key[PK_L].used) build_key(g, s, PK_L, btn_label(g, EMU_BTN_L, "L"), aos_font_body);
+    if (g->key[PK_R].used) build_key(g, s, PK_R, btn_label(g, EMU_BTN_R, "R"), aos_font_body);
+    if (g->key[PK_SELECT].used) build_key(g, s, PK_SELECT, btn_label(g, EMU_BTN_SELECT, "SELECT"), small);
+    if (g->key[PK_START].used) build_key(g, s, PK_START, btn_label(g, EMU_BTN_START, "START"), small);
     if (g->key[PK_MENU].used) build_key(g, s, PK_MENU, AOS_SYM_PAUSE, &aos_sym_28);
     if (g->key[PK_TURBO].used) build_key(g, s, PK_TURBO, AOS_SYM_SKIP_NEXT, &aos_sym_28);
 
@@ -557,7 +655,7 @@ static int claim(game_t *g, int x, int y)
     /* the face cluster: the box around its buttons, a little bigger */
     rect_t fb = { 0 };
     bool any = false;
-    for (int k = PK_A; k <= PK_Y; k++) {
+    for (int k = PK_A; k <= PK_D; k++) {
         if (!g->key[k].used) continue;
         rect_t r = g->key[k].r;
         if (!any) {
@@ -597,24 +695,21 @@ static uint32_t dpad_dirs(game_t *g, int x, int y)
 
 static uint32_t face_btns(game_t *g, int x, int y)
 {
-    static const struct { int k; uint32_t b; } F[] = {
-        { PK_A, EMU_BTN_A }, { PK_B, EMU_BTN_B }, { PK_X, EMU_BTN_X }, { PK_Y, EMU_BTN_Y },
-    };
     uint32_t b = 0;
     int best = -1, bd = 0;
-    for (size_t i = 0; i < sizeof F / sizeof F[0]; i++) {
-        const pkey_t *p = &g->key[F[i].k];
+    for (int i = 0; i < PK_FACE_N; i++) {
+        const pkey_t *p = &g->key[FACE[i].k];
         if (!p->used) continue;
         int cx = p->r.x + p->r.w / 2, cy = p->r.y + p->r.h / 2;
         int rad = p->r.w * 62 / 100;            /* a bit past the edge: between two is both */
         int d2 = (x - cx) * (x - cx) + (y - cy) * (y - cy);
-        if (d2 <= rad * rad) b |= F[i].b;
+        if (d2 <= rad * rad) b |= FACE[i].btn;
         if (best < 0 || d2 < bd) {
             best = (int)i;
             bd = d2;
         }
     }
-    if (!b && best >= 0) b = F[best].b;
+    if (!b && best >= 0) b = FACE[best].btn;
     return b;
 }
 
@@ -696,15 +791,82 @@ static uint32_t pad_read(int i, bool *menu_combo)
     return b;
 }
 
-/* The pad's buttons as the console has them: X and Y are A and B on a
- * console without them, L2/R2 are L/R. */
-static uint32_t fold(const emu_core_t *core, uint32_t b)
+/* A SNES-style pad's buttons as the console has them, by where they sit:
+ * on a 3-button Mega Drive pad Y B A are A B C (and L X R the top row of a
+ * 6-button one), on a Neo Geo B A Y X are A B C D, and a console with two
+ * buttons takes A or X as A and B or Y as B. L2/R2 are L/R where the
+ * console has no others. The screen's pad needs none of this: its keys are
+ * the console's own. */
+static uint32_t fold(const game_t *g, uint32_t b)
 {
-    if (!(core->buttons & EMU_BTN_X) && (b & EMU_BTN_X)) b = (b & ~EMU_BTN_X) | EMU_BTN_A;
-    if (!(core->buttons & EMU_BTN_Y) && (b & EMU_BTN_Y)) b = (b & ~EMU_BTN_Y) | EMU_BTN_B;
-    if (!(core->buttons & EMU_BTN_L2) && (b & EMU_BTN_L2)) b = (b & ~EMU_BTN_L2) | EMU_BTN_L;
-    if (!(core->buttons & EMU_BTN_R2) && (b & EMU_BTN_R2)) b = (b & ~EMU_BTN_R2) | EMU_BTN_R;
-    return b & core->buttons;
+    const uint32_t keep = EMU_BTN_DPAD | EMU_BTN_SELECT | EMU_BTN_START;
+    uint32_t o = b & keep;
+    bool A = b & EMU_BTN_A, B = b & EMU_BTN_B, X = b & EMU_BTN_X, Y = b & EMU_BTN_Y;
+    bool L = b & EMU_BTN_L, R = b & EMU_BTN_R;
+    if (!has(g, EMU_BTN_L2) && (b & EMU_BTN_L2)) L = true;
+    if (!has(g, EMU_BTN_R2) && (b & EMU_BTN_R2)) R = true;
+    switch (face_kind(g)) {
+    case EMU_FACE_ROW3:
+    case EMU_FACE_GRID6:
+        if (Y) o |= EMU_BTN_A;
+        if (B) o |= EMU_BTN_B;
+        if (A) o |= EMU_BTN_C;
+        if (L) o |= EMU_BTN_X;
+        if (X) o |= EMU_BTN_Y;
+        if (R) o |= EMU_BTN_Z;
+        break;
+    case EMU_FACE_ARC4:
+        if (B) o |= EMU_BTN_A;
+        if (A) o |= EMU_BTN_B;
+        if (Y) o |= EMU_BTN_C;
+        if (X) o |= EMU_BTN_D;
+        break;
+    case EMU_FACE_DIAMOND:
+        o |= b & (EMU_BTN_A | EMU_BTN_B | EMU_BTN_X | EMU_BTN_Y);
+        if (L) o |= EMU_BTN_L;
+        if (R) o |= EMU_BTN_R;
+        break;
+    default:
+        if (A || X) o |= EMU_BTN_A;
+        if (B || Y) o |= EMU_BTN_B;
+        if (L) o |= EMU_BTN_L;
+        if (R) o |= EMU_BTN_R;
+        break;
+    }
+    o |= b & (EMU_BTN_L2 | EMU_BTN_R2);
+    return o & g->core->buttons;
+}
+
+/* A USB keyboard as one more pad, laid out as a SNES-style one so fold()
+ * fits it to the console: the arrows, X = A, Z = B, S = X, A = Y, Q = L,
+ * W = R, Enter = START, Backspace or the right Shift = SELECT. Esc opens
+ * the menu and Tab held is fast forward. HID usages of the keyboard page. */
+static uint32_t kbd_read(bool *menu, bool *ff)
+{
+    uint8_t keys[16], mods = 0;
+    int n = aos_hal_usb_kbd_held(keys, (int)sizeof keys, &mods);
+    uint32_t b = 0;
+    for (int i = 0; i < n; i++) {
+        switch (keys[i]) {
+        case 0x52: b |= EMU_BTN_UP; break;
+        case 0x51: b |= EMU_BTN_DOWN; break;
+        case 0x50: b |= EMU_BTN_LEFT; break;
+        case 0x4F: b |= EMU_BTN_RIGHT; break;
+        case 0x1B: b |= EMU_BTN_A; break;          /* x */
+        case 0x1D: b |= EMU_BTN_B; break;          /* z */
+        case 0x16: b |= EMU_BTN_X; break;          /* s */
+        case 0x04: b |= EMU_BTN_Y; break;          /* a */
+        case 0x14: b |= EMU_BTN_L; break;          /* q */
+        case 0x1A: b |= EMU_BTN_R; break;          /* w */
+        case 0x28: b |= EMU_BTN_START; break;      /* Enter */
+        case 0x2A: b |= EMU_BTN_SELECT; break;     /* Backspace */
+        case 0x29: *menu = true; break;            /* Esc */
+        case 0x2B: *ff = true; break;              /* Tab */
+        default: break;
+        }
+    }
+    if (mods & 0x20) b |= EMU_BTN_SELECT;          /* right Shift */
+    return b;
 }
 
 static void input_poll(emu_app_t *a, game_t *g)
@@ -715,6 +877,24 @@ static void input_poll(emu_app_t *a, game_t *g)
     uint32_t pads[EMU_MAX_PLAYERS] = { 0 };
     for (int i = 0; i < EMU_MAX_PLAYERS && i < AOS_GAMEPAD_MAX; i++) {
         pads[i] = pad_read(i, &combo);
+    }
+    /* the keyboard's player: the second where the console has two, so one
+     * plays on the screen and one on the keyboard (setting "kbd_player") */
+    bool kmenu = false, kff = false;
+    uint32_t kb = kbd_read(&kmenu, &kff);
+    int kp = emu_pref("kbd_player", 1);
+    if (kp < 0 || kp >= g->core->players) kp = 0;
+    pads[kp] |= kb;
+    if (kmenu && !g->kmenu) {
+        g->kmenu = true;
+        open_menu(a);
+        return;
+    }
+    g->kmenu = kmenu;
+    if (kff != g->kff) {
+        g->kff = kff;
+        g->turbo = kff;
+        emu_run_turbo(kff);
     }
     uint32_t now = (uint32_t)aos_hal_uptime_ms();
     if (combo) {
@@ -730,8 +910,8 @@ static void input_poll(emu_app_t *a, game_t *g)
         g->combo_ms = 0;
         g->combo_fired = false;
     }
-    pads[0] |= g->touch_btn;
-    for (int i = 0; i < EMU_MAX_PLAYERS; i++) pads[i] = fold(g->core, pads[i]);
+    for (int i = 0; i < EMU_MAX_PLAYERS; i++) pads[i] = fold(g, pads[i]);
+    pads[0] |= g->touch_btn & g->core->buttons;
     for (int i = g->core->players; i < EMU_MAX_PLAYERS; i++) pads[i] = 0;
     emu_run_pads(pads);
     lit_update(g, pads[0]);
@@ -960,6 +1140,12 @@ static void game_frame(emu_app_t *a, game_t *g)
         g->running = true;
         show_msg(g, NULL);
         emu_recent_touch(&g->game, 0);
+        /* the panel at the console's rate, so scrolling does not judder:
+         * 60 Hz needs the panel's 80 MHz clock (docs/APPS-P4.md), else ~51 */
+        if (emu_pref("hz", 1)) {
+            g->hz = aos_hal_display_refresh_request((int)(emu_run_fps() + 0.5f));
+            aos_hal_log(EMU_TAG, "panel at %d Hz for a %.2f Hz console", g->hz, (double)emu_run_fps());
+        }
     }
 
     g->over = aos_ui_overlay();
@@ -1029,7 +1215,14 @@ bool emu_game_open(emu_app_t *a, const emu_game_t *gm)
     }
     memset(g, 0, sizeof *g);
     g->game = *gm;
-    g->core = gm->core;
+    g->shadow = gm->core;
+    char cerr[160] = "";
+    g->core = emu_core_open(gm->core, cerr, sizeof cerr);
+    if (!g->core) {
+        aos_ui_toast(cerr, 3000);
+        return false;
+    }
+    g->game.core = g->core;
     g->skin = emu_skin(gm->core);
     g->fown[0] = g->fown[1] = OWN_NONE;
     g->open = true;
@@ -1068,6 +1261,10 @@ void emu_game_close(emu_app_t *a, bool save_auto)
     bool played = g->running;
     uint32_t secs = ((uint32_t)aos_hal_uptime_ms() - g->t_open) / 1000;
     emu_run_stop(save_auto);
+    g->game.core = g->shadow;
+    if (g->hz) aos_hal_display_refresh_request(0);
+    g->hz = 0;
+    emu_core_close();
     if (played) emu_recent_touch(&g->game, secs);
     if (g->scr) lv_obj_delete(g->scr);
     g->scr = NULL;
@@ -1122,6 +1319,9 @@ void emu_game_destroy(emu_app_t *a)
         uint32_t secs = ((uint32_t)aos_hal_uptime_ms() - g->t_open) / 1000;
         bool played = g->running;
         emu_run_stop(true);
+        g->game.core = g->shadow;
+        if (g->hz) aos_hal_display_refresh_request(0);
+        emu_core_close();
         if (played) emu_recent_touch(&g->game, secs);
     }
     free(g->cv_buf);

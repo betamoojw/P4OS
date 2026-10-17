@@ -17,10 +17,24 @@ const { h, put, toast, fmtBytes, fsPut, fsList, fsDelete, fsMkdir, fsBytes, fsTe
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 
 const ROOT = '/emulador';
-const CONSOLES = [
-  { id: 'nes', name: 'NES', exts: ['.nes', '.fds', '.nsf'], bios: tr('Opcional: disksys.rom para el Famicom Disk System.'), w: 256, h: 240 },
-  { id: 'gba', name: 'Game Boy Advance', exts: ['.gba', '.agb', '.bin'], bios: tr('Opcional: gba_bios.bin (la BIOS original mejora la compatibilidad; sin ella se usa una libre que trae el emulador).'), w: 240, h: 160 },
+/* The consoles: the app writes the ones it has to consolas.txt each time it
+ * opens; these are the notes about their system files, and the list to use
+ * before the app has ever run. */
+const BIOS_NOTES = {
+  nes: tr('Opcional: disksys.rom para el Famicom Disk System.'),
+  gba: tr('Opcional: gba_bios.bin (la BIOS original mejora la compatibilidad; sin ella se usa una libre que trae el emulador).'),
+};
+let CONSOLES = [
+  { id: 'nes', name: 'NES', exts: ['.nes', '.fds', '.nsf'] },
+  { id: 'gba', name: 'Game Boy Advance', exts: ['.gba', '.agb', '.bin'] },
 ];
+async function loadConsoles() {
+  const txt = await fsText(ROOT + '/consolas.txt').catch(() => null);
+  if (!txt) return;
+  const list = txt.split('\n').map(l => l.split('\t')).filter(f => f.length >= 4 && f[0])
+    .map(([id, name, short, exts]) => ({ id, name, short, exts: exts.trim().split(/\s+/) }));
+  if (list.length) CONSOLES = list;
+}
 
 if (!document.getElementById('css-emulador')) {
   const st = document.createElement('style');
@@ -140,7 +154,7 @@ function render(main) {
 
   function drawTabs() {
     tabs.replaceChildren(...CONSOLES.map(c =>
-      h('button', { class: 'btn' + (c === con ? ' on' : ''), onclick: () => { con = c; drawTabs(); load(); } }, c.name)));
+      h('button', { class: 'btn' + (c === con ? ' on' : ''), onclick: () => { con = c; drawTabs(); load(); } }, c.short || c.name)));
   }
 
   /* the app makes these when it opens; the page too, for a card that has
@@ -218,7 +232,7 @@ function render(main) {
       list,
       h('h2', { style: 'margin-top:22px' }, tr('BIOS y archivos de sistema')),
       h('div', { class: 'card pad' },
-        h('p', { class: 'small muted' }, con.bios),
+        h('p', { class: 'small muted' }, BIOS_NOTES[con.id] || tr('Los archivos de sistema que pida la consola (el emulador avisa cuáles).')),
         ...bios.filter(b => !b.dir && !b.name.startsWith('.')).map(b =>
           h('div', { class: 'row' }, h('span', { class: 'grow mono' }, b.name), h('span', { class: 'small muted' }, fmtBytes(b.size)),
             h('button', { class: 'btn red', onclick: () => confirm(tr('¿Borrar %s?', b.name)) &&
@@ -276,8 +290,7 @@ function render(main) {
     });
   }
 
-  drawTabs();
-  load().catch(e => toast(e.message, true));
+  loadConsoles().then(() => { con = CONSOLES[0]; drawTabs(); return load(); }).catch(e => toast(e.message, true));
   return () => { alive = false; };
 }
 

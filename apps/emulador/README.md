@@ -88,22 +88,39 @@ up to date there from the buffer on screen, and flips.
 
 **A core** is a static library of its own (`cores/emu_cores.cmake`,
 `emu_core_board_lib()`), compiled with its own flags (C, C++, assembly,
--O2) and linked into the `.so` through `ELF_LIBS`; the app's own files go
-through `project_so()`'s -Os. A core exports only `emu_core_<id>`.
+-O2), then linked into its module `build/modules/<dir>.so`; the app's own
+files go through `project_so()`'s -Os. A core exports only its
+`emu_core_<id>` tables. In the simulator the cores are linked into the app
+(`sim.cmake`). `EMU_ONLY="nes gba"` builds just those.
 
-**Adding a console:** a `cores/<id>/` with the core, its adapter
-implementing `emu_core_t`, `board.cmake` and `sim.cmake`; its line in the
-`foreach` of `CMakeLists.txt` and `sim.cmake`, in `main/emu_cores.c`, a skin
-in `em_files.c` and a line in the page's `CONSOLES`.
+**Adding a console:** a `cores/<dir>/` with the core, its adapter
+implementing `emu_core_t`, `board.cmake` and `sim.cmake` (both globbed; set
+`EMU_CORE_IDS` for several consoles in one folder); for the simulator its
+id in `main/emu_cores.c`, and a skin in `em_files.c`. The texts it shows
+go in `main/em_strings.c` for the catalogs.
 
-## Firmware it would use
+## What it takes from the firmware
 
-- **A cache sync for code written at run time** (`aos_hal_code_sync(p, n)`:
-  write the data cache back, drop the instruction cache's lines). gpSP's
-  recompiler for RISC-V needs it; until the firmware exports it, the GBA
-  runs gpSP's interpreter.
-- **Keys held on a USB keyboard** (today keys are events with a 500 ms
-  repeat), for a second player on the keyboard.
+Since the firmware's commit `8bdf0da` (docs/APPS-P4.md, "Emulators"):
+
+- **Modules:** each core is its own `apps/emulador/<dir>.so` on the card
+  (`aos_hal_module_open`), loaded only while one of its consoles plays. The
+  app (60 KB) finds them when it opens and keeps what their tables say in
+  `emulador/.modulos.txt`, so the library opens none. A module exports
+  `emu_module_abi()` and `emu_module_core(i)` (generated from
+  `cores/emu_module.c.in`); one built against another `EMU_CORE_ABI` is
+  refused. `tools/build_apps.sh` builds and checks them
+  (`build/modules/*.so`) and `tools/install_apps.sh` installs them.
+- **The GBA's recompiler:** blocks of the PSRAM heap and
+  `aos_hal_code_sync` (setting `jit` in the menu, on by default).
+- **A player on the keyboard:** `aos_hal_usb_kbd_held`. The arrows, X = A,
+  Z = B, S = X, A = Y, Q = L, W = R, Enter = START, Backspace or the right
+  Shift = SELECT; Esc opens the menu, Tab held is fast forward. It plays as
+  player 2 where the console has two (setting), so one plays on the screen
+  and one on the keyboard.
+- **The panel at the console's rate** while a game plays
+  (`aos_hal_display_refresh_request`): 60 Hz needs the panel's 80 MHz
+  clock (`POST /api/panel/qos?mhz=80`, from the next boot); otherwise ~51.
 
 ## Third-party code
 

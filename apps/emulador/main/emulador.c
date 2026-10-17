@@ -43,14 +43,13 @@ static void *emu_create(aos_app_t *self, lv_obj_t *root)
     a->root = root;
     uint32_t hi = 0, hp = 0;
     aos_hal_heap_info(&hi, &hp);
-    int n = 0;
-    while (emu_cores[n]) n++;
-    aos_hal_log(EMU_TAG, "opening: %d consoles | internal %u B, psram %u B", n, (unsigned)hi, (unsigned)hp);
+    aos_hal_log(EMU_TAG, "opening | internal %u B, psram %u B", (unsigned)hi, (unsigned)hp);
 
     lv_obj_set_style_bg_color(root, lv_color_hex(EMU_C_BG), 0);
     lv_obj_set_style_bg_opa(root, LV_OPA_COVER, 0);
     lv_obj_remove_flag(root, LV_OBJ_FLAG_SCROLLABLE);
 
+    emu_cores_scan();
     emu_folders_make();
     emu_lib_show(a);
     a->timer = lv_timer_create(tick_cb, TICK_MS, a);
@@ -68,6 +67,7 @@ static void emu_destroy(aos_app_t *self, void *inst)
     if (a->M) lv_free(a->M);
     a->M = NULL;
     emu_lib_destroy(a);
+    emu_cores_free();
     lv_obj_clean(a->root);
     lv_free(a);
 }

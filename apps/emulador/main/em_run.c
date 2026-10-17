@@ -97,6 +97,7 @@ static struct {
     uint32_t            period_ms;
     emu_run_stats_t     stats;
     bool                stop_save_auto;
+    float               fps;
 } R;
 
 static bool cas(volatile int *p, int from, int to)
@@ -170,9 +171,37 @@ static void host_audio(const int16_t *lr, int frames)
     }
 }
 
-/* Executable memory for a recompiler. Not yet: the firmware exports no way
- * to make freshly written code visible to the instruction cache, so the
- * cores are handed NULL and run their interpreters (emu_core.h). */
+/* Executable memory for a recompiler (gpSP's for the GBA): blocks of the
+ * PSRAM heap, which the P4 runs code from as it runs the apps' own, and
+ * the firmware's cache sync before a block written runs (aos_hal.h). The
+ * simulator runs nothing recompiled: the cores get NULL there and
+ * interpret. */
+#if !defined(AOS_SIM) && !defined(AOS_SIM_BUILTIN)
+#include "esp_heap_caps.h"
+
+static void *exec_alloc(size_t align, size_t size)
+{
+    if (align < 256) align = 256;           /* a cache line, for the sync */
+    return heap_caps_aligned_alloc(align, size, MALLOC_CAP_SPIRAM);
+}
+
+static void exec_free(void *code)
+{
+    heap_caps_free(code);
+}
+
+static bool exec_publish(void *code, size_t size)
+{
+    return aos_hal_code_sync(code, size);
+}
+#define EXEC_ALLOC   exec_alloc
+#define EXEC_FREE    exec_free
+#define EXEC_PUBLISH exec_publish
+#else
+#define EXEC_ALLOC   NULL
+#define EXEC_FREE    NULL
+#define EXEC_PUBLISH NULL
+#endif
 
 /* ---------------------------------------------------------------------------
  * The frames, from the screen's side
@@ -355,6 +384,7 @@ static void worker(void *arg)
     R.rate = R.core->sample_rate();
     float fps = R.core->fps();
     if (fps < 20 || fps > 120) fps = 60;
+    R.fps = fps;
     aos_hal_log(EMU_TAG, "%s loaded in %u ms: %.2f fps, sound %d Hz", R.game.title,
                 (unsigned)((aos_hal_uptime_us() - t0) / 1000), (double)fps, R.rate);
 
@@ -523,9 +553,9 @@ bool emu_run_start(const emu_core_t *core, const emu_game_t *game)
         .video = host_video,
         .audio = host_audio,
         .log = host_log,
-        .exec_alloc = NULL,
-        .exec_free = NULL,
-        .exec_publish = NULL,
+        .exec_alloc = emu_pref("jit", 1) ? EXEC_ALLOC : NULL,
+        .exec_free = emu_pref("jit", 1) ? EXEC_FREE : NULL,
+        .exec_publish = emu_pref("jit", 1) ? EXEC_PUBLISH : NULL,
     };
     if (!slots_alloc()) {
         snprintf(R.err, sizeof R.err, "%s", _("Falta memoria"));
@@ -557,6 +587,7 @@ void emu_run_stop(bool save_auto)
 }
 
 emu_run_state_t emu_run_state(void) { return R.state; }
+float emu_run_fps(void) { return R.fps; }
 const char *emu_run_error(void) { return R.err; }
 
 void emu_run_pause(bool paused) { R.paused = paused; }

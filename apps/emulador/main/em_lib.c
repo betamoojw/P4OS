@@ -288,6 +288,15 @@ static void thumbs_free(lib_t *l)
     emu_thumb_free(&l->hero_thumb);
 }
 
+/* A console's picture width for a height: its shape as shown, the wide
+ * pixels of an Atari counted, never narrower than square. */
+static int pic_w(const emu_core_t *c, int h)
+{
+    float pa = c->pixel_aspect > 0.01f ? c->pixel_aspect : 1.0f;
+    int w = (int)(h * c->max_w * pa / c->max_h);
+    return w < h ? h : w;
+}
+
 static lv_obj_t *picture(lv_obj_t *parent, const emu_game_t *g, lv_image_dsc_t *dsc, int w, int h)
 {
     lv_obj_t *well = plain(parent);
@@ -329,7 +338,7 @@ static void build_hero(emu_app_t *a, lib_t *l, lv_obj_t *col, int cw)
     lv_obj_add_event_cb(c, hero_cb, LV_EVENT_LONG_PRESSED, a);
     focus_add(l, c);
 
-    int ph = 192, pw = ph * g->core->max_w / g->core->max_h;
+    int ph = 192, pw = pic_w(g->core, ph);
     lv_obj_t *pic = picture(c, g, &l->hero_thumb, pw, ph);
     lv_obj_align(pic, LV_ALIGN_LEFT_MID, 0, 0);
 
@@ -421,7 +430,7 @@ static void build_row(emu_app_t *a, lib_t *l, lv_obj_t *list, int gi, int w)
     lv_obj_add_event_cb(r, row_cb, LV_EVENT_LONG_PRESSED, a);
     focus_add(l, r);
 
-    int ph = 84, pw = ph * g->core->max_w / g->core->max_h;
+    int ph = 84, pw = pic_w(g->core, ph);
     lv_image_dsc_t *dsc = g->has_auto && l->nthumb < THUMBS_MAX ? &l->thumb[l->nthumb] : NULL;
     lv_obj_t *pic = picture(r, g, dsc, pw, ph);
     if (dsc && dsc->data) l->nthumb++;

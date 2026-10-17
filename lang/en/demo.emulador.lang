@@ -11,12 +11,12 @@ Juegos	Games
 #: apps/emulador/main/em_files.c:100
 Copiá acá los juegos de esta consola (también en subcarpetas).\nbios/ guarda los archivos de sistema que la consola pueda usar;\nsaves/ y states/ los escribe el emulador.	Copy this console's games here (subfolders work too).\nbios/ holds the system files the console may use;\nsaves/ and states/ are written by the emulator.
 
-#: apps/emulador/main/em_game.c:1139
-#: apps/emulador/main/em_game.c:1281
+#: apps/emulador/main/em_game.c:1140
+#: apps/emulador/main/em_game.c:1282
 Tocá para volver	Tap to go back
 
-#: apps/emulador/main/em_game.c:1274
-#: apps/emulador/main/em_game.c:1327
+#: apps/emulador/main/em_game.c:1275
+#: apps/emulador/main/em_game.c:1328
 #: apps/emulador/main/em_menu.c:210
 Cargando...	Loading...
 
@@ -431,6 +431,63 @@ No se pudo escribir la caché del juego en la tarjeta	Could not write the game's
 
 #: apps/emulador/main/em_strings.c:61
 No se pudo leer la caché del juego	Could not read the game's cache
+
+#: apps/emulador/main/em_strings.c:63
+Dificultad izquierda	Left difficulty
+
+#: apps/emulador/main/em_strings.c:63
+Dificultad derecha	Right difficulty
+
+#: apps/emulador/main/em_strings.c:63
+Televisor	TV
+
+#: apps/emulador/main/em_strings.c:63
+Suavizar parpadeo	Smooth flicker
+
+#: apps/emulador/main/em_strings.c:64
+BIOS de la 7800	7800 BIOS
+
+#: apps/emulador/main/em_strings.c:64
+Girar la pantalla	Rotate the screen
+
+#: apps/emulador/main/em_strings.c:64
+Según el juego	As the game says
+
+#: apps/emulador/main/em_strings.c:64
+A (difícil)	A (hard)
+
+#: apps/emulador/main/em_strings.c:65
+B (fácil)	B (easy)
+
+#: apps/emulador/main/em_strings.c:65
+Color	Colour
+
+#: apps/emulador/main/em_strings.c:65
+Blanco y negro	Black and white
+
+#: apps/emulador/main/em_strings.c:65
+No usar	Don't use
+
+#: apps/emulador/main/em_strings.c:65
+Usar si está	Use if present
+
+#: apps/emulador/main/em_strings.c:66
+Izquierda	Left
+
+#: apps/emulador/main/em_strings.c:66
+Derecha	Right
+
+#: apps/emulador/main/em_strings.c:67
+No es un juego de Atari 2600	Not an Atari 2600 game
+
+#: apps/emulador/main/em_strings.c:67
+No es un juego de Atari 7800	Not an Atari 7800 game
+
+#: apps/emulador/main/em_strings.c:68
+No es un juego de Atari Lynx	Not an Atari Lynx game
+
+#: apps/emulador/main/em_strings.c:68
+Tipo de cartucho no soportado	Cartridge type not supported
 
 #: apps/emulador/main/emu_cores.c:378
 No está el módulo de esta consola	This console's module is missing

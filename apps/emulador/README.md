@@ -37,6 +37,8 @@ files.
 | ColecoVision | `.col` | required: `coleco.rom` |
 | PC Engine | `.pce` | — (HuCards only) |
 | Neo Geo | MAME `.zip` sets, by their short name | required: MAME's `neogeo.zip` |
+| Atari 2600 / 7800 | `.a26` `.bin` / `.a78` `.bin` | 7800: optional `7800 BIOS (U).rom` |
+| Atari Lynx | `.lnx` `.lyx` `.o` | — (the boot ROM is emulated) |
 
 No game or BIOS comes with the app.
 
@@ -144,6 +146,9 @@ Each core is its own module and carries its own licence; the app
 | `pce.so` | pce-go, as Retro-Go carries it | GPL-2.0 |
 | `md.so` | Gwenesis (Musashi 68000, Marat Fayzullin's Z80) | **AGPL-3.0**; the Z80's notice forbids commercial distribution |
 | `neogeo.so` | gngeo (Generator 68000), superzazu's z80, MAME's YM2610 | GPL-2.0-or-later; MIT; old MAME files with no licence |
+| `a2600.so` | Stella | GPL-2.0-or-later |
+| `a7800.so` | ProSystem | GPL-2.0-or-later |
+| `lynx.so` | Handy | Handy's licence (permissive) |
 
 Every change to a vendored core is listed in `cores/<dir>/README.md`. No
 game or official BIOS comes with any of them.

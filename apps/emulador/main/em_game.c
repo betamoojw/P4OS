@@ -339,10 +339,8 @@ static void layout(game_t *g)
 
         /* the top row: L, the menu and fast forward, R */
         int ty = cy + 10;
-        if (lr) {
-            key_set(g, PK_L, 24, ty, 190, 62, false);
-            key_set(g, PK_R, W - 24 - 190, ty, 190, 62, false);
-        }
+        if (has(g, EMU_BTN_L)) key_set(g, PK_L, 24, ty, 190, 62, false);
+        if (has(g, EMU_BTN_R)) key_set(g, PK_R, W - 24 - 190, ty, 190, 62, false);
         key_set(g, PK_MENU, W / 2 - 112, ty + 4, 104, 54, false);
         key_set(g, PK_TURBO, W / 2 + 8, ty + 4, 104, 54, false);
 
@@ -366,10 +364,8 @@ static void layout(game_t *g)
         int band = g->pic.x;
         int rx = g->pic.x + g->pic.w;
         int rband = W - rx;
-        if (lr) {
-            key_set(g, PK_L, 16, 16, band - 32, 60, false);
-            key_set(g, PK_R, rx + 16, 16, rband - 32, 60, false);
-        }
+        if (has(g, EMU_BTN_L)) key_set(g, PK_L, 16, 16, band - 32, 60, false);
+        if (has(g, EMU_BTN_R)) key_set(g, PK_R, rx + 16, 16, rband - 32, 60, false);
         int my0 = lr ? 92 : 20;
         int half = (band - 40) / 2;
         key_set(g, PK_MENU, 16, my0, half, 52, false);

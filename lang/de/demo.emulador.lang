@@ -11,12 +11,12 @@ Juegos	Spiele
 #: apps/emulador/main/em_files.c:100
 Copiá acá los juegos de esta consola (también en subcarpetas).\nbios/ guarda los archivos de sistema que la consola pueda usar;\nsaves/ y states/ los escribe el emulador.	Kopiere die Spiele dieser Konsole hierher (Unterordner gehen auch).\nbios/ enthält Systemdateien, die die Konsole nutzen kann;\nsaves/ und states/ schreibt der Emulator.
 
-#: apps/emulador/main/em_game.c:1139
-#: apps/emulador/main/em_game.c:1281
+#: apps/emulador/main/em_game.c:1140
+#: apps/emulador/main/em_game.c:1282
 Tocá para volver	Tippen, um zurückzugehen
 
-#: apps/emulador/main/em_game.c:1274
-#: apps/emulador/main/em_game.c:1327
+#: apps/emulador/main/em_game.c:1275
+#: apps/emulador/main/em_game.c:1328
 #: apps/emulador/main/em_menu.c:210
 Cargando...	Wird geladen...
 
@@ -431,6 +431,63 @@ No se pudo escribir la caché del juego en la tarjeta	Der Cache des Spiels konnt
 
 #: apps/emulador/main/em_strings.c:61
 No se pudo leer la caché del juego	Der Cache des Spiels konnte nicht gelesen werden
+
+#: apps/emulador/main/em_strings.c:63
+Dificultad izquierda	Schwierigkeit links
+
+#: apps/emulador/main/em_strings.c:63
+Dificultad derecha	Schwierigkeit rechts
+
+#: apps/emulador/main/em_strings.c:63
+Televisor	Fernseher
+
+#: apps/emulador/main/em_strings.c:63
+Suavizar parpadeo	Flimmern glätten
+
+#: apps/emulador/main/em_strings.c:64
+BIOS de la 7800	7800-BIOS
+
+#: apps/emulador/main/em_strings.c:64
+Girar la pantalla	Bildschirm drehen
+
+#: apps/emulador/main/em_strings.c:64
+Según el juego	Wie das Spiel will
+
+#: apps/emulador/main/em_strings.c:64
+A (difícil)	A (schwer)
+
+#: apps/emulador/main/em_strings.c:65
+B (fácil)	B (leicht)
+
+#: apps/emulador/main/em_strings.c:65
+Color	Farbe
+
+#: apps/emulador/main/em_strings.c:65
+Blanco y negro	Schwarzweiß
+
+#: apps/emulador/main/em_strings.c:65
+No usar	Nicht verwenden
+
+#: apps/emulador/main/em_strings.c:65
+Usar si está	Verwenden, wenn vorhanden
+
+#: apps/emulador/main/em_strings.c:66
+Izquierda	Links
+
+#: apps/emulador/main/em_strings.c:66
+Derecha	Rechts
+
+#: apps/emulador/main/em_strings.c:67
+No es un juego de Atari 2600	Kein Atari-2600-Spiel
+
+#: apps/emulador/main/em_strings.c:67
+No es un juego de Atari 7800	Kein Atari-7800-Spiel
+
+#: apps/emulador/main/em_strings.c:68
+No es un juego de Atari Lynx	Kein Atari-Lynx-Spiel
+
+#: apps/emulador/main/em_strings.c:68
+Tipo de cartucho no soportado	Modultyp nicht unterstützt
 
 #: apps/emulador/main/emu_cores.c:378
 No está el módulo de esta consola	Das Modul dieser Konsole fehlt

@@ -59,4 +59,11 @@ __attribute__((unused)) static const char *const CORE_TEXTS[] = {
     N_("No hay lugar en la tarjeta para la caché del juego"),
     N_("No se pudo escribir la caché del juego en la tarjeta"),
     N_("No se pudo leer la caché del juego"),
+    /* Atari 2600, 7800, Lynx (cores/a2600, a7800, lynx) */
+    N_("Dificultad izquierda"), N_("Dificultad derecha"), N_("Televisor"), N_("Suavizar parpadeo"),
+    N_("BIOS de la 7800"), N_("Girar la pantalla"), N_("Según el juego"), N_("A (difícil)"),
+    N_("B (fácil)"), N_("Color"), N_("Blanco y negro"), N_("No usar"), N_("Usar si está"),
+    N_("Izquierda"), N_("Derecha"),
+    N_("No es un juego de Atari 2600"), N_("No es un juego de Atari 7800"),
+    N_("No es un juego de Atari Lynx"), N_("Tipo de cartucho no soportado"),
 };

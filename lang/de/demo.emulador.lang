@@ -5,64 +5,64 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/emulador/main/em_files.c:87
+#: apps/emulador/main/em_files.c:99
 Juegos	Spiele
 
-#: apps/emulador/main/em_files.c:88
+#: apps/emulador/main/em_files.c:100
 Copiá acá los juegos de esta consola (también en subcarpetas).\nbios/ guarda los archivos de sistema que la consola pueda usar;\nsaves/ y states/ los escribe el emulador.	Kopiere die Spiele dieser Konsole hierher (Unterordner gehen auch).\nbios/ enthält Systemdateien, die die Konsole nutzen kann;\nsaves/ und states/ schreibt der Emulator.
 
-#: apps/emulador/main/em_game.c:935
-#: apps/emulador/main/em_game.c:1053
+#: apps/emulador/main/em_game.c:1115
+#: apps/emulador/main/em_game.c:1246
 Tocá para volver	Tippen, um zurückzugehen
 
-#: apps/emulador/main/em_game.c:1046
-#: apps/emulador/main/em_game.c:1095
-#: apps/emulador/main/em_menu.c:209
+#: apps/emulador/main/em_game.c:1239
+#: apps/emulador/main/em_game.c:1292
+#: apps/emulador/main/em_menu.c:210
 Cargando...	Wird geladen...
 
 #: apps/emulador/main/em_lib.c:89
 menos de 1 min	unter 1 Min.
 
-#: apps/emulador/main/em_lib.c:216
+#: apps/emulador/main/em_lib.c:215
 Empezar desde el principio borra el estado automático. Las partidas guardadas por el juego y las ranuras quedan.	Von vorn beginnen löscht den automatischen Spielstand. Die Speicherstände des Spiels und die Slots bleiben.
 
-#: apps/emulador/main/em_lib.c:221
+#: apps/emulador/main/em_lib.c:220
 Seguir donde quedó	Dort weiterspielen
 
-#: apps/emulador/main/em_lib.c:221
+#: apps/emulador/main/em_lib.c:220
 Desde el principio	Von vorn
 
-#: apps/emulador/main/em_lib.c:338
+#: apps/emulador/main/em_lib.c:337
 CONTINUAR	WEITERSPIELEN
 
-#: apps/emulador/main/em_lib.c:338
+#: apps/emulador/main/em_lib.c:337
 JUGAR DE NUEVO	NOCH EINMAL
 
-#: apps/emulador/main/em_lib.c:394
+#: apps/emulador/main/em_lib.c:395
 Todos	Alle
 
-#: apps/emulador/main/em_lib.c:402
+#: apps/emulador/main/em_lib.c:405
 Recientes	Zuletzt
 
-#: apps/emulador/main/em_lib.c:402
+#: apps/emulador/main/em_lib.c:405
 A-Z	A-Z
 
-#: apps/emulador/main/em_lib.c:463
+#: apps/emulador/main/em_lib.c:473
 Todavía no hay juegos	Noch keine Spiele
 
-#: apps/emulador/main/em_lib.c:471
+#: apps/emulador/main/em_lib.c:481
 Copiá los juegos a la tarjeta, una carpeta por consola:	Kopiere die Spiele auf die Karte, ein Ordner pro Konsole:
 
-#: apps/emulador/main/em_lib.c:472
+#: apps/emulador/main/em_lib.c:482
 También se pueden subir desde el portal web de la placa, en la página Emulador. Los archivos de sistema (como la BIOS de la GBA) van en la carpeta bios de cada consola.	Sie lassen sich auch über das Webportal der Platine hochladen, auf der Seite Emulador. Systemdateien (etwa das GBA-BIOS) kommen in den bios-Ordner der jeweiligen Konsole.
 
-#: apps/emulador/main/em_lib.c:509
+#: apps/emulador/main/em_lib.c:519
 Emulador	Emulator
 
-#: apps/emulador/main/em_lib.c:540
+#: apps/emulador/main/em_lib.c:550
 %d juego	%d Spiel
 
-#: apps/emulador/main/em_lib.c:540
+#: apps/emulador/main/em_lib.c:550
 %d juegos	%d Spiele
 
 #: apps/emulador/main/em_menu.c:66
@@ -75,7 +75,7 @@ Entera	Ganzzahlig
 Estirada	Gestreckt
 
 #: apps/emulador/main/em_menu.c:67
-#: apps/emulador/main/em_menu.c:146
+#: apps/emulador/main/em_menu.c:147
 Automático	Automatisch
 
 #: apps/emulador/main/em_menu.c:67
@@ -95,71 +95,86 @@ No	Nein
 #: apps/emulador/main/em_strings.c:16
 Sí	Ja
 
-#: apps/emulador/main/em_menu.c:149
+#: apps/emulador/main/em_menu.c:69
+Jugador 1	Spieler 1
+
+#: apps/emulador/main/em_menu.c:69
+Jugador 2	Spieler 2
+
+#: apps/emulador/main/em_menu.c:150
 Ranura %d	Slot %d
 
-#: apps/emulador/main/em_menu.c:153
+#: apps/emulador/main/em_menu.c:154
 vacía	leer
 
-#: apps/emulador/main/em_menu.c:160
+#: apps/emulador/main/em_menu.c:161
 guardado	gespeichert
 
-#: apps/emulador/main/em_menu.c:209
+#: apps/emulador/main/em_menu.c:210
 Guardando...	Wird gespeichert...
 
-#: apps/emulador/main/em_menu.c:420
+#: apps/emulador/main/em_menu.c:421
 Continuar	Weiter
 
-#: apps/emulador/main/em_menu.c:421
+#: apps/emulador/main/em_menu.c:422
 Reiniciar	Neustart
 
-#: apps/emulador/main/em_menu.c:422
+#: apps/emulador/main/em_menu.c:423
 Salir	Beenden
 
-#: apps/emulador/main/em_menu.c:425
+#: apps/emulador/main/em_menu.c:426
 Estados	Spielstände
 
-#: apps/emulador/main/em_menu.c:431
+#: apps/emulador/main/em_menu.c:432
 Guardar	Speichern
 
-#: apps/emulador/main/em_menu.c:431
+#: apps/emulador/main/em_menu.c:432
 Cargar	Laden
 
-#: apps/emulador/main/em_menu.c:457
+#: apps/emulador/main/em_menu.c:458
 Opciones	Optionen
 
-#: apps/emulador/main/em_menu.c:458
+#: apps/emulador/main/em_menu.c:459
 Tamaño de la imagen	Bildgröße
 
-#: apps/emulador/main/em_menu.c:459
+#: apps/emulador/main/em_menu.c:460
 Saltear cuadros	Bilder überspringen
 
-#: apps/emulador/main/em_menu.c:460
+#: apps/emulador/main/em_menu.c:461
 Sonido	Ton
 
-#: apps/emulador/main/em_menu.c:461
+#: apps/emulador/main/em_menu.c:462
 Mostrar cuadros por segundo	Bilder pro Sekunde zeigen
 
-#: apps/emulador/main/em_menu.c:462
+#: apps/emulador/main/em_menu.c:463
 Seguir donde quedó al abrir	Beim Öffnen fortsetzen
 
-#: apps/emulador/main/em_menu.c:550
-Estado guardado	Spielstand gespeichert
+#: apps/emulador/main/em_menu.c:464
+Pantalla al ritmo de la consola	Bildschirm im Takt der Konsole
 
-#: apps/emulador/main/em_menu.c:550
-No se pudo guardar el estado	Spielstand konnte nicht gespeichert werden
+#: apps/emulador/main/em_menu.c:466
+El teclado USB juega como	Die USB-Tastatur spielt als
+
+#: apps/emulador/main/em_menu.c:469
+Recompilador (al abrir un juego)	Recompiler (beim Öffnen eines Spiels)
 
 #: apps/emulador/main/em_menu.c:558
+Estado guardado	Spielstand gespeichert
+
+#: apps/emulador/main/em_menu.c:558
+No se pudo guardar el estado	Spielstand konnte nicht gespeichert werden
+
+#: apps/emulador/main/em_menu.c:566
 No se pudo cargar el estado	Spielstand konnte nicht geladen werden
 
-#: apps/emulador/main/em_run.c:349
-#: apps/emulador/main/em_strings.c:26
+#: apps/emulador/main/em_run.c:378
+#: apps/emulador/main/em_strings.c:30
 No se pudo cargar el juego	Spiel konnte nicht geladen werden
 
-#: apps/emulador/main/em_run.c:531
+#: apps/emulador/main/em_run.c:561
 Falta memoria	Zu wenig Speicher
 
-#: apps/emulador/main/em_run.c:537
+#: apps/emulador/main/em_run.c:567
 Otra app está usando el procesador	Eine andere App nutzt den Prozessor
 
 #: apps/emulador/main/em_strings.c:14
@@ -196,28 +211,61 @@ No hay memoria	Kein Speicher frei
 Falta la BIOS del Famicom Disk System (disksys.rom)	Das BIOS des Famicom Disk System fehlt (disksys.rom)
 
 #: apps/emulador/main/em_strings.c:21
-BIOS	BIOS
+Paleta (juegos de Game Boy)	Palette (Game-Boy-Spiele)
 
 #: apps/emulador/main/em_strings.c:21
-Automática	Automatisch
+Verde (DMG)	Grün (DMG)
 
 #: apps/emulador/main/em_strings.c:21
-Integrada	Eingebaut
+Gris	Grau
+
+#: apps/emulador/main/em_strings.c:21
+Pocket	Pocket
 
 #: apps/emulador/main/em_strings.c:22
-Corrección de color	Farbkorrektur
+Color automático	Automatische Farben
 
 #: apps/emulador/main/em_strings.c:22
-Mezcla de cuadros	Bildüberblendung
+No es un juego de Game Boy	Kein Game-Boy-Spiel
 
 #: apps/emulador/main/em_strings.c:23
-El archivo no es un juego de Game Boy Advance	Die Datei ist kein Game-Boy-Advance-Spiel
+Este tipo de cartucho no está soportado	Dieser Modultyp wird nicht unterstützt
 
-#: apps/emulador/main/em_strings.c:24
-El juego es más grande que un cartucho de Game Boy Advance	Das Spiel ist größer als ein Game-Boy-Advance-Modul
+#: apps/emulador/main/em_strings.c:23
+No se pudo leer el juego	Spiel konnte nicht gelesen werden
 
 #: apps/emulador/main/em_strings.c:25
-No hay memoria suficiente para el juego	Nicht genug Speicher für das Spiel
+BIOS	BIOS
+
+#: apps/emulador/main/em_strings.c:25
+Automática	Automatisch
+
+#: apps/emulador/main/em_strings.c:25
+Integrada	Eingebaut
 
 #: apps/emulador/main/em_strings.c:26
+Corrección de color	Farbkorrektur
+
+#: apps/emulador/main/em_strings.c:26
+Mezcla de cuadros	Bildüberblendung
+
+#: apps/emulador/main/em_strings.c:27
+El archivo no es un juego de Game Boy Advance	Die Datei ist kein Game-Boy-Advance-Spiel
+
+#: apps/emulador/main/em_strings.c:28
+El juego es más grande que un cartucho de Game Boy Advance	Das Spiel ist größer als ein Game-Boy-Advance-Modul
+
+#: apps/emulador/main/em_strings.c:29
+No hay memoria suficiente para el juego	Nicht genug Speicher für das Spiel
+
+#: apps/emulador/main/em_strings.c:30
 No se pudo abrir el juego	Spiel konnte nicht geöffnet werden
+
+#: apps/emulador/main/emu_cores.c:378
+No está el módulo de esta consola	Das Modul dieser Konsole fehlt
+
+#: apps/emulador/main/emu_cores.c:388
+No se pudo cargar el módulo	Das Modul konnte nicht geladen werden
+
+#: apps/emulador/main/emu_cores.c:395
+El módulo es de otra versión del emulador	Das Modul gehört zu einer anderen Version des Emulators

@@ -194,13 +194,26 @@ hit), `flash1..3` (flashers on big events).
   music synthesised with numpy for the theme (nothing recorded), mu-law at
   16 kHz in the pack; a ten-voice mixer on the streaming speaker.
 
-Memory (PSRAM): ~13 MB with a table loaded (the frame, the depth of the
-frame, the table's picture and its depth twice, the art); the carousel holds
-the six cards' thumbnails (~4 MB) only while it is up. Internal RAM: none of
-its own.
+Memory (PSRAM only: an allocation never falls back to internal RAM): a
+table takes ~10 MB of pictures (the frame and its depth, the table's
+picture and its depth, the art) and ~13 MB in all with its sounds; the
+carousel holds the six cards' thumbnails (~4 MB) only while it is up, and
+frees them before a table loads. Measured on the board (0.17.0, freshly
+started): 18 MB of PSRAM free before, 4.8 MB while playing. A table that
+does not load whole (other big apps alive) is not played: a toast asks to
+close them. Internal RAM: none of its own.
 
-The log says every 5 s while playing:
-`pinball: 60.0 fps, 1.10 ms a frame, 180 rows/frame pushed, flip 1, 13319 KB art`.
+Measured on the board (2026-10-17, Noche de Zombis, page flipping): 68-70
+frames a second (the frame timer's 14 ms; the panel shows 60), 3-6 ms of
+work a frame, 1-2.5 ms drawing and 2-4 ms copying 110-220 rows to the
+panel's buffer. The log says every 5 s:
+`pinball: 69.6 fps, 3.37 ms a frame (draw 1.13, push 2.06), 113 rows/frame pushed, flip 1, 10122 KB art`.
+
+On 0.17.0 the first build loaded a table beside the carousel's cards and
+ran out of PSRAM: half the pack missing, and malloc() falling back to
+internal RAM starved the system's DMA until the board panicked. The DMA
+copies to the panel also go 64 rows at a time: one of a whole frame wants
+more link-list items than the driver has.
 
 ## Simulator switches
 
@@ -209,5 +222,4 @@ tutorial, `PB_DEBUG=1` draws the physics' shapes over the picture.
 
 ## Pending
 
-- Measure on the board: fps, the rows pushed, the time a frame takes.
 - Tune the difficulty with real players (ball time, outlanes, missions).

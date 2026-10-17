@@ -71,15 +71,16 @@ def build():
     t.flasher('flash1', 404, 150, z=70, color=MOON, size=90)       # the moon
     t.flasher('flash2', 90, 200, z=60, color=GREEN, size=70)
 
-    # decoration: what stands on the field and does not touch the ball
-    t.deco('tomb', 80, 150, rot=10, s=1.0)
-    t.deco('tomb', 118, 220, rot=-8, s=0.8)
-    t.deco('tomb', 372, 170, rot=5, s=0.7)
-    t.deco('hand', 120, 520, rot=20, s=1.0)
-    t.deco('hand', 410, 600, rot=-30, s=0.8)
-    t.deco('crypt', 408, 246, s=1.0)
-    t.deco('tree', 92, 260, s=1.1)
-    t.deco('coffin', 240, 430, s=0.6)
+
+    # the toys stand where the ball never goes: the cabinet's corners and
+    # the back shelf, the slingshots' tops, the apron
+    t.deco('tomb', 52, 46, s=1.1, rot=10, z=60)
+    t.deco('crypt', 260, -6, s=1.3, z=60)
+    t.deco('tree', 468, 46, s=1.2, z=60)
+    t.deco('hand', 91, 814, s=0.8, z=30)
+    t.deco('hand', 391, 814, s=0.8, z=30, rot=-20)
+    t.deco('tomb', 54, 1016, s=0.9, z=30)
+    t.deco('coffin', 426, 1016, s=0.9, z=30, rot=90)
 
     t.mission(dict(es='La horda', en='The horde', de='Die Horde'), 'bumper', 10, 45, 250000)
     t.mission(dict(es='Cerrá las tumbas', en='Seal the tombs', de='Versiegle die Gräber'), 'drop', 6, 60, 300000)

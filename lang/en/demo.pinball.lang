@@ -1,0 +1,214 @@
+# amoledos-lang 1   es -> en
+# demo.pinball.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/pinball/main/pb_game.c:120
+¡A JUGAR!	LET'S PLAY!
+
+#: apps/pinball/main/pb_game.c:148
+TILT	TILT
+
+#: apps/pinball/main/pb_game.c:152
+¡CUIDADO!	DANGER!
+
+#: apps/pinball/main/pb_game.c:168
+MISIÓN	MISSION
+
+#: apps/pinball/main/pb_game.c:183
+MODO FINAL	FINAL MODE
+
+#: apps/pinball/main/pb_game.c:183
+#: apps/pinball/main/pb_game.c:745
+MULTIBOLA	MULTIBALL
+
+#: apps/pinball/main/pb_game.c:184
+TODO VALE x5	EVERYTHING x5
+
+#: apps/pinball/main/pb_game.c:184
+JACKPOT EN LA RAMPA	JACKPOT ON THE RAMP
+
+#: apps/pinball/main/pb_game.c:195
+JACKPOT	JACKPOT
+
+#: apps/pinball/main/pb_game.c:214
+¡MISIÓN CUMPLIDA!	MISSION COMPLETE!
+
+#: apps/pinball/main/pb_game.c:239
+MISIÓN LISTA	MISSION READY
+
+#: apps/pinball/main/pb_game.c:239
+#: apps/pinball/main/pb_game.c:271
+TIRÁ AL EMBUDO	SHOOT THE SAUCER
+
+#: apps/pinball/main/pb_game.c:264
+BOLA %d TRABADA	BALL %d LOCKED
+
+#: apps/pinball/main/pb_game.c:265
+BOLA TRABADA	BALL LOCKED
+
+#: apps/pinball/main/pb_game.c:271
+BOLA EXTRA	EXTRA BALL
+
+#: apps/pinball/main/pb_game.c:286
+¡BOLA EXTRA!	EXTRA BALL!
+
+#: apps/pinball/main/pb_game.c:310
+¡TIRO PERFECTO!	SKILL SHOT!
+
+#: apps/pinball/main/pb_game.c:324
+BONUS x%d	BONUS x%d
+
+#: apps/pinball/main/pb_game.c:339
+KICKBACK LISTO	KICKBACK READY
+
+#: apps/pinball/main/pb_game.c:356
+¡COMBO!	COMBO!
+
+#: apps/pinball/main/pb_game.c:380
+BUMPERS MÁS FUERTES	BUMPERS POWER UP
+
+#: apps/pinball/main/pb_game.c:429
+JACKPOT MÁS GRANDE	BIGGER JACKPOT
+
+#: apps/pinball/main/pb_game.c:432
+TRABA LISTA	LOCK IS LIT
+
+#: apps/pinball/main/pb_game.c:432
+TIRÁ A LA RAMPA	SHOOT THE RAMP
+
+#: apps/pinball/main/pb_game.c:452
+¡SALVADA!	BALL SAVED!
+
+#: apps/pinball/main/pb_game.c:461
+FIN DE LA MULTIBOLA	MULTIBALL OVER
+
+#: apps/pinball/main/pb_game.c:472
+BOLA PERDIDA	BALL LOST
+
+#: apps/pinball/main/pb_game.c:581
+KICKBACK	KICKBACK
+
+#: apps/pinball/main/pb_game.c:618
+SE ACABÓ EL TIEMPO	TIME'S UP
+
+#: apps/pinball/main/pb_game.c:662
+TIRÁ DE NUEVO	SHOOT AGAIN
+
+#: apps/pinball/main/pb_game.c:722
+RÉCORD %s	HIGH SCORE %s
+
+#: apps/pinball/main/pb_game.c:724
+LANZÁ PARA JUGAR	LAUNCH TO PLAY
+
+#: apps/pinball/main/pb_game.c:736
+#: apps/pinball/main/pb_game.c:739
+BOLA %d	BALL %d
+
+#: apps/pinball/main/pb_game.c:753
+BONUS %s x%d	BONUS %s x%d
+
+#: apps/pinball/main/pb_game.c:760
+FIN DEL JUEGO	GAME OVER
+
+#: apps/pinball/main/pinball.c:708
+#: apps/pinball/main/pinball.c:743
+#: apps/pinball/main/pinball.c:1172
+Efectos: sí	Sound effects: on
+
+#: apps/pinball/main/pinball.c:708
+#: apps/pinball/main/pinball.c:743
+#: apps/pinball/main/pinball.c:1172
+Efectos: no	Sound effects: off
+
+#: apps/pinball/main/pinball.c:718
+#: apps/pinball/main/pinball.c:744
+#: apps/pinball/main/pinball.c:1173
+Música: sí	Music: on
+
+#: apps/pinball/main/pinball.c:718
+#: apps/pinball/main/pinball.c:744
+#: apps/pinball/main/pinball.c:1173
+Música: no	Music: off
+
+#: apps/pinball/main/pinball.c:738
+#: apps/pinball/main/pinball.c:848
+Pausa	Paused
+
+#: apps/pinball/main/pinball.c:740
+Seguir	Resume
+
+#: apps/pinball/main/pinball.c:741
+Empezar de nuevo	Start over
+
+#: apps/pinball/main/pinball.c:742
+Cómo se juega	How to play
+
+#: apps/pinball/main/pinball.c:745
+#: apps/pinball/main/pinball.c:766
+Elegir otra mesa	Choose another table
+
+#: apps/pinball/main/pinball.c:754
+Fin del juego	Game over
+
+#: apps/pinball/main/pinball.c:759
+¡Récord nuevo!	New high score!
+
+#: apps/pinball/main/pinball.c:762
+Récord: %s	High score: %s
+
+#: apps/pinball/main/pinball.c:765
+Otra vez	Play again
+
+#: apps/pinball/main/pinball.c:820
+Tocá acá:\npaleta izquierda	Touch here:\nleft flipper
+
+#: apps/pinball/main/pinball.c:821
+Tocá acá:\npaleta derecha	Touch here:\nright flipper
+
+#: apps/pinball/main/pinball.c:824
+Deslizá rápido el dedo por acá para sacudir la mesa.\n¡Si la sacudís mucho, TILT!	Swipe quickly here to nudge the table.\nNudge it too much and it TILTs!
+
+#: apps/pinball/main/pinball.c:834
+Cuando aparece este botón, tocalo para lanzar la bola. Mantenelo apretado para elegir la fuerza.	When this button appears, tap it to launch the ball. Hold it down to choose the strength.
+
+#: apps/pinball/main/pinball.c:852
+¡A jugar!	Let's play!
+
+#: apps/pinball/main/pinball.c:1004
+No se pudo cargar la mesa	The table could not be loaded
+
+#: apps/pinball/main/pinball.c:1050
+Preparando la mesa...	Setting up the table...
+
+#: apps/pinball/main/pinball.c:1071
+Récord:	High score:
+
+#: apps/pinball/main/pinball.c:1147
+El tutorial sale en la próxima partida	The tutorial shows in the next game
+
+#: apps/pinball/main/pinball.c:1158
+Récords borrados	High scores cleared
+
+#: apps/pinball/main/pinball.c:1171
+Ajustes	Settings
+
+#: apps/pinball/main/pinball.c:1174
+Ver el tutorial otra vez	Show the tutorial again
+
+#: apps/pinball/main/pinball.c:1175
+Borrar los récords	Clear the high scores
+
+#: apps/pinball/main/pinball.c:1176
+Listo	Done
+
+#: apps/pinball/main/pinball.c:1202
+Pinball 3D	Pinball 3D
+
+#: apps/pinball/main/pinball.c:1219
+No hay mesas en la tarjeta.\n\nCopiá los archivos pinball_*_p4.pak a la carpeta apps de la tarjeta.	There are no tables on the card.\n\nCopy the pinball_*_p4.pak files to the card's apps folder.
+
+#: apps/pinball/main/pinball.c:1317
+Jugar	Play

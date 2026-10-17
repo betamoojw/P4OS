@@ -60,14 +60,14 @@ def want(what):
     return not ONLY or what in ONLY
 
 
-OFF = [0.0, 0.0]     # where things are built: the icons go far from the table
+OFF = [0.0, 0.0, 0.0]   # where things are built: the icons go far from the table, toys stand on things
 
 
 def V(x, y, z=0.0):
     """table millimetres -> world"""
     x += OFF[0]
     y += OFF[1]
-    return Vector(((x - W / 2) / 1000.0, (H - y) / 1000.0, z / 1000.0))
+    return Vector(((x - W / 2) / 1000.0, (H - y) / 1000.0, (z + OFF[2]) / 1000.0))
 
 
 def col(c, k=1.0):
@@ -442,6 +442,8 @@ def build_cabinet():
     box('cab_r', W + 40, H / 2, 0, 64, H + 140, 62, M_CAB)
     box('rail_l', -30, H / 2, 62, 30, H + 140, 8, M_CHROME)
     box('rail_r', W + 30, H / 2, 62, 30, H + 140, 8, M_CHROME)
+    # a shelf along the back, for the theme's toys
+    box('shelf', W / 2, -8, 0, W + 16, 12, 60, M_CAB)
     # the backboard behind the top arch, with the theme's picture
     bb = os.path.join(args.tex, 'backboard.png')
     m = image_mat('backboard', bb, rough=0.5, clear=0.2) if os.path.exists(bb) else M_CAB
@@ -670,13 +672,241 @@ def deco_zombis(nm, kind, x, y, s, rot, v):
 DECO = {'zombis': deco_zombis}
 
 
+def wedge_disc(nm, x, y, z0, z1, r, mats, n, r0=0.0, start=0.0):
+    """a disc of n slices, materials in turn: a roulette, a tent's stripes"""
+    objs = []
+    for i in range(n):
+        a0 = start + i / n * 2 * math.pi
+        a1 = start + (i + 1) / n * 2 * math.pi
+        pts = [(x + r0 * math.cos(a0), y + r0 * math.sin(a0))] if r0 else [(x, y)]
+        for k in range(4):
+            a = a0 + (a1 - a0) * k / 3
+            pts.append((x + r * math.cos(a), y + r * math.sin(a)))
+        if r0:
+            pts.append((x + r0 * math.cos(a1), y + r0 * math.sin(a1)))
+        objs.append(prism('%s_w%d' % (nm, i), pts, z0, z1, mats[i % len(mats)]))
+    return objs
+
+
+def striped_cone(nm, x, y, z, r, h, mats, n=12):
+    """a cone in n coloured gores (the big top)"""
+    for i in range(n):
+        a0, a1 = i / n * 2 * math.pi, (i + 1) / n * 2 * math.pi
+        verts = [V(x, y, z + h), V(x + r * math.cos(a0), y + r * math.sin(a0), z),
+                 V(x + r * math.cos(a1), y + r * math.sin(a1), z)]
+        mesh_obj('%s_g%d' % (nm, i), verts, [(0, 1, 2)], mats[i % len(mats)])
+
+
+def deco_robots(nm, kind, x, y, s, rot, v):
+    steel = m_('steel', 0xB8C4D4, 0.25, metal=0.9)
+    blue = m_('rblue', 0x2050C0, 0.35, clear=0.5)
+    glow = m_('rglow', 0x30E0FF, 0.3, emit_k=8)
+    pink = m_('rpink', 0xFF40C0, 0.3, emit_k=5)
+    if kind == 'robot':
+        box(nm + 'legs', x - 6 * s, y, 0, 5 * s, 6 * s, 18 * s, steel, rot=rot)
+        box(nm + 'legs2', x + 6 * s, y, 0, 5 * s, 6 * s, 18 * s, steel, rot=rot)
+        box(nm + 'body', x, y, 18 * s, 24 * s, 16 * s, 24 * s, blue, rot=rot)
+        box(nm + 'panel', x, y + 8 * s, 24 * s, 12 * s, 1.5, 10 * s, glow, rot=rot)
+        box(nm + 'head', x, y, 44 * s, 18 * s, 14 * s, 14 * s, steel, rot=rot)
+        for sx in (-1, 1):
+            sphere(nm + 'eye%d' % sx, x + sx * 4.5 * s, y + 7 * s, 51 * s, 2.8 * s, glow)
+            box(nm + 'arm%d' % sx, x + sx * 15 * s, y, 22 * s, 5 * s, 5 * s, 18 * s, steel, rot=rot)
+        cyl(nm + 'ant', x, y, 0.8 * s, 58 * s, 68 * s, steel)
+        sphere(nm + 'antb', x, y, 69 * s, 2.5 * s, pink)
+    elif kind == 'rocket':
+        white = m_('rwhite', 0xF0F2F6, 0.3, clear=0.6)
+        red = m_('rred', 0xE02830, 0.3, clear=0.6)
+        cyl(nm + 'body', x, y, 12 * s, 14 * s, 70 * s, white)
+        cone(nm + 'nose', x, y, 70 * s, 12 * s, 0.5, 26 * s, red)
+        sphere(nm + 'win', x, y + 11 * s, 52 * s, 5 * s, glow, scale=(1, 0.4, 1))
+        for i in range(3):
+            a = i / 3 * 2 * math.pi
+            box(nm + 'fin%d' % i, x + math.cos(a) * 13 * s, y + math.sin(a) * 13 * s, 10 * s, 10 * s, 2.5 * s,
+                22 * s, red, rot=math.degrees(a))
+        cone(nm + 'flame', x, y, 0, 8 * s, 2 * s, 14 * s, m_('flame', 0xFF8A20, 0.5, emit_k=10))
+    elif kind == 'planet':
+        sphere(nm, x, y, 34 * s, 24 * s, m_('planet', 0x8A50D0, 0.6))
+        torus(nm + 'ring', x, y, 34 * s, 36 * s, 3 * s, m_('ring', 0xE0C080, 0.4), rot=(0.4, 0.2, 0))
+        cyl(nm + 'stand', x, y, 2 * s, 0, 12 * s, steel)
+    elif kind == 'dish':
+        cyl(nm + 'post', x, y, 2.5 * s, 0, 22 * s, steel)
+        o = sphere(nm + 'dish', x, y, 30 * s, 16 * s, steel, scale=(1, 1, 0.35))
+        o.rotation_euler = (0.6, 0, math.radians(rot))
+        sphere(nm + 'tip', x, y, 36 * s, 2.5 * s, pink)
+    elif kind == 'ufo':
+        sphere(nm, x, y, 16 * s, 22 * s, steel, scale=(1, 1, 0.3))
+        sphere(nm + 'dome', x, y, 20 * s, 10 * s, m_('udome', 0x60F0FF, 0.1, emit_k=2), scale=(1, 1, 0.8))
+        for i in range(8):
+            a = i / 8 * 2 * math.pi
+            sphere(nm + 'l%d' % i, x + math.cos(a) * 19 * s, y + math.sin(a) * 19 * s, 15 * s, 1.8 * s, pink)
+
+
+def deco_jungla(nm, kind, x, y, s, rot, v):
+    stone = m_('jstone', 0x7A7460, 0.85)
+    moss = m_('moss', 0x4A7A30, 0.8)
+    if kind == 'palm':
+        trunk = m_('trunk', 0x6A4A28, 0.9)
+        leaf = m_('leaf', 0x3A9A2A, 0.6)
+        for i in range(6):
+            cyl(nm + 't%d' % i, x + i * 1.2 * s, y, (6 - i * 0.5) * s, i * 12 * s, (i + 1) * 12 * s, trunk)
+        top = (x + 7 * s, y, 72 * s)
+        for i in range(7):
+            a = i / 7 * 2 * math.pi + math.radians(rot)
+            o = box(nm + 'l%d' % i, top[0] + math.cos(a) * 18 * s, top[1] + math.sin(a) * 18 * s, top[2] - 6 * s,
+                    36 * s, 9 * s, 1.5 * s, leaf, rot=math.degrees(a), tilt=(0, 18))
+        sphere(nm + 'c', top[0], top[1], top[2], 5 * s, m_('coco', 0x5A3A1A, 0.7))
+    elif kind == 'temple':
+        for i in range(4):
+            w = (60 - i * 12) * s
+            box(nm + 's%d' % i, x, y, i * 12 * s, w, w * 0.8, 12 * s, stone)
+        box(nm + 'top', x, y, 48 * s, 14 * s, 12 * s, 14 * s, moss)
+        box(nm + 'door', x, y + 18 * s, 0, 14 * s, 4 * s, 18 * s, m_('dark', 0x0A0806, 0.9))
+        sphere(nm + 'gem', x, y + 4 * s, 56 * s, 4 * s, m_('gem', 0xFFA020, 0.2, emit_k=6))
+    elif kind == 'idol':
+        box(nm, x, y, 0, 22 * s, 16 * s, 40 * s, stone, rot=rot)
+        box(nm + 'brow', x, y + 8 * s, 28 * s, 24 * s, 4 * s, 4 * s, moss, rot=rot)
+        for sx in (-1, 1):
+            sphere(nm + 'eye%d' % sx, x + sx * 5 * s, y + 8 * s, 24 * s, 3 * s, m_('ieye', 0xFFA020, 0.3, emit_k=8))
+        box(nm + 'mouth', x, y + 8 * s, 8 * s, 14 * s, 3 * s, 6 * s, m_('dark', 0x0A0806, 0.9), rot=rot)
+    elif kind == 'snake':
+        green = m_('snake', 0x2A8A3A, 0.4, clear=0.5)
+        pts = [(x + 18 * s * math.cos(a / 6), y + 10 * s * math.sin(a / 3), 4 * s + a * 1.2 * s) for a in range(0, 30)]
+        tube(nm, pts, 3.2 * s, green)
+        sphere(nm + 'h', pts[-1][0], pts[-1][1], pts[-1][2] + 2 * s, 5 * s, green, scale=(1.3, 1, 0.8))
+    elif kind == 'rocks':
+        for i, (dx, dy, r) in enumerate(((0, 0, 12), (14, 6, 9), (-12, 8, 8), (4, -10, 7))):
+            sphere(nm + str(i), x + dx * s, y + dy * s, r * 0.6 * s, r * s, stone if i % 2 else moss, scale=(1, 1, 0.7))
+
+
+def deco_circo(nm, kind, x, y, s, rot, v):
+    red = m_('cred', 0xE8243C, 0.3, clear=0.6)
+    white = m_('cwhite', 0xF4F0E8, 0.3, clear=0.6)
+    gold = m_('cgold', 0xFFC840, 0.25, metal=0.8)
+    blue = m_('cblue', 0x2A6AE0, 0.3, clear=0.6)
+    if kind == 'tent':
+        cyl(nm + 'wall', x, y, 34 * s, 0, 22 * s, red)
+        wedge_disc(nm + 'band', x, y, 22 * s, 24 * s, 35 * s, [white, red], 16)
+        striped_cone(nm + 'roof', x, y, 24 * s, 38 * s, 34 * s, [red, white], 16)
+        cyl(nm + 'pole', x, y, 1.2 * s, 58 * s, 72 * s, gold)
+        o = box(nm + 'flag', x + 6 * s, y, 66 * s, 10 * s, 1, 6 * s, blue)
+    elif kind == 'ball':
+        sphere(nm, x, y, 18 * s, 18 * s, red)
+        torus(nm + 'b1', x, y, 18 * s, 17.6 * s, 3.5 * s, white, rot=(math.pi / 2, 0, 0.6))
+        torus(nm + 'b2', x, y, 18 * s, 17.6 * s, 3.5 * s, blue, rot=(math.pi / 2, 0, 2.2))
+        sphere(nm + 'star', x, y, 36 * s, 4 * s, gold)
+    elif kind == 'podium':
+        wedge_disc(nm, x, y, 0, 26 * s, 22 * s, [red, white], 12)
+        cyl(nm + 'top', x, y, 23 * s, 26 * s, 29 * s, gold)
+        prism(nm + 'star', [(x + (9 if i % 2 == 0 else 4) * s * math.cos(i * math.pi / 5 - math.pi / 2),
+                             y + (9 if i % 2 == 0 else 4) * s * math.sin(i * math.pi / 5 - math.pi / 2))
+                            for i in range(10)], 29 * s, 31 * s, m_('star', 0xFFE060, 0.3, emit_k=3))
+    elif kind == 'balloons':
+        for i, (dx, dy, c) in enumerate(((0, 0, 0xE8243C), (10, 4, 0x2A6AE0), (-9, 5, 0xFFD040), (4, -8, 0x30C060))):
+            sphere(nm + str(i), x + dx * s, y + dy * s, (46 + i * 4) * s, 8 * s, m_('bal%d' % i, c, 0.2, clear=0.8),
+                   scale=(1, 1, 1.2))
+            tube(nm + 's%d' % i, [(x, y, 0), (x + dx * s, y + dy * s, (38 + i * 4) * s)], 0.4, white)
+    elif kind == 'cannon':
+        black = m_('iron', 0x202024, 0.3, metal=0.8)
+        cone(nm + 'barrel', x, y, -6 * s, 7 * s, 6 * s, 40 * s, black, rot=(math.radians(55), 0, -math.radians(rot)))
+        for sx in (-1, 1):
+            torus(nm + 'w%d' % sx, x + sx * 9 * s, y, 10 * s, 8 * s, 2 * s, gold, rot=(0, math.pi / 2, 0))
+
+
+def deco_casino(nm, kind, x, y, s, rot, v):
+    red = m_('kred', 0xD01830, 0.3, clear=0.7)
+    black = m_('kblack', 0x141414, 0.3, clear=0.7)
+    gold = m_('kgold', 0xFFC830, 0.2, metal=0.9)
+    white = m_('kwhite', 0xF4F0E8, 0.3, clear=0.5)
+    green = m_('kgreen', 0x109040, 0.4)
+    if kind == 'slot':
+        box(nm, x, y, 0, 34 * s, 22 * s, 50 * s, red)
+        box(nm + 'win', x, y + 11 * s, 26 * s, 26 * s, 1.5, 14 * s, m_('reels', 0xF8F4E0, 0.3, emit_k=1.5))
+        for i in range(3):
+            box(nm + 'r%d' % i, x + (i - 1) * 8 * s, y + 12 * s, 30 * s, 6 * s, 1.2, 6 * s,
+                m_('sym%d' % i, [0xE01830, 0xFFC830, 0x2060E0][i], 0.3, emit_k=2))
+        box(nm + 'top', x, y, 50 * s, 36 * s, 24 * s, 6 * s, gold)
+        cyl(nm + 'arm', x + 20 * s, y, 1.5 * s, 20 * s, 48 * s, gold)
+        sphere(nm + 'knob', x + 20 * s, y, 50 * s, 4 * s, red)
+    elif kind == 'wheel':
+        cyl(nm + 'base', x, y, 40 * s, 0, 10 * s, m_('wood2', 0x5A2A10, 0.4, clear=0.6))
+        wedge_disc(nm, x, y, 10 * s, 12 * s, 34 * s, [red, black] * 18 + [green], 37, r0=18 * s)
+        cyl(nm + 'hub', x, y, 18 * s, 10 * s, 14 * s, gold)
+        cyl(nm + 'spin', x, y, 3 * s, 14 * s, 24 * s, gold)
+        sphere(nm + 'ball', x + 26 * s, y, 14 * s, 2.5 * s, white)
+    elif kind == 'chips':
+        for i, (dx, dy, c, n) in enumerate(((0, 0, red, 6), (16, 6, black, 4), (-14, 8, m_('kblue', 0x2050C0, 0.3,
+                                                                                               clear=0.7), 5))):
+            for k in range(n):
+                cyl(nm + '%d_%d' % (i, k), x + dx * s, y + dy * s, 9 * s, k * 3.2 * s, (k + 1) * 3.2 * s - 0.4,
+                    c if k % 2 == 0 else white)
+    elif kind == 'dice':
+        for i, (dx, dy, rr) in enumerate(((0, 0, rot), (16 * s, 8 * s, rot + 35))):
+            box(nm + str(i), x + dx, y + dy, 0, 14 * s, 14 * s, 14 * s, white, rot=rr)
+            for k, (px, py) in enumerate(((-3.5, -3.5), (3.5, 3.5), (0, 0), (-3.5, 3.5), (3.5, -3.5))[:3 + i * 2]):
+                sphere(nm + 'p%d%d' % (i, k), x + dx + px * s, y + dy + py * s, 14 * s, 1.5 * s, black)
+    elif kind == 'cards':
+        for i in range(4):
+            box(nm + str(i), x + i * 5 * s, y, i * 1.2 * s, 22 * s, 32 * s, 1.0 * s, white, rot=rot + i * 12)
+        box(nm + 'suit', x + 15 * s, y, 5 * s, 6 * s, 6 * s, 1, red, rot=rot + 81)
+
+
+def deco_piratas(nm, kind, x, y, s, rot, v):
+    wood = m_('pwood', 0x6A4020, 0.6, clear=0.3)
+    dark = m_('pdark', 0x2A1A0E, 0.6)
+    gold = m_('pgold', 0xFFC040, 0.2, metal=0.9)
+    white = m_('psail', 0xF0E6D0, 0.6)
+    if kind == 'palm':
+        deco_jungla(nm, 'palm', x, y, s, rot, v)
+    elif kind == 'ship':
+        hull = [(-34, -10), (30, -10), (40, 0), (30, 10), (-34, 10), (-40, 0)]
+        a = math.radians(rot)
+        prism(nm + 'hull', [(x + px * s, y + py * s) for px, py in hull], 0, 16 * s, wood)
+        box(nm + 'deck', x - 26 * s, y, 16 * s, 16 * s, 18 * s, 8 * s, dark)
+        for i, mx_ in enumerate((-10, 14)):
+            cyl(nm + 'mast%d' % i, x + mx_ * s, y, 1.6 * s, 16 * s, 70 * s, dark)
+            box(nm + 'sail%d' % i, x + mx_ * s, y + 2 * s, 30 * s, 26 * s, 1.5, 28 * s, white)
+        box(nm + 'flag', x + 18 * s, y, 66 * s, 12 * s, 1, 8 * s, m_('pflag', 0x101010, 0.6))
+    elif kind == 'chest':
+        box(nm, x, y, 0, 34 * s, 22 * s, 16 * s, wood, rot=rot)
+        cone(nm + 'lid', x, y, -1 * s, 11 * s, 11 * s, 34 * s, wood, rot=(0, math.pi / 2, -math.radians(rot)))
+        for dx in (-12, 12):
+            box(nm + 'band%d' % dx, x + dx * s, y, 0, 3 * s, 23 * s, 17 * s, gold, rot=rot)
+        for i in range(8):
+            sphere(nm + 'g%d' % i, x + (i % 4 - 1.5) * 6 * s, y + (i // 4 - 0.5) * 6 * s, 17 * s, 3 * s,
+                   m_('coin', 0xFFD040, 0.2, metal=1.0, emit_k=0.5), scale=(1, 1, 0.4))
+    elif kind == 'skull':
+        bone = m_('pbone', 0xE0D8C0, 0.5)
+        sphere(nm, x, y, 14 * s, 12 * s, bone)
+        box(nm + 'jaw', x, y + 4 * s, 2 * s, 12 * s, 10 * s, 8 * s, bone)
+        for sx in (-1, 1):
+            sphere(nm + 'e%d' % sx, x + sx * 4.5 * s, y + 9 * s, 15 * s, 3.2 * s, m_('psock', 0x0A0806, 0.9))
+            o = box(nm + 'x%d' % sx, x, y, 1, 34 * s, 4 * s, 4 * s, bone, rot=45 * sx)
+    elif kind == 'anchor':
+        iron = m_('piron', 0x30343A, 0.35, metal=0.8)
+        box(nm + 'shank', x, y, 4, 4 * s, 4 * s, 40 * s, iron)
+        box(nm + 'stock', x, y, 36 * s, 22 * s, 3 * s, 3 * s, iron)
+        torus(nm + 'ring', x, y, 46 * s, 4 * s, 1.2 * s, iron, rot=(math.pi / 2, 0, 0))
+        torus(nm + 'arms', x, y, 12 * s, 14 * s, 2 * s, iron, rot=(math.pi / 2, 0, 0))
+    elif kind == 'barrels':
+        for i, (dx, dy) in enumerate(((0, 0), (16, 4), (8, -12))):
+            cyl(nm + str(i), x + dx * s, y + dy * s, 8 * s, 0, 22 * s, wood)
+            for zz in (4, 17):
+                cyl(nm + 'h%d%d' % (i, zz), x + dx * s, y + dy * s, 8.4 * s, zz * s, (zz + 1.5) * s, dark)
+
+
+DECO.update({'robots': deco_robots, 'jungla': deco_jungla, 'circo': deco_circo, 'casino': deco_casino,
+             'piratas': deco_piratas})
+
+
 def deco_generic(nm, kind, x, y, s, rot, v):
     cyl(nm, x, y, 10 * s, 0, 30 * s, m_('generic', TH['accent'], 0.4))
 
 
 def build_decor(nm, v):
     fn = DECO.get(TH.get('art', S['id']), deco_generic)
+    OFF[2] = v.get('z', 0.0)
     fn(nm, v['kind'], v['x'], v['y'], v.get('s', 1.0), v.get('rot', 0.0), v)
+    OFF[2] = 0.0
 
 
 # ---- flippers, spinner, ball ----------------------------------------------------
@@ -1145,12 +1375,12 @@ def studio_world():
     nt.links.new(tc.outputs['Generated'], sep.inputs['Vector'])
     nt.links.new(sep.outputs['Z'], ramp.inputs['Fac'])
     cr = ramp.color_ramp
-    cr.elements[0].position = 0.35
-    cr.elements[0].color = (0.02, 0.02, 0.025, 1)
-    cr.elements[1].position = 0.62
-    cr.elements[1].color = (0.9, 0.92, 0.95, 1)
-    e = cr.elements.new(0.52)
-    e.color = col(TH.get('gi', TH['accent']), 0.6)
+    cr.elements[0].position = 0.2
+    cr.elements[0].color = (0.12, 0.12, 0.13, 1)
+    cr.elements[1].position = 0.85
+    cr.elements[1].color = (1.0, 1.0, 1.0, 1)
+    e = cr.elements.new(0.55)
+    e.color = (0.55, 0.57, 0.6, 1)
     nt.links.new(ramp.outputs['Color'], bg.inputs['Color'])
     bg.inputs['Strength'].default_value = 1.0
     return w
@@ -1164,7 +1394,7 @@ def render_ball():
     lights = [o for o in sc.objects if o.type == 'LIGHT']
     for o in hidden + lights:
         o.hide_render = True
-    hl = area('ball_hl', W / 2 - 40, H * 0.62 + 60, 200, 60, 1.5)
+    hl = area('ball_hl', W / 2 - 60, H * 0.62 + 40, 160, 40, 4.0)
     view = Vector((0, -math.cos(CAM['pitch']), math.sin(CAM['pitch'])))
     co = solo_camera(ball.location, br * 2.04 / 1000.0, look=view)
     sc.camera = co
@@ -1211,6 +1441,140 @@ def icon_pause_zombis(g):
 
 
 ICONS = {'zombis': (icon_launch_zombis, icon_pause_zombis)}
+
+
+def bars(g, mat, z=-4):
+    for sx in (-1, 1):
+        g.append(box('ip_bar%d' % sx, sx * 12, 0, z, 12, 40, 6, mat))
+
+
+def icon_launch_robots(g, pressed):
+    white = principled('lrw', col(0xF0F2F6), rough=0.3, clear=0.6)
+    red = principled('lrr', col(0xE02830), rough=0.3, clear=0.6)
+    flame = principled('lrf%d' % pressed, col(0xFF8A20), rough=0.5, emit=col(0xFF9A30), emit_k=30 if pressed else 6)
+    g.append(cyl('ic_pad', 0, 0, 44, -16, -6, principled('lrpad', col(0x283048), rough=0.3, metal=0.6), n=6))
+    o = cyl('ic_body', 0, 0, 11, 6, 44, white)
+    g.append(o)
+    g.append(cone('ic_nose', 0, 0, 44, 11, 0.5, 18, red))
+    g.append(sphere('ic_win', 0, 10, 30, 5, principled('lrwin', col(0x30E0FF), emit=col(0x30E0FF), emit_k=4),
+                    scale=(1, 0.4, 1)))
+    for i in range(3):
+        a = i / 3 * 2 * math.pi + math.pi / 2
+        g.append(box('ic_fin%d' % i, math.cos(a) * 12, math.sin(a) * 12, 6, 10, 2.5, 16, red, rot=math.degrees(a)))
+    g.append(cone('ic_flame', 0, 0, -6, 9, 3, 12 if pressed else 7, flame))
+
+
+def icon_pause_robots(g):
+    steel = principled('gear', col(0x8C98AC), rough=0.25, metal=0.9)
+    g.append(cyl('ip_gear', 0, 0, 36, -16, -6, steel, n=40))
+    for i in range(10):
+        a = i / 10 * 2 * math.pi
+        g.append(box('ip_t%d' % i, math.cos(a) * 40, math.sin(a) * 40, -16, 10, 9, 10, steel, rot=math.degrees(a)))
+    bars(g, principled('pbr', col(0x30E0FF), emit=col(0x30E0FF), emit_k=3), z=-6)
+
+
+def icon_launch_jungla(g, pressed):
+    stone = principled('ljs', col(0x8A8470), rough=0.85)
+    moss = principled('ljm', col(0x4A7A30), rough=0.8)
+    eye = principled('lje%d' % pressed, col(0xFFA020), emit=col(0xFFA020), emit_k=25 if pressed else 5)
+    dark = principled('ljd', col(0x0A0806), rough=0.9)
+    g.append(cyl('ic_base', 0, 0, 44, -16, -6, moss, n=12))
+    g.append(box('ic_head', 0, 0, -6, 46, 34, 52, stone))
+    g.append(box('ic_brow', 0, 17, 22, 50, 6, 6, moss))
+    for sx in (-1, 1):
+        g.append(box('ic_sock%d' % sx, sx * 11, 17, 8, 13, 4, 11, dark))
+        g.append(sphere('ic_eye%d' % sx, sx * 11, 19, 13, 4.5, eye, scale=(1, 0.4, 1)))
+    g.append(box('ic_nose', 0, 19, -2, 8, 6, 14, stone))
+    g.append(box('ic_mouth', 0, 17, -10, 30, 4, 7, dark))
+    for i in range(5):
+        g.append(box('ic_t%d' % i, -12 + i * 6, 19, -10, 3, 2, 7, stone))
+
+
+def icon_pause_jungla(g):
+    g.append(cyl('ip_stone', 0, 0, 44, -16, -6, principled('pjs', col(0x8A8470), rough=0.85), n=9))
+    bars(g, principled('pjb', col(0xFFA020), emit=col(0xFFA020), emit_k=2), z=-6)
+
+
+def icon_launch_circo(g, pressed):
+    iron = principled('lci', col(0x26262C), rough=0.3, metal=0.8)
+    gold = principled('lcg', col(0xFFC840), rough=0.25, metal=0.8)
+    red = principled('lcr', col(0xE8243C), rough=0.3, clear=0.6)
+    g.append(cyl('ic_base', 0, 0, 44, -16, -6, red, n=48))
+    g.append(cone('ic_barrel', 0, 4, -10, 13, 11, 56, iron, rot=(math.radians(-50), 0, 0)))
+    g.append(torus('ic_rim', 0, -17, 36, 12, 3, gold, rot=(math.radians(-50), 0, 0)))
+    for sx in (-1, 1):
+        g.append(torus('ic_w%d' % sx, sx * 18, 10, 6, 13, 3, gold, rot=(0, math.pi / 2, 0)))
+    if pressed:
+        g.append(sphere('ic_boom', 0, -24, 44, 14, principled('lcb', col(0xFFD060), emit=col(0xFFB030), emit_k=20)))
+
+
+def icon_pause_circo(g):
+    red = principled('pcr', col(0xE8243C), rough=0.3, clear=0.6)
+    white = principled('pcw', col(0xF4F0E8), rough=0.3, clear=0.6)
+    for i in range(12):
+        a0, a1 = i / 12 * 2 * math.pi, (i + 1) / 12 * 2 * math.pi
+        pts = [(0, 0)] + [(44 * math.cos(a0 + (a1 - a0) * k / 3), 44 * math.sin(a0 + (a1 - a0) * k / 3))
+                          for k in range(4)]
+        g.append(prism('ip_w%d' % i, pts, -16, -6, red if i % 2 else white))
+    bars(g, principled('pcg', col(0xFFC840), rough=0.25, metal=0.8), z=-6)
+
+
+def icon_launch_casino(g, pressed):
+    red = principled('lkr', col(0xD01830), rough=0.3, clear=0.7)
+    black = principled('lkb', col(0x141414), rough=0.3, clear=0.7)
+    green = principled('lkg', col(0x109040), rough=0.3, clear=0.7)
+    gold = principled('lkgo', col(0xFFC830), rough=0.2, metal=0.9)
+    g.append(cyl('ic_rim', 0, 0, 46, -16, -2, principled('lkw', col(0x5A2A10), rough=0.4, clear=0.6), n=64))
+    for i in range(37):
+        a0, a1 = i / 37 * 2 * math.pi, (i + 1) / 37 * 2 * math.pi
+        pts = [(20 * math.cos(a0), 20 * math.sin(a0))] + [(40 * math.cos(a0 + (a1 - a0) * k / 2),
+                                                           40 * math.sin(a0 + (a1 - a0) * k / 2)) for k in range(3)] + \
+              [(20 * math.cos(a1), 20 * math.sin(a1))]
+        g.append(prism('ic_s%d' % i, pts, -2, 0, green if i == 36 else (red if i % 2 else black)))
+    g.append(cyl('ic_hub', 0, 0, 20, -2, 3, gold, n=48))
+    g.append(cyl('ic_spin', 0, 0, 4, 3, 16, gold))
+    for i in range(4):
+        a = i / 4 * 2 * math.pi + (0.5 if pressed else 0)
+        g.append(box('ic_arm%d' % i, math.cos(a) * 9, math.sin(a) * 9, 12, 18, 3, 3, gold, rot=math.degrees(a)))
+    g.append(sphere('ic_ball', 30 if not pressed else -14, 0 if not pressed else 26, 3, 3.5,
+                    principled('lkball', col(0xF8F8F8), rough=0.1, clear=1.0, emit=col(0xFFFFFF),
+                               emit_k=4 if pressed else 0)))
+
+
+def icon_pause_casino(g):
+    red = principled('pkr', col(0xD01830), rough=0.3, clear=0.7)
+    white = principled('pkw', col(0xF4F0E8), rough=0.3, clear=0.7)
+    g.append(cyl('ip_chip', 0, 0, 44, -16, -6, red, n=64))
+    for i in range(8):
+        a = i / 8 * 2 * math.pi
+        g.append(box('ip_e%d' % i, math.cos(a) * 40, math.sin(a) * 40, -16, 12, 7, 10.5, white, rot=math.degrees(a) + 90))
+    bars(g, white, z=-6)
+
+
+def icon_launch_piratas(g, pressed):
+    wood = principled('lpw', col(0x7A4A24), rough=0.5, clear=0.4)
+    gold = principled('lpg%d' % pressed, col(0xFFC040), rough=0.2, metal=0.9, emit=col(0xFFC040),
+                      emit_k=3 if pressed else 0)
+    rot = 0.4 if pressed else 0.0
+    g.append(torus('ic_ring', 0, 0, 0, 30, 4.5, wood))
+    g.append(cyl('ic_hub', 0, 0, 9, -5, 5, gold))
+    for i in range(8):
+        a = i / 8 * 2 * math.pi + rot
+        g.append(box('ic_sp%d' % i, math.cos(a) * 20, math.sin(a) * 20, -2.5, 40, 5, 5, wood, rot=math.degrees(a)))
+        g.append(cyl('ic_h%d' % i, math.cos(a) * 44, math.sin(a) * 44, 3.5, -3, 3, wood))
+        g.append(sphere('ic_k%d' % i, math.cos(a) * 48, math.sin(a) * 48, 0, 4.5, wood))
+
+
+def icon_pause_piratas(g):
+    gold = principled('ppg', col(0xFFC040), rough=0.2, metal=0.9)
+    g.append(cyl('ip_coin', 0, 0, 44, -16, -6, gold, n=64))
+    g.append(torus('ip_rim', 0, 0, -6, 40, 2, gold))
+    bars(g, principled('ppd', col(0x5A3A10), rough=0.4), z=-6)
+
+
+ICONS.update({'robots': (icon_launch_robots, icon_pause_robots), 'jungla': (icon_launch_jungla, icon_pause_jungla),
+              'circo': (icon_launch_circo, icon_pause_circo), 'casino': (icon_launch_casino, icon_pause_casino),
+              'piratas': (icon_launch_piratas, icon_pause_piratas)})
 
 
 def icon_launch_generic(g, pressed):

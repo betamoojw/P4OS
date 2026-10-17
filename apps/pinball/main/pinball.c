@@ -600,7 +600,8 @@ static lv_obj_t *panel_open(app_t *a, int kind, int w, int h)
     lv_obj_add_flag(dim, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_remove_flag(dim, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_t *p = lv_obj_create(dim);
-    lv_obj_set_size(p, w, h);
+    lv_obj_set_size(p, w, LV_SIZE_CONTENT);
+    lv_obj_set_style_max_height(p, h, 0);
     lv_obj_center(p);
     lv_obj_set_style_radius(p, 36, 0);
     lv_obj_set_style_bg_color(p, C(t ? t->c_panel : 0x1C1C1E), 0);
@@ -768,7 +769,8 @@ static void over_show(app_t *a)
 }
 
 /* the tutorial: the zones drawn over the table itself */
-static lv_obj_t *zone(lv_obj_t *parent, int x, int y, int w, int h, uint32_t col, const char *text, bool round)
+static lv_obj_t *zone(lv_obj_t *parent, int x, int y, int w, int h, uint32_t col, const char *text, bool round,
+                      bool top)
 {
     lv_obj_t *z = lv_obj_create(parent);
     lv_obj_remove_style_all(z);
@@ -788,7 +790,8 @@ static lv_obj_t *zone(lv_obj_t *parent, int x, int y, int w, int h, uint32_t col
         lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
         lv_obj_set_width(l, w - 30);
         lv_label_set_long_mode(l, LV_LABEL_LONG_MODE_WRAP);
-        lv_obj_center(l);
+        if (top) lv_obj_align(l, LV_ALIGN_TOP_MID, 0, 50);
+        else lv_obj_center(l);
     }
     return z;
 }
@@ -817,13 +820,13 @@ static void tutorial_show(app_t *a)
     pb_audio_pause(true);
     aos_pad_reset(&a->pad, lv_tick_get());
     uint32_t acc = t->c_accent, alt = t->c_dmd;
-    zone(dim, 10, ZONE_Y, PB_SW / 2 - 16, PB_SH - ZONE_Y - 10, acc, _("Tocá acá:\npaleta izquierda"), false);
+    zone(dim, 10, ZONE_Y, PB_SW / 2 - 16, PB_SH - ZONE_Y - 10, acc, _("Tocá acá:\npaleta izquierda"), false, true);
     zone(dim, PB_SW / 2 + 6, ZONE_Y, PB_SW / 2 - 16, PB_SH - ZONE_Y - 10, acc, _("Tocá acá:\npaleta derecha"),
-         false);
+         false, true);
     zone(dim, 10, PB_TOP + 10, PB_SW - 20, ZONE_Y - PB_TOP - 30, alt,
-         _("Deslizá rápido el dedo por acá para sacudir la mesa.\n¡Si la sacudís mucho, TILT!"), false);
+         _("Deslizá rápido el dedo por acá para sacudir la mesa.\n¡Si la sacudís mucho, TILT!"), false, false);
     pb_rect_t lr = a->rd.launch_rc;
-    lv_obj_t *lz = zone(dim, lr.x0, lr.y0, lr.x1 - lr.x0, lr.y1 - lr.y0, 0xFFFFFF, NULL, true);
+    lv_obj_t *lz = zone(dim, lr.x0, lr.y0, lr.x1 - lr.x0, lr.y1 - lr.y0, 0xFFFFFF, NULL, true, false);
     card_t *c = a->cur >= 0 ? &a->card[a->cur] : NULL;
     if (c && c->icon) {
         lv_obj_t *img = lv_image_create(lz);
@@ -841,9 +844,9 @@ static void tutorial_show(app_t *a)
     lv_obj_set_style_radius(ll, 12, 0);
     lv_obj_set_width(ll, 420);
     lv_label_set_long_mode(ll, LV_LABEL_LONG_MODE_WRAP);
-    lv_obj_set_pos(ll, PB_SW - 430, lr.y0 - 170);
+    lv_obj_set_pos(ll, PB_SW - 430, lr.y0 - 200);
     pb_rect_t pr = a->rd.pause_rc;
-    zone(dim, pr.x0 - 4, pr.y0 - 4, pr.x1 - pr.x0 + 8, pr.y1 - pr.y0 + 8, 0xFFFFFF, NULL, false);
+    zone(dim, pr.x0 - 4, pr.y0 - 4, pr.x1 - pr.x0 + 8, pr.y1 - pr.y0 + 8, 0xFFFFFF, NULL, false, false);
     lv_obj_t *pl = lv_label_create(dim);
     lv_label_set_text(pl, _("Pausa"));
     lv_obj_set_style_text_color(pl, C(0xFFFFFF), 0);

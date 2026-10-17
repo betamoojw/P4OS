@@ -138,6 +138,19 @@ class Pack:
         self.add(name, PK_SPRITE, a.shape[1], a.shape[0], x, y, raw)
         return True
 
+    def spritez(self, name, img, z, x, y):
+        """a toy's frame: colour, alpha and the depth of each pixel (mm)"""
+        a = np.asarray(img.convert('RGBA'))
+        box = crop_box(a[..., 3] > 0)
+        if box is None:
+            return False
+        x0, x1, y0, y1 = box
+        c = a[y0:y1, x0:x1]
+        zz = np.clip(np.round(np.asarray(z)[y0:y1, x0:x1] * 10), 0, 65000).astype('<u2')
+        raw = rgb565(c[..., :3]).tobytes() + c[..., 3].astype(np.uint8).tobytes() + zz.tobytes()
+        self.add(name, 8, x1 - x0, y1 - y0, x + x0, y + y0, raw)
+        return True
+
     def depth(self, name, z, x=0, y=0):
         """z in millimetres -> u16 tenths"""
         z = np.clip(np.round(np.asarray(z) * 10), 0, 65000).astype('<u2')

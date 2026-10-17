@@ -30,7 +30,7 @@ def build():
     t.bumper('bumper1', 150, 252, cap=RED, body=0xF0E8D8)
     t.bumper('bumper2', 330, 252, cap=BLUE, body=0xF0E8D8)
     t.bumper('bumper3', 240, 226, cap=GOLD, body=0xF0E8D8)
-    t.toy('carousel', 'disc', 240, 330, 46, model='carousel', a0=2.6)
+    t.toy('carousel', 'disc', 240, 330, 46, model='carousel', a0=2.6, a1=4)
 
     # THE HUMAN CANNONBALL (Cirqus Voltaire): the ball coming down the left
     # orbit drops into the cannon; it swings, and the launch button fires
@@ -38,7 +38,7 @@ def build():
     t.lamp('cannon', 92, 676, 'arrow', 16, GOLD, 30)
 
     # the ringmaster pops up in the middle: two hits send him down
-    t.toy('ringmaster', 'bash', 240, 470, 16, model='ringmaster')
+    t.toy('ringmaster', 'bash', 240, 470, 19, model='ringmaster', s=1.6)
     t.lamp('toy', 240, 510, 'arrow', 18, RED, 0)
 
     # the cannon's ramp, left

@@ -32,7 +32,7 @@ def build():
 
     # THE GHOST SHIP (Pirates of the Caribbean): it sails to and fro across
     # the bay; four hits sink it, and it opens the sword duel
-    t.toy('ship', 'mover', 158, 300, 25, model='ship', x1=300, y1=300, period=9.0)
+    t.toy('ship', 'mover', 158, 300, 26, model='ship', x1=300, y1=300, period=9.0, s=1.3)
     t.lamp('toy', 229, 352, 'arrow', 18, GOLD, 0)
 
     # THE KRAKEN: now and then its tentacles grab the ball and fling it
@@ -42,7 +42,7 @@ def build():
 
     # THE CHEST: two hits open its lid; a ball in it while it is open is
     # locked; two locks and the treasure pours out (multiball)
-    t.toy('chest', 'bash', 240, 452, 18, model='chestlid')
+    t.toy('chest', 'bash', 240, 452, 20, model='chestlid', s=1.2)
     t.saucer('chestpen', 240, 452, eject_deg=95, eject_speed=1600, r=14, role='lock')
     t.lamp('lockpen', 240, 492, 'arrow', 16, GOLD, 0)
 

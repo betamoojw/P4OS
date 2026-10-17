@@ -291,8 +291,7 @@ class Flat:
         base = self.solids(bg.copy())
         th = self.t.theme
         art = dict(bg=base, depth=None, lamps=self.lamps(base), drops={},
-                   flippers={0: self.flipper_frames(self.t.flippers[0]),
-                             1: self.flipper_frames(self.t.flippers[1])},
+                   flippers={i: self.flipper_frames(f) for i, f in enumerate(self.t.flippers)},
                    spinner=self.spinner_frames(), ball=None,
                    launch=self.button_icon(150, th['accent']), launch_on=self.button_icon(150, th['accent'], True),
                    pause=self.button_icon(88, th['accent'], glyph='pause'), icon=None)

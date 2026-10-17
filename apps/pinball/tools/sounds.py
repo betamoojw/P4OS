@@ -18,7 +18,8 @@ RNG = np.random.default_rng(1234)
 
 SND_NAMES = ['flipper', 'bumper', 'sling', 'drop', 'bank', 'target', 'lane', 'lanes', 'spinner', 'saucer', 'eject',
              'ramp', 'rampfail', 'orbit', 'launch', 'drain', 'save', 'kickback', 'mission', 'missiondone', 'jackpot',
-             'multiball', 'lock', 'extra', 'tiltwarn', 'tilt', 'skill', 'bonus', 'gameover', 'start', 'wall', 'post']
+             'multiball', 'lock', 'extra', 'tiltwarn', 'tilt', 'skill', 'bonus', 'gameover', 'start', 'wall', 'post',
+             'toyhit', 'toydown', 'video', 'cannon', 'magnet', 'disc', 'letter', 'videohit']
 
 
 # ---- the basics -------------------------------------------------------------
@@ -740,10 +741,102 @@ KITS.update({'robots': kit_robots, 'jungla': kit_jungla, 'circo': kit_circo, 'ca
              'piratas': kit_piratas})
 
 
+# ---- the toys' and the video modes' sounds, theme by theme ---------------------
+
+def splash(d=1.0):
+    n = int(d * R)
+    return lp(noise(d), sweep(4000, 300, d)) * env(n, 0.005, d * 0.35)
+
+
+def boom(d=0.8):
+    return mx((kick(0.5, 90, 30), 1.0), (lp(noise(d), sweep(2500, 150, d)) * env(int(d * R), 0.002, d * 0.25), 0.8))
+
+
+def extras_zombis():
+    def groan(f0, f1, d, vowel='o'):
+        n = int(d * R)
+        x = osc(sweep(f0, f1, d) * (1 + 0.03 * np.sin(2 * np.pi * 7 * np.arange(n) / R)), d, 'saw')
+        return formant(x, vowel) * env(n, 0.03, 9, 1, 0.1)
+    return dict(
+        toyhit=norm(mx((tom(90, 0.2), 0.8), (groan(160, 120, 0.35, 'u'), 0.7)), 0.8),
+        toydown=norm(reverb(mx(groan(200, 70, 1.2, 'a'), (lp(noise(0.8), 600) * env(int(0.8 * R), 0.05, 0.3), 0.6)), 0.6, 0.3), 0.9),
+        video=norm(reverb(place([(i * 0.12, organ(hz(n), 0.4), 1) for i, n in enumerate(('E4', 'G4', 'B4', 'E5'))]), 0.5, 0.3), 0.85),
+        videohit=norm(mx(hp(noise(0.12), 1500) * env(int(0.12 * R), 0.001, 0.03), (kick(0.1, 200, 60), 0.6)), 0.8),
+        letter=norm(bell(hz('B5'), 0.4, 3.5, 2, 0.2), 0.6))
+
+
+def extras_robots():
+    clang = lambda f: bell(f, 0.5, 2.71, 4, 0.2)
+    return dict(
+        toyhit=norm(mx((clang(420), 0.8), (osc(sweep(1600, 400, 0.1), 0.1, 'square') * env(int(0.1 * R), 0.001, 0.05), 0.4)), 0.8),
+        toydown=norm(mx(osc(sweep(800, 60, 1.0), 1.0, 'square') * env(int(R), 0.01, 0.5),
+                        (lp(noise(0.6), 2000) * env(int(0.6 * R), 0.2, 0.3), 0.4)), 0.85),
+        magnet=norm(mx(osc(sweep(80, 160, 1.2), 1.2, 'saw') * env(int(1.2 * R), 0.1, 9, 1, 0.2),
+                       (osc(sweep(800, 1600, 1.2), 1.2) * env(int(1.2 * R), 0.1, 9, 1, 0.2), 0.3)), 0.75),
+        video=norm(place([(i * 0.08, lead(hz(n), 0.15), 1) for i, n in enumerate(('D5', 'F5', 'A5', 'D6', 'A5', 'D6'))]), 0.8),
+        videohit=norm(osc(sweep(2400, 300, 0.12), 0.12, 'square') * env(int(0.12 * R), 0.001, 0.05), 0.6),
+        letter=norm(lead(hz('A5'), 0.12), 0.5))
+
+
+def extras_jungla():
+    return dict(
+        toyhit=norm(mx((tom(70, 0.3), 1.0), (hp(noise(0.15), 800) * env(int(0.15 * R), 0.001, 0.04), 0.6)), 0.85),
+        toydown=norm(mx(lp(noise(1.4), 250) * env(int(1.4 * R), 0.05, 0.6), (tom(50, 1.0), 0.7)), 0.9),
+        video=norm(place([(i * 0.12, bongo(240 + 60 * (i % 3), 0.15), 1) for i in range(8)] +
+                         [(0.4, flute(hz('A5'), 0.6), 0.6)]), 0.85),
+        videohit=norm(marimba(hz('G5'), 0.3), 0.6),
+        letter=norm(marimba(hz('E5'), 0.3), 0.6))
+
+
+def extras_circo():
+    slide = lambda f0, f1, d: osc(sweep(f0, f1, d), d) * env(int(d * R), 0.02, 9, 1, 0.05)
+    honk = lambda f, d: formant(osc(f, d, 'square'), 'a') * env(int(d * R), 0.01, 9, 1, 0.03)
+    return dict(
+        toyhit=norm(honk(260, 0.18), 0.75),
+        toydown=norm(place([(0, slide(1400, 200, 0.8), 1), (0.7, crash(1.0), 0.7)]), 0.85),
+        cannon=norm(boom(1.0), 0.9),
+        disc=norm(place([(i * 0.07, calliope(hz(n), 0.1), 1) for i, n in enumerate(('C6', 'E6', 'G6'))]), 0.5),
+        video=norm(place([(i * 0.04, snare(0.06), 0.5) for i in range(20)] + [(0.8, crash(0.8), 0.6)]), 0.85),
+        videohit=norm(mx(hp(noise(0.06), 2000) * env(int(0.06 * R), 0.001, 0.015), (tom(400, 0.06), 0.4)), 0.7),
+        letter=norm(calliope(hz('G5'), 0.15), 0.5))
+
+
+def extras_casino():
+    coin = lambda f=2400, d=0.4: mx(bell(f, d, 2.76, 1.2, 0.2), (bell(f * 1.5, d, 3.1, 1.0, 0.15), 0.6))
+    rattle = place([(sum(0.03 + 0.012 * k for k in range(i)), hp(noise(0.015), 3000) * env(int(0.015 * R), 0.001, 0.004), 1)
+                    for i in range(18)])
+    return dict(
+        disc=norm(rattle, 0.6),
+        video=norm(place([(0, mx(lp(noise(0.3), 800) * env(int(0.3 * R), 0.01, 0.1), (tom(120, 0.2), 0.6)), 1)] +
+                         [(0.3 + i * 0.05, hp(noise(0.02), 2500) * env(int(0.02 * R), 0.001, 0.005), 0.7) for i in range(16)]),
+                   0.8),
+        videohit=norm(mx(tom(160, 0.12), (hp(noise(0.05), 1200) * env(int(0.05 * R), 0.001, 0.015), 0.6)), 0.7),
+        letter=norm(coin(), 0.6), toyhit=norm(coin(2000, 0.3), 0.6), toydown=norm(coin(1600, 0.8), 0.8))
+
+
+def extras_piratas():
+    return dict(
+        toyhit=norm(boom(0.5), 0.8),
+        toydown=norm(place([(0, boom(1.0), 1), (0.3, splash(1.2), 0.9), (0.6, bell(hz('A5'), 0.8, 2.4, 2, 0.4), 0.4)]), 0.9),
+        magnet=norm(mx(formant(osc(sweep(90, 60, 1.2), 1.2, 'saw'), 'o') * env(int(1.2 * R), 0.05, 9, 1, 0.2),
+                       (splash(0.8), 0.5)), 0.85),
+        video=norm(mx(hp(osc(sweep(3000, 5000, 0.4), 0.4), 2000) * env(int(0.4 * R), 0.001, 0.2),
+                      (bell(2800, 0.5, 3.7, 3, 0.25), 0.6)), 0.8),
+        videohit=norm(bell(2200, 0.4, 3.7, 4, 0.15), 0.7),
+        letter=norm(bell(hz('E6'), 0.3, 2.76, 1.2, 0.15), 0.6))
+
+
+EXTRAS = {'zombis': extras_zombis, 'robots': extras_robots, 'jungla': extras_jungla, 'circo': extras_circo,
+          'casino': extras_casino, 'piratas': extras_piratas}
+
+
 def make(t):
     kit = KITS.get(t.theme.get('sound', t.id), kit_generic)()
     s = mech()
     s.update(kit)
+    theme = t.theme.get('sound', t.id)
+    if theme in EXTRAS:
+        s.update(EXTRAS[theme]())
     out = {}
     for name in SND_NAMES:
         x = s.get(name)

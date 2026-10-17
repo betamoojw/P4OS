@@ -56,7 +56,7 @@ def build():
 
     # THE BOULDER (Indiana Jones): it rolls to and fro across the temple's
     # courtyard; three hits stop it and open the Path of Adventure
-    t.toy('boulder', 'mover', 182, 428, 21, model='boulder', x1=262, y1=428, period=6.0)
+    t.toy('boulder', 'mover', 182, 428, 22, model='boulder', x1=262, y1=428, period=6.0, s=1.05)
     t.lamp('toy', 222, 470, 'arrow', 18, ORANGE, 0)
 
     # the temple's mouth, left: up a vine-covered wire to the top lanes

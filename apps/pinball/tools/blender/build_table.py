@@ -580,7 +580,28 @@ def build_items():
             build_decor(nm, v)
 
 
+def build_wire(nm, v):
+    """a habitrail: four chrome wires round the ball's path"""
+    path = v['path']
+    pts2 = [(p[0], p[1]) for p in path]
+    for side in (-1, 1):
+        for dz, dw in ((2, 9), (18, 15)):
+            o = offset(pts2, side * dw)
+            tube(nm + 'w%d%d' % (side, dz), [(o[i][0], o[i][1], path[i][2] + dz) for i in range(len(path))], 1.1,
+                 M_CHROME)
+    for i in range(1, len(path) - 1, 2):
+        L = offset(pts2, 16)[i]
+        R = offset(pts2, -16)[i]
+        tube(nm + 'r%d' % i, [(L[0], L[1], path[i][2] + 18), (L[0], L[1], path[i][2]), (R[0], R[1], path[i][2]),
+                              (R[0], R[1], path[i][2] + 18)], 1.0, M_CHROME)
+        if path[i][2] > 25:
+            cyl(nm + 'leg%d' % i, path[i][0], path[i][1], 1.6, 0, path[i][2], M_CHROME)
+
+
 def build_ramp(nm, v):
+    if v.get('style') == 'wire':
+        build_wire(nm, v)
+        return
     path = v['path']
     w = v['width'] / 2
     color = v.get('color') or TH['accent']
@@ -667,6 +688,10 @@ def deco_zombis(nm, kind, x, y, s, rot, v):
         box(nm + 'y', x, y - 9 * s, 10 * s, 10 * s, 3 * s, 1, m_('gold', 0xC8A040, 0.3, metal=1))
     elif kind == 'moon':
         sphere(nm, x, y, 60, v.get('r', 30), m_('moon', 0xFFF2B0, 0.6, emit_k=1.5), scale=(1, 1, 1))
+    elif kind == 'grave':
+        sphere(nm + 'mound', x, y + 2, 0, 24 * s, m_('dirt', 0x2A2418, 0.9), scale=(1, 0.8, 0.18))
+        box(nm + 'stone', x, y - 22 * s, 0, 24 * s, 7 * s, 30 * s, stone)
+        cone(nm + 'top', x, y - 22 * s, 30 * s - 3.5 * s, 12 * s, 12 * s, 7 * s, stone, rot=(math.pi / 2, 0, 0))
 
 
 DECO = {'zombis': deco_zombis}
@@ -733,6 +758,12 @@ def deco_robots(nm, kind, x, y, s, rot, v):
         o = sphere(nm + 'dish', x, y, 30 * s, 16 * s, steel, scale=(1, 1, 0.35))
         o.rotation_euler = (0.6, 0, math.radians(rot))
         sphere(nm + 'tip', x, y, 36 * s, 2.5 * s, pink)
+    elif kind == 'pad':
+        cyl(nm, x, y, 30 * s, 0, 1.0, m_('padm', 0x404858, 0.4, metal=0.6))
+        for i in range(8):
+            a = i * math.pi / 4
+            box(nm + 's%d' % i, x + math.cos(a) * 25 * s, y + math.sin(a) * 25 * s, 1.0, 8 * s, 3 * s, 0.6,
+                m_('hazard', 0xFFC020, 0.4), rot=math.degrees(a) + 90)
     elif kind == 'ufo':
         sphere(nm, x, y, 16 * s, 22 * s, steel, scale=(1, 1, 0.3))
         sphere(nm + 'dome', x, y, 20 * s, 10 * s, m_('udome', 0x60F0FF, 0.1, emit_k=2), scale=(1, 1, 0.8))
@@ -844,6 +875,17 @@ def deco_casino(nm, kind, x, y, s, rot, v):
             box(nm + str(i), x + dx, y + dy, 0, 14 * s, 14 * s, 14 * s, white, rot=rr)
             for k, (px, py) in enumerate(((-3.5, -3.5), (3.5, 3.5), (0, 0), (-3.5, 3.5), (3.5, -3.5))[:3 + i * 2]):
                 sphere(nm + 'p%d%d' % (i, k), x + dx + px * s, y + dy + py * s, 14 * s, 1.5 * s, black)
+    elif kind == 'slotbig':
+        box(nm, x, y, 0, 44 * s, 32 * s, 60 * s, red)
+        box(nm + 'top', x, y - 2 * s, 60 * s, 46 * s, 30 * s, 10 * s, gold)
+        box(nm + 'win', x, y + 16 * s, 30 * s, 36 * s, 1.5, 18 * s, m_('reels', 0xF8F4E0, 0.3, emit_k=1.5))
+        for i in range(3):
+            box(nm + 'r%d' % i, x + (i - 1) * 11 * s, y + 17 * s, 34 * s, 8 * s, 1.2, 9 * s,
+                m_('sym%d' % i, [0xE01830, 0xFFC830, 0x2060E0][i], 0.3, emit_k=2))
+        cyl(nm + 'arm', x + 26 * s, y, 2 * s, 24 * s, 64 * s, gold)
+        sphere(nm + 'knob', x + 26 * s, y, 66 * s, 5 * s, red)
+        for i in range(10):
+            sphere(nm + 'b%d' % i, x - 20 * s + i * 4.4 * s, y + 16 * s, 72 * s, 1.6 * s, m_('bulb', 0xFFE080, 0.3, emit_k=6))
     elif kind == 'cards':
         for i in range(4):
             box(nm + str(i), x + i * 5 * s, y, i * 1.2 * s, 22 * s, 32 * s, 1.0 * s, white, rot=rot + i * 12)
@@ -887,6 +929,18 @@ def deco_piratas(nm, kind, x, y, s, rot, v):
         box(nm + 'stock', x, y, 36 * s, 22 * s, 3 * s, 3 * s, iron)
         torus(nm + 'ring', x, y, 46 * s, 4 * s, 1.2 * s, iron, rot=(math.pi / 2, 0, 0))
         torus(nm + 'arms', x, y, 12 * s, 14 * s, 2 * s, iron, rot=(math.pi / 2, 0, 0))
+    elif kind == 'tentacles':
+        green = m_('kraken', 0x2A8A6A, 0.4, clear=0.5)
+        cyl(nm + 'hole', x, y, 26 * s, -6, 0.6, m_('water', 0x082838, 0.1, clear=1.0))
+        for i in range(6):
+            a = i / 6 * 2 * math.pi
+            r0 = 34 * s
+            pts = []
+            for k in range(10):
+                u = k / 9
+                rr = r0 + 6 * math.sin(u * 3 + i)
+                pts.append((x + math.cos(a + u * 0.8) * rr, y + math.sin(a + u * 0.8) * rr, 2 + u * (8 + 4 * (i % 2)) * s))
+            tube(nm + 't%d' % i, pts, 3.5 * s, green)
     elif kind == 'barrels':
         for i, (dx, dy) in enumerate(((0, 0), (16, 4), (8, -12))):
             cyl(nm + str(i), x + dx * s, y + dy * s, 8 * s, 0, 22 * s, wood)
@@ -1186,12 +1240,259 @@ def lamp_lights(name, on):
 LAMP_LIGHTS = {}
 
 
+# ---------------------------------------------------------------------------
+# the toys: built round an empty at their place, turned frame by frame
+# ---------------------------------------------------------------------------
+
+def parent_to(objs, piv):
+    # the new objects' matrices are only right after an update
+    bpy.context.view_layer.update()
+    for o in objs:
+        if o.parent is None or o.parent.type != 'EMPTY':
+            mw = o.matrix_world.copy()
+            o.parent = piv
+            o.matrix_parent_inverse = piv.matrix_world.inverted()
+            o.matrix_world = mw
+
+
+def new_empty(name, x, y, z=0.0):
+    e = bpy.data.objects.new(name, None)
+    link(e)
+    e.location = V(x, y, z)
+    bpy.context.view_layer.update()
+    return e
+
+
+def collect(fn):
+    """the objects a builder makes"""
+    n0 = len(ALL)
+    fn()
+    return [o for o in ALL[n0:] if o.type != 'EMPTY']
+
+
+def toy_zombie(t, x, y, s):
+    skin = m_('zskin', 0x7A9A50, 0.6)
+    rag = m_('zrag', 0x4A3A5A, 0.8)
+    pants = m_('zpants', 0x2A3040, 0.8)
+    eye = m_('zeye', 0xD0FF40, 0.3, emit_k=8)
+    return collect(lambda: (
+        box('zl1', x - 6 * s, y, 0, 7 * s, 8 * s, 26 * s, pants), box('zl2', x + 6 * s, y, 0, 7 * s, 8 * s, 26 * s, pants),
+        box('zbody', x, y, 26 * s, 26 * s, 14 * s, 24 * s, rag, rot=4),
+        box('zarm1', x - 12 * s, y + 10 * s, 40 * s, 6 * s, 22 * s, 6 * s, skin, tilt=(-8, 0)),
+        box('zarm2', x + 12 * s, y + 12 * s, 38 * s, 6 * s, 24 * s, 6 * s, skin, tilt=(-14, 0)),
+        sphere('zhead', x + 1 * s, y + 1 * s, 58 * s, 10 * s, skin, scale=(1, 0.95, 1.1)),
+        sphere('ze1', x - 4 * s, y + 9 * s, 60 * s, 2.4 * s, eye), sphere('ze2', x + 5 * s, y + 9 * s, 60 * s, 2.4 * s, eye),
+        box('zjaw', x, y + 7 * s, 50 * s, 10 * s, 3 * s, 3 * s, m_('zmouth', 0x200810, 0.9))))
+
+
+def toy_robot(t, x, y, s):
+    steel = m_('steel', 0xB8C4D4, 0.25, metal=0.9)
+    blue = m_('rblue', 0x2050C0, 0.35, clear=0.5)
+    glow = m_('rglow', 0x30E0FF, 0.3, emit_k=8)
+    red = m_('rred2', 0xFF3050, 0.3, emit_k=10)
+    legs = collect(lambda: (
+        box('rl1', x - 15 * s, y - 4 * s, 0, 9 * s, 12 * s, 30 * s, steel), box('rl2', x + 15 * s, y - 4 * s, 0, 9 * s, 12 * s, 30 * s, steel),
+        box('rhip', x, y - 10 * s, 26 * s, 40 * s, 10 * s, 8 * s, steel)))
+    torso = collect(lambda: (
+        box('rtorso', x, y - 6 * s, 34 * s, 44 * s, 22 * s, 30 * s, blue),
+        box('rpanel', x, y + 5 * s, 40 * s, 24 * s, 2, 14 * s, glow),
+        sphere('rsh1', x - 25 * s, y - 6 * s, 58 * s, 7 * s, steel), sphere('rsh2', x + 25 * s, y - 6 * s, 58 * s, 7 * s, steel),
+        box('ra1', x - 28 * s, y, 34 * s, 7 * s, 8 * s, 24 * s, steel), box('ra2', x + 28 * s, y, 34 * s, 7 * s, 8 * s, 24 * s, steel),
+        box('rhead', x, y - 6 * s, 64 * s, 26 * s, 20 * s, 18 * s, steel),
+        box('rvisor', x, y + 4 * s, 70 * s, 20 * s, 2, 5 * s, red),
+        cyl('rant', x, y - 6 * s, 1 * s, 82 * s, 92 * s, steel), sphere('rantb', x, y - 6 * s, 93 * s, 3 * s, glow)))
+    return legs + torso, torso
+
+
+def toy_ringmaster(t, x, y, s):
+    red = m_('rmcoat', 0xD01828, 0.4, clear=0.4)
+    black = m_('rmblack', 0x101010, 0.4, clear=0.5)
+    white = m_('rmwhite', 0xF4F0E8, 0.4)
+    skin = m_('rmskin', 0xF0C090, 0.5)
+    gold = m_('rmgold', 0xFFC840, 0.25, metal=0.9)
+    return collect(lambda: (
+        box('rml1', x - 5 * s, y, 0, 6 * s, 7 * s, 24 * s, black), box('rml2', x + 5 * s, y, 0, 6 * s, 7 * s, 24 * s, black),
+        box('rmcoat', x, y, 22 * s, 22 * s, 12 * s, 26 * s, red),
+        box('rmshirt', x, y + 6 * s, 30 * s, 8 * s, 1.5, 14 * s, white),
+        box('rmarm', x + 13 * s, y + 6 * s, 38 * s, 5 * s, 18 * s, 5 * s, red, tilt=(-30, 0)),
+        sphere('rmglove', x + 13 * s, y + 16 * s, 44 * s, 3.5 * s, white),
+        sphere('rmhead', x, y + 1 * s, 55 * s, 8.5 * s, skin),
+        box('rmmus', x, y + 8 * s, 52 * s, 10 * s, 2, 2 * s, black),
+        cyl('rmbrim', x, y, 12 * s, 61 * s, 63 * s, black), cyl('rmhat', x, y, 7.5 * s, 63 * s, 80 * s, black),
+        cyl('rmband', x, y, 7.8 * s, 64 * s, 67 * s, gold)))
+
+
+def toy_ship(t, x, y, s):
+    wood = m_('gwood', 0x2E3A30, 0.6)
+    sail = m_('gsail', 0xC8D8C0, 0.7)
+    glow = m_('gglow', 0x60FFA0, 0.3, emit_k=8)
+    hull = [(-30, -9), (24, -9), (34, 0), (24, 9), (-30, 9), (-34, 0)]
+    def build():
+        prism('ghull', [(x + px * s, y + py * s) for px, py in hull], 0, 16 * s, wood)
+        box('gdeck', x - 22 * s, y, 16 * s, 14 * s, 16 * s, 8 * s, wood)
+        for i, mx_ in enumerate((-8, 12)):
+            cyl('gmast%d' % i, x + mx_ * s, y, 1.4 * s, 16 * s, 66 * s, wood)
+            box('gsail%d' % i, x + mx_ * s, y + 2 * s, 28 * s, 24 * s, 1.2, 26 * s, sail)
+        sphere('glamp1', x + 30 * s, y, 22 * s, 2.5 * s, glow)
+        sphere('glamp2', x - 30 * s, y, 26 * s, 2.5 * s, glow)
+        box('gflag', x + 16 * s, y, 62 * s, 10 * s, 1, 7 * s, m_('gflagm', 0x101010, 0.6))
+    return collect(build)
+
+
+def toy_boulder(t, x, y, s):
+    stone = m_('boulder', 0x8A7A60, 0.85)
+    bm = bmesh.new()
+    bmesh.ops.create_icosphere(bm, subdivisions=3, radius=21 * s / 1000.0)
+    import random as _r
+    rr = _r.Random(5)
+    for v in bm.verts:
+        v.co *= 1.0 + rr.uniform(-0.08, 0.08)
+    me = bpy.data.meshes.new('boulder')
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new('boulder', me)
+    o.data.materials.append(stone)
+    o.location = V(x, y, 21 * s)
+    link(o)
+    moss = sphere('bmoss', x - 8 * s, y - 6 * s, 30 * s, 9 * s, m_('moss', 0x4A7A30, 0.8), scale=(1, 1, 0.5))
+    return [o, moss]
+
+
+def toy_chestlid(t, x, y, s):
+    wood = m_('pwood', 0x6A4020, 0.6, clear=0.3)
+    gold = m_('pgold', 0xFFC040, 0.2, metal=0.9)
+    def build():
+        cone('clid', x, y, 16 * s - 17 * s, 11 * s, 11 * s, 34 * s, wood, rot=(0, math.pi / 2, 0))
+        for dx in (-12, 12):
+            box('cband%d' % dx, x + dx * s, y, 14 * s, 3 * s, 23 * s, 12 * s, gold)
+    p = collect(build)
+    return p, p
+
+
+def toy_disc(t, x, y, s, kind):
+    def build():
+        if kind == 'roulette':
+            red = m_('kred', 0xD01830, 0.3, clear=0.7)
+            black = m_('kblack', 0x141414, 0.3, clear=0.7)
+            gold = m_('kgold', 0xFFC830, 0.2, metal=0.9)
+            wedge_disc('rw', x, y, 0.5, 3, 52 * s, [red, black], 36, r0=30 * s)
+            wedge_disc('rin', x, y, 0.5, 3.5, 30 * s, [m_('wood2', 0x5A2A10, 0.4, clear=0.6)], 1)
+            torus('rrim', x, y, 3, 52 * s, 2.2, gold)
+            for i in range(4):
+                a = i * math.pi / 2
+                box('rspk%d' % i, x + math.cos(a) * 14 * s, y + math.sin(a) * 14 * s, 3.5, 26 * s, 3, 2, gold,
+                    rot=math.degrees(a))
+            cyl('rhub', x, y, 6 * s, 3.5, 8, gold)
+        else:
+            red = m_('cred', 0xE8243C, 0.3, clear=0.6)
+            white = m_('cwhite', 0xF4F0E8, 0.3, clear=0.6)
+            gold = m_('cgold', 0xFFC840, 0.25, metal=0.8)
+            wedge_disc('cw', x, y, 0.5, 3, 46 * s, [red, white], 12)
+            torus('crim', x, y, 3, 46 * s, 2.5, gold)
+            for i in range(4):
+                a = i * math.pi / 2 + 0.4
+                hx, hy = x + math.cos(a) * 32 * s, y + math.sin(a) * 32 * s
+                box('chorse%d' % i, hx, hy, 3, 14 * s, 5 * s, 3, m_('horse%d' % (i % 2), [0xFFD040, 0x60A0FF][i % 2], 0.3),
+                    rot=math.degrees(a) + 90)
+            cyl('chub', x, y, 7 * s, 3, 7, gold)
+    return collect(build)
+
+
+def toy_cannon(t, x, y, s):
+    iron = m_('iron', 0x26262C, 0.3, metal=0.8)
+    gold = m_('cgold', 0xFFC840, 0.25, metal=0.8)
+    red = m_('cred', 0xE8243C, 0.3, clear=0.6)
+    def build():
+        cyl('cnbase', x, y, 16 * s, 0, 6 * s, red)
+        # the barrel points along +x (the table's angle 0), up 25 degrees
+        cone('cnbar', x + 10 * s, y, 4 * s, 8 * s, 6.5 * s, 34 * s, iron, rot=(0, math.radians(65), 0))
+        torus('cnrim', x + 24 * s, y, 18 * s, 7 * s, 1.6, gold, rot=(0, math.radians(65), 0))
+        for sy in (-1, 1):
+            torus('cnw%d' % sy, x, y + sy * 11 * s, 8 * s, 7 * s, 1.8 * s, gold, rot=(math.pi / 2, 0, 0))
+    return collect(build)
+
+
+TOY_MODELS = {'zombie': toy_zombie, 'robot': toy_robot, 'ringmaster': toy_ringmaster, 'ship': toy_ship,
+              'boulder': toy_boulder, 'chestlid': toy_chestlid, 'cannon': toy_cannon}
+
+
+def build_toys():
+    """every toy with frames: (toy, root, parts, set_frame)"""
+    out = []
+    for ty in S.get('toys', []):
+        kind, model = ty['kind'], ty['model']
+        x, y, sc = ty['x'], ty['y'], ty.get('s', 1.0)
+        nf = S['toy_frames'].get(kind, 0)
+        if not nf:
+            continue
+        piv = new_empty('toy_%s' % ty['name'], x, y)
+        # a light of its own over every toy: they are the table's stars
+        point('spot_%s' % ty['name'], x, y + 40, 220, 0.45, (1.0, 0.97, 0.9), 30)
+        part = None
+        if kind == 'disc':
+            parts = toy_disc(ty, x, y, sc, model)
+        elif model in TOY_MODELS:
+            r = TOY_MODELS[model](ty, x, y, sc)
+            parts, part = (r if isinstance(r, tuple) else (r, None))
+        else:
+            parts = collect(lambda: cyl('toy_' + ty['name'], x, y, ty['r'], 0, 40, m_('generic', TH['accent'], 0.4)))
+        parent_to(parts, piv)
+        sub = None
+        if part:
+            # the part that opens (the robot's torso, the chest's lid): an
+            # empty at its hinge, on its back edge
+            hy, hz = {'robot': (-17, 30), 'chestlid': (-11, 16)}.get(model, (-17, 30))
+            sub = new_empty('toyp_%s' % ty['name'], x, y + hy * sc, hz * sc)
+            sub.parent = piv
+            sub.matrix_parent_inverse = piv.matrix_world.inverted()
+            bpy.context.view_layer.update()
+            for o in part:
+                mw = o.matrix_world.copy()
+                o.parent = sub
+                o.matrix_parent_inverse = sub.matrix_world.inverted()
+                o.matrix_world = mw
+        base_loc = piv.location.copy()
+
+        def set_frame(k, ty=ty, piv=piv, sub=sub, base_loc=base_loc, nf=nf, kind=kind, model=model):
+            piv.location = base_loc.copy()
+            piv.rotation_euler = (0, 0, 0)
+            if sub:
+                sub.rotation_euler = (0, 0, 0)
+            if kind == 'bash':
+                if k < 4:
+                    piv.rotation_euler = (math.radians(-7 * k), 0, 0)
+                else:
+                    u = (k - 3) / (nf - 4 + 1)
+                    if sub:
+                        sub.rotation_euler = (math.radians((-100 if model == 'chestlid' else -75) * u), 0, 0)
+                    else:
+                        piv.location = base_loc + Vector((0, 0, -0.075 * u))
+            elif kind == 'mover':
+                u = k / (nf - 1)
+                piv.location = base_loc + Vector(((ty['x1'] - ty['x']) * u / 1000.0, -(ty['y1'] - ty['y']) * u / 1000.0, 0))
+                if model == 'boulder':
+                    dist = math.hypot(ty['x1'] - ty['x'], ty['y1'] - ty['y']) * u
+                    piv.rotation_euler = (0, dist / ty['r'], 0)
+                elif model == 'ship':
+                    piv.rotation_euler = (math.radians(4 * math.sin(u * 9)), 0, 0)
+            elif kind == 'disc':
+                rep = 2 * math.pi / max(1, ty['a1'])
+                piv.rotation_euler = (0, 0, -rep * k / nf)
+            elif kind == 'cannon':
+                a = ty['a0'] + (ty['a1'] - ty['a0']) * k / (nf - 1)
+                piv.rotation_euler = (0, 0, -math.radians(a))
+            bpy.context.view_layer.update()
+        set_frame(0)
+        out.append((ty, piv, parts, set_frame))
+    return out
+
+
 def main():
     pf = build_playfield()
     build_cabinet()
     build_items()
     build_lights()
-    meta = dict(lamps={}, drops={}, flippers={0: [], 1: []}, spinner=[])
+    meta = dict(lamps={}, drops={}, flippers={i: [] for i in range(len(S['flippers']))}, spinner=[], toys={})
     # lights that only lamps switch on
     for l in S['lamps']:
         if l['kind'] in ('bumper', 'flasher', 'sling'):
@@ -1210,8 +1511,9 @@ def main():
         pivs.append(flipper_obj(f))
     spin = [v for v in S['vis'] if v['t'] == 'spinner']
     hinge, plate = spinner_plate(spin[0]) if spin else (None, [])
-    dyn = [o for p in pivs for o in p[1]] + plate
-    statics = [o for o in ALL if o not in dyn]
+    toys = build_toys()
+    dyn = [o for p in pivs for o in p[1]] + plate + [o for tt in toys for o in tt[2]]
+    statics = [o for o in ALL if o not in dyn and o.type != 'EMPTY']
 
     if args.blend:
         bpy.ops.wm.save_as_mainfile(filepath=args.blend)
@@ -1331,7 +1633,49 @@ def main():
         vis(statics, camera=True, shadow=True)
         hide(plate, True)
         no_border()
-    # 6. the ball, and the buttons
+    # 6. the toys' frames: each toy and its shadow, what stands in front held
+    # out, and the depth of its pixels
+    if want('toys'):
+        for ti, (ty, piv, parts, set_frame) in enumerate(toys):
+            nf = S['toy_frames'][ty['kind']]
+            hide(dyn, True)
+            hide(parts, False)
+            boxes = []
+            for k in range(nf):
+                set_frame(k)
+                boxes.append(project_bbox(parts, 16))
+            boxes = [b for b in boxes if b]
+            print('toy', ty['name'], 'boxes', [tuple(int(v) for v in b) for b in boxes[:3]], [o.name for o in parts][:6])
+            if not boxes:
+                continue
+            bb = (min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes))
+            bx = border(*bb)
+            meta['toys'][ti] = []
+            for k in range(nf):
+                set_frame(k)
+                for o in statics:
+                    o.visible_camera = o is pf or not o.name.startswith('under')
+                    o.visible_shadow = False
+                    o.is_holdout = o is not pf
+                pf.is_shadow_catcher = True
+                a = render(os.path.join(TMP, 'toy.exr'), max(32, args.samples // 2), transparent=True)
+                fn = 'toy%d_%02d.png' % (ti, k)
+                write_png(a, os.path.join(args.out, fn), alpha=True)
+                # the depth: the toy alone
+                for o in statics:
+                    o.is_holdout = False
+                    o.visible_camera = False
+                pf.is_shadow_catcher = False
+                d = render_depth(os.path.join(TMP, 'toyz.exr'))
+                np.save(os.path.join(args.out, 'toy%d_%02d.npy' % (ti, k)), d.astype(np.float32))
+                meta['toys'][ti].append(dict(file=fn, depth='toy%d_%02d.npy' % (ti, k), x=bx[0], y=bx[1]))
+            for o in statics:
+                o.is_holdout = False
+            vis(statics, camera=True, shadow=True)
+            set_frame(0)
+        hide(dyn, True)
+        no_border()
+    # 7. the ball, and the buttons
     if want('ball'):
         render_ball()
     if want('icons'):
@@ -1341,7 +1685,7 @@ def main():
     if os.path.exists(p) and ONLY:
         old = json.load(open(p))
         for k, v in meta.items():
-            full = any(v.values()) if isinstance(v, dict) and k == 'flippers' else bool(v)
+            full = any(v.values()) if isinstance(v, dict) and k in ('flippers', 'toys') else bool(v)
             if full:
                 old[k] = v
         meta = old

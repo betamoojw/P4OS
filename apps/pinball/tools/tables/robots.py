@@ -32,7 +32,7 @@ def build():
 
     # THE ROBOT (Pinbot): three hits and his chest opens; with the lock lit,
     # a ball shot into it stays there, where you can see it
-    t.toy('robot', 'bash', 232, 352, 22, model='robot')
+    t.toy('robot', 'bash', 232, 352, 24, model='robot', s=1.25)
     t.saucer('chest', 232, 352, eject_deg=95, eject_speed=1600, r=14, role='lock')
     t.lamp('toy', 232, 404, 'arrow', 18, ORANGE, 0)
 

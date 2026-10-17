@@ -99,7 +99,11 @@ def compose_screen(dmd, bg, art):
     scr = Image.new('RGB', (pt.SCREEN_W, pt.SCREEN_H))
     scr.paste(dmd, (0, 0))
     scr.paste(bg, (0, pt.DMD_H))
-    for side in (0, 1):
+    for ti, frames in sorted(art.get('toys', {}).items()):
+        if frames:
+            im, z, x, y = frames[0]
+            scr.paste(im, (x, y), im)
+    for side in sorted(art['flippers']):
         fr = art['flippers'][side]
         if fr:
             img, x, y = fr[0] if isinstance(fr[0], tuple) else (fr[0], 0, pt.DMD_H)
@@ -150,8 +154,30 @@ def load_renders(t, d):
         diff = np.asarray(Image.fromarray((diff * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(5))) > 0
         art['drops'][name] = (down.astype(np.uint8), z, diff, x, y)
     art['flippers'] = {}
-    for s in (0, 1):
-        art['flippers'][s] = [(img(f['file']).convert('RGBA'), f['x'], f['y'] + pt.DMD_H) for f in meta['flippers'][str(s)]]
+    for s, frames in meta['flippers'].items():
+        art['flippers'][int(s)] = [(img(f['file']).convert('RGBA'), f['x'], f['y'] + pt.DMD_H) for f in frames]
+    # the toys: their frames with the depth of their own pixels; where only
+    # their shadow is, the table's depth (it darkens the playfield, it hides
+    # nothing)
+    art['toys'] = {}
+    for ti, frames in meta.get('toys', {}).items():
+        out = []
+        for f in frames:
+            im = img(f['file']).convert('RGBA')
+            z = np.load(os.path.join(d, f['depth'])).astype(np.float32)
+            x, y = f['x'], f['y']
+            h, w = z.shape
+            under = art['depth'][y:y + h, x:x + w]
+            shadow_only = z > 8000
+            z = np.where(shadow_only, under, z)
+            # the shadow catcher also catches a faint haze of the room's light:
+            # only the toy's own shadow is kept
+            a = np.asarray(im).copy()
+            al = a[..., 3].astype(np.int32)
+            al = np.where(shadow_only, np.clip((al - 40) * 1.4, 0, 255), al)
+            a[..., 3] = al.astype(np.uint8)
+            out.append((Image.fromarray(a), z, x, y + pt.DMD_H))
+        art['toys'][int(ti)] = out
     art['spinner'] = [(img(f['file']).convert('RGBA'), f['x'], f['y'] + pt.DMD_H) for f in meta.get('spinner', [])]
     art['ball'] = img('ball.png').convert('RGBA') if os.path.exists(os.path.join(d, 'ball.png')) else None
     for k in ('launch', 'launch_on', 'pause', 'icon'):
@@ -184,8 +210,11 @@ def build(tid, flat, out_dir, sounds_on=True):
         pk.add_light('L_' + name, light, 0, pt.DMD_H)
     for name, (rgbimg, z, mask, x, y) in art['drops'].items():
         pk.patch('D_' + name, rgbimg, z, mask, x, y + pt.DMD_H)
-    add_sprite_list(pk, 'F0_', art['flippers'][0])
-    add_sprite_list(pk, 'F1_', art['flippers'][1])
+    for i in sorted(art['flippers']):
+        add_sprite_list(pk, 'F%d_' % i, art['flippers'][i])
+    for ti, frames in sorted(art.get('toys', {}).items()):
+        for k, (im, z, x, y) in enumerate(frames):
+            pk.spritez('T%d_%02d' % (ti, k), im, z, x, y)
     add_sprite_list(pk, 'S_', art['spinner'])
     if art.get('ball') is not None:
         pk.sprite('ball', art['ball'], 0, 0, crop=False)

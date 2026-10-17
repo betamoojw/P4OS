@@ -107,7 +107,8 @@ typedef struct {
     float   x1, y1;         /* the mover's other end; the cannon's and the magnet's
                              * throw: x1 speed (mm/s), y1 unused                     */
     float   a0, a1;         /* the cannon's swing and the magnet's throw (degrees);
-                             * the disc's top speed (rad/s) in a0                    */
+                             * the disc: a0 its speed (rad/s), a1 how many times its
+                             * pattern repeats in a turn                             */
     float   period;         /* the mover's and the cannon's, seconds                 */
 } pb_toydef_t;
 

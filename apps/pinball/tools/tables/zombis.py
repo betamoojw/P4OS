@@ -30,8 +30,8 @@ def build():
 
     # THE ZOMBIE: he stands on his grave in the middle; three hits send him
     # back under, and he comes back harder (Monster Bash's monsters)
-    t.toy('zombie', 'bash', 282, 336, 17, model='zombie')
-    t.deco('grave', 282, 336, s=1.0)
+    t.toy('zombie', 'bash', 282, 336, 22, model='zombie', s=1.7)
+    t.deco('grave', 282, 336, s=1.3)
     t.lamp('toy', 282, 380, 'arrow', 18, BLOOD, 0)
 
     # the crypt's ramp, right: up the middle-right, over the orbit and down

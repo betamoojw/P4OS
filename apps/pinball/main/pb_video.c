@@ -361,11 +361,15 @@ static void hud(const pb_video_t *v, pb_dmd_t *d, const char *title)
     char s[32];
     dmd_number(s, sizeof s, v->score);
     dmd_text(d, DMD_W - dmd_text_w(s, 1) - 1, 0, s, 1, 12);
-    dmd_text(d, 1, 0, title, 1, 7);
+    /* the game's name while it starts, then the seconds left */
+    if (v->t < 2.0f) {
+        dmd_text(d, 1, 0, title, 1, ((int)(v->t * 6)) & 1 ? 15 : 8);
+        return;
+    }
     int left = (int)(v->dur - v->t + 0.99f);
     if (left < 0) left = 0;
     snprintf(s, sizeof s, "%d", left);
-    dmd_text(d, 64 - dmd_text_w(s, 1) / 2, 0, s, 1, 9);
+    dmd_text(d, 1, 0, s, 1, 9);
 }
 
 void pb_video_draw(const pb_video_t *v, pb_dmd_t *d, int lang)

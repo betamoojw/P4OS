@@ -392,8 +392,8 @@ static void feat_toy_hit(pb_game_t *g, int obj)
         pb_fstate_t *s = &g->feat[i];
         if (s->kind != FK_BASH || s->toy != toy || !g->ph->toy[toy].up) continue;
         if (++s->count < s->need) {
-            char a[24];
-            snprintf(a, sizeof a, "%d / %d", s->count, s->need);
+            char a[32];
+            snprintf(a, sizeof a, "%d / %d", s->count & 0xFF, s->need & 0xFF);
             pb_game_say(g, TX(g, s->text_hit, _("¡GOLPE!")), a, 0.9f, false);
             continue;
         }
@@ -450,6 +450,7 @@ static bool feat_saucer(pb_game_t *g, int obj, int ball)
             g->video_ball = ball;
             if (b) b->hold = 1e9f;
             pb_video_start(&g->video, s->round, (uint32_t)(g->clock * 1000) + 77);
+            g->video_hits = 0;
             pb_game_sound(g, SND_VIDEO);
             return true;
         }
@@ -578,7 +579,10 @@ static void feat_update(pb_game_t *g, float dt)
         }
     }
     if (g->video.on) {
-        if (!pb_video_step(&g->video, dt, g->in_lp, g->in_rp, g->in_lh, g->in_rh)) {
+        bool more = pb_video_step(&g->video, dt, g->in_lp, g->in_rp, g->in_lh, g->in_rh);
+        if (g->video.hits > g->video_hits) pb_game_sound(g, SND_VIDEO_HIT);
+        g->video_hits = g->video.hits;
+        if (!more) {
             uint32_t p = g->video.score;
             points(g, p);
             char num[24];

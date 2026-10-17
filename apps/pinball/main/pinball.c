@@ -1070,6 +1070,13 @@ static void load_cb(lv_timer_t *tm)
     pb_render_full(&a->rd);
     lv_obj_invalidate(a->canvas);
     a->last_us = aos_hal_uptime_us();
+#if defined(AOS_SIM) || defined(AOS_SIM_BUILTIN)
+    /* PB_VIDEO=<n> plays that video mode at once (scripts) */
+    if (getenv("PB_VIDEO")) {
+        pb_video_start(&a->g.video, atoi(getenv("PB_VIDEO")), 1234);
+        a->g.video_ball = -1;
+    }
+#endif
     if (!pref_bool("pb_tut", false)) tutorial_show(a);
 }
 

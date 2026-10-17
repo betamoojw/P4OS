@@ -87,6 +87,7 @@ typedef struct {
     bool     video_lit;
     int      video_feat;        /* the video feature playing, -1 none         */
     int      video_ball;
+    int      video_hits;        /* the hits already heard                     */
     bool     in_lp, in_rp, in_lh, in_rh;   /* the flipper buttons, for the video modes */
     float    cannon_t;          /* since the cannon fired (its targets count)  */
     int      roulette_bet;      /* 0 red, 1 black                              */

@@ -531,7 +531,9 @@ static void draw_sprite_opa(pb_render_t *r, const pb_spr_t *s, const pb_rect_t *
             unsigned al = opa >= 255 ? *sa : (*sa * opa) >> 8;
             if (al) {
                 *d = al >= 250 ? *sp : blend(*d, *sp, al);
-                if (zrow && z && al >= 128) z[x - a.x0] = zr;
+                /* only the flipper itself hides the ball, not its shadow
+                 * (the shadow catcher's pixels are never this opaque) */
+                if (zrow && z && al >= 245) z[x - a.x0] = zr;
             }
         }
     }
@@ -799,7 +801,11 @@ void pb_render_frame(pb_render_t *r, const pb_game_t *g, const pb_phys_t *ph, co
             break;
         }
         case TK_DISC: {
-            int i = (int)(y->phase / (2 * PB_PI) * n + 0.5f);
+            /* the frames cover one repeat of the disc's pattern (a1 of them
+             * in a turn): a smooth turn from few frames */
+            float rep = 2 * PB_PI / (d->a1 >= 1 ? d->a1 : 1);
+            float u = fmodf(y->phase, rep) / rep;
+            int i = (int)(u * n + 0.5f);
             tf[k] = ((i % n) + n) % n;
             break;
         }

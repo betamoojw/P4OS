@@ -15,6 +15,18 @@ in a carousel:
 | Casino Real | `casino` | green felt; four cards, three dice, the roulette saucer, the high rollers' ramp |
 | La Isla Pirata | `piratas` | the treasure chest, the cannon ramp, the barrels |
 
+Each table has toys and tricks of its own, after the machines of the
+eighties and nineties:
+
+| Table | Its attractions | After |
+|---|---|---|
+| Noche de Zombis | **the zombie** on his grave: three hits send him under, he comes back harder; **Z-O-M-B-I** standups light the video mode; the mausoleum kicks the ball **up a wire** to the top lanes; video mode **Cazador de zombis** | Monster Bash, Addams Family |
+| Robots en Órbita | **the robot**: three hits open his chest, a ball shot into it is locked (he swallows it, two start multiball); the **tractor beam** (a magnet) grabs the ball and throws it at him; an **upper flipper**; R-O-B-O-T; video mode **Invasores** | Pinbot, Black Knight 2000 |
+| El Templo de la Jungla | **the boulder** rolling to and fro across the courtyard: three hits stop it; the temple kicks the ball **up a wire**; an **upper flipper** on the left; video mode **Camino de la aventura** | Indiana Jones |
+| El Gran Circo | **the human cannonball**: the ball down the left orbit drops into the cannon, it swings, the launch button fires it at the jugglers; the **merry-go-round** flings the ball; **the ringmaster** pops up; video mode **Globos** | Cirqus Voltaire, Funhouse |
+| Casino Real | **the roulette** turning on the table: the ball leaving it lands on a number, the lit colour pays, the zero pays a fortune; **the slot machine**: its reels on the DMD, each flipper stops one; five cards | Twilight Zone, Whirlwind, Royal Flush |
+| La Isla Pirata | **the ghost ship** sailing across the bay: four hits sink it; **the Kraken** grabs the ball and flings it; **the chest**: two hits open its lid, a ball in it is locked; video mode **Duelo** | Pirates of the Caribbean |
+
 Everything the player sees once a table is chosen is that table's: the
 DMD's colour, the launch button (a skull, a rocket, a tiki mask, a cannon, a
 roulette wheel, a ship's wheel), the pause button, the panels' colours with
@@ -45,6 +57,10 @@ uploads them all. Neither the renders (`assets/`) nor the packs are in git.
 
 - **Flippers:** the lower half of the screen; the left half is the left
   flipper, the right half the right one, both at once with two fingers.
+- **Video modes:** while one plays on the DMD the flipper buttons are its
+  (the flippers rest); each game says on its first seconds what it is.
+- **The cannon** (the Big Top): with the ball in it the launch button shows
+  again; press it when the cannon points where you want.
 - **Launch:** when a ball waits on the plunger the table's launch button
   shows in the bottom right corner. A tap launches it hard; held, a ring
   fills and empties, and letting go launches with that strength (a soft
@@ -137,6 +153,38 @@ Things to keep, learned tuning these six:
 - The inlane guide ends **tangent to the flipper's pivot** (`tangent_point`)
   or the ball sits in the notch.
 
+### Toys and attractions
+
+`t.toy(name, kind, x, y, r, model=..., ...)` puts a toy on the table; its
+`model` is what `blender/build_table.py` builds (`TOY_MODELS`, or a disc's
+pattern), and Blender renders its frames with the depth of their pixels,
+so the ball passes in front of it or behind it:
+
+| Kind | What it does | Frames |
+|---|---|---|
+| `bash` | a figure that takes hits (a circle the ball bounces off), wobbles, and sinks when the rules say; a model with a hinged part opens it instead (the robot's torso, the chest's lid) | 9: four of the wobble, five sinking |
+| `mover` | the same, going to and fro between (x, y) and (x1, y1) in `period` seconds; it carries its speed into the knock | 16 along the way |
+| `disc` | turns at `a0` rad/s and drags the ball along; leaving it, the ball has an angle on it (a roulette's number); `a1` is how many times its pattern repeats in a turn | 16 over one repeat |
+| `cannon` | catches the ball, swings between `a0` and `a1` degrees, fires at `x1` mm/s when the launch button is pressed (by itself after 6 s) | 9 across the swing |
+| `magnet` | when on, pulls the ball in, holds it, throws it towards `a0` at `x1` mm/s | none |
+
+`t.habitrail(name, path)` is a wire ramp nothing enters by itself, and
+`t.saucer(..., vuk=name)` kicks the ball up it. `t.flipper('L'|'R', ...)`
+after `standard_lower()` adds upper flippers (the same button moves every
+flipper of its side). `t.feat(kind, ...)` declares an attraction for the
+rules (`main/pb_game.c`, "Features"):
+
+| Feature | Words | What it is |
+|---|---|---|
+| `bash` | `toy hits points lights=video\|lock\|multiball hit done back` | a toy to beat; it comes back after 12 s needing one more hit; `hit`, `done`, `back` name the table's `text` lines |
+| `lockpen` | `saucer toy lit=0\|1` | a lock in a toy: while the toy is down (and the lock lit, with `lit=1`) a ball in that saucer is locked; the toy swallows it and a new ball is served; two locks start multiball |
+| `letters` | `objs word lights` | spell the word with those targets or rollovers |
+| `video` | `game saucer light=letters\|bash\|always` | a video mode in that saucer (`shoot`, `invaders`, `runner`, `darts`, `slots`, `duel`, `main/pb_video.c`) |
+| `roulette` | `toy` | the disc's numbers: red, black, the zero |
+| `cannon` | `toy targets` | targets hit within 2.5 s of a shot pay more |
+| `magnet` | `toy every on points text` | on for `on` seconds every `every` |
+| `disc` | `toy` | pays for every ride |
+
 ### Lamps
 
 The rules light lamps by name; a lamp the table does not have is simply not
@@ -144,7 +192,8 @@ shown. Names: `lane1..3`, `inL`, `inR`, `outL`, `outR`, `kickback`,
 `drop<n>` (lit while its drop target is up), `target<n>`, `lock`, `ramp1`,
 `saucer`, `mission1..5`, `x2..x5`, `extraball`, `shootagain`, `jackpot`,
 `spinner`, `orbitL`, `orbitR`, `bumper<n>` and `sling<L|R>` (they flash on a
-hit), `flash1..3` (flashers on big events).
+hit), `flash1..3` (flashers on big events), and for the attractions `toy`,
+`video`, `letter1..n`, `lockpen`, `cannon`, `magnet`, `red`, `black`.
 
 ### Objects and roles
 
@@ -218,7 +267,8 @@ more link-list items than the driver has.
 ## Simulator switches
 
 `PB_TABLE=<n>` opens the n-th table straight away, `PB_NOTUT=1` skips the
-tutorial, `PB_DEBUG=1` draws the physics' shapes over the picture.
+tutorial, `PB_DEBUG=1` draws the physics' shapes over the picture,
+`PB_VIDEO=<n>` plays video mode n at once (0 shoot ... 5 duel).
 
 ## Pending
 

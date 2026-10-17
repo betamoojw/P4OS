@@ -58,7 +58,7 @@ def build():
     # THE ROULETTE (Whirlwind's spinning discs): it turns on the table and
     # flings the ball; where the ball leaves it is the number. The lit
     # colour pays, the zero pays a fortune
-    t.toy('roulette', 'disc', 240, 420, 52, model='roulette', a0=2.2)
+    t.toy('roulette', 'disc', 240, 420, 52, model='roulette', a0=2.2, a1=18)
     t.lamp('red', 190, 488, 'shield', 16, RED)
     t.lamp('black', 290, 488, 'shield', 16, 0x202020)
 

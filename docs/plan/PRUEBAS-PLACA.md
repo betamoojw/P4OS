@@ -407,6 +407,12 @@ Que necesitan la mano del usuario o equipos:
 - [x] I2C con un BME280 real (2026-10-01): en i2c.ext (pines 15/17, 3V3 en
       el 18), Bus lo ve en 0x76 y Módulos lo detecta solo; 181 lecturas sin
       errores, 23,1 °C, 43 % y 1020 hPa. Fotos en el README.
+- [x] SPI con un MAX6675 real (2026-10-18): módulo con termocupla K en
+      spi.a (3V3 en el pin 2, SCK 38, CS 32, SO 36). Bus > "MAX6675:
+      temperatura" dio 03 89 = 28,25 °C; declarado desde Módulos > Agregar
+      (CS del puerto) se lee cada segundo en Sensores: 156 lecturas sin
+      errores, 25-26 °C en reposo, 26 → 63 °C en ~15 s con un encendedor en
+      la punta y la bajada lenta de la vaina.
 - [x] Punto de acceso propio (2026-10-01): el C6 de fábrica hace SoftAP en
       APSTA; el usuario se unió con el QR desde el teléfono y abrió el portal
       con el otro. Con el AP prendido la RAM interna no cambió (291 KB) y la

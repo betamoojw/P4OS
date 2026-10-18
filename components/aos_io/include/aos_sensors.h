@@ -19,6 +19,11 @@
  * closes it again, so the Bus app (or anybody) can use the same port in
  * between; when the pins are someone else's, the round is skipped.
  *
+ * SPI chips (a MAX6675 thermocouple) are read in the same rounds, declared
+ * only: "module max6675 spi.a", "module horno spi.a chip=max6675", and
+ * "... cs=48" for a second one on the same wires. Their port is opened and
+ * closed around each read too.
+ *
  * The same code runs in the simulator, where sim/sensors_sim.c answers on
  * i2c.ext as a BME280, an SHT31, a BH1750, an INA219 and an ADS1115
  * (P4_SIM_SENSORS).
@@ -67,12 +72,14 @@ typedef struct {
     char     name[24];              /* the module's name, or the chip's for a detected one */
     char     chip[12];              /* "BME280" */
     char     port[16];
-    uint8_t  addr;
+    uint8_t  addr;                  /* I2C: the address; SPI: the chip select's GPIO */
     bool     declared;              /* from modules.txt */
     uint8_t  state;                 /* aos_sensor_state_t */
     /* why it failed, "<why>" or "<why>:<detail>": nack (no answer), crc,
      * id:<what the chip said it is>, notready, busy:<owner of the pins>,
-     * port (cannot open it), board:<the board's chip at that address> */
+     * port (cannot open it), board:<the board's chip at that address>,
+     * open (a thermocouple not connected), nack:spi (an SPI chip whose
+     * MISO stayed high: nobody there) */
     char     err[48];
     uint32_t t_ms;                  /* uptime of the last good read */
     uint32_t reads, errors;
@@ -97,6 +104,11 @@ typedef struct {
     uint8_t     naddr;
     bool        shunt;              /* takes shunt= (milliohms) */
     bool        gain;               /* takes gain= (full scale in mV) */
+    /* On an SPI port, declared only (nothing to probe): no addresses; its
+     * chip select is the port's cs= or the module's. In aos_sensor_t its
+     * addr is that CS's GPIO. Last, so that apps built before it still
+     * read the fields above it where they were. */
+    bool        spi;
 } aos_sensor_chip_t;
 
 int                      aos_sensor_chip_count(void);

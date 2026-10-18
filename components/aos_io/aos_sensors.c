@@ -49,7 +49,7 @@ static void scpy(char *d, size_t n, const char *s)
 /* The chips                                                                   */
 /* -------------------------------------------------------------------------- */
 
-enum { CH_BME280, CH_BMP280, CH_SHT3X, CH_SHT4X, CH_AHT20, CH_BH1750, CH_INA219, CH_INA226, CH_ADS1115, CH_N };
+enum { CH_BME280, CH_BMP280, CH_SHT3X, CH_SHT4X, CH_AHT20, CH_BH1750, CH_INA219, CH_INA226, CH_ADS1115, CH_MAX6675, CH_N };
 
 static const aos_sensor_chip_t CHIPS[CH_N] = {
     [CH_BME280]  = { "bme280",  "BME280",  { 0x76, 0x77 }, 2, false, false },
@@ -61,6 +61,7 @@ static const aos_sensor_chip_t CHIPS[CH_N] = {
     [CH_INA219]  = { "ina219",  "INA219",  { 0x40, 0x41, 0x44, 0x45 }, 4, true, false },
     [CH_INA226]  = { "ina226",  "INA226",  { 0x40, 0x41, 0x44, 0x45 }, 4, true, false },
     [CH_ADS1115] = { "ads1115", "ADS1115", { 0x48, 0x49, 0x4A, 0x4B }, 4, false, true },
+    [CH_MAX6675] = { "max6675", "MAX6675", { 0 }, 0, false, false, true },
 };
 
 /* Other names people give them in modules.txt */
@@ -194,7 +195,7 @@ static bool cmd16(aos_io_i2c_t *b, uint8_t a, uint16_t cmd)
 /* The drivers: each fills v[] and returns an AOS_SERR_*-like code             */
 /* -------------------------------------------------------------------------- */
 
-enum { R_OK = 0, R_NACK, R_CRC, R_ID, R_NOTREADY };
+enum { R_OK = 0, R_NACK, R_CRC, R_ID, R_NOTREADY, R_OPEN };
 
 static void setv(slot_t *s, int k, const char *key, int q, float v)
 {
@@ -454,6 +455,29 @@ static int ads_read(aos_io_i2c_t *b, slot_t *s)
     return R_OK;
 }
 
+/* ---- MAX6675: a K thermocouple, 0..1023.75 °C in quarters of a degree ----
+ * 16 bits per read: D15 always 0, D14..D3 the temperature, D2 set when the
+ * thermocouple is open, D1 always 0. Each read (CS low) stops a conversion
+ * and CS high starts the next, 220 ms: a read a second is well apart. Mode 0,
+ * at most 4.3 MHz; MISO's pull-up makes an absent chip 0xFFFF. */
+static int max6675_read(aos_io_spi_t *d, slot_t *s)
+{
+    uint8_t rx[2];
+    if (!aos_io_spi_xfer(d, NULL, rx, 2, XFER_MS)) return R_NACK;
+    uint16_t w = (uint16_t)(rx[0] << 8 | rx[1]);
+    if (w == 0xFFFF) {                  /* MISO's pull-up: nobody drove it */
+        scpy(s->pub.err, sizeof s->pub.err, "spi");
+        return R_NACK;
+    }
+    if (w & 0x8002) {
+        snprintf(s->pub.err, sizeof s->pub.err, "%04X", w);
+        return R_ID;
+    }
+    if (w & 4) return R_OPEN;
+    setv(s, 0, "temp", AOS_SQ_TEMP, (float)(w >> 3) * 0.25f);
+    return R_OK;
+}
+
 static int drv_init(aos_io_i2c_t *b, slot_t *s)
 {
     switch (s->chip) {
@@ -609,7 +633,18 @@ static void sync_declared(void)
         arg_str(mod->args, "chip", cs, sizeof cs);
         int chip = chip_index(cs[0] ? cs : mod->name);
         if (chip < 0) continue;
-        uint8_t addr = (uint8_t)aos_io_arg_int(mod->args, "addr", CHIPS[chip].addrs[0]);
+        uint8_t addr;
+        if (CHIPS[chip].spi) {
+            /* the chip select tells two of them apart on the same wires */
+            const aos_io_port_t *pp = aos_io_port_find(mod->port);
+            if (!pp || pp->kind != AOS_PORT_SPI) continue;
+            int cs = aos_io_module_gpio(mod->name, "cs");
+            if (cs < 0) cs = pp->pins[3];
+            if (cs < 0) continue;
+            addr = (uint8_t)cs;
+        } else {
+            addr = (uint8_t)aos_io_arg_int(mod->args, "addr", CHIPS[chip].addrs[0]);
+        }
         slot_t *s = slot_find(mod->port, addr);
         if (s && s->chip != chip && !(s->chip <= CH_BMP280 && chip <= CH_BMP280)) {
             /* the user says it is something else than autodetect thought */
@@ -703,6 +738,8 @@ static port_st_t *pst_of(const char *port)
     return p;
 }
 
+static void commit(slot_t *s, const slot_t *tmpp, int r);
+
 static void read_slot(aos_io_i2c_t *b, slot_t *s)
 {
     /* a declared chip on the board's bus where the board has one of its own */
@@ -726,26 +763,32 @@ static void read_slot(aos_io_i2c_t *b, slot_t *s)
         if (r == R_OK) tmp.inited = true;
     }
     if (r == R_OK) r = drv_read(b, &tmp);
+    commit(s, &tmp, r);
+}
+
+/* A driver's result into the table: the values whole, or why not */
+static void commit(slot_t *s, const slot_t *tmpp, int r)
+{
     lock();
-    if (!s->used || strcmp(s->pub.port, tmp.pub.port) || s->pub.addr != tmp.pub.addr) { unlock(); return; }
-    s->inited = tmp.inited;
-    s->init_ms = tmp.init_ms;
-    s->cal = tmp.cal;
-    s->chip = tmp.chip;
-    memcpy(s->pub.chip, tmp.pub.chip, sizeof s->pub.chip);
+    if (!s->used || strcmp(s->pub.port, tmpp->pub.port) || s->pub.addr != tmpp->pub.addr) { unlock(); return; }
+    s->inited = tmpp->inited;
+    s->init_ms = tmpp->init_ms;
+    s->cal = tmpp->cal;
+    s->chip = tmpp->chip;
+    memcpy(s->pub.chip, tmpp->pub.chip, sizeof s->pub.chip);
     s->pub.reads++;
     if (r == R_OK) {
         s->pub.state = AOS_SENSOR_OK;
         s->pub.err[0] = 0;
-        s->pub.n = tmp.pub.n;
-        memcpy(s->pub.v, tmp.pub.v, sizeof s->pub.v);
+        s->pub.n = tmpp->pub.n;
+        memcpy(s->pub.v, tmpp->pub.v, sizeof s->pub.v);
         s->pub.t_ms = (uint32_t)aos_hal_uptime_ms();
         hist_push(s, true);
     } else {
-        static const char *const WHY[] = { "", "nack", "crc", "id", "notready" };
+        static const char *const WHY[] = { "", "nack", "crc", "id", "notready", "open" };
         s->pub.state = r == R_NOTREADY && s->pub.state != AOS_SENSOR_OK ? AOS_SENSOR_WAIT : AOS_SENSOR_ERR;
         /* err is "<why>" or "<why>:<detail>" (the id the chip gave) */
-        if (tmp.pub.err[0]) snprintf(s->pub.err, sizeof s->pub.err, "%s:%.36s", WHY[r], tmp.pub.err);
+        if (tmpp->pub.err[0]) snprintf(s->pub.err, sizeof s->pub.err, "%s:%.36s", WHY[r], tmpp->pub.err);
         else scpy(s->pub.err, sizeof s->pub.err, WHY[r]);
         if (r != R_NOTREADY) s->pub.errors++;
         /* a chip that stopped answering may have lost power: start it again */
@@ -753,6 +796,44 @@ static void read_slot(aos_io_i2c_t *b, slot_t *s)
         hist_push(s, false);
     }
     unlock();
+}
+
+/* The SPI chips: each opens its port with its own chip select, for the
+ * length of one read */
+static void read_spi_slots(void)
+{
+    for (int i = 0; i < AOS_SENSOR_MAX; i++) {
+        lock();
+        slot_t *s = &s_slot[i];
+        bool mine = s->used && CHIPS[s->chip].spi;
+        slot_t tmp = *s;
+        unlock();
+        if (!mine) continue;
+        /* the chip select as sync_declared() resolved it: the module's cs=, else the port's */
+        aos_io_spi_cfg_t cfg = { .clock_hz = 1000000, .mode = 0, .cs = (int8_t)tmp.pub.addr };
+        aos_io_spi_t *d = aos_io_spi_open(tmp.pub.port, OWNER, &cfg);
+        if (!d) {
+            const aos_io_port_t *p = aos_io_port_find(tmp.pub.port);
+            const char *o = NULL;
+            for (int k = 0; p && !o && k < 3; k++) o = aos_io_owner(p->pins[k]);
+            if (!o) o = aos_io_owner(tmp.pub.addr);
+            if (o && !strcmp(o, OWNER)) o = NULL;
+            lock();
+            if (s->used) {
+                s->pub.state = o ? AOS_SENSOR_BUSY : AOS_SENSOR_ERR;
+                snprintf(s->pub.err, sizeof s->pub.err, o ? "busy:%s" : "port", o ? o : "");
+                hist_push(s, false);
+            }
+            unlock();
+            continue;
+        }
+        tmp.pub.err[0] = 0;
+        tmp.pub.n = 0;
+        tmp.inited = true;
+        int r = max6675_read(d, &tmp);
+        aos_io_spi_close(d);
+        commit(s, &tmp, r);
+    }
 }
 
 static void service(void *arg)
@@ -857,6 +938,7 @@ static void service(void *arg)
             }
             unlock();
         }
+        read_spi_slots();
         s_seq++;
         uint32_t spent = (uint32_t)aos_hal_uptime_ms() - t0;
         aos_hal_sleep_ms(spent < ROUND_MS - 200 ? ROUND_MS - spent : 200);

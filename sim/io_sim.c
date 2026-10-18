@@ -379,6 +379,10 @@ void aos_io_be_uart_lines_release(aos_io_uart_t *u)
  *   max31855  thermocouple converter, read-only, 32 bits: a K junction near
  *             24 °C that drifts a few degrees over a minute, the chip's own
  *             temperature near 26. "max31855:open" reports an open probe.
+ *   max6675   the older thermocouple converter, read-only, 16 bits: a K
+ *             junction near 180 °C (an oven warming up and cooling over two
+ *             minutes). "max6675:open" sets the open-probe bit. On no CS
+ *             by default: "48=max6675" puts it on one.
  *   mcp3008   8-channel 10-bit ADC, emulated bit by bit after the start bit
  *             (so the usual 01 80 00 and the other alignments work), VREF
  *             3.3 V: ch0 a slow sine, ch1 a pot at mid travel, ch2 a 30 s
@@ -394,7 +398,7 @@ void aos_io_be_uart_lines_release(aos_io_uart_t *u)
 #include <math.h>
 #include <pthread.h>
 
-enum { SD_NONE = 0, SD_LOOP, SD_FLASH, SD_TC, SD_TC_OPEN, SD_ADC, SD_EE25 = 32 /* + its type (eeprom_sim.c) */ };
+enum { SD_NONE = 0, SD_LOOP, SD_FLASH, SD_TC, SD_TC_OPEN, SD_ADC, SD_TC6675, SD_TC6675_OPEN, SD_EE25 = 32 /* + its type (eeprom_sim.c) */ };
 
 typedef struct {
     int8_t any;                 /* the chip on every CS, 0 = per CS */
@@ -413,6 +417,7 @@ static int dev_named(const char *n, size_t len)
         { "none", SD_NONE }, { "loop", SD_LOOP }, { "loopback", SD_LOOP },
         { "w25q128", SD_FLASH }, { "flash", SD_FLASH },
         { "max31855", SD_TC }, { "max31855:open", SD_TC_OPEN },
+        { "max6675", SD_TC6675 }, { "max6675:open", SD_TC6675_OPEN },
         { "mcp3008", SD_ADC }, { "adc", SD_ADC },
     };
     for (size_t i = 0; i < sizeof N / sizeof N[0]; i++)
@@ -545,6 +550,15 @@ static void tc_xfer(bool open_probe, uint8_t *rx, size_t n)
     for (size_t i = 0; i < n; i++) rx[i] = i < 4 ? (uint8_t)(w >> (24 - 8 * i)) : 0x00;
 }
 
+static void tc6675_xfer(bool open_probe, uint8_t *rx, size_t n)
+{
+    double t = sim_t();
+    double tc = 180.0 + 60.0 * sin(t / 20.0) + jitter(0.3);
+    uint16_t w = (uint16_t)(((uint32_t)lround(tc / 0.25) & 0xFFF) << 3);
+    if (open_probe) w = 0x0004;
+    for (size_t i = 0; i < n; i++) rx[i] = i < 2 ? (uint8_t)(w >> (8 - 8 * i)) : 0x00;
+}
+
 static double adc_volts(int ch)
 {
     double t = sim_t();
@@ -616,6 +630,8 @@ bool aos_io_be_spi_xfer(aos_io_spi_t *s, const uint8_t *tx, uint8_t *rx, size_t 
     case SD_FLASH:  flash_xfer(wire_tx, wire_rx, n); max_hz = 50000000; mode_ok = s->mode == 0 || s->mode == 3; break;
     case SD_TC:
     case SD_TC_OPEN: tc_xfer(chip == SD_TC_OPEN, wire_rx, n); max_hz = 5000000; mode_ok = s->mode == 0; break;
+    case SD_TC6675:
+    case SD_TC6675_OPEN: tc6675_xfer(chip == SD_TC6675_OPEN, wire_rx, n); max_hz = 4300000; mode_ok = s->mode == 0; break;
     case SD_ADC:    adc_xfer(wire_tx, wire_rx, n); max_hz = 2000000; mode_ok = s->mode == 0 || s->mode == 3; break;
     default:
         if (chip >= SD_EE25) { sim_ee25_xfer(chip - SD_EE25, wire_tx, wire_rx, n); max_hz = 10000000; mode_ok = s->mode == 0 || s->mode == 3; }

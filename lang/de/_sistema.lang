@@ -7479,3 +7479,13 @@ no se pudo cargar %s: %s	%s konnte nicht geladen werden: %s
 
 #: apps/emulador  (nombre de app)
 Emulador	Emulator
+Contestó %04X: no es lo que manda un MAX6675. ¿Es otro chip, o el modo SPI?	Antwort %04X: So antwortet kein MAX6675. Ein anderer Chip oder der SPI-Modus?
+Termocupla %.2f °C	Thermoelement %.2f °C
+MAX6675: temperatura	MAX6675: Temperatur
+Termocupla tipo K, de 0 a 1024 °C, por SPI	Thermoelement Typ K, 0 bis 1024 °C, über SPI
+No hay puertos SPI en modules.txt.	In modules.txt gibt es keine SPI-Ports.
+El del puerto (GPIO%d)	Der des Ports (GPIO%d)
+El del puerto (no tiene)	Der des Ports (er hat keinen)
+Cada chip en los mismos cables lleva su propio CS.	Jeder Chip an denselben Leitungen hat seinen eigenen CS.
+Pinball 3D	Pinball 3D
+No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?	Keine Antwort: MISO blieb auf 1. Versorgung, CS, Kabel?

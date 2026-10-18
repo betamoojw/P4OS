@@ -256,6 +256,7 @@ static const char *chip_what(const char *id)
     if (!strcmp(id, "ina219")) return _("Tensión, corriente y potencia, hasta 26 V");
     if (!strcmp(id, "ina226")) return _("Tensión, corriente y potencia, hasta 36 V");
     if (!strcmp(id, "ads1115")) return _("ADC de 16 bits, 4 entradas");
+    if (!strcmp(id, "max6675")) return _("Termocupla tipo K, de 0 a 1024 °C, por SPI");
     return "";
 }
 
@@ -314,14 +315,24 @@ static void fmt_err(const char *err, char *out, size_t n)
 {
     const char *d = strchr(err, ':');
     d = d ? d + 1 : "";
-    if (!strncmp(err, "nack", 4)) scpy(out, n, _("No contesta en esa dirección"));
+    if (!strncmp(err, "nack:spi", 8)) scpy(out, n, _("No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?"));
+    else if (!strncmp(err, "nack", 4)) scpy(out, n, _("No contesta en esa dirección"));
     else if (!strncmp(err, "crc", 3)) scpy(out, n, _("Llegó una lectura con el CRC mal"));
     else if (!strncmp(err, "id", 2)) snprintf(out, n, _("En esa dirección hay otro chip (dice %s)"), d);
     else if (!strncmp(err, "notready", 8)) scpy(out, n, _("Todavía no midió"));
     else if (!strncmp(err, "busy", 4)) snprintf(out, n, _("Los pines los tiene %s"), d);
     else if (!strncmp(err, "port", 4)) scpy(out, n, _("No se pudo abrir el puerto"));
     else if (!strncmp(err, "board", 5)) snprintf(out, n, _("Ahí está el %s de la placa"), d);
+    else if (!strncmp(err, "open", 4)) scpy(out, n, _("La termocupla está abierta (o no está conectada)"));
     else scpy(out, n, err);
+}
+
+/* Where a sensor is: an I2C address, or an SPI chip's chip select */
+static void sens_where(const aos_sensor_t *s, char *out, size_t n)
+{
+    const aos_io_port_t *p = aos_io_port_find(s->port);
+    if (p && p->kind == AOS_PORT_SPI) snprintf(out, n, "CS%u", (unsigned)s->addr);
+    else snprintf(out, n, "0x%02X", s->addr);
 }
 
 static void fmt_msg(const aos_mod_msg_t *m, char *out, size_t n)
@@ -920,11 +931,35 @@ static int ports_of_kind(int kind, const aos_io_port_t **out, int max)
     return n;
 }
 
+/* The port kind the chosen chip goes on */
+static int form_port_kind(void)
+{
+    if (F.kind == F_RS485) return AOS_PORT_UART;
+    return aos_sensor_chip_at(F.kind)->spi ? AOS_PORT_SPI : AOS_PORT_I2C;
+}
+
+/* An SPI chip's chip select: the port's own (choice 0), or a header pin
+ * nobody holds and no port uses (choices 1..) */
+static int cs_choices(int *gpios, int max)
+{
+    int n = 0;
+    const aos_io_pin_t *h = aos_io_header();
+    for (int i = 0; i < 40 && n < max; i++) {
+        int g = h[i].gpio;
+        if (g < 0 || (h[i].flags & (AOS_PIN_RESERVED | AOS_PIN_BOARD)) || aos_io_owner(g)) continue;
+        bool port_pin = false;
+        for (int p = 0; p < aos_io_port_count(); p++)
+            for (int k = 0; k < 4; k++) port_pin |= aos_io_port_at(p)->pins[k] == g;
+        if (!port_pin) gpios[n++] = g;
+    }
+    return n;
+}
+
 static void form_line(char *out, size_t n, bool *ok)
 {
     const aos_io_port_t *pts[AOS_IO_PORT_MAX];
     bool rs = F.kind == F_RS485;
-    int np = ports_of_kind(rs ? AOS_PORT_UART : AOS_PORT_I2C, pts, AOS_IO_PORT_MAX);
+    int np = ports_of_kind(form_port_kind(), pts, AOS_IO_PORT_MAX);
     *ok = np > 0;
     if (!np) { out[0] = 0; return; }
     if (F.port >= np) F.port = 0;
@@ -936,6 +971,15 @@ static void form_line(char *out, size_t n, bool *ok)
         return;
     }
     const aos_sensor_chip_t *c = aos_sensor_chip_at(F.kind);
+    if (c->spi) {
+        int gp[40], ng = cs_choices(gp, 40);
+        if (F.addr > ng) F.addr = 0;
+        aos_modules_free_name(c->id, name, sizeof name);
+        size_t o = (size_t)snprintf(out, n, "module %s %s", name, pts[F.port]->name);
+        if (F.addr > 0 && o < n) snprintf(out + o, n - o, " cs=%d", gp[F.addr - 1]);
+        else if (pts[F.port]->pins[3] < 0) *ok = false;     /* the port has no CS: one must be chosen */
+        return;
+    }
     if (F.addr >= c->naddr) F.addr = 0;
     aos_modules_free_name(c->id, name, sizeof name);
     size_t o = (size_t)snprintf(out, n, "module %s %s addr=0x%02X", name, pts[F.port]->name, c->addrs[F.addr]);
@@ -992,15 +1036,31 @@ static void form_build(void)
                    : chip_what(c->id), iw);
 
     const aos_io_port_t *pts[AOS_IO_PORT_MAX];
-    int np = ports_of_kind(rs ? AOS_PORT_UART : AOS_PORT_I2C, pts, AOS_IO_PORT_MAX);
+    int pk = form_port_kind();
+    int np = ports_of_kind(pk, pts, AOS_IO_PORT_MAX);
     section(sh, _("PUERTO"));
-    if (!np) caption(sh, rs ? _("No hay puertos UART en modules.txt.") : _("No hay puertos I2C en modules.txt."), iw);
+    if (!np) caption(sh, pk == AOS_PORT_UART ? _("No hay puertos UART en modules.txt.")
+                       : pk == AOS_PORT_SPI ? _("No hay puertos SPI en modules.txt.") : _("No hay puertos I2C en modules.txt."), iw);
     r = chips_row(sh, iw);
     for (int i = 0; i < np; i++) chip(r, pts[i]->name, F.port == i, f_port_cb, (void *)(intptr_t)i);
     if (np && !rs && !strcmp(pts[F.port < np ? F.port : 0]->name, "i2c.board"))
         caption(sh, _("Ojo: el bus de la placa ya tiene el ES7210 en 0x40, donde suelen estar los INA219."), iw);
     char t[32];
-    if (!rs) {
+    if (!rs && c->spi) {
+        /* the chip select: the port's, or a free pin for a second chip on the same wires */
+        section(sh, "CS");
+        r = chips_row(sh, iw);
+        const aos_io_port_t *pt = np ? pts[F.port < np ? F.port : 0] : NULL;
+        if (pt && pt->pins[3] >= 0) snprintf(t, sizeof t, _("El del puerto (GPIO%d)"), pt->pins[3]);
+        else scpy(t, sizeof t, _("El del puerto (no tiene)"));
+        chip(r, t, F.addr == 0, f_addr_cb, (void *)(intptr_t)0);
+        int gp[40], ng = cs_choices(gp, 40);
+        for (int i = 0; i < ng; i++) {
+            snprintf(t, sizeof t, "GPIO%d", gp[i]);
+            chip(r, t, F.addr == i + 1, f_addr_cb, (void *)(intptr_t)(i + 1));
+        }
+        caption(sh, _("Cada chip en los mismos cables lleva su propio CS."), iw);
+    } else if (!rs) {
         section(sh, _("DIRECCIÓN"));
         r = chips_row(sh, iw);
         for (int i = 0; i < c->naddr; i++) {
@@ -1288,7 +1348,9 @@ static void sensor_card(lv_obj_t *parent, int i, const aos_sensor_t *s, int32_t 
     lv_obj_t *nm = aos_label(head, s->name, aos_font_body, AOS_C_TEXT);
     lv_obj_align(nm, LV_ALIGN_LEFT_MID, 44, 0);
     char t[64];
-    snprintf(t, sizeof t, "%s · %s 0x%02X", s->chip, s->port, s->addr);
+    char where[8];
+    sens_where(s, where, sizeof where);
+    snprintf(t, sizeof t, "%s · %s %s", s->chip, s->port, where);
     lv_obj_t *info = aos_label(head, t, aos_font_caption, AOS_C_DIM);
     lv_obj_align(info, LV_ALIGN_RIGHT_MID, 0, -12);
     lv_obj_t *tag = aos_label(head, s->declared ? "modules.txt" : _("detectado"), aos_font_tiny, s->declared ? C_MOD : lv_color_hex(0x93C5FD));

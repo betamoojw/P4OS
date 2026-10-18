@@ -67,6 +67,7 @@ pins that sit together:
 | INA219 | bus voltage, shunt voltage, current, power | 0x40 to 0x4F | power-on config 0x399F | `module ina219 i2c.ext addr=0x40 shunt=100` |
 | INA226 | bus voltage, shunt voltage, current, power | 0x40 to 0x4F | manufacturer id 0x5449 ("TI") at 0xFE | `module ina226 i2c.ext addr=0x40 shunt=100` |
 | ADS1115 | four single-ended voltages, A0 to A3 | 0x48 to 0x4B | threshold registers at 0x8000/0x7FFF | `module ads1115 i2c.ext addr=0x48 gain=4096` |
+| MAX6675 (SPI) | a type K thermocouple, 0 to 1023.75 °C | its CS | cannot be: declared only | `module max6675 spi.a`, `module horno spi.a chip=max6675 cs=48` |
 
 ### Units
 
@@ -91,6 +92,7 @@ The UIs scale them for a bench: mV, mA and mW below 1. The value keys are:
 | BH1750 | `lux` |
 | INA219/226 | `bus`, `current`, `power`, `shunt` |
 | ADS1115 | `a0` .. `a3` |
+| MAX6675 | `temp` |
 
 ### What each driver does
 
@@ -129,6 +131,23 @@ The UIs scale them for a bench: mV, mA and mW below 1. The value keys are:
   - `gain=` is the full scale in mV: 6144, 4096 (the default, so 3.3 V
     fits), 2048, 1024, 512 or 256.
   - Never put more than VDD + 0.3 V on an input, whatever the range.
+- **MAX6675 (SPI, 2026-10-18):**
+  - The only SPI chip the service reads. It is declared, never detected:
+    an SPI chip cannot be asked what it is without a write it might take
+    for a command.
+  - Each round opens the port with the chip's own CS, reads 16 bits in mode
+    0 at 1 MHz, and closes it. The CS is the module's `cs=`, else the
+    port's; two thermocouples on the same wires each need their own CS.
+    In the service's table, `addr` holds that CS's GPIO, and the UIs show
+    it as "CS48".
+  - A read stops the conversion under way and CS going up starts the next
+    one (220 ms). A read a second never catches one half done.
+  - D15 and D1 are always 0, D2 is set with the thermocouple open, and D14
+    to D3 are the temperature in quarters of a degree. 0xFFFF is MISO's
+    pull-up with nobody driving it: "No contesta" (`nack:spi`). An open
+    thermocouple is the error `open`. A word with D15 or D1 set is another
+    chip or a wrong SPI mode (`id:<word>`).
+  - In the simulator: `P4_SIM_SPI_A="48=max6675"`, or `max6675:open`.
 
 ## Declaring a module
 
@@ -145,6 +164,9 @@ module <name> <port> [chip=<chip>] [addr=0x..] [shunt=<mΩ>] [gain=<mV>]
   that chip. That is how two of the same kind get different names.
 - **`addr=`** is only needed when the address is not the usual one.
 
+On an SPI port, `cs=` is the chip select when it is not the port's own:
+`module caldera spi.a chip=max6675 cs=48`.
+
 A declared sensor is read whatever autodetect thinks. If it does not answer,
 it shows the reason:
 
@@ -152,7 +174,8 @@ it shows the reason:
 - a bad CRC;
 - another chip at that address (with the id it gave);
 - the pins are someone else's;
-- the board has one of its own chips there.
+- the board has one of its own chips there;
+- on SPI, MISO stayed high (nobody there), or the thermocouple is open.
 
 The value names come from the module name: `aos_sensor_value("banco",
 "current", &a)`.
@@ -161,7 +184,8 @@ To edit `modules.txt`:
 
 - **In the app:** Módulos > Puertos. **Editar** opens the file. It is
   checked on every keystroke, and Save stays off until it would load.
-  **Agregar** builds a line from chips: chip, port, address, shunt or range.
+  **Agregar** builds a line from chips: chip, port, address (or CS for an
+  SPI chip), shunt or range.
 - **In the portal:** the Expansión page, with the same checks and form.
 - **Anything else** that writes the file (Archivos, `PUT /api/fs/put`) is
   also fine. The portal reloads `modules.txt` whenever it is written.
@@ -375,6 +399,8 @@ port's, those of its modules, or none. Then:
 - **Examples:** these fill the bytes, set mode 0 at 1 MHz and send:
   - "Memoria flash: leer ID (9F)": the maker and size.
   - "MAX31855: temperatura": both temperatures, or the fault.
+  - "MAX6675: temperatura": two bytes, the thermocouple's temperature, or
+    that it is open.
   - "MCP3008: canal N": the count and the volts. The CH chip changes N.
   - "Lazo": 16 bytes that must come back. **Try this first on the board:**
     a jumper from pin 34 to pin 36.

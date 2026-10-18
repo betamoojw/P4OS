@@ -1431,7 +1431,7 @@ Puertos y módulos	Ports and modules
 Agregar módulo	Add module
 
 #: components/aos_portal/web/app.js:1602
-Sintaxis: port <nombre> <pines> y module <nombre> <puerto> [addr= chip= shunt= gain=]. Los sensores que se reconocen solos no hace falta declararlos; declarados, se leen aunque no se identifiquen (docs/MODULES.md).	Syntax: port <name> <pins> and module <name> <port> [addr= chip= shunt= gain=]. Sensors that are recognized on their own need no declaring; declared ones are read even if they can't be identified (docs/MODULES.md).
+Sintaxis: port <nombre> <pines> y module <nombre> <puerto> [addr= chip= shunt= gain= cs=]. Los sensores que se reconocen solos no hace falta declararlos; declarados, se leen aunque no se identifiquen (docs/MODULES.md).	Syntax: port <name> <pins> and module <name> <port> [addr= chip= shunt= gain= cs=]. Sensors that are recognized on their own need no declaring; declared ones are read even if they can't be identified (docs/MODULES.md).
 
 #: components/aos_portal/web/app.js:1628
 Reloj	Clock
@@ -2046,3 +2046,5 @@ La autoridad HTTPS de la placa	The board's HTTPS authority
 Grabar firmware	Flash firmware
 
 Confirmar	Confirm
+CS del puerto	The port's CS
+No hay puertos SPI.	There are no SPI ports.

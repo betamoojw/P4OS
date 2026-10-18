@@ -1433,14 +1433,17 @@ async function pageExpansion() {
     if (k0) fKind.value = k0;
     formKind();
   }
+  /* an SPI chip's chip select: the port's, or a header pin nobody holds and no port uses */
+  function csChoices() { return ex.header.filter(p => p.gpio >= 0 && ['free', 'adc', 'care'].includes(p.cls)).map(p => p.gpio); }
   function formKind() {
     const rs = fKind.value === 'rs485', c = ex.chips.find(x => x.id === fKind.value);
-    const kinds = ex.ports.filter(p => p.kind === (rs ? 'uart' : 'i2c'));
+    const kinds = ex.ports.filter(p => p.kind === (rs ? 'uart' : c.spi ? 'spi' : 'i2c'));
     const p0 = fPort.value;
     put(fPort, kinds.map(p => h('option', { value: p.name }, p.name)));
     if (kinds.some(p => p.name === p0)) fPort.value = p0;
     fAddr.style.display = rs ? 'none' : '';
-    if (!rs) put(fAddr, c.addrs.map(a => h('option', { value: a }, hex(a))));
+    if (!rs && c.spi) put(fAddr, h('option', { value: '' }, tr('CS del puerto')), csChoices().map(g => h('option', { value: g }, 'CS GPIO' + g)));
+    else if (!rs) put(fAddr, c.addrs.map(a => h('option', { value: a }, hex(a))));
     const opts = rs ? [[9600, '9600'], [19200, '19200'], [38400, '38400'], [115200, '115200']]
       : c.shunt ? [[100, `shunt ${num(0.1, 1)} Ω (R100)`], [50, `shunt ${num(0.05, 2)} Ω (R050)`], [10, `shunt ${num(0.01, 2)} Ω (R010)`]]
       : c.gain ? [[4096, `±${num(4.096, 3)} V`], [6144, `±${num(6.144, 3)} V`], [2048, `±${num(2.048, 3)} V`], [1024, `±${num(1.024, 3)} V`]] : [];
@@ -1450,10 +1453,11 @@ async function pageExpansion() {
   }
   function formLine() {
     const rs = fKind.value === 'rs485', c = ex.chips.find(x => x.id === fKind.value);
-    if (!fPort.value) { fLine.textContent = rs ? tr('No hay puertos UART.') : tr('No hay puertos I2C.'); fAdd.disabled = true; return; }
+    if (!fPort.value) { fLine.textContent = rs ? tr('No hay puertos UART.') : c.spi ? tr('No hay puertos SPI.') : tr('No hay puertos I2C.'); fAdd.disabled = true; return; }
     fAdd.disabled = false;
     let l = `module ${freeName(rs ? 'rs485' : c.id)} ${fPort.value}`;
     if (rs) l += ` baud=${fOpt.value}`;
+    else if (c.spi) { if (fAddr.value) l += ` cs=${fAddr.value}`; }
     else {
       l += ` addr=${hex(+fAddr.value)}`;
       if (c.shunt) l += ` shunt=${fOpt.value}`;
@@ -1561,7 +1565,7 @@ async function pageExpansion() {
       : tr('%s sensores', p.found) + (p.scan_age_ms != null ? ' · ' + tr('buscó hace %s s', Math.round(p.scan_age_ms / 1000)) : '')))));
     put(sens, se.sensors.length ? se.sensors.map(s => h('div', { class: 'card pad xp-s' },
       h('div', { class: 'btns', style: 'justify-content:space-between' }, h('b', { style: 'font-size:18px' }, s.name),
-        h('span', { class: 'muted small' }, `${s.chip} · ${s.port} ${hex(s.addr)} · `, h('span', { style: s.declared ? '' : 'color:#93c5fd' }, s.declared ? 'modules.txt' : tr('detectado')))),
+        h('span', { class: 'muted small' }, `${s.chip} · ${s.port} ${s.where || hex(s.addr)} · `, h('span', { style: s.declared ? '' : 'color:#93c5fd' }, s.declared ? 'modules.txt' : tr('detectado')))),
       h('div', { class: 'xp-vals' }, s.values.map(v => h('div', { class: 'xp-v' + (xpSel && xpSel.name === s.name && xpSel.key === v.key ? ' sel' : ''),
         onclick: () => { xpSel = { name: s.name, key: v.key, q: v.q }; drawSensors(); loadHist(); } },
         h('div', { class: 'muted small' }, v.name), h('div', { class: 'mid' }, xpFmt(v.q, v.v))))),
@@ -1599,7 +1603,7 @@ async function pageExpansion() {
     h('div', { class: 'card' }, ta, h('div', { class: 'row' }, ck, revert, save)),
     h('div', { class: 'card pad', style: 'margin-top:14px' }, h('b', {}, tr('Agregar módulo')),
       h('div', { class: 'btns', style: 'margin-top:10px' }, fKind, fPort, fAddr, fOpt, fAdd), h('div', { style: 'margin-top:10px' }, fLine)),
-    h('p', { class: 'note' }, tr('Sintaxis: port <nombre> <pines> y module <nombre> <puerto> [addr= chip= shunt= gain=]. Los sensores que se reconocen solos no hace falta declararlos; declarados, se leen aunque no se identifiquen (docs/MODULES.md).')));
+    h('p', { class: 'note' }, tr('Sintaxis: port <nombre> <pines> y module <nombre> <puerto> [addr= chip= shunt= gain= cs=]. Los sensores que se reconocen solos no hace falta declararlos; declarados, se leen aunque no se identifiquen (docs/MODULES.md).')));
   await loadEx(true);
   await loadSensors();
   clearTimeout(xpT);

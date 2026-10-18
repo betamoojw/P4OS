@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- **MAX6675 thermocouples, in Módulos and in Bus.** The sensor service reads
+  SPI chips too, declared in `modules.txt` (`module horno spi.a
+  chip=max6675`, with `cs=` for a second one on the same wires): each round
+  opens the port with the chip's own CS, reads it and closes it. Módulos
+  adds one from its form (chip, SPI port and CS) and shows it as
+  "spi.a CS49"; an open thermocouple and a chip that does not answer are
+  said in words. Bus has a "MAX6675: temperatura" example, and the
+  simulator emulates one (`P4_SIM_SPI_A="48=max6675"`). Tried on the board
+  with a type K probe: 156 reads without an error, 26 to 63 °C in 15 s
+  with a lighter at the tip (docs/MODULES.md).
+
 ## 0.18.0 — 2026-10-17
 
 - **Pinball 3D** (`apps/pinball`): a 3D pinball after Space Cadet, upright,

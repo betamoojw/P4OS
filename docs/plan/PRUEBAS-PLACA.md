@@ -438,6 +438,11 @@ Que necesitan la mano del usuario o equipos:
       `POST /api/apps/boot`, reinicio, y el registro dijo `aos.clock started
       hidden` a los 3,9 s; el usuario lo sacó desde Ajustes > Desarrollador
       y la lista quedó vacía.
+- [x] Apps en segundo plano (2026-10-19): Datalog registrando muestra el
+      punto rojo en la barra y sigue vivo con cinco apps más abiertas
+      (`keeping aos.datalog ... running: background`); después de una OTA
+      arrancó solo (`started hidden`). Dibujo, con el DS18B20 leyéndose,
+      ya no queda como "running: pins": se cierra al salir (1674 KB).
 - [x] Punto de acceso propio (2026-10-01): el C6 de fábrica hace SoftAP en
       APSTA; el usuario se unió con el QR desde el teléfono y abrió el portal
       con el otro. Con el AP prendido la RAM interna no cambió (291 KB) y la

@@ -104,7 +104,10 @@ bool aos_io_claim(int gpio, const char *owner)
     lock();
     bool ok = !s_owner[gpio][0] || !strcmp(s_owner[gpio], owner);
     if (ok && !s_owner[gpio][0]) {
-        const char *app = aos_hal_app_context();
+        /* the sensor service's rounds are the system's, whatever app is in
+         * front: under its name a 1-Wire bus held 750 ms a second made the
+         * app look busy, and it was never closed (2026-10-19) */
+        const char *app = strcmp(owner, AOS_IO_OWNER_SENSORS) ? aos_hal_app_context() : NULL;
         snprintf(s_app[gpio], sizeof s_app[gpio], "%s", app ? app : "");
     }
     if (ok) snprintf(s_owner[gpio], sizeof s_owner[gpio], "%s", owner);

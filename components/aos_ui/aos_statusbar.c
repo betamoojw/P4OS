@@ -6,8 +6,10 @@
  * app with AOS_APP_FLAG_UNDER_BAR draws under it and picks the glyph colour
  * with aos_ui_statusbar_style().
  *
- * The right-hand glyphs, left to right: the modules on the header (when
- * any is active), Home Assistant, the SD card, Wi-Fi with its bars, and the
+ * The right-hand glyphs, left to right: what apps working in the background
+ * show (aos_ui_status_icon_set(): a logger logging, up to four), the
+ * modules on the header (when any is active), Home Assistant, the SD card,
+ * Wi-Fi with its bars, and the
  * battery - only when a battery is connected (AOS_CAP_BATTERY); on the bench
  * the board lives on USB and a permanent "100 %" would be noise.
  */
@@ -22,6 +24,40 @@
 
 static lv_obj_t *s_bar, *s_time, *s_title, *s_right;
 static lv_obj_t *s_wifi, *s_sd, *s_ha, *s_mod, *s_bat, *s_bat_pct;
+
+/* The apps' own glyphs: set from any thread (only these fields change),
+ * drawn from the UI's tick, five times a second */
+#define APP_ICONS 4
+static struct {
+    char      id[40];
+    char      glyph[8];                 /* one glyph of aos_sym_28, UTF-8 */
+    uint32_t  rgb;                      /* 0: the bar's own colour */
+    lv_obj_t *l;
+} s_app[APP_ICONS];
+static volatile bool s_app_dirty;
+
+bool aos_ui_status_icon_set(const char *app_id, const char *glyph, uint32_t rgb)
+{
+    if (!app_id || !*app_id) return false;
+    int at = -1, free_at = -1;
+    for (int i = 0; i < APP_ICONS; i++) {
+        if (!strcmp(s_app[i].id, app_id)) at = i;
+        else if (!s_app[i].id[0] && free_at < 0) free_at = i;
+    }
+    if (!glyph || !*glyph) {
+        if (at >= 0) { s_app[at].id[0] = 0; s_app_dirty = true; }
+        return true;
+    }
+    if (at < 0) at = free_at;
+    if (at < 0 || strlen(glyph) >= sizeof s_app[0].glyph) return false;
+    snprintf(s_app[at].id, sizeof s_app[at].id, "%s", app_id);
+    snprintf(s_app[at].glyph, sizeof s_app[at].glyph, "%s", glyph);
+    s_app[at].rgb = rgb;
+    s_app_dirty = true;
+    return true;
+}
+
+void aos_statusbar_app_gone(const char *app_id) { aos_ui_status_icon_set(app_id, NULL, 0); }
 
 static lv_obj_t *glyph(lv_obj_t *parent)
 {
@@ -58,6 +94,11 @@ void aos_statusbar_create(lv_obj_t *layer)
     lv_obj_set_style_pad_column(s_right, 10, 0);
     lv_obj_remove_flag(s_right, LV_OBJ_FLAG_CLICKABLE);
 
+    for (int i = 0; i < APP_ICONS; i++) {
+        s_app[i].l = glyph(s_right);
+        lv_obj_add_flag(s_app[i].l, LV_OBJ_FLAG_HIDDEN);
+    }
+    s_app_dirty = true;                 /* one set before the bar existed */
     s_mod = glyph(s_right);
     s_ha = glyph(s_right);
     s_sd = glyph(s_right);
@@ -95,6 +136,18 @@ static void set_glyph(lv_obj_t *l, const char *g, lv_opa_t opa)
     lv_obj_remove_flag(l, LV_OBJ_FLAG_HIDDEN);
     if (strcmp(lv_label_get_text(l), g)) lv_label_set_text(l, g);
     lv_obj_set_style_text_opa(l, opa, 0);
+}
+
+void aos_statusbar_apps_tick(void)
+{
+    if (!s_app_dirty || !s_bar) return;
+    s_app_dirty = false;
+    for (int i = 0; i < APP_ICONS; i++) {
+        if (!s_app[i].l) continue;
+        set_glyph(s_app[i].l, s_app[i].id[0] ? s_app[i].glyph : NULL, LV_OPA_COVER);
+        if (s_app[i].rgb) lv_obj_set_style_text_color(s_app[i].l, lv_color_hex(s_app[i].rgb), 0);
+        else lv_obj_remove_local_style_prop(s_app[i].l, LV_STYLE_TEXT_COLOR, 0);
+    }
 }
 
 static const char *wifi_glyph(void)

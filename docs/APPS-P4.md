@@ -193,6 +193,14 @@ that must go on after a power cut or a firmware update.
 - The user sees the list in Settings, Developer, "Arrancan con la placa",
   and a tap takes an app off. The portal has it too: `GET /api/apps/boot`,
   and `POST /api/apps/boot?id=<id>&on=0|1`.
+- **A glyph in the status bar** while it works hidden:
+  `aos_ui_status_icon_set(self->desc.id, AOS_SYM_RECORD, 0xFF453A)` puts
+  one of `aos_sys_glyphs.h` left of the system's (Datalog's red dot while
+  it logs), and `NULL` takes it off; closing the app does too. Up to four
+  apps at once. Callable from any thread: the bar draws it within 200 ms.
+- **The limit of apps alive** (four besides the one in front) never closes
+  an app with something running: `AOS_APP_FLAG_BACKGROUND`, busy, pins,
+  sound. Only the idle ones go, the least recently used first.
 - The clock may not be set yet at that moment: there is no battery-backed
   RTC chip on the board, and the time comes from the network. Check
   `aos_hal_time_is_valid()` before stamping a reading.

@@ -56,6 +56,9 @@ const aos_io_pin_t *aos_io_pin_of_gpio(int gpio);   /* NULL: not on the header *
 
 /* ---- who holds a pin ---- */
 
+/* The sensor service's owner name (aos_sensors.c). Its claims are the
+ * system's: they count for no app (aos_io_held_for_app). */
+#define AOS_IO_OWNER_SENSORS "Sensores"
 bool        aos_io_claim(int gpio, const char *owner);   /* false: taken or not free */
 void        aos_io_release(int gpio, const char *owner);
 void        aos_io_release_owner(const char *owner);     /* all of an owner's pins */

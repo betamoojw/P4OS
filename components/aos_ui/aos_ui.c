@@ -207,6 +207,7 @@ static void destroy_app(aos_app_t *app)
     if (!app->running && !app->root) return;
     aos_hwkbd_app_gone(app->desc.id);
     aos_hwmouse_app_gone(app->desc.id);
+    aos_statusbar_app_gone(app->desc.id);      /* its glyph in the bar, if it had one */
     if (app->running && app->destroy) app->destroy(app, app->inst);
     if (app->root) lv_obj_delete(app->root);
     app->inst = NULL;
@@ -457,12 +458,18 @@ static bool keepable(const aos_app_t *app)
     return app->desc.flags & (AOS_APP_FLAG_KEEP | AOS_APP_FLAG_BACKGROUND);
 }
 
+static const char *busy_why(const aos_app_t *app, bool leaving);
+
+/* More than AOS_UI_ALIVE_MAX apps alive: the least recently used go, but
+ * never one with something running (busy_why(): a logger in the background,
+ * music, pins it drives), which would stop doing it until reopened. With
+ * all of them busy the count may go over; memory has trim_for_memory(). */
 static void enforce_alive_max(aos_app_t *keep)
 {
     aos_app_t *alive[AOS_MAX_APPS];
     int n = aos_ui_alive(alive, AOS_MAX_APPS);
     for (int i = n - 1; i >= 0 && n > AOS_UI_ALIVE_MAX; i--) {
-        if (alive[i] == keep || alive[i] == s_cur) continue;
+        if (alive[i] == keep || alive[i] == s_cur || busy_why(alive[i], false)) continue;
         aos_hal_log("ui", "closing %s: more than %d apps alive", alive[i]->desc.id, AOS_UI_ALIVE_MAX);
         destroy_app(alive[i]);
         n--;
@@ -1323,6 +1330,7 @@ void aos_ui_tick(void)
         if (!s_used[i] || !a->running || !a->tick) continue;
         if (a == s_cur || (a->desc.flags & AOS_APP_FLAG_BACKGROUND)) a->tick(a, a->inst);
     }
+    aos_statusbar_apps_tick();          /* an app's glyph in the bar, set from any thread */
     aos_banner_tick();
     aos_lock_tick();
     aos_pair_ui_tick();

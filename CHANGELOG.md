@@ -44,6 +44,15 @@
   portal has `GET/POST /api/apps/boot` (docs/APPS-P4.md, "Starting with
   the board").
 
+- **An app working in the background is never closed by the limit of
+  apps alive**, and can show a glyph of its own in the status bar
+  (`aos_ui_status_icon_set()`). Opening four more apps closed Datalog and
+  its logging stopped until it was opened again; now the limit only takes
+  apps with nothing running. Datalog shows a red dot while it logs.
+  And the sensor service's pins count for no app: with a 1-Wire bus held
+  750 ms a second, the app in front was taken for one driving pins and was
+  never closed.
+
 ## 0.18.0 — 2026-10-17
 
 - **Pinball 3D** (`apps/pinball`): a 3D pinball after Space Cadet, upright,

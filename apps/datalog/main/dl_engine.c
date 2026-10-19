@@ -29,6 +29,8 @@
  */
 #include "dl.h"
 
+static void running_shown(bool on);
+
 #define QMAX 8
 
 typedef struct {
@@ -425,7 +427,7 @@ void dl_engine_start(void)
     E.was_running = false;
     E.nin = E.nout = 0;
     aos_sensors_start();
-    aos_ui_boot_start_set(DL_APP_ID, E.cfg.running);
+    running_shown(E.cfg.running);
     E.stop = false;
     E.alive = true;
     if (!aos_hal_thread_start("datalog", thread_fn, NULL, 8192, 3)) {
@@ -490,6 +492,14 @@ void dl_ch_delete(int i)
     dl_unlock();
 }
 
+/* Logging or not, as the system sees it: the app starts with the board
+ * while it logs, and a red dot in the status bar says so */
+static void running_shown(bool on)
+{
+    aos_ui_boot_start_set(DL_APP_ID, on);
+    aos_ui_status_icon_set(DL_APP_ID, on ? AOS_SYM_RECORD : NULL, 0xFF453A);
+}
+
 void dl_set_running(bool on)
 {
     dl_lock();
@@ -498,7 +508,7 @@ void dl_set_running(bool on)
     if (was != on) changed();
     dl_unlock();
     /* a board that boots goes on logging, unless it was paused */
-    aos_ui_boot_start_set(DL_APP_ID, on);
+    running_shown(on);
 }
 
 void dl_set_semicolon(bool on)
@@ -526,5 +536,5 @@ void dl_reload(void)
     E.cfg_seq++;
     E.seq++;
     dl_unlock();
-    if (run_changed) aos_ui_boot_start_set(DL_APP_ID, cfg.running);
+    if (run_changed) running_shown(cfg.running);
 }

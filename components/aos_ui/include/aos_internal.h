@@ -46,6 +46,8 @@ lv_obj_t *aos_home_app_icon(lv_obj_t *parent, const aos_app_t *app, int32_t size
 void aos_statusbar_create(lv_obj_t *layer);
 void aos_statusbar_layout(void);         /* orientation changed */
 void aos_statusbar_tick(void);           /* once a second */
+void aos_statusbar_app_gone(const char *app_id);   /* destroy_app(): its glyph goes */
+void aos_statusbar_apps_tick(void);      /* the apps' glyphs, from aos_ui_tick() */
 void aos_statusbar_set_title(const char *title);
 lv_obj_t *aos_statusbar_obj(void);
 

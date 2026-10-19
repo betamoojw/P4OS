@@ -111,6 +111,12 @@ void        aos_ui_boot_start_ids(char *out, size_t n);
 bool        aos_ui_start_hidden(const char *id);
 /* main.c, once the card's apps are in: starts the list. */
 void        aos_ui_boot_start_run(void);
+/* A glyph of the app's own in the status bar, left of the system's, while
+ * it works in the background (a logger logging): one of aos_sys_glyphs.h,
+ * in rgb (0xRRGGBB; 0 the bar's colour). NULL takes it off; closing the app
+ * does too. Up to four apps at once: false when the bar is full. From any
+ * thread: the bar draws it at its next tick, within 200 ms. */
+bool        aos_ui_status_icon_set(const char *app_id, const char *glyph, uint32_t rgb);
 /* The live apps (in front or hidden), most recent first. */
 int         aos_ui_alive(aos_app_t **out, int max);
 void        aos_ui_close_others(void);     /* ends every app but the one in front (USB disk mode) */

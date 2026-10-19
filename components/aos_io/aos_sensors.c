@@ -38,7 +38,7 @@ static void scpy(char *d, size_t n, const char *s)
     d[i] = 0;
 }
 
-#define OWNER       "Sensores"
+#define OWNER       AOS_IO_OWNER_SENSORS
 #define XFER_MS     50
 #define ROUND_MS    1000
 #define SCAN_FAST   5000        /* autodetect while somebody looks */

@@ -161,6 +161,33 @@ bool aos_io_be_can_status(aos_io_can_t *c, aos_can_status_t *st);
 bool aos_io_be_can_recover(aos_io_can_t *c);
 void aos_io_be_can_close(aos_io_can_t *c);
 
+/* Pulses and counts (aos_io_pulse.c): the pins are claimed by the front */
+#define AOS_IO_EDGES_MAX 160
+struct aos_io_edges {
+    int8_t   gpio;
+    int      max;
+    char     owner[24];
+    void    *be;
+};
+bool aos_io_be_edges_open(aos_io_edges_t *e);
+void aos_io_be_edges_arm(aos_io_edges_t *e);
+int  aos_io_be_edges_wait(aos_io_edges_t *e, uint32_t idle_us, uint32_t timeout_ms);
+int  aos_io_be_edges_get(aos_io_edges_t *e, uint32_t *t_us, uint8_t *level, int max);
+void aos_io_be_edges_close(aos_io_edges_t *e);
+bool aos_io_be_pulse_out(int gpio, int level, uint32_t us);
+bool aos_io_be_shift_in(int data, int clk, int bits, int extra, uint32_t *out);
+
+struct aos_io_count {
+    int8_t   gpio;
+    bool     both;
+    uint32_t debounce_us;
+    char     owner[24];
+    void    *be;
+};
+bool     aos_io_be_count_open(aos_io_count_t *c, aos_gpio_mode_t pull);
+uint32_t aos_io_be_count_get(aos_io_count_t *c);
+void     aos_io_be_count_close(aos_io_count_t *c);
+
 bool aos_io_be_gpio_mode(int gpio, aos_gpio_mode_t mode);
 int  aos_io_be_gpio_get(int gpio);
 bool aos_io_be_gpio_set(int gpio, int level);

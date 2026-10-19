@@ -238,6 +238,49 @@ bool aos_io_gpio_mode(int gpio, aos_gpio_mode_t mode, const char *owner);
 int  aos_io_gpio_get(int gpio);                  /* 0/1, -1 if not available */
 bool aos_io_gpio_set(int gpio, int level);
 
+/* ---- pulses and counts (any usable GPIO of the header) ----
+ *
+ * For the sensors that speak in pulse widths and the ones that are counted,
+ * as the sensor service reads them on GPIO ports: a DHT22's bits, an
+ * HC-SR04's echo, an HX711's clocked bits, a flow meter's or a rain
+ * gauge's pulses. The pins become the owner's (aos_io_claim); closing
+ * leaves them claimed: the owner releases them.
+ *
+ * edges: every change of level on a pin, timed by an interrupt. The latency
+ * is a few microseconds and about the same for every edge, so a width is
+ * good to a microsecond or two; two edges closer than the latency can be
+ * missed (a decoder checks what it gets: a DHT's checksum). arm() forgets
+ * what came before and starts; wait() returns when max edges came, when
+ * none came for idle_us after the first, or after timeout_ms; get() gives
+ * each edge's time from the first and the level after it.
+ *
+ * pulse_out: a pulse of 'us' microseconds at 'level' on an output of the
+ * owner (an HC-SR04's 10 us trigger), then the other level.
+ *
+ * shift_in: 'bits' bits clocked in on the rising edges of clk, MSB first,
+ * then 'extra' clocks more (the HX711's gain and channel). Each clock is
+ * high about a microsecond, with interrupts held off only for that.
+ *
+ * count: edges counted while open, rising or both, as a 32-bit count that
+ * wraps. On the board the PCNT counts them when debounce_us is under 10
+ * (its glitch filter); a longer debounce (a reed switch's bounce) is
+ * counted by an interrupt that ignores an edge closer than debounce_us to
+ * the last one counted. */
+typedef struct aos_io_edges aos_io_edges_t;
+aos_io_edges_t *aos_io_edges_open(int gpio, int max, const char *owner);
+void aos_io_edges_arm(aos_io_edges_t *e);
+int  aos_io_edges_wait(aos_io_edges_t *e, uint32_t idle_us, uint32_t timeout_ms);   /* edges so far */
+int  aos_io_edges_get(aos_io_edges_t *e, uint32_t *t_us, uint8_t *level, int max);
+void aos_io_edges_close(aos_io_edges_t *e);
+
+bool aos_io_pulse_out(int gpio, int level, uint32_t us, const char *owner);
+bool aos_io_shift_in(int data, int clk, int bits, int extra, uint32_t *out, const char *owner);
+
+typedef struct aos_io_count aos_io_count_t;
+aos_io_count_t *aos_io_count_open(int gpio, aos_gpio_mode_t pull, bool both_edges, uint32_t debounce_us, const char *owner);
+uint32_t aos_io_count_get(aos_io_count_t *c);
+void aos_io_count_close(aos_io_count_t *c);
+
 /* ---- 1-Wire (any usable GPIO of the header) ----
  *
  * One bus per GPIO, for the DS18B20 and its family. On the board it is

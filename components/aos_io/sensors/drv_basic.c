@@ -118,12 +118,14 @@ static int bme_read(sens_io_t *io, sens_slot_t *s)
 
 const sens_drv_t DRV_BME280 = {
     .prio = SP_REG,
-    .pub = { "bme280", "BME280", { 0x76, 0x77 }, 2 },
+    .cat = SC(ENV),
+    .pub = { .id = "bme280", .name = "BME280", .addrs = { 0x76, 0x77 }, .naddr = 2 },
     .identify = bme_identify, .init = bme_init, .read = bme_read,
 };
 const sens_drv_t DRV_BMP280 = {
     .prio = SP_REG,
-    .pub = { "bmp280", "BMP280", { 0x76, 0x77 }, 2 },
+    .cat = SC(ENV),
+    .pub = { .id = "bmp280", .name = "BMP280", .addrs = { 0x76, 0x77 }, .naddr = 2 },
     .identify = bmp_identify, .init = bme_init, .read = bme_read,
 };
 
@@ -182,19 +184,22 @@ static int sht4_read(sens_io_t *io, sens_slot_t *s)
 
 const sens_drv_t DRV_SHT3X = {
     .prio = SP_CMD,
-    .pub = { "sht3x", "SHT3x", { 0x44, 0x45 }, 2 },
+    .cat = SC(TEMP),
+    .pub = { .id = "sht3x", .name = "SHT3x", .addrs = { 0x44, 0x45 }, .naddr = 2 },
     .identify = sht3_identify, .read = sht3_read,
 };
 const sens_drv_t DRV_SHT4X = {
     .prio = SP_CMD,
-    .pub = { "sht4x", "SHT4x", { 0x44, 0x45 }, 2 },
+    .cat = SC(TEMP),
+    .pub = { .id = "sht4x", .name = "SHT4x", .addrs = { 0x44, 0x45 }, .naddr = 2 },
     .probe = { 0x44, 0x45, 0x46 }, .nprobe = 3,
     .identify = sht4_identify, .read = sht4_read,
 };
 /* the last word at 0x44/0x45, after every chip that proves itself there */
 const sens_drv_t DRV_SHT3X_CAND = {
     .prio = SP_LAST,
-    .pub = { "sht3x", "SHT3x", { 0x44, 0x45 }, 2 },
+    .cat = SC(TEMP),
+    .pub = { .id = "sht3x", .name = "SHT3x", .addrs = { 0x44, 0x45 }, .naddr = 2 },
     .flags = SF_HIDDEN,
     .identify = sht3_candidate, .read = sht3_read,
 };
@@ -204,10 +209,18 @@ const sens_drv_t DRV_SHT3X_CAND = {
 typedef struct { bool nocrc; } aht_t;
 SPRIV_CHECK(aht_t);
 
+/* Any read of an AHT gives its status, then the last measurement and its
+ * CRC: a plain read, with no 0x71 written first, because a PCF8574A shares
+ * 0x38 and takes any byte written to it as its outputs. An expander answers
+ * a read with its port, the same byte over and over: that is not an AHT. */
 static int aht_identify(aos_io_i2c_t *b, uint8_t a)
 {
-    uint8_t c = 0x71, st = 0xFF;
-    if (si2c_wrrd(b, a, &c, 1, &st, 1) && !(st & 0x80) && (st & 0x08)) return ID_YES;
+    uint8_t r[7];
+    if (!si2c_rd(b, a, r, sizeof r)) return ID_NO;
+    bool same = true;
+    for (int i = 1; i < 7; i++) same &= r[i] == r[0];
+    if (same) return ID_NO;
+    if (!(r[0] & 0x80) && (r[0] & 0x08)) return ID_YES;
     return ID_MAYBE;
 }
 
@@ -249,7 +262,8 @@ static int aht_read(sens_io_t *io, sens_slot_t *s)
 
 const sens_drv_t DRV_AHT20 = {
     .prio = SP_CMD,
-    .pub = { "aht20", "AHT20", { 0x38 }, 1 },
+    .cat = SC(TEMP),
+    .pub = { .id = "aht20", .name = "AHT20", .addrs = { 0x38 }, .naddr = 1 },
     .identify = aht_identify, .init = aht_init, .read = aht_read,
 };
 
@@ -275,7 +289,8 @@ static int bh_read(sens_io_t *io, sens_slot_t *s)
 
 const sens_drv_t DRV_BH1750 = {
     .prio = SP_LAST,
-    .pub = { "bh1750", "BH1750", { 0x23, 0x5C }, 2 },
+    .cat = SC(LIGHT),
+    .pub = { .id = "bh1750", .name = "BH1750", .addrs = { 0x23, 0x5C }, .naddr = 2 },
     .identify = bh_identify, .init = bh_init, .read = bh_read,
 };
 
@@ -335,13 +350,15 @@ static int ina226_read(sens_io_t *io, sens_slot_t *s) { return ina_read_common(i
 
 const sens_drv_t DRV_INA226 = {
     .prio = SP_REG,
-    .pub = { "ina226", "INA226", { 0x40, 0x41, 0x44, 0x45 }, 4, true },
+    .cat = SC(POWER),
+    .pub = { .id = "ina226", .name = "INA226", .addrs = { 0x40, 0x41, 0x44, 0x45 }, .naddr = 4, .shunt = true },
     .probe = { 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47 }, .nprobe = 8,
     .identify = ina226_identify, .init = ina226_init, .read = ina226_read,
 };
 const sens_drv_t DRV_INA219 = {
     .prio = SP_REG2,
-    .pub = { "ina219", "INA219", { 0x40, 0x41, 0x44, 0x45 }, 4, true },
+    .cat = SC(POWER),
+    .pub = { .id = "ina219", .name = "INA219", .addrs = { 0x40, 0x41, 0x44, 0x45 }, .naddr = 4, .shunt = true },
     .probe = { 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47 }, .nprobe = 8,
     .identify = ina219_identify, .read = ina219_read,
 };
@@ -389,7 +406,8 @@ static int ads_read(sens_io_t *io, sens_slot_t *s)
 
 const sens_drv_t DRV_ADS1115 = {
     .prio = SP_REG,
-    .pub = { "ads1115", "ADS1115", { 0x48, 0x49, 0x4A, 0x4B }, 4, false, true },
+    .cat = SC(POWER),
+    .pub = { .id = "ads1115", .name = "ADS1115", .addrs = { 0x48, 0x49, 0x4A, 0x4B }, .naddr = 4, .gain = true },
     .identify = ads_identify, .read = ads_read,
 };
 
@@ -418,7 +436,8 @@ static int max6675_read(sens_io_t *io, sens_slot_t *s)
 
 const sens_drv_t DRV_MAX6675 = {
     .prio = SP_REG,
-    .pub = { "max6675", "MAX6675", { 0 }, 0, false, false, true, false, AOS_SENSOR_BUS_SPI },
+    .cat = SC(TEMP),
+    .pub = { .id = "max6675", .name = "MAX6675", .spi = true, .bus = AOS_SENSOR_BUS_SPI },
     .flags = SF_NOPROBE, .spi_mode = 0, .spi_hz = 1000000,
     .read = max6675_read,
 };
@@ -426,7 +445,8 @@ const sens_drv_t DRV_MAX6675 = {
 /* ---- DS18B20 and its family: the service reads the 1-Wire buses ---- */
 const sens_drv_t DRV_DS18B20 = {
     .prio = SP_REG,
-    .pub = { "ds18b20", "DS18B20", { 0 }, 0, false, false, false, true, AOS_SENSOR_BUS_ONEWIRE, 1 },
+    .cat = SC(TEMP),
+    .pub = { .id = "ds18b20", .name = "DS18B20", .onewire = true, .bus = AOS_SENSOR_BUS_ONEWIRE, .pins = 1 },
     .flags = SF_NOPROBE,
 };
 

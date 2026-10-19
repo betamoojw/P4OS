@@ -169,7 +169,7 @@ static const sim_model_t *model_named(const char *name)
     return NULL;
 }
 
-#define MAX_EDEV 16
+#define MAX_EDEV 48
 static sim_emu_t s_edev[MAX_EDEV];
 static int s_nedev;
 
@@ -540,7 +540,7 @@ static void setup(void)
     const char *e = getenv("P4_SIM_SENSORS");
     if (e && (!strcmp(e, "0") || !strcmp(e, "off") || !strcmp(e, "none"))) return;
     if (!e || !*e || !strcmp(e, "1")) e = "bme280@0x76,sht31@0x44,bh1750@0x23,ina219@0x40,ads1115@0x48";
-    char buf[256];
+    char buf[2048];
     snprintf(buf, sizeof buf, "%s", e);
     for (char *tok = strtok(buf, ", "); tok; tok = strtok(NULL, ", ")) {
         char *at = strchr(tok, '@');
@@ -563,7 +563,7 @@ static void setup(void)
         }
         add_dev(kind, at ? (int)strtol(at, NULL, 0) : KIND[kind].addr);
     }
-    char list[400] = "";
+    char list[1600] = "";
     for (int i = 0; i < s_ndev; i++) {
         size_t o = strlen(list);
         snprintf(list + o, sizeof list - o, "%s%s@0x%02X", i ? " " : "", KIND[s_dev[i].kind].name, s_dev[i].addr);

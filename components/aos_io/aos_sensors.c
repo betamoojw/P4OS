@@ -77,6 +77,31 @@ static slot_t *slot_find(const char *port, uint8_t addr)
     return NULL;
 }
 
+/* A slot's driver lets go of what it holds, with the lock held: a counter,
+ * an interrupt (fini), and a GPIO sensor's pins that no other slot reads */
+static void slot_release(slot_t *s)
+{
+    const sens_drv_t *d = s->chip >= 0 && s->chip < SENS_NDRV ? SENS_DRV[s->chip] : NULL;
+    if (d && d->fini && s->inited) d->fini(s);
+    s->inited = false;
+    for (int k = 0; k < 2; k++) {
+        int g = s->gpio[k];
+        if (g < 0) continue;
+        bool other = false;
+        for (int i = 0; i < AOS_SENSOR_MAX; i++)
+            other |= &s_slot[i] != s && s_slot[i].used && (s_slot[i].gpio[0] == g || s_slot[i].gpio[1] == g);
+        const char *o = aos_io_owner(g);
+        if (!other && o && !strcmp(o, OWNER)) aos_io_release(g, OWNER);
+        s->gpio[k] = -1;
+    }
+}
+
+static void slot_drop(slot_t *s)
+{
+    slot_release(s);
+    s->used = false;
+}
+
 /* A new slot, called with the lock held */
 static slot_t *slot_add(const char *port, uint8_t addr, int chip)
 {
@@ -90,6 +115,7 @@ static slot_t *slot_add(const char *port, uint8_t addr, int chip)
         if (!s->hist) return NULL;
         s->used = true;
         s->chip = chip;
+        s->gpio[0] = s->gpio[1] = -1;
         s->gain_mv = 4096;
         s->shunt_mohm = 100;
         scpy(s->pub.port, sizeof s->pub.port, port);
@@ -287,6 +313,7 @@ static void sync_declared(void)
         slot_t *s = slot_find(mod->port, addr);
         if (s && s->chip != chip && strcmp(SENS_DRV[s->chip]->pub.id, d->pub.id)) {
             /* the user says it is something else than autodetect thought */
+            slot_release(s);
             s->chip = chip;
             s->inited = false;
             s->xn = s->pub.n = 0;
@@ -312,7 +339,7 @@ static void sync_declared(void)
         slot_t *s = &s_slot[i];
         if (!s->used) continue;
         if (!s->declared_now) s->pub.declared = false;
-        if (!s->declared_now && !s->detected) s->used = false;
+        if (!s->declared_now && !s->detected) slot_drop(s);
     }
     unlock();
 }
@@ -383,8 +410,15 @@ static void detect(aos_io_i2c_t *b, const char *port)
         int chip = s ? s->chip : -1;
         unlock();
         if (declared) { found[i] = -100; continue; }            /* the user's: leave it be */
-        if (!aos_io_i2c_probe(b, a)) continue;
+        /* an AM2320 asleep (3 s after its last word) NACKs the call that
+         * wakes it: at its address, a second call 2 ms later */
+        if (!aos_io_i2c_probe(b, a) && (a != 0x5C || (aos_hal_sleep_ms(2), !aos_io_i2c_probe(b, a)))) continue;
         if (reading) { found[i] = chip; continue; }             /* known and reading: not asked again */
+        /* known but failing (out of range, a bad CRC): its own driver asks
+         * first, so the other drivers' probes do not poke a chip that is
+         * set up (a VL53L1X probe would undo a VL53L0X's sequence) */
+        const sens_drv_t *own = drv_of(chip);
+        if (own && own->identify && own->identify(b, a) == ID_YES) { found[i] = chip; continue; }
         found[i] = identify(b, a);
     }
     lock();
@@ -397,7 +431,7 @@ static void detect(aos_io_i2c_t *b, const char *port)
         slot_t *s = slot_find(port, a);
         if (found[i] == -100) continue;
         if (found[i] >= 0) {
-            if (s && s->chip != found[i]) { s->used = false; s = NULL; }
+            if (s && s->chip != found[i]) { slot_drop(s); s = NULL; }
             if (!s) {
                 s = slot_add(port, a, found[i]);
                 if (s) detected_name(s);
@@ -405,7 +439,7 @@ static void detect(aos_io_i2c_t *b, const char *port)
             if (s) s->detected = true;
             continue;
         }
-        if (s && !s->pub.declared) s->used = false;                   /* gone */
+        if (s && !s->pub.declared) slot_drop(s);                      /* gone */
         if (found[i] <= -2 && s_ncand < AOS_SENSOR_CAND_MAX) {
             aos_sensor_cand_t *c = &s_cand[s_ncand++];
             scpy(c->port, sizeof c->port, port);
@@ -451,7 +485,7 @@ static void commit(slot_t *s, const slot_t *tmpp, int r)
         s->pub.t_ms = sens_now();
         hist_push(s, true);
     } else {
-        static const char *const WHY[] = { "", "nack", "crc", "id", "notready", "open", "range" };
+        static const char *const WHY[] = { "", "nack", "crc", "id", "notready", "open", "range", "cfg" };
         s->pub.state = r == R_NOTREADY && s->pub.state != AOS_SENSOR_OK ? AOS_SENSOR_WAIT : AOS_SENSOR_ERR;
         /* err is "<why>" or "<why>:<detail>" (the id the chip gave) */
         if (tmpp->pub.err[0]) snprintf(s->pub.err, sizeof s->pub.err, "%s:%.36s", WHY[r], tmpp->pub.err);
@@ -605,6 +639,16 @@ static void read_gpio_slots(void)
             continue;
         }
         sens_io_t io = { .pin = { pin, aos_io_module_gpio(name, "pin2") } };
+        /* the pins it reads now, freed when it goes (another pin2= frees the old one) */
+        lock();
+        if (s->used) {
+            int old2 = s->gpio[1];
+            s->gpio[0] = (int8_t)pin;
+            s->gpio[1] = (int8_t)io.pin[1];
+            const char *o2 = old2 >= 0 && old2 != io.pin[1] ? aos_io_owner(old2) : NULL;
+            if (o2 && !strcmp(o2, OWNER)) { aos_io_release(old2, OWNER); s->inited = false; }
+        }
+        unlock();
         run_driver(s, &io);
     }
 }
@@ -700,7 +744,7 @@ static void ow_begin(uint32_t t0, bool rescan, bool viewed)
                     if (s->ow_miss < 255) s->ow_miss++;
                     if (s->ow_miss < 3 || s->pub.state == AOS_SENSOR_OK) continue;
                     s->detected = false;
-                    if (!s->pub.declared) s->used = false;
+                    if (!s->pub.declared) slot_drop(s);
                 }
                 unlock();
             }

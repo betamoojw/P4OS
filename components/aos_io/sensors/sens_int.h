@@ -39,7 +39,8 @@
 #define SENS_XFER_MS 50
 
 /* what init() and read() return */
-enum { R_OK = 0, R_NACK, R_CRC, R_ID, R_NOTREADY, R_OPEN, R_RANGE };
+enum { R_OK = 0, R_NACK, R_CRC, R_ID, R_NOTREADY, R_OPEN, R_RANGE,
+       R_CFG };     /* the module line lacks something (sens_err: the key) */
 
 /* what identify() returns */
 enum { ID_NO = 0, ID_YES, ID_MAYBE };
@@ -73,9 +74,16 @@ typedef struct sens_drv {
     uint8_t  spi_mode;
     uint32_t spi_hz;
     uint32_t baud;                  /* UART */
+    /* The form's group, AOS_SENSOR_CAT_* + 1; 0 takes the family file's
+     * (drv_basic.c and the SPI, GPIO and UART files mix them: theirs say it) */
+    uint8_t  cat;
     int  (*identify)(aos_io_i2c_t *b, uint8_t addr);
     int  (*init)(sens_io_t *io, sens_slot_t *s);
     int  (*read)(sens_io_t *io, sens_slot_t *s);
+    /* The slot goes (out of modules.txt, another chip): let go of what
+     * init() took that is not the bus's (a counter, an interrupt). The
+     * service frees a GPIO sensor's pins itself. */
+    void (*fini)(sens_slot_t *s);
 } sens_drv_t;
 
 #define SENS_PRIV 320
@@ -95,6 +103,7 @@ struct sens_slot {
     uint32_t read_ms;               /* uptime of the last read() */
     uint64_t rom;                   /* 1-Wire: the sensor's id (family in the low byte) */
     uint8_t  ow_miss;               /* 1-Wire: searches in a row that did not find it */
+    int8_t   gpio[2];               /* a GPIO sensor's pins as last read (pin=, pin2=), -1 none */
     union { uint8_t b[SENS_PRIV]; uint64_t align; } priv;
     float   *hist;                  /* [AOS_SENSOR_XVALUES][AOS_SENSOR_HIST], PSRAM */
     int      h_pos, h_n;
@@ -115,6 +124,7 @@ extern const sens_drv_t *SENS_DRV[];
 extern int SENS_NDRV;
 void sens_table_init(void);
 int  sens_drv_find(const char *id);         /* index from an id, an alias or "bme280_2"; -1 */
+#define SC(cat) ((uint8_t)(AOS_SENSOR_CAT_##cat + 1))   /* .cat = SC(TEMP) */
 const sens_drv_t *sens_drv(const sens_slot_t *s);
 
 /* ---- helpers (sens_util.c) ---- */

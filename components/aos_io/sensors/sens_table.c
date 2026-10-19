@@ -15,6 +15,16 @@ FAMILIES(DECL)
 #define MAX_DRV 192
 const sens_drv_t *SENS_DRV[MAX_DRV];
 int SENS_NDRV;
+static uint8_t s_cat[MAX_DRV];          /* each driver's form group, in SENS_DRV's order */
+
+/* The form group of each family's drivers (BASIC and the bus files: each
+ * driver says its own) */
+static const uint8_t FAM_CAT[] = {
+    [0] = AOS_SENSOR_CAT_OTHER,  [1] = AOS_SENSOR_CAT_ENV,    [2] = AOS_SENSOR_CAT_TEMP,
+    [3] = AOS_SENSOR_CAT_AIR,    [4] = AOS_SENSOR_CAT_LIGHT,  [5] = AOS_SENSOR_CAT_MOTION,
+    [6] = AOS_SENSOR_CAT_POWER,  [7] = AOS_SENSOR_CAT_DIST,   [8] = AOS_SENSOR_CAT_OTHER,
+    [9] = AOS_SENSOR_CAT_OTHER,  [10] = AOS_SENSOR_CAT_OTHER, [11] = AOS_SENSOR_CAT_OTHER,
+};
 
 static const sens_drv_t *const *const GROUPS[] = {
 #define G(f) SENS_G_##f,
@@ -35,15 +45,22 @@ void sens_table_init(void)
         while (!__atomic_load_n(&s_ready, __ATOMIC_ACQUIRE)) aos_hal_sleep_ms(1);
         return;
     }
+    _Static_assert(sizeof FAM_CAT == sizeof GROUPS / sizeof GROUPS[0], "a family without its group");
     int n = 0;
     for (size_t g = 0; g < sizeof GROUPS / sizeof GROUPS[0]; g++)
-        for (int i = 0; GROUPS[g][i] && n < MAX_DRV; i++) SENS_DRV[n++] = GROUPS[g][i];
+        for (int i = 0; GROUPS[g][i] && n < MAX_DRV; i++) {
+            const sens_drv_t *d = GROUPS[g][i];
+            s_cat[n] = d->cat ? (uint8_t)(d->cat - 1) : FAM_CAT[g];
+            SENS_DRV[n++] = d;
+        }
     /* stable insertion sort by prio: the families' order breaks the ties */
     for (int i = 1; i < n; i++) {
         const sens_drv_t *d = SENS_DRV[i];
+        uint8_t c = s_cat[i];
         int j = i;
-        for (; j > 0 && SENS_DRV[j - 1]->prio > d->prio; j--) SENS_DRV[j] = SENS_DRV[j - 1];
+        for (; j > 0 && SENS_DRV[j - 1]->prio > d->prio; j--) { SENS_DRV[j] = SENS_DRV[j - 1]; s_cat[j] = s_cat[j - 1]; }
         SENS_DRV[j] = d;
+        s_cat[j] = c;
     }
     SENS_NDRV = n;
     __atomic_store_n(&s_ready, 1, __ATOMIC_RELEASE);
@@ -96,4 +113,11 @@ const aos_sensor_chip_t *aos_sensor_chip_find(const char *id)
 {
     int c = sens_drv_find(id);
     return c >= 0 ? &SENS_DRV[c]->pub : NULL;
+}
+
+int aos_sensor_chip_cat(const aos_sensor_chip_t *c)
+{
+    sens_table_init();
+    for (int k = 0; k < SENS_NDRV; k++) if (&SENS_DRV[k]->pub == c) return s_cat[k];
+    return AOS_SENSOR_CAT_OTHER;
 }

@@ -5,6 +5,8 @@
  * real serial adapter on the Mac - a CH340 on the bench works as the P4's
  * header would. Without it, the port is a make-believe ESP32 printing a boot
  * log and a heartbeat, so the Terminal has something to show.
+ * P4_SIM_UART_A=sensor:mhz19 puts an emulated serial sensor there instead
+ * (uart_emu_sim.c), for the sensor service's UART drivers.
  *
  * I2C: the board bus answers where the board's chips are; "i2c.ext" answers
  * at the addresses in P4_SIM_I2C_EXT (default 0x76,0x44: a BME280 and an
@@ -24,7 +26,8 @@
  * the target it plays. The GPIOs of the lines also take the levels, so the
  * Bus app shows them.
  *
- * SPI: emulated chips (a W25Q128 flash, a MAX31855, an MCP3008) or a
+ * SPI: emulated chips (a W25Q128 flash, the thermocouple and RTD converters,
+ * the MCP3008/3208: spi_emu_sim.c) or a
  * loopback, chosen by CS; see the SPI section at the end.
  */
 #include "aos_io_backend.h"
@@ -50,7 +53,15 @@ typedef struct {
     int step;
     char pending[256];
     int pend_len, pend_pos;
+    void *emu;              /* P4_SIM_<PORT>=sensor:<model>: uart_emu_sim.c */
 } sim_uart_t;
+
+/* uart_emu_sim.c: an emulated sensor on the port */
+void *sim_uemu_open(const char *port, const char *model, uint32_t baud);
+int   sim_uemu_read(void *h, void *buf, int len, int timeout_ms);
+int   sim_uemu_write(void *h, const void *buf, int len);
+void  sim_uemu_baud(void *h, uint32_t baud);
+void  sim_uemu_close(void *h);
 
 static void env_name(const char *port, char *out, size_t cap)
 {
@@ -79,7 +90,11 @@ bool aos_io_be_uart_open(aos_io_uart_t *u, bool rs485)
     char env[40];
     env_name(u->port->name, env, sizeof env);
     const char *dev = getenv(env);
-    if (dev && *dev) {
+    if (dev && !strncmp(dev, "sensor:", 7)) {
+        s->emu = sim_uemu_open(u->port->name, dev + 7, u->baud);
+        if (!s->emu) { free(s); return false; }
+        snprintf(u->desc, sizeof u->desc, "%s (simulated %s)", u->port->name, dev + 7);
+    } else if (dev && *dev) {
         s->fd = open(dev, O_RDWR | O_NOCTTY | O_NONBLOCK);
         if (s->fd < 0 || !set_speed(s->fd, u->baud)) {
             aos_hal_log("io", "%s: cannot open %s (%s)", u->port->name, dev, strerror(errno));
@@ -136,6 +151,7 @@ static void make_line(sim_uart_t *s)
 int aos_io_be_uart_read(aos_io_uart_t *u, void *buf, int len, int timeout_ms)
 {
     sim_uart_t *s = u->be;
+    if (s->emu) return sim_uemu_read(s->emu, buf, len, timeout_ms);
     if (s->fd >= 0) {
         struct pollfd p = { .fd = s->fd, .events = POLLIN };
         int r = poll(&p, 1, timeout_ms);
@@ -163,6 +179,7 @@ int aos_io_be_uart_read(aos_io_uart_t *u, void *buf, int len, int timeout_ms)
 int aos_io_be_uart_write(aos_io_uart_t *u, const void *buf, int len)
 {
     sim_uart_t *s = u->be;
+    if (s->emu) return sim_uemu_write(s->emu, buf, len);
     if (s->fd >= 0) {
         /* the fd is non-blocking and a pty takes about a kilobyte at a time:
          * keep going while the other side drains, as the board's driver
@@ -204,12 +221,14 @@ bool aos_io_be_uart_set_format(aos_io_uart_t *u, char parity, int stop_bits)
 bool aos_io_be_uart_set_baud(aos_io_uart_t *u, uint32_t baud)
 {
     sim_uart_t *s = u->be;
+    if (s->emu) sim_uemu_baud(s->emu, baud);
     return s->fd < 0 || set_speed(s->fd, baud);
 }
 
 void aos_io_be_uart_close(aos_io_uart_t *u)
 {
     sim_uart_t *s = u->be;
+    if (s && s->emu) sim_uemu_close(s->emu);
     if (s && s->fd >= 0) close(s->fd);
     free(s);
     u->be = NULL;
@@ -395,6 +414,9 @@ void aos_io_be_uart_lines_release(aos_io_uart_t *u)
  *             3.3 V: ch0 a slow sine, ch1 a pot at mid travel, ch2 a 30 s
  *             ramp, ch3 ground, ch4 the 3V3 rail, ch5 a light sensor, ch6-7
  *             floating.
+ *   max31856, max31856:open, max31865, max31865:pt1000, max31865:open,
+ *   mcp3208   the sensor service's other SPI chips, in spi_emu_sim.c (on no
+ *             CS by default).
  *
  * With no CS (the app drives one with aos_io_gpio_*), the chip is the one
  * whose CS GPIO the app holds low as an output. The chips also mind the
@@ -405,7 +427,11 @@ void aos_io_be_uart_lines_release(aos_io_uart_t *u)
 #include <math.h>
 #include <pthread.h>
 
-enum { SD_NONE = 0, SD_LOOP, SD_FLASH, SD_TC, SD_TC_OPEN, SD_ADC, SD_TC6675, SD_TC6675_OPEN, SD_EE25 = 32 /* + its type (eeprom_sim.c) */ };
+enum { SD_NONE = 0, SD_LOOP, SD_FLASH, SD_TC, SD_TC_OPEN, SD_ADC, SD_TC6675, SD_TC6675_OPEN,
+       SD_EMU = 16 /* + its index (spi_emu_sim.c) */, SD_EE25 = 32 /* + its type (eeprom_sim.c) */ };
+
+int  sim_spi_emu_named(const char *n, size_t len);
+void sim_spi_emu_xfer(int dev, uint8_t mode, const uint8_t *tx, uint8_t *rx, size_t n, uint32_t *max_hz, bool *mode_ok);
 
 typedef struct {
     int8_t any;                 /* the chip on every CS, 0 = per CS */
@@ -429,6 +455,8 @@ static int dev_named(const char *n, size_t len)
     };
     for (size_t i = 0; i < sizeof N / sizeof N[0]; i++)
         if (strlen(N[i].name) == len && !strncasecmp(n, N[i].name, len)) return N[i].dev;
+    int e = sim_spi_emu_named(n, len);
+    if (e >= 0 && SD_EMU + e < SD_EE25) return SD_EMU + e;
     int t = sim_ee25_type(n, len);
     return t >= 0 ? SD_EE25 + t : -1;
 }
@@ -642,6 +670,7 @@ bool aos_io_be_spi_xfer(aos_io_spi_t *s, const uint8_t *tx, uint8_t *rx, size_t 
     case SD_ADC:    adc_xfer(wire_tx, wire_rx, n); max_hz = 2000000; mode_ok = s->mode == 0 || s->mode == 3; break;
     default:
         if (chip >= SD_EE25) { sim_ee25_xfer(chip - SD_EE25, wire_tx, wire_rx, n); max_hz = 10000000; mode_ok = s->mode == 0 || s->mode == 3; }
+        else if (chip >= SD_EMU) sim_spi_emu_xfer(chip - SD_EMU, s->mode, wire_tx, wire_rx, n, &max_hz, &mode_ok);
         else memset(wire_rx, 0xFF, n);
         break;
     }

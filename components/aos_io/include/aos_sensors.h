@@ -166,9 +166,23 @@ typedef struct {
 
 enum { AOS_SENSOR_BUS_I2C = 0, AOS_SENSOR_BUS_SPI, AOS_SENSOR_BUS_ONEWIRE, AOS_SENSOR_BUS_GPIO, AOS_SENSOR_BUS_UART };
 
+/* The groups the forms show the chips in */
+enum {
+    AOS_SENSOR_CAT_TEMP = 0,        /* temperature and humidity, thermocouples */
+    AOS_SENSOR_CAT_ENV,             /* pressure and weather */
+    AOS_SENSOR_CAT_AIR,             /* CO2, gases, particles */
+    AOS_SENSOR_CAT_LIGHT,           /* light, UV, colour */
+    AOS_SENSOR_CAT_MOTION,          /* accelerometers, gyroscopes, compasses */
+    AOS_SENSOR_CAT_POWER,           /* voltage, current, ADCs, load cells */
+    AOS_SENSOR_CAT_DIST,            /* distance and presence */
+    AOS_SENSOR_CAT_OTHER,
+    AOS_SENSOR_CAT_COUNT
+};
+
 int                      aos_sensor_chip_count(void);
 const aos_sensor_chip_t *aos_sensor_chip_at(int i);
 const aos_sensor_chip_t *aos_sensor_chip_find(const char *id);   /* also "sht31", "aht10"... */
+int                      aos_sensor_chip_cat(const aos_sensor_chip_t *c);   /* AOS_SENSOR_CAT_* */
 
 /* Starts the service (once; later calls do nothing). Any of the calls below
  * starts it too. */

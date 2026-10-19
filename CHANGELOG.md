@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **Datalog** (`apps/datalog`): a data logger for the header's sensors.
+  Each reading is a value written to its own CSV in `/datalog` with the
+  date and time, every N seconds, minutes or hours or at set times of day:
+  an I2C, SPI or 1-Wire sensor of the sensor service (a BME280, the
+  MAX6675, a DS18B20...), a GPIO read with its pull-up or pull-down, an
+  ADS1115 input (its range, in volts, counts or scaled through two points
+  into a unit of one's own) or the board's own Wi-Fi signal and memory.
+  Low and high alarms with hysteresis tell with a sound and a message over
+  any app, or only with a note in the CSV, and can drive a GPIO (a relay)
+  while they last. A chart per reading from an hour to the whole file, a
+  portal page (`#datalog`) with the live values, the charts and the files;
+  it goes on in the background and starts with the board while it logs.
+  Tried in the simulator only ([apps/datalog/README.md](apps/datalog/README.md)).
+
 - **MAX6675 thermocouples, in Módulos and in Bus.** The sensor service reads
   SPI chips too, declared in `modules.txt` (`module horno spi.a
   chip=max6675`, with `cs=` for a second one on the same wires): each round

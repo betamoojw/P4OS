@@ -95,6 +95,15 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       canal en vivo anda en la placa (espectro cada ~80 ms, estado, órdenes);
       el usuario la abrió: "se ve bien". Volumen y silenciar agregados el
       2026-10-07 (sin mirar todavía en el navegador).
+- [ ] **Datalog** (2026-10-18, `apps/datalog/README.md`): hecha en el
+      simulador, sin instalar. En la placa: una línea con el MAX6675 y otra
+      con el DS18B20 que dejó conectados la sesión de firmware (cada 10 s),
+      que el CSV de `/datalog` crezca con la app en segundo plano, una
+      alarma alta con sonido y el aviso encima de otra app, una salida GPIO
+      con un LED o un relé (nivel alto y a GND), un reinicio con el registro
+      andando (tiene que seguir solo) y la página `#datalog` (pausar,
+      gráfico, bajar). Medir el hilo: cuánto tarda una ronda con varias
+      líneas cada 1 s y la RAM interna antes y después.
 - [ ] **RF: datos de 433 MHz y guardar** (2026-10-07): el modo Datos corre en la
       placa (16 % del hilo de la radio). **Un control copiador (EV1527, dos
       códigos, dos botones cada uno) y uno de fábrica (EV1527, cuatro botones)

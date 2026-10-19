@@ -171,6 +171,8 @@ add_custom_command(OUTPUT ${AOS_WEB_C}
     COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/../tools/gen_web_assets.py ${AOS_WEB_C} ${AOS_WEB_FILES}
     DEPENDS ${AOS_WEB_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/../tools/gen_web_assets.py)
 
+# the sensor service's drivers (components/aos_io/sensors)
+file(GLOB AOS_SENSORS_SRC CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/sensors/*.c)
 add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_httpd.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal.c
@@ -217,6 +219,7 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_leds.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_serial.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_sensors.c
+    ${AOS_SENSORS_SRC}
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_modules.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_io_signal.c
     io_sim.c

@@ -28,6 +28,7 @@
 #include "aos_io.h"
 #include "aos_modules.h"
 #include "aos_sensors.h"
+#include "aos_sensor_text.h"
 #include "cJSON.h"
 
 #include <math.h>
@@ -129,32 +130,7 @@ static void fmt_msg(const aos_mod_msg_t *m, char *out, size_t n)
     else scpy(out, n, t);
 }
 
-static void fmt_err(const char *err, char *out, size_t n)
-{
-    const char *d = strchr(err, ':');
-    d = d ? d + 1 : "";
-    if (!strncmp(err, "nack:spi", 8)) snprintf(out, n, "%s", _("No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?"));
-    else if (!strncmp(err, "nack:ow", 7)) snprintf(out, n, "%s", _("No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?"));
-    else if (!strncmp(err, "nack", 4)) snprintf(out, n, "%s", _("No contesta en esa dirección"));
-    else if (!strncmp(err, "crc", 3)) snprintf(out, n, "%s", _("Llegó una lectura con el CRC mal"));
-    else if (!strncmp(err, "id", 2)) snprintf(out, n, _("En esa dirección hay otro chip (dice %s)"), d);
-    else if (!strncmp(err, "notready", 8)) snprintf(out, n, "%s", _("Todavía no midió"));
-    else if (!strncmp(err, "busy", 4)) snprintf(out, n, _("Los pines los tiene %s"), d);
-    else if (!strncmp(err, "port", 4)) snprintf(out, n, "%s", _("No se pudo abrir el puerto"));
-    else if (!strncmp(err, "board", 5)) snprintf(out, n, _("Ahí está el %s de la placa"), d);
-    else if (!strncmp(err, "open", 4)) snprintf(out, n, "%s", _("La termocupla está abierta (o no está conectada)"));
-    else scpy(out, n, err);
-}
 
-static const char *key_name(const char *key)
-{
-    static const char *const K[][2] = { { "temp", N_("Temperatura") }, { "hum", N_("Humedad") }, { "press", N_("Presión") },
-                                        { "lux", N_("Luz") }, { "bus", N_("Tensión") }, { "current", N_("Corriente") },
-                                        { "power", N_("Potencia") }, { "shunt", N_("En el shunt") }, { "a0", "A0" },
-                                        { "a1", "A1" }, { "a2", "A2" }, { "a3", "A3" } };
-    for (size_t i = 0; i < sizeof K / sizeof K[0]; i++) if (!strcmp(K[i][0], key)) return _(K[i][1]);
-    return key;
-}
 
 /* -------------------------------------------------------------------------- */
 /* The header, the ports, the file                                             */
@@ -348,7 +324,7 @@ static void api_sensors(aos_httpd_req_t *r)
         cJSON_AddStringToObject(e, "state", ST[s.state & 3]);
         if (s.err[0]) {
             char m[96];
-            fmt_err(s.err, m, sizeof m);
+            aos_sensor_err_text(s.err, m, sizeof m);
             cJSON_AddStringToObject(e, "err", s.err);
             cJSON_AddStringToObject(e, "msg", m);
         }
@@ -356,13 +332,15 @@ static void api_sensors(aos_httpd_req_t *r)
         cJSON_AddNumberToObject(e, "errors", s.errors);
         if (s.t_ms) cJSON_AddNumberToObject(e, "age_ms", now - s.t_ms);
         cJSON *vs = cJSON_AddArrayToObject(e, "values");
-        for (int k = 0; k < s.n; k++) {
+        aos_sensor_value_t xv[AOS_SENSOR_XVALUES];
+        int xn = aos_sensor_values(i, xv, AOS_SENSOR_XVALUES);
+        for (int k = 0; k < xn; k++) {
             cJSON *v = cJSON_CreateObject();
-            cJSON_AddStringToObject(v, "key", s.v[k].key);
-            cJSON_AddStringToObject(v, "name", key_name(s.v[k].key));
-            cJSON_AddNumberToObject(v, "q", s.v[k].q);
-            cJSON_AddStringToObject(v, "unit", aos_sensor_unit(s.v[k].q));
-            add_num(v, "v", s.state == AOS_SENSOR_OK ? s.v[k].v : NAN);
+            cJSON_AddStringToObject(v, "key", xv[k].key);
+            cJSON_AddStringToObject(v, "name", aos_sensor_key_name(xv[k].key));
+            cJSON_AddNumberToObject(v, "q", xv[k].q);
+            cJSON_AddStringToObject(v, "unit", aos_sensor_unit(xv[k].q));
+            add_num(v, "v", s.state == AOS_SENSOR_OK ? xv[k].v : NAN);
             cJSON_AddItemToArray(vs, v);
         }
         cJSON_AddItemToArray(arr, e);

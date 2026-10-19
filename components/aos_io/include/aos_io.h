@@ -154,6 +154,11 @@ aos_io_i2c_t *aos_io_i2c_open(const char *port, const char *owner);      /* "i2c
 bool aos_io_i2c_probe(aos_io_i2c_t *b, uint8_t addr);
 bool aos_io_i2c_xfer(aos_io_i2c_t *b, uint8_t addr, const void *w, size_t wn, void *r, size_t rn, int timeout_ms);
 void aos_io_i2c_close(aos_io_i2c_t *b);
+/* One device on this handle at its own clock (0: the port's) and with a
+ * longer clock-stretching wait (0: the driver's default), for the chips
+ * that need 100 kHz and hold SCL low while they work (SCD30, MLX90614,
+ * BNO055...). Lasts until the handle is closed. */
+bool aos_io_i2c_dev_cfg(aos_io_i2c_t *b, uint8_t addr, uint32_t hz, uint32_t stretch_us);
 /* What usually lives at an address, for scanners ("BME280 / BMP280"). */
 const char *aos_io_i2c_guess(uint8_t addr, bool board_bus);
 

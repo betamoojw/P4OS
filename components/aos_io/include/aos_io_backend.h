@@ -49,6 +49,7 @@ void aos_io_be_uart_lines_release(aos_io_uart_t *u);
 bool aos_io_be_i2c_open(aos_io_i2c_t *b);
 bool aos_io_be_i2c_probe(aos_io_i2c_t *b, uint8_t addr);
 bool aos_io_be_i2c_xfer(aos_io_i2c_t *b, uint8_t addr, const void *w, size_t wn, void *r, size_t rn, int timeout_ms);
+bool aos_io_be_i2c_dev_cfg(aos_io_i2c_t *b, uint8_t addr, uint32_t hz, uint32_t stretch_us);
 void aos_io_be_i2c_close(aos_io_i2c_t *b);
 
 /* An SPI device. aos_io.c has resolved and claimed everything before the

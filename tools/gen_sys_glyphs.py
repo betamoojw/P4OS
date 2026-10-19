@@ -88,6 +88,10 @@ GLYPHS = [
     "cursor-default-click", "rocket-launch", "play-pause", "microphone-off", "application-brackets",
     "led-on", "electric-switch", "developer-board", "resistor", "arrow-left-bold", "arrow-right-bold",
     "arrow-up-bold", "arrow-down-bold", "circle", "circle-outline", "pause-circle", "trophy",
+    # the sensor service's quantities (Módulos, Datalog)
+    "magnet", "compass-outline", "weather-sunny", "weather-rainy", "radioactive", "heart-pulse",
+    "axis-arrow", "rotate-3d-variant", "blur", "molecule", "weather-windy", "counter", "water",
+    "eye-outline",
 ]
 
 HEADER = os.path.join(REPO, "components", "aos_ui", "include", "aos_sys_glyphs.h")

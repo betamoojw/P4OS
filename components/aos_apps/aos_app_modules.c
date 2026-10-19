@@ -27,6 +27,7 @@
 #include "aos_io.h"
 #include "aos_modules.h"
 #include "aos_sensors.h"
+#include "aos_sensor_text.h"
 #include "aos_sys_glyphs.h"
 #include "aos_mono.h"
 
@@ -71,7 +72,7 @@ static struct {
     char sig[320];
     lv_obj_t *status, *chart, *ch_title, *ch_value, *ch_range;
     lv_chart_series_t *ser;
-    lv_obj_t *tile[AOS_SENSOR_MAX][AOS_SENSOR_VALUES], *tval[AOS_SENSOR_MAX][AOS_SENSOR_VALUES];
+    lv_obj_t *tile[AOS_SENSOR_MAX][AOS_SENSOR_XVALUES], *tval[AOS_SENSOR_MAX][AOS_SENSOR_XVALUES];
     lv_obj_t *sstate[AOS_SENSOR_MAX];
     /* the editor */
     lv_obj_t *ta, *kb, *ed_status, *ed_save;
@@ -181,7 +182,42 @@ static lv_obj_t *column(lv_obj_t *parent, int32_t w, int32_t h)
     return c;
 }
 
-static void comma(char *s) { for (; *s; s++) if (*s == '.') *s = ','; }
+/* The sensor service's words, shared with the portal and the apps (aos_sensor_text.h) */
+#define chip_what   aos_sensor_chip_what
+#define key_name    aos_sensor_key_name
+#define q_glyph     aos_sensor_glyph
+#define fmt_value   aos_sensor_fmt
+#define fmt_err     aos_sensor_err_text
+
+/* A sensor with every value it has, not only aos_sensor_t's first four */
+typedef struct {
+    char     name[24], chip[12], port[16];
+    uint8_t  addr;
+    bool     declared;
+    uint8_t  state;
+    char     err[48];
+    uint32_t t_ms, reads, errors;
+    int      n;
+    aos_sensor_value_t v[AOS_SENSOR_XVALUES];
+} msens_t;
+
+static bool msens_at(int i, msens_t *o)
+{
+    aos_sensor_t s;
+    if (!aos_sensor_at(i, &s)) return false;
+    memcpy(o->name, s.name, sizeof o->name);
+    memcpy(o->chip, s.chip, sizeof o->chip);
+    memcpy(o->port, s.port, sizeof o->port);
+    o->addr = s.addr;
+    o->declared = s.declared;
+    o->state = s.state;
+    memcpy(o->err, s.err, sizeof o->err);
+    o->t_ms = s.t_ms;
+    o->reads = s.reads;
+    o->errors = s.errors;
+    o->n = aos_sensor_values(i, o->v, AOS_SENSOR_XVALUES);
+    return true;
+}
 
 static void overlay_close(void)
 {
@@ -247,90 +283,13 @@ static const char *pin_note(int pin)
     }
 }
 
-static const char *chip_what(const char *id)
-{
-    if (!strcmp(id, "bme280")) return _("Temperatura, presión y humedad");
-    if (!strcmp(id, "bmp280")) return _("Temperatura y presión");
-    if (!strcmp(id, "sht3x") || !strcmp(id, "sht4x") || !strcmp(id, "aht20")) return _("Temperatura y humedad");
-    if (!strcmp(id, "bh1750")) return _("Luz, en lux");
-    if (!strcmp(id, "ina219")) return _("Tensión, corriente y potencia, hasta 26 V");
-    if (!strcmp(id, "ina226")) return _("Tensión, corriente y potencia, hasta 36 V");
-    if (!strcmp(id, "ads1115")) return _("ADC de 16 bits, 4 entradas");
-    if (!strcmp(id, "max6675")) return _("Termocupla tipo K, de 0 a 1024 °C, por SPI");
-    if (!strcmp(id, "ds18b20")) return _("Temperatura por 1-Wire: todos los que haya en el bus, cada uno con su número de serie");
-    return "";
-}
 
-static const char *key_name(const char *key)
-{
-    if (!strcmp(key, "temp")) return _("Temperatura");
-    if (!strcmp(key, "hum")) return _("Humedad");
-    if (!strcmp(key, "press")) return _("Presión");
-    if (!strcmp(key, "lux")) return _("Luz");
-    if (!strcmp(key, "bus")) return _("Tensión");
-    if (!strcmp(key, "current")) return _("Corriente");
-    if (!strcmp(key, "power")) return _("Potencia");
-    if (!strcmp(key, "shunt")) return _("En el shunt");
-    if (key[0] == 'a' && key[1] >= '0' && key[1] <= '3' && !key[2]) {
-        static char an[4][4];
-        int i = key[1] - '0';
-        snprintf(an[i], sizeof an[i], "A%d", i);
-        return an[i];
-    }
-    return key;
-}
 
-static const char *q_glyph(int q, const char *key)
-{
-    switch (q) {
-    case AOS_SQ_TEMP: return AOS_SYM_THERMOMETER;
-    case AOS_SQ_HUM: return AOS_SYM_WATER_PERCENT;
-    case AOS_SQ_PRESS: return AOS_SYM_GAUGE;
-    case AOS_SQ_LUX: return AOS_SYM_BRIGHTNESS_6;
-    case AOS_SQ_CURR: return AOS_SYM_SINE_WAVE;
-    case AOS_SQ_POWER: return AOS_SYM_POWER_PLUG;
-    default: return key && key[0] == 'a' ? AOS_SYM_WAVEFORM : AOS_SYM_LIGHTNING_BOLT;
-    }
-}
 
-/* A value with its unit, scaled the way a bench wants it, decimal comma */
-static void fmt_value(int q, float v, char *out, size_t n)
-{
-    if (isnan(v)) { snprintf(out, n, "--"); return; }
-    float a = fabsf(v);
-    switch (q) {
-    case AOS_SQ_TEMP: snprintf(out, n, "%.1f °C", v); break;
-    case AOS_SQ_HUM: snprintf(out, n, "%.1f %%", v); break;
-    case AOS_SQ_PRESS: snprintf(out, n, "%.1f hPa", v); break;
-    case AOS_SQ_LUX: snprintf(out, n, a < 100 ? "%.1f lx" : "%.0f lx", v); break;
-    case AOS_SQ_VOLT: if (a < 1) snprintf(out, n, "%.1f mV", v * 1000); else snprintf(out, n, "%.3f V", v); break;
-    case AOS_SQ_CURR: if (a < 1) snprintf(out, n, "%.1f mA", v * 1000); else snprintf(out, n, "%.3f A", v); break;
-    case AOS_SQ_POWER: if (a < 1) snprintf(out, n, "%.0f mW", v * 1000); else snprintf(out, n, "%.2f W", v); break;
-    default: snprintf(out, n, "%g", v); break;
-    }
-    comma(out);
-}
 
-/* The service's "why:detail" in words */
-static void fmt_err(const char *err, char *out, size_t n)
-{
-    const char *d = strchr(err, ':');
-    d = d ? d + 1 : "";
-    if (!strncmp(err, "nack:spi", 8)) scpy(out, n, _("No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?"));
-    else if (!strncmp(err, "nack:ow", 7)) scpy(out, n, _("No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?"));
-    else if (!strncmp(err, "nack", 4)) scpy(out, n, _("No contesta en esa dirección"));
-    else if (!strncmp(err, "crc", 3)) scpy(out, n, _("Llegó una lectura con el CRC mal"));
-    else if (!strncmp(err, "id", 2)) snprintf(out, n, _("En esa dirección hay otro chip (dice %s)"), d);
-    else if (!strncmp(err, "notready", 8)) scpy(out, n, _("Todavía no midió"));
-    else if (!strncmp(err, "busy", 4)) snprintf(out, n, _("Los pines los tiene %s"), d);
-    else if (!strncmp(err, "port", 4)) scpy(out, n, _("No se pudo abrir el puerto"));
-    else if (!strncmp(err, "board", 5)) snprintf(out, n, _("Ahí está el %s de la placa"), d);
-    else if (!strncmp(err, "open", 4)) scpy(out, n, _("La termocupla está abierta (o no está conectada)"));
-    else scpy(out, n, err);
-}
 
 /* Where a sensor is: an I2C address, or an SPI chip's chip select */
-static void sens_where(const aos_sensor_t *s, char *out, size_t n)
+static void sens_where(const msens_t *s, char *out, size_t n)
 {
     const aos_io_port_t *p = aos_io_port_find(s->port);
     if (p && p->kind == AOS_PORT_SPI) snprintf(out, n, "CS%u", (unsigned)s->addr);
@@ -749,8 +708,8 @@ static void port_card(lv_obj_t *parent, const aos_io_port_t *pt, int32_t w)
         char det[128] = "";
         size_t o = 0;
         for (int i = 0; i < aos_sensor_count() && o < sizeof det; i++) {
-            aos_sensor_t s;
-            if (!aos_sensor_at(i, &s) || s.declared || strcmp(s.port, pt->name)) continue;
+            msens_t s;
+            if (!msens_at(i, &s) || s.declared || strcmp(s.port, pt->name)) continue;
             o += (size_t)snprintf(det + o, sizeof det - o, "%s%s 0x%02X", o ? ", " : "", s.chip, s.addr);
         }
         if (det[0]) {
@@ -1191,8 +1150,8 @@ static void sens_sig(char *out, size_t n)
     size_t o = 0;
     int cnt = aos_sensor_count();
     for (int i = 0; i < cnt && o < n; i++) {
-        aos_sensor_t s;
-        if (!aos_sensor_at(i, &s)) continue;
+        msens_t s;
+        if (!msens_at(i, &s)) continue;
         o += (size_t)snprintf(out + o, n - o, "%s/%s/%d/%d;", s.name, s.chip, s.n, s.state == AOS_SENSOR_OK || s.n > 0);
     }
     aos_sensor_cand_t c[AOS_SENSOR_CAND_MAX];
@@ -1200,12 +1159,12 @@ static void sens_sig(char *out, size_t n)
     for (int i = 0; i < nc && o < n; i++) o += (size_t)snprintf(out + o, n - o, "c%02x;", c[i].addr);
 }
 
-static bool sel_find(int *si, int *sk, aos_sensor_t *out)
+static bool sel_find(int *si, int *sk, msens_t *out)
 {
     int cnt = aos_sensor_count();
     for (int i = 0; i < cnt; i++) {
-        aos_sensor_t s;
-        if (!aos_sensor_at(i, &s) || strcmp(s.name, S.sel_name)) continue;
+        msens_t s;
+        if (!msens_at(i, &s) || strcmp(s.name, S.sel_name)) continue;
         for (int k = 0; k < s.n; k++)
             if (!strcmp(s.v[k].key, S.sel_key)) { *si = i; *sk = k; if (out) *out = s; return true; }
     }
@@ -1213,8 +1172,8 @@ static bool sel_find(int *si, int *sk, aos_sensor_t *out)
      * the first reading there is */
     for (int pass = 0; pass < 2; pass++)
         for (int i = 0; i < cnt; i++) {
-            aos_sensor_t s;
-            if (!aos_sensor_at(i, &s) || !s.n) continue;
+            msens_t s;
+            if (!msens_at(i, &s) || !s.n) continue;
             for (int k = 0; k < s.n; k++) {
                 if (pass == 0 && s.v[k].q != AOS_SQ_TEMP) continue;
                 *si = i;
@@ -1230,13 +1189,13 @@ static bool sel_find(int *si, int *sk, aos_sensor_t *out)
 static float min_span(int q)
 {
     static const float M[AOS_SQ_COUNT] = { 1.0f, 4.0f, 1.0f, 20.0f, 0.05f, 0.01f, 0.05f };
-    return q >= 0 && q < AOS_SQ_COUNT ? M[q] : 1.0f;
+    return q >= 0 && q < AOS_SQ_COUNT && M[q] > 0 ? M[q] : 1.0f;
 }
 
 static void chart_refresh(void)
 {
     int si = -1, sk = -1;
-    aos_sensor_t s;
+    msens_t s;
     bool have = sel_find(&si, &sk, &s);
     U.sel_i = have ? si : -1;
     U.sel_k = have ? sk : -1;
@@ -1306,9 +1265,9 @@ static void sens_values_refresh(void)
     int cnt = aos_sensor_count();
     uint32_t now = (uint32_t)aos_hal_uptime_ms();
     for (int i = 0; i < cnt && i < AOS_SENSOR_MAX; i++) {
-        aos_sensor_t s;
-        if (!aos_sensor_at(i, &s)) continue;
-        for (int k = 0; k < s.n && k < AOS_SENSOR_VALUES; k++) {
+        msens_t s;
+        if (!msens_at(i, &s)) continue;
+        for (int k = 0; k < s.n && k < AOS_SENSOR_XVALUES; k++) {
             if (!U.tval[i][k]) continue;
             char t[32];
             fmt_value(s.v[k].q, s.state == AOS_SENSOR_OK ? s.v[k].v : NAN, t, sizeof t);
@@ -1342,9 +1301,9 @@ static void sens_values_refresh(void)
 
 static void tile_cb(lv_event_t *e)
 {
-    int v = (int)(intptr_t)lv_event_get_user_data(e), i = v / AOS_SENSOR_VALUES, k = v % AOS_SENSOR_VALUES;
-    aos_sensor_t s;
-    if (!aos_sensor_at(i, &s) || k >= s.n) return;
+    int v = (int)(intptr_t)lv_event_get_user_data(e), i = v / AOS_SENSOR_XVALUES, k = v % AOS_SENSOR_XVALUES;
+    msens_t s;
+    if (!msens_at(i, &s) || k >= s.n) return;
     scpy(S.sel_name, sizeof S.sel_name, s.name);
     scpy(S.sel_key, sizeof S.sel_key, s.v[k].key);
     sens_values_refresh();
@@ -1385,7 +1344,7 @@ static void build_chart(lv_obj_t *parent, int32_t w, int32_t h)
     aos_make_decorative(U.chart);
 }
 
-static void sensor_card(lv_obj_t *parent, int i, const aos_sensor_t *s, int32_t w)
+static void sensor_card(lv_obj_t *parent, int i, const msens_t *s, int32_t w)
 {
     lv_obj_t *c = card(parent, w, LV_SIZE_CONTENT);
     lv_obj_set_style_pad_all(c, 18, 0);
@@ -1408,7 +1367,7 @@ static void sensor_card(lv_obj_t *parent, int i, const aos_sensor_t *s, int32_t 
         int cols = U.land ? (s->n < 3 ? s->n : 3) : (s->n < 2 ? s->n : 2);
         int32_t iw = w - 36, tw = (iw - (cols - 1) * 10) / cols;
         lv_obj_t *row = chips_row(c, iw);
-        for (int k = 0; k < s->n && k < AOS_SENSOR_VALUES; k++) {
+        for (int k = 0; k < s->n && k < AOS_SENSOR_XVALUES; k++) {
             lv_obj_t *tl = box(row, tw, 104);
             lv_obj_set_style_bg_color(tl, AOS_C_CARD2, 0);
             lv_obj_set_style_bg_opa(tl, LV_OPA_COVER, 0);
@@ -1417,7 +1376,7 @@ static void sensor_card(lv_obj_t *parent, int i, const aos_sensor_t *s, int32_t 
             lv_obj_set_style_pad_hor(tl, 16, 0);
             lv_obj_set_style_bg_opa(tl, LV_OPA_60, LV_STATE_PRESSED);
             lv_obj_add_flag(tl, LV_OBJ_FLAG_CLICKABLE);
-            lv_obj_add_event_cb(tl, tile_cb, LV_EVENT_CLICKED, (void *)(intptr_t)(i * AOS_SENSOR_VALUES + k));
+            lv_obj_add_event_cb(tl, tile_cb, LV_EVENT_CLICKED, (void *)(intptr_t)(i * AOS_SENSOR_XVALUES + k));
             lv_obj_t *gl = aos_label(tl, q_glyph(s->v[k].q, s->v[k].key), &aos_sym_28, AOS_C_DIM);
             lv_obj_align(gl, LV_ALIGN_TOP_LEFT, -4, 10);
             lv_obj_t *kl = aos_label(tl, key_name(s->v[k].key), aos_font_caption, AOS_C_DIM);
@@ -1502,8 +1461,8 @@ static void build_sensors(void)
 
     int cnt = aos_sensor_count();
     for (int i = 0; i < cnt && i < AOS_SENSOR_MAX; i++) {
-        aos_sensor_t s;
-        if (aos_sensor_at(i, &s)) sensor_card(right, i, &s, rw);
+        msens_t s;
+        if (msens_at(i, &s)) sensor_card(right, i, &s, rw);
     }
     if (!cnt) {
         lv_obj_t *e = card(right, rw, LV_SIZE_CONTENT);

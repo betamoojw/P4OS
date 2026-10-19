@@ -295,6 +295,13 @@ bool aos_io_be_i2c_xfer(aos_io_i2c_t *b, uint8_t addr, const void *w, size_t wn,
 
 void aos_io_be_i2c_close(aos_io_i2c_t *b) { (void)b; }
 
+/* the simulated buses have no clock to slow down */
+bool aos_io_be_i2c_dev_cfg(aos_io_i2c_t *b, uint8_t addr, uint32_t hz, uint32_t stretch_us)
+{
+    (void)b; (void)addr; (void)hz; (void)stretch_us;
+    return true;
+}
+
 /* ---- GPIO ---- */
 
 static int8_t s_level[64];

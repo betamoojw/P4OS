@@ -118,11 +118,13 @@ void aos_io_be_uart_lines_release(aos_io_uart_t *u)
 
 /* ---- I2C ---- */
 
-#define DEVS 8
+/* the sensor service's autodetect touches a few dozen addresses per open */
+#define DEVS 48
 typedef struct {
     i2c_master_bus_handle_t bus;
     bool own;
     uint8_t addr[DEVS];
+    uint32_t hz[DEVS], stretch[DEVS];   /* aos_io_i2c_dev_cfg(): 0 the port's */
     i2c_master_dev_handle_t dev[DEVS];
     int ndev;
 } i2c_be_t;
@@ -147,16 +149,47 @@ bool aos_io_be_i2c_open(aos_io_i2c_t *b)
     return s->bus != NULL;
 }
 
+static bool i2c_dev_add(aos_io_i2c_t *b, int i, uint8_t addr, uint32_t hz, uint32_t stretch)
+{
+    i2c_be_t *s = b->be;
+    uint32_t port_hz = b->port->freq ? b->port->freq : 100000;
+    i2c_device_config_t dc = { .dev_addr_length = I2C_ADDR_BIT_LEN_7, .device_address = addr,
+                               .scl_speed_hz = hz && hz < port_hz ? hz : port_hz, .scl_wait_us = stretch };
+    if (i2c_master_bus_add_device(s->bus, &dc, &s->dev[i]) != ESP_OK) return false;
+    s->addr[i] = addr;
+    s->hz[i] = hz;
+    s->stretch[i] = stretch;
+    return true;
+}
+
 static i2c_master_dev_handle_t dev_for(aos_io_i2c_t *b, uint8_t addr)
 {
     i2c_be_t *s = b->be;
     for (int i = 0; i < s->ndev; i++) if (s->addr[i] == addr) return s->dev[i];
-    if (s->ndev >= DEVS) return NULL;
-    i2c_device_config_t dc = { .dev_addr_length = I2C_ADDR_BIT_LEN_7, .device_address = addr,
-                               .scl_speed_hz = b->port->freq ? b->port->freq : 100000 };
-    if (i2c_master_bus_add_device(s->bus, &dc, &s->dev[s->ndev]) != ESP_OK) return NULL;
-    s->addr[s->ndev] = addr;
+    if (s->ndev >= DEVS) {
+        /* full: the oldest goes (autodetect walks on, it does not come back) */
+        i2c_master_bus_rm_device(s->dev[0]);
+        memmove(&s->addr[0], &s->addr[1], (DEVS - 1) * sizeof s->addr[0]);
+        memmove(&s->hz[0], &s->hz[1], (DEVS - 1) * sizeof s->hz[0]);
+        memmove(&s->stretch[0], &s->stretch[1], (DEVS - 1) * sizeof s->stretch[0]);
+        memmove(&s->dev[0], &s->dev[1], (DEVS - 1) * sizeof s->dev[0]);
+        s->ndev--;
+    }
+    if (!i2c_dev_add(b, s->ndev, addr, 0, 0)) return NULL;
     return s->dev[s->ndev++];
+}
+
+bool aos_io_be_i2c_dev_cfg(aos_io_i2c_t *b, uint8_t addr, uint32_t hz, uint32_t stretch_us)
+{
+    i2c_be_t *s = b->be;
+    for (int i = 0; i < s->ndev; i++) {
+        if (s->addr[i] != addr) continue;
+        if (s->hz[i] == hz && s->stretch[i] == stretch_us) return true;
+        i2c_master_bus_rm_device(s->dev[i]);
+        return i2c_dev_add(b, i, addr, hz, stretch_us);
+    }
+    if (!dev_for(b, addr)) return false;       /* added with the port's settings... */
+    return aos_io_be_i2c_dev_cfg(b, addr, hz, stretch_us);     /* ...and found now */
 }
 
 bool aos_io_be_i2c_probe(aos_io_i2c_t *b, uint8_t addr)

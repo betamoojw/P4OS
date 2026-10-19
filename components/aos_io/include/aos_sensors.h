@@ -1,6 +1,7 @@
 /*
- * P4OS - I2C sensors on the header: drivers, autodetect and the service
- * that keeps their latest readings (aos_sensors.c, docs/MODULES.md).
+ * P4OS - The sensors on the header: drivers, autodetect and the service
+ * that keeps their latest readings (aos_sensors.c and the drivers in
+ * components/aos_io/sensors/, docs/MODULES.md and docs/SENSORS.md).
  *
  * A thread reads every sensor about once a second and keeps, per sensor, its
  * last values and a five-minute history. The sensors come from two places:
@@ -32,9 +33,13 @@
  * GPIO port with no such line is never driven. One conversion for the whole
  * bus starts at the beginning of a round and is read at its end (750 ms).
  *
+ * Sensors on a plain GPIO port (DHT11/22, HC-SR04, HX711, pulses, a digital
+ * input) and on a UART port (MH-Z19, PMS5003...) are declared the same way:
+ * "module clima gpio.dht chip=dht22", "module co2 uart.a chip=mhz19".
+ *
  * The same code runs in the simulator, where sim/sensors_sim.c answers on
  * i2c.ext as a BME280, an SHT31, a BH1750, an INA219 and an ADS1115
- * (P4_SIM_SENSORS).
+ * (P4_SIM_SENSORS), and more.
  */
 #pragma once
 
@@ -55,6 +60,32 @@ typedef enum {
     AOS_SQ_VOLT,            /* V   */
     AOS_SQ_CURR,            /* A   */
     AOS_SQ_POWER,           /* W   */
+    /* 2026-10-19: appended, so the numbers above keep their meaning for
+     * apps built before. An app that meets one it does not know shows the
+     * value with aos_sensor_unit(). */
+    AOS_SQ_CO2,             /* ppm (CO2, and other gases in ppm)   */
+    AOS_SQ_TVOC,            /* ppb                                 */
+    AOS_SQ_INDEX,           /* an index with no unit: AQI, VOC/NOx index */
+    AOS_SQ_PM,              /* µg/m³                               */
+    AOS_SQ_UVI,             /* UV index                            */
+    AOS_SQ_DIST,            /* mm                                  */
+    AOS_SQ_ACCEL,           /* g                                   */
+    AOS_SQ_GYRO,            /* °/s                                 */
+    AOS_SQ_MAG,             /* µT                                  */
+    AOS_SQ_ANGLE,           /* °                                   */
+    AOS_SQ_PERCENT,         /* % (a battery's charge, a level)     */
+    AOS_SQ_OHM,             /* Ω (a gas sensor's resistance)       */
+    AOS_SQ_RAW,             /* counts, as the chip gives them      */
+    AOS_SQ_FREQ,            /* Hz                                  */
+    AOS_SQ_FLOW,            /* L/min                               */
+    AOS_SQ_VOLUME,          /* L                                   */
+    AOS_SQ_SPEED,           /* m/s                                 */
+    AOS_SQ_RAIN,            /* mm                                  */
+    AOS_SQ_DOSE,            /* µSv/h                               */
+    AOS_SQ_ENERGY,          /* Wh                                  */
+    AOS_SQ_MASS,            /* g                                   */
+    AOS_SQ_STATE,           /* 0 or 1: motion, a switch, a key     */
+    AOS_SQ_BPM,             /* beats a minute                      */
     AOS_SQ_COUNT
 } aos_sensor_q_t;
 
@@ -65,13 +96,17 @@ typedef enum {
     AOS_SENSOR_BUSY,        /* the port's pins were someone else's this round */
 } aos_sensor_state_t;
 
-#define AOS_SENSOR_MAX      12
+#define AOS_SENSOR_MAX      32      /* 12 before 2026-10-19 */
+/* aos_sensor_t carries the first four values, as it always has; a sensor
+ * has up to AOS_SENSOR_XVALUES (an IMU, a particle counter), all of them
+ * through aos_sensor_values(). */
 #define AOS_SENSOR_VALUES   4
+#define AOS_SENSOR_XVALUES  12
 #define AOS_SENSOR_HIST     300     /* samples of history, one a second */
 #define AOS_SENSOR_CAND_MAX 12
 
 typedef struct {
-    char    key[12];                /* "temp", "hum", "press", "lux", "bus", "current", "power", "a0".."a3" */
+    char    key[12];                /* "temp", "hum", "press", "lux", "bus", "current", "power", "a0".."a3", "co2", "pm25", "ax"... */
     uint8_t q;                      /* aos_sensor_q_t */
     float   v;
 } aos_sensor_value_t;
@@ -122,7 +157,14 @@ typedef struct {
      * Its sensors are found by a search of the bus; in aos_sensor_t, addr
      * is that GPIO and the name ends in the sensor's serial. */
     bool        onewire;
+    /* The bus it hangs from (AOS_SENSOR_BUS_*), and for GPIO the number of
+     * pins its port gives (1, or 2: trigger and echo, clock and data).
+     * Appended 2026-10-19. */
+    uint8_t     bus;
+    uint8_t     pins;
 } aos_sensor_chip_t;
+
+enum { AOS_SENSOR_BUS_I2C = 0, AOS_SENSOR_BUS_SPI, AOS_SENSOR_BUS_ONEWIRE, AOS_SENSOR_BUS_GPIO, AOS_SENSOR_BUS_UART };
 
 int                      aos_sensor_chip_count(void);
 const aos_sensor_chip_t *aos_sensor_chip_at(int i);
@@ -157,7 +199,11 @@ bool aos_sensor_at(int i, aos_sensor_t *out);                /* a copy */
 /* The latest value of one sensor by name and key: ("bme280", "temp").
  * false while it has none (not read yet, or failing). */
 bool aos_sensor_value(const char *name, const char *key, float *out);
-/* Value k of sensor i, oldest first; returns how many (up to max). */
+/* Every value of sensor i (the four of aos_sensor_t and the rest), as the
+ * last good read left them: how many, up to max. */
+int  aos_sensor_values(int i, aos_sensor_value_t *out, int max);
+/* Value k of sensor i (k < AOS_SENSOR_XVALUES), oldest first; returns how
+ * many (up to max). */
 int  aos_sensor_history(int i, int k, float *out, int max);
 int  aos_sensor_candidates(aos_sensor_cand_t *out, int max);
 

@@ -524,6 +524,11 @@ bool aos_io_i2c_xfer(aos_io_i2c_t *b, uint8_t addr, const void *w, size_t wn, vo
     return b && aos_io_be_i2c_xfer(b, addr, w, wn, r, rn, timeout_ms);
 }
 
+bool aos_io_i2c_dev_cfg(aos_io_i2c_t *b, uint8_t addr, uint32_t hz, uint32_t stretch_us)
+{
+    return b && aos_io_be_i2c_dev_cfg(b, addr, hz, stretch_us);
+}
+
 void aos_io_i2c_close(aos_io_i2c_t *b)
 {
     if (!b) return;

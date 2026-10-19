@@ -276,7 +276,7 @@ void dl_list_build(void)
         lv_obj_set_flex_flow(e, LV_FLEX_FLOW_COLUMN);
         lv_obj_set_style_pad_row(e, 14, 0);
         aos_label(e, _("Todavía no hay lecturas"), aos_font_title, AOS_C_TEXT);
-        dl_caption(e, _("Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor I2C, SPI o 1-Wire, una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés."), w - 56);
+        dl_caption(e, _("Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor (I2C, SPI, 1-Wire, de pines o por puerto serie), una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés."), w - 56);
         dl_pill(e, AOS_SYM_PLUS, _("Agregar una lectura"), DL_C_DARK, plus_cb, NULL);
     }
     settings(col, w);

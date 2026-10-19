@@ -28,12 +28,15 @@ The form asks, in this order:
    or at up to eight times of day. "Every" reads at once when logging
    starts and then on the clock's grid (every 5 min is :00, :05...). The
    times need the clock from the network.
-2. **Kind of sensor:** GPIO, I2C, SPI, 1-Wire or Otros.
+2. **Kind of sensor:** GPIO, I2C, SPI, 1-Wire, Pines (a DHT22, an HC-SR04,
+   a scale, a flow meter, a PIR), Serie (an MH-Z19, a PMS5003, a PZEM-004T,
+   a radar) or Otros.
 3. **What that kind asks:**
-   - **I2C, SPI, 1-Wire:** the bus, the sensor on it (BME280 0x76, MAX6675
-     CS49, DS18B20 5A1E0F) and which of its values (temperature, humidity,
-     pressure...), each with what it reads now. These are the system's
-     sensor service (`aos_sensors.h`, `docs/MODULES.md`): the app never
+   - **I2C, SPI, 1-Wire, Pines, Serie:** the bus, the sensor on it (BME280
+     0x76, MAX6675 CS49, DS18B20 5A1E0F, DHT22) and which of its values
+     (temperature, humidity, pressure... up to twelve), each with what it
+     reads now and the unit the service gives it. These are the system's
+     sensor service (`aos_sensors.h`, `docs/SENSORS.md`): the app never
      opens those buses, it takes the latest value of a sensor by name, so
      Módulos, Bus and the portal see the same thing. A kind with nothing
      on it says how to connect or declare one, with "Buscar de nuevo" and

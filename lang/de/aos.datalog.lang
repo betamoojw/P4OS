@@ -181,10 +181,8 @@ Abrir Módulos	Module öffnen
 No hay ningún ADS1115. Conectalo a i2c.ext (SDA GPIO21 pin 15, SCL GPIO22 pin 17, 3V3 y GND): se reconoce solo en unos segundos.	Kein ADS1115 vorhanden. An i2c.ext anschließen (SDA GPIO21 Pin 15, SCL GPIO22 Pin 17, 3V3 und GND): er wird in wenigen Sekunden von selbst erkannt.
 
 #: apps/datalog/main/dl_edit.c:387
-No hay sensores I2C. Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 en i2c.ext (SDA GPIO21, SCL GPIO22) se reconocen solos; un BH1750 se declara en Módulos.	Keine I2C-Sensoren. BME280, SHT3x/4x, AHT20, INA219/226 und ADS1115 an i2c.ext (SDA GPIO21, SCL GPIO22) werden von selbst erkannt; ein BH1750 wird in Module eingetragen.
 
 #: apps/datalog/main/dl_edit.c:388
-No hay sensores SPI. Un MAX6675 se declara en Módulos (Puertos, Agregar): el puerto spi.a y su CS.	Keine SPI-Sensoren. Ein MAX6675 wird in Module eingetragen (Ports, Hinzufügen): der Port spi.a und sein CS.
 
 #: apps/datalog/main/dl_edit.c:389
 No hay sensores 1-Wire. Un bus de DS18B20 se declara en Módulos (Puertos, Agregar, DS18B20): se elige el pin.	Keine 1-Wire-Sensoren. Ein DS18B20-Bus wird in Module eingetragen (Ports, Hinzufügen, DS18B20): dort den Pin wählen.
@@ -454,7 +452,7 @@ Cada lectura va a su archivo en %s de la tarjeta (se bajan desde el portal, en D
 Todavía no hay lecturas	Noch keine Messungen
 
 #: apps/datalog/main/dl_list.c:279
-Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor I2C, SPI o 1-Wire, una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.	Jede Messung ist ein Wert, der mit Datum und Uhrzeit in eine CSV kommt: ein I2C-, SPI- oder 1-Wire-Sensor, ein ADS1115-Eingang oder ein Pin der Stiftleiste, in Abständen oder zu festen Uhrzeiten, auf Wunsch mit Alarmen.
+Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor (I2C, SPI, 1-Wire, de pines o por puerto serie), una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.	Jede Messung ist ein Wert, der mit Datum und Uhrzeit in eine CSV kommt: ein Sensor (I2C, SPI, 1-Wire, an Pins oder seriell), ein ADS1115-Eingang oder ein Pin der Stiftleiste, in Abständen oder zu festen Uhrzeiten, auf Wunsch mit Alarmen.
 
 #: apps/datalog/main/dl_list.c:280
 Agregar una lectura	Messung hinzufügen
@@ -645,3 +643,19 @@ Borrar los datos	Daten löschen
 
 #: apps/datalog/main/dl_view.c:377
 Cargando…	Lädt…
+No hay sensores I2C. Los conocidos se reconocen solos en i2c.ext (SDA GPIO21, SCL GPIO22); los pocos que no se pueden reconocer sin riesgo (PCF8591, PCF8574, LM75…) se declaran en Módulos.	Keine I2C-Sensoren. Bekannte werden an i2c.ext (SDA GPIO21, SCL GPIO22) von selbst erkannt; die wenigen, die sich nicht gefahrlos erkennen lassen (PCF8591, PCF8574, LM75…), werden in Module eingetragen.
+No contesta en el pin. ¿Alimentación, cables, el modelo?	Keine Antwort am Pin. Versorgung, Kabel, das Modell?
+No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?	Keine Antwort an der seriellen Schnittstelle. TX und RX gekreuzt, Versorgung?
+Fuera de rango	Außerhalb des Bereichs
+No hay sensores SPI. Una termocupla (MAX6675, MAX31855), una PT100 (MAX31865) o un MCP3008 se declaran en Módulos (Puertos, Agregar): el puerto spi.a y su CS.	Keine SPI-Sensoren. Ein Thermoelement (MAX6675, MAX31855), ein PT100 (MAX31865) oder ein MCP3008 wird in Module eingetragen (Ports, Hinzufügen): der Port spi.a und sein CS.
+No hay sensores de pines. Un DHT22, un HC-SR04, una balanza HX711, un caudalímetro o un PIR se declaran en Módulos (Puertos, Agregar): se eligen sus pines.	Keine Pin-Sensoren. Ein DHT22, ein HC-SR04, eine HX711-Waage, ein Durchflussmesser oder ein PIR wird in Module eingetragen (Ports, Hinzufügen): man wählt seine Pins.
+No hay sensores por puerto serie. Un MH-Z19, un PMS5003, un PZEM-004T o un radar LD2410 se declaran en Módulos (Puertos, Agregar), en uart.a.	Keine seriellen Sensoren. Ein MH-Z19, ein PMS5003, ein PZEM-004T oder ein LD2410-Radar wird in Module eingetragen (Ports, Hinzufügen), an uart.a.
+Pines	Pins
+Serie	Seriell
+La RTD está abierta o le falta un cable	Der RTD ist offen oder ein Kabel fehlt
+La termocupla está en corto a GND	Das Thermoelement hat Kurzschluss nach GND
+La termocupla está en corto a VCC	Das Thermoelement hat Kurzschluss nach VCC
+Una punta de la termocupla toca VCC o GND	Ein Thermoelementdraht berührt VCC oder GND
+La RTD está en corto	Der RTD ist kurzgeschlossen
+Falta %s= en la línea del módulo	In der Modulzeile fehlt %s=
+No se entiende lo que manda: ¿otra velocidad u otro sensor?	Was er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?

@@ -33,6 +33,7 @@
 #include "aos_i18n.h"
 #include "aos_io.h"
 #include "aos_sensors.h"
+#include "aos_sensor_text.h"
 #include "aos_sys_glyphs.h"
 #include "aos_theme.h"
 #include "aos_ui.h"
@@ -64,7 +65,11 @@ void        dl_i18n_load(void);
 #define DL_C_LOW    lv_color_hex(0x64D2FF)
 
 /* What kind of source a line has: the form's first choice */
-enum { DL_K_GPIO = 0, DL_K_I2C, DL_K_SPI, DL_K_OW, DL_K_SYS, DL_K_COUNT };
+/* GPIO: a pin's level or an ADS1115 input; I2C, SPI, 1-Wire, PIN (a DHT,
+ * an HC-SR04, a scale, pulses) and UART: a sensor of the service; SYS: the
+ * board itself */
+enum { DL_K_GPIO = 0, DL_K_I2C, DL_K_SPI, DL_K_OW, DL_K_PIN, DL_K_UART, DL_K_SYS, DL_K_COUNT };
+#define DL_K_SERVICE(k) ((k) >= DL_K_I2C && (k) <= DL_K_UART)
 enum { DL_PULL_NONE = 0, DL_PULL_UP, DL_PULL_DOWN };
 /* An ADS1115 input: volts, the converter's counts, or a straight line
  * through two points into the user's own unit */
@@ -170,6 +175,7 @@ void        dl_fmt_num(float v, int dec, char *out, size_t n);   /* decimal comm
 bool        dl_parse_num(const char *s, float *out);
 int         dl_src_sensors(int kind, bool analog, aos_sensor_t *out, int max);
 bool        dl_src_find(const char *name, aos_sensor_t *out);
+int         dl_src_values(const char *name, aos_sensor_value_t *out, int max);
 void        dl_sensor_where(const aos_sensor_t *s, char *out, size_t n);
 void        dl_err_text(const char *err, char *out, size_t n);
 int         dl_ads_gain(const char *sensor);

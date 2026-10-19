@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-static const char *const KIND[DL_K_COUNT] = { "gpio", "i2c", "spi", "ow", "sys" };
+static const char *const KIND[DL_K_COUNT] = { "gpio", "i2c", "spi", "ow", "pin", "uart", "sys" };
 static const char *const PULL[3] = { "none", "up", "down" };
 static const char *const MODE[3] = { "volt", "raw", "scale" };
 static const char *const SYS[DL_SYS_COUNT] = { "rssi", "psram", "ram", "uptime" };

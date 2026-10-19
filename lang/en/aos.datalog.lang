@@ -181,10 +181,8 @@ Abrir Módulos	Open Modules
 No hay ningún ADS1115. Conectalo a i2c.ext (SDA GPIO21 pin 15, SCL GPIO22 pin 17, 3V3 y GND): se reconoce solo en unos segundos.	There is no ADS1115. Connect it to i2c.ext (SDA GPIO21 pin 15, SCL GPIO22 pin 17, 3V3 and GND): it is recognised by itself in a few seconds.
 
 #: apps/datalog/main/dl_edit.c:387
-No hay sensores I2C. Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 en i2c.ext (SDA GPIO21, SCL GPIO22) se reconocen solos; un BH1750 se declara en Módulos.	No I2C sensors. BME280, SHT3x/4x, AHT20, INA219/226 and ADS1115 on i2c.ext (SDA GPIO21, SCL GPIO22) are recognised by themselves; a BH1750 is declared in Modules.
 
 #: apps/datalog/main/dl_edit.c:388
-No hay sensores SPI. Un MAX6675 se declara en Módulos (Puertos, Agregar): el puerto spi.a y su CS.	No SPI sensors. A MAX6675 is declared in Modules (Ports, Add): the spi.a port and its CS.
 
 #: apps/datalog/main/dl_edit.c:389
 No hay sensores 1-Wire. Un bus de DS18B20 se declara en Módulos (Puertos, Agregar, DS18B20): se elige el pin.	No 1-Wire sensors. A bus of DS18B20s is declared in Modules (Ports, Add, DS18B20): you pick the pin.
@@ -454,7 +452,7 @@ Cada lectura va a su archivo en %s de la tarjeta (se bajan desde el portal, en D
 Todavía no hay lecturas	No readings yet
 
 #: apps/datalog/main/dl_list.c:279
-Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor I2C, SPI o 1-Wire, una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.	Each reading is a value logged to a CSV with its date and time: an I2C, SPI or 1-Wire sensor, an ADS1115 input or a pin of the header, every so often or at set times, with alarms if you like.
+Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor (I2C, SPI, 1-Wire, de pines o por puerto serie), una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.	Each reading is a value logged to a CSV with its date and time: a sensor (I2C, SPI, 1-Wire, on pins or on a serial port), an ADS1115 input or a pin of the header, every so often or at set times, with alarms if you like.
 
 #: apps/datalog/main/dl_list.c:280
 Agregar una lectura	Add a reading
@@ -645,3 +643,19 @@ Borrar los datos	Delete the data
 
 #: apps/datalog/main/dl_view.c:377
 Cargando…	Loading…
+No hay sensores I2C. Los conocidos se reconocen solos en i2c.ext (SDA GPIO21, SCL GPIO22); los pocos que no se pueden reconocer sin riesgo (PCF8591, PCF8574, LM75…) se declaran en Módulos.	No I2C sensors. The known ones are recognised by themselves on i2c.ext (SDA GPIO21, SCL GPIO22); the few that cannot be recognised safely (PCF8591, PCF8574, LM75…) are declared in Modules.
+No contesta en el pin. ¿Alimentación, cables, el modelo?	No answer on the pin. Power, wiring, the model?
+No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?	No answer on the serial port. TX and RX crossed, power?
+Fuera de rango	Out of range
+No hay sensores SPI. Una termocupla (MAX6675, MAX31855), una PT100 (MAX31865) o un MCP3008 se declaran en Módulos (Puertos, Agregar): el puerto spi.a y su CS.	No SPI sensors. A thermocouple (MAX6675, MAX31855), a PT100 (MAX31865) or an MCP3008 is declared in Modules (Ports, Add): the spi.a port and its CS.
+No hay sensores de pines. Un DHT22, un HC-SR04, una balanza HX711, un caudalímetro o un PIR se declaran en Módulos (Puertos, Agregar): se eligen sus pines.	No pin sensors. A DHT22, an HC-SR04, an HX711 scale, a flow meter or a PIR is declared in Modules (Ports, Add): you choose its pins.
+No hay sensores por puerto serie. Un MH-Z19, un PMS5003, un PZEM-004T o un radar LD2410 se declaran en Módulos (Puertos, Agregar), en uart.a.	No serial sensors. An MH-Z19, a PMS5003, a PZEM-004T or an LD2410 radar is declared in Modules (Ports, Add), on uart.a.
+Pines	Pins
+Serie	Serial
+La RTD está abierta o le falta un cable	The RTD is open or a wire is missing
+La termocupla está en corto a GND	The thermocouple is shorted to GND
+La termocupla está en corto a VCC	The thermocouple is shorted to VCC
+Una punta de la termocupla toca VCC o GND	A thermocouple lead touches VCC or GND
+La RTD está en corto	The RTD is shorted
+Falta %s= en la línea del módulo	The module line lacks %s=
+No se entiende lo que manda: ¿otra velocidad u otro sensor?	Cannot make sense of what it sends: another speed or another sensor?

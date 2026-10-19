@@ -170,6 +170,9 @@ static void mode_cb(lv_event_t *e) { D.d.an_mode = (uint8_t)UD(e); build(); }
 
 static aos_sensor_t s_sens[AOS_SENSOR_MAX];
 static int s_nsens;
+/* every value of the chosen sensor, not only the four of aos_sensor_t */
+static aos_sensor_value_t s_vals[AOS_SENSOR_XVALUES];
+static int s_nvals;
 
 static void bus_cb(lv_event_t *e)
 {
@@ -187,10 +190,12 @@ static void sensor_cb(lv_event_t *e)
     dl_scpy(D.d.sensor, sizeof D.d.sensor, s_sens[i].name);
     dl_scpy(D.bus, sizeof D.bus, s_sens[i].port);
     /* the only value, or the same key it had, stays chosen */
+    aos_sensor_value_t v[AOS_SENSOR_XVALUES];
+    int nv = dl_src_values(s_sens[i].name, v, AOS_SENSOR_XVALUES);
     bool keep = false;
-    for (int k = 0; k < s_sens[i].n; k++) keep |= !strcmp(s_sens[i].v[k].key, D.d.key);
+    for (int k = 0; k < nv; k++) keep |= !strcmp(v[k].key, D.d.key);
     if (!keep) {
-        if (s_sens[i].n == 1 || D.d.analog) dl_scpy(D.d.key, sizeof D.d.key, s_sens[i].n ? s_sens[i].v[0].key : "");
+        if (nv == 1 || D.d.analog) dl_scpy(D.d.key, sizeof D.d.key, nv ? v[0].key : "");
         else D.d.key[0] = 0;
     }
     auto_name();
@@ -198,9 +203,9 @@ static void sensor_cb(lv_event_t *e)
 }
 static void key_cb(lv_event_t *e)
 {
-    int v = UD(e), i = v / AOS_SENSOR_VALUES, k = v % AOS_SENSOR_VALUES;
-    if (i < 0 || i >= s_nsens || k >= s_sens[i].n) return;
-    dl_scpy(D.d.key, sizeof D.d.key, s_sens[i].v[k].key);
+    int k = UD(e);
+    if (k < 0 || k >= s_nvals) return;
+    dl_scpy(D.d.key, sizeof D.d.key, s_vals[k].key);
     auto_name();
     build();
 }
@@ -366,9 +371,13 @@ static void sensor_label(const aos_sensor_t *s, char *out, size_t n)
 {
     const aos_io_port_t *p = aos_io_port_find(s->port);
     if (p && p->kind == AOS_PORT_GPIO) {
+        /* a 1-Wire sensor by its serial; a pin sensor named after its chip, by the chip */
         const char *us = strrchr(s->name, '_');
-        snprintf(out, n, "%s %s", s->chip, us ? us + 1 : s->name);
+        if (us) snprintf(out, n, "%s %s", s->chip, us + 1);
+        else if (aos_sensor_chip_find(s->name)) snprintf(out, n, "%s", s->chip);
+        else snprintf(out, n, "%s %s", s->chip, s->name);
     } else if (p && p->kind == AOS_PORT_SPI) snprintf(out, n, "%s CS%u", s->chip, (unsigned)s->addr);
+    else if (p && p->kind == AOS_PORT_UART) snprintf(out, n, "%s", s->chip);
     else snprintf(out, n, "%s 0x%02X", s->chip, s->addr);
     if (s->declared && strcasecmp(s->name, s->chip) && !(p && p->kind == AOS_PORT_GPIO)) {
         size_t o = strlen(out);
@@ -384,8 +393,10 @@ static void sec_service(lv_obj_t *col, int32_t w, bool analog)
     for (int i = 0; i < s_nsens; i++) if (!strcmp(s_sens[i].name, D.d.sensor)) sel = i;
     if (!s_nsens && !D.d.sensor[0]) {
         const char *t = analog ? _("No hay ningún ADS1115. Conectalo a i2c.ext (SDA GPIO21 pin 15, SCL GPIO22 pin 17, 3V3 y GND): se reconoce solo en unos segundos.")
-                      : D.d.kind == DL_K_I2C ? _("No hay sensores I2C. Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 en i2c.ext (SDA GPIO21, SCL GPIO22) se reconocen solos; un BH1750 se declara en Módulos.")
-                      : D.d.kind == DL_K_SPI ? _("No hay sensores SPI. Un MAX6675 se declara en Módulos (Puertos, Agregar): el puerto spi.a y su CS.")
+                      : D.d.kind == DL_K_I2C ? _("No hay sensores I2C. Los conocidos se reconocen solos en i2c.ext (SDA GPIO21, SCL GPIO22); los pocos que no se pueden reconocer sin riesgo (PCF8591, PCF8574, LM75…) se declaran en Módulos.")
+                      : D.d.kind == DL_K_SPI ? _("No hay sensores SPI. Una termocupla (MAX6675, MAX31855), una PT100 (MAX31865) o un MCP3008 se declaran en Módulos (Puertos, Agregar): el puerto spi.a y su CS.")
+                      : D.d.kind == DL_K_PIN ? _("No hay sensores de pines. Un DHT22, un HC-SR04, una balanza HX711, un caudalímetro o un PIR se declaran en Módulos (Puertos, Agregar): se eligen sus pines.")
+                      : D.d.kind == DL_K_UART ? _("No hay sensores por puerto serie. Un MH-Z19, un PMS5003, un PZEM-004T o un radar LD2410 se declaran en Módulos (Puertos, Agregar), en uart.a.")
                       : _("No hay sensores 1-Wire. Un bus de DS18B20 se declara en Módulos (Puertos, Agregar, DS18B20): se elige el pin.");
         no_sensors(col, w, t);
         return;
@@ -436,14 +447,15 @@ static void sec_service(lv_obj_t *col, int32_t w, bool analog)
     const aos_sensor_t *s = &s_sens[sel];
     dl_section(col, analog ? _("ENTRADA") : _("VARIABLE"));
     lv_obj_t *k = dl_chips(col, w);
-    for (int i = 0; i < s->n && i < AOS_SENSOR_VALUES; i++) {
+    s_nvals = dl_src_values(s->name, s_vals, AOS_SENSOR_XVALUES);
+    for (int i = 0; i < s_nvals; i++) {
         char t[64], v[32];
         dl_ch_t tmp = D.d;
-        dl_scpy(tmp.key, sizeof tmp.key, s->v[i].key);
+        dl_scpy(tmp.key, sizeof tmp.key, s_vals[i].key);
         tmp.an_mode = DL_AN_VOLT;
-        dl_fmt_value(&tmp, s->state == AOS_SENSOR_OK ? s->v[i].v : NAN, true, v, sizeof v);
-        snprintf(t, sizeof t, "%s · %s", dl_key_name(s->v[i].key), v);
-        dl_chip(k, t, !strcmp(D.d.key, s->v[i].key), key_cb, (void *)(intptr_t)(sel * AOS_SENSOR_VALUES + i));
+        dl_fmt_value(&tmp, s->state == AOS_SENSOR_OK ? s_vals[i].v : NAN, true, v, sizeof v);
+        snprintf(t, sizeof t, "%s · %s", dl_key_name(s_vals[i].key), v);
+        dl_chip(k, t, !strcmp(D.d.key, s_vals[i].key), key_cb, (void *)(intptr_t)i);
     }
     if (s->state == AOS_SENSOR_ERR && s->err[0]) {
         char t[96];
@@ -693,7 +705,7 @@ void dl_edit_open(int ch)
             dl_cfg_defaults(&D.d);
             D.name_auto = true;
             /* the first kind that has a sensor on it */
-            static const int ORDER[] = { DL_K_I2C, DL_K_SPI, DL_K_OW };
+            static const int ORDER[] = { DL_K_I2C, DL_K_SPI, DL_K_OW, DL_K_PIN, DL_K_UART };
             aos_sensor_t s;
             for (size_t k = 0; k < sizeof ORDER / sizeof ORDER[0]; k++)
                 if (dl_src_sensors(ORDER[k], false, &s, 1)) { D.d.kind = (uint8_t)ORDER[k]; break; }

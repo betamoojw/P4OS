@@ -21,16 +21,40 @@
 
 #include <stdlib.h>
 
-/* The quantity of a service key: the unit and the decimals follow it */
+/* The quantity of a service key, for a sensor that is not there now (the
+ * service says it with every value: ch_q() asks it first) */
 static int key_q(const char *key)
 {
-    if (!strcmp(key, "temp")) return AOS_SQ_TEMP;
+    if (!strcmp(key, "temp") || !strcmp(key, "obj") || !strcmp(key, "amb") || !strcmp(key, "cj")) return AOS_SQ_TEMP;
     if (!strcmp(key, "hum")) return AOS_SQ_HUM;
     if (!strcmp(key, "press")) return AOS_SQ_PRESS;
     if (!strcmp(key, "lux")) return AOS_SQ_LUX;
     if (!strcmp(key, "current")) return AOS_SQ_CURR;
     if (!strcmp(key, "power")) return AOS_SQ_POWER;
+    if (!strcmp(key, "co2") || !strcmp(key, "eco2")) return AOS_SQ_CO2;
+    if (!strcmp(key, "tvoc")) return AOS_SQ_TVOC;
+    if (!strncmp(key, "pm", 2)) return AOS_SQ_PM;
+    if (!strcmp(key, "dist")) return AOS_SQ_DIST;
     return AOS_SQ_VOLT;     /* bus, shunt, a0..a3 */
+}
+
+/* Every value of the service's sensor 'name' (up to AOS_SENSOR_XVALUES) */
+int dl_src_values(const char *name, aos_sensor_value_t *out, int max)
+{
+    int cnt = aos_sensor_count();
+    for (int i = 0; i < cnt; i++) {
+        aos_sensor_t s;
+        if (aos_sensor_at(i, &s) && !strcmp(s.name, name)) return aos_sensor_values(i, out, max);
+    }
+    return 0;
+}
+
+static int ch_q(const dl_ch_t *c)
+{
+    aos_sensor_value_t v[AOS_SENSOR_XVALUES];
+    int n = dl_src_values(c->sensor, v, AOS_SENSOR_XVALUES);
+    for (int k = 0; k < n; k++) if (!strcmp(v[k].key, c->key)) return v[k].q;
+    return key_q(c->key);
 }
 
 static bool same_ci(const char *a, const char *b)
@@ -52,6 +76,8 @@ const char *dl_kind_name(int kind)
     case DL_K_I2C: return "I2C";
     case DL_K_SPI: return "SPI";
     case DL_K_OW: return "1-Wire";
+    case DL_K_PIN: return _("Pines");
+    case DL_K_UART: return _("Serie");
     default: return _("Otros");
     }
 }
@@ -80,7 +106,7 @@ const char *dl_key_name(const char *key)
         static const char *const A[4] = { "A0", "A1", "A2", "A3" };
         return A[key[1] - '0'];
     }
-    return key;
+    return aos_sensor_key_name(key);
 }
 
 const char *dl_src_unit(const dl_ch_t *c)
@@ -96,7 +122,7 @@ const char *dl_src_unit(const dl_ch_t *c)
         if (c->sys == DL_SYS_UPTIME) return "h";
         return "KB";
     default:
-        return aos_sensor_unit(key_q(c->key));
+        return aos_sensor_unit(ch_q(c));
     }
 }
 
@@ -110,11 +136,13 @@ int dl_src_decimals(const dl_ch_t *c)
     case DL_K_SYS:
         return c->sys == DL_SYS_UPTIME ? 2 : 0;
     default:
-        switch (key_q(c->key)) {
-        case AOS_SQ_TEMP: case AOS_SQ_PRESS: return 2;
-        case AOS_SQ_HUM: case AOS_SQ_LUX: return 1;
-        case AOS_SQ_POWER: return 3;
-        default: return 4;
+        switch (ch_q(c)) {
+        case AOS_SQ_TEMP: case AOS_SQ_PRESS: case AOS_SQ_UVI: case AOS_SQ_GYRO: case AOS_SQ_MAG:
+        case AOS_SQ_FREQ: case AOS_SQ_FLOW: case AOS_SQ_SPEED: case AOS_SQ_RAIN: case AOS_SQ_MASS: return 2;
+        case AOS_SQ_HUM: case AOS_SQ_LUX: case AOS_SQ_ANGLE: case AOS_SQ_PERCENT: return 1;
+        case AOS_SQ_POWER: case AOS_SQ_ACCEL: case AOS_SQ_VOLUME: case AOS_SQ_DOSE: return 3;
+        case AOS_SQ_VOLT: case AOS_SQ_CURR: case AOS_SQ_ENERGY: return 4;
+        default: return 0;  /* ppm, ppb, µg/m³, mm, counts, an index, a state */
         }
     }
 }
@@ -126,15 +154,7 @@ const char *dl_src_glyph(const dl_ch_t *c)
     case DL_K_SYS:
         return c->sys == DL_SYS_RSSI ? AOS_SYM_WIFI : c->sys == DL_SYS_UPTIME ? AOS_SYM_TIMER_OUTLINE : AOS_SYM_MEMORY;
     default:
-        switch (key_q(c->key)) {
-        case AOS_SQ_TEMP: return AOS_SYM_THERMOMETER;
-        case AOS_SQ_HUM: return AOS_SYM_WATER_PERCENT;
-        case AOS_SQ_PRESS: return AOS_SYM_GAUGE;
-        case AOS_SQ_LUX: return AOS_SYM_BRIGHTNESS_6;
-        case AOS_SQ_CURR: return AOS_SYM_SINE_WAVE;
-        case AOS_SQ_POWER: return AOS_SYM_POWER_PLUG;
-        default: return AOS_SYM_LIGHTNING_BOLT;
-        }
+        return aos_sensor_glyph(ch_q(c), c->key);
     }
 }
 
@@ -149,7 +169,7 @@ void dl_fmt_num(float v, int dec, char *out, size_t n)
 void dl_fmt_value(const dl_ch_t *c, float v, bool unit, char *out, size_t n)
 {
     int dec = dl_src_decimals(c);
-    if (c->kind >= DL_K_I2C && c->kind <= DL_K_OW && key_q(c->key) == AOS_SQ_TEMP) dec = 1;
+    if (DL_K_SERVICE(c->kind) && ch_q(c) == AOS_SQ_TEMP) dec = 1;
     if (c->kind == DL_K_GPIO && c->analog && c->an_mode == DL_AN_SCALE) dec = fabsf(v) >= 100 ? 1 : 2;
     char num[32];
     dl_fmt_num(v, dec, num, sizeof num);
@@ -175,14 +195,41 @@ bool dl_parse_num(const char *s, float *out)
 
 /* ---- the sensor service ---- */
 
-static int port_kind(const char *port)
+/* The driver of a sensor of the service: by its name ("dht22", "ds18b20_A1B2C3"),
+ * the chip= of its module line, or the chip it shows */
+static const aos_sensor_chip_t *sensor_chip(const aos_sensor_t *s)
 {
-    const aos_io_port_t *p = aos_io_port_find(port);
+    const aos_sensor_chip_t *c = aos_sensor_chip_find(s->name);
+    if (c) return c;
+    const aos_io_module_t *m = aos_io_module_find(s->name);
+    const char *a = m ? strstr(m->args, "chip=") : NULL;
+    if (a) {
+        char id[24];
+        size_t k = 0;
+        for (a += 5; *a && *a != ' ' && k + 1 < sizeof id; a++) id[k++] = *a;
+        id[k] = 0;
+        if ((c = aos_sensor_chip_find(id))) return c;
+    }
+    char low[16];
+    size_t k = 0;
+    for (const char *p = s->chip; *p && k + 1 < sizeof low; p++) low[k++] = (char)(*p >= 'A' && *p <= 'Z' ? *p + 32 : *p);
+    low[k] = 0;
+    return aos_sensor_chip_find(low);
+}
+
+static int sensor_kind(const aos_sensor_t *s)
+{
+    const aos_io_port_t *p = aos_io_port_find(s->port);
     if (!p) return -1;
     switch (p->kind) {
     case AOS_PORT_I2C: return DL_K_I2C;
     case AOS_PORT_SPI: return DL_K_SPI;
-    case AOS_PORT_GPIO: return DL_K_OW;
+    case AOS_PORT_UART: return DL_K_UART;
+    case AOS_PORT_GPIO: {
+        /* a GPIO port is a 1-Wire bus or a sensor's pin */
+        const aos_sensor_chip_t *c = sensor_chip(s);
+        return c && c->bus == AOS_SENSOR_BUS_GPIO ? DL_K_PIN : DL_K_OW;
+    }
     default: return -1;
     }
 }
@@ -193,7 +240,7 @@ int dl_src_sensors(int kind, bool analog, aos_sensor_t *out, int max)
     for (int i = 0; i < cnt && n < max; i++) {
         aos_sensor_t s;
         if (!aos_sensor_at(i, &s)) continue;
-        if (analog ? !is_ads(&s) : port_kind(s.port) != kind) continue;
+        if (analog ? !is_ads(&s) : sensor_kind(&s) != kind) continue;
         out[n++] = s;
     }
     return n;
@@ -212,6 +259,7 @@ void dl_sensor_where(const aos_sensor_t *s, char *out, size_t n)
     const aos_io_port_t *p = aos_io_port_find(s->port);
     if (p && p->kind == AOS_PORT_SPI) snprintf(out, n, "%.15s CS%u", s->port, (unsigned)s->addr);
     else if (p && p->kind == AOS_PORT_GPIO) snprintf(out, n, "%.15s GPIO%u", s->port, (unsigned)s->addr);
+    else if (p && p->kind == AOS_PORT_UART) snprintf(out, n, "%.15s", s->port);
     else snprintf(out, n, "%.15s 0x%02X", s->port, s->addr);
 }
 
@@ -222,14 +270,24 @@ void dl_err_text(const char *err, char *out, size_t n)
     d = d ? d + 1 : "";
     if (!strncmp(err, "nack:spi", 8)) dl_scpy(out, n, _("No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?"));
     else if (!strncmp(err, "nack:ow", 7)) dl_scpy(out, n, _("No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?"));
+    else if (!strncmp(err, "nack:gpio", 9)) dl_scpy(out, n, _("No contesta en el pin. ¿Alimentación, cables, el modelo?"));
+    else if (!strncmp(err, "nack:uart", 9)) dl_scpy(out, n, _("No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?"));
     else if (!strncmp(err, "nack", 4)) dl_scpy(out, n, _("No contesta en esa dirección"));
+    else if (!strncmp(err, "crc:sync", 8)) dl_scpy(out, n, _("No se entiende lo que manda: ¿otra velocidad u otro sensor?"));
     else if (!strncmp(err, "crc", 3)) dl_scpy(out, n, _("Llegó una lectura con el CRC mal"));
     else if (!strncmp(err, "id", 2)) snprintf(out, n, _("En esa dirección hay otro chip (dice %s)"), d);
     else if (!strncmp(err, "notready", 8)) dl_scpy(out, n, _("Todavía no midió"));
     else if (!strncmp(err, "busy", 4)) snprintf(out, n, _("Los pines los tiene %s"), d);
     else if (!strncmp(err, "port", 4)) dl_scpy(out, n, _("No se pudo abrir el puerto"));
     else if (!strncmp(err, "board", 5)) snprintf(out, n, _("Ahí está el %s de la placa"), d);
+    else if (!strncmp(err, "open:rtd", 8)) dl_scpy(out, n, _("La RTD está abierta o le falta un cable"));
+    else if (!strncmp(err, "open:gnd", 8)) dl_scpy(out, n, _("La termocupla está en corto a GND"));
+    else if (!strncmp(err, "open:vcc", 8)) dl_scpy(out, n, _("La termocupla está en corto a VCC"));
+    else if (!strncmp(err, "open:ovuv", 9)) dl_scpy(out, n, _("Una punta de la termocupla toca VCC o GND"));
     else if (!strncmp(err, "open", 4)) dl_scpy(out, n, _("La termocupla está abierta (o no está conectada)"));
+    else if (!strncmp(err, "range:short", 11)) dl_scpy(out, n, _("La RTD está en corto"));
+    else if (!strncmp(err, "range", 5)) dl_scpy(out, n, _("Fuera de rango"));
+    else if (!strncmp(err, "cfg", 3)) snprintf(out, n, _("Falta %s= en la línea del módulo"), d);
     else dl_scpy(out, n, err);
 }
 

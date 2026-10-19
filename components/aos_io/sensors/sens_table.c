@@ -7,7 +7,7 @@
 #include "sens_int.h"
 
 /* The families, in the order their drivers break ties of prio */
-#define FAMILIES(X) X(BASIC) X(ENV) X(AIR) X(LIGHT) X(MOTION) X(POWER) X(DIST) X(MISC) X(SPI) X(GPIO) X(UART)
+#define FAMILIES(X) X(BASIC) X(ENV) X(TEMP) X(AIR) X(LIGHT) X(MOTION) X(POWER) X(DIST) X(MISC) X(SPI) X(GPIO) X(UART)
 #define DECL(f) extern const sens_drv_t *const SENS_G_##f[]; extern const sens_alias_t SENS_A_##f[];
 FAMILIES(DECL)
 #undef DECL

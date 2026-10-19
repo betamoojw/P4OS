@@ -1,5 +1,5 @@
 /*
- * P4OS - Sensor drivers: temperature, humidity and pressure on I2C (sens_int.h, docs/SENSORS.md).
+ * P4OS - Sensor drivers: pressure (barometers) on I2C (sens_int.h, docs/SENSORS.md).
  */
 #include "sens_int.h"
 

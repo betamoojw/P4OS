@@ -152,7 +152,7 @@ bool sim_reg8_xfer(sim_emu_t *d, const uint8_t *w, size_t wn, uint8_t *r, size_t
 }
 
 /* The families' models */
-#define FAMILIES(X) X(ENV) X(AIR) X(LIGHT) X(MOTION) X(POWER) X(DIST) X(MISC)
+#define FAMILIES(X) X(ENV) X(TEMP) X(AIR) X(LIGHT) X(MOTION) X(POWER) X(DIST) X(MISC)
 #define DECL(f) extern const sim_model_t *const SIM_M_##f[];
 FAMILIES(DECL)
 #undef DECL

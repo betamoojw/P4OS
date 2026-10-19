@@ -70,6 +70,15 @@ same pixels as the board.</em></p>
 itself in Modules and by the scan in Bus, and the SPI loopback at 40 MHz
 (that one is a capture from the panel, over HTTP).</em></p>
 
+<p align="center">
+  <img src="docs/img/photo-bus-max6675.jpg" width="300" alt="Bus reading a MAX6675 thermocouple module: 03 89, 28.25 °C">
+  <img src="docs/img/photo-modules-max6675.jpg" width="300" alt="Modules' Sensors page charting the thermocouple heated with a lighter, up to 63 °C and cooling">
+</p>
+
+<p align="center"><em>A MAX6675 with a type K thermocouple on the SPI port:
+Bus's example reads it, and Modules logs it every second; the curve is the
+tip heated with a lighter.</em></p>
+
 ---
 
 ## What it does

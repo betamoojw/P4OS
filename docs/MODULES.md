@@ -150,6 +150,13 @@ The UIs scale them for a bench: mV, mA and mW below 1. The value keys are:
     thermocouple is the error `open`. A word with D15 or D1 set is another
     chip or a wrong SPI mode (`id:<word>`).
   - In the simulator: `P4_SIM_SPI_A="48=max6675"`, or `max6675:open`.
+
+  <img src="img/photo-bus-max6675.jpg" width="280" alt="Bus reading a MAX6675 thermocouple module: 03 89, 28.25 °C">
+  <img src="img/photo-modules-max6675.jpg" width="280" alt="Modules' Sensors page charting the thermocouple heated with a lighter, up to 63 °C and cooling">
+
+  On the board (2026-10-18): Bus's example read `03 89`, 28.25 °C; declared
+  from Módulos it was read every second with no error, and a lighter at the
+  tip took it from 26 to 63 °C in 15 s.
 - **DS18B20 and its family on 1-Wire (2026-10-18):**
   - A bus is a GPIO port (`port gpio.ow pin=28`) with a module line on it
     (`module ds18b20 gpio.ow`). A GPIO port without one is never driven:

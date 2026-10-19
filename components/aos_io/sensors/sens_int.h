@@ -62,6 +62,10 @@ typedef struct {
 
 typedef struct sens_drv {
     aos_sensor_chip_t pub;          /* what aos_sensor_chip_at() gives the UIs */
+    /* Where autodetect tries it among the drivers of an address: lower
+     * first. SP_REG proves itself reading registers, SP_CMD needs a command
+     * (Sensirion's), SP_LAST is a weak signature or a candidate. */
+    uint8_t  prio;
     uint8_t  flags;
     uint8_t  probe[8];              /* I2C: where autodetect looks; none: pub.addrs */
     uint8_t  nprobe;
@@ -100,9 +104,16 @@ struct sens_slot {
 #define SPRIV(s, T) ((T *)(void *)(s)->priv.b)
 #define SPRIV_CHECK(T) _Static_assert(sizeof(T) <= SENS_PRIV, #T " does not fit in the slot")
 
-/* ---- the table (sens_table.c) ---- */
-extern const sens_drv_t *const SENS_DRV[];
-extern const int SENS_NDRV;
+enum { SP_REG = 10, SP_REG2 = 20, SP_CMD = 50, SP_LAST = 90 };
+
+/* ---- the table (sens_table.c) ----
+ * Every driver file exports a NULL-terminated list, SENS_G_<FAMILY>, and
+ * aliases, SENS_A_<FAMILY> (id NULL at the end); the table puts them all
+ * in prio order, the files' order and their own breaking ties. */
+typedef struct { const char *alias, *id; } sens_alias_t;
+extern const sens_drv_t *SENS_DRV[];
+extern int SENS_NDRV;
+void sens_table_init(void);
 int  sens_drv_find(const char *id);         /* index from an id, an alias or "bme280_2"; -1 */
 const sens_drv_t *sens_drv(const sens_slot_t *s);
 

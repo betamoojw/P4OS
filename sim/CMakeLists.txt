@@ -173,6 +173,8 @@ add_custom_command(OUTPUT ${AOS_WEB_C}
 
 # the sensor service's drivers (components/aos_io/sensors)
 file(GLOB AOS_SENSORS_SRC CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/sensors/*.c)
+# and the chips they talk to, by family (sim/emu_*.c, sensors_emu.h)
+file(GLOB SIM_EMU_SRC CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/emu_*.c)
 add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_httpd.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal.c
@@ -224,6 +226,7 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_io_signal.c
     io_sim.c
     sensors_sim.c
+    ${SIM_EMU_SRC}
     eeprom_sim.c
     io_signal_sim.c
     ${AOS_UI_SRC}

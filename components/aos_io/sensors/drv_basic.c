@@ -117,10 +117,12 @@ static int bme_read(sens_io_t *io, sens_slot_t *s)
 }
 
 const sens_drv_t DRV_BME280 = {
+    .prio = SP_REG,
     .pub = { "bme280", "BME280", { 0x76, 0x77 }, 2 },
     .identify = bme_identify, .init = bme_init, .read = bme_read,
 };
 const sens_drv_t DRV_BMP280 = {
+    .prio = SP_REG,
     .pub = { "bmp280", "BMP280", { 0x76, 0x77 }, 2 },
     .identify = bmp_identify, .init = bme_init, .read = bme_read,
 };
@@ -179,16 +181,19 @@ static int sht4_read(sens_io_t *io, sens_slot_t *s)
 }
 
 const sens_drv_t DRV_SHT3X = {
+    .prio = SP_CMD,
     .pub = { "sht3x", "SHT3x", { 0x44, 0x45 }, 2 },
     .identify = sht3_identify, .read = sht3_read,
 };
 const sens_drv_t DRV_SHT4X = {
+    .prio = SP_CMD,
     .pub = { "sht4x", "SHT4x", { 0x44, 0x45 }, 2 },
     .probe = { 0x44, 0x45, 0x46 }, .nprobe = 3,
     .identify = sht4_identify, .read = sht4_read,
 };
 /* the last word at 0x44/0x45, after every chip that proves itself there */
 const sens_drv_t DRV_SHT3X_CAND = {
+    .prio = SP_LAST,
     .pub = { "sht3x", "SHT3x", { 0x44, 0x45 }, 2 },
     .flags = SF_HIDDEN,
     .identify = sht3_candidate, .read = sht3_read,
@@ -243,6 +248,7 @@ static int aht_read(sens_io_t *io, sens_slot_t *s)
 }
 
 const sens_drv_t DRV_AHT20 = {
+    .prio = SP_CMD,
     .pub = { "aht20", "AHT20", { 0x38 }, 1 },
     .identify = aht_identify, .init = aht_init, .read = aht_read,
 };
@@ -268,6 +274,7 @@ static int bh_read(sens_io_t *io, sens_slot_t *s)
 }
 
 const sens_drv_t DRV_BH1750 = {
+    .prio = SP_LAST,
     .pub = { "bh1750", "BH1750", { 0x23, 0x5C }, 2 },
     .identify = bh_identify, .init = bh_init, .read = bh_read,
 };
@@ -327,11 +334,13 @@ static int ina219_read(sens_io_t *io, sens_slot_t *s) { return ina_read_common(i
 static int ina226_read(sens_io_t *io, sens_slot_t *s) { return ina_read_common(io, s, false); }
 
 const sens_drv_t DRV_INA226 = {
+    .prio = SP_REG,
     .pub = { "ina226", "INA226", { 0x40, 0x41, 0x44, 0x45 }, 4, true },
     .probe = { 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47 }, .nprobe = 8,
     .identify = ina226_identify, .init = ina226_init, .read = ina226_read,
 };
 const sens_drv_t DRV_INA219 = {
+    .prio = SP_REG2,
     .pub = { "ina219", "INA219", { 0x40, 0x41, 0x44, 0x45 }, 4, true },
     .probe = { 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47 }, .nprobe = 8,
     .identify = ina219_identify, .read = ina219_read,
@@ -379,6 +388,7 @@ static int ads_read(sens_io_t *io, sens_slot_t *s)
 }
 
 const sens_drv_t DRV_ADS1115 = {
+    .prio = SP_REG,
     .pub = { "ads1115", "ADS1115", { 0x48, 0x49, 0x4A, 0x4B }, 4, false, true },
     .identify = ads_identify, .read = ads_read,
 };
@@ -407,6 +417,7 @@ static int max6675_read(sens_io_t *io, sens_slot_t *s)
 }
 
 const sens_drv_t DRV_MAX6675 = {
+    .prio = SP_REG,
     .pub = { "max6675", "MAX6675", { 0 }, 0, false, false, true, false, AOS_SENSOR_BUS_SPI },
     .flags = SF_NOPROBE, .spi_mode = 0, .spi_hz = 1000000,
     .read = max6675_read,
@@ -414,6 +425,23 @@ const sens_drv_t DRV_MAX6675 = {
 
 /* ---- DS18B20 and its family: the service reads the 1-Wire buses ---- */
 const sens_drv_t DRV_DS18B20 = {
+    .prio = SP_REG,
     .pub = { "ds18b20", "DS18B20", { 0 }, 0, false, false, false, true, AOS_SENSOR_BUS_ONEWIRE, 1 },
     .flags = SF_NOPROBE,
+};
+
+const sens_drv_t *const SENS_G_BASIC[] = {
+    &DRV_BME280, &DRV_BMP280, &DRV_INA226, &DRV_INA219, &DRV_ADS1115,
+    &DRV_SHT3X, &DRV_SHT4X, &DRV_AHT20, &DRV_SHT3X_CAND, &DRV_BH1750,
+    &DRV_MAX6675, &DRV_DS18B20, NULL,
+};
+
+const sens_alias_t SENS_A_BASIC[] = {
+    { "sht30", "sht3x" }, { "sht31", "sht3x" }, { "sht35", "sht3x" }, { "sht85", "sht3x" }, { "gxht30", "sht3x" },
+    { "sht40", "sht4x" }, { "sht41", "sht4x" }, { "sht43", "sht4x" }, { "sht45", "sht4x" },
+    { "aht10", "aht20" }, { "aht21", "aht20" }, { "aht2x", "aht20" }, { "aht25", "aht20" }, { "aht30", "aht20" },
+    { "dht20", "aht20" }, { "am2301b", "aht20" }, { "am2315c", "aht20" },
+    { "gy302", "bh1750" }, { "gy30", "bh1750" },
+    { "ds18s20", "ds18b20" }, { "ds1822", "ds18b20" }, { "max31850", "ds18b20" }, { "onewire", "ds18b20" },
+    { NULL, NULL },
 };

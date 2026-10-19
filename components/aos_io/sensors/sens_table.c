@@ -1,46 +1,63 @@
 /*
  * P4OS - The sensor drivers, in the order autodetect tries them at an
  * address (sens_int.h): the ones a plain register read proves first, those
- * that need a command next, the candidates last.
+ * that need a command next, the candidates last. Each family's file brings
+ * its own list; the table is put together once, at the first use.
  */
 #include "sens_int.h"
 
-#define D(x) extern const sens_drv_t x;
-D(DRV_BME280) D(DRV_BMP280) D(DRV_INA226) D(DRV_INA219) D(DRV_ADS1115)
-D(DRV_SHT3X) D(DRV_SHT4X) D(DRV_AHT20) D(DRV_SHT3X_CAND) D(DRV_BH1750)
-D(DRV_MAX6675) D(DRV_DS18B20)
-#undef D
+/* The families, in the order their drivers break ties of prio */
+#define FAMILIES(X) X(BASIC) X(ENV) X(AIR) X(LIGHT) X(MOTION) X(POWER) X(DIST) X(MISC) X(SPI) X(GPIO) X(UART)
+#define DECL(f) extern const sens_drv_t *const SENS_G_##f[]; extern const sens_alias_t SENS_A_##f[];
+FAMILIES(DECL)
+#undef DECL
 
-const sens_drv_t *const SENS_DRV[] = {
-    /* I2C, proved by a register */
-    &DRV_BME280, &DRV_BMP280,
-    &DRV_INA226, &DRV_INA219,
-    &DRV_ADS1115,
-    /* I2C, proved by a command */
-    &DRV_SHT3X, &DRV_SHT4X, &DRV_AHT20,
-    /* I2C, candidates */
-    &DRV_SHT3X_CAND, &DRV_BH1750,
-    /* SPI, 1-Wire: declared */
-    &DRV_MAX6675, &DRV_DS18B20,
-};
-const int SENS_NDRV = (int)(sizeof SENS_DRV / sizeof SENS_DRV[0]);
+#define MAX_DRV 192
+const sens_drv_t *SENS_DRV[MAX_DRV];
+int SENS_NDRV;
 
-/* Other names people give them in modules.txt */
-static const struct { const char *alias, *id; } ALIAS[] = {
-    { "sht30", "sht3x" }, { "sht31", "sht3x" }, { "sht35", "sht3x" }, { "sht85", "sht3x" }, { "gxht30", "sht3x" },
-    { "sht40", "sht4x" }, { "sht41", "sht4x" }, { "sht43", "sht4x" }, { "sht45", "sht4x" },
-    { "aht10", "aht20" }, { "aht21", "aht20" }, { "aht2x", "aht20" }, { "aht25", "aht20" }, { "aht30", "aht20" },
-    { "dht20", "aht20" }, { "am2301b", "aht20" }, { "am2315c", "aht20" },
-    { "gy302", "bh1750" }, { "gy30", "bh1750" },
-    { "ds18s20", "ds18b20" }, { "ds1822", "ds18b20" }, { "max31850", "ds18b20" }, { "onewire", "ds18b20" },
+static const sens_drv_t *const *const GROUPS[] = {
+#define G(f) SENS_G_##f,
+    FAMILIES(G)
+#undef G
 };
+static const sens_alias_t *const ALIASES[] = {
+#define A(f) SENS_A_##f,
+    FAMILIES(A)
+#undef A
+};
+
+static int s_init, s_ready;
+
+void sens_table_init(void)
+{
+    if (__atomic_exchange_n(&s_init, 1, __ATOMIC_ACQ_REL)) {
+        while (!__atomic_load_n(&s_ready, __ATOMIC_ACQUIRE)) aos_hal_sleep_ms(1);
+        return;
+    }
+    int n = 0;
+    for (size_t g = 0; g < sizeof GROUPS / sizeof GROUPS[0]; g++)
+        for (int i = 0; GROUPS[g][i] && n < MAX_DRV; i++) SENS_DRV[n++] = GROUPS[g][i];
+    /* stable insertion sort by prio: the families' order breaks the ties */
+    for (int i = 1; i < n; i++) {
+        const sens_drv_t *d = SENS_DRV[i];
+        int j = i;
+        for (; j > 0 && SENS_DRV[j - 1]->prio > d->prio; j--) SENS_DRV[j] = SENS_DRV[j - 1];
+        SENS_DRV[j] = d;
+    }
+    SENS_NDRV = n;
+    __atomic_store_n(&s_ready, 1, __ATOMIC_RELEASE);
+}
 
 int sens_drv_find(const char *id)
 {
+    sens_table_init();
     if (!id || !*id) return -1;
-    for (int i = 0; i < SENS_NDRV; i++) if (!strcmp(SENS_DRV[i]->pub.id, id)) return i;
-    for (size_t i = 0; i < sizeof ALIAS / sizeof ALIAS[0]; i++)
-        if (!strcmp(ALIAS[i].alias, id)) return sens_drv_find(ALIAS[i].id);
+    /* the first of an id that is not a hidden twin */
+    for (int i = 0; i < SENS_NDRV; i++) if (!(SENS_DRV[i]->flags & SF_HIDDEN) && !strcmp(SENS_DRV[i]->pub.id, id)) return i;
+    for (size_t g = 0; g < sizeof ALIASES / sizeof ALIASES[0]; g++)
+        for (int i = 0; ALIASES[g][i].alias; i++)
+            if (!strcmp(ALIASES[g][i].alias, id)) return sens_drv_find(ALIASES[g][i].id);
     /* "bme280_b", "ina219-banco": the part before the separator */
     char base[24];
     size_t n = strcspn(id, "_-.");
@@ -59,6 +76,7 @@ const sens_drv_t *sens_drv(const sens_slot_t *s)
 
 int aos_sensor_chip_count(void)
 {
+    sens_table_init();
     int n = 0;
     for (int i = 0; i < SENS_NDRV; i++) if (!(SENS_DRV[i]->flags & SF_HIDDEN)) n++;
     return n;
@@ -66,6 +84,7 @@ int aos_sensor_chip_count(void)
 
 const aos_sensor_chip_t *aos_sensor_chip_at(int i)
 {
+    sens_table_init();
     for (int k = 0; k < SENS_NDRV; k++) {
         if (SENS_DRV[k]->flags & SF_HIDDEN) continue;
         if (i-- == 0) return &SENS_DRV[k]->pub;

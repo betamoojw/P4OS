@@ -18,13 +18,15 @@
  *   "0" / "off"    none (the plain register blobs of io_sim.c, as before)
  *   a list         "bmp280@0x77,sht4x,aht20,ina226@0x41": any of bme280,
  *                  bmp280, sht31 (sht3x), sht4x, aht20, bh1750, ina219,
- *                  ina226, ads1115; the address defaults to the usual one.
+ *                  ina226, ads1115, and every model of sim/emu_*.c
+ *                  (sensors_emu.h); the address defaults to the usual one.
  *
  * They answer on every I2C port except i2c.board (whose chips io_sim.c
  * plays already). Thread-safe: the sensor service and the Bus app use the
  * bus from different threads.
  */
 #include "aos_hal.h"
+#include "sensors_emu.h"
 
 #include <math.h>
 #include <pthread.h>
@@ -115,6 +117,66 @@ static double ads_in(int ch, double t)
     case 2: return 1.20 + 0.08 * sin(TAU * t / 90.0) + noise(0.001);   /* an NTC divider */
     default: return noise(0.0005);                               /* tied to GND */
     }
+}
+
+/* ---- for the models of sim/emu_*.c (sensors_emu.h) ---- */
+uint64_t sim_ms(void) { return aos_hal_uptime_ms(); }
+double sim_now_s(void) { return now_s(); }
+double sim_noise(double amp) { return noise(amp); }
+double sim_room_t(double t) { return room_t(t); }
+double sim_room_h(double t) { return room_h(t); }
+double sim_room_p(double t) { return room_p(t); }
+double sim_light(double t) { return light(t); }
+
+uint8_t sim_crc8(const uint8_t *d, int n, uint8_t poly, uint8_t init)
+{
+    uint8_t c = init;
+    for (int i = 0; i < n; i++) {
+        c ^= d[i];
+        for (int k = 0; k < 8; k++) c = (uint8_t)(c & 0x80 ? (c << 1) ^ poly : c << 1);
+    }
+    return c;
+}
+
+bool sim_reg8_xfer(sim_emu_t *d, const uint8_t *w, size_t wn, uint8_t *r, size_t rn)
+{
+    if (wn) {
+        d->ptr = w[0];
+        for (size_t i = 1; i < wn; i++) d->regs[(uint8_t)(d->ptr + i - 1)] = w[i];
+        if (wn > 1) d->ptr = (uint8_t)(d->ptr + wn - 1);
+        if (wn > 1 && !rn) return true;
+        d->ptr = w[0];
+    }
+    for (size_t i = 0; i < rn; i++) r[i] = d->regs[(uint8_t)(d->ptr + i)];
+    return true;
+}
+
+/* The families' models */
+#define FAMILIES(X) X(ENV) X(AIR) X(LIGHT) X(MOTION) X(POWER) X(DIST) X(MISC)
+#define DECL(f) extern const sim_model_t *const SIM_M_##f[];
+FAMILIES(DECL)
+#undef DECL
+static const sim_model_t *const *const MODELS[] = {
+#define G(f) SIM_M_##f,
+    FAMILIES(G)
+#undef G
+};
+
+static const sim_model_t *model_named(const char *name)
+{
+    for (size_t g = 0; g < sizeof MODELS / sizeof MODELS[0]; g++)
+        for (int i = 0; MODELS[g][i]; i++) if (!strcmp(MODELS[g][i]->name, name)) return MODELS[g][i];
+    return NULL;
+}
+
+#define MAX_EDEV 16
+static sim_emu_t s_edev[MAX_EDEV];
+static int s_nedev;
+
+static sim_emu_t *efind(uint8_t addr)
+{
+    for (int i = 0; i < s_nedev; i++) if (s_edev[i].addr == addr) return &s_edev[i];
+    return NULL;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -487,15 +549,30 @@ static void setup(void)
         for (int k = 0; k < D_N; k++) if (!strcmp(tok, KIND[k].name)) kind = k;
         if (!strcmp(tok, "sht3x") || !strcmp(tok, "sht30")) kind = D_SHT3X;
         if (!strcmp(tok, "sht40") || !strcmp(tok, "sht41")) kind = D_SHT4X;
-        if (kind < 0) { aos_hal_log("sim", "P4_SIM_SENSORS: no such sensor '%s'", tok); continue; }
+        if (kind < 0) {
+            const sim_model_t *m = model_named(tok);
+            if (!m) { aos_hal_log("sim", "P4_SIM_SENSORS: no such sensor '%s'", tok); continue; }
+            if (s_nedev < MAX_EDEV) {
+                sim_emu_t *d = &s_edev[s_nedev++];
+                memset(d, 0, sizeof *d);
+                d->m = m;
+                d->addr = (uint8_t)(at ? (int)strtol(at, NULL, 0) : m->addr);
+                if (m->reset) m->reset(d);
+            }
+            continue;
+        }
         add_dev(kind, at ? (int)strtol(at, NULL, 0) : KIND[kind].addr);
     }
-    char list[160] = "";
+    char list[400] = "";
     for (int i = 0; i < s_ndev; i++) {
         size_t o = strlen(list);
         snprintf(list + o, sizeof list - o, "%s%s@0x%02X", i ? " " : "", KIND[s_dev[i].kind].name, s_dev[i].addr);
     }
-    aos_hal_log("sim", "emulated I2C sensors: %s", s_ndev ? list : "none");
+    for (int i = 0; i < s_nedev; i++) {
+        size_t o = strlen(list);
+        snprintf(list + o, sizeof list - o, "%s%s@0x%02X", o ? " " : "", s_edev[i].m->name, s_edev[i].addr);
+    }
+    aos_hal_log("sim", "emulated I2C sensors: %s", list[0] ? list : "none");
 }
 
 static emu_t *find(uint8_t addr)
@@ -509,7 +586,7 @@ bool sim_sensors_on(void)
 {
     pthread_mutex_lock(&s_mx);
     if (s_ndev < 0) setup();
-    bool on = s_ndev > 0;
+    bool on = s_ndev > 0 || s_nedev > 0;
     pthread_mutex_unlock(&s_mx);
     return on;
 }
@@ -517,7 +594,7 @@ bool sim_sensors_on(void)
 bool sim_sensors_has(uint8_t addr)
 {
     pthread_mutex_lock(&s_mx);
-    bool ok = find(addr) != NULL;
+    bool ok = find(addr) != NULL || (s_ndev >= 0 && efind(addr) != NULL);
     pthread_mutex_unlock(&s_mx);
     return ok;
 }
@@ -527,6 +604,8 @@ bool sim_sensors_xfer(uint8_t addr, const uint8_t *w, size_t wn, uint8_t *r, siz
     pthread_mutex_lock(&s_mx);
     emu_t *d = find(addr);
     bool ok = false;
+    sim_emu_t *e = d ? NULL : efind(addr);
+    if (e) ok = e->m->xfer(e, w, wn, r, rn);
     if (d) {
         switch (d->kind) {
         case D_BME280: case D_BMP280: ok = bme_xfer(d, w, wn, r, rn); break;

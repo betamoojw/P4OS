@@ -865,6 +865,7 @@ void aos_sensors_start(void)
         while (!__atomic_load_n(&s_ready, __ATOMIC_ACQUIRE)) aos_hal_sleep_ms(1);
         return;
     }
+    sens_table_init();
     s_mx = aos_hal_mutex_create();
     s_keep_ms = sens_now();
     __atomic_store_n(&s_ready, 1, __ATOMIC_RELEASE);

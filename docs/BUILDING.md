@@ -35,7 +35,25 @@ card's apps and the preferences stay. Opening the CH340 port in any other way
 `app-flash` always writes `ota_0`, so `build_fw.sh` erases the otadata after
 it: otherwise a board that last updated over Wi-Fi goes on booting `ota_1`,
 the old image. A full `flash` (bootloader and partition table too) is only
-needed when those change; the rollback below needed one, once.
+needed when those change; the rollback below needed one, once, and so did
+the bigger app slots (2026-10-19):
+
+    tools/build_fw.sh rev1_3 -p /dev/cu.wchusbserial<id> -b 460800 flash
+
+The partition table (`partitions.csv`) never changes over Wi-Fi: an OTA
+writes an app slot and nothing else. The table is:
+
+| Partition | Offset | Size | |
+|---|---|---|---|
+| nvs, otadata, phy_init | 0x9000 | 32 KB | settings, which slot boots |
+| ota_0, ota_1 | 0x20000, 0x990000 | 9.44 MB each | the firmware, twice |
+| storage | 0x1300000 | 12 MB | a FAT nobody mounts yet |
+| coredump | 0x1F00000 | 1 MB | the last crash, for the portal |
+
+Until 2026-10-19 the slots were 8 MB and the last 2.9 MB of the flash were
+unassigned; the firmware with the 112 sensor drivers reached 7.5 MB. If it
+gets tight again, `storage` is the next room: 12 MB down to 8 gives each
+slot 2 MB more, with another serial flash.
 
 ## Updating over Wi-Fi
 
@@ -45,7 +63,7 @@ needed when those change; the rollback below needed one, once.
 Or from the portal: **Firmware**, "Elegir el .bin…" with
 `build/rev1_3/p4os.bin`, then "Reiniciar". The upload takes ~25 s for 5.7 MB.
 
-- The flash has two 8 MB app slots (`ota_0`, `ota_1`). The image is written
+- The flash has two 9.44 MB app slots (`ota_0`, `ota_1`). The image is written
   into the idle one while it arrives (`PUT /api/ota`), so a cut upload leaves
   the running firmware untouched.
 - The new image boots **on trial** (`CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE`).

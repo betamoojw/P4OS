@@ -1,9 +1,11 @@
 # Modules and sensors on the header
 
 The 40-pin header at the back (J3) is where the bench's extra hardware goes.
-This page is about the I2C sensors P4OS reads by itself, how to wire and
+This page is about the sensors P4OS reads by itself, how to wire and
 declare them, what autodetect does, and how the simulator plays them; and
-about the SPI API for the chips an app drives itself ([SPI](#spi)).
+about the SPI API for the chips an app drives itself ([SPI](#spi)). The
+catalogue of the 112 chips the service knows, what each one gives and what
+it takes on its module line is [SENSORS.md](SENSORS.md).
 The design of the header, its ports and `modules.txt` is in
 [plan/EXPANSION.md](plan/EXPANSION.md).
 
@@ -54,6 +56,12 @@ pins that sit together:
   board's own addresses.
 
 ## Supported sensors
+
+The full list is [SENSORS.md](SENSORS.md): temperature and humidity,
+pressure, air quality, light, motion and compass, voltage and current,
+distance and presence, on I2C, SPI, 1-Wire, plain GPIOs and serial ports.
+The table below is the first twelve, the ones measured on the board when
+they came in (2026-10-15 to 10-18), with what each driver does.
 
 | Chip | What it reads | Addresses | Identified by | Module line |
 |---|---|---|---|---|
@@ -236,8 +244,8 @@ The sensor service (`aos_sensors.c`) is a thread that does one round a
 second:
 
 1. **It merges** the sensors `modules.txt` declares with the ones
-   autodetect found. There is one slot per port and address, twelve at
-   most.
+   autodetect found. There is one slot per port and address, 32 at
+   most, each with up to 12 values.
 2. **For each I2C port with something to do,** it opens the port as
    "Sensores" (claiming SDA and SCL), probes if a probe is due, reads every
    sensor on it, and **closes it again**. The port is held for a few
@@ -256,8 +264,10 @@ second:
 
 ### How it decides
 
-It probes only the addresses the supported chips use: 0x23, 0x38, 0x40 to
-0x4F, 0x5C, 0x76 and 0x77.
+It probes only the addresses some driver uses, and at each one it tries the
+drivers in the table's order: those that prove themselves with a plain
+register read first, those that need a command next, weak signatures last
+([SENSORS.md](SENSORS.md#what-autodetect-never-does)).
 
 - **A chip that proves what it is gets read without being declared.** The
   proof is in the "Identified by" column above: an id register, a

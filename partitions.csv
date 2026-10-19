@@ -1,10 +1,17 @@
-# P4OS, 32 MB flash. Two 8 MB app slots for OTA, a FAT store for when there is
+# P4OS, 32 MB flash. Two app slots for OTA, a FAT store for when there is
 # no card, and a coredump the portal can serve.
-# Name,     Type, SubType,  Offset,   Size
-nvs,        data, nvs,      0x9000,   0x6000
-otadata,    data, ota,      0xf000,   0x2000
-phy_init,   data, phy,      0x11000,  0x1000
-ota_0,      app,  ota_0,    0x20000,  8M
-ota_1,      app,  ota_1,    ,         8M
-storage,    data, fat,      ,         12M
-coredump,   data, coredump, ,         1M
+#
+# 2026-10-19: the slots went from 8 MB to 9.44 MB (0x970000) each, taking the
+# 2.9 MB that were left unassigned at the end; storage and coredump moved
+# up. The firmware with the 112 sensor drivers was 7.5 MB, 6 % short of the
+# old 8 MB. The next room, if it gets tight again, is storage: nothing
+# mounts it today, and 12M -> 8M gives each slot 2 MB more. A new table
+# goes on by serial (esptool), never by OTA (docs/BUILDING.md).
+# Name,     Type, SubType,  Offset,     Size
+nvs,        data, nvs,      0x9000,     0x6000
+otadata,    data, ota,      0xf000,     0x2000
+phy_init,   data, phy,      0x11000,    0x1000
+ota_0,      app,  ota_0,    0x20000,    0x970000
+ota_1,      app,  ota_1,    0x990000,   0x970000
+storage,    data, fat,      0x1300000,  12M
+coredump,   data, coredump, 0x1F00000,  1M

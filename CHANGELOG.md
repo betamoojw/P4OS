@@ -1,5 +1,48 @@
 # Changelog
 
+## Unreleased
+
+- **112 sensors, read by themselves.** The sensor service went from twelve
+  chips to 112, from what Adafruit, SparkFun, Seeed, Waveshare, Pimoroni,
+  DFRobot, M5Stack and the GY-xxx boards sell: temperature and humidity
+  (SHT2x/HTU21D/Si7021, SHTC3, HDC1080/2080/302x, AM2320, MCP9808, TMP117,
+  MLX90614...), pressure (BME680/688 with its gas heater, BMP180/388/581,
+  DPS310, LPS22, MS5611, QMP6988), air quality (SCD30/40/41, SGP30, SGP40/41
+  with Sensirion's VOC and NOx indices, CCS811, ENS160, SEN5x, SPS30,
+  PMSA003I), light (VEML7700/6075, TSL2561/2591, TCS34725, APDS-9960,
+  LTR390, OPT3001, Si1145, MAX44009), motion and compass (the MPU family
+  with the MPU-9250's AK8963, ICM-20948/42688, LSM6DS, BMI160, QMI8658,
+  BNO055, ADXL345, LIS3DH and six magnetometers), power (INA260/3221/228,
+  MAX17048, ADS1015, PCF8591, MCP342x, NAU7802, MCP9600), distance (VL53L0X/
+  L1X, VL6180X, URM09, TF-Luna, RCWL-9620) and more (MAX3010x with the
+  pulse, MPR121, Seesaw, AS5600, DS3231, PCF8574). On SPI the MAX31855/
+  31856/31865 and MCP3008/3208; on plain GPIOs the DHT11/22, HC-SR04, HX711,
+  flow meters, rain gauges, anemometers, Geiger tubes, PIRs and contacts;
+  on a serial port the MH-Z19, Senseair S8, PMS5003, SDS011, PZEM-004T and
+  the LD2410/LD2450 radars. Autodetect only reads and never probes where a
+  write could change a chip (a mux, a DAC, an expander); 29 emulated chips
+  of every family read at once in the simulator without one taken for
+  another. The catalogue, the module arguments and the wiring:
+  [docs/SENSORS.md](docs/SENSORS.md).
+- **Up to 12 values a sensor and 32 sensors**, each value with its key and
+  its quantity; `aos_sensor_values()` gives them all, and
+  `aos_sensor_text.h` says them as Módulos does (names, units, glyphs,
+  errors).
+- **Módulos' "Agregar módulo"** picks what it measures first, then the chip;
+  GPIO sensors get their pins (and a second one), serial ones their port.
+  The portal's form groups the chips the same way.
+- **Datalog** reads every value of a sensor, not only the first four, with
+  the unit the service says, and two new kinds: sensors on pins and serial
+  sensors.
+- **Pulses and counts in the HAL** (`aos_io.h`): edges timed by an
+  interrupt, a pulse out, bits clocked in, and edges counted by the PCNT,
+  for the DHT, HC-SR04, HX711 and pulse sensors and for apps.
+- **Bigger firmware slots.** The two OTA slots went from 8 MB to 9.44 MB
+  each, taking the 2.9 MB that were unassigned at the end of the flash
+  (storage and coredump moved up). An update over Wi-Fi still works on the
+  old table; the bigger slots need one full flash by serial
+  (`p4os-rev1_3-full.zip`, docs/BUILDING.md).
+
 ## 0.19.0 — 2026-10-19
 
 - **Datalog** (`apps/datalog`): a data logger for the header's sensors.

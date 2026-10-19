@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.19.0 — 2026-10-19
 
 - **Datalog** (`apps/datalog`): a data logger for the header's sensors.
   Each reading is a value written to its own CSV in `/datalog` with the

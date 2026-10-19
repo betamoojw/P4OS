@@ -8,7 +8,7 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and forty-three more on
+portrait or landscape. There are twenty-three built-in apps and forty-four more on
 the microSD, loaded as shared objects:
 
 - **Games:** twenty-three, among them Mila (a Sokoban with a black cat in
@@ -18,7 +18,8 @@ the microSD, loaded as shared objects:
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
   a VNC viewer for a computer's screen, a computer algebra system with
-  graphs, geometry and statistics, Lua, and Python (MicroPython).
+  graphs, geometry and statistics, a data logger for the header's sensors,
+  Lua, and Python (MicroPython).
 - **A web portal** for files, updates, the log and the network sweeps, and a
   page for every app that wants one, which the app brings from the card.
 - **Bluetooth with the phone:** the iPhone's notifications on the board, in
@@ -179,8 +180,8 @@ header with who holds each pin.
 | <img src="docs/img/app-bus.png" width="125"> | <img src="docs/img/app-modules.png" width="125"> | <img src="docs/img/app-serial.png" width="125"> | <img src="docs/img/app-flasher.png" width="125"> | <img src="docs/img/app-modbus.png" width="125"> | <img src="docs/img/app-elec.png" width="125"> |
 
 - **Bus:** scans I2C and names what answers, talks to SPI chips with presets
-  (flash memories, the MAX31855, the MCP3008, the RC522 RFID reader, a
-  loopback), finds the DS18B20s on a 1-Wire bus and reads them live with
+  (flash memories, the MAX31855 and MAX6675 thermocouples, the MCP3008, the
+  RC522 RFID reader, a loopback), finds the DS18B20s on a 1-Wire bus and reads them live with
   their resolution, and reads and drives GPIO.
 - **LED Strips:** an addressable strip (WS2812B, WS2811, SK6812, SK6812 RGBW)
   on any free pin of the header, with the colour order and the number of
@@ -188,8 +189,11 @@ header with who holds each pin.
   tab estimates what the strip draws, WLED's way, and dims the whole frame to
   stay within the supply's budget. The strip keeps running with the app
   closed and comes back after a restart.
-- **Modules:** live readings from the sensors in `modules.txt` (SHT3x,
-  INA219, BME280...).
+- **Modules:** live readings from the sensors in `modules.txt`, every
+  second with five minutes of history: on I2C (SHT3x, INA219, BME280,
+  ADS1115... found by themselves), a MAX6675 thermocouple on SPI, and the
+  DS18B20s on a 1-Wire bus, each named after its serial. Every app reads
+  them by name (`aos_sensors.h`).
 - **Terminal:** two serial ports, hex, filters and alerts.
 - **Programmer:** flashes another ESP32 from firmware on the card
   (esp-serial-flasher), wired to the header or plugged into the USB host
@@ -246,6 +250,27 @@ in [docs/MODULES.md](docs/MODULES.md).
 <p align="center">
   <img src="docs/img/bench-pwm.svg" width="460" alt="Wiring: two LEDs, a servo and an analog level on the header">
 </p>
+
+### Datalog
+
+A data logger for the header's sensors (from the card, since 0.19). Each
+line is a value written with its date and time to a CSV of its own in
+`/datalog`, every N seconds, minutes or hours or at set times: a sensor of
+Modules (I2C, SPI or 1-Wire), a GPIO with its pull-up or pull-down, an
+ADS1115 input in volts or scaled into a unit of your own, or the board's own
+Wi-Fi and memory. Low and high alarms, with hysteresis, sound and show over
+any app, or only leave a note in the CSV, and can drive a GPIO (a relay).
+
+| The lines | One line's chart | A new line |
+|---|---|---|
+| <img src="docs/img/app-datalog.png" width="200"> | <img src="docs/img/app-datalog-chart.png" width="200"> | <img src="docs/img/app-datalog-form.png" width="200"> |
+
+While it logs it works hidden, shows a red dot in the status bar, and
+starts by itself with the board, so a power cut or an update does not stop
+it; paused, it does not. Its page in the portal (`#datalog`) shows the live
+values and the charts and downloads the files. On the board, a MAX6675 and
+a DS18B20 logged every 10 s (the captures above);
+[apps/datalog/README.md](apps/datalog/README.md) has the rest.
 
 ### RF, a software radio
 
@@ -616,6 +641,9 @@ reads them.
 - The BOOT button and safe mode.
 - I2C with a real BME280 on the header: found by itself, read once a second
   without errors. SPI with MOSI looped to MISO at 1, 10 and 40 MHz, the port's top speed.
+- A MAX6675 thermocouple on SPI and a DS18B20 on 1-Wire, read every second
+  in Modules, and logged by Datalog in the background through a restart
+  and an update, with five more apps opened over it.
 - Settings' Storage page and the QR codes.
 - The lock screen with its code, and the languages with no card.
 - The C6 updated from the P4 to esp_hosted 3.0.9, and back to its factory
@@ -792,6 +820,7 @@ Where something is a guess, it says so.
 | [MODULES.md](docs/MODULES.md) | the 40-pin header, `modules.txt`, I2C, SPI and GPIO from apps |
 | [apps/emulador/README.md](apps/emulador/README.md) | the emulator: the consoles, the card's folders, the modules, what was measured |
 | [apps/pinball/README.md](apps/pinball/README.md) | the pinball: the tables, the rules, adding a table, rendering and packing, what was measured |
+| [apps/datalog/README.md](apps/datalog/README.md) | the data logger: a line's choices, the CSV, the alarms, logging in the background |
 | [apps/rf/README.md](apps/rf/README.md) | the software radio: receivers, the signal chain, what was measured, the decoders and their tests |
 | [PORTAL-PAGES.md](docs/PORTAL-PAGES.md) | an app's own page in the web portal, from the card, with no firmware |
 | [SECURITY.md](docs/SECURITY.md) | who may use the portal: trusted networks, the password, the token, and what is not covered |
@@ -843,8 +872,8 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 44 de la tarjeta (juegos, un pinball 3D de seis mesas, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
-| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 45 de la tarjeta (juegos, un pinball 3D de seis mesas, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
 | Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |
 | Cómo se instala | la primera vez por el CH340; después `tools/ota.sh p4os.local` o el portal |

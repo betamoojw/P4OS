@@ -2530,6 +2530,14 @@ static const char blob_en__sistema_lang[] =
     "Cada chip en los mismos cables lleva su propio CS.\tEach chip on the same wires has its own CS.\n"
     "Pinball 3D\tPinball 3D\n"
     "No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?\tNo answer: MISO stayed high. Power, CS, wires?\n"
+    "Temperatura por 1-Wire: todos los que haya en el bus, cada uno con su número de serie\tTemperature over 1-Wire: every sensor on the bus, each with its serial number\n"
+    "No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?\tNo answer on the 1-Wire bus. Power, the 4.7 kΩ resistor, wires?\n"
+    "EL BUS (UN PIN)\tTHE BUS (ONE PIN)\n"
+    "Datos al pin, VDD a 3V3 y 4,7 kΩ entre datos y 3V3. Los sensores del bus aparecen solos, cada uno con su número de serie.\tData to the pin, VDD to 3V3 and 4.7 kΩ between data and 3V3. The sensors on the bus show up by themselves, each with its serial number.\n"
+    "Tocá otra vez para sacarla\tTap again to take it off\n"
+    "ARRANCAN CON LA PLACA\tSTART WITH THE BOARD\n"
+    "no está en la tarjeta\tnot on the card\n"
+    "Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.\tApps that ask for it (a data logger, say) start hidden when the board powers up, as if you had opened them and left them. Tapping one takes it off the list.\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -9954,6 +9962,14 @@ static const char blob_de__sistema_lang[] =
     "Cada chip en los mismos cables lleva su propio CS.\tJeder Chip an denselben Leitungen hat seinen eigenen CS.\n"
     "Pinball 3D\tPinball 3D\n"
     "No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?\tKeine Antwort: MISO blieb auf 1. Versorgung, CS, Kabel?\n"
+    "Temperatura por 1-Wire: todos los que haya en el bus, cada uno con su número de serie\tTemperatur über 1-Wire: alle Sensoren am Bus, jeder mit seiner Seriennummer\n"
+    "No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?\tKeine Antwort am 1-Wire-Bus. Versorgung, der 4,7-kΩ-Widerstand, Kabel?\n"
+    "EL BUS (UN PIN)\tDER BUS (EIN PIN)\n"
+    "Datos al pin, VDD a 3V3 y 4,7 kΩ entre datos y 3V3. Los sensores del bus aparecen solos, cada uno con su número de serie.\tDaten an den Pin, VDD an 3V3 und 4,7 kΩ zwischen Daten und 3V3. Die Sensoren am Bus erscheinen von selbst, jeder mit seiner Seriennummer.\n"
+    "Tocá otra vez para sacarla\tNoch einmal tippen zum Entfernen\n"
+    "ARRANCAN CON LA PLACA\tSTARTEN MIT DER PLATINE\n"
+    "no está en la tarjeta\tnicht auf der Karte\n"
+    "Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.\tApps, die es verlangen (etwa ein Datenlogger), starten versteckt, wenn die Platine eingeschaltet wird, als hättest du sie geöffnet und verlassen. Antippen nimmt eine von der Liste.\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =
@@ -14862,7 +14878,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2516, 47, files_en, 48 },
-    { "de", "Deutsch", 2516, 47, files_de, 48 },
+    { "en", "English", 2524, 47, files_en, 48 },
+    { "de", "Deutsch", 2524, 47, files_de, 48 },
 };
 const int aos_lang_pack_count = 2;

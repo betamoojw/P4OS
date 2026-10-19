@@ -13,6 +13,22 @@
   with a type K probe: 156 reads without an error, 26 to 63 °C in 15 s
   with a lighter at the tip (docs/MODULES.md).
 
+- **DS18B20 thermometers in the sensor service.** A GPIO port with a
+  module line becomes a 1-Wire bus (`port gpio.ow pin=28`, `module ds18b20
+  gpio.ow`): every DS18B20, DS18S20, DS1822 or MAX31850 a search finds there
+  is read each second, named after its serial (`ds18b20_A1B2C3`, the same
+  at every boot), and `rom=28-...` gives one a name of its own. One
+  conversion for the whole bus starts at the beginning of a round and is
+  read at its end, while the I2C and SPI chips are read. A GPIO port with
+  no such line is never driven. Módulos' form picks a GPIO port or a free
+  pin and writes both lines.
+- **Apps that start with the board.** An app with
+  `AOS_APP_FLAG_BACKGROUND` can ask to start hidden at every boot
+  (`aos_ui_boot_start_set()`): a data logger that goes on after a power
+  cut or an update. Settings, Developer lists them and takes one off; the
+  portal has `GET/POST /api/apps/boot` (docs/APPS-P4.md, "Starting with
+  the board").
+
 ## 0.18.0 — 2026-10-17
 
 - **Pinball 3D** (`apps/pinball`): a 3D pinball after Space Cadet, upright,

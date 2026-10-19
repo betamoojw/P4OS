@@ -7489,3 +7489,11 @@ El del puerto (no tiene)	The port's (it has none)
 Cada chip en los mismos cables lleva su propio CS.	Each chip on the same wires has its own CS.
 Pinball 3D	Pinball 3D
 No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?	No answer: MISO stayed high. Power, CS, wires?
+Temperatura por 1-Wire: todos los que haya en el bus, cada uno con su número de serie	Temperature over 1-Wire: every sensor on the bus, each with its serial number
+No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?	No answer on the 1-Wire bus. Power, the 4.7 kΩ resistor, wires?
+EL BUS (UN PIN)	THE BUS (ONE PIN)
+Datos al pin, VDD a 3V3 y 4,7 kΩ entre datos y 3V3. Los sensores del bus aparecen solos, cada uno con su número de serie.	Data to the pin, VDD to 3V3 and 4.7 kΩ between data and 3V3. The sensors on the bus show up by themselves, each with its serial number.
+Tocá otra vez para sacarla	Tap again to take it off
+ARRANCAN CON LA PLACA	START WITH THE BOARD
+no está en la tarjeta	not on the card
+Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.	Apps that ask for it (a data logger, say) start hidden when the board powers up, as if you had opened them and left them. Tapping one takes it off the list.

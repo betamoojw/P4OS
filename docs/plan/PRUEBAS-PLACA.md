@@ -413,6 +413,15 @@ Que necesitan la mano del usuario o equipos:
       (CS del puerto) se lee cada segundo en Sensores: 156 lecturas sin
       errores, 25-26 °C en reposo, 26 → 63 °C en ~15 s con un encendedor en
       la punta y la bajada lenta de la vaina.
+- [x] DS18B20 en el servicio de sensores (2026-10-18): en el pin 16
+      (GPIO28), declarado desde Módulos > Agregar (escribió `port gpio.ow
+      pin=28` y `module ds18b20 gpio.ow`); apareció solo como
+      `ds18b20_37E966`, 52 lecturas sin errores, bajando de 35 a 34 °C
+      después de tenerlo en la mano, junto con el MAX6675 a 26 °C.
+- [x] Arrancar con la placa (2026-10-18): el Reloj puesto en la lista desde
+      `POST /api/apps/boot`, reinicio, y el registro dijo `aos.clock started
+      hidden` a los 3,9 s; el usuario lo sacó desde Ajustes > Desarrollador
+      y la lista quedó vacía.
 - [x] Punto de acceso propio (2026-10-01): el C6 de fábrica hace SoftAP en
       APSTA; el usuario se unió con el QR desde el teléfono y abrió el portal
       con el otro. Con el AP prendido la RAM interna no cambió (291 KB) y la

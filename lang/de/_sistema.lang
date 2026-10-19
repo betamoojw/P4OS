@@ -7489,3 +7489,11 @@ El del puerto (no tiene)	Der des Ports (er hat keinen)
 Cada chip en los mismos cables lleva su propio CS.	Jeder Chip an denselben Leitungen hat seinen eigenen CS.
 Pinball 3D	Pinball 3D
 No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?	Keine Antwort: MISO blieb auf 1. Versorgung, CS, Kabel?
+Temperatura por 1-Wire: todos los que haya en el bus, cada uno con su número de serie	Temperatur über 1-Wire: alle Sensoren am Bus, jeder mit seiner Seriennummer
+No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?	Keine Antwort am 1-Wire-Bus. Versorgung, der 4,7-kΩ-Widerstand, Kabel?
+EL BUS (UN PIN)	DER BUS (EIN PIN)
+Datos al pin, VDD a 3V3 y 4,7 kΩ entre datos y 3V3. Los sensores del bus aparecen solos, cada uno con su número de serie.	Daten an den Pin, VDD an 3V3 und 4,7 kΩ zwischen Daten und 3V3. Die Sensoren am Bus erscheinen von selbst, jeder mit seiner Seriennummer.
+Tocá otra vez para sacarla	Noch einmal tippen zum Entfernen
+ARRANCAN CON LA PLACA	STARTEN MIT DER PLATINE
+no está en la tarjeta	nicht auf der Karte
+Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.	Apps, die es verlangen (etwa ein Datenlogger), starten versteckt, wenn die Platine eingeschaltet wird, als hättest du sie geöffnet und verlassen. Antippen nimmt eine von der Liste.

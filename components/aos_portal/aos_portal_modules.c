@@ -134,6 +134,7 @@ static void fmt_err(const char *err, char *out, size_t n)
     const char *d = strchr(err, ':');
     d = d ? d + 1 : "";
     if (!strncmp(err, "nack:spi", 8)) snprintf(out, n, "%s", _("No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?"));
+    else if (!strncmp(err, "nack:ow", 7)) snprintf(out, n, "%s", _("No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?"));
     else if (!strncmp(err, "nack", 4)) snprintf(out, n, "%s", _("No contesta en esa dirección"));
     else if (!strncmp(err, "crc", 3)) snprintf(out, n, "%s", _("Llegó una lectura con el CRC mal"));
     else if (!strncmp(err, "id", 2)) snprintf(out, n, _("En esa dirección hay otro chip (dice %s)"), d);
@@ -294,6 +295,7 @@ static void api_expansion(aos_httpd_req_t *r)
         cJSON_AddBoolToObject(e, "shunt", c->shunt);
         cJSON_AddBoolToObject(e, "gain", c->gain);
         cJSON_AddBoolToObject(e, "spi", c->spi);
+        cJSON_AddBoolToObject(e, "onewire", c->onewire);
         cJSON_AddItemToArray(chips, e);
     }
     send_cjson(r, 200, o);
@@ -339,6 +341,7 @@ static void api_sensors(aos_httpd_req_t *r)
         const aos_io_port_t *sp = aos_io_port_find(s.port);
         char where[8];
         if (sp && sp->kind == AOS_PORT_SPI) snprintf(where, sizeof where, "CS%u", (unsigned)s.addr);
+        else if (sp && sp->kind == AOS_PORT_GPIO) snprintf(where, sizeof where, "GPIO%u", (unsigned)s.addr);
         else snprintf(where, sizeof where, "0x%02X", s.addr);
         cJSON_AddStringToObject(e, "where", where);
         cJSON_AddBoolToObject(e, "declared", s.declared);

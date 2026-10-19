@@ -68,6 +68,7 @@ pins that sit together:
 | INA226 | bus voltage, shunt voltage, current, power | 0x40 to 0x4F | manufacturer id 0x5449 ("TI") at 0xFE | `module ina226 i2c.ext addr=0x40 shunt=100` |
 | ADS1115 | four single-ended voltages, A0 to A3 | 0x48 to 0x4B | threshold registers at 0x8000/0x7FFF | `module ads1115 i2c.ext addr=0x48 gain=4096` |
 | MAX6675 (SPI) | a type K thermocouple, 0 to 1023.75 °C | its CS | cannot be: declared only | `module max6675 spi.a`, `module horno spi.a chip=max6675 cs=48` |
+| DS18B20 (1-Wire; also DS18S20, DS1822, MAX31850) | temperature | its ROM, on a GPIO port | the bus is declared, its sensors found by a search | `port gpio.ow pin=28` and `module ds18b20 gpio.ow` |
 
 ### Units
 
@@ -93,6 +94,7 @@ The UIs scale them for a bench: mV, mA and mW below 1. The value keys are:
 | INA219/226 | `bus`, `current`, `power`, `shunt` |
 | ADS1115 | `a0` .. `a3` |
 | MAX6675 | `temp` |
+| DS18B20 and its family | `temp` |
 
 ### What each driver does
 
@@ -148,6 +150,27 @@ The UIs scale them for a bench: mV, mA and mW below 1. The value keys are:
     thermocouple is the error `open`. A word with D15 or D1 set is another
     chip or a wrong SPI mode (`id:<word>`).
   - In the simulator: `P4_SIM_SPI_A="48=max6675"`, or `max6675:open`.
+- **DS18B20 and its family on 1-Wire (2026-10-18):**
+  - A bus is a GPIO port (`port gpio.ow pin=28`) with a module line on it
+    (`module ds18b20 gpio.ow`). A GPIO port without one is never driven:
+    the pin may hold a relay, and a reset pulse would click it.
+  - Every sensor a search finds on the bus is read. Its name is the
+    module's and the last six hex digits of its serial (`ds18b20_A1B2C3`),
+    the same at every boot, so an app or a log can count on it.
+  - `module heladera gpio.ow chip=ds18b20 rom=28-0123456789AB` gives one
+    sensor a name. The ROM is written as Bus's 1-Wire tab shows it. A named
+    sensor that is not on the bus says so ("No contesta en el bus 1-Wire").
+  - Each round starts one conversion for the whole bus (skip ROM) before
+    the I2C and SPI reads, and reads every sensor (match ROM, CRC checked)
+    at the end of the round, 750 ms later. The bus is open for that long,
+    so Bus's 1-Wire tab on the same pin finds it taken, and the other way
+    round.
+  - The search runs at start, every 5 s while someone looks, and every
+    minute otherwise; a sensor unplugged goes from the list unless
+    `modules.txt` names it.
+  - **Módulos > Agregar > DS18B20:** pick a GPIO port, or a free pin, and
+    the form writes both lines.
+  - In the simulator, `P4_SIM_ONEWIRE` (two sensors by default).
 
 ## Declaring a module
 

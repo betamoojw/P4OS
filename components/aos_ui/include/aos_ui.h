@@ -95,6 +95,22 @@ uint32_t    aos_ui_app_held_kb(const aos_app_t *app);
 /* What a live app has running ("background", "busy", "pins", "audio",
  * "microphone", "recording"), or NULL. */
 const char *aos_ui_app_busy(const aos_app_t *app);
+/* Apps that start with the board, hidden, as if opened and left (a logger
+ * that must go on after a power cut or an update). Only an app with
+ * AOS_APP_FLAG_BACKGROUND, the one that ticks while hidden. The app
+ * asks for it itself - the logger while it logs - and the list is kept in
+ * the preferences; Settings, Developer shows it and takes one off. Not in
+ * safe mode. At boot each one gets create() and then hide(), never show(),
+ * until the user opens it. */
+bool        aos_ui_boot_start_set(const char *id, bool on);
+bool        aos_ui_boot_start_get(const char *id);
+/* The ids, comma-separated, in the order they start; "" none. */
+void        aos_ui_boot_start_ids(char *out, size_t n);
+/* Creates an app hidden now: create() and hide(). false: no such app, or one
+ * without AOS_APP_FLAG_BACKGROUND. */
+bool        aos_ui_start_hidden(const char *id);
+/* main.c, once the card's apps are in: starts the list. */
+void        aos_ui_boot_start_run(void);
 /* The live apps (in front or hidden), most recent first. */
 int         aos_ui_alive(aos_app_t **out, int max);
 void        aos_ui_close_others(void);     /* ends every app but the one in front (USB disk mode) */

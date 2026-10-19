@@ -567,6 +567,122 @@ static void trim_for_memory(void)
     }
 }
 
+/* ---- apps that start with the board (aos_ui.h) ----
+ * A comma-separated list of ids in the preference "boot_apps". */
+#define BOOT_KEY "boot_apps"
+#define BOOT_MAX 256
+
+void aos_ui_boot_start_ids(char *out, size_t n)
+{
+    if (!out || !n) return;
+    out[0] = 0;
+    aos_hal_pref_get_str(BOOT_KEY, out, n);
+}
+
+static bool boot_has(const char *list, const char *id)
+{
+    size_t l = strlen(id);
+    for (const char *p = list; p && *p; ) {
+        const char *e = strchr(p, ',');
+        size_t k = e ? (size_t)(e - p) : strlen(p);
+        if (k == l && !strncmp(p, id, l)) return true;
+        p = e ? e + 1 : NULL;
+    }
+    return false;
+}
+
+bool aos_ui_boot_start_get(const char *id)
+{
+    if (!id) return false;
+    char l[BOOT_MAX];
+    aos_ui_boot_start_ids(l, sizeof l);
+    return boot_has(l, id);
+}
+
+bool aos_ui_boot_start_set(const char *id, bool on)
+{
+    if (!id || !*id || strchr(id, ',')) return false;
+    char l[BOOT_MAX], out[BOOT_MAX] = "";
+    aos_ui_boot_start_ids(l, sizeof l);
+    if (boot_has(l, id) == on) return true;
+    size_t o = 0;
+    /* the others as they were */
+    for (const char *p = l; *p; ) {
+        const char *e = strchr(p, ',');
+        size_t k = e ? (size_t)(e - p) : strlen(p);
+        if (k && !(k == strlen(id) && !strncmp(p, id, k)) && o + k + 2 < sizeof out) {
+            if (o) out[o++] = ',';
+            memcpy(out + o, p, k);
+            o += k;
+            out[o] = 0;
+        }
+        if (!e) break;
+        p = e + 1;
+    }
+    if (on) {
+        if (o + strlen(id) + 2 >= sizeof out) return false;
+        if (o) out[o++] = ',';
+        snprintf(out + o, sizeof out - o, "%s", id);
+    }
+    aos_hal_log("ui", "%s %s the board", id, on ? "now starts with" : "no longer starts with");
+    return out[0] ? aos_hal_pref_set_str(BOOT_KEY, out) : (aos_hal_pref_erase(BOOT_KEY), true);
+}
+
+bool aos_ui_start_hidden(const char *id)
+{
+    aos_app_t *app = aos_ui_app_find(id);
+    if (!app) {
+        aos_hal_log("ui", "to start hidden: no such app: %s", id ? id : "(null)");
+        return false;
+    }
+    if (app->running) return true;
+    /* KEEP alone gets no ticks while hidden: nothing would run */
+    if (!(app->desc.flags & AOS_APP_FLAG_BACKGROUND)) {
+        aos_hal_log("ui", "%s does not run hidden (no AOS_APP_FLAG_BACKGROUND): not started", id);
+        return false;
+    }
+    /* what it claims and translates while it builds is its own, as in aos_ui_open() */
+    aos_hal_app_context_set(app->desc.id);
+    aos_i18n_app_load(app->desc.id);
+    app->root = lv_obj_create(s_appl);
+    lv_obj_remove_style_all(app->root);
+    lv_obj_add_flag(app->root, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_set_style_bg_color(app->root, AOS_C_BG, 0);
+    lv_obj_set_style_bg_opa(app->root, LV_OPA_COVER, 0);
+    lv_obj_set_style_text_color(app->root, AOS_C_TEXT, 0);
+    lv_obj_set_style_text_font(app->root, aos_font_body, 0);
+    lv_obj_remove_flag(app->root, LV_OBJ_FLAG_SCROLLABLE);
+    place_root(app);
+    lv_obj_update_layout(app->root);
+    trim_for_memory();
+    s_psram_at_create_kb[slot_of_app(app)] = psram_free_kb();
+    s_creates++;
+    app->running = true;
+    app->created_rot = aos_hal_display_get_rotation();
+    app->last_used_ms = (uint32_t)aos_hal_uptime_ms();
+    app->inst = app->create ? app->create(app, app->root) : NULL;
+    if (app->hide) app->hide(app, app->inst);
+    /* back to whoever is in front */
+    aos_hal_app_context_set(s_cur ? s_cur->desc.id : NULL);
+    if (s_cur) aos_i18n_app_load(s_cur->desc.id);
+    else aos_i18n_app_unload();
+    aos_hal_log("ui", "%s started hidden", id);
+    return true;
+}
+
+void aos_ui_boot_start_run(void)
+{
+    if (aos_ui_safe_mode()) return;
+    char l[BOOT_MAX];
+    aos_ui_boot_start_ids(l, sizeof l);
+    for (char *p = l; p && *p; ) {
+        char *e = strchr(p, ',');
+        if (e) *e = 0;
+        if (*p) aos_ui_start_hidden(p);
+        p = e ? e + 1 : NULL;
+    }
+}
+
 static void leave_current(bool destroy_now)
 {
     aos_app_t *app = s_cur;

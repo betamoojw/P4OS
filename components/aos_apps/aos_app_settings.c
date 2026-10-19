@@ -2268,6 +2268,14 @@ static void bg_close_cb(lv_event_t *e)
     show(PG_DEV);
 }
 
+static void boot_off_cb(lv_event_t *e)
+{
+    const char *id = lv_event_get_user_data(e);
+    if (!second_tap(e, _("Tocá otra vez para sacarla"))) return;
+    aos_ui_boot_start_set(id, false);
+    show(PG_DEV);
+}
+
 static const char *busy_text(const char *why)
 {
     if (!why) return NULL;
@@ -2311,6 +2319,26 @@ static void build_bg(lv_obj_t *p)
     snprintf(v, sizeof v, "%u,%u MB", (unsigned)(fp >> 20), (unsigned)((fp & 0xFFFFF) * 10 >> 20));
     row(g, NULL, 0, _("PSRAM libre"), v, false, NULL, NULL);
     note(p, _("Lo que ocupa cada una se mide al salir de ella. Tocar una la cierra."));
+
+    /* the apps that asked to start with the board (aos_ui.h) */
+    g = group(p, _("ARRANCAN CON LA PLACA"));
+    static char ids[256];
+    aos_ui_boot_start_ids(ids, sizeof ids);
+    static char one[8][48];
+    int nb = 0;
+    for (char *q = ids; *q && nb < 8; ) {
+        char *e = strchr(q, ',');
+        size_t k = e ? (size_t)(e - q) : strlen(q);
+        snprintf(one[nb], sizeof one[nb], "%.*s", (int)k, q);
+        const aos_app_t *a = aos_ui_app_find(one[nb]);
+        row(g, NULL, 0, a ? aos_tr(a->desc.name) : one[nb], a ? NULL : _("no está en la tarjeta"), false,
+            boot_off_cb, one[nb]);
+        nb++;
+        if (!e) break;
+        q = e + 1;
+    }
+    if (!nb) row(g, NULL, 0, _("Ninguna"), NULL, false, NULL, NULL);
+    note(p, _("Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista."));
 }
 
 static void build_dev(lv_obj_t *p)

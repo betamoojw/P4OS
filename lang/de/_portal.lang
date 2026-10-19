@@ -2048,3 +2048,4 @@ Grabar firmware	Firmware flashen
 Confirmar	Bestätigen
 CS del puerto	CS des Ports
 No hay puertos SPI.	Keine SPI-Ports.
+GPIO%d (puerto nuevo)	GPIO%d (neuer Port)

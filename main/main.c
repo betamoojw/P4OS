@@ -211,6 +211,7 @@ void app_main(void)
     ESP_LOGI(TAG, "%d app(s) on the card", dyn);
     if (aos_hal_lock(2000)) {
         aos_ui_boot_done();
+        aos_ui_boot_start_run();    /* the apps that start with the board, hidden (not in safe mode) */
         aos_hal_unlock();
     }
     aos_hal_boot_stage("usb");

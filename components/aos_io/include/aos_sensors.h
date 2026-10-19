@@ -24,6 +24,14 @@
  * "... cs=48" for a second one on the same wires. Their port is opened and
  * closed around each read too.
  *
+ * 1-Wire temperature sensors (DS18B20, DS18S20, DS1822, MAX31850) hang off a
+ * GPIO port that a module line makes a bus: "module ds18b20 gpio.ow". Every
+ * sensor a search finds there is read, named after the module and the last
+ * six hex digits of its serial ("ds18b20_A1B2C3": the same name forever);
+ * "module heladera gpio.ow chip=ds18b20 rom=28-0123456789AB" names one. A
+ * GPIO port with no such line is never driven. One conversion for the whole
+ * bus starts at the beginning of a round and is read at its end (750 ms).
+ *
  * The same code runs in the simulator, where sim/sensors_sim.c answers on
  * i2c.ext as a BME280, an SHT31, a BH1750, an INA219 and an ADS1115
  * (P4_SIM_SENSORS).
@@ -72,14 +80,15 @@ typedef struct {
     char     name[24];              /* the module's name, or the chip's for a detected one */
     char     chip[12];              /* "BME280" */
     char     port[16];
-    uint8_t  addr;                  /* I2C: the address; SPI: the chip select's GPIO */
+    uint8_t  addr;                  /* I2C: the address; SPI: the chip select's GPIO; 1-Wire: the bus's GPIO */
     bool     declared;              /* from modules.txt */
     uint8_t  state;                 /* aos_sensor_state_t */
     /* why it failed, "<why>" or "<why>:<detail>": nack (no answer), crc,
      * id:<what the chip said it is>, notready, busy:<owner of the pins>,
      * port (cannot open it), board:<the board's chip at that address>,
      * open (a thermocouple not connected), nack:spi (an SPI chip whose
-     * MISO stayed high: nobody there) */
+     * MISO stayed high: nobody there), nack:ow (no presence pulse on the
+     * 1-Wire bus, or a sensor that did not answer with a good CRC) */
     char     err[48];
     uint32_t t_ms;                  /* uptime of the last good read */
     uint32_t reads, errors;
@@ -109,6 +118,10 @@ typedef struct {
      * addr is that CS's GPIO. Last, so that apps built before it still
      * read the fields above it where they were. */
     bool        spi;
+    /* On a 1-Wire bus: a "port gpio.<x> pin=N" whose GPIO is the data line.
+     * Its sensors are found by a search of the bus; in aos_sensor_t, addr
+     * is that GPIO and the name ends in the sensor's serial. */
+    bool        onewire;
 } aos_sensor_chip_t;
 
 int                      aos_sensor_chip_count(void);

@@ -1437,12 +1437,15 @@ async function pageExpansion() {
   function csChoices() { return ex.header.filter(p => p.gpio >= 0 && ['free', 'adc', 'care'].includes(p.cls)).map(p => p.gpio); }
   function formKind() {
     const rs = fKind.value === 'rs485', c = ex.chips.find(x => x.id === fKind.value);
-    const kinds = ex.ports.filter(p => p.kind === (rs ? 'uart' : c.spi ? 'spi' : 'i2c'));
+    const kinds = ex.ports.filter(p => p.kind === (rs ? 'uart' : c.onewire ? 'gpio' : c.spi ? 'spi' : 'i2c'));
     const p0 = fPort.value;
-    put(fPort, kinds.map(p => h('option', { value: p.name }, p.name)));
+    put(fPort, kinds.map(p => h('option', { value: p.name }, p.name)),
+      /* a 1-Wire bus may also go on a free pin, which becomes a port of its own */
+      !rs && c.onewire ? csChoices().map(g => h('option', { value: 'new:' + g }, tr('GPIO%d (puerto nuevo)', g))) : []);
     if (kinds.some(p => p.name === p0)) fPort.value = p0;
     fAddr.style.display = rs ? 'none' : '';
-    if (!rs && c.spi) put(fAddr, h('option', { value: '' }, tr('CS del puerto')), csChoices().map(g => h('option', { value: g }, 'CS GPIO' + g)));
+    if (!rs && c.onewire) fAddr.style.display = 'none';
+    else if (!rs && c.spi) put(fAddr, h('option', { value: '' }, tr('CS del puerto')), csChoices().map(g => h('option', { value: g }, 'CS GPIO' + g)));
     else if (!rs) put(fAddr, c.addrs.map(a => h('option', { value: a }, hex(a))));
     const opts = rs ? [[9600, '9600'], [19200, '19200'], [38400, '38400'], [115200, '115200']]
       : c.shunt ? [[100, `shunt ${num(0.1, 1)} Ω (R100)`], [50, `shunt ${num(0.05, 2)} Ω (R050)`], [10, `shunt ${num(0.01, 2)} Ω (R010)`]]
@@ -1455,6 +1458,12 @@ async function pageExpansion() {
     const rs = fKind.value === 'rs485', c = ex.chips.find(x => x.id === fKind.value);
     if (!fPort.value) { fLine.textContent = rs ? tr('No hay puertos UART.') : c.spi ? tr('No hay puertos SPI.') : tr('No hay puertos I2C.'); fAdd.disabled = true; return; }
     fAdd.disabled = false;
+    if (!rs && c.onewire && fPort.value.startsWith('new:')) {
+      let pn = 'gpio.ow';
+      for (let k = 2; ex.ports.some(p => p.name === pn) && k < 10; k++) pn = 'gpio.ow' + k;
+      fLine.textContent = `port ${pn} pin=${fPort.value.slice(4)}\nmodule ${freeName(c.id)} ${pn}`;
+      return;
+    }
     let l = `module ${freeName(rs ? 'rs485' : c.id)} ${fPort.value}`;
     if (rs) l += ` baud=${fOpt.value}`;
     else if (c.spi) { if (fAddr.value) l += ` cs=${fAddr.value}`; }

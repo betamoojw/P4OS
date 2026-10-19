@@ -49,7 +49,7 @@ static void scpy(char *d, size_t n, const char *s)
 /* The chips                                                                   */
 /* -------------------------------------------------------------------------- */
 
-enum { CH_BME280, CH_BMP280, CH_SHT3X, CH_SHT4X, CH_AHT20, CH_BH1750, CH_INA219, CH_INA226, CH_ADS1115, CH_MAX6675, CH_N };
+enum { CH_BME280, CH_BMP280, CH_SHT3X, CH_SHT4X, CH_AHT20, CH_BH1750, CH_INA219, CH_INA226, CH_ADS1115, CH_MAX6675, CH_DS18B20, CH_N };
 
 static const aos_sensor_chip_t CHIPS[CH_N] = {
     [CH_BME280]  = { "bme280",  "BME280",  { 0x76, 0x77 }, 2, false, false },
@@ -62,6 +62,7 @@ static const aos_sensor_chip_t CHIPS[CH_N] = {
     [CH_INA226]  = { "ina226",  "INA226",  { 0x40, 0x41, 0x44, 0x45 }, 4, true, false },
     [CH_ADS1115] = { "ads1115", "ADS1115", { 0x48, 0x49, 0x4A, 0x4B }, 4, false, true },
     [CH_MAX6675] = { "max6675", "MAX6675", { 0 }, 0, false, false, true },
+    [CH_DS18B20] = { "ds18b20", "DS18B20", { 0 }, 0, false, false, false, true },
 };
 
 /* Other names people give them in modules.txt */
@@ -70,6 +71,7 @@ static const struct { const char *alias; int chip; } ALIAS[] = {
     { "sht40", CH_SHT4X }, { "sht41", CH_SHT4X }, { "sht45", CH_SHT4X },
     { "aht10", CH_AHT20 }, { "aht21", CH_AHT20 }, { "aht2x", CH_AHT20 }, { "aht25", CH_AHT20 },
     { "gy302", CH_BH1750 },
+    { "ds18s20", CH_DS18B20 }, { "ds1822", CH_DS18B20 }, { "max31850", CH_DS18B20 }, { "onewire", CH_DS18B20 },
 };
 
 int aos_sensor_chip_count(void) { return CH_N; }
@@ -123,6 +125,7 @@ typedef struct {
     bool     inited;
     uint32_t init_ms;
     bme_cal_t cal;
+    uint64_t rom;               /* 1-Wire: the sensor's id (family in the low byte) */
     float   *hist;              /* [AOS_SENSOR_VALUES][AOS_SENSOR_HIST] */
     int      h_pos, h_n;
 } slot_t;
@@ -620,6 +623,78 @@ static void arg_str(const char *args, const char *key, char *out, size_t n)
     }
 }
 
+/* ---- 1-Wire buses ----
+ * A GPIO port with a 1-Wire sensor's module line on it. Found again at every
+ * sync from modules.txt; its open handle lives for one round only. */
+#define OW_BUSES 4
+#define OW_DEVS  16
+
+typedef struct {
+    char         port[AOS_IO_PORT_NAME_MAX];
+    int          gpio;
+    char         base[24];          /* the name of the sensors nobody named */
+    bool         seen;              /* still in modules.txt at this sync */
+    bool         scanned;
+    uint32_t     scan_ms;
+    aos_io_ow_t *b;                 /* open from ow_begin() to ow_finish() */
+    uint32_t     conv_at;
+    int          conv_ms;
+} ow_bus_t;
+
+static ow_bus_t s_ow[OW_BUSES];
+static int s_now;
+
+/* The low 56 bits: the family and the serial, without the CRC byte */
+#define ROM56(r) ((r) & 0x00FFFFFFFFFFFFFFull)
+
+static slot_t *slot_find_rom(const char *port, uint64_t rom)
+{
+    for (int i = 0; i < AOS_SENSOR_MAX; i++)
+        if (s_slot[i].used && s_slot[i].rom && ROM56(s_slot[i].rom) == ROM56(rom) && !strcmp(s_slot[i].pub.port, port))
+            return &s_slot[i];
+    return NULL;
+}
+
+/* "28-0123456789AB", as the Bus app shows them: the family, then the serial
+ * most significant byte first. The CRC byte is computed. 0: not one. */
+static uint64_t rom_parse(const char *t)
+{
+    if (!t || !*t) return 0;
+    char *e;
+    unsigned long fam = strtoul(t, &e, 16);
+    if (*e != '-' || fam > 0xFF) return 0;
+    const char *sp = e + 1;
+    unsigned long long ser = strtoull(sp, &e, 16);
+    if (e - sp != 12 || *e) return 0;
+    uint8_t b[8];
+    b[0] = (uint8_t)fam;
+    for (int i = 0; i < 6; i++) b[1 + i] = (uint8_t)(ser >> (8 * i));
+    b[7] = aos_io_ow_crc8(b, 7);
+    uint64_t rom = 0;
+    for (int i = 7; i >= 0; i--) rom = rom << 8 | b[i];
+    return rom;
+}
+
+static bool ow_temp_family(uint8_t f) { return f == 0x28 || f == 0x10 || f == 0x22 || f == 0x3B; }
+
+static ow_bus_t *ow_bus_of(const char *port, int gpio)
+{
+    for (int i = 0; i < s_now; i++)
+        if (!strcmp(s_ow[i].port, port)) {
+            if (s_ow[i].gpio != gpio) { s_ow[i].gpio = gpio; s_ow[i].scanned = false; }
+            s_ow[i].seen = true;
+            return &s_ow[i];
+        }
+    if (s_now >= OW_BUSES) return NULL;
+    ow_bus_t *b = &s_ow[s_now++];
+    memset(b, 0, sizeof *b);
+    scpy(b->port, sizeof b->port, port);
+    b->gpio = gpio;
+    scpy(b->base, sizeof b->base, "ds18b20");
+    b->seen = true;
+    return b;
+}
+
 static bool board_chip(uint8_t a) { return a == 0x14 || a == 0x5D || a == 0x18 || a == 0x40 || a == 0x36; }
 
 /* modules.txt into the table: declared slots, with their settings */
@@ -627,12 +702,36 @@ static void sync_declared(void)
 {
     lock();
     for (int i = 0; i < AOS_SENSOR_MAX; i++) s_slot[i].declared_now = false;
+    for (int i = 0; i < s_now; i++) { s_ow[i].seen = false; scpy(s_ow[i].base, sizeof s_ow[i].base, "ds18b20"); }
     for (int m = 0; m < aos_io_module_count(); m++) {
         const aos_io_module_t *mod = aos_io_module_at(m);
         char cs[24];
         arg_str(mod->args, "chip", cs, sizeof cs);
         int chip = chip_index(cs[0] ? cs : mod->name);
         if (chip < 0) continue;
+        if (CHIPS[chip].onewire) {
+            /* the line makes its GPIO port a bus; with rom= it names one sensor */
+            const aos_io_port_t *pp = aos_io_port_find(mod->port);
+            if (!pp || pp->kind != AOS_PORT_GPIO || pp->pins[0] < 0) continue;
+            ow_bus_t *bus = ow_bus_of(mod->port, pp->pins[0]);
+            char rs[24];
+            arg_str(mod->args, "rom", rs, sizeof rs);
+            uint64_t rom = rom_parse(rs);
+            if (!rom) {
+                if (bus) scpy(bus->base, sizeof bus->base, mod->name);
+                continue;
+            }
+            slot_t *s = slot_find_rom(mod->port, rom);
+            if (!s) s = slot_add(mod->port, (uint8_t)pp->pins[0], chip);
+            if (!s) continue;
+            if (!s->rom) s->rom = rom;
+            s->declared_now = true;
+            s->pub.declared = true;
+            scpy(s->pub.name, sizeof s->pub.name, mod->name);
+            const char *fam = aos_io_ow_family((uint8_t)rom);
+            if (fam) scpy(s->pub.chip, sizeof s->pub.chip, fam);
+            continue;
+        }
         uint8_t addr;
         if (CHIPS[chip].spi) {
             /* the chip select tells two of them apart on the same wires */
@@ -662,6 +761,14 @@ static void sync_declared(void)
         if (sh != s->shunt_mohm || g != s->gain_mv) { s->shunt_mohm = sh; s->gain_mv = g; }
         s->nocrc = !strcmp(mod->name, "aht10") || !strcmp(cs, "aht10");
     }
+    /* a bus that left modules.txt: what was only found on it goes */
+    int w = 0;
+    for (int i = 0; i < s_now; i++) {
+        if (s_ow[i].seen) { if (w != i) s_ow[w] = s_ow[i]; w++; continue; }
+        for (int k = 0; k < AOS_SENSOR_MAX; k++)
+            if (s_slot[k].used && s_slot[k].rom && !strcmp(s_slot[k].pub.port, s_ow[i].port)) s_slot[k].detected = false;
+    }
+    s_now = w;
     /* what is neither declared nor detected any more goes */
     for (int i = 0; i < AOS_SENSOR_MAX; i++) {
         slot_t *s = &s_slot[i];
@@ -770,7 +877,7 @@ static void read_slot(aos_io_i2c_t *b, slot_t *s)
 static void commit(slot_t *s, const slot_t *tmpp, int r)
 {
     lock();
-    if (!s->used || strcmp(s->pub.port, tmpp->pub.port) || s->pub.addr != tmpp->pub.addr) { unlock(); return; }
+    if (!s->used || strcmp(s->pub.port, tmpp->pub.port) || s->pub.addr != tmpp->pub.addr || s->rom != tmpp->rom) { unlock(); return; }
     s->inited = tmpp->inited;
     s->init_ms = tmpp->init_ms;
     s->cal = tmpp->cal;
@@ -836,6 +943,111 @@ static void read_spi_slots(void)
     }
 }
 
+/* Every sensor of a bus, in the same state: the bus could not be had */
+static void ow_mark(const char *port, int state, const char *err)
+{
+    lock();
+    for (int i = 0; i < AOS_SENSOR_MAX; i++) {
+        slot_t *s = &s_slot[i];
+        if (!s->used || !s->rom || strcmp(s->pub.port, port)) continue;
+        s->pub.state = (uint8_t)state;
+        scpy(s->pub.err, sizeof s->pub.err, err);
+        if (state == AOS_SENSOR_ERR) s->pub.errors++;
+        hist_push(s, false);
+    }
+    unlock();
+}
+
+/* The round's start on each bus: a search when one is due, then one
+ * conversion for every sensor at once; read in ow_finish() */
+static void ow_begin(uint32_t t0, bool rescan, bool viewed)
+{
+    for (int i = 0; i < s_now; i++) {
+        ow_bus_t *bus = &s_ow[i];
+        bus->b = NULL;
+        const char *o = aos_io_owner(bus->gpio);
+        if (o && strcmp(o, OWNER)) {
+            char e[48];
+            snprintf(e, sizeof e, "busy:%s", o);
+            ow_mark(bus->port, AOS_SENSOR_BUSY, e);
+            continue;
+        }
+        aos_io_ow_t *b = aos_io_ow_open(bus->gpio, true, OWNER);
+        if (!b) { ow_mark(bus->port, AOS_SENSOR_ERR, "port"); continue; }
+        if (rescan || !bus->scanned || t0 - bus->scan_ms >= (viewed ? SCAN_FAST : SCAN_SLOW)) {
+            uint64_t roms[OW_DEVS];
+            int n = aos_io_ow_search(b, roms, OW_DEVS);
+            bus->scanned = true;
+            bus->scan_ms = (uint32_t)aos_hal_uptime_ms();
+            if (n >= 0) {
+                lock();
+                bool found[AOS_SENSOR_MAX] = { 0 };
+                for (int k = 0; k < n; k++) {
+                    uint8_t fam = (uint8_t)roms[k];
+                    if (!ow_temp_family(fam)) continue;
+                    slot_t *s = slot_find_rom(bus->port, roms[k]);
+                    if (!s) {
+                        s = slot_add(bus->port, (uint8_t)bus->gpio, CH_DS18B20);
+                        if (!s) continue;
+                        snprintf(s->pub.name, sizeof s->pub.name, "%.15s_%06X", bus->base,
+                                 (unsigned)((roms[k] >> 8) & 0xFFFFFF));
+                    }
+                    s->rom = roms[k];
+                    s->detected = true;
+                    const char *fn = aos_io_ow_family(fam);
+                    if (fn) scpy(s->pub.chip, sizeof s->pub.chip, fn);
+                    found[s - s_slot] = true;
+                }
+                /* gone from the bus: forgotten unless modules.txt names it */
+                for (int k = 0; k < AOS_SENSOR_MAX; k++) {
+                    slot_t *s = &s_slot[k];
+                    if (!s->used || !s->rom || found[k] || strcmp(s->pub.port, bus->port)) continue;
+                    s->detected = false;
+                    if (!s->pub.declared) s->used = false;
+                }
+                unlock();
+            }
+        }
+        int ms = aos_io_ds18b20_convert_all(b);
+        if (ms < 0) {
+            aos_io_ow_close(b);
+            ow_mark(bus->port, AOS_SENSOR_ERR, "nack:ow");    /* no presence pulse */
+            continue;
+        }
+        bus->b = b;
+        bus->conv_at = (uint32_t)aos_hal_uptime_ms();
+        bus->conv_ms = ms;
+    }
+}
+
+static void ow_finish(void)
+{
+    for (int i = 0; i < s_now; i++) {
+        ow_bus_t *bus = &s_ow[i];
+        if (!bus->b) continue;
+        uint32_t el = (uint32_t)aos_hal_uptime_ms() - bus->conv_at;
+        if (el < (uint32_t)bus->conv_ms) aos_hal_sleep_ms((uint32_t)bus->conv_ms - el + 5);
+        for (int k = 0; k < AOS_SENSOR_MAX; k++) {
+            lock();
+            slot_t *s = &s_slot[k];
+            bool mine = s->used && s->rom && !strcmp(s->pub.port, bus->port);
+            slot_t tmp = *s;
+            unlock();
+            if (!mine) continue;
+            tmp.pub.err[0] = 0;
+            tmp.pub.n = 0;
+            tmp.inited = true;
+            float t;
+            int bits, r = R_OK;
+            if (aos_io_ds18b20_read(bus->b, tmp.rom, &t, &bits)) setv(&tmp, 0, "temp", AOS_SQ_TEMP, t);
+            else { r = R_NACK; scpy(tmp.pub.err, sizeof tmp.pub.err, "ow"); }
+            commit(s, &tmp, r);
+        }
+        aos_io_ow_close(bus->b);
+        bus->b = NULL;
+    }
+}
+
 static void service(void *arg)
 {
     (void)arg;
@@ -856,6 +1068,7 @@ static void service(void *arg)
         }
         sync_declared();
         bool viewed = t0 - s_keep_ms < KEEP_MS;
+        ow_begin(t0, rescan, viewed);        /* the conversions run while the rest is read */
         char ports[AOS_IO_PORT_MAX][AOS_IO_PORT_NAME_MAX];
         int np = 0;
         for (int i = 0; i < aos_io_port_count() && np < AOS_IO_PORT_MAX; i++) {
@@ -939,6 +1152,7 @@ static void service(void *arg)
             unlock();
         }
         read_spi_slots();
+        ow_finish();
         s_seq++;
         uint32_t spent = (uint32_t)aos_hal_uptime_ms() - t0;
         aos_hal_sleep_ms(spent < ROUND_MS - 200 ? ROUND_MS - spent : 200);

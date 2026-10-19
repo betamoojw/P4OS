@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3378 simbolos.
+ * Total: 3383 simbolos.
  */
 
 #include <stddef.h>
@@ -1108,6 +1108,10 @@ extern int aos_ui_block_gestures;
 extern int aos_ui_boot_done;
 extern int aos_ui_boot_progress;
 extern int aos_ui_boot_show;
+extern int aos_ui_boot_start_get;
+extern int aos_ui_boot_start_ids;
+extern int aos_ui_boot_start_run;
+extern int aos_ui_boot_start_set;
 extern int aos_ui_button;
 extern int aos_ui_close;
 extern int aos_ui_close_others;
@@ -1148,6 +1152,7 @@ extern int aos_ui_set_safe_mode;
 extern int aos_ui_set_wallpaper;
 extern int aos_ui_snapshot_peek;
 extern int aos_ui_snapshot_release;
+extern int aos_ui_start_hidden;
 extern int aos_ui_statusbar_refresh;
 extern int aos_ui_statusbar_set_visible;
 extern int aos_ui_statusbar_style;
@@ -4489,6 +4494,10 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_boot_done),
     ESP_ELFSYM_EXPORT(aos_ui_boot_progress),
     ESP_ELFSYM_EXPORT(aos_ui_boot_show),
+    ESP_ELFSYM_EXPORT(aos_ui_boot_start_get),
+    ESP_ELFSYM_EXPORT(aos_ui_boot_start_ids),
+    ESP_ELFSYM_EXPORT(aos_ui_boot_start_run),
+    ESP_ELFSYM_EXPORT(aos_ui_boot_start_set),
     ESP_ELFSYM_EXPORT(aos_ui_button),
     ESP_ELFSYM_EXPORT(aos_ui_close),
     ESP_ELFSYM_EXPORT(aos_ui_close_others),
@@ -4529,6 +4538,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_set_wallpaper),
     ESP_ELFSYM_EXPORT(aos_ui_snapshot_peek),
     ESP_ELFSYM_EXPORT(aos_ui_snapshot_release),
+    ESP_ELFSYM_EXPORT(aos_ui_start_hidden),
     ESP_ELFSYM_EXPORT(aos_ui_statusbar_refresh),
     ESP_ELFSYM_EXPORT(aos_ui_statusbar_set_visible),
     ESP_ELFSYM_EXPORT(aos_ui_statusbar_style),

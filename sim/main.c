@@ -396,6 +396,7 @@ int main(int argc, char **argv)
     aos_apps_register_builtin();
     register_sim_apps();
     aos_ui_init();
+    aos_ui_boot_start_run();            /* the apps that start with the board, hidden */
     aos_portal_start(getenv("P4_SIM_PORTAL_PORT") ? atoi(getenv("P4_SIM_PORTAL_PORT")) : 8080);
 
     s_pad_keys = getenv("P4_SIM_PAD") && atoi(getenv("P4_SIM_PAD"));

@@ -16,6 +16,8 @@
  *   POST /api/nav?to=home|back|rotate  POST /api/open?id=
  *   GET  /api/apps                     [{id,name,color_a,color_b,aic,text}], for the pages that draw icons
  *   GET  /api/apps/icon?id=            that app's AIC icon blob (aos_icon_ops.h), 404 if it has none
+ *   GET  /api/apps/boot                the apps that start with the board, hidden (aos_ui.h)
+ *   POST /api/apps/boot?id=&on=0|1     one on or off that list, as the app itself would
  *   GET  /api/player                   what plays, and the pipeline's ring and underruns
  *   GET  /api/wifi   GET /api/wifi/scan   POST /api/wifi {ssid,pass}
  *   POST /api/wifi/forget
@@ -327,6 +329,27 @@ static void api_open(aos_httpd_req_t *r)
     if (!aos_httpd_query(r, "id", id, sizeof id)) { send_err(r, 400, "id"); return; }
     aos_ui_request_open(id);
     send_ok(r);
+}
+
+static void api_apps_boot(aos_httpd_req_t *r, bool set)
+{
+    if (set) {
+        char id[48];
+        if (!aos_httpd_query(r, "id", id, sizeof id)) { send_err(r, 400, "id"); return; }
+        if (!aos_ui_boot_start_set(id, aos_httpd_query_int(r, "on", 1) != 0)) { send_err(r, 400, _("no se pudo guardar")); return; }
+    }
+    char ids[256];
+    aos_ui_boot_start_ids(ids, sizeof ids);
+    cJSON *o = cJSON_CreateObject();
+    cJSON *a = cJSON_AddArrayToObject(o, "apps");
+    for (char *q = ids; *q; ) {
+        char *e = strchr(q, ',');
+        if (e) *e = 0;
+        cJSON_AddItemToArray(a, cJSON_CreateString(q));
+        if (!e) break;
+        q = e + 1;
+    }
+    send_cjson(r, 200, o);
 }
 
 static void api_apps(aos_httpd_req_t *r)
@@ -1519,6 +1542,7 @@ static void handler(aos_httpd_req_t *r)
     else if (post && !strcmp(p, "open")) api_open(r);
     else if (get && !strcmp(p, "apps")) api_apps(r);
     else if (get && !strcmp(p, "apps/icon")) api_app_icon(r);
+    else if ((get || post) && !strcmp(p, "apps/boot")) api_apps_boot(r, post);
     else if (!strcmp(p, "wifi")) api_wifi(r);
     else if (get && !strcmp(p, "wifi/scan")) api_wifi_scan(r);
     else if (post && !strcmp(p, "wifi/forget")) { aos_hal_net_forget(); send_ok(r); }

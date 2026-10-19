@@ -222,7 +222,7 @@ img.shot { display: none; max-width: 800px; width: 100%; border-radius: 12px; }
 .xp-v { background: var(--card2); border-radius: 12px; padding: 8px 12px; cursor: pointer; border: 2px solid transparent; }
 .xp-v.sel { border-color: #94a3b8; }
 .xp-ta { border-radius: 0; border: 0; min-height: 320px; font: 13.5px/1.5 ui-monospace, Menlo, monospace; resize: vertical; background: var(--bg); padding: 16px 20px; }
-.xp-line { display: block; color: #fbbf24; }
+.xp-line { display: block; color: #fbbf24; white-space: pre-wrap; }
 @media (max-width: 1100px) { .xp-top { grid-template-columns: 1fr; } }
 
 /* Editor */

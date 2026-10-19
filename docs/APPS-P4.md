@@ -171,6 +171,32 @@ Drawing 1.7 MB are closed; Radio 490 KB, Notes 343 KB, Music 156 KB, CAN
 154 KB and the small tools stay. The games have no KEEP, and Gems, Mila,
 Monster Hop and Turbo give all their PSRAM back when closed.
 
+## Starting with the board
+
+An app with `AOS_APP_FLAG_BACKGROUND` can ask to start with the board,
+hidden, as if the user had opened it and left it (2026-10-18): a logger
+that must go on after a power cut or a firmware update.
+
+- `aos_ui_boot_start_set(self->desc.id, true)` puts it on the list, and
+  `false` takes it off; `aos_ui_boot_start_get()` says whether it is on.
+  The app decides: a logger asks while it logs and stops asking when it is
+  paused, so a board that boots does not log what nobody wants.
+- At boot, once the card's apps are in, each one on the list gets
+  `create()` with its root hidden and then `hide()`, never `show()`, until
+  the user opens it; from then on it is any app that was left. Its `tick()`
+  runs about five times a second meanwhile, on the shell's thread: work
+  that waits (a sensor, a file) goes in a thread of its own
+  (`aos_hal_thread_start`).
+- Not in safe mode, and an app without `AOS_APP_FLAG_BACKGROUND` is refused
+  (with `KEEP` alone it would get no ticks). An id that is not on the card
+  is skipped and said in the log.
+- The user sees the list in Settings, Developer, "Arrancan con la placa",
+  and a tap takes an app off. The portal has it too: `GET /api/apps/boot`,
+  and `POST /api/apps/boot?id=<id>&on=0|1`.
+- The clock may not be set yet at that moment: there is no battery-backed
+  RTC chip on the board, and the time comes from the network. Check
+  `aos_hal_time_is_valid()` before stamping a reading.
+
 ## Drawing a frame of your own
 
 - **Worker** (`aos_hal_worker_start`): runs on core 0, priority 3, with a

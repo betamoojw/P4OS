@@ -2048,3 +2048,4 @@ Grabar firmware	Flash firmware
 Confirmar	Confirm
 CS del puerto	The port's CS
 No hay puertos SPI.	There are no SPI ports.
+GPIO%d (puerto nuevo)	GPIO%d (new port)

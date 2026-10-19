@@ -315,6 +315,7 @@ static void *create(aos_app_t *self, lv_obj_t *root)
     memset(&U, 0, sizeof U);
     memset(&A, 0, sizeof A);
     memset(&W, 0, sizeof W);
+    dl_i18n_load();
     dl_engine_start();
     layout(root);
     U.view = DL_V_LIST;

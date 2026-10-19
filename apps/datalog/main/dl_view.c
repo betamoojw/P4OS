@@ -255,7 +255,7 @@ static void chips_build(void)
 {
     if (!V.chips) return;
     lv_obj_clean(V.chips);
-    for (int i = 0; i < NRANGES; i++) dl_chip(V.chips, aos_tr(RANGES[i].name), i == s_range, range_cb, (void *)(intptr_t)i);
+    for (int i = 0; i < NRANGES; i++) dl_chip(V.chips, dl_tr(RANGES[i].name), i == s_range, range_cb, (void *)(intptr_t)i);
 }
 
 static void back_cb(lv_event_t *e) { (void)e; dl_go(DL_V_LIST, -1); }

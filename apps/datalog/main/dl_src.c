@@ -438,7 +438,7 @@ void dl_src_desc(const dl_ch_t *c, char *out, size_t n)
     }
     if (c->kind == DL_K_GPIO) {
         static const char *const MODE[3] = { N_("en volts"), N_("crudo"), N_("escalado") };
-        snprintf(out, n, "%s %s · %s · %s", chip, where, dl_key_name(c->key), aos_tr(MODE[c->an_mode < 3 ? c->an_mode : 0]));
+        snprintf(out, n, "%s %s · %s · %s", chip, where, dl_key_name(c->key), dl_tr(MODE[c->an_mode < 3 ? c->an_mode : 0]));
     } else if (c->kind == DL_K_OW) {
         snprintf(out, n, "%s · %s", c->sensor, where);
     } else {

@@ -105,6 +105,20 @@ app puts every second while the page looks); the page sends `run=0|1` and
 `csv=comma|semicolon` the same way. A CSV over 8 MB is read by its last
 8 MB.
 
+## On the board
+
+Tried on 2026-10-18 with the MAX6675 on `spi.a` and a DS18B20 on
+`gpio.ow`: lines made with the form, logging with another app in front, a
+high alarm over the clock and the home screen, a restart while logging
+(it came back by itself) and pause and resume from the portal's live
+channel. 262 KB of PSRAM, ~3 KB of internal RAM. Not yet: an alarm's GPIO
+output on real hardware, an ADS1115 and a digital input.
+
+**Its own catalog.** `aos_tr()` translates with the catalog of the app in
+front, so a hidden app's texts (the CSV's notes, the alarm over another
+app) came out in Spanish. The app reads `aos.datalog.lang` itself
+(`dl_i18n.c`) and `_()` in its sources is `dl_tr()`.
+
 ## In the simulator
 
 The emulated bench has a BME280, SHT31, BH1750, INA219 and ADS1115 on

@@ -95,15 +95,22 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       canal en vivo anda en la placa (espectro cada ~80 ms, estado, órdenes);
       el usuario la abrió: "se ve bien". Volumen y silenciar agregados el
       2026-10-07 (sin mirar todavía en el navegador).
-- [ ] **Datalog** (2026-10-18, `apps/datalog/README.md`): hecha en el
-      simulador, sin instalar. En la placa: una línea con el MAX6675 y otra
-      con el DS18B20 que dejó conectados la sesión de firmware (cada 10 s),
-      que el CSV de `/datalog` crezca con la app en segundo plano, una
-      alarma alta con sonido y el aviso encima de otra app, una salida GPIO
-      con un LED o un relé (nivel alto y a GND), un reinicio con el registro
-      andando (tiene que seguir solo) y la página `#datalog` (pausar,
-      gráfico, bajar). Medir el hilo: cuánto tarda una ronda con varias
-      líneas cada 1 s y la RAM interna antes y después.
+- [ ] **Datalog** (2026-10-18, `apps/datalog/README.md`). **Probada en la
+      placa el 2026-10-18:** dos líneas hechas con el formulario por toques
+      del portal, el MAX6675 (25 °C) y el DS18B20 (23,9 °C) cada 10 s; los
+      CSV de `/datalog` crecen con otra app al frente; una alarma alta de
+      24 °C (con sonido) salió encima del Reloj y del inicio, y su nota en
+      el CSV al empezar, mientras dura y al terminar; editar `datalog.txt`
+      por el portal la recarga sola; reiniciada con el registro andando,
+      arrancó oculta ("started hidden") y siguió anotando; pausar y
+      reanudar por `/api/live` la saca y la pone en la lista de arranque.
+      Ocupa 262 KB de PSRAM y ~3 KB de RAM interna. Arreglado en la placa:
+      los textos salían en castellano con otra app al frente (ahora lee su
+      propio catálogo). Falta: la salida GPIO de una alarma con un LED o un
+      relé, la página `#datalog` abierta en un navegador contra la placa
+      (en el simulador anda; en la placa se probaron sus pedidos), un
+      ADS1115 y una entrada digital reales. Quedan en la tarjeta las dos
+      líneas de prueba, en pausa.
 - [ ] **RF: datos de 433 MHz y guardar** (2026-10-07): el modo Datos corre en la
       placa (16 % del hilo de la radio). **Un control copiador (EV1527, dos
       códigos, dos botones cada uno) y uno de fábrica (EV1527, cuatro botones)

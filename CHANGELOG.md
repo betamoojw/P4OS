@@ -14,7 +14,8 @@
   while they last. A chart per reading from an hour to the whole file, a
   portal page (`#datalog`) with the live values, the charts and the files;
   it goes on in the background and starts with the board while it logs.
-  Tried in the simulator only ([apps/datalog/README.md](apps/datalog/README.md)).
+  Tried on the board with a MAX6675 and a DS18B20
+  ([apps/datalog/README.md](apps/datalog/README.md)).
 
 - **MAX6675 thermocouples, in Módulos and in Bus.** The sensor service reads
   SPI chips too, declared in `modules.txt` (`module horno spi.a

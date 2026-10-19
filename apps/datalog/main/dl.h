@@ -45,6 +45,12 @@
 #include <strings.h>
 #include <string.h>
 
+/* The app's own catalog, not the front app's (dl_i18n.c): _() is dl_tr() */
+const char *dl_tr(const char *es);
+void        dl_i18n_load(void);
+#undef _
+#define _(s) dl_tr(s)
+
 #define DL_APP_ID   "aos.datalog"
 #define DL_OWNER    "Datalog"
 #define DL_MAX_CH   16

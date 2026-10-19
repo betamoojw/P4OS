@@ -692,6 +692,11 @@ void dl_edit_open(int ch)
         if (D.idx < 0) {
             dl_cfg_defaults(&D.d);
             D.name_auto = true;
+            /* the first kind that has a sensor on it */
+            static const int ORDER[] = { DL_K_I2C, DL_K_SPI, DL_K_OW };
+            aos_sensor_t s;
+            for (size_t k = 0; k < sizeof ORDER / sizeof ORDER[0]; k++)
+                if (dl_src_sensors(ORDER[k], false, &s, 1)) { D.d.kind = (uint8_t)ORDER[k]; break; }
         }
         D.unit = D.d.every_s % 3600 == 0 ? 3600 : D.d.every_s % 60 == 0 ? 60 : 1;
         aos_sensors_keep();

@@ -27,6 +27,8 @@ void        aos_sensor_err_text(const char *err, char *out, size_t n);
 /* What a chip measures, in a line ("Temperatura, presión y humedad"); ""
  * for one it does not know */
 const char *aos_sensor_chip_what(const char *id);
+/* A form group's name (AOS_SENSOR_CAT_*): "Temperatura y humedad" */
+const char *aos_sensor_cat_name(int cat);
 
 #ifdef __cplusplus
 }

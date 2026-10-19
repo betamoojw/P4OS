@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3386 simbolos.
+ * Total: 3417 simbolos.
  */
 
 #include <stddef.h>
@@ -717,13 +717,22 @@ extern int aos_io_be_can_recover;
 extern int aos_io_be_can_recv;
 extern int aos_io_be_can_send;
 extern int aos_io_be_can_status;
+extern int aos_io_be_count_close;
+extern int aos_io_be_count_get;
+extern int aos_io_be_count_open;
 extern int aos_io_be_dac_close;
 extern int aos_io_be_dac_open;
 extern int aos_io_be_dac_set;
+extern int aos_io_be_edges_arm;
+extern int aos_io_be_edges_close;
+extern int aos_io_be_edges_get;
+extern int aos_io_be_edges_open;
+extern int aos_io_be_edges_wait;
 extern int aos_io_be_gpio_get;
 extern int aos_io_be_gpio_mode;
 extern int aos_io_be_gpio_set;
 extern int aos_io_be_i2c_close;
+extern int aos_io_be_i2c_dev_cfg;
 extern int aos_io_be_i2c_open;
 extern int aos_io_be_i2c_probe;
 extern int aos_io_be_i2c_xfer;
@@ -738,10 +747,12 @@ extern int aos_io_be_ow_read;
 extern int aos_io_be_ow_reset;
 extern int aos_io_be_ow_search;
 extern int aos_io_be_ow_write;
+extern int aos_io_be_pulse_out;
 extern int aos_io_be_pwm_close;
 extern int aos_io_be_pwm_open;
 extern int aos_io_be_pwm_set_duty;
 extern int aos_io_be_pwm_set_freq;
+extern int aos_io_be_shift_in;
 extern int aos_io_be_spi_close;
 extern int aos_io_be_spi_open;
 extern int aos_io_be_spi_set_clock;
@@ -765,6 +776,9 @@ extern int aos_io_can_recv;
 extern int aos_io_can_send;
 extern int aos_io_can_status;
 extern int aos_io_claim;
+extern int aos_io_count_close;
+extern int aos_io_count_get;
+extern int aos_io_count_open;
 extern int aos_io_dac_close;
 extern int aos_io_dac_level;
 extern int aos_io_dac_open;
@@ -772,12 +786,18 @@ extern int aos_io_dac_set;
 extern int aos_io_ds18b20_convert_all;
 extern int aos_io_ds18b20_read;
 extern int aos_io_ds18b20_set_bits;
+extern int aos_io_edges_arm;
+extern int aos_io_edges_close;
+extern int aos_io_edges_get;
+extern int aos_io_edges_open;
+extern int aos_io_edges_wait;
 extern int aos_io_gpio_get;
 extern int aos_io_gpio_mode;
 extern int aos_io_gpio_set;
 extern int aos_io_header;
 extern int aos_io_held_for_app;
 extern int aos_io_i2c_close;
+extern int aos_io_i2c_dev_cfg;
 extern int aos_io_i2c_guess;
 extern int aos_io_i2c_open;
 extern int aos_io_i2c_probe;
@@ -808,6 +828,7 @@ extern int aos_io_port_at;
 extern int aos_io_port_count;
 extern int aos_io_port_find;
 extern int aos_io_port_lines;
+extern int aos_io_pulse_out;
 extern int aos_io_pwm_bits;
 extern int aos_io_pwm_close;
 extern int aos_io_pwm_duty;
@@ -820,6 +841,7 @@ extern int aos_io_pwm_set_invert;
 extern int aos_io_pwm_set_pulse_us;
 extern int aos_io_release;
 extern int aos_io_release_owner;
+extern int aos_io_shift_in;
 extern int aos_io_spi_clock;
 extern int aos_io_spi_close;
 extern int aos_io_spi_cs_gpio;
@@ -1035,13 +1057,22 @@ extern int aos_scope_status;
 extern int aos_scope_wave;
 extern int aos_sensor_at;
 extern int aos_sensor_candidates;
+extern int aos_sensor_cat_name;
 extern int aos_sensor_chip_at;
+extern int aos_sensor_chip_cat;
 extern int aos_sensor_chip_count;
 extern int aos_sensor_chip_find;
+extern int aos_sensor_chip_what;
 extern int aos_sensor_count;
+extern int aos_sensor_decimals;
+extern int aos_sensor_err_text;
+extern int aos_sensor_fmt;
+extern int aos_sensor_glyph;
 extern int aos_sensor_history;
+extern int aos_sensor_key_name;
 extern int aos_sensor_unit;
 extern int aos_sensor_value;
+extern int aos_sensor_values;
 extern int aos_sensors_autostart;
 extern int aos_sensors_keep;
 extern int aos_sensors_ports;
@@ -4106,13 +4137,22 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_be_can_recv),
     ESP_ELFSYM_EXPORT(aos_io_be_can_send),
     ESP_ELFSYM_EXPORT(aos_io_be_can_status),
+    ESP_ELFSYM_EXPORT(aos_io_be_count_close),
+    ESP_ELFSYM_EXPORT(aos_io_be_count_get),
+    ESP_ELFSYM_EXPORT(aos_io_be_count_open),
     ESP_ELFSYM_EXPORT(aos_io_be_dac_close),
     ESP_ELFSYM_EXPORT(aos_io_be_dac_open),
     ESP_ELFSYM_EXPORT(aos_io_be_dac_set),
+    ESP_ELFSYM_EXPORT(aos_io_be_edges_arm),
+    ESP_ELFSYM_EXPORT(aos_io_be_edges_close),
+    ESP_ELFSYM_EXPORT(aos_io_be_edges_get),
+    ESP_ELFSYM_EXPORT(aos_io_be_edges_open),
+    ESP_ELFSYM_EXPORT(aos_io_be_edges_wait),
     ESP_ELFSYM_EXPORT(aos_io_be_gpio_get),
     ESP_ELFSYM_EXPORT(aos_io_be_gpio_mode),
     ESP_ELFSYM_EXPORT(aos_io_be_gpio_set),
     ESP_ELFSYM_EXPORT(aos_io_be_i2c_close),
+    ESP_ELFSYM_EXPORT(aos_io_be_i2c_dev_cfg),
     ESP_ELFSYM_EXPORT(aos_io_be_i2c_open),
     ESP_ELFSYM_EXPORT(aos_io_be_i2c_probe),
     ESP_ELFSYM_EXPORT(aos_io_be_i2c_xfer),
@@ -4127,10 +4167,12 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_be_ow_reset),
     ESP_ELFSYM_EXPORT(aos_io_be_ow_search),
     ESP_ELFSYM_EXPORT(aos_io_be_ow_write),
+    ESP_ELFSYM_EXPORT(aos_io_be_pulse_out),
     ESP_ELFSYM_EXPORT(aos_io_be_pwm_close),
     ESP_ELFSYM_EXPORT(aos_io_be_pwm_open),
     ESP_ELFSYM_EXPORT(aos_io_be_pwm_set_duty),
     ESP_ELFSYM_EXPORT(aos_io_be_pwm_set_freq),
+    ESP_ELFSYM_EXPORT(aos_io_be_shift_in),
     ESP_ELFSYM_EXPORT(aos_io_be_spi_close),
     ESP_ELFSYM_EXPORT(aos_io_be_spi_open),
     ESP_ELFSYM_EXPORT(aos_io_be_spi_set_clock),
@@ -4154,6 +4196,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_can_send),
     ESP_ELFSYM_EXPORT(aos_io_can_status),
     ESP_ELFSYM_EXPORT(aos_io_claim),
+    ESP_ELFSYM_EXPORT(aos_io_count_close),
+    ESP_ELFSYM_EXPORT(aos_io_count_get),
+    ESP_ELFSYM_EXPORT(aos_io_count_open),
     ESP_ELFSYM_EXPORT(aos_io_dac_close),
     ESP_ELFSYM_EXPORT(aos_io_dac_level),
     ESP_ELFSYM_EXPORT(aos_io_dac_open),
@@ -4161,12 +4206,18 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_ds18b20_convert_all),
     ESP_ELFSYM_EXPORT(aos_io_ds18b20_read),
     ESP_ELFSYM_EXPORT(aos_io_ds18b20_set_bits),
+    ESP_ELFSYM_EXPORT(aos_io_edges_arm),
+    ESP_ELFSYM_EXPORT(aos_io_edges_close),
+    ESP_ELFSYM_EXPORT(aos_io_edges_get),
+    ESP_ELFSYM_EXPORT(aos_io_edges_open),
+    ESP_ELFSYM_EXPORT(aos_io_edges_wait),
     ESP_ELFSYM_EXPORT(aos_io_gpio_get),
     ESP_ELFSYM_EXPORT(aos_io_gpio_mode),
     ESP_ELFSYM_EXPORT(aos_io_gpio_set),
     ESP_ELFSYM_EXPORT(aos_io_header),
     ESP_ELFSYM_EXPORT(aos_io_held_for_app),
     ESP_ELFSYM_EXPORT(aos_io_i2c_close),
+    ESP_ELFSYM_EXPORT(aos_io_i2c_dev_cfg),
     ESP_ELFSYM_EXPORT(aos_io_i2c_guess),
     ESP_ELFSYM_EXPORT(aos_io_i2c_open),
     ESP_ELFSYM_EXPORT(aos_io_i2c_probe),
@@ -4197,6 +4248,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_port_count),
     ESP_ELFSYM_EXPORT(aos_io_port_find),
     ESP_ELFSYM_EXPORT(aos_io_port_lines),
+    ESP_ELFSYM_EXPORT(aos_io_pulse_out),
     ESP_ELFSYM_EXPORT(aos_io_pwm_bits),
     ESP_ELFSYM_EXPORT(aos_io_pwm_close),
     ESP_ELFSYM_EXPORT(aos_io_pwm_duty),
@@ -4209,6 +4261,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_pwm_set_pulse_us),
     ESP_ELFSYM_EXPORT(aos_io_release),
     ESP_ELFSYM_EXPORT(aos_io_release_owner),
+    ESP_ELFSYM_EXPORT(aos_io_shift_in),
     ESP_ELFSYM_EXPORT(aos_io_spi_clock),
     ESP_ELFSYM_EXPORT(aos_io_spi_close),
     ESP_ELFSYM_EXPORT(aos_io_spi_cs_gpio),
@@ -4424,13 +4477,22 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_scope_wave),
     ESP_ELFSYM_EXPORT(aos_sensor_at),
     ESP_ELFSYM_EXPORT(aos_sensor_candidates),
+    ESP_ELFSYM_EXPORT(aos_sensor_cat_name),
     ESP_ELFSYM_EXPORT(aos_sensor_chip_at),
+    ESP_ELFSYM_EXPORT(aos_sensor_chip_cat),
     ESP_ELFSYM_EXPORT(aos_sensor_chip_count),
     ESP_ELFSYM_EXPORT(aos_sensor_chip_find),
+    ESP_ELFSYM_EXPORT(aos_sensor_chip_what),
     ESP_ELFSYM_EXPORT(aos_sensor_count),
+    ESP_ELFSYM_EXPORT(aos_sensor_decimals),
+    ESP_ELFSYM_EXPORT(aos_sensor_err_text),
+    ESP_ELFSYM_EXPORT(aos_sensor_fmt),
+    ESP_ELFSYM_EXPORT(aos_sensor_glyph),
     ESP_ELFSYM_EXPORT(aos_sensor_history),
+    ESP_ELFSYM_EXPORT(aos_sensor_key_name),
     ESP_ELFSYM_EXPORT(aos_sensor_unit),
     ESP_ELFSYM_EXPORT(aos_sensor_value),
+    ESP_ELFSYM_EXPORT(aos_sensor_values),
     ESP_ELFSYM_EXPORT(aos_sensors_autostart),
     ESP_ELFSYM_EXPORT(aos_sensors_keep),
     ESP_ELFSYM_EXPORT(aos_sensors_ports),

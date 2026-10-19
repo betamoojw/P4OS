@@ -1429,22 +1429,37 @@ async function pageExpansion() {
   function formFill(keep) {
     if (!ex) return;
     const k0 = keep ? fKind.value : '';
-    put(fKind, ex.chips.map(c => h('option', { value: c.id }, c.name)), h('option', { value: 'rs485' }, 'RS485'));
+    /* by what they measure, each group by name; RS485 goes with the rest */
+    const cats = ex.cats || [];
+    const byName = (a, b) => a.name.localeCompare(b.name);
+    put(fKind, cats.map((n, k) => h('optgroup', { label: n },
+      ex.chips.filter(c => (c.cat || 0) === k).sort(byName).map(c => h('option', { value: c.id }, c.name)),
+      k === cats.length - 1 ? h('option', { value: 'rs485' }, 'RS485') : null)),
+      cats.length ? null : ex.chips.map(c => h('option', { value: c.id }, c.name)),
+      cats.length ? null : h('option', { value: 'rs485' }, 'RS485'));
     if (k0) fKind.value = k0;
     formKind();
   }
   /* an SPI chip's chip select: the port's, or a header pin nobody holds and no port uses */
   function csChoices() { return ex.header.filter(p => p.gpio >= 0 && ['free', 'adc', 'care'].includes(p.cls)).map(p => p.gpio); }
+  /* the bus a chip hangs from (aos_sensors.h: 0 I2C, 1 SPI, 2 1-Wire, 3 GPIO, 4 UART) */
+  const chipBus = c => c.bus != null ? c.bus : c.onewire ? 2 : c.spi ? 1 : 0;
+  const pinChip = c => c && (chipBus(c) === 2 || chipBus(c) === 3);
   function formKind() {
     const rs = fKind.value === 'rs485', c = ex.chips.find(x => x.id === fKind.value);
-    const kinds = ex.ports.filter(p => p.kind === (rs ? 'uart' : c.onewire ? 'gpio' : c.spi ? 'spi' : 'i2c'));
+    const bus = rs ? 4 : chipBus(c);
+    const used = new Set(ex.modules.map(m => m.port));
+    const kinds = ex.ports.filter(p => p.kind === ['i2c', 'spi', 'gpio', 'gpio', 'uart'][bus]
+      /* a GPIO sensor wants its pin to itself; a 1-Wire bus takes many */
+      && (bus !== 3 || !used.has(p.name)));
     const p0 = fPort.value;
     put(fPort, kinds.map(p => h('option', { value: p.name }, p.name)),
-      /* a 1-Wire bus may also go on a free pin, which becomes a port of its own */
-      !rs && c.onewire ? csChoices().map(g => h('option', { value: 'new:' + g }, tr('GPIO%d (puerto nuevo)', g))) : []);
+      /* a 1-Wire bus or a GPIO sensor may also go on a free pin, which becomes a port of its own */
+      pinChip(c) && !rs ? csChoices().map(g => h('option', { value: 'new:' + g }, tr('GPIO%d (puerto nuevo)', g))) : []);
     if (kinds.some(p => p.name === p0)) fPort.value = p0;
     fAddr.style.display = rs ? 'none' : '';
-    if (!rs && c.onewire) fAddr.style.display = 'none';
+    if (!rs && bus === 3 && c.pins >= 2) put(fAddr, csChoices().map(g => h('option', { value: g }, tr('segundo pin GPIO%d', g))));
+    else if (!rs && (pinChip(c) || bus === 4)) fAddr.style.display = 'none';
     else if (!rs && c.spi) put(fAddr, h('option', { value: '' }, tr('CS del puerto')), csChoices().map(g => h('option', { value: g }, 'CS GPIO' + g)));
     else if (!rs) put(fAddr, c.addrs.map(a => h('option', { value: a }, hex(a))));
     const opts = rs ? [[9600, '9600'], [19200, '19200'], [38400, '38400'], [115200, '115200']]
@@ -1456,16 +1471,24 @@ async function pageExpansion() {
   }
   function formLine() {
     const rs = fKind.value === 'rs485', c = ex.chips.find(x => x.id === fKind.value);
-    if (!fPort.value) { fLine.textContent = rs ? tr('No hay puertos UART.') : c.spi ? tr('No hay puertos SPI.') : tr('No hay puertos I2C.'); fAdd.disabled = true; return; }
+    const bus = rs ? 4 : chipBus(c);
+    if (!fPort.value) { fLine.textContent = bus === 4 ? tr('No hay puertos UART.') : bus === 1 ? tr('No hay puertos SPI.') : bus >= 2 ? tr('No queda ningún pin libre en el conector.') : tr('No hay puertos I2C.'); fAdd.disabled = true; return; }
     fAdd.disabled = false;
-    if (!rs && c.onewire && fPort.value.startsWith('new:')) {
-      let pn = 'gpio.ow';
-      for (let k = 2; ex.ports.some(p => p.name === pn) && k < 10; k++) pn = 'gpio.ow' + k;
-      fLine.textContent = `port ${pn} pin=${fPort.value.slice(4)}\nmodule ${freeName(c.id)} ${pn}`;
+    /* a GPIO sensor's second pin (trigger and echo, clock and data) */
+    const p2 = !rs && bus === 3 && c.pins >= 2 ? ` pin2=${fAddr.value}` : '';
+    if (p2 && (fAddr.value === fPort.value.slice(4) || !fAddr.value)) { fLine.textContent = tr('El segundo pin tiene que ser otro.'); fAdd.disabled = true; return; }
+    if (pinChip(c) && !rs && fPort.value.startsWith('new:')) {
+      const name = freeName(c.id);
+      const base = bus === 2 ? 'gpio.ow' : 'gpio.' + name;
+      let pn = base;
+      for (let k = 2; ex.ports.some(p => p.name === pn) && k < 10; k++) pn = (bus === 2 ? base : 'gpio.' + name.slice(0, 8)) + k;
+      fLine.textContent = `port ${pn} pin=${fPort.value.slice(4)}\nmodule ${name} ${pn}${p2}`;
       return;
     }
     let l = `module ${freeName(rs ? 'rs485' : c.id)} ${fPort.value}`;
     if (rs) l += ` baud=${fOpt.value}`;
+    else if (pinChip(c)) l += p2;
+    else if (bus === 4) { /* the speed is the sensor's own */ }
     else if (c.spi) { if (fAddr.value) l += ` cs=${fAddr.value}`; }
     else {
       l += ` addr=${hex(+fAddr.value)}`;
@@ -1574,7 +1597,7 @@ async function pageExpansion() {
       : tr('%s sensores', p.found) + (p.scan_age_ms != null ? ' · ' + tr('buscó hace %s s', Math.round(p.scan_age_ms / 1000)) : '')))));
     put(sens, se.sensors.length ? se.sensors.map(s => h('div', { class: 'card pad xp-s' },
       h('div', { class: 'btns', style: 'justify-content:space-between' }, h('b', { style: 'font-size:18px' }, s.name),
-        h('span', { class: 'muted small' }, `${s.chip} · ${s.port} ${s.where || hex(s.addr)} · `, h('span', { style: s.declared ? '' : 'color:#93c5fd' }, s.declared ? 'modules.txt' : tr('detectado')))),
+        h('span', { class: 'muted small' }, `${s.chip} · ${s.port}${s.where == null ? ' ' + hex(s.addr) : s.where ? ' ' + s.where : ''} · `, h('span', { style: s.declared ? '' : 'color:#93c5fd' }, s.declared ? 'modules.txt' : tr('detectado')))),
       h('div', { class: 'xp-vals' }, s.values.map(v => h('div', { class: 'xp-v' + (xpSel && xpSel.name === s.name && xpSel.key === v.key ? ' sel' : ''),
         onclick: () => { xpSel = { name: s.name, key: v.key, q: v.q }; drawSensors(); loadHist(); } },
         h('div', { class: 'muted small' }, v.name), h('div', { class: 'mid' }, xpFmt(v.q, v.v))))),

@@ -7498,3 +7498,159 @@ ARRANCAN CON LA PLACA	START WITH THE BOARD
 no está en la tarjeta	not on the card
 Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.	Apps that ask for it (a data logger, say) start hidden when the board powers up, as if you had opened them and left them. Tapping one takes it off the list.
 Datalog	Datalog
+Tensión 1	Voltage 1
+Tensión 2	Voltage 2
+Tensión 3	Voltage 3
+Corriente 1	Current 1
+Corriente 2	Current 2
+Corriente 3	Current 3
+Índice VOC	VOC index
+Índice NOx	NOx index
+Resistencia del gas	Gas resistance
+Etanol	Ethanol
+Índice UV	UV index
+Visible	Visible
+Espectro completo	Full spectrum
+Sin filtro	Unfiltered
+Temperatura de color	Colour temperature
+Proximidad	Proximity
+Distancia	Distance
+Aceleración X	Acceleration X
+Aceleración Y	Acceleration Y
+Aceleración Z	Acceleration Z
+Giro X	Rotation X
+Giro Y	Rotation Y
+Giro Z	Rotation Z
+Campo X	Field X
+Campo Y	Field Y
+Campo Z	Field Z
+Rumbo	Heading
+Cabeceo	Pitch
+Alabeo	Roll
+Carga	Charge
+Tensión de la celda	Cell voltage
+Peso	Weight
+Crudo	Raw
+Pulsos	Pulses
+Caudal	Flow
+Lluvia	Rain
+Dosis	Dose
+Cuentas por minuto	Counts per minute
+Factor de potencia	Power factor
+Presencia	Presence
+Toques	Touches
+Humedad del suelo	Soil moisture
+Pulso	Pulse
+Oxígeno en sangre	Blood oxygen
+Objeto	Object
+Ambiente	Ambient
+Junta fría	Cold junction
+En movimiento	Moving
+Quieto	Still
+Calibración	Calibration
+VOC crudo	Raw VOC
+NOx crudo	Raw NOx
+Imán	Magnet
+Personas	People
+Distancia en movimiento	Moving distance
+Distancia quieto	Still distance
+Señal en movimiento	Moving signal
+Señal quieto	Still signal
+Velocidad 1	Speed 1
+Velocidad 2	Speed 2
+Velocidad 3	Speed 3
+Carga por hora	Charge per hour
+Lluvia por hora	Rain per hour
+No contesta en el pin. ¿Alimentación, cables, el modelo?	No answer on the pin. Power, wiring, the model?
+No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?	No answer on the serial port. TX and RX crossed, power?
+La RTD está abierta o le falta un cable	The RTD is open or a wire is missing
+La termocupla está en corto a GND	The thermocouple is shorted to GND
+Una punta de la termocupla toca VCC o GND	A thermocouple lead touches VCC or GND
+La RTD está en corto	The RTD is shorted
+Fuera de rango	Out of range
+Falta %s= en la línea del módulo	The module line lacks %s=
+Temperatura, presión, humedad y gas (calidad del aire)	Temperature, pressure, humidity and gas (air quality)
+Temperatura y presión, de precisión	Temperature and pressure, precise
+Temperatura y presión (altímetro)	Temperature and pressure (altimeter)
+Temperatura, ±0,25 °C	Temperature, ±0.25 °C
+Temperatura, ±0,1 °C	Temperature, ±0.1 °C
+Temperatura sin contacto (infrarrojo) y del ambiente	Contactless (infrared) and ambient temperature
+CO₂ real (fotoacústico), temperatura y humedad	True CO₂ (photoacoustic), temperature and humidity
+CO₂ real (NDIR), temperatura y humedad	True CO₂ (NDIR), temperature and humidity
+eCO₂ y TVOC	eCO₂ and TVOC
+Índice de VOC y de NOx (algoritmo de Sensirion)	VOC and NOx index (Sensirion's algorithm)
+Calidad del aire, eCO₂ y TVOC	Air quality, eCO₂ and TVOC
+Partículas PM1, PM2,5 y PM10	Particles PM1, PM2.5 and PM10
+Partículas, temperatura, humedad, VOC y NOx	Particles, temperature, humidity, VOC and NOx
+Partículas PM1 a PM10	Particles PM1 to PM10
+UVA, UVB e índice UV	UVA, UVB and UV index
+Luz, en lux (visible e infrarrojo)	Light, in lux (visible and infrared)
+Luz, en lux, de alto rango	Light, in lux, wide range
+Color (rojo, verde, azul), lux y temperatura de color	Colour (red, green, blue), lux and colour temperature
+Proximidad y color	Proximity and colour
+Índice UV y luz	UV index and light
+Temperatura, de precisión	Temperature, precise
+Distancia por LiDAR, hasta 8 m	Distance by LiDAR, up to 8 m
+Índice UV, visible e infrarrojo	UV index, visible and infrared
+Acelerómetro y giróscopo (y brújula en el MPU-9250)	Accelerometer and gyroscope (and compass on the MPU-9250)
+Acelerómetro, giróscopo y brújula	Accelerometer, gyroscope and compass
+Acelerómetro y giróscopo	Accelerometer and gyroscope
+Orientación absoluta (fusión de 9 ejes)	Absolute orientation (9-axis fusion)
+Brújula (campo magnético)	Compass (magnetic field)
+Distancia por láser, hasta 2 m	Distance by laser, up to 2 m
+Distancia por láser, hasta 4 m	Distance by laser, up to 4 m
+Distancia por láser hasta 20 cm, y luz	Distance by laser up to 20 cm, and light
+Distancia por ultrasonido	Distance by ultrasound
+Distancia por ultrasonido y temperatura	Distance by ultrasound and temperature
+Tensión, corriente y potencia, con su shunt adentro (15 A)	Voltage, current and power, with a built-in shunt (15 A)
+Tres canales de tensión y corriente	Three voltage and current channels
+Tensión, corriente, potencia y energía, hasta 85 V	Voltage, current, power and energy, up to 85 V
+Batería de litio: tensión y carga	Lithium battery: voltage and charge
+ADC de 12 bits, 4 entradas	12-bit ADC, 4 inputs
+ADC de 8 bits, 4 entradas	8-bit ADC, 4 inputs
+ADC de 18 bits	18-bit ADC
+Celda de carga (balanza), 24 bits	Load cell (scale), 24 bits
+Termocupla por I2C	Thermocouple over I2C
+Pulso (MAX30102) y la luz roja e infrarroja, en crudo	Pulse (MAX30102) and raw red and infrared light
+12 teclas táctiles	12 touch keys
+Humedad del suelo y temperatura (Adafruit)	Soil moisture and temperature (Adafruit)
+Ángulo magnético	Magnetic angle
+Temperatura del reloj DS3231	Temperature of the DS3231 clock
+8 entradas digitales	8 digital inputs
+Termocupla, de −200 a 1350 °C, por SPI	Thermocouple, −200 to 1350 °C, over SPI
+Termocupla de cualquier tipo, por SPI	Thermocouple of any type, over SPI
+PT100 o PT1000 (RTD), por SPI	PT100 or PT1000 (RTD), over SPI
+ADC de 10 bits, 8 entradas, por SPI	10-bit ADC, 8 inputs, over SPI
+ADC de 12 bits, 8 entradas, por SPI	12-bit ADC, 8 inputs, over SPI
+Temperatura y humedad (DHT11)	Temperature and humidity (DHT11)
+Temperatura y humedad (DHT22, AM2302)	Temperature and humidity (DHT22, AM2302)
+Distancia por ultrasonido (disparo y eco)	Distance by ultrasound (trigger and echo)
+Celda de carga (balanza)	Load cell (scale)
+Distancia por ultrasonido con un solo pin (Grove, PING)	Distance by ultrasound on a single pin (Grove, PING)
+Pulsos contados y su frecuencia: un medidor, un contador	Pulses counted and their frequency: a meter, a counter
+Caudal de agua (YF-S201 y parecidos): litros por minuto y litros	Water flow (YF-S201 and similar): litres per minute and litres
+Lluvia, con un pluviómetro de cubeta basculante	Rain, with a tipping-bucket gauge
+Velocidad del viento, con un anemómetro de cazoletas	Wind speed, with a cup anemometer
+Radiación: cuentas por minuto y dosis (tubo Geiger)	Radiation: counts per minute and dose (Geiger tube)
+Una entrada digital: un botón, un contacto, un módulo KY	A digital input: a button, a contact, a KY module
+Movimiento: un PIR (HC-SR501, AM312) o un radar RCWL-0516	Motion: a PIR (HC-SR501, AM312) or an RCWL-0516 radar
+CO₂ real (NDIR) por puerto serie	True CO₂ (NDIR) over a serial port
+CO₂ real (NDIR), Senseair S8	True CO₂ (NDIR), Senseair S8
+Partículas PM1, PM2,5 y PM10 por puerto serie	Particles PM1, PM2.5 and PM10 over a serial port
+Partículas PM2,5 y PM10 por puerto serie	Particles PM2.5 and PM10 over a serial port
+Energía de 220 V: tensión, corriente, potencia y energía	Mains energy: voltage, current, power and energy
+Presencia humana por radar	Human presence by radar
+Presencia y posición de hasta tres personas por radar	Presence and position of up to three people by radar
+Presión y clima	Pressure and weather
+Luz y color	Light and colour
+Movimiento y brújula	Motion and compass
+Tensión, corriente y ADC	Voltage, current and ADC
+Distancia y presencia	Distance and presence
+QUÉ MIDE	WHAT IT MEASURES
+PRIMER PIN	FIRST PIN
+EL PIN	THE PIN
+No queda ningún pin libre en el conector.	No free pin is left on the header.
+SEGUNDO PIN	SECOND PIN
+El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos (ECHO, DT).	The first is the trigger or the clock (TRIG, SCK); the second, the echo or the data (ECHO, DT).
+TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	The sensor's TX to the port's RX and RX to TX; the sensor sets the speed.
+No se entiende lo que manda: ¿otra velocidad u otro sensor?	Cannot make sense of what it sends: another speed or another sensor?

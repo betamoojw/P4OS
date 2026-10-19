@@ -183,8 +183,12 @@ EXTRA_SYMBOLS = [
 # aos_access_ is the portal's security (password, token, sessions, the
 # HTTPS keys): set on the board, in Settings, and nowhere else
 # (docs/SECURITY.md); aos_hwkbd_ and aos_hwmouse_ are the shell's side of the
-# USB keyboard and mouse.
-EXCLUDE_PREFIXES = ("_", ".", "$", "__", "aos_p4_", "aos_access_", "aos_hwkbd_", "aos_hwmouse_")
+# USB keyboard and mouse. DRV_, SENS_, sens_ and si2c_ are the sensor
+# service's drivers and their helpers (components/aos_io/sensors): an app
+# reads sensors through aos_sensors.h, and the driver table is two hundred
+# names that would only grow the table.
+EXCLUDE_PREFIXES = ("_", ".", "$", "__", "aos_p4_", "aos_access_", "aos_hwkbd_", "aos_hwmouse_",
+                    "DRV_", "SENS_", "sens_", "si2c_")
 EXCLUDE_EXACT = {"elf_find_sym", "elf_find_sym_default", "elf_set_symbol_resolver"}
 
 

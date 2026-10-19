@@ -55,6 +55,15 @@ const char *aos_sensor_key_name(const char *key)
         { "obj", N_("Objeto") }, { "amb", N_("Ambiente") }, { "cj", N_("Junta fría") },
         { "rtd", N_("Resistencia") }, { "die", N_("Chip") },
         { "move", N_("En movimiento") }, { "still", N_("Quieto") },
+        { "white", N_("Blanco") }, { "calib", N_("Calibración") }, { "vocraw", N_("VOC crudo") }, { "noxraw", N_("NOx crudo") },
+        { "signal", N_("Señal") }, { "magnet", N_("Imán") },
+        { "p0", "P0" }, { "p1", "P1" }, { "p2", "P2" }, { "p3", "P3" },
+        { "p4", "P4" }, { "p5", "P5" }, { "p6", "P6" }, { "p7", "P7" },
+        { "alarm", N_("Alarma") }, { "people", N_("Personas") },
+        { "move_dist", N_("Distancia en movimiento") }, { "still_dist", N_("Distancia quieto") },
+        { "move_en", N_("Señal en movimiento") }, { "still_en", N_("Señal quieto") },
+        { "x1", "X 1" }, { "x2", "X 2" }, { "x3", "X 3" }, { "y1", "Y 1" }, { "y2", "Y 2" }, { "y3", "Y 3" },
+        { "speed1", N_("Velocidad 1") }, { "speed2", N_("Velocidad 2") }, { "speed3", N_("Velocidad 3") }, { "rate", N_("Carga por hora") }, { "rainrate", N_("Lluvia por hora") },
     };
     if (!key) return "";
     for (size_t i = 0; i < sizeof K / sizeof K[0]; i++) if (!strcmp(K[i][0], key)) return _(K[i][1]);
@@ -147,14 +156,21 @@ void aos_sensor_err_text(const char *err, char *out, size_t n)
     else if (!strncmp(err, "nack:gpio", 9)) scpy(out, n, _("No contesta en el pin. ¿Alimentación, cables, el modelo?"));
     else if (!strncmp(err, "nack:uart", 9)) scpy(out, n, _("No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?"));
     else if (!strncmp(err, "nack", 4)) scpy(out, n, _("No contesta en esa dirección"));
+    else if (!strncmp(err, "crc:sync", 8)) scpy(out, n, _("No se entiende lo que manda: ¿otra velocidad u otro sensor?"));
     else if (!strncmp(err, "crc", 3)) scpy(out, n, _("Llegó una lectura con el CRC mal"));
     else if (!strncmp(err, "id", 2)) snprintf(out, n, _("En esa dirección hay otro chip (dice %s)"), d);
     else if (!strncmp(err, "notready", 8)) scpy(out, n, _("Todavía no midió"));
     else if (!strncmp(err, "busy", 4)) snprintf(out, n, _("Los pines los tiene %s"), d);
     else if (!strncmp(err, "port", 4)) scpy(out, n, _("No se pudo abrir el puerto"));
     else if (!strncmp(err, "board", 5)) snprintf(out, n, _("Ahí está el %s de la placa"), d);
+    else if (!strncmp(err, "open:rtd", 8)) scpy(out, n, _("La RTD está abierta o le falta un cable"));
+    else if (!strncmp(err, "open:gnd", 8)) scpy(out, n, _("La termocupla está en corto a GND"));
+    else if (!strncmp(err, "open:vcc", 8)) scpy(out, n, _("La termocupla está en corto a VCC"));
+    else if (!strncmp(err, "open:ovuv", 9)) scpy(out, n, _("Una punta de la termocupla toca VCC o GND"));
     else if (!strncmp(err, "open", 4)) scpy(out, n, _("La termocupla está abierta (o no está conectada)"));
+    else if (!strncmp(err, "range:short", 11)) scpy(out, n, _("La RTD está en corto"));
     else if (!strncmp(err, "range", 5)) scpy(out, n, _("Fuera de rango"));
+    else if (!strncmp(err, "cfg", 3)) snprintf(out, n, _("Falta %s= en la línea del módulo"), d);
     else scpy(out, n, err);
 }
 
@@ -177,7 +193,7 @@ const char *aos_sensor_chip_what(const char *id)
         { "mlx90614", N_("Temperatura sin contacto (infrarrojo) y del ambiente") },
         /* air */
         { "scd4x", N_("CO₂ real (fotoacústico), temperatura y humedad") }, { "scd30", N_("CO₂ real (NDIR), temperatura y humedad") },
-        { "sgp30", N_("eCO₂ y TVOC") }, { "sgp4x", N_("Gases orgánicos (VOC) y NOx, en crudo") },
+        { "sgp30", N_("eCO₂ y TVOC") }, { "sgp4x", N_("Índice de VOC y de NOx (algoritmo de Sensirion)") },
         { "ccs811", N_("eCO₂ y TVOC") }, { "ens160", N_("Calidad del aire, eCO₂ y TVOC") },
         { "pmsa003i", N_("Partículas PM1, PM2,5 y PM10") }, { "sen5x", N_("Partículas, temperatura, humedad, VOC y NOx") },
         { "sps30", N_("Partículas PM1 a PM10") }, { "hm3301", N_("Partículas PM1, PM2,5 y PM10") },
@@ -186,6 +202,8 @@ const char *aos_sensor_chip_what(const char *id)
         { "tsl2561", N_("Luz, en lux (visible e infrarrojo)") }, { "tsl2591", N_("Luz, en lux, de alto rango") },
         { "tcs34725", N_("Color (rojo, verde, azul), lux y temperatura de color") },
         { "apds9960", N_("Proximidad y color") }, { "ltr390", N_("Índice UV y luz") }, { "opt3001", N_("Luz, en lux") },
+        { "ltr329", N_("Luz, en lux (visible e infrarrojo)") }, { "sts3x", N_("Temperatura, de precisión") },
+        { "tfluna", N_("Distancia por LiDAR, hasta 8 m") },
         { "si1145", N_("Índice UV, visible e infrarrojo") }, { "max44009", N_("Luz, en lux") },
         /* motion */
         { "mpu6050", N_("Acelerómetro y giróscopo (y brújula en el MPU-9250)") }, { "icm20948", N_("Acelerómetro, giróscopo y brújula") },
@@ -208,7 +226,7 @@ const char *aos_sensor_chip_what(const char *id)
         { "pcf8591", N_("ADC de 8 bits, 4 entradas") }, { "mcp3421", N_("ADC de 18 bits") },
         { "nau7802", N_("Celda de carga (balanza), 24 bits") }, { "mcp9600", N_("Termocupla por I2C") },
         /* other */
-        { "max3010x", N_("Pulso y oxígeno: la luz roja e infrarroja, en crudo") }, { "mpr121", N_("12 teclas táctiles") },
+        { "max3010x", N_("Pulso (MAX30102) y la luz roja e infrarroja, en crudo") }, { "mpr121", N_("12 teclas táctiles") },
         { "seesaw", N_("Humedad del suelo y temperatura (Adafruit)") }, { "as5600", N_("Ángulo magnético") },
         { "ds3231", N_("Temperatura del reloj DS3231") }, { "pcf8574", N_("8 entradas digitales") },
         /* SPI */
@@ -220,15 +238,36 @@ const char *aos_sensor_chip_what(const char *id)
         /* GPIO */
         { "dht11", N_("Temperatura y humedad (DHT11)") }, { "dht22", N_("Temperatura y humedad (DHT22, AM2302)") },
         { "hcsr04", N_("Distancia por ultrasonido (disparo y eco)") }, { "hx711", N_("Celda de carga (balanza)") },
-        { "pulse", N_("Pulsos: caudalímetro, anemómetro, pluviómetro, Geiger, medidor") },
-        { "digital", N_("Una entrada digital: PIR, botón, contacto, módulos KY") },
+        { "ping", N_("Distancia por ultrasonido con un solo pin (Grove, PING)") },
+        { "pulse", N_("Pulsos contados y su frecuencia: un medidor, un contador") },
+        { "flow", N_("Caudal de agua (YF-S201 y parecidos): litros por minuto y litros") },
+        { "rain", N_("Lluvia, con un pluviómetro de cubeta basculante") },
+        { "wind", N_("Velocidad del viento, con un anemómetro de cazoletas") },
+        { "geiger", N_("Radiación: cuentas por minuto y dosis (tubo Geiger)") },
+        { "input", N_("Una entrada digital: un botón, un contacto, un módulo KY") },
+        { "pir", N_("Movimiento: un PIR (HC-SR501, AM312) o un radar RCWL-0516") },
         /* UART */
-        { "mhz19", N_("CO₂ real (NDIR) por puerto serie") }, { "senseair", N_("CO₂ real (NDIR), Senseair S8") },
+        { "mhz19", N_("CO₂ real (NDIR) por puerto serie") }, { "senseair_s8", N_("CO₂ real (NDIR), Senseair S8") },
         { "pms5003", N_("Partículas PM1, PM2,5 y PM10 por puerto serie") }, { "sds011", N_("Partículas PM2,5 y PM10 por puerto serie") },
         { "pzem004t", N_("Energía de 220 V: tensión, corriente, potencia y energía") },
         { "ld2410", N_("Presencia humana por radar") },
+        { "ld2450", N_("Presencia y posición de hasta tres personas por radar") },
     };
     if (!id) return "";
     for (size_t i = 0; i < sizeof W / sizeof W[0]; i++) if (!strcmp(W[i][0], id)) return _(W[i][1]);
     return "";
+}
+
+const char *aos_sensor_cat_name(int cat)
+{
+    switch (cat) {
+    case AOS_SENSOR_CAT_TEMP: return _("Temperatura y humedad");
+    case AOS_SENSOR_CAT_ENV: return _("Presión y clima");
+    case AOS_SENSOR_CAT_AIR: return _("Calidad del aire");
+    case AOS_SENSOR_CAT_LIGHT: return _("Luz y color");
+    case AOS_SENSOR_CAT_MOTION: return _("Movimiento y brújula");
+    case AOS_SENSOR_CAT_POWER: return _("Tensión, corriente y ADC");
+    case AOS_SENSOR_CAT_DIST: return _("Distancia y presencia");
+    default: return _("Otros");
+    }
 }

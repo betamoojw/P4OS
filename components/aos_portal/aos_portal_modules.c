@@ -260,6 +260,8 @@ static void api_expansion(aos_httpd_req_t *r)
         cJSON_AddItemToObject(o, "check", check_json(&ck));
         free(text);
     }
+    cJSON *cats = cJSON_AddArrayToObject(o, "cats");
+    for (int k = 0; k < AOS_SENSOR_CAT_COUNT; k++) cJSON_AddItemToArray(cats, cJSON_CreateString(aos_sensor_cat_name(k)));
     cJSON *chips = cJSON_AddArrayToObject(o, "chips");
     for (int i = 0; i < aos_sensor_chip_count(); i++) {
         const aos_sensor_chip_t *c = aos_sensor_chip_at(i);
@@ -272,6 +274,9 @@ static void api_expansion(aos_httpd_req_t *r)
         cJSON_AddBoolToObject(e, "gain", c->gain);
         cJSON_AddBoolToObject(e, "spi", c->spi);
         cJSON_AddBoolToObject(e, "onewire", c->onewire);
+        cJSON_AddNumberToObject(e, "bus", c->bus);
+        cJSON_AddNumberToObject(e, "pins", c->pins);
+        cJSON_AddNumberToObject(e, "cat", aos_sensor_chip_cat(c));
         cJSON_AddItemToArray(chips, e);
     }
     send_cjson(r, 200, o);
@@ -318,6 +323,7 @@ static void api_sensors(aos_httpd_req_t *r)
         char where[8];
         if (sp && sp->kind == AOS_PORT_SPI) snprintf(where, sizeof where, "CS%u", (unsigned)s.addr);
         else if (sp && sp->kind == AOS_PORT_GPIO) snprintf(where, sizeof where, "GPIO%u", (unsigned)s.addr);
+        else if (sp && sp->kind == AOS_PORT_UART) where[0] = 0;
         else snprintf(where, sizeof where, "0x%02X", s.addr);
         cJSON_AddStringToObject(e, "where", where);
         cJSON_AddBoolToObject(e, "declared", s.declared);

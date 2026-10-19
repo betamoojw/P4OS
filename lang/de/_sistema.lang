@@ -7498,3 +7498,159 @@ ARRANCAN CON LA PLACA	STARTEN MIT DER PLATINE
 no está en la tarjeta	nicht auf der Karte
 Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.	Apps, die es verlangen (etwa ein Datenlogger), starten versteckt, wenn die Platine eingeschaltet wird, als hättest du sie geöffnet und verlassen. Antippen nimmt eine von der Liste.
 Datalog	Datalog
+Tensión 1	Spannung 1
+Tensión 2	Spannung 2
+Tensión 3	Spannung 3
+Corriente 1	Strom 1
+Corriente 2	Strom 2
+Corriente 3	Strom 3
+Índice VOC	VOC-Index
+Índice NOx	NOx-Index
+Resistencia del gas	Gaswiderstand
+Etanol	Ethanol
+Índice UV	UV-Index
+Visible	Sichtbar
+Espectro completo	Volles Spektrum
+Sin filtro	Ungefiltert
+Temperatura de color	Farbtemperatur
+Proximidad	Nähe
+Distancia	Entfernung
+Aceleración X	Beschleunigung X
+Aceleración Y	Beschleunigung Y
+Aceleración Z	Beschleunigung Z
+Giro X	Drehung X
+Giro Y	Drehung Y
+Giro Z	Drehung Z
+Campo X	Feld X
+Campo Y	Feld Y
+Campo Z	Feld Z
+Rumbo	Kurs
+Cabeceo	Nicken
+Alabeo	Rollen
+Carga	Ladung
+Tensión de la celda	Zellspannung
+Peso	Gewicht
+Crudo	Roh
+Pulsos	Impulse
+Caudal	Durchfluss
+Lluvia	Regen
+Dosis	Dosis
+Cuentas por minuto	Zählungen pro Minute
+Factor de potencia	Leistungsfaktor
+Presencia	Anwesenheit
+Toques	Berührungen
+Humedad del suelo	Bodenfeuchte
+Pulso	Puls
+Oxígeno en sangre	Blutsauerstoff
+Objeto	Objekt
+Ambiente	Umgebung
+Junta fría	Vergleichsstelle
+En movimiento	In Bewegung
+Quieto	Ruhend
+Calibración	Kalibrierung
+VOC crudo	VOC roh
+NOx crudo	NOx roh
+Imán	Magnet
+Personas	Personen
+Distancia en movimiento	Entfernung in Bewegung
+Distancia quieto	Entfernung ruhend
+Señal en movimiento	Signal in Bewegung
+Señal quieto	Signal ruhend
+Velocidad 1	Geschwindigkeit 1
+Velocidad 2	Geschwindigkeit 2
+Velocidad 3	Geschwindigkeit 3
+Carga por hora	Ladung pro Stunde
+Lluvia por hora	Regen pro Stunde
+No contesta en el pin. ¿Alimentación, cables, el modelo?	Keine Antwort am Pin. Versorgung, Kabel, das Modell?
+No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?	Keine Antwort an der seriellen Schnittstelle. TX und RX gekreuzt, Versorgung?
+La RTD está abierta o le falta un cable	Der RTD ist offen oder ein Kabel fehlt
+La termocupla está en corto a GND	Das Thermoelement hat Kurzschluss nach GND
+Una punta de la termocupla toca VCC o GND	Ein Thermoelementdraht berührt VCC oder GND
+La RTD está en corto	Der RTD ist kurzgeschlossen
+Fuera de rango	Außerhalb des Bereichs
+Falta %s= en la línea del módulo	In der Modulzeile fehlt %s=
+Temperatura, presión, humedad y gas (calidad del aire)	Temperatur, Druck, Feuchte und Gas (Luftqualität)
+Temperatura y presión, de precisión	Temperatur und Druck, präzise
+Temperatura y presión (altímetro)	Temperatur und Druck (Höhenmesser)
+Temperatura, ±0,25 °C	Temperatur, ±0,25 °C
+Temperatura, ±0,1 °C	Temperatur, ±0,1 °C
+Temperatura sin contacto (infrarrojo) y del ambiente	Berührungslose (Infrarot-) und Umgebungstemperatur
+CO₂ real (fotoacústico), temperatura y humedad	Echtes CO₂ (photoakustisch), Temperatur und Feuchte
+CO₂ real (NDIR), temperatura y humedad	Echtes CO₂ (NDIR), Temperatur und Feuchte
+eCO₂ y TVOC	eCO₂ und TVOC
+Índice de VOC y de NOx (algoritmo de Sensirion)	VOC- und NOx-Index (Algorithmus von Sensirion)
+Calidad del aire, eCO₂ y TVOC	Luftqualität, eCO₂ und TVOC
+Partículas PM1, PM2,5 y PM10	Feinstaub PM1, PM2,5 und PM10
+Partículas, temperatura, humedad, VOC y NOx	Feinstaub, Temperatur, Feuchte, VOC und NOx
+Partículas PM1 a PM10	Feinstaub PM1 bis PM10
+UVA, UVB e índice UV	UVA, UVB und UV-Index
+Luz, en lux (visible e infrarrojo)	Licht, in Lux (sichtbar und infrarot)
+Luz, en lux, de alto rango	Licht, in Lux, großer Bereich
+Color (rojo, verde, azul), lux y temperatura de color	Farbe (Rot, Grün, Blau), Lux und Farbtemperatur
+Proximidad y color	Nähe und Farbe
+Índice UV y luz	UV-Index und Licht
+Temperatura, de precisión	Temperatur, präzise
+Distancia por LiDAR, hasta 8 m	Entfernung per LiDAR, bis 8 m
+Índice UV, visible e infrarrojo	UV-Index, sichtbar und infrarot
+Acelerómetro y giróscopo (y brújula en el MPU-9250)	Beschleunigungssensor und Gyroskop (und Kompass beim MPU-9250)
+Acelerómetro, giróscopo y brújula	Beschleunigungssensor, Gyroskop und Kompass
+Acelerómetro y giróscopo	Beschleunigungssensor und Gyroskop
+Orientación absoluta (fusión de 9 ejes)	Absolute Ausrichtung (9-Achsen-Fusion)
+Brújula (campo magnético)	Kompass (Magnetfeld)
+Distancia por láser, hasta 2 m	Entfernung per Laser, bis 2 m
+Distancia por láser, hasta 4 m	Entfernung per Laser, bis 4 m
+Distancia por láser hasta 20 cm, y luz	Entfernung per Laser bis 20 cm, und Licht
+Distancia por ultrasonido	Entfernung per Ultraschall
+Distancia por ultrasonido y temperatura	Entfernung per Ultraschall und Temperatur
+Tensión, corriente y potencia, con su shunt adentro (15 A)	Spannung, Strom und Leistung, mit eingebautem Shunt (15 A)
+Tres canales de tensión y corriente	Drei Spannungs- und Stromkanäle
+Tensión, corriente, potencia y energía, hasta 85 V	Spannung, Strom, Leistung und Energie, bis 85 V
+Batería de litio: tensión y carga	Lithium-Akku: Spannung und Ladung
+ADC de 12 bits, 4 entradas	12-Bit-ADC, 4 Eingänge
+ADC de 8 bits, 4 entradas	8-Bit-ADC, 4 Eingänge
+ADC de 18 bits	18-Bit-ADC
+Celda de carga (balanza), 24 bits	Wägezelle (Waage), 24 Bit
+Termocupla por I2C	Thermoelement über I2C
+Pulso (MAX30102) y la luz roja e infrarroja, en crudo	Puls (MAX30102) und rotes und infrarotes Licht, roh
+12 teclas táctiles	12 Touch-Tasten
+Humedad del suelo y temperatura (Adafruit)	Bodenfeuchte und Temperatur (Adafruit)
+Ángulo magnético	Magnetischer Winkel
+Temperatura del reloj DS3231	Temperatur der DS3231-Uhr
+8 entradas digitales	8 digitale Eingänge
+Termocupla, de −200 a 1350 °C, por SPI	Thermoelement, −200 bis 1350 °C, über SPI
+Termocupla de cualquier tipo, por SPI	Thermoelement beliebigen Typs, über SPI
+PT100 o PT1000 (RTD), por SPI	PT100 oder PT1000 (RTD), über SPI
+ADC de 10 bits, 8 entradas, por SPI	10-Bit-ADC, 8 Eingänge, über SPI
+ADC de 12 bits, 8 entradas, por SPI	12-Bit-ADC, 8 Eingänge, über SPI
+Temperatura y humedad (DHT11)	Temperatur und Feuchte (DHT11)
+Temperatura y humedad (DHT22, AM2302)	Temperatur und Feuchte (DHT22, AM2302)
+Distancia por ultrasonido (disparo y eco)	Entfernung per Ultraschall (Trigger und Echo)
+Celda de carga (balanza)	Wägezelle (Waage)
+Distancia por ultrasonido con un solo pin (Grove, PING)	Entfernung per Ultraschall an einem Pin (Grove, PING)
+Pulsos contados y su frecuencia: un medidor, un contador	Gezählte Impulse und ihre Frequenz: ein Zähler, ein Messgerät
+Caudal de agua (YF-S201 y parecidos): litros por minuto y litros	Wasserdurchfluss (YF-S201 und ähnliche): Liter pro Minute und Liter
+Lluvia, con un pluviómetro de cubeta basculante	Regen, mit einem Kippwaagen-Regenmesser
+Velocidad del viento, con un anemómetro de cazoletas	Windgeschwindigkeit, mit einem Schalenanemometer
+Radiación: cuentas por minuto y dosis (tubo Geiger)	Strahlung: Zählungen pro Minute und Dosis (Geigerzählrohr)
+Una entrada digital: un botón, un contacto, un módulo KY	Ein digitaler Eingang: ein Taster, ein Kontakt, ein KY-Modul
+Movimiento: un PIR (HC-SR501, AM312) o un radar RCWL-0516	Bewegung: ein PIR (HC-SR501, AM312) oder ein RCWL-0516-Radar
+CO₂ real (NDIR) por puerto serie	Echtes CO₂ (NDIR) über die serielle Schnittstelle
+CO₂ real (NDIR), Senseair S8	Echtes CO₂ (NDIR), Senseair S8
+Partículas PM1, PM2,5 y PM10 por puerto serie	Feinstaub PM1, PM2,5 und PM10 über die serielle Schnittstelle
+Partículas PM2,5 y PM10 por puerto serie	Feinstaub PM2,5 und PM10 über die serielle Schnittstelle
+Energía de 220 V: tensión, corriente, potencia y energía	Netzenergie: Spannung, Strom, Leistung und Energie
+Presencia humana por radar	Personenanwesenheit per Radar
+Presencia y posición de hasta tres personas por radar	Anwesenheit und Position von bis zu drei Personen per Radar
+Presión y clima	Druck und Wetter
+Luz y color	Licht und Farbe
+Movimiento y brújula	Bewegung und Kompass
+Tensión, corriente y ADC	Spannung, Strom und ADC
+Distancia y presencia	Entfernung und Anwesenheit
+QUÉ MIDE	WAS ES MISST
+PRIMER PIN	ERSTER PIN
+EL PIN	DER PIN
+No queda ningún pin libre en el conector.	Am Anschluss ist kein Pin mehr frei.
+SEGUNDO PIN	ZWEITER PIN
+El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos (ECHO, DT).	Der erste ist Trigger oder Takt (TRIG, SCK); der zweite Echo oder Daten (ECHO, DT).
+TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	TX des Sensors an RX des Ports und RX an TX; die Geschwindigkeit gibt der Sensor vor.
+No se entiende lo que manda: ¿otra velocidad u otro sensor?	Was er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?

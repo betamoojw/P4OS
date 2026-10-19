@@ -82,9 +82,12 @@ static struct {
     int sel_i, sel_k;               /* the reading on the chart, as found this time */
 } U;
 
-/* The form's choices: a sensor chip (0 .. chips-1) or RS485 */
-static struct { int kind, port, addr, opt; } F;
+/* The form's choices: a group, a sensor chip in it (0 .. chips-1) or RS485,
+ * the port (or a free pin), the address (an SPI chip's CS, a GPIO chip's
+ * second pin) and an option (shunt, range, speed) */
+static struct { int cat, kind, port, addr, opt; } F;
 #define F_RS485 aos_sensor_chip_count()
+#define AOS_SENSOR_CHIPS_FORM 192
 
 static void build_page(void);
 
@@ -288,12 +291,14 @@ static const char *pin_note(int pin)
 
 
 
-/* Where a sensor is: an I2C address, or an SPI chip's chip select */
+/* Where a sensor is: an I2C address, an SPI chip's chip select, a pin;
+ * nothing for a UART one */
 static void sens_where(const msens_t *s, char *out, size_t n)
 {
     const aos_io_port_t *p = aos_io_port_find(s->port);
     if (p && p->kind == AOS_PORT_SPI) snprintf(out, n, "CS%u", (unsigned)s->addr);
     else if (p && p->kind == AOS_PORT_GPIO) snprintf(out, n, "GPIO%u", (unsigned)s->addr);
+    else if (p && p->kind == AOS_PORT_UART) out[0] = 0;          /* the port says it all */
     else snprintf(out, n, "0x%02X", s->addr);
 }
 
@@ -898,7 +903,31 @@ static int form_port_kind(void)
 {
     if (F.kind == F_RS485) return AOS_PORT_UART;
     const aos_sensor_chip_t *c = aos_sensor_chip_at(F.kind);
-    return c->onewire ? AOS_PORT_GPIO : c->spi ? AOS_PORT_SPI : AOS_PORT_I2C;
+    switch (c->bus) {
+    case AOS_SENSOR_BUS_ONEWIRE: case AOS_SENSOR_BUS_GPIO: return AOS_PORT_GPIO;
+    case AOS_SENSOR_BUS_SPI: return AOS_PORT_SPI;
+    case AOS_SENSOR_BUS_UART: return AOS_PORT_UART;
+    default: return c->onewire ? AOS_PORT_GPIO : c->spi ? AOS_PORT_SPI : AOS_PORT_I2C;
+    }
+}
+
+static bool pin_bus(const aos_sensor_chip_t *c)
+{
+    return c && (c->onewire || c->bus == AOS_SENSOR_BUS_GPIO);
+}
+
+/* The chips of a group, by name (the table is in autodetect's order) */
+static int chips_of_cat(int cat, int *out, int max)
+{
+    int n = 0;
+    for (int i = 0; i < aos_sensor_chip_count() && n < max; i++) {
+        const aos_sensor_chip_t *c = aos_sensor_chip_at(i);
+        if (aos_sensor_chip_cat(c) != cat) continue;
+        int j = n++;
+        for (; j > 0 && strcasecmp(aos_sensor_chip_at(out[j - 1])->name, c->name) > 0; j--) out[j] = out[j - 1];
+        out[j] = i;
+    }
+    return n;
 }
 
 /* An SPI chip's chip select: the port's own (choice 0), or a header pin
@@ -920,12 +949,40 @@ static int cs_choices(int *gpios, int max)
 
 static int cs_choices(int *gpios, int max);
 
-/* A 1-Wire bus: a GPIO port of modules.txt (choices 0..np-1), or a free pin
- * that becomes one (np..): then the line is two, the port and the module */
-static void ow_form_line(const aos_sensor_chip_t *c, char *out, size_t n, bool *ok)
+static bool port_has_module(const char *port)
+{
+    for (int m = 0; m < aos_io_module_count(); m++)
+        if (!strcmp(aos_io_module_at(m)->port, port)) return true;
+    return false;
+}
+
+/* The GPIO ports a pin chip may use: for 1-Wire any (a bus has many
+ * sensors), for a GPIO sensor only one with nothing on it */
+static int pin_ports(const aos_sensor_chip_t *c, const aos_io_port_t **out, int max)
+{
+    const aos_io_port_t *all[AOS_IO_PORT_MAX];
+    int na = ports_of_kind(AOS_PORT_GPIO, all, AOS_IO_PORT_MAX), n = 0;
+    for (int i = 0; i < na && n < max; i++)
+        if (c->onewire || !port_has_module(all[i]->name)) out[n++] = all[i];
+    return n;
+}
+
+/* A GPIO sensor's second pin (trigger and echo, clock and data): a free
+ * one that is not the first */
+static int pin2_choices(int first, int *gpios, int max)
+{
+    int gp[40], ng = cs_choices(gp, 40), n = 0;
+    for (int i = 0; i < ng && n < max; i++) if (gp[i] != first) gpios[n++] = gp[i];
+    return n;
+}
+
+/* A 1-Wire bus or a GPIO sensor: a GPIO port of modules.txt (choices
+ * 0..np-1), or a free pin that becomes one (np..): then the line is two,
+ * the port and the module */
+static void pin_form_line(const aos_sensor_chip_t *c, char *out, size_t n, bool *ok)
 {
     const aos_io_port_t *pts[AOS_IO_PORT_MAX];
-    int np = ports_of_kind(AOS_PORT_GPIO, pts, AOS_IO_PORT_MAX);
+    int np = pin_ports(c, pts, AOS_IO_PORT_MAX);
     int gp[40], ng = cs_choices(gp, 40);
     *ok = np + ng > 0;
     out[0] = 0;
@@ -933,19 +990,34 @@ static void ow_form_line(const aos_sensor_chip_t *c, char *out, size_t n, bool *
     if (F.port >= np + ng) F.port = 0;
     char name[24];
     aos_modules_free_name(c->id, name, sizeof name);
+    char p2[16] = "";
+    int first = F.port < np ? pts[F.port]->pins[0] : gp[F.port - np];
+    if (!c->onewire && c->pins >= 2) {
+        int g2[40], n2 = pin2_choices(first, g2, 40);
+        if (!n2) { *ok = false; return; }
+        if (F.addr >= n2) F.addr = 0;
+        snprintf(p2, sizeof p2, " pin2=%d", g2[F.addr]);
+    }
     if (F.port < np) {
-        snprintf(out, n, "module %s %s", name, pts[F.port]->name);
+        snprintf(out, n, "module %s %s%s", name, pts[F.port]->name, p2);
         return;
     }
-    char pn[16] = "gpio.ow";
-    for (int k = 2; aos_io_port_find(pn) && k < 10; k++) snprintf(pn, sizeof pn, "gpio.ow%d", k);
-    snprintf(out, n, "port %s pin=%d\nmodule %s %s", pn, gp[F.port - np], name, pn);
+    char pn[AOS_IO_PORT_NAME_MAX];
+    if (c->onewire) {
+        scpy(pn, sizeof pn, "gpio.ow");
+        for (int k = 2; aos_io_port_find(pn) && k < 10; k++) snprintf(pn, sizeof pn, "gpio.ow%d", k);
+    } else {
+        /* the port after the module: gpio.dht22, gpio.dht22_2 */
+        snprintf(pn, sizeof pn, "gpio.%.10s", name);
+        for (int k = 2; aos_io_port_find(pn) && k < 10; k++) snprintf(pn, sizeof pn, "gpio.%.8s%d", name, k);
+    }
+    snprintf(out, n, "port %s pin=%d\nmodule %s %s%s", pn, gp[F.port - np], name, pn, p2);
 }
 
 static void form_line(char *out, size_t n, bool *ok)
 {
-    if (F.kind != F_RS485 && aos_sensor_chip_at(F.kind)->onewire) {
-        ow_form_line(aos_sensor_chip_at(F.kind), out, n, ok);
+    if (F.kind != F_RS485 && pin_bus(aos_sensor_chip_at(F.kind))) {
+        pin_form_line(aos_sensor_chip_at(F.kind), out, n, ok);
         return;
     }
     const aos_io_port_t *pts[AOS_IO_PORT_MAX];
@@ -962,6 +1034,12 @@ static void form_line(char *out, size_t n, bool *ok)
         return;
     }
     const aos_sensor_chip_t *c = aos_sensor_chip_at(F.kind);
+    if (c->bus == AOS_SENSOR_BUS_UART) {
+        /* the speed is the sensor's own: the driver knows it */
+        aos_modules_free_name(c->id, name, sizeof name);
+        snprintf(out, n, "module %s %s", name, pts[F.port]->name);
+        return;
+    }
     if (c->spi) {
         int gp[40], ng = cs_choices(gp, 40);
         if (F.addr > ng) F.addr = 0;
@@ -982,6 +1060,15 @@ static void form_line(char *out, size_t n, bool *ok)
 
 static void form_build(void);
 static void f_kind_cb(lv_event_t *e) { F.kind = (int)(intptr_t)lv_event_get_user_data(e); F.addr = 0; F.opt = F.kind == F_RS485 ? 0 : (aos_sensor_chip_at(F.kind)->gain ? 1 : 0); form_build(); }
+static void f_cat_cb(lv_event_t *e)
+{
+    F.cat = (int)(intptr_t)lv_event_get_user_data(e);
+    int ids[AOS_SENSOR_CHIPS_FORM];
+    F.kind = chips_of_cat(F.cat, ids, AOS_SENSOR_CHIPS_FORM) ? ids[0] : F_RS485;
+    F.addr = F.port = 0;
+    F.opt = F.kind == F_RS485 ? 0 : (aos_sensor_chip_at(F.kind)->gain ? 1 : 0);
+    form_build();
+}
 static void f_port_cb(lv_event_t *e) { F.port = (int)(intptr_t)lv_event_get_user_data(e); form_build(); }
 static void f_addr_cb(lv_event_t *e) { F.addr = (int)(intptr_t)lv_event_get_user_data(e); form_build(); }
 static void f_opt_cb(lv_event_t *e) { F.opt = (int)(intptr_t)lv_event_get_user_data(e); form_build(); }
@@ -1017,10 +1104,14 @@ static void form_build(void)
     if (U.land) w = U.W - 120 < 1000 ? U.W - 120 : 1000, iw = w - 56;
     lv_obj_t *sh = sheet_open(w);
     aos_label(sh, _("Agregar módulo"), aos_font_title, AOS_C_TEXT);
-    section(sh, _("QUÉ ES"));
+    section(sh, _("QUÉ MIDE"));
     lv_obj_t *r = chips_row(sh, iw);
-    for (int i = 0; i < aos_sensor_chip_count(); i++) chip(r, aos_sensor_chip_at(i)->name, F.kind == i, f_kind_cb, (void *)(intptr_t)i);
-    chip(r, "RS485", F.kind == F_RS485, f_kind_cb, (void *)(intptr_t)F_RS485);
+    for (int k = 0; k < AOS_SENSOR_CAT_COUNT; k++) chip(r, aos_sensor_cat_name(k), F.cat == k, f_cat_cb, (void *)(intptr_t)k);
+    section(sh, _("QUÉ ES"));
+    r = chips_row(sh, iw);
+    int ids[AOS_SENSOR_CHIPS_FORM], nid = chips_of_cat(F.cat, ids, AOS_SENSOR_CHIPS_FORM);
+    for (int i = 0; i < nid; i++) chip(r, aos_sensor_chip_at(ids[i])->name, F.kind == ids[i], f_kind_cb, (void *)(intptr_t)ids[i]);
+    if (F.cat == AOS_SENSOR_CAT_OTHER) chip(r, "RS485", F.kind == F_RS485, f_kind_cb, (void *)(intptr_t)F_RS485);
     bool rs = F.kind == F_RS485;
     const aos_sensor_chip_t *c = rs ? NULL : aos_sensor_chip_at(F.kind);
     caption(sh, rs ? _("Un transceptor RS485 (MAX485 o uno automático) para Modbus RTU; el DE va en el pin de del puerto.")
@@ -1030,20 +1121,36 @@ static void form_build(void)
     int pk = form_port_kind();
     int np = ports_of_kind(pk, pts, AOS_IO_PORT_MAX);
     char t[32];
-    if (c && c->onewire) {
-        /* the bus: a GPIO port there is, or a free pin that becomes one */
-        section(sh, _("EL BUS (UN PIN)"));
+    if (pin_bus(c)) {
+        /* the pin: a GPIO port there is, or a free pin that becomes one */
+        const aos_io_port_t *gpts[AOS_IO_PORT_MAX];
+        int ngp = pin_ports(c, gpts, AOS_IO_PORT_MAX);
+        section(sh, c->onewire ? _("EL BUS (UN PIN)") : c->pins >= 2 ? _("PRIMER PIN") : _("EL PIN"));
         r = chips_row(sh, iw);
-        for (int i = 0; i < np; i++) {
-            snprintf(t, sizeof t, "%s · GPIO%d", pts[i]->name, pts[i]->pins[0]);
+        for (int i = 0; i < ngp; i++) {
+            snprintf(t, sizeof t, "%s · GPIO%d", gpts[i]->name, gpts[i]->pins[0]);
             chip(r, t, F.port == i, f_port_cb, (void *)(intptr_t)i);
         }
         int gp[40], ng = cs_choices(gp, 40);
         for (int i = 0; i < ng; i++) {
             snprintf(t, sizeof t, "GPIO%d", gp[i]);
-            chip(r, t, F.port == np + i, f_port_cb, (void *)(intptr_t)(np + i));
+            chip(r, t, F.port == ngp + i, f_port_cb, (void *)(intptr_t)(ngp + i));
         }
-        caption(sh, _("Datos al pin, VDD a 3V3 y 4,7 kΩ entre datos y 3V3. Los sensores del bus aparecen solos, cada uno con su número de serie."), iw);
+        if (!ngp && !ng) caption(sh, _("No queda ningún pin libre en el conector."), iw);
+        if (c->onewire) {
+            caption(sh, _("Datos al pin, VDD a 3V3 y 4,7 kΩ entre datos y 3V3. Los sensores del bus aparecen solos, cada uno con su número de serie."), iw);
+        } else if (c->pins >= 2 && ngp + ng) {
+            section(sh, _("SEGUNDO PIN"));
+            r = chips_row(sh, iw);
+            int pi = F.port < ngp + ng ? F.port : 0;
+            int first = pi < ngp ? gpts[pi]->pins[0] : gp[pi - ngp];
+            int g2[40], n2 = pin2_choices(first, g2, 40);
+            for (int i = 0; i < n2; i++) {
+                snprintf(t, sizeof t, "GPIO%d", g2[i]);
+                chip(r, t, F.addr == i, f_addr_cb, (void *)(intptr_t)i);
+            }
+            caption(sh, _("El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos (ECHO, DT)."), iw);
+        }
         goto line;
     }
     section(sh, _("PUERTO"));
@@ -1053,7 +1160,9 @@ static void form_build(void)
     for (int i = 0; i < np; i++) chip(r, pts[i]->name, F.port == i, f_port_cb, (void *)(intptr_t)i);
     if (np && !rs && !strcmp(pts[F.port < np ? F.port : 0]->name, "i2c.board"))
         caption(sh, _("Ojo: el bus de la placa ya tiene el ES7210 en 0x40, donde suelen estar los INA219."), iw);
-    if (!rs && c->spi) {
+    if (!rs && c->bus == AOS_SENSOR_BUS_UART) {
+        caption(sh, _("TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor."), iw);
+    } else if (!rs && c->spi) {
         /* the chip select: the port's, or a free pin for a second chip on the same wires */
         section(sh, "CS");
         r = chips_row(sh, iw);
@@ -1136,6 +1245,11 @@ static void add_cb(lv_event_t *e)
         int np = ports_of_kind(AOS_PORT_I2C, pts, AOS_IO_PORT_MAX);
         for (int i = 0; i < np; i++) if (!strcmp(pts[i]->name, cand[ci].port)) F.port = i;
         if (c->gain) F.opt = 1;
+        F.cat = aos_sensor_chip_cat(c);
+    } else {
+        int ids[AOS_SENSOR_CHIPS_FORM];
+        F.cat = AOS_SENSOR_CAT_TEMP;
+        F.kind = chips_of_cat(F.cat, ids, AOS_SENSOR_CHIPS_FORM) ? ids[0] : F_RS485;
     }
     form_build();
 }

@@ -7655,3 +7655,4 @@ TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	The s
 No se entiende lo que manda: ¿otra velocidad u otro sensor?	Cannot make sense of what it sends: another speed or another sensor?
 Es otro chip	Another chip
 %s va en un puerto %s, y %s no lo es	%s goes on a %s port, and %s isn't one
+Puede ser: %s	It may be: %s

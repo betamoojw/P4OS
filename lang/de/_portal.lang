@@ -2052,3 +2052,4 @@ GPIO%d (puerto nuevo)	GPIO%d (neuer Port)
 segundo pin GPIO%d	zweiter Pin GPIO%d
 No queda ningún pin libre en el conector.	Am Anschluss ist kein Pin mehr frei.
 El segundo pin tiene que ser otro.	Der zweite Pin muss ein anderer sein.
+Puede ser: %s	Es kann sein: %s

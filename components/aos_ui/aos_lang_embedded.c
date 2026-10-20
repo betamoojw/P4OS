@@ -2696,6 +2696,7 @@ static const char blob_en__sistema_lang[] =
     "No se entiende lo que manda: ¿otra velocidad u otro sensor?\tCannot make sense of what it sends: another speed or another sensor?\n"
     "Es otro chip\tAnother chip\n"
     "%s va en un puerto %s, y %s no lo es\t%s goes on a %s port, and %s isn't one\n"
+    "Puede ser: %s\tIt may be: %s\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -10514,6 +10515,7 @@ static const char blob_de__sistema_lang[] =
     "No se entiende lo que manda: ¿otra velocidad u otro sensor?\tWas er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?\n"
     "Es otro chip\tAnderer Chip\n"
     "%s va en un puerto %s, y %s no lo es\t%s gehört an einen %s-Port, und %s ist keiner\n"
+    "Puede ser: %s\tEs kann sein: %s\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =
@@ -15650,7 +15652,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2682, 48, files_en, 49 },
-    { "de", "Deutsch", 2682, 48, files_de, 49 },
+    { "en", "English", 2683, 48, files_en, 49 },
+    { "de", "Deutsch", 2683, 48, files_de, 49 },
 };
 const int aos_lang_pack_count = 2;

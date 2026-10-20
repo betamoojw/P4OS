@@ -7655,3 +7655,4 @@ TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	TX de
 No se entiende lo que manda: ¿otra velocidad u otro sensor?	Was er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?
 Es otro chip	Anderer Chip
 %s va en un puerto %s, y %s no lo es	%s gehört an einen %s-Port, und %s ist keiner
+Puede ser: %s	Es kann sein: %s

@@ -137,7 +137,7 @@ typedef struct {
     char    port[16];
     uint8_t addr;
     char    chip[12];               /* the driver it would get ("bh1750") */
-    char    guess[40];              /* aos_io_i2c_guess() */
+    char    guess[64];              /* the catalogue's chips at that address: what else it may be */
 } aos_sensor_cand_t;
 
 /* The chips with a driver, for forms ("Agregar módulo"). */

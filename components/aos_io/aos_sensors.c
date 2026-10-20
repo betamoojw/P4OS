@@ -377,25 +377,11 @@ static int probe_list(uint8_t *out, int max)
     return n;
 }
 
-/* What usually sits at an I2C address, for Bus: the chip the service reads
- * there, or the catalogue's chips that live there (and the common parts
- * that are not sensors), "SHT3x / SHT4x / OPT3001 / HDC302x" */
-void aos_sensor_i2c_guess(const char *port, uint8_t a, char *out, size_t n)
+/* The catalogue's chips at an I2C address (and the common parts that are
+ * not sensors), "SHT3x / SHT4x / OPT3001 / HDC302x"; no lock */
+static void catalog_guess(uint8_t a, char *out, size_t n)
 {
-    if (!out || !n) return;
     out[0] = 0;
-    bool board = port && !strcmp(port, "i2c.board");
-    const char *g = aos_io_i2c_guess(a, board);
-    if (board && g[0]) { scpy(out, n, g); return; }
-    aos_sensors_start();
-    lock();
-    for (int i = 0; i < AOS_SENSOR_MAX; i++)
-        if (s_slot[i].used && !s_slot[i].rom && s_slot[i].pub.addr == a && port && !strcmp(s_slot[i].pub.port, port)) {
-            scpy(out, n, s_slot[i].pub.chip);
-            break;
-        }
-    unlock();
-    if (out[0]) return;
     size_t o = 0;
     int shown = 0;
     for (int k = 0; k < SENS_NDRV && shown < 5; k++) {
@@ -415,6 +401,27 @@ void aos_sensor_i2c_guess(const char *port, uint8_t a, char *out, size_t n)
                   : a == 0x68 ? "DS1307"
                   : a >= 0x70 && a <= 0x77 ? "TCA9548A" : NULL;
     if (x && o + 4 < n) snprintf(out + o, n - o, "%s%s", o ? " / " : "", x);
+}
+
+/* What usually sits at an I2C address, for Bus: the chip the service reads
+ * there, else the catalogue's */
+void aos_sensor_i2c_guess(const char *port, uint8_t a, char *out, size_t n)
+{
+    if (!out || !n) return;
+    out[0] = 0;
+    bool board = port && !strcmp(port, "i2c.board");
+    const char *g = aos_io_i2c_guess(a, board);
+    if (board && g[0]) { scpy(out, n, g); return; }
+    aos_sensors_start();
+    lock();
+    for (int i = 0; i < AOS_SENSOR_MAX; i++)
+        if (s_slot[i].used && !s_slot[i].rom && s_slot[i].pub.addr == a && port && !strcmp(s_slot[i].pub.port, port)) {
+            scpy(out, n, s_slot[i].pub.chip);
+            break;
+        }
+    unlock();
+    if (out[0]) return;
+    catalog_guess(a, out, n);
     if (!out[0]) scpy(out, n, g);
 }
 
@@ -486,7 +493,7 @@ static void detect(aos_io_i2c_t *b, const char *port)
             scpy(c->port, sizeof c->port, port);
             c->addr = a;
             scpy(c->chip, sizeof c->chip, SENS_DRV[-2 - found[i]]->pub.id);
-            scpy(c->guess, sizeof c->guess, aos_io_i2c_guess(a, false));
+            catalog_guess(a, c->guess, sizeof c->guess);      /* what else it may be */
         }
     }
     unlock();

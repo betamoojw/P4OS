@@ -1604,7 +1604,7 @@ async function pageExpansion() {
       h('div', { class: 'small ' + (s.state === 'ok' ? 'muted' : 'bad') }, s.state === 'ok' ? tr('%s lecturas · %s errores', s.reads, s.errors) : s.msg || tr('Esperando la primera lectura')))) :
       h('div', { class: 'card pad muted' }, tr('No hay sensores. Conectá uno a i2c.ext: SDA al GPIO21 (pin 15), SCL al GPIO22 (pin 17), 3V3 (pin 18) y GND (pin 19). Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos.')));
     put(cands, se.candidates.length ? [h('h2', {}, tr('Parece que hay')), h('div', { class: 'card' }, se.candidates.map(c => h('div', { class: 'row' },
-      h('code', { class: 'mono', style: 'color:#f59e0b' }, hex(c.addr)), h('div', { class: 'grow' }, tr('¿Es un %s?', (ex && ex.chips.find(x => x.id === c.chip) || {}).name || c.chip) + ' ', h('span', { class: 'muted small' }, `${c.port} · ${c.guess || tr('no dice qué es')}`)),
+      h('code', { class: 'mono', style: 'color:#f59e0b' }, hex(c.addr)), h('div', { class: 'grow' }, tr('¿Es un %s?', (ex && ex.chips.find(x => x.id === c.chip) || {}).name || c.chip) + ' ', h('span', { class: 'muted small' }, `${c.port} · ${c.guess ? tr('Puede ser: %s', c.guess) : tr('no dice qué es')}`)),
       h('button', { class: 'btn', onclick: async () => {
         ta.value = ta.value.replace(/\n*$/, '\n') + `module ${freeName(c.chip)} ${c.port} addr=${hex(c.addr)}\n`; await doSave();
       } }, tr('Agregar'))))),

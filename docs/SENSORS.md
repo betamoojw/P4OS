@@ -32,6 +32,12 @@ in the line; any of its other names (the "also known as" column) works too,
 and so does a name of your own with `chip=`:
 `module heladera gpio.dht chip=dht22`.
 
+Each chip is read at its own speed, whatever the port's `freq=`: the
+100 kHz parts (PCF8591, PCF8574, AM2320, and those that stretch the clock,
+like the SCD30 or the SEN5x) at 100 kHz, the rest at the port's. The
+PCF8591 is the one that shows it: it converts on SCL's clock, and at
+400 kHz its inputs read anything.
+
 Everything on the header is 3.3 V. A 5 V module's outputs (an HC-SR04's
 ECHO, a 5 V PIR) need a divider or a level shifter before the pin.
 

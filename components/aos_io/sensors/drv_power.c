@@ -363,7 +363,10 @@ const sens_drv_t DRV_ADS1015 = {
  * library does. Any write is its control byte, so it is declared only.
  * vref= is the reference (VCC on a YL-40, 3.3 V); dac=0..255 keeps the
  * analog output on with that value (otherwise it is off). On a YL-40,
- * AIN0 is the LDR, AIN1 the thermistor, AIN3 the pot (with their jumpers). */
+ * the LDR, the thermistor and the pot sit on three inputs through their
+ * jumpers, in an order that changes from maker to maker (one on the bench
+ * had the pot on AIN0 and the LDR on AIN1). The PCF8591 is a 100 kHz part
+ * and converts on SCL's clock: it is read at 100 kHz (SF_SLOW). */
 
 static int pcf8591_read(sens_io_t *io, sens_slot_t *s)
 {

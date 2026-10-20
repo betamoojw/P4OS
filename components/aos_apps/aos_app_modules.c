@@ -1584,7 +1584,9 @@ static void cand_rows(lv_obj_t *parent, int32_t w)
         snprintf(t, sizeof t, _("¿Es un %s?"), sc ? sc->name : c[i].chip);
         lv_obj_t *q = aos_label(r, t, aos_font_body, AOS_C_TEXT);
         lv_obj_align(q, LV_ALIGN_LEFT_MID, 100, -14);
-        lv_obj_t *gl = aos_label(r, c[i].guess[0] ? c[i].guess : _("no dice qué es"), aos_font_caption, AOS_C_DIM);
+        char may[96];
+        if (c[i].guess[0]) snprintf(may, sizeof may, _("Puede ser: %s"), c[i].guess);
+        lv_obj_t *gl = aos_label(r, c[i].guess[0] ? may : _("no dice qué es"), aos_font_caption, AOS_C_DIM);
         lv_obj_set_width(gl, w - 100 - 40 - 200);
         lv_label_set_long_mode(gl, LV_LABEL_LONG_MODE_DOTS);
         lv_obj_align(gl, LV_ALIGN_LEFT_MID, 100, 18);

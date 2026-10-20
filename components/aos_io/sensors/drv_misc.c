@@ -410,7 +410,7 @@ static int pcf_read(sens_io_t *io, sens_slot_t *s)
 const sens_drv_t DRV_PCF8574 = {
     .prio = SP_REG,
     .pub = { .id = "pcf8574", .name = "PCF8574", .addrs = { 0x20, 0x38, 0x27, 0x3F }, .naddr = 4 },
-    .flags = SF_NOPROBE,
+    .flags = SF_NOPROBE | SF_SLOW,              /* a 100 kHz part */
     .init = pcf_init, .read = pcf_read,
 };
 

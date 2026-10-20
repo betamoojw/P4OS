@@ -382,7 +382,9 @@ static int pcf8591_read(sens_io_t *io, sens_slot_t *s)
 const sens_drv_t DRV_PCF8591 = {
     .prio = SP_REG,
     .pub = { .id = "pcf8591", .name = "PCF8591", .addrs = { 0x48, 0x49, 0x4A, 0x4B }, .naddr = 4 },
-    .flags = SF_NOPROBE,
+    /* 100 kHz at most, and its converter runs on SCL: at 400 kHz the
+     * readings came out anywhere on the board (2026-10-19) */
+    .flags = SF_NOPROBE | SF_SLOW,
     .read = pcf8591_read,
 };
 

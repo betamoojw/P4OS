@@ -406,6 +406,7 @@ static int am2320_read(sens_io_t *io, sens_slot_t *s)
 const sens_drv_t DRV_AM2320 = {
     .prio = SP_CMD,                 /* after the LPS22's WHO_AM_I; before the BH1750 candidate */
     .pub = { .id = "am2320", .name = "AM2320", .addrs = { 0x5C }, .naddr = 1 },
+    .flags = SF_SLOW,                   /* a 100 kHz part */
     .min_ms = 2000,
     .identify = am2320_identify, .read = am2320_read,
 };

@@ -443,6 +443,36 @@ Que necesitan la mano del usuario o equipos:
       (`keeping aos.datalog ... running: background`); después de una OTA
       arrancó solo (`started hidden`). Dibujo, con el DS18B20 leyéndose,
       ya no queda como "running: pins": se cierra al salir (1674 KB).
+- [x] Sensores nuevos con los módulos del usuario (2026-10-19, 0.20.0), en
+      i2c.ext, uno a la vez, todos reconocidos solos salvo los que se
+      declaran:
+  - AHT10 en 0x38: antes se tomaba por un AHT20 y quedaba en "CRC mal";
+    ahora se reconoce como AHT10 (22,2 °C, 52,7 %).
+  - SGP30 en 0x58: 400 ppm / 0 ppb los primeros segundos, después
+    410 / 6; algunos errores mientras se enchufaba con el bus andando.
+  - INA219 en 0x40: midiendo el consumo del MAX6675, el DS18B20 y él
+    mismo a 3,288 V: 1,3 a 1,7 mA.
+  - TSL2561 en 0x29: 34-36 lx de noche.
+  - TCS34725 en 0x29: un valor absurdo (344 259 lx) al cambiar de ganancia:
+    arreglado (la integración se reinicia), sin probar en la placa todavía;
+    se desconectaba por el lío de cables.
+  - PCF8574A en 0x3F, declarado: P1 a GND leído como 0.
+  - PCF8591 (YL-40) en 0x48, declarado: a 400 kHz leía cualquier cosa;
+    leído a 100 kHz, estable. En este módulo AIN0 es el potenciómetro y
+    AIN1 la LDR. Su DAC leído por el ADS1115: 64 -> 0,808 V, 128 -> 1,629 V;
+    con 200 y 255 se cayó el bus (los dos módulos dejaron de contestar
+    hasta apagar la salida): seguramente el LED de AOUT y el cableado,
+    repetir con el banco ordenado.
+  - ADS1115 en 0x49 (ADDR a VCC), junto al PCF8591: 3,277 V en A0 (3V3),
+    0 en A1 (GND).
+  - PCA9685 en 0x40: Bus lo nombra, no queda como candidato a sensor;
+    falta probar salidas, servos y `osc=` con fuente de 5 V en V+.
+  - Particiones: las ranuras OTA de 9,44 MB fallaron al verificar (la
+    caché no mapea más allá de 16 MB); quedaron de 7,94 MB, grabadas por
+    cable, y las OTA siguientes anduvieron.
+  - Cambiar el idioma cerraba Datalog en segundo plano, y `_sistema.lang`
+    pasaba los 256 KB del cargador: arreglados y vistos en la placa
+    (`started hidden` después de recargar el inglés, 4994 textos).
 - [x] Punto de acceso propio (2026-10-01): el C6 de fábrica hace SoftAP en
       APSTA; el usuario se unió con el QR desde el teléfono y abrió el portal
       con el otro. Con el AP prendido la RAM interna no cambió (291 KB) y la

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.20.0 — 2026-10-19
 
 - **PCA9685 in the PWM app.** A "16 servos" module declared in
   `modules.txt` (`module servos i2c.ext chip=pca9685 addr=0x40`) adds its

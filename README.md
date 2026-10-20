@@ -189,11 +189,17 @@ header with who holds each pin.
   tab estimates what the strip draws, WLED's way, and dims the whole frame to
   stay within the supply's budget. The strip keeps running with the app
   closed and comes back after a restart.
-- **Modules:** live readings from the sensors in `modules.txt`, every
-  second with five minutes of history: on I2C (SHT3x, INA219, BME280,
-  ADS1115... found by themselves), a MAX6675 thermocouple on SPI, and the
-  DS18B20s on a 1-Wire bus, each named after its serial. Every app reads
-  them by name (`aos_sensors.h`).
+- **Modules:** live readings from 112 kinds of sensor, every second with
+  five minutes of history (since 0.20): temperature and humidity, pressure,
+  air quality (CO2, VOC, particles), light and colour, motion and compass,
+  voltage and current, distance and presence. The I2C ones that can tell
+  who they are are found by themselves (BME280/680, SHT, AHT, SCD4x, SGP30,
+  VEML7700, TSL2561, TCS34725, MPU-9250, BNO055, INA219/226/260, ADS1115,
+  VL53L0X...); the rest are added from a form: thermocouples and PT100s on
+  SPI, DS18B20s on 1-Wire, DHT22, HC-SR04, HX711 scales, flow meters and
+  PIRs on plain pins, MH-Z19, PMS5003, PZEM-004T and LD2410 radars on a
+  serial port. Every app reads them by name (`aos_sensors.h`); the
+  catalogue is [docs/SENSORS.md](docs/SENSORS.md).
 - **Terminal:** two serial ports, hex, filters and alerts.
 - **Programmer:** flashes another ESP32 from firmware on the card
   (esp-serial-flasher), wired to the header or plugged into the USB host
@@ -204,8 +210,9 @@ header with who holds each pin.
 - **Electronics:** resistor colours, Ohm's law, dividers, LEDs, the 555 and
   SMD codes.
 
-The simulator has fake chips and fake servers for all of it, two DS18B20s on
-its fake 1-Wire bus among them ([docs/MODULES.md](docs/MODULES.md)).
+The simulator has fake chips and fake servers for all of it: every one of
+the 112 sensors has an emulated twin that speaks its protocol
+([docs/SENSORS.md](docs/SENSORS.md), [docs/MODULES.md](docs/MODULES.md)).
 
 | LED Strips: effects | The strip | Power | Bus: 1-Wire |
 |---|---|---|---|
@@ -227,7 +234,8 @@ pins it uses, has a wiring drawing on the board and a page in the portal.
 - **PWM:** seven channels on any free pins, from 1 Hz to 20 MHz, with a
   knob, patterns (ramp, breathing, strobe, sine), servo pulses in
   microseconds, and an analog level through an RC filter (the P4 has no
-  DAC).
+  DAC). Since 0.20, sixteen more on each PCA9685 module over I2C, for
+  servos and LEDs.
 - **Infrared:** learns a remote's buttons (NEC, Samsung, Sony, JVC,
   Panasonic, RC5, RC6, or raw) and sends them back; air conditioners, TVs, fans and lights
   from [SmartIR](https://github.com/litinoveweedle/SmartIR)'s code library.
@@ -255,8 +263,9 @@ in [docs/MODULES.md](docs/MODULES.md).
 
 A data logger for the header's sensors (from the card, since 0.19). Each
 line is a value written with its date and time to a CSV of its own in
-`/datalog`, every N seconds, minutes or hours or at set times: a sensor of
-Modules (I2C, SPI or 1-Wire), a GPIO with its pull-up or pull-down, an
+`/datalog`, every N seconds, minutes or hours or at set times: any value
+of a sensor of Modules (I2C, SPI, 1-Wire, on pins or serial), a GPIO with
+its pull-up or pull-down, an
 ADS1115 input in volts or scaled into a unit of your own, or the board's own
 Wi-Fi and memory. Low and high alarms, with hysteresis, sound and show over
 any app, or only leave a note in the CSV, and can drive a GPIO (a relay).

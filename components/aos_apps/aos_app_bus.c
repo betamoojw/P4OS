@@ -34,6 +34,7 @@
 #include "aos_hal.h"
 #include "aos_ui.h"
 #include "aos_io.h"
+#include "aos_sensors.h"
 #include "aos_sys_glyphs.h"
 #include "aos_mono.h"
 
@@ -442,7 +443,8 @@ static void build_found(lv_obj_t *parent, int32_t w)
         lv_obj_set_style_text_color(ad, C_AMBER, 0);
         lv_label_set_text_fmt(ad, "0x%02X", a);
         lv_obj_align(ad, LV_ALIGN_LEFT_MID, 0, 0);
-        const char *guess = aos_io_i2c_guess((uint8_t)a, board_bus());
+        char guess[96];
+        aos_sensor_i2c_guess(S.port, (uint8_t)a, guess, sizeof guess);
         lv_obj_t *gl = aos_label(r, guess[0] ? guess : _("desconocido"), aos_font_body, guess[0] ? AOS_C_TEXT : AOS_C_DIM);
         lv_obj_set_width(gl, w - 44 - 110 - 40);
         lv_label_set_long_mode(gl, LV_LABEL_LONG_MODE_DOTS);
@@ -664,7 +666,8 @@ static void build_dev_head(lv_obj_t *parent, int32_t w)
     lv_obj_set_style_text_font(t, aos_font_large, 0);
     lv_obj_set_style_text_color(t, AOS_C_TEXT, 0);
     lv_label_set_text_fmt(t, "0x%02X", S.dev);
-    const char *guess = aos_io_i2c_guess((uint8_t)S.dev, board_bus());
+    char guess[96];
+    aos_sensor_i2c_guess(S.port, (uint8_t)S.dev, guess, sizeof guess);
     lv_obj_t *gl = aos_label(parent, guess[0] ? guess : _("Dispositivo desconocido"), aos_font_body, AOS_C_DIM);
     lv_obj_set_width(gl, w);
     lv_label_set_long_mode(gl, LV_LABEL_LONG_MODE_WRAP);

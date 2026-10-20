@@ -183,6 +183,9 @@ int                      aos_sensor_chip_count(void);
 const aos_sensor_chip_t *aos_sensor_chip_at(int i);
 const aos_sensor_chip_t *aos_sensor_chip_find(const char *id);   /* also "sht31", "aht10"... */
 int                      aos_sensor_chip_cat(const aos_sensor_chip_t *c);   /* AOS_SENSOR_CAT_* */
+/* What usually sits at an I2C address of a port, for Bus: the chip the
+ * service reads there, else the catalogue's chips at that address */
+void                     aos_sensor_i2c_guess(const char *port, uint8_t addr, char *out, size_t n);
 
 /* Starts the service (once; later calls do nothing). Any of the calls below
  * starts it too. */

@@ -377,6 +377,47 @@ static int probe_list(uint8_t *out, int max)
     return n;
 }
 
+/* What usually sits at an I2C address, for Bus: the chip the service reads
+ * there, or the catalogue's chips that live there (and the common parts
+ * that are not sensors), "SHT3x / SHT4x / OPT3001 / HDC302x" */
+void aos_sensor_i2c_guess(const char *port, uint8_t a, char *out, size_t n)
+{
+    if (!out || !n) return;
+    out[0] = 0;
+    bool board = port && !strcmp(port, "i2c.board");
+    const char *g = aos_io_i2c_guess(a, board);
+    if (board && g[0]) { scpy(out, n, g); return; }
+    aos_sensors_start();
+    lock();
+    for (int i = 0; i < AOS_SENSOR_MAX; i++)
+        if (s_slot[i].used && !s_slot[i].rom && s_slot[i].pub.addr == a && port && !strcmp(s_slot[i].pub.port, port)) {
+            scpy(out, n, s_slot[i].pub.chip);
+            break;
+        }
+    unlock();
+    if (out[0]) return;
+    size_t o = 0;
+    int shown = 0;
+    for (int k = 0; k < SENS_NDRV && shown < 5; k++) {
+        const sens_drv_t *d = SENS_DRV[k];
+        if (d->pub.bus != AOS_SENSOR_BUS_I2C || (d->flags & SF_HIDDEN)) continue;
+        bool here = drv_probes(d, a);
+        for (int i = 0; i < d->pub.naddr && !here; i++) here = d->pub.addrs[i] == a;
+        if (!here || strstr(out, d->pub.name)) continue;
+        o += (size_t)snprintf(out + o, n - o, "%s%s", o ? " / " : "", d->pub.name);
+        if (o >= n) { out[n - 1] = 0; return; }
+        shown++;
+    }
+    /* the parts that are not sensors */
+    const char *x = a == 0x3C || a == 0x3D ? "SSD1306 / SH1106 OLED"
+                  : a >= 0x50 && a <= 0x57 ? "AT24Cxx EEPROM"
+                  : a >= 0x20 && a <= 0x27 ? "MCP23017"
+                  : a == 0x68 ? "DS1307"
+                  : a >= 0x70 && a <= 0x77 ? "TCA9548A" : NULL;
+    if (x && o + 4 < n) snprintf(out + o, n - o, "%s%s", o ? " / " : "", x);
+    if (!out[0]) scpy(out, n, g);
+}
+
 /* What is at this address: a driver index, or -2 - index for a candidate,
  * -1 nothing known. The table's order decides: the first that proves
  * itself wins; the first candidate counts only if nobody proves anything. */

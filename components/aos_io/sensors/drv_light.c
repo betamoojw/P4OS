@@ -269,7 +269,11 @@ static int tsl2561_read(sens_io_t *io, sens_slot_t *s)
         bool sat = ch0 > clip || ch1 > clip;
         int nl = lt_pick(lvl, TSL61_N, TSL61_SENS, (float)ch0 / clip, sat);
         if (nl == lvl) break;
-        if (!si2c_wreg8(b, a, 0x81, TSL61_LV[nl].timing)) return R_NACK;
+        /* powered down and up: the integration under way (the old setting's,
+         * maybe longer than the new settle) is thrown away, and the next one
+         * is the new setting's from start to end */
+        if (!si2c_wreg8(b, a, 0x80, 0x00) || !si2c_wreg8(b, a, 0x81, TSL61_LV[nl].timing) ||
+            !si2c_wreg8(b, a, 0x80, 0x03)) return R_NACK;
         p->lvl = (uint8_t)nl;
         p->t_cfg = sens_now();
         if (!sat) break;
@@ -390,9 +394,14 @@ static int tcs34725_identify(aos_io_i2c_t *b, uint8_t a)
     return si2c_rreg8(b, a, 0x92, &id) && (id == 0x44 || id == 0x4D) ? ID_YES : ID_NO;
 }
 
+/* AEN off, the setting, AEN on: the cycle under way (the old setting's) is
+ * dropped and AVALID comes back only after a whole cycle of the new one.
+ * Without it a cycle at 60x finished after the change and was read as 1x:
+ * 344 259 lx on the board (2026-10-19). */
 static bool tcs_set(aos_io_i2c_t *b, uint8_t a, int lvl)
 {
-    return si2c_wreg8(b, a, 0x81, TCS_LV[lvl].atime) && si2c_wreg8(b, a, 0x8F, TCS_LV[lvl].again);
+    return si2c_wreg8(b, a, 0x80, 0x01) && si2c_wreg8(b, a, 0x81, TCS_LV[lvl].atime) &&
+           si2c_wreg8(b, a, 0x8F, TCS_LV[lvl].again) && si2c_wreg8(b, a, 0x80, 0x03);
 }
 
 static int tcs34725_init(sens_io_t *io, sens_slot_t *s)

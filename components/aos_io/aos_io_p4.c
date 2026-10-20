@@ -122,31 +122,61 @@ void aos_io_be_uart_lines_release(aos_io_uart_t *u)
 #define DEVS 48
 typedef struct {
     i2c_master_bus_handle_t bus;
-    bool own;
+    bool own;                           /* a bus of s_bus[] (not the board's) */
     uint8_t addr[DEVS];
     uint32_t hz[DEVS], stretch[DEVS];   /* aos_io_i2c_dev_cfg(): 0 the port's */
     i2c_master_dev_handle_t dev[DEVS];
     int ndev;
 } i2c_be_t;
 
+/* One bus a port, shared by every handle open on it (aos_io.c counts them):
+ * each handle adds its own devices, the last one takes the bus down. The
+ * table is touched under a mutex of its own: the sensor service and an app
+ * open and close the same port from their threads. */
+#define I2C_BUSES 4
+static struct { char port[AOS_IO_PORT_NAME_MAX]; i2c_master_bus_handle_t bus; int refs; } s_bus[I2C_BUSES];
+static SemaphoreHandle_t s_bus_mx;
+static StaticSemaphore_t s_bus_mx_buf;
+
+__attribute__((constructor)) static void bus_mx_init(void) { s_bus_mx = xSemaphoreCreateMutexStatic(&s_bus_mx_buf); }
+
 bool aos_io_be_i2c_open(aos_io_i2c_t *b)
 {
     i2c_be_t *s = calloc(1, sizeof *s);
+    if (!s) return false;
     if (!strcmp(b->port->name, "i2c.board")) {
         bsp_i2c_init();
         s->bus = bsp_i2c_get_handle();
-    } else {
+        b->be = s;
+        return s->bus != NULL;
+    }
+    xSemaphoreTake(s_bus_mx, portMAX_DELAY);
+    int k = -1, free_k = -1;
+    for (int i = 0; i < I2C_BUSES; i++) {
+        if (s_bus[i].refs && !strcmp(s_bus[i].port, b->port->name)) k = i;
+        else if (!s_bus[i].refs && free_k < 0) free_k = i;
+    }
+    if (k < 0 && free_k >= 0) {
         i2c_master_bus_config_t c = {
             .i2c_port = -1,                     /* any free controller */
             .sda_io_num = b->port->pins[0], .scl_io_num = b->port->pins[1],
             .clk_source = I2C_CLK_SRC_DEFAULT, .glitch_ignore_cnt = 7,
             .flags.enable_internal_pullup = true,
         };
-        if (i2c_new_master_bus(&c, &s->bus) != ESP_OK) { free(s); return false; }
+        if (i2c_new_master_bus(&c, &s_bus[free_k].bus) == ESP_OK) {
+            k = free_k;
+            snprintf(s_bus[k].port, sizeof s_bus[k].port, "%s", b->port->name);
+        }
+    }
+    if (k >= 0) {
+        s_bus[k].refs++;
+        s->bus = s_bus[k].bus;
         s->own = true;
     }
+    xSemaphoreGive(s_bus_mx);
+    if (k < 0) { free(s); return false; }
     b->be = s;
-    return s->bus != NULL;
+    return true;
 }
 
 static bool i2c_dev_add(aos_io_i2c_t *b, int i, uint8_t addr, uint32_t hz, uint32_t stretch)
@@ -211,7 +241,16 @@ void aos_io_be_i2c_close(aos_io_i2c_t *b)
     i2c_be_t *s = b->be;
     if (!s) return;
     for (int i = 0; i < s->ndev; i++) i2c_master_bus_rm_device(s->dev[i]);
-    if (s->own) i2c_del_master_bus(s->bus);
+    if (s->own) {
+        xSemaphoreTake(s_bus_mx, portMAX_DELAY);
+        for (int i = 0; i < I2C_BUSES; i++)
+            if (s_bus[i].refs && s_bus[i].bus == s->bus && --s_bus[i].refs == 0) {
+                i2c_del_master_bus(s_bus[i].bus);
+                s_bus[i].bus = NULL;
+                s_bus[i].port[0] = 0;
+            }
+        xSemaphoreGive(s_bus_mx);
+    }
     free(s);
     b->be = NULL;
 }

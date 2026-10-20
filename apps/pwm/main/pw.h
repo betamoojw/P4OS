@@ -1,8 +1,9 @@
 /*
  * P4OS - PWM generator: what the app's files share.
  *
- * Up to seven channels, each on a header pin of its own, each in one of four
- * modes: free PWM (frequency and duty), a servo (50 Hz and a pulse width), a
+ * Up to seven channels on header pins of their own (the LEDC's), and more on
+ * the outputs of the PCA9685s modules.txt declares (sixteen each, over I2C,
+ * one frequency a chip), each in one of four modes: free PWM (frequency and duty), a servo (50 Hz and a pulse width), a
  * LED (brightness through a gamma curve) and an analog level (the
  * sigma-delta modulator through an RC filter). A channel's value is kept
  * normalised, 0..1 of its range, so the knob, the patterns and the portal
@@ -33,7 +34,9 @@
 #include <stdint.h>
 
 #define PW_OWNER      "PWM"         /* who holds the pins, as other apps show it */
-#define PW_CH_MAX     7             /* the LEDC's channels (the eighth is the backlight) */
+#define PW_LEDC_MAX   7             /* header pins: the LEDC's channels (the eighth is the backlight) */
+#define PW_CH_MAX     23            /* those, and a PCA9685's sixteen outputs */
+#define PW_PCA_MAX    4             /* PCA9685 chips at once */
 #define PW_STEPS_MAX  8
 #define PW_TICK_MS    20
 #define PW_FREQ_MAX   20000000u
@@ -47,6 +50,8 @@ enum { PW_T_VALUE, PW_T_FREQ, PW_T_SPEED };     /* what the knob turns */
 /* What a channel is: saved in presets, mirrored to the portal. */
 typedef struct {
     int8_t   gpio;              /* -1: no pin yet */
+    int8_t   pch;               /* a PCA9685's output 0..15, -1: a header pin (gpio) */
+    char     pca[24];           /* that PCA9685's module in modules.txt */
     uint8_t  mode;
     bool     on;
     bool     invert;
@@ -70,6 +75,7 @@ typedef struct {
     pw_cfg_t      c;
     aos_io_pwm_t *pwm;
     aos_io_dac_t *dac;
+    aos_io_pca_t *pca;          /* the chip of a PCA9685 output, shared (pw_t.pcas) */
     char          err[96];
     float         live;         /* 0..1 of the range, out now (patterns move it) */
     float         hw;           /* last duty or level written */
@@ -98,6 +104,7 @@ typedef struct {
     bool       land;
 
     pw_ch_t    ch[PW_CH_MAX];
+    struct { char name[24]; aos_io_pca_t *h; int users; } pcas[PW_PCA_MAX];
     int        n;               /* channels in use, ch[0..n-1] */
     int        sel;
     int        target;
@@ -129,6 +136,8 @@ typedef struct {
 extern pw_t *pw_g;
 
 static inline pw_ch_t *pw_cur(void) { return pw_g->n ? &pw_g->ch[pw_g->sel] : NULL; }
+static inline bool pw_on_pca(const pw_cfg_t *c) { return c->pch >= 0 && c->pca[0]; }
+static inline bool pw_hw_on(const pw_ch_t *h) { return h->pwm || h->dac || h->pca; }
 
 /* ---- pw_engine.c ---- */
 void     pw_cfg_default(pw_cfg_t *c, int mode);
@@ -145,6 +154,11 @@ int      pw_add(int mode);                          /* index, -1 if full */
 void     pw_remove(int i);
 bool     pw_set_on(pw_ch_t *h, bool on);
 void     pw_set_gpio(pw_ch_t *h, int gpio);
+void     pw_set_pca(pw_ch_t *h, const char *module, int ch);   /* a PCA9685 output */
+int      pw_pca_user(const char *module, int ch, int except); /* the channel on it, -1 */
+void     pw_out_label(const pw_cfg_t *c, char *b, size_t n);  /* "GPIO28", "servos 3", "sin pin" */
+uint32_t pw_hw_freq(const pw_ch_t *h);              /* what the output runs at, 0 none */
+int      pw_hw_bits(const pw_ch_t *h);
 void     pw_set_mode(pw_ch_t *h, int mode);
 void     pw_set_freq(pw_ch_t *h, uint32_t hz);
 void     pw_set_pattern(pw_ch_t *h, int pat);

@@ -523,6 +523,38 @@ one takes any usable GPIO of the header and claims it, like the rest.
 | `aos_io_ir_*` | the RMT, 1 us a tick | in: a demodulating receiver (TSOP38238, VS1838B), up to 1024 marks and spaces a frame, two buffers so the next frame lands while one is read; out: an IR LED through a transistor, the carrier settable (38 kHz, 33 % by default, or none) |
 | `aos_io_can_*` | the TWAI controllers, classic CAN 2.0 | 25 kbit/s to 1 Mbit/s; normal, listen only, and a self test that needs no transceiver (one pin for TX and RX); a queue of 64 received frames with time stamps |
 
+### PCA9685: sixteen more PWM outputs over I2C (2026-10-19)
+
+The "16 servos" module. Declared as a module on an I2C port:
+
+```
+module servos i2c.ext chip=pca9685 addr=0x40 [freq=50] [osc=25000000] [od=1] [invert=1]
+```
+
+- **The API** is `aos_io_pca_*` in `aos_io.h` (`components/aos_io/aos_pca9685.c`):
+  open by the module's name, a frequency for the chip, and a duty or a
+  servo pulse in microseconds for each of its sixteen outputs, 12 bits.
+- **One frequency a chip,** 24 Hz to 1526 Hz: the prescaler is the chip's,
+  not the output's. The PWM app keeps it at 50 Hz while a servo is on the
+  chip and tells a channel that asks for another one.
+- **The oscillator** is "25 MHz", but many clones run a few percent fast:
+  measure an output and set `osc=` to correct the servo pulses.
+- **Power:** VCC to 3V3 (the logic), V+ to the servos' own supply, never
+  the board's 3V3. OE has a pull-down on the module: leave it.
+- **The PWM app** offers its outputs after the header's pins, in the pin
+  sheet and on the portal's page: a channel can be a header pin or
+  "servos 3". PWM, servo and LED modes; no analog level.
+- **It is not a sensor.** The sensor service tells it apart by its
+  registers at power-on (SUBADR1..3 and ALLCALLADR read E2 E4 E8 E0), never
+  offers it as a candidate, and Bus names it. Opened, it stops answering
+  the all-call address 0x70, where a TCA9548A may sit.
+- **An I2C port is shared** since then: the app holds the chip open while
+  the sensor service goes on reading the other chips of the same bus. The
+  pins are claimed once, by whoever opened the port first; a pin held as a
+  plain GPIO still keeps the port from opening.
+- **In the simulator:** `P4_SIM_SENSORS="pca9685@0x40"`, and the log says
+  what each output does ("PCA9685 0x40 ch3: 7.5% at 50 Hz (1500 us high)").
+
 **Wiring for a bench test of PWM** (what was tried on the board): two
 LEDs at two frequencies, a servo at 50 Hz on its own 5 V, and the analog
 level through its RC filter, with a meter on it.

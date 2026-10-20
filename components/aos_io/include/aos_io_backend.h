@@ -28,8 +28,11 @@ struct aos_io_uart {
     bool     usb_jtag;              /* an Espressif chip's own USB-Serial-JTAG (303a:1001) */
 };
 
+/* An I2C port is shared: every open of it is a handle of its own over the
+ * same bus (aos_io.c counts them, the backend keeps one bus a port). */
 struct aos_io_i2c {
-    const aos_io_port_t *port;
+    const aos_io_port_t *port;      /* = &pcopy */
+    aos_io_port_t pcopy;            /* modules.txt may be loaded again while open */
     char  owner[24];
     void *be;
 };

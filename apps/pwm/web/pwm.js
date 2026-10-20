@@ -32,16 +32,16 @@ const COLORS = { pwm: '#0a84ff', servo: '#ff9f0a', led: '#ffd60a', nivel: '#40c8
 const PINS = [[2, 8], [5, 11], [3, 12], [4, 14], [21, 15], [28, 16], [22, 17], [29, 20], [24, 21], [30, 22],
   [25, 23], [31, 24], [34, 28], [32, 31], [49, 32], [50, 34], [46, 35], [51, 36], [47, 37], [52, 38], [48, 39]];
 const PIN_OF = Object.fromEntries(PINS);
-const FREQ_MAX = 20000000, PER_MIN = 0.05, PER_MAX = 60, MAX_CH = 7;
+const FREQ_MAX = 20000000, PER_MIN = 0.05, PER_MAX = 60, MAX_CH = 23;
 
 /* ---------------------------------------------------------------- the format */
 
-const DEF = () => ({ gpio: -1, mode: 'pwm', on: false, inv: false, freq: 1000, duty: 0.5, pulse: 1500, smin: 500,
+const DEF = () => ({ gpio: -1, pca: '', pch: -1, mode: 'pwm', on: false, inv: false, freq: 1000, duty: 0.5, pulse: 1500, smin: 500,
   smax: 2500, sdeg: 180, bright: 0.5, gamma: 2.2, level: 0.5, pat: 'fijo', period: 2, lo: 0, hi: 1,
   steps: [0, 0.33, 0.66, 1], rfreq: 0, bits: 0, live: 0, err: '' });
 
 function parse(text) {
-  const st = { run: false, ack: 0, ch: [] };
+  const st = { run: false, ack: 0, ch: [], pcas: [] };
   for (const raw of (text || '').split('\n')) {
     const l = raw.trim();
     if (l.startsWith('pwm')) {
@@ -50,6 +50,8 @@ function parse(text) {
       if (ack) st.ack = +ack[1];
       continue;
     }
+    /* the PCA9685s modules.txt declares: their outputs join the pin lists */
+    if (l.startsWith('pca ')) { const m = / name=(\S+)/.exec(l); if (m) st.pcas.push(m[1]); continue; }
     if (!l.startsWith('ch ')) continue;
     const c = DEF();
     let rest = l.slice(3);
@@ -60,6 +62,7 @@ function parse(text) {
       if (i < 0) continue;
       const k = kv.slice(0, i), v = kv.slice(i + 1);
       if (k === 'mode' || k === 'pat') c[k] = v;
+      else if (k === 'pca') c.pca = v === '-' ? '' : v;
       else if (k === 'on' || k === 'inv') c[k] = v === '1';
       else if (k === 'steps') c.steps = v.split(',').filter(x => x !== '').map(Number);
       else if (k in c) c[k] = Number(v);
@@ -71,7 +74,7 @@ function parse(text) {
 
 const f4 = v => (+v).toFixed(4);
 function line(c) {
-  return `ch gpio=${c.gpio} mode=${c.mode} on=${c.on ? 1 : 0} inv=${c.inv ? 1 : 0} freq=${Math.round(c.freq)} ` +
+  return `ch gpio=${c.gpio} pca=${c.pca || '-'} pch=${c.pca ? c.pch : -1} mode=${c.mode} on=${c.on ? 1 : 0} inv=${c.inv ? 1 : 0} freq=${Math.round(c.freq)} ` +
     `duty=${f4(c.duty)} pulse=${Math.round(c.pulse)} smin=${c.smin} smax=${c.smax} sdeg=${c.sdeg} ` +
     `bright=${f4(c.bright)} gamma=${(+c.gamma).toFixed(2)} level=${f4(c.level)} pat=${c.pat} ` +
     `period=${(+c.period).toFixed(3)} lo=${f4(c.lo)} hi=${f4(c.hi)} steps=${c.steps.map(s => (+s).toFixed(3)).join(',')}`;
@@ -275,7 +278,16 @@ P.registerPage({
       const dot = h('span', { class: 'dot' });
       const name = h('span', { class: 'grow muted small' });
       const sw = h('input', { type: 'checkbox', onchange: e => { c().on = e.target.checked; send(); } });
-      const pin = h('select', { onchange: e => { c().gpio = +e.target.value; send(); } });
+      /* a header pin ("28") or a PCA9685 output ("pca:servos:3") */
+      const pin = h('select', { onchange: e => {
+        const v = e.target.value, ch = c();
+        if (v.startsWith('pca:')) {
+          const [, name, n] = v.split(':');
+          ch.pca = name; ch.pch = +n; ch.gpio = -1;
+          if (ch.mode === 'nivel') ch.mode = 'pwm';
+        } else { ch.gpio = +v; ch.pca = ''; ch.pch = -1; }
+        send();
+      } });
       const del = h('button', { class: 'btn', title: tr('Borrar el canal'), onclick: () => {
         if (st.ch.length < 2) return;
         st.ch.splice(i, 1); shape = ''; send();
@@ -360,10 +372,16 @@ P.registerPage({
           (ch.pat !== 'fijo' ? ' · ' + tr((PATS.find(p => p[0] === ch.pat) || PATS[0])[1]) : '');
         seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.k === ch.mode));
         if (document.activeElement !== pin) {
-          const used = new Set(st.ch.filter((_, k) => k !== i).map(x => x.gpio));
+          const others = st.ch.filter((_, k) => k !== i);
+          const used = new Set(others.filter(x => !x.pca).map(x => x.gpio));
+          const usedPca = new Set(others.filter(x => x.pca).map(x => x.pca + ':' + x.pch));
           put(pin, h('option', { value: -1 }, tr('sin pin')), PINS.map(([g, p]) =>
-            h('option', { value: g, disabled: used.has(g) }, used.has(g) ? tr('GPIO%d · pata %d (otro canal)', g, p) : tr('GPIO%d · pata %d', g, p))));
-          pin.value = String(ch.gpio);
+            h('option', { value: g, disabled: used.has(g) }, used.has(g) ? tr('GPIO%d · pata %d (otro canal)', g, p) : tr('GPIO%d · pata %d', g, p))),
+            st.pcas.map(n => h('optgroup', { label: 'PCA9685 · ' + n }, Array.from({ length: 16 }, (_, k) => {
+              const busy = usedPca.has(n + ':' + k);
+              return h('option', { value: `pca:${n}:${k}`, disabled: busy }, busy ? tr('salida %d (otro canal)', k) : tr('salida %d', k));
+            }))));
+          pin.value = ch.pca ? `pca:${ch.pca}:${ch.pch}` : String(ch.gpio);
         }
         freqRow.style.display = hasFreq(ch.mode) ? '' : 'none';
         if (document.activeElement !== freq) freq.value = ch.freq;

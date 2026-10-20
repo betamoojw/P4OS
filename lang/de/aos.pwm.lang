@@ -352,3 +352,16 @@ Con fades del LEDC: el hardware va de un punto al siguiente.	Mit LEDC-Fades: die
 
 #: apps/pwm/main/pw_ui.c:633
 La app escribe el valor cada 20 ms.	Die App schreibt den Wert alle 20 ms.
+PCA9685 %s, salida %d	PCA9685 %s, Ausgang %d
+Un servo tiene este PCA9685 a 50 Hz: sus 16 salidas comparten la frecuencia	Ein Servo hält diesen PCA9685 auf 50 Hz: seine 16 Ausgänge teilen sich die Frequenz
+El PCA9685 no tomó la frecuencia	Der PCA9685 hat die Frequenz nicht übernommen
+Un PCA9685 va de 24 Hz a 1526 Hz	Ein PCA9685 reicht von 24 Hz bis 1526 Hz
+Un PCA9685 no da un nivel analógico: PWM, servo o LED	Ein PCA9685 liefert keinen Analogpegel: PWM, Servo oder LED
+No contesta el PCA9685 %s	Der PCA9685 %s antwortet nicht
+Esa salida la usa el canal %d	Kanal %d nutzt diesen Ausgang
+Las 16 salidas de un PCA9685 comparten una frecuencia, de 24 Hz a 1526 Hz: un servo lo deja en 50 Hz. Los servos se alimentan por V+ del módulo, no por la placa.	Die 16 Ausgänge eines PCA9685 teilen eine Frequenz, 24 Hz bis 1526 Hz: ein Servo hält sie auf 50 Hz. Servos werden über V+ des Moduls versorgt, nicht über die Platine.
+Con un PCA9685 declarado en Módulos (module servos i2c.ext chip=pca9685 addr=0x40) aparecen acá sus 16 salidas.	Mit einem in Module eingetragenen PCA9685 (module servos i2c.ext chip=pca9685 addr=0x40) erscheinen hier seine 16 Ausgänge.
+Señal: salida %d del PCA9685 %s (sus pines PWM de esa columna).	Signal: Ausgang %d des PCA9685 %s (die PWM-Pins dieser Spalte).
+%sPCA9685 a %s	%sPCA9685 auf %s
+%s%d PCA9685	%s%d PCA9685
+%.12s\nsalida %d	%.12s\nAusgang %d

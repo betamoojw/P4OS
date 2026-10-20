@@ -107,7 +107,7 @@ void pw_draw_signal(lv_event_t *e)
     float x0 = (float)a.x1 + 24, x1 = (float)a.x2 - 24;
     float top = (float)a.y1 + 20;
     const pw_cfg_t *c = &h->c;
-    bool live = h->pwm || h->dac;
+    bool live = pw_hw_on(h);
     lv_color_t col = live ? lv_color_hex(pw_mode_color(c->mode)) : AOS_C_DIM;
     lv_color_t dim = AOS_C_DIM;
     const lv_font_t *f = aos_font_caption;
@@ -147,7 +147,7 @@ void pw_draw_signal(lv_event_t *e)
         return;
     }
 
-    float hz = h->pwm ? (float)aos_io_pwm_freq(h->pwm) : (float)pw_freq_of(c);
+    float hz = pw_hw_freq(h) ? (float)pw_hw_freq(h) : (float)pw_freq_of(c);
     if (hz < 1.0f) hz = 1.0f;
     float d = pw_out(h, h->live);
     float T = 1.0f / hz;
@@ -336,7 +336,9 @@ void pw_draw_schematic(lv_event_t *e)
 
     char pin[32] = "GPIO";
     pw_ch_t *h = pw_cur();
-    if (h && h->c.gpio >= 0) {
+    if (h && pw_on_pca(&h->c)) {
+        snprintf(pin, sizeof pin, _("PCA9685 %s, salida %d"), h->c.pca, h->c.pch);
+    } else if (h && h->c.gpio >= 0) {
         const aos_io_pin_t *p = aos_io_pin_of_gpio(h->c.gpio);
         snprintf(pin, sizeof pin, _("GPIO%d (pata %d)"), h->c.gpio, p ? p->pin : 0);
     }

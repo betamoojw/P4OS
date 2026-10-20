@@ -377,6 +377,12 @@ static int probe_list(uint8_t *out, int max)
     return n;
 }
 
+/* Parts that are not sensors, found where some live (known_part()) */
+#define KNOWN_MAX 16
+static struct { char port[16]; uint8_t addr; const char *name; } s_known[KNOWN_MAX];
+static int s_nknown;
+#define KNOWN_PART (-200)
+
 /* The catalogue's chips at an I2C address (and the common parts that are
  * not sensors), "SHT3x / SHT4x / OPT3001 / HDC302x"; no lock */
 static void catalog_guess(uint8_t a, char *out, size_t n)
@@ -399,8 +405,11 @@ static void catalog_guess(uint8_t a, char *out, size_t n)
                   : a >= 0x50 && a <= 0x57 ? "AT24Cxx EEPROM"
                   : a >= 0x20 && a <= 0x27 ? "MCP23017"
                   : a == 0x68 ? "DS1307"
-                  : a >= 0x70 && a <= 0x77 ? "TCA9548A" : NULL;
-    if (x && o + 4 < n) snprintf(out + o, n - o, "%s%s", o ? " / " : "", x);
+                  : a == 0x70 ? "TCA9548A / PCA9685"
+                  : a >= 0x71 && a <= 0x77 ? "TCA9548A" : NULL;
+    if (x && o + 4 < n) o += (size_t)snprintf(out + o, n - o, "%s%s", o ? " / " : "", x);
+    /* a PCA9685 takes any address from 0x40 to 0x7F */
+    if (a >= 0x40 && a <= 0x7F && a != 0x70 && o + 12 < n) snprintf(out + o, n - o, "%sPCA9685", o ? " / " : "");
 }
 
 /* What usually sits at an I2C address, for Bus: the chip the service reads
@@ -419,6 +428,8 @@ void aos_sensor_i2c_guess(const char *port, uint8_t a, char *out, size_t n)
             scpy(out, n, s_slot[i].pub.chip);
             break;
         }
+    for (int i = 0; i < s_nknown && !out[0]; i++)
+        if (s_known[i].addr == a && port && !strcmp(s_known[i].port, port)) scpy(out, n, s_known[i].name);
     unlock();
     if (out[0]) return;
     catalog_guess(a, out, n);
@@ -443,8 +454,27 @@ static int identify(aos_io_i2c_t *b, uint8_t a)
     return cand >= 0 ? CAND(cand) : -1;
 }
 
+/* Parts that are not sensors but sit where some do, told by registers only
+ * they have: named for Bus (aos_sensor_i2c_guess), never a candidate. Asked
+ * only where no sensor proved itself, with register reads alone. */
+
+static const char *known_part(aos_io_i2c_t *b, uint8_t a)
+{
+    /* PCA9685: SUBADR1..3 and ALLCALLADR E2 E4 E8 E0 since power-on (read one
+     * at a time: auto-increment is off until someone turns it on), MODE2's
+     * top three bits 0 */
+    if (a >= 0x40 && a <= 0x7F && a != 0x70) {
+        static const uint8_t SIG[4] = { 0xE2, 0xE4, 0xE8, 0xE0 };
+        uint8_t v, m2;
+        for (int k = 0; k < 4; k++) if (!si2c_rreg8(b, a, (uint8_t)(0x02 + k), &v) || v != SIG[k]) return NULL;
+        if (si2c_rreg8(b, a, 0x01, &m2) && !(m2 & 0xE0)) return "PCA9685";
+    }
+    return NULL;
+}
+
 static void detect(aos_io_i2c_t *b, const char *port)
 {
+    const char *part[96] = { 0 };
     uint8_t addrs[96];
     int na = probe_list(addrs, (int)sizeof addrs);
     int found[96];
@@ -468,10 +498,20 @@ static void detect(aos_io_i2c_t *b, const char *port)
         const sens_drv_t *own = drv_of(chip);
         if (own && own->identify && own->identify(b, a) == ID_YES) { found[i] = chip; continue; }
         found[i] = identify(b, a);
+        if (found[i] < 0 && (part[i] = known_part(b, a))) found[i] = KNOWN_PART;
     }
     lock();
-    /* candidates of this port are replaced by this pass's */
+    /* the parts and the candidates of this port are replaced by this pass's */
     int w = 0;
+    for (int i = 0; i < s_nknown; i++) if (strcmp(s_known[i].port, port)) s_known[w++] = s_known[i];
+    s_nknown = w;
+    for (int i = 0; i < na && s_nknown < KNOWN_MAX; i++)
+        if (found[i] == KNOWN_PART) {
+            scpy(s_known[s_nknown].port, sizeof s_known[0].port, port);
+            s_known[s_nknown].addr = addrs[i];
+            s_known[s_nknown++].name = part[i];
+        }
+    w = 0;
     for (int i = 0; i < s_ncand; i++) if (strcmp(s_cand[i].port, port)) s_cand[w++] = s_cand[i];
     s_ncand = w;
     for (int i = 0; i < na; i++) {
@@ -488,7 +528,7 @@ static void detect(aos_io_i2c_t *b, const char *port)
             continue;
         }
         if (s && !s->pub.declared) slot_drop(s);                      /* gone */
-        if (found[i] <= -2 && s_ncand < AOS_SENSOR_CAND_MAX) {
+        if (found[i] <= -2 && found[i] != KNOWN_PART && s_ncand < AOS_SENSOR_CAND_MAX) {
             aos_sensor_cand_t *c = &s_cand[s_ncand++];
             scpy(c->port, sizeof c->port, port);
             c->addr = a;
@@ -868,11 +908,12 @@ static void i2c_round(uint32_t t0, bool rescan, bool viewed)
         unlock();
         if (!scan && !nslots) continue;
 
-        /* pins somebody else holds (the Bus app driving GPIO21, say):
-         * skip the round quietly instead of having the arbiter refuse
-         * and log it every second */
+        /* pins somebody else holds as plain GPIOs (the Bus app driving
+         * GPIO21, say): skip the round quietly instead of having the arbiter
+         * refuse and log it every second. Another user of the same I2C port
+         * (an app driving a PCA9685) is no obstacle: the bus is shared. */
         const aos_io_port_t *pp = aos_io_port_find(port);
-        bool held = !board && port_owner(pp, -1);
+        bool held = !board && port_owner(pp, -1) && !aos_io_i2c_users(port);
         aos_io_i2c_t *b = held ? NULL : aos_io_i2c_open(port, OWNER);
         if (!b && !held) {
             aos_hal_sleep_ms(40);                  /* the Bus app in the middle of a job: once more */

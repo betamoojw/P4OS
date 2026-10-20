@@ -303,13 +303,14 @@ static void chip_fill(int i)
     lv_obj_t *mode = lv_obj_get_child(c, 1);
     lv_label_set_text(mode, h->c.pat != PW_P_NONE ? pw_pat_name(h->c.pat) : pw_mode_name(h->c.mode));
     lv_obj_set_style_text_color(mode, col, 0);
-    bool on = h->pwm || h->dac;
+    bool on = pw_hw_on(h);
     lv_obj_set_style_bg_color(lv_obj_get_child(c, 2), on ? AOS_C_GREEN : h->err[0] ? AOS_C_RED : AOS_C_CARD2, 0);
     pw_g->chip_txt[i][0] = 0;
     chip_value(i);
     lv_obj_t *pin = lv_obj_get_child(c, 4);
-    if (h->c.gpio < 0) lv_label_set_text(pin, _("sin pin"));
-    else lv_label_set_text_fmt(pin, "GPIO%d", h->c.gpio);
+    char ol[32];
+    pw_out_label(&h->c, ol, sizeof ol);
+    lv_label_set_text(pin, ol);
     lv_obj_set_style_border_color(c, i == pw_g->sel ? col : AOS_C_CARD, 0);
 }
 
@@ -543,19 +544,31 @@ static void header_info(void)
 {
     uint32_t f[3];
     int n = pw_freqs_in_use(f);
-    if (!n) {
+    /* and the PCA9685s open, each at its one frequency */
+    int np = 0;
+    uint32_t pf = 0;
+    for (int i = 0; i < PW_PCA_MAX; i++) if (pw_g->pcas[i].users) { np++; pf = aos_io_pca_freq(pw_g->pcas[i].h); }
+    if (!n && !np) {
         lv_label_set_text(pw_g->hdr_info, _("Ningún PWM encendido"));
         return;
     }
-    char txt[96] = "", one[24];
+    char txt[128] = "", one[24];
     for (int i = 0; i < n && i < 3; i++) {
         pw_fmt_freq(one, sizeof one, (float)f[i]);
         size_t l = strlen(txt);
         snprintf(txt + l, sizeof txt - l, "%s%s", i ? " · " : "", one);
     }
     size_t l = strlen(txt);
-    l += (size_t)snprintf(txt + l, sizeof txt - l, "  ");
-    snprintf(txt + l, sizeof txt - l, _("(%d de 3 frecuencias)"), n);
+    if (n) {
+        l += (size_t)snprintf(txt + l, sizeof txt - l, "  ");
+        l += (size_t)snprintf(txt + l, sizeof txt - l, _("(%d de 3 frecuencias)"), n);
+    }
+    if (np == 1) {
+        pw_fmt_freq(one, sizeof one, (float)pf);
+        snprintf(txt + l, sizeof txt - l, _("%sPCA9685 a %s"), n ? "  ·  " : "", one);
+    } else if (np > 1) {
+        snprintf(txt + l, sizeof txt - l, _("%s%d PCA9685"), n ? "  ·  " : "", np);
+    }
     lv_label_set_text(pw_g->hdr_info, txt);
 }
 
@@ -572,15 +585,17 @@ void pw_ui_refresh(void)
     if (g->n >= PW_CH_MAX) lv_obj_add_flag(g->chip_add, LV_OBJ_FLAG_HIDDEN);
     else lv_obj_remove_flag(g->chip_add, LV_OBJ_FLAG_HIDDEN);
 
-    if (c->gpio < 0) {
+    if (pw_on_pca(c)) {
+        lv_label_set_text_fmt(g->pin_lbl, _("%.12s\nsalida %d"), c->pca, c->pch);
+    } else if (c->gpio < 0) {
         lv_label_set_text(g->pin_lbl, _("Elegí\nun pin"));
     } else {
         const aos_io_pin_t *p = aos_io_pin_of_gpio(c->gpio);
         lv_label_set_text_fmt(g->pin_lbl, _("GPIO%d\npata %d"), c->gpio, p ? p->pin : 0);
     }
-    pw_bm_set(g->mode_bm, PW_M_COUNT, c->mode, 0);
-    if ((h->pwm || h->dac) != lv_obj_has_state(g->power, LV_STATE_CHECKED)) {
-        if (h->pwm || h->dac) lv_obj_add_state(g->power, LV_STATE_CHECKED);
+    pw_bm_set(g->mode_bm, PW_M_COUNT, c->mode, pw_on_pca(c) ? 1u << PW_M_DAC : 0);
+    if (pw_hw_on(h) != lv_obj_has_state(g->power, LV_STATE_CHECKED)) {
+        if (pw_hw_on(h)) lv_obj_add_state(g->power, LV_STATE_CHECKED);
         else lv_obj_remove_state(g->power, LV_STATE_CHECKED);
     }
 

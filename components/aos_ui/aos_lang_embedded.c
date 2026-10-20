@@ -5507,6 +5507,19 @@ static const char blob_en_aos_pwm_lang[] =
     "Un patrón mueve el valor solo, y sigue con la app en segundo plano. Al cerrar la app, todo se apaga.\tA pattern moves the value by itself, and keeps going with the app in the background. Closing the app turns everything off.\n"
     "Con fades del LEDC: el hardware va de un punto al siguiente.\tWith LEDC fades: the hardware goes from one point to the next.\n"
     "La app escribe el valor cada 20 ms.\tThe app writes the value every 20 ms.\n"
+    "PCA9685 %s, salida %d\tPCA9685 %s, output %d\n"
+    "Un servo tiene este PCA9685 a 50 Hz: sus 16 salidas comparten la frecuencia\tA servo holds this PCA9685 at 50 Hz: its 16 outputs share the frequency\n"
+    "El PCA9685 no tomó la frecuencia\tThe PCA9685 did not take the frequency\n"
+    "Un PCA9685 va de 24 Hz a 1526 Hz\tA PCA9685 goes from 24 Hz to 1526 Hz\n"
+    "Un PCA9685 no da un nivel analógico: PWM, servo o LED\tA PCA9685 gives no analog level: PWM, servo or LED\n"
+    "No contesta el PCA9685 %s\tThe PCA9685 %s does not answer\n"
+    "Esa salida la usa el canal %d\tChannel %d uses that output\n"
+    "Las 16 salidas de un PCA9685 comparten una frecuencia, de 24 Hz a 1526 Hz: un servo lo deja en 50 Hz. Los servos se alimentan por V+ del módulo, no por la placa.\tA PCA9685's 16 outputs share one frequency, 24 Hz to 1526 Hz: a servo keeps it at 50 Hz. Servos are powered through the module's V+, not from the board.\n"
+    "Con un PCA9685 declarado en Módulos (module servos i2c.ext chip=pca9685 addr=0x40) aparecen acá sus 16 salidas.\tWith a PCA9685 declared in Modules (module servos i2c.ext chip=pca9685 addr=0x40) its 16 outputs show up here.\n"
+    "Señal: salida %d del PCA9685 %s (sus pines PWM de esa columna).\tSignal: output %d of the PCA9685 %s (the PWM pins of that column).\n"
+    "%sPCA9685 a %s\t%sPCA9685 at %s\n"
+    "%s%d PCA9685\t%s%d PCA9685\n"
+    "%.12s\\nsalida %d\t%.12s\\noutput %d\n"
     ;
 
 static const char blob_en_aos_python_lang[] =
@@ -13326,6 +13339,19 @@ static const char blob_de_aos_pwm_lang[] =
     "Un patrón mueve el valor solo, y sigue con la app en segundo plano. Al cerrar la app, todo se apaga.\tEin Muster bewegt den Wert von selbst und läuft im Hintergrund weiter. Beim Schließen der App geht alles aus.\n"
     "Con fades del LEDC: el hardware va de un punto al siguiente.\tMit LEDC-Fades: die Hardware fährt von einem Punkt zum nächsten.\n"
     "La app escribe el valor cada 20 ms.\tDie App schreibt den Wert alle 20 ms.\n"
+    "PCA9685 %s, salida %d\tPCA9685 %s, Ausgang %d\n"
+    "Un servo tiene este PCA9685 a 50 Hz: sus 16 salidas comparten la frecuencia\tEin Servo hält diesen PCA9685 auf 50 Hz: seine 16 Ausgänge teilen sich die Frequenz\n"
+    "El PCA9685 no tomó la frecuencia\tDer PCA9685 hat die Frequenz nicht übernommen\n"
+    "Un PCA9685 va de 24 Hz a 1526 Hz\tEin PCA9685 reicht von 24 Hz bis 1526 Hz\n"
+    "Un PCA9685 no da un nivel analógico: PWM, servo o LED\tEin PCA9685 liefert keinen Analogpegel: PWM, Servo oder LED\n"
+    "No contesta el PCA9685 %s\tDer PCA9685 %s antwortet nicht\n"
+    "Esa salida la usa el canal %d\tKanal %d nutzt diesen Ausgang\n"
+    "Las 16 salidas de un PCA9685 comparten una frecuencia, de 24 Hz a 1526 Hz: un servo lo deja en 50 Hz. Los servos se alimentan por V+ del módulo, no por la placa.\tDie 16 Ausgänge eines PCA9685 teilen eine Frequenz, 24 Hz bis 1526 Hz: ein Servo hält sie auf 50 Hz. Servos werden über V+ des Moduls versorgt, nicht über die Platine.\n"
+    "Con un PCA9685 declarado en Módulos (module servos i2c.ext chip=pca9685 addr=0x40) aparecen acá sus 16 salidas.\tMit einem in Module eingetragenen PCA9685 (module servos i2c.ext chip=pca9685 addr=0x40) erscheinen hier seine 16 Ausgänge.\n"
+    "Señal: salida %d del PCA9685 %s (sus pines PWM de esa columna).\tSignal: Ausgang %d des PCA9685 %s (die PWM-Pins dieser Spalte).\n"
+    "%sPCA9685 a %s\t%sPCA9685 auf %s\n"
+    "%s%d PCA9685\t%s%d PCA9685\n"
+    "%.12s\\nsalida %d\t%.12s\\nAusgang %d\n"
     ;
 
 static const char blob_de_aos_python_lang[] =

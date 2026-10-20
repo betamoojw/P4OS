@@ -159,6 +159,9 @@ void aos_io_i2c_close(aos_io_i2c_t *b);
  * that need 100 kHz and hold SCL low while they work (SCD30, MLX90614,
  * BNO055...). Lasts until the handle is closed. */
 bool aos_io_i2c_dev_cfg(aos_io_i2c_t *b, uint8_t addr, uint32_t hz, uint32_t stretch_us);
+/* How many handles have this port open now: an I2C port is shared, every
+ * open is a handle of its own over one bus */
+int  aos_io_i2c_users(const char *port);
 /* What usually lives at an address, for scanners ("BME280 / BMP280"). */
 const char *aos_io_i2c_guess(uint8_t addr, bool board_bus);
 
@@ -237,6 +240,25 @@ typedef enum { AOS_GPIO_INPUT = 0, AOS_GPIO_INPUT_PULLUP, AOS_GPIO_INPUT_PULLDOW
 bool aos_io_gpio_mode(int gpio, aos_gpio_mode_t mode, const char *owner);
 int  aos_io_gpio_get(int gpio);                  /* 0/1, -1 if not available */
 bool aos_io_gpio_set(int gpio, int level);
+
+/* ---- PCA9685: sixteen PWM outputs over I2C (servos, LEDs) ----
+ *
+ * A chip is a module line: "module servos i2c.ext chip=pca9685 addr=0x40"
+ * [freq=50] [osc=25000000] [od=1] [invert=1] (aos_pca9685.c). The sixteen
+ * outputs share one frequency, 24 Hz to 1526 Hz; each has its duty in
+ * 4096ths. set_freq() returns the frequency it got (the prescaler's step),
+ * 0 on error. Opening turns every output off; closing too, and puts the
+ * chip to sleep. The I2C port stays shared with the sensor service. */
+typedef struct aos_io_pca aos_io_pca_t;
+int           aos_io_pca_modules(char names[][24], int max);       /* the modules.txt lines that are one */
+aos_io_pca_t *aos_io_pca_open(const char *module, const char *owner);
+uint32_t      aos_io_pca_set_freq(aos_io_pca_t *p, uint32_t hz);
+uint32_t      aos_io_pca_freq(const aos_io_pca_t *p);
+float         aos_io_pca_period_us(const aos_io_pca_t *p);
+bool          aos_io_pca_set_duty(aos_io_pca_t *p, int ch, float duty);    /* 0..1; ch 0..15 */
+bool          aos_io_pca_set_pulse_us(aos_io_pca_t *p, int ch, float us);  /* a servo's pulse */
+const char   *aos_io_pca_desc(const aos_io_pca_t *p);              /* "servos (i2c.ext 0x40)" */
+void          aos_io_pca_close(aos_io_pca_t *p);
 
 /* ---- pulses and counts (any usable GPIO of the header) ----
  *

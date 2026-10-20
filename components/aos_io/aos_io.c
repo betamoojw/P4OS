@@ -501,16 +501,55 @@ void aos_io_uart_close(aos_io_uart_t *u)
 
 const char *aos_io_uart_desc(aos_io_uart_t *u) { return u ? u->desc : ""; }
 
+/* The open I2C handles. A bus is for many devices: the sensor service's
+ * round, Bus's scan and an app driving a PCA9685 all along can use the same
+ * port at once (the IDF serialises their transfers). The pins are claimed
+ * once, by the first handle's owner; when that one closes while others go
+ * on, the claim passes to one of them, and the last close lets them go. A
+ * pin held as a plain GPIO (Bus's GPIO tab on SDA) still keeps the port
+ * from opening. */
+#define I2C_OPEN_MAX 16
+static aos_io_i2c_t *s_i2c_open[I2C_OPEN_MAX];
+
+static int i2c_users(const char *port, const aos_io_i2c_t *except, aos_io_i2c_t **other)
+{
+    int n = 0;
+    for (int i = 0; i < I2C_OPEN_MAX; i++)
+        if (s_i2c_open[i] && s_i2c_open[i] != except && !strcmp(s_i2c_open[i]->port->name, port)) {
+            if (other) *other = s_i2c_open[i];
+            n++;
+        }
+    return n;
+}
+
+int aos_io_i2c_users(const char *port)
+{
+    lock();
+    int n = port ? i2c_users(port, NULL, NULL) : 0;
+    unlock();
+    return n;
+}
+
 aos_io_i2c_t *aos_io_i2c_open(const char *port, const char *owner)
 {
     const aos_io_port_t *p = aos_io_port_find(port);
-    if (!p || p->kind != AOS_PORT_I2C) return NULL;
-    if (!claim_pins(p, owner)) return NULL;
+    if (!p || p->kind != AOS_PORT_I2C || !owner) return NULL;
     aos_io_i2c_t *b = calloc(1, sizeof *b);
-    b->port = p;
+    if (!b) return NULL;
+    b->pcopy = *p;
+    b->port = &b->pcopy;
     snprintf(b->owner, sizeof b->owner, "%s", owner);
-    if (!aos_io_be_i2c_open(b)) {
-        release_pins(p, owner);
+    lock();
+    bool shared = i2c_users(port, NULL, NULL) > 0;
+    int slot = -1;
+    for (int i = 0; i < I2C_OPEN_MAX && slot < 0; i++) if (!s_i2c_open[i]) slot = i;
+    if (slot >= 0) s_i2c_open[slot] = b;            /* counted from now: a second open shares */
+    unlock();
+    if (slot < 0 || (!shared && !claim_pins(b->port, owner)) || !aos_io_be_i2c_open(b)) {
+        lock();
+        if (slot >= 0) s_i2c_open[slot] = NULL;
+        unlock();
+        if (slot >= 0 && !shared && b->be == NULL) release_pins(b->port, owner);
         free(b);
         return NULL;
     }
@@ -533,7 +572,19 @@ void aos_io_i2c_close(aos_io_i2c_t *b)
 {
     if (!b) return;
     aos_io_be_i2c_close(b);
-    release_pins(b->port, b->owner);
+    lock();
+    for (int i = 0; i < I2C_OPEN_MAX; i++) if (s_i2c_open[i] == b) s_i2c_open[i] = NULL;
+    aos_io_i2c_t *other = NULL;
+    int left = i2c_users(b->port->name, NULL, &other);
+    char next[24] = "";
+    if (left && other && strcmp(other->owner, b->owner)) snprintf(next, sizeof next, "%s", other->owner);
+    unlock();
+    /* the pins: free with the last handle; if this one held the claim and
+     * another owner goes on, the claim is theirs now */
+    const char *o = aos_io_owner(b->port->pins[0]);
+    bool mine = o && !strcmp(o, b->owner);
+    if (!left) release_pins(b->port, b->owner);
+    else if (mine && next[0]) { release_pins(b->port, b->owner); claim_pins(b->port, next); }
     free(b);
 }
 

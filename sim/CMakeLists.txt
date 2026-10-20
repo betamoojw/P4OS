@@ -225,6 +225,7 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_modules.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_io_signal.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_io_pulse.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_pca9685.c
     io_sim.c
     uart_emu_sim.c
     spi_emu_sim.c

@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **PCA9685 in the PWM app.** A "16 servos" module declared in
+  `modules.txt` (`module servos i2c.ext chip=pca9685 addr=0x40`) adds its
+  sixteen outputs to the PWM app's pin sheet and to its portal page: PWM,
+  servo and LED channels with the knob and the patterns, 12 bits, one
+  frequency a chip (24-1526 Hz, held at 50 Hz while a servo is on it). An
+  `aos_io_pca_*` API for any app; the sensor service recognises the chip and
+  never takes it for an INA219; I2C ports are shared by every user at once
+  (docs/MODULES.md).
+- **Datalog keeps logging through a change of language,** and language
+  packs up to 1 MB are read (the system's had passed 256 KB and was dropped).
+- **AHT10 told from AHT20, "Es otro chip" in Módulos, Bus names every
+  address from the catalogue, each I2C chip at its own speed** (the PCF8591
+  at 400 kHz read anything), **a candidate lists what else it may be**, and
+  the light sensors' range changes no longer give one absurd reading.
+
 - **112 sensors, read by themselves.** The sensor service went from twelve
   chips to 112, from what Adafruit, SparkFun, Seeed, Waveshare, Pimoroni,
   DFRobot, M5Stack and the GY-xxx boards sell: temperature and humidity

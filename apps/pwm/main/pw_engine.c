@@ -11,6 +11,12 @@
  * interrupt gives back). Closing waits for the fade too, so that no channel
  * goes to its next owner halfway through one.
  *
+ * A PCA9685 output is written over I2C every tick it changes, 12 bits, no
+ * fades (there are none in the chip). Its sixteen outputs share the chip's
+ * frequency: a channel that asks another one moves them all, unless a servo
+ * on the chip holds it at 50 Hz, which the channel is told. The chip is
+ * opened by its first channel and closed by its last (pw_t.pcas).
+ *
  * Smooth patterns (breathe, sweep, ramp, sine) on a PWM channel go as
  * hardware fades of 40-120 ms, from where the pattern is to where it will
  * be at the end of the segment: piecewise linear in duty, smooth to the eye
@@ -42,6 +48,7 @@ void pw_cfg_default(pw_cfg_t *c, int mode)
 {
     memset(c, 0, sizeof *c);
     c->gpio   = -1;
+    c->pch    = -1;
     c->mode   = (uint8_t)mode;
     c->freq   = 1000;
     c->duty   = 0.5f;
@@ -90,6 +97,7 @@ float pw_out(const pw_ch_t *h, float v)
     switch (h->c.mode) {
     case PW_M_SERVO: {
         float us = h->c.smin + v * (float)(h->c.smax - h->c.smin);
+        if (h->pca) return clampf(us / aos_io_pca_period_us(h->pca), 0, 1);
         float hz = h->pwm ? (float)aos_io_pwm_freq(h->pwm) : 50.0f;
         return clampf(us * hz / 1e6f, 0, 1);
     }
@@ -168,8 +176,84 @@ int pw_freqs_in_use(uint32_t out[3])
 int pw_gpio_user(int gpio, int except)
 {
     for (int i = 0; i < pw_g->n; i++)
-        if (i != except && pw_g->ch[i].c.gpio == gpio) return i;
+        if (i != except && !pw_on_pca(&pw_g->ch[i].c) && pw_g->ch[i].c.gpio == gpio) return i;
     return -1;
+}
+
+int pw_pca_user(const char *module, int ch, int except)
+{
+    for (int i = 0; i < pw_g->n; i++) {
+        const pw_cfg_t *c = &pw_g->ch[i].c;
+        if (i != except && pw_on_pca(c) && c->pch == ch && !strcmp(c->pca, module)) return i;
+    }
+    return -1;
+}
+
+void pw_out_label(const pw_cfg_t *c, char *b, size_t n)
+{
+    if (pw_on_pca(c)) snprintf(b, n, "%.15s %d", c->pca, c->pch);
+    else if (c->gpio >= 0) snprintf(b, n, "GPIO%d", c->gpio);
+    else snprintf(b, n, "%s", _("sin pin"));
+}
+
+uint32_t pw_hw_freq(const pw_ch_t *h)
+{
+    return h->pca ? aos_io_pca_freq(h->pca) : h->pwm ? aos_io_pwm_freq(h->pwm) : 0;
+}
+
+int pw_hw_bits(const pw_ch_t *h) { return h->pca ? 12 : h->pwm ? aos_io_pwm_bits(h->pwm) : 0; }
+
+/* ---------------------------------------------------------------- PCA9685 chips */
+
+static aos_io_pca_t *pca_get(const char *name)
+{
+    int fr = -1;
+    for (int i = 0; i < PW_PCA_MAX; i++) {
+        if (pw_g->pcas[i].users && !strcmp(pw_g->pcas[i].name, name)) { pw_g->pcas[i].users++; return pw_g->pcas[i].h; }
+        if (!pw_g->pcas[i].users && fr < 0) fr = i;
+    }
+    if (fr < 0) return NULL;
+    aos_io_pca_t *p = aos_io_pca_open(name, PW_OWNER);
+    if (!p) return NULL;
+    snprintf(pw_g->pcas[fr].name, sizeof pw_g->pcas[fr].name, "%s", name);
+    pw_g->pcas[fr].h = p;
+    pw_g->pcas[fr].users = 1;
+    return p;
+}
+
+static void pca_put(aos_io_pca_t *p)
+{
+    for (int i = 0; i < PW_PCA_MAX; i++)
+        if (pw_g->pcas[i].users && pw_g->pcas[i].h == p && --pw_g->pcas[i].users == 0) {
+            aos_io_pca_close(p);
+            pw_g->pcas[i].h = NULL;
+        }
+}
+
+/* The chip's frequency for a channel that wants hz: the chip moves to it,
+ * unless another of its channels is a servo (50 Hz). The other channels see
+ * the new frequency on their next write. */
+static void pca_freq(pw_ch_t *h, uint32_t hz)
+{
+    bool servo = false;
+    for (int i = 0; i < pw_g->n; i++) {
+        const pw_ch_t *o = &pw_g->ch[i];
+        if (o != h && o->pca == h->pca && o->c.mode == PW_M_SERVO) servo = true;
+    }
+    uint32_t now = aos_io_pca_freq(h->pca);
+    if (servo && h->c.mode != PW_M_SERVO && hz != now) {
+        snprintf(h->err, sizeof h->err, "%s", _("Un servo tiene este PCA9685 a 50 Hz: sus 16 salidas comparten la frecuencia"));
+        h->asked = now;
+        return;
+    }
+    uint32_t got = aos_io_pca_set_freq(h->pca, hz < 24 ? 24 : hz > 1526 ? 1526 : hz);
+    if (!got) { snprintf(h->err, sizeof h->err, "%s", _("El PCA9685 no tomó la frecuencia")); return; }
+    h->asked = hz;
+    if (hz < 24 || hz > 1526)
+        snprintf(h->err, sizeof h->err, "%s", _("Un PCA9685 va de 24 Hz a 1526 Hz"));
+    else
+        h->err[0] = 0;
+    for (int i = 0; i < pw_g->n; i++) if (pw_g->ch[i].pca == h->pca) pw_g->ch[i].hw_valid = false;
 }
 
 static void explain(pw_ch_t *h, uint32_t hz)
@@ -189,7 +273,7 @@ static void explain(pw_ch_t *h, uint32_t hz)
     int nf = pw_freqs_in_use(f);
     bool known = false;
     for (int k = 0; k < nf && k < 3; k++) known |= f[k] == hz;
-    if (open >= PW_CH_MAX)
+    if (open >= PW_LEDC_MAX)
         snprintf(h->err, sizeof h->err, "%s", _("Los siete canales del LEDC están ocupados"));
     else if (nf >= 3 && !known)
         snprintf(h->err, sizeof h->err, "%s", _("Ya hay tres frecuencias distintas: el LEDC no da más"));
@@ -201,6 +285,26 @@ static bool hw_open(pw_ch_t *h)
 {
     uint32_t now = lv_tick_get();
     h->err[0] = 0;
+    if (pw_on_pca(&h->c)) {
+        if (h->c.mode == PW_M_DAC) {
+            snprintf(h->err, sizeof h->err, "%s", _("Un PCA9685 no da un nivel analógico: PWM, servo o LED"));
+            return false;
+        }
+        h->pca = pca_get(h->c.pca);
+        if (!h->pca) {
+            snprintf(h->err, sizeof h->err, _("No contesta el PCA9685 %s"), h->c.pca);
+            return false;
+        }
+        pca_freq(h, pw_freq_of(&h->c));
+        aos_hal_log("pwm", "%s output %d on as %s", h->c.pca, h->c.pch, pw_mode_name(h->c.mode));
+        h->hw_valid = false;
+        h->dirty = true;
+        h->freq_dirty = false;
+        h->busy_until = now;
+        h->freq_ms = now;
+        h->t0 = now;
+        return true;
+    }
     if (h->c.gpio < 0) {
         snprintf(h->err, sizeof h->err, "%s", _("Elegí un pin para este canal"));
         return false;
@@ -238,13 +342,20 @@ static void hw_close(pw_ch_t *h)
         aos_io_dac_close(h->dac);
         h->dac = NULL;
     }
+    if (h->pca) {
+        aos_io_pca_set_duty(h->pca, h->c.pch, 0.0f);
+        pca_put(h->pca);
+        h->pca = NULL;
+    }
     h->hw_valid = false;
     h->busy_until = 0;
 }
 
 static void hw_write(pw_ch_t *h, float o)
 {
-    if (h->pwm) aos_io_pwm_set_duty(h->pwm, o);
+    /* a PCA9685 inverts the whole chip or nothing: a channel's own is here */
+    if (h->pca) aos_io_pca_set_duty(h->pca, h->c.pch, h->c.invert ? 1.0f - o : o);
+    else if (h->pwm) aos_io_pwm_set_duty(h->pwm, o);
     else if (h->dac) aos_io_dac_set(h->dac, o);
     h->hw = o;
     h->hw_valid = true;
@@ -275,7 +386,7 @@ void pw_remove(int i)
 
 bool pw_set_on(pw_ch_t *h, bool on)
 {
-    bool is = h->pwm || h->dac;
+    bool is = pw_hw_on(h);
     if (on != is) {
         if (on) on = hw_open(h);
         else { hw_close(h); h->err[0] = 0; }
@@ -287,9 +398,22 @@ bool pw_set_on(pw_ch_t *h, bool on)
 
 void pw_set_gpio(pw_ch_t *h, int gpio)
 {
-    bool was = h->pwm || h->dac;
+    bool was = pw_hw_on(h);
     hw_close(h);
     h->c.gpio = (int8_t)gpio;
+    h->c.pch = -1;
+    h->err[0] = 0;
+    h->c.on = was ? hw_open(h) : false;
+    pw_store_changed();
+}
+
+void pw_set_pca(pw_ch_t *h, const char *module, int ch)
+{
+    bool was = pw_hw_on(h);
+    hw_close(h);
+    snprintf(h->c.pca, sizeof h->c.pca, "%s", module);
+    h->c.pch = (int8_t)ch;
+    if (h->c.mode == PW_M_DAC) h->c.mode = PW_M_PWM;
     h->err[0] = 0;
     h->c.on = was ? hw_open(h) : false;
     pw_store_changed();
@@ -298,12 +422,19 @@ void pw_set_gpio(pw_ch_t *h, int gpio)
 void pw_set_mode(pw_ch_t *h, int mode)
 {
     if (mode == h->c.mode) return;
+    if (mode == PW_M_DAC && pw_on_pca(&h->c)) {
+        aos_ui_toast(_("Un PCA9685 no da un nivel analógico: PWM, servo o LED"), 2200);
+        return;
+    }
     bool kind = (h->c.mode == PW_M_DAC) != (mode == PW_M_DAC);
-    bool was = h->pwm || h->dac;
+    bool was = pw_hw_on(h);
     if (kind) hw_close(h);
     h->c.mode = (uint8_t)mode;
     if (kind) h->c.on = was ? hw_open(h) : false;
-    else if (h->pwm) {
+    else if (h->pca) {
+        if (pw_freq_of(&h->c) != h->asked) h->freq_dirty = true;
+        h->dirty = true;
+    } else if (h->pwm) {
         if (pw_freq_of(&h->c) != h->asked) h->freq_dirty = true;
         h->dirty = true;
     }
@@ -313,7 +444,7 @@ void pw_set_mode(pw_ch_t *h, int mode)
 void pw_set_freq(pw_ch_t *h, uint32_t hz)
 {
     h->c.freq = hz < 1 ? 1 : hz > PW_FREQ_MAX ? PW_FREQ_MAX : hz;
-    if (h->pwm && pw_freq_of(&h->c) != h->asked) h->freq_dirty = true;
+    if ((h->pwm || h->pca) && pw_freq_of(&h->c) != h->asked) h->freq_dirty = true;
     pw_store_changed();
 }
 
@@ -362,8 +493,12 @@ void pw_apply(const pw_cfg_t *cfg, int n)
     for (int i = 0; i < n; i++) {
         if (in[i].mode >= PW_M_COUNT) in[i].mode = PW_M_PWM;
         if (in[i].pat >= PW_P_COUNT) in[i].pat = PW_P_NONE;
-        for (int k = 0; k < i; k++)
-            if (in[i].gpio >= 0 && in[k].gpio == in[i].gpio) { in[i].gpio = -1; in[i].on = false; }
+        if (in[i].mode == PW_M_DAC && pw_on_pca(&in[i])) in[i].mode = PW_M_PWM;
+        for (int k = 0; k < i; k++) {
+            bool same = pw_on_pca(&in[i]) ? pw_on_pca(&in[k]) && in[k].pch == in[i].pch && !strcmp(in[k].pca, in[i].pca)
+                                         : !pw_on_pca(&in[k]) && in[i].gpio >= 0 && in[k].gpio == in[i].gpio;
+            if (same) { in[i].gpio = -1; in[i].pch = -1; in[i].on = false; }
+        }
     }
     bool reopen[PW_CH_MAX] = { 0 };
     int had = pw_g->n;
@@ -371,7 +506,8 @@ void pw_apply(const pw_cfg_t *cfg, int n)
         pw_ch_t *h = &pw_g->ch[i];
         if (i >= n) { hw_close(h); continue; }
         const pw_cfg_t *c = &in[i];
-        reopen[i] = c->gpio != h->c.gpio || (c->mode == PW_M_DAC) != (h->c.mode == PW_M_DAC) || c->on != h->c.on;
+        reopen[i] = c->gpio != h->c.gpio || c->pch != h->c.pch || strcmp(c->pca, h->c.pca) ||
+                    (c->mode == PW_M_DAC) != (h->c.mode == PW_M_DAC) || c->on != h->c.on;
         if (reopen[i]) hw_close(h);
     }
     for (int i = had; i < n; i++) {
@@ -388,7 +524,7 @@ void pw_apply(const pw_cfg_t *cfg, int n)
         if (reopen[i]) {
             h->err[0] = 0;
             h->c.on = in[i].on ? hw_open(h) : false;
-        } else if (h->pwm) {
+        } else if (h->pwm || h->pca) {
             if (pw_freq_of(&h->c) != h->asked) h->freq_dirty = true;
             if (old.invert != h->c.invert) h->inv_dirty = true;
         }
@@ -431,8 +567,22 @@ static void run_channel(pw_ch_t *h, uint32_t now)
     } else {
         h->live = pw_val(c);
     }
-    if (!h->pwm && !h->dac) return;
+    if (!pw_hw_on(h)) return;
     if (pending(h->busy_until, now)) return;        /* a fade is running */
+
+    if (h->pca) {
+        if (h->freq_dirty && (uint32_t)(now - h->freq_ms) >= 40) {
+            h->freq_ms = now;
+            h->freq_dirty = false;
+            pca_freq(h, pw_freq_of(c));
+            h->hw_valid = false;
+        }
+        if (h->inv_dirty) { h->inv_dirty = false; h->hw_valid = false; }
+        float o = pw_out(h, h->live);
+        if (h->dirty || !h->hw_valid || fabsf(o - h->hw) > 1e-6f) hw_write(h, o);
+        h->dirty = false;
+        return;
+    }
 
     if (h->freq_dirty && (uint32_t)(now - h->freq_ms) >= 40) {
         uint32_t hz = pw_freq_of(c);
@@ -562,9 +712,9 @@ void pw_fmt_value(const pw_ch_t *h, float v, char *big, size_t nb, char *sub, si
     case PW_M_PWM:
         pw_fnum(a, sizeof a, v * 100.0f, 1);
         snprintf(big, nb, "%s %%", a);
-        if (h->pwm) {
-            freq_sig(f, sizeof f, (float)aos_io_pwm_freq(h->pwm), 4);
-            snprintf(sub, ns, _("%s · %d bits"), f, aos_io_pwm_bits(h->pwm));
+        if (h->pwm || h->pca) {
+            freq_sig(f, sizeof f, (float)pw_hw_freq(h), 4);
+            snprintf(sub, ns, _("%s · %d bits"), f, pw_hw_bits(h));
         } else {
             pw_fmt_freq(f, sizeof f, (float)c->freq);
             snprintf(sub, ns, "%s", f);

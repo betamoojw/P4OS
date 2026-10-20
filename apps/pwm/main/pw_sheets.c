@@ -172,6 +172,64 @@ static void pin_pick_cb(lv_event_t *e)
     if (h->err[0]) aos_ui_toast(h->err, 2500);
 }
 
+/* The PCA9685s of modules.txt while the sheet is open: an output's user data
+ * is its chip's index here times 16 plus the output */
+static char s_pca_names[PW_PCA_MAX][24];
+
+static void pca_pick_cb(lv_event_t *e)
+{
+    int v = (int)(intptr_t)lv_event_get_user_data(e), k = v / 16, ch = v % 16;
+    pw_ch_t *h = pw_cur();
+    if (!h || k < 0 || k >= PW_PCA_MAX) return;
+    int other = pw_pca_user(s_pca_names[k], ch, pw_g->sel);
+    if (other >= 0) {
+        char m[96];
+        snprintf(m, sizeof m, _("Esa salida la usa el canal %d"), other + 1);
+        aos_ui_toast(m, 1800);
+        return;
+    }
+    pw_set_pca(h, s_pca_names[k], ch);
+    pw_sheet_close();
+    pw_ui_refresh();
+    if (h->err[0]) aos_ui_toast(h->err, 2500);
+}
+
+/* A PCA9685's sixteen outputs, as small tiles after the header's pins */
+static void pca_section(lv_obj_t *b, int k, int32_t w)
+{
+    char t[64];
+    snprintf(t, sizeof t, "PCA9685 · %s", s_pca_names[k]);
+    lv_obj_t *hd = aos_label(b, t, aos_font_small, AOS_C_TEXT);
+    lv_obj_set_width(hd, w);
+    lv_obj_t *grid = lv_obj_create(b);
+    lv_obj_remove_style_all(grid);
+    lv_obj_set_size(grid, w, LV_SIZE_CONTENT);
+    lv_obj_remove_flag(grid, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_flex_flow(grid, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_style_pad_gap(grid, 8, 0);
+    int cols = 8;
+    int32_t cw = (w - (cols - 1) * 8) / cols;
+    for (int ch = 0; ch < 16; ch++) {
+        int us = pw_pca_user(s_pca_names[k], ch, -1);
+        lv_obj_t *c = lv_obj_create(grid);
+        lv_obj_remove_style_all(c);
+        lv_obj_set_size(c, cw, 72);
+        lv_obj_remove_flag(c, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_add_flag(c, LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_set_style_bg_color(c, AOS_C_CARD2, 0);
+        lv_obj_set_style_bg_opa(c, LV_OPA_COVER, 0);
+        lv_obj_set_style_bg_opa(c, LV_OPA_60, LV_STATE_PRESSED);
+        lv_obj_set_style_radius(c, 14, 0);
+        lv_obj_set_style_border_width(c, 3, 0);
+        lv_obj_set_style_border_color(c, us == pw_g->sel ? AOS_C_ACCENT : us >= 0 ? AOS_C_ORANGE : AOS_C_CARD2, 0);
+        if (us >= 0 && us != pw_g->sel) lv_obj_set_style_opa(c, LV_OPA_60, 0);
+        lv_obj_t *n = aos_label(c, "", aos_font_small, AOS_C_TEXT);
+        lv_label_set_text_fmt(n, "%d", ch);
+        lv_obj_center(n);
+        lv_obj_add_event_cb(c, pca_pick_cb, LV_EVENT_CLICKED, (void *)(intptr_t)(k * 16 + ch));
+    }
+}
+
 void pw_sheet_pins(void)
 {
     lv_obj_t *b = pw_sheet_open(_("Pin del canal"));
@@ -227,6 +285,10 @@ void pw_sheet_pins(void)
         lv_obj_align(sl, LV_ALIGN_BOTTOM_LEFT, 0, 0);
         lv_obj_add_event_cb(c, pin_pick_cb, LV_EVENT_CLICKED, (void *)(intptr_t)p->gpio);
     }
+    int np = aos_io_pca_modules(s_pca_names, PW_PCA_MAX);
+    for (int k = 0; k < np; k++) pca_section(b, k, w);
+    note(b, np ? _("Las 16 salidas de un PCA9685 comparten una frecuencia, de 24 Hz a 1526 Hz: un servo lo deja en 50 Hz. Los servos se alimentan por V+ del módulo, no por la placa.")
+               : _("Con un PCA9685 declarado en Módulos (module servos i2c.ext chip=pca9685 addr=0x40) aparecen acá sus 16 salidas."));
 }
 
 /* ---------------------------------------------------------------- settings */
@@ -752,7 +814,9 @@ void pw_sheet_wiring(void)
     pin_list(gnd, sizeof gnd, "GND");
     pin_list(v33, sizeof v33, "3V3");
     pin_list(v5, sizeof v5, "5V");
-    if (h && h->c.gpio >= 0) {
+    if (h && pw_on_pca(&h->c)) {
+        snprintf(sig, sizeof sig, _("Señal: salida %d del PCA9685 %s (sus pines PWM de esa columna)."), h->c.pch, h->c.pca);
+    } else if (h && h->c.gpio >= 0) {
         const aos_io_pin_t *p = aos_io_pin_of_gpio(h->c.gpio);
         snprintf(sig, sizeof sig, _("Señal: pata %d (GPIO%d)."), p ? p->pin : 0, h->c.gpio);
         strcat(sig, " ");

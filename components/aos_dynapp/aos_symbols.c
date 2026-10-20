@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3418 simbolos.
+ * Total: 3428 simbolos.
  */
 
 #include <stddef.h>
@@ -801,6 +801,7 @@ extern int aos_io_i2c_dev_cfg;
 extern int aos_io_i2c_guess;
 extern int aos_io_i2c_open;
 extern int aos_io_i2c_probe;
+extern int aos_io_i2c_users;
 extern int aos_io_i2c_xfer;
 extern int aos_io_ir_close;
 extern int aos_io_ir_read;
@@ -823,6 +824,15 @@ extern int aos_io_ow_reset;
 extern int aos_io_ow_search;
 extern int aos_io_ow_write;
 extern int aos_io_owner;
+extern int aos_io_pca_close;
+extern int aos_io_pca_desc;
+extern int aos_io_pca_freq;
+extern int aos_io_pca_modules;
+extern int aos_io_pca_open;
+extern int aos_io_pca_period_us;
+extern int aos_io_pca_set_duty;
+extern int aos_io_pca_set_freq;
+extern int aos_io_pca_set_pulse_us;
 extern int aos_io_pin_of_gpio;
 extern int aos_io_port_at;
 extern int aos_io_port_count;
@@ -4222,6 +4232,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_i2c_guess),
     ESP_ELFSYM_EXPORT(aos_io_i2c_open),
     ESP_ELFSYM_EXPORT(aos_io_i2c_probe),
+    ESP_ELFSYM_EXPORT(aos_io_i2c_users),
     ESP_ELFSYM_EXPORT(aos_io_i2c_xfer),
     ESP_ELFSYM_EXPORT(aos_io_ir_close),
     ESP_ELFSYM_EXPORT(aos_io_ir_read),
@@ -4244,6 +4255,15 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_ow_search),
     ESP_ELFSYM_EXPORT(aos_io_ow_write),
     ESP_ELFSYM_EXPORT(aos_io_owner),
+    ESP_ELFSYM_EXPORT(aos_io_pca_close),
+    ESP_ELFSYM_EXPORT(aos_io_pca_desc),
+    ESP_ELFSYM_EXPORT(aos_io_pca_freq),
+    ESP_ELFSYM_EXPORT(aos_io_pca_modules),
+    ESP_ELFSYM_EXPORT(aos_io_pca_open),
+    ESP_ELFSYM_EXPORT(aos_io_pca_period_us),
+    ESP_ELFSYM_EXPORT(aos_io_pca_set_duty),
+    ESP_ELFSYM_EXPORT(aos_io_pca_set_freq),
+    ESP_ELFSYM_EXPORT(aos_io_pca_set_pulse_us),
     ESP_ELFSYM_EXPORT(aos_io_pin_of_gpio),
     ESP_ELFSYM_EXPORT(aos_io_port_at),
     ESP_ELFSYM_EXPORT(aos_io_port_count),

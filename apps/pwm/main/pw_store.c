@@ -48,9 +48,9 @@ static size_t cfg_line(char *b, size_t n, const pw_ch_t *h, bool extra)
 {
     const pw_cfg_t *c = &h->c;
     int k = snprintf(b, n,
-                     "ch gpio=%d mode=%s on=%d inv=%d freq=%u duty=%.4f pulse=%.0f smin=%u smax=%u sdeg=%u "
+                     "ch gpio=%d pca=%s pch=%d mode=%s on=%d inv=%d freq=%u duty=%.4f pulse=%.0f smin=%u smax=%u sdeg=%u "
                      "bright=%.4f gamma=%.2f level=%.4f pat=%s period=%.3f lo=%.4f hi=%.4f steps=",
-                     c->gpio, MODE_KEYS[c->mode < PW_M_COUNT ? c->mode : 0], (extra ? (h->pwm || h->dac) : c->on) ? 1 : 0,
+                     c->gpio, c->pca[0] ? c->pca : "-", c->pch, MODE_KEYS[c->mode < PW_M_COUNT ? c->mode : 0], (extra ? pw_hw_on(h) : c->on) ? 1 : 0,
                      c->invert ? 1 : 0, (unsigned)c->freq, (double)c->duty, (double)c->pulse, c->smin, c->smax, c->sdeg,
                      (double)c->bright, (double)c->gamma, (double)c->level, PAT_KEYS[c->pat < PW_P_COUNT ? c->pat : 0],
                      (double)c->period, (double)c->lo, (double)c->hi);
@@ -58,7 +58,7 @@ static size_t cfg_line(char *b, size_t n, const pw_ch_t *h, bool extra)
         k += snprintf(b + k, n - (size_t)k, "%s%.3f", i ? "," : "", (double)c->step[i]);
     if (extra && k > 0 && (size_t)k < n) {
         k += snprintf(b + k, n - (size_t)k, " rfreq=%u bits=%d live=%.4f err=%s",
-                      (unsigned)(h->pwm ? aos_io_pwm_freq(h->pwm) : 0), h->pwm ? aos_io_pwm_bits(h->pwm) : 0,
+                      (unsigned)pw_hw_freq(h), pw_hw_bits(h),
                       (double)h->live, h->err);
     }
     if (k > 0 && (size_t)k + 1 < n) { b[k++] = '\n'; b[k] = 0; }
@@ -73,6 +73,15 @@ static bool write_file(const char *path, bool extra, bool run)
     if (extra) snprintf(line, sizeof line, "pwm 1 run=%d ack=%u sel=%d\n", run ? 1 : 0, (unsigned)pw_g->ack, pw_g->sel);
     else snprintf(line, sizeof line, "# P4OS, PWM generator (aos.pwm)\npwm 1\n");
     bool ok = fputs(line, f) >= 0;
+    if (extra) {
+        /* the PCA9685s of modules.txt, for the page's pin lists */
+        char names[PW_PCA_MAX * 2][24];
+        int nn = aos_io_pca_modules(names, PW_PCA_MAX * 2);
+        for (int i = 0; i < nn && ok; i++) {
+            snprintf(line, sizeof line, "pca name=%s\n", names[i]);
+            ok = fputs(line, f) >= 0;
+        }
+    }
     for (int i = 0; i < pw_g->n && ok; i++) {
         if (cfg_line(line, sizeof line, &pw_g->ch[i], extra)) ok = fputs(line, f) >= 0;
     }
@@ -92,7 +101,17 @@ static void cfg_check(pw_cfg_t *c)
 {
     const aos_io_pin_t *p = c->gpio >= 0 ? aos_io_pin_of_gpio(c->gpio) : NULL;
     if (!p || (p->flags & (AOS_PIN_RESERVED | AOS_PIN_BOARD))) c->gpio = -1;
-    if (c->gpio < 0) c->on = false;
+    /* a PCA9685 output: a chip modules.txt still declares, 0..15 */
+    if (c->pch > 15 || !c->pca[0] || !strcmp(c->pca, "-")) c->pch = -1;
+    if (c->pch >= 0) {
+        char names[PW_PCA_MAX * 2][24];
+        int nn = aos_io_pca_modules(names, PW_PCA_MAX * 2);
+        bool there = false;
+        for (int i = 0; i < nn; i++) there |= !strcmp(names[i], c->pca);
+        if (!there) c->pch = -1;
+    }
+    if (c->pch < 0) c->pca[0] = 0;
+    if (c->gpio < 0 && c->pch < 0) c->on = false;
     if (c->freq < 1) c->freq = 1;
     if (c->freq > PW_FREQ_MAX) c->freq = PW_FREQ_MAX;
     c->duty = fclamp(c->duty, 0, 1, 0.5f);
@@ -114,6 +133,8 @@ static void cfg_check(pw_cfg_t *c)
 static void set_key(pw_cfg_t *c, const char *k, const char *v)
 {
     if (!strcmp(k, "gpio")) c->gpio = (int8_t)strtol(v, NULL, 10);
+    else if (!strcmp(k, "pca")) snprintf(c->pca, sizeof c->pca, "%s", v);
+    else if (!strcmp(k, "pch")) c->pch = (int8_t)strtol(v, NULL, 10);
     else if (!strcmp(k, "mode")) c->mode = (uint8_t)key_index(v, MODE_KEYS, PW_M_COUNT, PW_M_PWM);
     else if (!strcmp(k, "on")) c->on = v[0] == '1';
     else if (!strcmp(k, "inv")) c->invert = v[0] == '1';

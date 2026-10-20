@@ -289,10 +289,10 @@ void pw_knob_refresh(void)
         float lf = log10f((float)c->freq);
         pos = lf - floorf(lf);                       /* within its decade */
         pw_fmt_freq(big, sizeof big, (float)c->freq);
-        if (h->pwm) {
+        if (h->pwm || h->pca) {
             char f[24];
-            pw_fmt_freq(f, sizeof f, (float)aos_io_pwm_freq(h->pwm));
-            snprintf(sub, sizeof sub, _("real %s · %d bits"), f, aos_io_pwm_bits(h->pwm));
+            pw_fmt_freq(f, sizeof f, (float)pw_hw_freq(h));
+            snprintf(sub, sizeof sub, _("real %s · %d bits"), f, pw_hw_bits(h));
         } else {
             snprintf(sub, sizeof sub, "%s", _("al encender"));
         }
@@ -319,7 +319,7 @@ void pw_knob_refresh(void)
     }
     }
     lv_arc_set_value(K.arc, (int32_t)(pos * 1000.0f + 0.5f));
-    bool live = h->pwm || h->dac;
+    bool live = pw_hw_on(h);
     lv_color_t col = lv_color_hex(pw_mode_color(c->mode));
     lv_obj_set_style_arc_color(K.arc, live ? col : AOS_C_DIM, LV_PART_INDICATOR);
     lv_label_set_text(K.what, what);

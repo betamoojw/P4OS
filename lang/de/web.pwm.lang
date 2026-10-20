@@ -185,3 +185,5 @@ Presets	Presets
 
 #: apps/pwm/web/pwm.js:498
 En /pwm de la tarjeta, una línea por canal. Al cargar uno, los canales encendidos se encienden en la placa.	In /pwm auf der Karte, eine Zeile pro Kanal. Beim Laden werden die eingeschalteten Kanäle auf der Platine eingeschaltet.
+salida %d (otro canal)	Ausgang %d (anderer Kanal)
+salida %d	Ausgang %d

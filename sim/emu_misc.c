@@ -433,7 +433,74 @@ static bool pcf_xfer(sim_emu_t *d, const uint8_t *w, size_t wn, uint8_t *r, size
 
 static const sim_model_t M_PCF8574 = { "pcf8574", 0x20, pcf_reset, pcf_xfer };
 
+/* -------------------------------------------------------------------------- */
+/* PCA9685 (not a sensor: the PWM app's outputs over I2C)                      */
+/* -------------------------------------------------------------------------- */
+
+/* Its registers as the datasheet has them at power-on (MODE1 0x11 asleep and
+ * answering all-call, MODE2 0x04, SUBADR E2 E4 E8, ALLCALLADR E0, PRE_SCALE
+ * 0x1E); auto-increment only when MODE1's AI is set; PRE_SCALE only takes a
+ * write while asleep; RESTART clears when written 1. What the outputs do is
+ * said in the log when a channel changes, to see the app work. */
+static void pca_reset(sim_emu_t *d)
+{
+    memset(d->regs, 0, sizeof d->regs);
+    d->regs[0x00] = 0x11;
+    d->regs[0x01] = 0x04;
+    d->regs[0x02] = 0xE2;
+    d->regs[0x03] = 0xE4;
+    d->regs[0x04] = 0xE8;
+    d->regs[0x05] = 0xE0;
+    for (int ch = 0; ch < 16; ch++) d->regs[0x06 + 4 * ch + 3] = 0x10;   /* full off */
+    d->regs[0xFE] = 0x1E;
+}
+
+static void pca_say(sim_emu_t *d, int ch)
+{
+    const uint8_t *r = &d->regs[0x06 + 4 * ch];
+    unsigned on = (unsigned)(r[0] | (r[1] & 0x0F) << 8), off = (unsigned)(r[2] | (r[3] & 0x0F) << 8);
+    float hz = 25e6f / (4096.0f * (float)(d->regs[0xFE] + 1));
+    float duty = (r[3] & 0x10) ? 0.0f : (r[1] & 0x10) ? 1.0f : (float)((off - on) & 0xFFF) / 4096.0f;
+    uint32_t key = (uint32_t)(duty * 4096.0f) | (uint32_t)d->regs[0xFE] << 16;
+    if (d->u[ch % 16] == key + 1) return;
+    d->u[ch % 16] = key + 1;
+    aos_hal_log("sim", "PCA9685 0x%02X ch%d: %.1f%% at %.0f Hz (%.0f us high)", d->addr, ch, duty * 100.0f, hz,
+                duty * 1e6f / hz);
+}
+
+static bool pca_xfer(sim_emu_t *d, const uint8_t *w, size_t wn, uint8_t *r, size_t rn)
+{
+    if (wn) {
+        d->ptr = w[0];
+        bool ai = d->regs[0x00] & 0x20;
+        uint8_t reg = w[0];
+        for (size_t i = 1; i < wn; i++) {
+            uint8_t v = w[i];
+            if (reg == 0xFE && !(d->regs[0x00] & 0x10)) { /* awake: ignored */ }
+            else if (reg == 0x00) d->regs[0x00] = (uint8_t)(v & 0x7F);          /* RESTART reads back 0 */
+            else if (reg >= 0xFA && reg <= 0xFD) {
+                d->regs[reg] = v;
+                for (int ch = 0; ch < 16; ch++) d->regs[0x06 + 4 * ch + (reg - 0xFA)] = v;
+            } else d->regs[reg] = v;
+            if (reg >= 0x06 && reg <= 0x45 && (reg - 0x06) % 4 == 3) pca_say(d, (reg - 0x06) / 4);
+            if (reg == 0xFD) for (int ch = 0; ch < 16; ch++) pca_say(d, ch);
+            if (ai) reg = (uint8_t)(reg + 1);
+        }
+        if (!rn) return true;
+    }
+    bool ai = d->regs[0x00] & 0x20;
+    uint8_t reg = d->ptr;
+    for (size_t i = 0; i < rn; i++) {
+        r[i] = d->regs[reg];
+        if (ai) reg = (uint8_t)(reg + 1);
+    }
+    return true;
+}
+
+static const sim_model_t M_PCA9685 = { "pca9685", 0x40, pca_reset, pca_xfer };
+
 const sim_model_t *const SIM_M_MISC[] = {
     &M_MAX30102, &M_MAX30100, &M_MPR121, &M_SEESAW, &M_AS5600, &M_DS3231, &M_PCF8574,
+    &M_PCA9685,
     NULL,
 };

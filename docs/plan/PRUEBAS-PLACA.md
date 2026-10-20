@@ -465,8 +465,14 @@ Que necesitan la mano del usuario o equipos:
     repetir con el banco ordenado.
   - ADS1115 en 0x49 (ADDR a VCC), junto al PCF8591: 3,277 V en A0 (3V3),
     0 en A1 (GND).
-  - PCA9685 en 0x40: Bus lo nombra, no queda como candidato a sensor;
-    falta probar salidas, servos y `osc=` con fuente de 5 V en V+.
+  - PCA9685 en 0x40: Bus lo nombra, no queda como candidato a sensor.
+    El 2026-10-20, con una fuente de 5 V en V+ y cuatro servos en las
+    salidas 0-3: la app PWM los movió uno por uno (1000/2000/1500 µs), cada
+    uno en su turno, y después los cuatro a la vez en una ola senoidal
+    (4 s, 1000-2000 µs, desfasados 1 s), fluida. Con el chip abierto, el
+    servicio de sensores siguió viendo i2c.ext "ok" (el puerto compartido)
+    y Datalog siguió grabando. Falta medir el pulso con el osciloscopio
+    por si el oscilador del módulo pide `osc=`.
   - Particiones: las ranuras OTA de 9,44 MB fallaron al verificar (la
     caché no mapea más allá de 16 MB); quedaron de 7,94 MB, grabadas por
     cable, y las OTA siguientes anduvieron.

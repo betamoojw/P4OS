@@ -185,7 +185,7 @@ const char *aos_sensor_chip_what(const char *id)
         { "lps22", N_("Temperatura y presión") }, { "ms5611", N_("Temperatura y presión (altímetro)") },
         { "qmp6988", N_("Temperatura y presión") },
         { "sht3x", N_("Temperatura y humedad") }, { "sht4x", N_("Temperatura y humedad") },
-        { "aht20", N_("Temperatura y humedad") }, { "sht2x", N_("Temperatura y humedad") },
+        { "aht20", N_("Temperatura y humedad") }, { "aht10", N_("Temperatura y humedad") }, { "sht2x", N_("Temperatura y humedad") },
         { "hdc1080", N_("Temperatura y humedad") }, { "hdc2080", N_("Temperatura y humedad") },
         { "hdc302x", N_("Temperatura y humedad") }, { "shtc3", N_("Temperatura y humedad") },
         { "am2320", N_("Temperatura y humedad") }, { "mcp9808", N_("Temperatura, ±0,25 °C") },

@@ -204,55 +204,108 @@ const sens_drv_t DRV_SHT3X_CAND = {
     .identify = sht3_candidate, .read = sht3_read,
 };
 
-/* ---- AHT20 / AHT10 (and DHT20, AM2301B, AHT25/30: the same at 0x38) ---- */
-
-typedef struct { bool nocrc; } aht_t;
+/* ---- AHT20 / AHT10 (and DHT20, AM2301B, AHT25/30: the same at 0x38) ----
+ * The two speak alike, but an AHT20 ends every read with a CRC byte and an
+ * AHT10 does not: its seventh byte is anything. Nothing else tells them
+ * apart, so autodetect calls it an AHT20 when that byte is a good CRC and
+ * an AHT10 when it is not, and the reads go on looking: two good CRCs in a
+ * row make it an AHT20 for good (a CRC is checked from then on), three bad
+ * ones with nothing good before make it an AHT10. Declared as an aht10, it
+ * is one from the start. */
+typedef struct {
+    bool    set;            /* crc decided from the module line once */
+    int8_t  crc;            /* 1 has one, 0 has none, -1 not known yet */
+    uint8_t good, bad;      /* CRCs in a row, while not known */
+} aht_t;
 SPRIV_CHECK(aht_t);
+
+static bool aht_crc_ok(const uint8_t *r) { return sens_crc8_si(r, 6) == r[6]; }
 
 /* Any read of an AHT gives its status, then the last measurement and its
  * CRC: a plain read, with no 0x71 written first, because a PCF8574A shares
  * 0x38 and takes any byte written to it as its outputs. An expander answers
  * a read with its port, the same byte over and over: that is not an AHT. */
-static int aht_identify(aos_io_i2c_t *b, uint8_t a)
+static int aht_probe(aos_io_i2c_t *b, uint8_t a, bool *crc)
 {
     uint8_t r[7];
     if (!si2c_rd(b, a, r, sizeof r)) return ID_NO;
     bool same = true;
     for (int i = 1; i < 7; i++) same &= r[i] == r[0];
     if (same) return ID_NO;
-    if (!(r[0] & 0x80) && (r[0] & 0x08)) return ID_YES;
-    return ID_MAYBE;
+    *crc = aht_crc_ok(r);
+    return !(r[0] & 0x80) && (r[0] & 0x08) ? ID_YES : ID_MAYBE;
+}
+
+static int aht20_identify(aos_io_i2c_t *b, uint8_t a)
+{
+    bool crc;
+    int r = aht_probe(b, a, &crc);
+    return r == ID_YES && !crc ? ID_NO : r;     /* no CRC: the AHT10's */
+}
+
+static int aht10_identify(aos_io_i2c_t *b, uint8_t a)
+{
+    bool crc;
+    return aht_probe(b, a, &crc) == ID_YES && !crc ? ID_YES : ID_NO;
+}
+
+static void aht_label(sens_slot_t *s, bool crc)
+{
+    sens_scpy(s->pub.chip, sizeof s->pub.chip, crc ? "AHT20" : "AHT10");
 }
 
 static int aht_init(sens_io_t *io, sens_slot_t *s)
 {
     aht_t *p = SPRIV(s, aht_t);
-    char c[16] = "";
-    sens_arg_str(s, "chip", c, sizeof c);
-    p->nocrc = !strncmp(s->pub.name, "aht10", 5) || !strcmp(c, "aht10");
+    if (!p->set) {
+        /* declared by its name, it is that; detected, the reads decide */
+        char c[16] = "";
+        sens_arg_str(s, "chip", c, sizeof c);
+        bool named10 = !strncmp(s->pub.name, "aht10", 5) || !strcmp(c, "aht10");
+        /* an "aht20" that is really an AHT10 still finds out by itself */
+        p->crc = s->pub.declared && named10 ? 0 : -1;
+        p->set = true;
+    }
     uint8_t cmd = 0x71, st = 0;
     if (!si2c_wrrd(io->i2c, s->pub.addr, &cmd, 1, &st, 1)) return R_NACK;
-    if (!(st & 0x08)) {                            /* not calibrated: the init command */
-        uint8_t w[3] = { (uint8_t)(p->nocrc ? 0xE1 : 0xBE), 0x08, 0x00 };
+    if (!(st & 0x08)) {
+        /* not calibrated: the AHT20's init command, then the AHT10's */
+        uint8_t w[3] = { (uint8_t)(p->crc == 0 ? 0xE1 : 0xBE), 0x08, 0x00 };
         if (!si2c_wr(io->i2c, s->pub.addr, w, 3)) return R_NACK;
         aos_hal_sleep_ms(10);
+        if (p->crc < 0 && si2c_wrrd(io->i2c, s->pub.addr, &cmd, 1, &st, 1) && !(st & 0x08)) {
+            w[0] = 0xE1;
+            si2c_wr(io->i2c, s->pub.addr, w, 3);
+            aos_hal_sleep_ms(10);
+        }
     }
     return R_OK;
 }
 
 static int aht_read(sens_io_t *io, sens_slot_t *s)
 {
-    const aht_t *p = SPRIV(s, aht_t);
+    aht_t *p = SPRIV(s, aht_t);
     uint8_t w[3] = { 0xAC, 0x33, 0x00 }, d[7];
     if (!si2c_wr(io->i2c, s->pub.addr, w, 3)) return R_NACK;
     aos_hal_sleep_ms(80);
     for (int tries = 0;; tries++) {
-        if (!si2c_rd(io->i2c, s->pub.addr, d, p->nocrc ? 6 : 7)) return R_NACK;
+        if (!si2c_rd(io->i2c, s->pub.addr, d, 7)) return R_NACK;
         if (!(d[0] & 0x80)) break;
         if (tries >= 2) return R_NOTREADY;
         aos_hal_sleep_ms(20);
     }
-    if (!p->nocrc && sens_crc8_si(d, 6) != d[6]) return R_CRC;
+    bool ok = aht_crc_ok(d);
+    if (p->crc < 0) {
+        /* still finding out: two good CRCs in a row, or three bad */
+        if (ok) { p->good++; p->bad = 0; }
+        else { p->bad++; p->good = 0; }
+        if (p->good >= 2) p->crc = 1;
+        else if (p->bad >= 3) p->crc = 0;
+        else return R_NOTREADY;
+        aht_label(s, p->crc == 1);
+    } else if (p->crc == 1 && !ok) {
+        return R_CRC;
+    }
     uint32_t rh = (uint32_t)d[1] << 12 | (uint32_t)d[2] << 4 | d[3] >> 4;
     uint32_t rt = (uint32_t)(d[3] & 0x0F) << 16 | (uint32_t)d[4] << 8 | d[5];
     sens_setv(s, 0, "temp", AOS_SQ_TEMP, (float)rt * 200.0f / 1048576.0f - 50.0f);
@@ -264,7 +317,14 @@ const sens_drv_t DRV_AHT20 = {
     .prio = SP_CMD,
     .cat = SC(TEMP),
     .pub = { .id = "aht20", .name = "AHT20", .addrs = { 0x38 }, .naddr = 1 },
-    .identify = aht_identify, .init = aht_init, .read = aht_read,
+    .identify = aht20_identify, .init = aht_init, .read = aht_read,
+};
+
+const sens_drv_t DRV_AHT10 = {
+    .prio = SP_CMD,
+    .cat = SC(TEMP),
+    .pub = { .id = "aht10", .name = "AHT10", .addrs = { 0x38, 0x39 }, .naddr = 2 },
+    .identify = aht10_identify, .init = aht_init, .read = aht_read,
 };
 
 /* ---- BH1750: continuous high resolution, 1 lx, 120 ms ---- */
@@ -452,14 +512,14 @@ const sens_drv_t DRV_DS18B20 = {
 
 const sens_drv_t *const SENS_G_BASIC[] = {
     &DRV_BME280, &DRV_BMP280, &DRV_INA226, &DRV_INA219, &DRV_ADS1115,
-    &DRV_SHT3X, &DRV_SHT4X, &DRV_AHT20, &DRV_SHT3X_CAND, &DRV_BH1750,
+    &DRV_SHT3X, &DRV_SHT4X, &DRV_AHT20, &DRV_AHT10, &DRV_SHT3X_CAND, &DRV_BH1750,
     &DRV_MAX6675, &DRV_DS18B20, NULL,
 };
 
 const sens_alias_t SENS_A_BASIC[] = {
     { "sht30", "sht3x" }, { "sht31", "sht3x" }, { "sht35", "sht3x" }, { "sht85", "sht3x" }, { "gxht30", "sht3x" },
     { "sht40", "sht4x" }, { "sht41", "sht4x" }, { "sht43", "sht4x" }, { "sht45", "sht4x" },
-    { "aht10", "aht20" }, { "aht21", "aht20" }, { "aht2x", "aht20" }, { "aht25", "aht20" }, { "aht30", "aht20" },
+    { "aht21", "aht20" }, { "aht2x", "aht20" }, { "aht25", "aht20" }, { "aht30", "aht20" },
     { "dht20", "aht20" }, { "am2301b", "aht20" }, { "am2315c", "aht20" },
     { "gy302", "bh1750" }, { "gy30", "bh1750" },
     { "ds18s20", "ds18b20" }, { "ds1822", "ds18b20" }, { "max31850", "ds18b20" }, { "onewire", "ds18b20" },

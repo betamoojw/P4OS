@@ -7654,3 +7654,4 @@ SEGUNDO PIN	ZWEITER PIN
 El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos (ECHO, DT).	Der erste ist Trigger oder Takt (TRIG, SCK); der zweite Echo oder Daten (ECHO, DT).
 TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	TX des Sensors an RX des Ports und RX an TX; die Geschwindigkeit gibt der Sensor vor.
 No se entiende lo que manda: ¿otra velocidad u otro sensor?	Was er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?
+Es otro chip	Anderer Chip

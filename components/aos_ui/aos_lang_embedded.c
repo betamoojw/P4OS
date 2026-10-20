@@ -2694,6 +2694,8 @@ static const char blob_en__sistema_lang[] =
     "SEGUNDO PIN\tSECOND PIN\n"
     "El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos (ECHO, DT).\tThe first is the trigger or the clock (TRIG, SCK); the second, the echo or the data (ECHO, DT).\n"
     "TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.\tThe sensor's TX to the port's RX and RX to TX; the sensor sets the speed.\n"
+    "No se entiende lo que manda: ¿otra velocidad u otro sensor?\tCannot make sense of what it sends: another speed or another sensor?\n"
+    "Es otro chip\tAnother chip\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -4414,7 +4416,7 @@ static const char blob_en_aos_datalog_lang[] =
     "Módulos\tModules\n"
     "Cada lectura va a su archivo en %s de la tarjeta (se bajan desde el portal, en Datalog). Mientras registra, la app sigue con la pantalla en otra cosa y arranca sola con la placa; en pausa no.\tEach reading goes to its own file in %s on the card (download them from the portal, under Datalog). While it logs, the app goes on with something else on screen and starts by itself with the board; paused, it does not.\n"
     "Todavía no hay lecturas\tNo readings yet\n"
-    "Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor I2C, SPI o 1-Wire, una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.\tEach reading is a value logged to a CSV with its date and time: an I2C, SPI or 1-Wire sensor, an ADS1115 input or a pin of the header, every so often or at set times, with alarms if you like.\n"
+    "Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor (I2C, SPI, 1-Wire, de pines o por puerto serie), una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.\tEach reading is a value logged to a CSV with its date and time: a sensor (I2C, SPI, 1-Wire, on pins or on a serial port), an ADS1115 input or a pin of the header, every so often or at set times, with alarms if you like.\n"
     "Agregar una lectura\tAdd a reading\n"
     "ALTA\tHIGH\n"
     "BAJA\tLOW\n"
@@ -4493,6 +4495,7 @@ static const char blob_en_aos_datalog_lang[] =
     "Una punta de la termocupla toca VCC o GND\tA thermocouple lead touches VCC or GND\n"
     "La RTD está en corto\tThe RTD is shorted\n"
     "Falta %s= en la línea del módulo\tThe module line lacks %s=\n"
+    "No se entiende lo que manda: ¿otra velocidad u otro sensor?\tCannot make sense of what it sends: another speed or another sensor?\n"
     ;
 
 static const char blob_en_aos_dibujo_lang[] =
@@ -10509,6 +10512,8 @@ static const char blob_de__sistema_lang[] =
     "SEGUNDO PIN\tZWEITER PIN\n"
     "El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos (ECHO, DT).\tDer erste ist Trigger oder Takt (TRIG, SCK); der zweite Echo oder Daten (ECHO, DT).\n"
     "TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.\tTX des Sensors an RX des Ports und RX an TX; die Geschwindigkeit gibt der Sensor vor.\n"
+    "No se entiende lo que manda: ¿otra velocidad u otro sensor?\tWas er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?\n"
+    "Es otro chip\tAnderer Chip\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =
@@ -12229,7 +12234,7 @@ static const char blob_de_aos_datalog_lang[] =
     "Módulos\tModule\n"
     "Cada lectura va a su archivo en %s de la tarjeta (se bajan desde el portal, en Datalog). Mientras registra, la app sigue con la pantalla en otra cosa y arranca sola con la placa; en pausa no.\tJede Messung kommt in ihre eigene Datei in %s auf der Karte (Download im Portal unter Datalog). Während der Aufzeichnung läuft die App auch mit anderem auf dem Bildschirm weiter und startet von selbst mit der Platine; pausiert nicht.\n"
     "Todavía no hay lecturas\tNoch keine Messungen\n"
-    "Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor I2C, SPI o 1-Wire, una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.\tJede Messung ist ein Wert, der mit Datum und Uhrzeit in eine CSV kommt: ein I2C-, SPI- oder 1-Wire-Sensor, ein ADS1115-Eingang oder ein Pin der Stiftleiste, in Abständen oder zu festen Uhrzeiten, auf Wunsch mit Alarmen.\n"
+    "Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor (I2C, SPI, 1-Wire, de pines o por puerto serie), una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.\tJede Messung ist ein Wert, der mit Datum und Uhrzeit in eine CSV kommt: ein Sensor (I2C, SPI, 1-Wire, an Pins oder seriell), ein ADS1115-Eingang oder ein Pin der Stiftleiste, in Abständen oder zu festen Uhrzeiten, auf Wunsch mit Alarmen.\n"
     "Agregar una lectura\tMessung hinzufügen\n"
     "ALTA\tHOCH\n"
     "BAJA\tNIEDRIG\n"
@@ -12308,6 +12313,7 @@ static const char blob_de_aos_datalog_lang[] =
     "Una punta de la termocupla toca VCC o GND\tEin Thermoelementdraht berührt VCC oder GND\n"
     "La RTD está en corto\tDer RTD ist kurzgeschlossen\n"
     "Falta %s= en la línea del módulo\tIn der Modulzeile fehlt %s=\n"
+    "No se entiende lo que manda: ¿otra velocidad u otro sensor?\tWas er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?\n"
     ;
 
 static const char blob_de_aos_dibujo_lang[] =
@@ -15644,7 +15650,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2680, 48, files_en, 49 },
-    { "de", "Deutsch", 2680, 48, files_de, 49 },
+    { "en", "English", 2682, 48, files_en, 49 },
+    { "de", "Deutsch", 2682, 48, files_de, 49 },
 };
 const int aos_lang_pack_count = 2;

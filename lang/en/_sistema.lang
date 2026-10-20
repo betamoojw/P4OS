@@ -7654,3 +7654,4 @@ SEGUNDO PIN	SECOND PIN
 El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos (ECHO, DT).	The first is the trigger or the clock (TRIG, SCK); the second, the echo or the data (ECHO, DT).
 TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	The sensor's TX to the port's RX and RX to TX; the sensor sets the speed.
 No se entiende lo que manda: ¿otra velocidad u otro sensor?	Cannot make sense of what it sends: another speed or another sensor?
+Es otro chip	Another chip

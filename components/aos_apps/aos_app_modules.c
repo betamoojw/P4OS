@@ -85,7 +85,7 @@ static struct {
 /* The form's choices: a group, a sensor chip in it (0 .. chips-1) or RS485,
  * the port (or a free pin), the address (an SPI chip's CS, a GPIO chip's
  * second pin) and an option (shunt, range, speed) */
-static struct { int cat, kind, port, addr, opt; } F;
+static struct { int cat, kind, port, addr, opt, want; } F;   /* want: the address to keep, -1 none */
 #define F_RS485 aos_sensor_chip_count()
 #define AOS_SENSOR_CHIPS_FORM 192
 
@@ -1059,13 +1059,23 @@ static void form_line(char *out, size_t n, bool *ok)
 }
 
 static void form_build(void);
-static void f_kind_cb(lv_event_t *e) { F.kind = (int)(intptr_t)lv_event_get_user_data(e); F.addr = 0; F.opt = F.kind == F_RS485 ? 0 : (aos_sensor_chip_at(F.kind)->gain ? 1 : 0); form_build(); }
+/* The chip's index of the address the form was opened for, else its first */
+static int want_addr(void)
+{
+    if (F.kind == F_RS485 || F.want < 0) return 0;
+    const aos_sensor_chip_t *c = aos_sensor_chip_at(F.kind);
+    for (int i = 0; i < c->naddr; i++) if (c->addrs[i] == F.want) return i;
+    return 0;
+}
+
+static void f_kind_cb(lv_event_t *e) { F.kind = (int)(intptr_t)lv_event_get_user_data(e); F.addr = want_addr(); F.opt = F.kind == F_RS485 ? 0 : (aos_sensor_chip_at(F.kind)->gain ? 1 : 0); form_build(); }
 static void f_cat_cb(lv_event_t *e)
 {
     F.cat = (int)(intptr_t)lv_event_get_user_data(e);
     int ids[AOS_SENSOR_CHIPS_FORM];
     F.kind = chips_of_cat(F.cat, ids, AOS_SENSOR_CHIPS_FORM) ? ids[0] : F_RS485;
-    F.addr = F.port = 0;
+    F.port = 0;
+    F.addr = want_addr();
     F.opt = F.kind == F_RS485 ? 0 : (aos_sensor_chip_at(F.kind)->gain ? 1 : 0);
     form_build();
 }
@@ -1230,27 +1240,54 @@ line:
 }
 
 /* user data: -1 opens the form fresh, else a candidate's index */
+/* The form on a chip already chosen, at its port and address: a candidate's,
+ * or a detected sensor that is something else */
+static void form_preset(const char *id, const char *port, uint8_t addr)
+{
+    for (int i = 0; i < aos_sensor_chip_count(); i++)
+        if (!strcmp(aos_sensor_chip_at(i)->id, id)) F.kind = i;
+    const aos_sensor_chip_t *c = aos_sensor_chip_at(F.kind);
+    F.want = addr;
+    F.addr = want_addr();
+    const aos_io_port_t *pts[AOS_IO_PORT_MAX];
+    int np = ports_of_kind(AOS_PORT_I2C, pts, AOS_IO_PORT_MAX);
+    for (int i = 0; i < np; i++) if (!strcmp(pts[i]->name, port)) F.port = i;
+    if (c->gain) F.opt = 1;
+    F.cat = aos_sensor_chip_cat(c);
+}
+
 static void add_cb(lv_event_t *e)
 {
     int ci = (int)(intptr_t)lv_event_get_user_data(e);
     memset(&F, 0, sizeof F);
+    F.want = -1;
     aos_sensor_cand_t cand[AOS_SENSOR_CAND_MAX];
     int nc = ci >= 0 ? aos_sensor_candidates(cand, AOS_SENSOR_CAND_MAX) : 0;
     if (ci >= 0 && ci < nc) {
-        for (int i = 0; i < aos_sensor_chip_count(); i++)
-            if (!strcmp(aos_sensor_chip_at(i)->id, cand[ci].chip)) F.kind = i;
-        const aos_sensor_chip_t *c = aos_sensor_chip_at(F.kind);
-        for (int i = 0; i < c->naddr; i++) if (c->addrs[i] == cand[ci].addr) F.addr = i;
-        const aos_io_port_t *pts[AOS_IO_PORT_MAX];
-        int np = ports_of_kind(AOS_PORT_I2C, pts, AOS_IO_PORT_MAX);
-        for (int i = 0; i < np; i++) if (!strcmp(pts[i]->name, cand[ci].port)) F.port = i;
-        if (c->gain) F.opt = 1;
-        F.cat = aos_sensor_chip_cat(c);
+        form_preset(cand[ci].chip, cand[ci].port, cand[ci].addr);
     } else {
         int ids[AOS_SENSOR_CHIPS_FORM];
         F.cat = AOS_SENSOR_CAT_TEMP;
         F.kind = chips_of_cat(F.cat, ids, AOS_SENSOR_CHIPS_FORM) ? ids[0] : F_RS485;
     }
+    form_build();
+}
+
+/* "Es otro chip": a detected sensor declared as the chip the user picks */
+static void other_cb(lv_event_t *e)
+{
+    msens_t s;
+    if (!msens_at((int)(intptr_t)lv_event_get_user_data(e), &s)) return;
+    memset(&F, 0, sizeof F);
+    const aos_sensor_chip_t *c = aos_sensor_chip_find(s.name);
+    if (!c) {
+        char low[16];
+        size_t k = 0;
+        for (const char *p = s.chip; *p && k + 1 < sizeof low; p++) low[k++] = (char)(*p >= 'A' && *p <= 'Z' ? *p + 32 : *p);
+        low[k] = 0;
+        c = aos_sensor_chip_find(low);
+    }
+    form_preset(c ? c->id : "", s.port, s.addr);
     form_build();
 }
 
@@ -1506,6 +1543,12 @@ static void sensor_card(lv_obj_t *parent, int i, const msens_t *s, int32_t w)
     U.sstate[i] = aos_label(c, "", aos_font_caption, AOS_C_DIM);
     lv_obj_set_width(U.sstate[i], w - 36);
     lv_label_set_long_mode(U.sstate[i], LV_LABEL_LONG_MODE_WRAP);
+    const aos_io_port_t *p = aos_io_port_find(s->port);
+    if (!s->declared && p && p->kind == AOS_PORT_I2C) {
+        /* autodetect can be wrong where chips look alike: the user says */
+        lv_obj_t *r = chips_row(c, w - 36);
+        pill(r, AOS_SYM_PENCIL, _("Es otro chip"), AOS_C_CARD2, other_cb, (void *)(intptr_t)i);
+    }
 }
 
 static void cand_rows(lv_obj_t *parent, int32_t w)

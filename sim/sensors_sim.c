@@ -36,12 +36,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum { D_BME280, D_BMP280, D_SHT3X, D_SHT4X, D_AHT20, D_BH1750, D_INA219, D_INA226, D_ADS1115, D_N };
+enum { D_BME280, D_BMP280, D_SHT3X, D_SHT4X, D_AHT20, D_BH1750, D_INA219, D_INA226, D_ADS1115, D_AHT10, D_N };
 
 static const struct { const char *name; uint8_t addr; } KIND[D_N] = {
     [D_BME280] = { "bme280", 0x76 }, [D_BMP280] = { "bmp280", 0x76 }, [D_SHT3X] = { "sht31", 0x44 },
     [D_SHT4X] = { "sht4x", 0x44 },   [D_AHT20] = { "aht20", 0x38 },   [D_BH1750] = { "bh1750", 0x23 },
     [D_INA219] = { "ina219", 0x40 }, [D_INA226] = { "ina226", 0x40 }, [D_ADS1115] = { "ads1115", 0x48 },
+    [D_AHT10] = { "aht10", 0x38 },
 };
 
 typedef struct {
@@ -380,7 +381,8 @@ static bool aht_xfer(emu_t *d, const uint8_t *w, size_t wn, uint8_t *r, size_t r
     if (!rn) return true;
     bool busy = d->resp_n && now < d->resp_ms;
     d->resp[0] = (uint8_t)((busy ? 0x80 : 0) | 0x10 | (d->cal ? 0x08 : 0));
-    d->resp[6] = crc8(d->resp, 6);
+    /* an AHT10 has no CRC: its seventh byte is whatever is on the bus */
+    d->resp[6] = d->kind == D_AHT10 ? (uint8_t)(0x5A ^ d->resp[5]) : crc8(d->resp, 6);
     for (size_t i = 0; i < rn; i++) r[i] = i < 7 ? d->resp[i] : 0xFF;
     return true;
 }
@@ -611,7 +613,7 @@ bool sim_sensors_xfer(uint8_t addr, const uint8_t *w, size_t wn, uint8_t *r, siz
         case D_BME280: case D_BMP280: ok = bme_xfer(d, w, wn, r, rn); break;
         case D_SHT3X: ok = sht3_xfer(d, w, wn, r, rn); break;
         case D_SHT4X: ok = sht4_xfer(d, w, wn, r, rn); break;
-        case D_AHT20: ok = aht_xfer(d, w, wn, r, rn); break;
+        case D_AHT20: case D_AHT10: ok = aht_xfer(d, w, wn, r, rn); break;
         case D_BH1750: ok = bh_xfer(d, w, wn, r, rn); break;
         default: ok = reg16_xfer(d, w, wn, r, rn); break;
         }

@@ -28,7 +28,10 @@
 /* A pack bigger than this is a corrupt or hostile file, not a translation.
  * The system catalog is ~11 KB of Spanish today; 256 KB is room to grow into
  * languages that are much wordier without risking the heap on a bad card. */
-#define CATALOG_MAX_BYTES  (256 * 1024)
+/* _sistema.lang passed 256 KB with the 112 sensors' texts (2026-10-19) and
+ * was dropped without a word: the board went on with the firmware's
+ * strings only. The blob and its index go to PSRAM (malloc over 1 KB). */
+#define CATALOG_MAX_BYTES  (1024 * 1024)
 
 typedef struct {
     uint32_t hash;
@@ -285,6 +288,8 @@ static char *slurp(const char *path, long *out_len)
     }
     long len = ftell(f);
     if (len < 0 || len > CATALOG_MAX_BYTES) {
+        if (len > CATALOG_MAX_BYTES)
+            aos_hal_log("i18n", "%s is %ld bytes, more than %d: not read", path, len, CATALOG_MAX_BYTES);
         fclose(f);
         return NULL;
     }

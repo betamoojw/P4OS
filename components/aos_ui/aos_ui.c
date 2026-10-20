@@ -1285,10 +1285,21 @@ void aos_ui_request_toast(const char *text)
 static void apply_language(const char *code)
 {
     /* text is copied into the objects, and apps may keep pointers into the
-     * catalogue about to be freed: every app is closed (as on the watch) */
+     * catalogue about to be freed: every app is closed (as on the watch).
+     * One working in the background (Datalog logging) starts again hidden in
+     * the new language: closing it for good stopped a log after every
+     * change of language (2026-10-19). */
+    char again[AOS_MAX_APPS][48];
+    int na = 0;
     aos_ui_home();
-    for (int i = 0; i < AOS_MAX_APPS; i++) if (s_used[i]) destroy_app(&s_apps[i]);
+    for (int i = 0; i < AOS_MAX_APPS; i++) {
+        if (!s_used[i]) continue;
+        if (s_apps[i].running && (s_apps[i].desc.flags & AOS_APP_FLAG_BACKGROUND) && s_apps[i].desc.id)
+            snprintf(again[na++], sizeof again[0], "%s", s_apps[i].desc.id);
+        destroy_app(&s_apps[i]);
+    }
     aos_i18n_set(code);
+    for (int i = 0; i < na; i++) aos_ui_start_hidden(again[i]);
     aos_home_rebuild();
     aos_statusbar_layout();
     aos_panels_layout();

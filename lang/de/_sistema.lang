@@ -3727,7 +3727,6 @@ GPIO%d está en %s y en %s	GPIO%d ist in %s und in %s
 %s está en %s, que no está declarado	%s ist an %s, das nicht deklariert ist
 
 #: components/aos_apps/aos_app_modules.c:345
-%s es un sensor I2C y %s no es un puerto I2C	%s ist ein I2C-Sensor und %s kein I2C-Port
 
 #: components/aos_apps/aos_app_modules.c:348
 Línea %d: %s	Zeile %d: %s
@@ -7655,3 +7654,4 @@ El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos 
 TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	TX des Sensors an RX des Ports und RX an TX; die Geschwindigkeit gibt der Sensor vor.
 No se entiende lo que manda: ¿otra velocidad u otro sensor?	Was er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?
 Es otro chip	Anderer Chip
+%s va en un puerto %s, y %s no lo es	%s gehört an einen %s-Port, und %s ist keiner

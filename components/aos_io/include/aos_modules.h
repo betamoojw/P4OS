@@ -36,7 +36,8 @@ typedef enum {
     /* warnings: it loads, but something will not work */
     AOS_MOD_W_PIN_TWICE,        /* gpio is in ports a and b */
     AOS_MOD_W_NO_PORT,          /* module a is on port b, which is not declared */
-    AOS_MOD_W_NOT_I2C,          /* sensor module a is on b, which is not an I2C port */
+    AOS_MOD_W_NOT_I2C,          /* sensor module a is on b, which is not the kind of port it
+                                 * goes on (gpio: AOS_PORT_I2C, _SPI, _GPIO or _UART) */
 } aos_mod_code_t;
 
 typedef struct {

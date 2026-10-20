@@ -1137,7 +1137,6 @@ static const char blob_en__sistema_lang[] =
     "no es ni «port» ni «module»\tit's neither «port» nor «module»\n"
     "GPIO%d está en %s y en %s\tGPIO%d is in %s and in %s\n"
     "%s está en %s, que no está declarado\t%s is on %s, which isn't declared\n"
-    "%s es un sensor I2C y %s no es un puerto I2C\t%s is an I2C sensor and %s isn't an I2C port\n"
     "Línea %d: %s\tLine %d: %s\n"
     "en un puerto\tin a port\n"
     "tomado\ttaken\n"
@@ -2696,6 +2695,7 @@ static const char blob_en__sistema_lang[] =
     "TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.\tThe sensor's TX to the port's RX and RX to TX; the sensor sets the speed.\n"
     "No se entiende lo que manda: ¿otra velocidad u otro sensor?\tCannot make sense of what it sends: another speed or another sensor?\n"
     "Es otro chip\tAnother chip\n"
+    "%s va en un puerto %s, y %s no lo es\t%s goes on a %s port, and %s isn't one\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -8955,7 +8955,6 @@ static const char blob_de__sistema_lang[] =
     "no es ni «port» ni «module»\tweder «port» noch «module»\n"
     "GPIO%d está en %s y en %s\tGPIO%d ist in %s und in %s\n"
     "%s está en %s, que no está declarado\t%s ist an %s, das nicht deklariert ist\n"
-    "%s es un sensor I2C y %s no es un puerto I2C\t%s ist ein I2C-Sensor und %s kein I2C-Port\n"
     "Línea %d: %s\tZeile %d: %s\n"
     "en un puerto\tin einem Port\n"
     "tomado\tbelegt\n"
@@ -10514,6 +10513,7 @@ static const char blob_de__sistema_lang[] =
     "TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.\tTX des Sensors an RX des Ports und RX an TX; die Geschwindigkeit gibt der Sensor vor.\n"
     "No se entiende lo que manda: ¿otra velocidad u otro sensor?\tWas er sendet, ergibt keinen Sinn: andere Geschwindigkeit oder anderer Sensor?\n"
     "Es otro chip\tAnderer Chip\n"
+    "%s va en un puerto %s, y %s no lo es\t%s gehört an einen %s-Port, und %s ist keiner\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =

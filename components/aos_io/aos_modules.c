@@ -75,7 +75,7 @@ void aos_modules_check(const char *text, size_t len, aos_mod_check_t *o)
     lport_t *ports = calloc(AOS_IO_PORT_MAX + 4, sizeof *ports);
     if (!ports) return;
     int np = 0, line_no = 0;
-    struct { char name[24], port[24]; int line; bool sensor; } mods[AOS_IO_MODULE_MAX + 4];
+    struct { char name[24], port[24]; int line; int sensor; } mods[AOS_IO_MODULE_MAX + 4];
     int nm = 0;
     for (size_t pos = 0; pos < len; ) {
         char line[160];
@@ -116,7 +116,14 @@ void aos_modules_check(const char *text, size_t len, aos_mod_check_t *o)
             char chip[24] = "";
             const char *cp = strstr(c + off, "chip=");
             if (cp) sscanf(cp + 5, "%23[^ \t#]", chip);
-            mods[nm].sensor = aos_sensor_chip_find(chip[0] ? chip : name) != NULL;
+            /* the port kind its chip goes on: I2C, SPI, a GPIO (1-Wire and pin
+             * sensors) or a UART; -1 not a sensor */
+            const aos_sensor_chip_t *sc = aos_sensor_chip_find(chip[0] ? chip : name);
+            mods[nm].sensor = !sc ? -1
+                            : sc->bus == AOS_SENSOR_BUS_SPI ? AOS_PORT_SPI
+                            : sc->bus == AOS_SENSOR_BUS_UART ? AOS_PORT_UART
+                            : sc->bus == AOS_SENSOR_BUS_ONEWIRE || sc->bus == AOS_SENSOR_BUS_GPIO ? AOS_PORT_GPIO
+                            : AOS_PORT_I2C;
             nm++;
         }
     }
@@ -135,7 +142,7 @@ void aos_modules_check(const char *text, size_t len, aos_mod_check_t *o)
         int pk = -1;
         for (int j = 0; j < np; j++) if (!strcmp(ports[j].name, mods[i].port)) pk = ports[j].kind;
         if (pk < 0) warn(o, AOS_MOD_W_NO_PORT, mods[i].line, -1, mods[i].name, mods[i].port);
-        else if (mods[i].sensor && pk != AOS_PORT_I2C) warn(o, AOS_MOD_W_NOT_I2C, mods[i].line, -1, mods[i].name, mods[i].port);
+        else if (mods[i].sensor >= 0 && pk != mods[i].sensor) warn(o, AOS_MOD_W_NOT_I2C, mods[i].line, mods[i].sensor, mods[i].name, mods[i].port);
     }
     free(ports);
 }

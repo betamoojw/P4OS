@@ -3727,7 +3727,6 @@ GPIO%d está en %s y en %s	GPIO%d is in %s and in %s
 %s está en %s, que no está declarado	%s is on %s, which isn't declared
 
 #: components/aos_apps/aos_app_modules.c:345
-%s es un sensor I2C y %s no es un puerto I2C	%s is an I2C sensor and %s isn't an I2C port
 
 #: components/aos_apps/aos_app_modules.c:348
 Línea %d: %s	Line %d: %s
@@ -7655,3 +7654,4 @@ El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos 
 TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	The sensor's TX to the port's RX and RX to TX; the sensor sets the speed.
 No se entiende lo que manda: ¿otra velocidad u otro sensor?	Cannot make sense of what it sends: another speed or another sensor?
 Es otro chip	Another chip
+%s va en un puerto %s, y %s no lo es	%s goes on a %s port, and %s isn't one

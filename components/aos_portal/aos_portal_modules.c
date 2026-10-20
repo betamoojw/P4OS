@@ -123,7 +123,12 @@ static void fmt_msg(const aos_mod_msg_t *m, char *out, size_t n)
     case AOS_MOD_E_UNKNOWN: snprintf(t, sizeof t, "%s", _("no es ni «port» ni «module»")); break;
     case AOS_MOD_W_PIN_TWICE: snprintf(t, sizeof t, _("GPIO%d está en %s y en %s"), m->gpio, m->a, m->b); break;
     case AOS_MOD_W_NO_PORT: snprintf(t, sizeof t, _("%s está en %s, que no está declarado"), m->a, m->b); break;
-    case AOS_MOD_W_NOT_I2C: snprintf(t, sizeof t, _("%s es un sensor I2C y %s no es un puerto I2C"), m->a, m->b); break;
+    case AOS_MOD_W_NOT_I2C: {
+        static const char *const K[] = { "UART", "I2C", "SPI", "GPIO" };
+        snprintf(t, sizeof t, _("%s va en un puerto %s, y %s no lo es"), m->a,
+                 m->gpio >= 0 && m->gpio < 4 ? K[m->gpio] : "I2C", m->b);
+        break;
+    }
     default: scpy(t, sizeof t, m->raw); break;
     }
     if (m->line > 0) snprintf(out, n, _("Línea %d: %s"), m->line, t);

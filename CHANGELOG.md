@@ -37,10 +37,11 @@
 - **Pulses and counts in the HAL** (`aos_io.h`): edges timed by an
   interrupt, a pulse out, bits clocked in, and edges counted by the PCNT,
   for the DHT, HC-SR04, HX711 and pulse sensors and for apps.
-- **Bigger firmware slots.** The two OTA slots went from 8 MB to 9.44 MB
-  each, taking the 2.9 MB that were unassigned at the end of the flash
-  (storage and coredump moved up). An update over Wi-Fi still works on the
-  old table; the bigger slots need one full flash by serial
+- **The OTA slots fit in the first 16 MB.** The flash is mapped with 24-bit
+  addresses, so an image past 16 MB fails its verification; the old
+  `ota_1` reached 128 KB beyond that line. Both slots are now 7.94 MB, the
+  most that fits. An update over Wi-Fi still works on the old table while
+  the image is small; the new table needs one full flash by serial
   (`p4os-rev1_3-full.zip`, docs/BUILDING.md).
 
 ## 0.19.0 — 2026-10-19

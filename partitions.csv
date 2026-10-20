@@ -1,17 +1,20 @@
 # P4OS, 32 MB flash. Two app slots for OTA, a FAT store for when there is
 # no card, and a coredump the portal can serve.
 #
-# 2026-10-19: the slots went from 8 MB to 9.44 MB (0x970000) each, taking the
-# 2.9 MB that were left unassigned at the end; storage and coredump moved
-# up. The firmware with the 112 sensor drivers was 7.5 MB, 6 % short of the
-# old 8 MB. The next room, if it gets tight again, is storage: nothing
-# mounts it today, and 12M -> 8M gives each slot 2 MB more. A new table
-# goes on by serial (esptool), never by OTA (docs/BUILDING.md).
+# Both app slots must lie whole in the first 16 MB: the cache maps the flash
+# with 24-bit addresses, and an image past 0x1000000 fails its verification
+# ("flash_mmap: ... out of range for 24bit flash mapping", 2026-10-19). Mapping
+# beyond that is CONFIG_BOOTLOADER_CACHE_32BIT_ADDR_QUAD_FLASH, experimental
+# in this IDF. So the slots are 0x7F0000 (7.94 MB) each, the most that fits;
+# until 2026-10-19 they were 8 MB and ota_1's last 128 KB were past 16 MB.
+# Growing them needs that 32-bit mapping or a smaller firmware; storage
+# (nothing mounts it) does not help, being above 16 MB. A new table goes on
+# by serial (esptool), never by OTA (docs/BUILDING.md).
 # Name,     Type, SubType,  Offset,     Size
 nvs,        data, nvs,      0x9000,     0x6000
 otadata,    data, ota,      0xf000,     0x2000
 phy_init,   data, phy,      0x11000,    0x1000
-ota_0,      app,  ota_0,    0x20000,    0x970000
-ota_1,      app,  ota_1,    0x990000,   0x970000
-storage,    data, fat,      0x1300000,  12M
-coredump,   data, coredump, 0x1F00000,  1M
+ota_0,      app,  ota_0,    0x20000,    0x7F0000
+ota_1,      app,  ota_1,    0x810000,   0x7F0000
+storage,    data, fat,      0x1000000,  12M
+coredump,   data, coredump, 0x1C00000,  1M

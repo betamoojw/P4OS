@@ -469,6 +469,21 @@ Que necesitan la mano del usuario o equipos:
     del registro 0xF0), 24 °C, 53 %, 1016,9 hPa, gas 170 -> 200 kΩ
     calentándose. Con un algodón con alcohol cerca el gas bajó a ~112 kΩ
     y volvió solo (112 -> 174 kΩ en un par de minutos).
+  - MPU-9250 en 0x68 (2026-10-21): reconocido solo (0x71) con su AK8963
+    detrás, 11 valores. Moviéndolo, un falso contacto lo reiniciaba: volvía
+    despierto, a ±2 g / ±250 °/s y con el paso a la brújula cerrado, y se
+    leía 3,3 g en reposo con la brújula congelada. Arreglado (d171eba: cada
+    lectura mira los rangos y el bypass) y visto en la placa: reinicios
+    durante las pruebas, cada uno con una sola lectura vacía y la siguiente
+    bien. La primera lectura después de configurarlo daba ~4 g (muestra
+    vieja en los registros): arreglado (0ffd07b). Inclinado para todos
+    lados: X e Y de -1 a +1 g, |a| en reposo 0,997 g (0,96-1,04 en 136
+    lecturas), los tres ejes del giróscopo respondiendo (hasta 169 °/s), la
+    brújula cambiando con la orientación. No se pudo girar plano una vuelta
+    entera por los cables: el rumbo queda sin probar (y sin calibrar el
+    hierro duro da un arco, no los 360°). Mientras el bus tenía falsos
+    contactos el portal dejó de contestar 1-2 s varias veces (el servicio
+    no tiene el lock durante la lectura): sin explicar todavía.
   - PCA9685 en 0x40: Bus lo nombra, no queda como candidato a sensor.
     El 2026-10-20, con una fuente de 5 V en V+ y cuatro servos en las
     salidas 0-3: la app PWM los movió uno por uno (1000/2000/1500 µs), cada

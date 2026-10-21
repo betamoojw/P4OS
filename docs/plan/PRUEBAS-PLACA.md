@@ -465,6 +465,10 @@ Que necesitan la mano del usuario o equipos:
     repetir con el banco ordenado.
   - ADS1115 en 0x49 (ADDR a VCC), junto al PCF8591: 3,277 V en A0 (3V3),
     0 en A1 (GND).
+  - BME688 en 0x76 (2026-10-21): reconocido solo como BME688 (variante
+    del registro 0xF0), 24 °C, 53 %, 1016,9 hPa, gas 170 -> 200 kΩ
+    calentándose. Con un algodón con alcohol cerca el gas bajó a ~112 kΩ
+    y volvió solo (112 -> 174 kΩ en un par de minutos).
   - PCA9685 en 0x40: Bus lo nombra, no queda como candidato a sensor.
     El 2026-10-20, con una fuente de 5 V en V+ y cuatro servos en las
     salidas 0-3: la app PWM los movió uno por uno (1000/2000/1500 µs), cada

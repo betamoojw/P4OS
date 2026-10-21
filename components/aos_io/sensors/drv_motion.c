@@ -246,6 +246,10 @@ static int mpu_init(sens_io_t *io, sens_slot_t *s)
         p->mag = ak8963_start(b, p);
         if (p->mag && (id == 0x70 || id == 0x72)) sens_scpy(s->pub.chip, sizeof s->pub.chip, "MPU-9250");
     }
+    /* The data registers still hold what was sampled at the factory ranges
+     * until a sample passes the new filter: read at once, a board at rest
+     * said 4 g (seen on the board after a reset, 2026-10-21) */
+    aos_hal_sleep_ms(30);
     return R_OK;
 }
 

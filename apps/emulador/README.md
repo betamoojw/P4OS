@@ -124,7 +124,7 @@ up to date there from the buffer on screen, and flips.
 
 **A core** is a static library of its own (`cores/emu_cores.cmake`,
 `emu_core_board_lib()`), compiled with its own flags (C, C++, assembly,
--O2), then linked into its module `build/modules/<dir>.so`; the app's own
+-O2), then linked into its module `build/<profile>/modules/<dir>.so`; the app's own
 files go through `project_so()`'s -Os. A core exports only its
 `emu_core_<id>` tables. In the simulator the cores are linked into the app
 (`sim.cmake`). `EMU_ONLY="nes gba"` builds just those.
@@ -179,7 +179,7 @@ Since the firmware's commit `8bdf0da` (docs/APPS-P4.md, "Emulators"):
   `emu_module_abi()` and `emu_module_core(i)` (generated from
   `cores/emu_module.c.in`); one built against another `EMU_CORE_ABI` is
   refused. `tools/build_apps.sh` builds and checks them
-  (`build/modules/*.so`) and `tools/install_apps.sh` installs them.
+  (`build/<profile>/modules/*.so`) and `tools/install_apps.sh` installs them.
 - **The GBA's recompiler:** blocks of the PSRAM heap and
   `aos_hal_code_sync` (setting `jit` in the menu, on by default).
 - **A player on the keyboard:** `aos_hal_usb_kbd_held`. The arrows, X = A,

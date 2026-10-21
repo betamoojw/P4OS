@@ -37,21 +37,22 @@ typedef struct {
     bool watch;      /* safe to turn into an input with pull-up */
 } hdr_t;
 
-/* J3, from the schematic and the Waveshare docs. Pin 1 = 5V, pin 2 = 3V3. */
+/* J3: convert the original LCD-5 pin numbers for the selected board. */
 static const hdr_t HDR[] = {
-    { 7, 4, "I2C SDA (board bus)", false },   { 8, 6, "I2C SCL (board bus)", false },
-    { 37, 7, "UART0 TX (console)", false },   { 2, 8, "free (touch INT if R108)", true },
-    { 38, 9, "UART0 RX (console)", false },   { 5, 11, "free (JTAG MTDO)", true },
-    { 3, 12, "free (JTAG MTCK)", true },      { 4, 14, "free (JTAG MTDI)", true },
-    { 21, 15, "free ADC1_CH5", true },        { 28, 16, "free", true },
-    { 22, 17, "free ADC1_CH6", true },        { 29, 20, "free", true },
-    { 24, 21, "USB-JTAG D- (free if unused)", true }, { 30, 22, "free", true },
-    { 25, 23, "USB-JTAG D+ (free if unused)", true }, { 31, 24, "free", true },
-    { 34, 28, "strapping JTAG sel", true },   { 35, 30, "BOOT (strapping)", false },
-    { 32, 31, "free", true },                 { 49, 32, "free ADC2_CH0", true },
-    { 50, 34, "free ADC2_CH1", true },        { 46, 35, "VO4 domain", true },
-    { 51, 36, "free ADC2_CH2", true },        { 47, 37, "VO4 domain", true },
-    { 52, 38, "free ADC2_CH3", true },        { 48, 39, "VO4 domain", true },
+    { 7, AOS_HEADER_PIN(4), "I2C SDA (board bus)", false },   { 8, AOS_HEADER_PIN(6), "I2C SCL (board bus)", false },
+    { 37, AOS_HEADER_PIN(7), "UART0 TX (console)", false },
+    { 2, AOS_HEADER_PIN(8), AOS_BOARD_ID == 5 ? "free (touch INT if R108)" : "free", true },
+    { 38, AOS_HEADER_PIN(9), "UART0 RX (console)", false },   { 5, AOS_HEADER_PIN(11), "free (JTAG MTDO)", true },
+    { 3, AOS_HEADER_PIN(12), "free (JTAG MTCK)", true },      { 4, AOS_HEADER_PIN(14), "free (JTAG MTDI)", true },
+    { 21, AOS_HEADER_PIN(15), "free ADC1_CH5", true },        { 28, AOS_HEADER_PIN(16), "free", true },
+    { 22, AOS_HEADER_PIN(17), "free ADC1_CH6", true },        { 29, AOS_HEADER_PIN(20), "free", true },
+    { 24, AOS_HEADER_PIN(21), "USB-JTAG D- (free if unused)", true }, { 30, AOS_HEADER_PIN(22), "free", true },
+    { 25, AOS_HEADER_PIN(23), "USB-JTAG D+ (free if unused)", true }, { 31, AOS_HEADER_PIN(24), "free", true },
+    { 34, AOS_HEADER_PIN(28), "strapping JTAG sel", true },   { 35, AOS_HEADER_PIN(30), "BOOT (strapping)", false },
+    { 32, AOS_HEADER_PIN(31), "free", true },                 { 49, AOS_HEADER_PIN(32), "free ADC2_CH0", true },
+    { 50, AOS_HEADER_PIN(34), "free ADC2_CH1", true },        { 46, AOS_HEADER_PIN(35), "VO4 domain", true },
+    { 51, AOS_HEADER_PIN(36), "free ADC2_CH2", true },        { 47, AOS_HEADER_PIN(37), "VO4 domain", true },
+    { 52, AOS_HEADER_PIN(38), "free ADC2_CH3", true },        { 48, AOS_HEADER_PIN(39), "VO4 domain", true },
 };
 #define NHDR (sizeof HDR / sizeof HDR[0])
 
@@ -92,7 +93,8 @@ static int cmd_gpio(int argc, char **argv)
     if (!strcmp(sub, "map")) {
         printf("pin gpio  note\n");
         for (int i = 0; i < NHDR; i++) printf("%3d  %2d   %s\n", HDR[i].pin, HDR[i].gpio, HDR[i].note);
-        printf("5V: pins 1,3   3V3: pins 2,18   GND: 5,10,13,19,26,29,33,40   USB HS D-/D+: 25/27\n");
+        printf("5V: %d,%d  3V3: %d,%d  GND example: %d  USB HS D-/D+: %s\n",
+               AOS_HEADER_PIN(1), AOS_HEADER_PIN(3), AOS_HEADER_PIN(2), AOS_HEADER_PIN(18), AOS_HEADER_PIN(5), AOS_USB_HS_PINS);
         return 0;
     }
 
@@ -157,7 +159,7 @@ static int cmd_gpio(int argc, char **argv)
     if (!strcmp(sub, "vo4")) {
         int g[3] = { 46, 47, 48 };
         for (int i = 0; i < 3; i++) { gpio_reset_pin(g[i]); gpio_set_direction(g[i], GPIO_MODE_OUTPUT); gpio_set_level(g[i], 1); }
-        bench_say("GPIO46/47/48 high: measure header pins 35, 37, 39 against GND (expect 3.3 V; SD mounted=%d)", sd_mounted());
+        bench_say("GPIO46/47/48 high: measure header pins %d, %d, %d against GND (expect 3.3 V; SD mounted=%d)", AOS_HEADER_PIN(35), AOS_HEADER_PIN(37), AOS_HEADER_PIN(39), sd_mounted());
         bench_report("gpio.vo4", "driven_high=46,47,48 sd_mounted=%d", sd_mounted());
         return 0;
     }

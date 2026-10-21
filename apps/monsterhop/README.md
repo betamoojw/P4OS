@@ -23,7 +23,7 @@ cmake --build sim/build-monsterhop -j8
 cd sim && P4_SIM_SCRIPT="wait 1500; open demo.monsterhop" ./build-monsterhop/p4os_sim
 
 # the .so for the card
-tools/build_apps.sh monsterhop                # apps/monsterhop/build/monsterhop.so
+tools/build_apps.sh monsterhop                # apps/monsterhop/build/rev1_3/monsterhop.so
 ```
 
 On the card, both go in `/apps`: `monsterhop.so` and `monsterhop_p4.pak`.

@@ -1380,8 +1380,8 @@ static void ui_timer(lv_timer_t *t)
         else
             snprintf(s, sizeof s, "%s\n\n%s", a->why ? _(a->why) : "",
                      aos_hal_usb_host_on()
-                         ? _("Enchufala en el host USB: pines 25/27 del conector de atrás (High Speed, cables de menos de 15 cm) y 5 V del pin 1. Los pines 21/23 son Full Speed: alcanzan para 240 mil muestras por segundo.")
-                         : _("El host USB está apagado: prendelo en Ajustes → USB → Host USB, y enchufá la RTL-SDR en los pines 25/27 del conector de atrás."));
+                         ? _("Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.")
+                         : _("El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí."));
         lv_label_set_text(a->empty_lbl, s);
     }
     /* the engine changed the rate (listening keeps to 960 k or 1.92 M) */
@@ -1832,7 +1832,7 @@ static void rate_pick(lv_event_t *e)
 {
     rf_t *a = A;
     if (!a->info.high_speed) {
-        aos_ui_toast(_("En los pines 21/23 (Full Speed) sólo entran 240 mil muestras por segundo"), 2500);
+        aos_ui_toast(_("En USB Full Speed sólo entran 240 mil muestras por segundo"), 2500);
         return;
     }
     a->want_rate = (uint32_t)(uintptr_t)lv_event_get_user_data(e);

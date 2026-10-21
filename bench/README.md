@@ -5,6 +5,10 @@ pruebas de `docs/plan/HARDWARE.md` y deja cada resultado como una línea
 `BENCH <prueba> clave=valor ...`, que `tools/bench_run.py` junta en
 `bench/results/`.
 
+Perfiles LCD-5, LCD-7, LCD-8 y LCD-10.1: ver [hardware](../docs/BOARDS.md).
+`AOS_BOARD=lcd8 ./build.sh rev3_x lvB` selecciona la placa sin cambiar el
+perfil de silicio. Los resultados históricos son del LCD-5.
+
 ## Qué hay
 
 | Carpeta | Qué es |

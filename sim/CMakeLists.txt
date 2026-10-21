@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(p4os_sim C)
+include(${CMAKE_CURRENT_LIST_DIR}/../cmake/board.cmake)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

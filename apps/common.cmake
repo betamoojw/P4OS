@@ -11,6 +11,7 @@
 #   project_so(mi_app)
 
 set(AOS_ROOT "${CMAKE_CURRENT_LIST_DIR}/..")
+idf_build_set_property(COMPILE_DEFINITIONS "AOS_DYNAMIC_APP=1" APPEND)
 
 # Que include(elf_loader) resuelva a NUESTRA copia y no a la de
 # managed_components.

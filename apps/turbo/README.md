@@ -27,7 +27,7 @@ cmake --build sim/build-turbo -j8
 cd sim && P4_SIM_SCRIPT="wait 1500; open demo.turbo" ./build-turbo/p4os_sim
 
 # the .so for the card
-tools/build_apps.sh turbo                      # apps/turbo/build/turbo.so
+tools/build_apps.sh turbo                      # apps/turbo/build/rev1_3/turbo.so
 ```
 
 On the card both go in `/apps`: `turbo.so` and `turbo_p4.pak`. Without the

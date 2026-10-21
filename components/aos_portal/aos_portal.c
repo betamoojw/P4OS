@@ -459,7 +459,7 @@ static void api_usb(aos_httpd_req_t *r)
         if (cJSON_IsBool(umic)) aos_hal_usb_mic_enable(cJSON_IsTrue(umic));
         int want = -1, port = -1;
         for (int i = 0; m && i < 4; i++) if (!strcmp(m, M[i]) && i != AOS_HAL_USB_DISK) want = i;
-        if (pins) port = !strcmp(pins, "21/23") ? AOS_HAL_USB_HOST_HEADER : !strcmp(pins, "25/27") ? AOS_HAL_USB_HOST_OTG
+        if (pins) port = (!strcmp(pins, "21/23") || !strcmp(pins, "fs") || !strcmp(pins, AOS_USB_FS_PINS)) ? AOS_HAL_USB_HOST_HEADER : (!strcmp(pins, "25/27") || !strcmp(pins, "hs") || !strcmp(pins, AOS_USB_HS_PINS)) ? AOS_HAL_USB_HOST_OTG
                        : !strcmp(pins, "both") ? AOS_HAL_USB_HOST_BOTH : -2;
         int lay = !layout ? -1 : !strcmp(layout, "latam") ? AOS_KBD_LATAM : !strcmp(layout, "us") ? AOS_KBD_US : -2;
         bool bad = (m && want < 0) || port == -2 || lay == -2 || (host && !cJSON_IsBool(host)) ||
@@ -488,6 +488,7 @@ static void api_usb(aos_httpd_req_t *r)
     cJSON_AddBoolToObject(o, "connected", aos_hal_usb_connected());
     int hp = aos_hal_usb_host_port();
     cJSON_AddStringToObject(o, "pins", hp == AOS_HAL_USB_HOST_HEADER ? "21/23" : hp == AOS_HAL_USB_HOST_BOTH ? "both" : "25/27");
+    cJSON_AddStringToObject(o, "physical_pins", hp == AOS_HAL_USB_HOST_HEADER ? AOS_USB_FS_PINS : hp == AOS_HAL_USB_HOST_BOTH ? "both" : AOS_USB_HS_PINS);
     cJSON_AddStringToObject(o, "layout", aos_hal_usb_kbd_layout() == AOS_KBD_US ? "us" : "latam");
     cJSON_AddBoolToObject(o, "usb_audio", aos_hal_usb_audio_enabled());
     cJSON_AddBoolToObject(o, "usb_mic", aos_hal_usb_mic_enabled());
@@ -513,6 +514,7 @@ static void api_usb(aos_httpd_req_t *r)
             cJSON_AddNumberToObject(d, "class", dv[i].cls);
             cJSON_AddStringToObject(d, "speed", dv[i].speed == 2 ? "high" : dv[i].speed == 1 ? "full" : "low");
             cJSON_AddStringToObject(d, "pins", dv[i].port == AOS_HAL_USB_HOST_HEADER ? "21/23" : "25/27");
+            cJSON_AddStringToObject(d, "physical_pins", dv[i].port == AOS_HAL_USB_HOST_HEADER ? AOS_USB_FS_PINS : AOS_USB_HS_PINS);
             if (dv[i].hub_port) cJSON_AddNumberToObject(d, "hub_port", dv[i].hub_port);
             cJSON_AddStringToObject(d, "uses", dv[i].uses);
             cJSON_AddItemToArray(da, d);

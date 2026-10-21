@@ -360,3 +360,9 @@ archivo	file
 
 #: apps/rf/main/rf_src_rtl.c:40
 La RTL-SDR no respondió al abrirla	The RTL-SDR did not answer when opened
+
+Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.	Connect to the High-Speed USB host with wires shorter than 15 cm. Check data and power pins in Settings and this board’s pin map. Full Speed supports 240 thousand samples per second.
+
+El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí.	The USB host is off: enable it in Settings → USB → USB host and connect the RTL-SDR to the High-Speed port shown there.
+
+En USB Full Speed sólo entran 240 mil muestras por segundo	USB Full Speed supports only 240 thousand samples per second

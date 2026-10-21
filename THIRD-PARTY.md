@@ -130,3 +130,10 @@ endorsed by the PSF. MicroPython is Damien George's project, MIT-licensed.
 
 Home Assistant and the other products named in the apps belong to their
 owners. P4OS is not affiliated with any of them.
+## LCD-X panel initialization tables
+
+`components/aos_board/panel_commands.h` contains panel initialization sequences
+from Waveshare's `esp32_p4_wifi6_touch_lcd_x` BSP 2.0.3, commit
+`0694fdb9fa7751cc2719a9d1927de70547b89ba0`, adapted for P4OS board selection.
+Source: https://github.com/waveshareteam/Waveshare-ESP32-components/tree/0694fdb9fa7751cc2719a9d1927de70547b89ba0/bsp/esp32_p4_wifi6_touch_lcd_x
+License: Apache-2.0, reproduced in `LICENSES/Apache-2.0.txt`.

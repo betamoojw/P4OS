@@ -353,10 +353,10 @@ static void render_one(app_t *a, int q, const mp_view_t *v)
  * each, for what a render costs per pixel. */
 static void render_bench(app_t *a)
 {
-    static const struct { const char *name; int w, h; float res; } B[] = {
-        { "watch 560x640", 560, 640, 1.0f },
-        { "half 616x896", AOS_PANEL_W / 2 + 2 * LM, AOS_PANEL_H / 2 + 2 * LM, 0.5f },
-        { "full 912x1472", AOS_PANEL_W + 2 * FM, AOS_PANEL_H + 2 * FM, 1.0f },
+    const struct { const char *name; int w, h; float res; } B[] = {
+        { "watch", 560, 640, 1.0f },
+        { "half", AOS_PANEL_W / 2 + 2 * LM, AOS_PANEL_H / 2 + 2 * LM, 0.5f },
+        { "full", AOS_PANEL_W + 2 * FM, AOS_PANEL_H + 2 * FM, 1.0f },
     };
     mp_view_t v = a->view;
     back_t *b = &a->pair[Q_FULL].b[1];
@@ -375,8 +375,8 @@ static void render_bench(app_t *a)
             labels = st.labels;
         }
         float mpx = (float)B[k].w * B[k].h / 1e6f;
-        aos_hal_log("mapas", "rbench z%.2f %s: %u us (geometry %u, labels %u, %d labels), %u us per Mpx",
-                    (double)v.z, B[k].name, (unsigned)(sum / 8), (unsigned)(geo / 8), (unsigned)(lab / 8),
+        aos_hal_log("mapas", "rbench z%.2f %s %dx%d: %u us (geometry %u, labels %u, %d labels), %u us per Mpx",
+                    (double)v.z, B[k].name, B[k].w, B[k].h, (unsigned)(sum / 8), (unsigned)(geo / 8), (unsigned)(lab / 8),
                     labels, (unsigned)(sum / 8 / mpx));
     }
 }
@@ -1120,14 +1120,15 @@ static void *mp_create(aos_app_t *self, lv_obj_t *root)
         ok &= a->pair[Q_FULL].b[i].px && a->pair[Q_HALF].b[i].px;
     }
     /* the frame: what the DMA2D reads for the panel and the canvas shows */
-    a->frame = (uint16_t *)aos_hal_io_alloc(CAP_FRAME * 2);
+    const size_t frame_pixels = CAP_FRAME;
+    a->frame = (uint16_t *)aos_hal_io_alloc(frame_pixels * 2);
     ok &= a->frame != NULL;
     if (!ok) {
         mp_destroy(self, a);
         aos_ui_toast(_("Sin memoria"), 2000);
         return NULL;
     }
-    for (size_t i = 0; i < CAP_FRAME; i++) a->frame[i] = mp_565(MP_BG);
+    for (size_t i = 0; i < frame_pixels; i++) a->frame[i] = mp_565(MP_BG);
     /* what is left for decoded tiles: a third of the free PSRAM, capped */
     uint32_t li = 0, left = 0;
     aos_hal_heap_info(&li, &left);

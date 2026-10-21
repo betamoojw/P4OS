@@ -2697,6 +2697,16 @@ static const char blob_en__sistema_lang[] =
     "Es otro chip\tAnother chip\n"
     "%s va en un puerto %s, y %s no lo es\t%s goes on a %s port, and %s isn't one\n"
     "Puede ser: %s\tIt may be: %s\n"
+    "Lo usa el host USB de alta velocidad.\tUsed by the High-Speed USB host.\n"
+    "Conexión del DS18B20: GND, datos al GPIO elegido, VDD a 3V3, y una resistencia de 4,7 kΩ entre datos y 3V3. Consultá el mapa de pines de esta placa.\tDS18B20: GND, data to the selected GPIO, VDD to 3V3, and a 4.7 kΩ resistor between data and 3V3. Check this board’s pin map.\n"
+    "Masa común: la de la tira, la de la fuente y un pin GND de la placa.\tCommon ground: the strip, the power supply and a GND pin on the board.\n"
+    "Los 5 V de la tira, de una fuente aparte salvo con pocos LEDs. Consultá el mapa de la placa para ubicar 5 V y GND. Una tira larga lleva alimentación por los dos extremos.\tUse a separate 5 V supply for the strip unless it has very few LEDs. Check the board’s pin map for 5 V and GND. Power a long strip at both ends.\n"
+    "Conectá uno a i2c.ext: SDA al GPIO21, SCL al GPIO22, 3V3 y GND. Consultá los números físicos en el mapa de esta placa. Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos; también se pueden declarar en modules.txt.\tConnect to i2c.ext: SDA to GPIO21, SCL to GPIO22, 3V3 and GND. Check physical pin numbers in this board’s map. BME280, SHT3x/4x, AHT20, INA219/226 and ADS1115 are detected automatically; they can also be declared in modules.txt.\n"
+    "Pines 19 (D−) y 17 (D+)\tPins 19 (D−) and 17 (D+)\n"
+    "Pines 15 (D−) y 13 (D+), o el conector OTG\tPins 15 (D−) and 13 (D+), or the OTG connector\n"
+    "Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 39 y GND del 35.\tPendrives are read at /usb, from Files and the portal; with a hub, up to three: /usb, /usb2 and /usb3, in FAT32. A keyboard types where the on-screen one would, while it is open. The OTG connector gives no 5 V: everything goes on the 40-pin header, 5 V from pin 39 and GND from pin 35.\n"
+    "19 y 17 son el segundo controlador USB del P4, de velocidad completa (12 Mbit/s): andan a la vez que cualquier modo del conector OTG. 15 y 13 son los mismos cables que el conector OTG, de alta velocidad, con cables cortos: el host le saca el modo al OTG mientras está prendido. Los dos a la vez son dos puertos, por ejemplo un teclado en uno y un pendrive en el otro.\t19 and 17 are the P4's second USB controller, Full Speed (12 Mbit/s): they work alongside any mode of the OTG connector. 15 and 13 are the same wires as the OTG connector, High Speed, with short wires: the host takes the OTG's mode away while it is on. Both at once are two ports, say a keyboard on one and a pendrive on the other.\n"
+    "LCD-X: pin 1 = GPIO48, pin 2 = GND. Consultá el dibujo de Waveshare antes de conectar alimentación.\tLCD-X: pin 1 = GPIO48, pin 2 = GND. Check Waveshare’s diagram before connecting power.\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -5700,6 +5710,9 @@ static const char blob_en_aos_rf_lang[] =
     "No hay ninguna RTL-SDR en el host USB\tThere is no RTL-SDR on the USB host\n"
     "archivo\tfile\n"
     "La RTL-SDR no respondió al abrirla\tThe RTL-SDR did not answer when opened\n"
+    "Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.\tConnect to the High-Speed USB host with wires shorter than 15 cm. Check data and power pins in Settings and this board’s pin map. Full Speed supports 240 thousand samples per second.\n"
+    "El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí.\tThe USB host is off: enable it in Settings → USB → USB host and connect the RTL-SDR to the High-Speed port shown there.\n"
+    "En USB Full Speed sólo entran 240 mil muestras por segundo\tUSB Full Speed supports only 240 thousand samples per second\n"
     ;
 
 static const char blob_en_aos_simon_lang[] =
@@ -10529,6 +10542,16 @@ static const char blob_de__sistema_lang[] =
     "Es otro chip\tAnderer Chip\n"
     "%s va en un puerto %s, y %s no lo es\t%s gehört an einen %s-Port, und %s ist keiner\n"
     "Puede ser: %s\tEs kann sein: %s\n"
+    "Lo usa el host USB de alta velocidad.\tWird vom High-Speed-USB-Host verwendet.\n"
+    "Conexión del DS18B20: GND, datos al GPIO elegido, VDD a 3V3, y una resistencia de 4,7 kΩ entre datos y 3V3. Consultá el mapa de pines de esta placa.\tDS18B20: GND, Daten an den gewählten GPIO, VDD an 3V3 und ein 4,7-kΩ-Widerstand zwischen Daten und 3V3. Die Pinbelegung dieser Platine beachten.\n"
+    "Masa común: la de la tira, la de la fuente y un pin GND de la placa.\tGemeinsame Masse: LED-Streifen, Netzteil und ein GND-Pin der Platine.\n"
+    "Los 5 V de la tira, de una fuente aparte salvo con pocos LEDs. Consultá el mapa de la placa para ubicar 5 V y GND. Una tira larga lleva alimentación por los dos extremos.\tDen Streifen mit einem separaten 5-V-Netzteil versorgen, außer bei sehr wenigen LEDs. 5 V und GND anhand der Pinbelegung bestimmen. Lange Streifen an beiden Enden versorgen.\n"
+    "Conectá uno a i2c.ext: SDA al GPIO21, SCL al GPIO22, 3V3 y GND. Consultá los números físicos en el mapa de esta placa. Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos; también se pueden declarar en modules.txt.\tAn i2c.ext anschließen: SDA an GPIO21, SCL an GPIO22, 3V3 und GND. Physische Pinnummern der Pinbelegung dieser Platine entnehmen. BME280, SHT3x/4x, AHT20, INA219/226 und ADS1115 werden automatisch erkannt und können auch in modules.txt eingetragen werden.\n"
+    "LCD-X: pin 1 = GPIO48, pin 2 = GND. Consultá el dibujo de Waveshare antes de conectar alimentación.\tLCD-X: Pin 1 = GPIO48, Pin 2 = GND. Vor dem Anschließen der Versorgung die Waveshare-Zeichnung prüfen.\n"
+    "Pines 19 (D−) y 17 (D+)\tPins 19 (D−) und 17 (D+)\n"
+    "Pines 15 (D−) y 13 (D+), o el conector OTG\tPins 15 (D−) und 13 (D+), oder der OTG-Anschluss\n"
+    "Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 39 y GND del 35.\tUSB-Sticks sind unter /usb lesbar, in Dateien und im Portal; mit einem Hub bis zu drei: /usb, /usb2 und /usb3, in FAT32. Eine Tastatur schreibt dorthin, wo die Bildschirmtastatur schreiben würde, solange sie offen ist. Der OTG-Anschluss liefert keine 5 V: alles kommt an die 40-polige Leiste, 5 V von Pin 39 und GND von Pin 35.\n"
+    "19 y 17 son el segundo controlador USB del P4, de velocidad completa (12 Mbit/s): andan a la vez que cualquier modo del conector OTG. 15 y 13 son los mismos cables que el conector OTG, de alta velocidad, con cables cortos: el host le saca el modo al OTG mientras está prendido. Los dos a la vez son dos puertos, por ejemplo un teclado en uno y un pendrive en el otro.\t19 und 17 sind der zweite USB-Controller des P4, Full Speed (12 Mbit/s): sie laufen neben jedem Modus des OTG-Anschlusses. 15 und 13 sind dieselben Leitungen wie der OTG-Anschluss, High Speed, mit kurzen Kabeln: solange der Host an ist, nimmt er dem OTG seinen Modus. Beide gleichzeitig sind zwei Ports, etwa eine Tastatur am einen und ein USB-Stick am anderen.\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =
@@ -13532,6 +13555,9 @@ static const char blob_de_aos_rf_lang[] =
     "No hay ninguna RTL-SDR en el host USB\tAm USB-Host ist kein RTL-SDR\n"
     "archivo\tDatei\n"
     "La RTL-SDR no respondió al abrirla\tDer RTL-SDR antwortete beim Öffnen nicht\n"
+    "Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.\tMit Kabeln unter 15 cm an den High-Speed-USB-Host anschließen. Daten- und Versorgungspins in den Einstellungen und der Pinbelegung prüfen. Full Speed unterstützt 240.000 Samples pro Sekunde.\n"
+    "El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí.\tDer USB-Host ist aus: unter Einstellungen → USB → USB-Host einschalten und den RTL-SDR an den dort angezeigten High-Speed-Port anschließen.\n"
+    "En USB Full Speed sólo entran 240 mil muestras por segundo\tUSB Full Speed unterstützt nur 240.000 Samples pro Sekunde\n"
     ;
 
 static const char blob_de_aos_simon_lang[] =
@@ -15678,7 +15704,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2683, 48, files_en, 49 },
-    { "de", "Deutsch", 2683, 48, files_de, 49 },
+    { "en", "English", 2693, 48, files_en, 49 },
+    { "de", "Deutsch", 2693, 48, files_de, 49 },
 };
 const int aos_lang_pack_count = 2;

@@ -4,7 +4,7 @@
  *
  * Everything is drawn at the screen's own resolution, 1:1, not upscaled
  * pixel art: the course and the golfer are meant to look rendered. On P4OS
- * the screen is 720x1280 upright or 1280x720 lying down, and can turn while
+ * the screen is 720/800x1280 upright, and can turn while
  * the game runs: GF_W / GF_H are the size of the canvas NOW (gf_w, gf_h),
  * and every buffer the size of the screen is allocated for GF_MAXPX pixels
  * so that it fits either way.
@@ -17,12 +17,13 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "aos_hal.h"
 
 extern int gf_w, gf_h;
 #define GF_W        gf_w
 #define GF_H        gf_h
 #define GF_MAXDIM   1280                    /* the longer side, either way up */
-#define GF_MAXPX    (720 * 1280)
+#define GF_MAXPX    (AOS_PANEL_W * AOS_PANEL_H)
 
 typedef struct {
     uint16_t *px;

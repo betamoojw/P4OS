@@ -55,7 +55,7 @@ cmake --build sim/build-pinball -j8
 cd sim && P4_SIM_SCRIPT="wait 1500; open demo.pinball" ./build-pinball/p4os_sim
 
 # the .so
-tools/build_apps.sh pinball                                 # apps/pinball/build/pinball.so
+tools/build_apps.sh pinball                                 # apps/pinball/build/rev1_3/pinball.so
 ```
 
 On the card everything goes in `/apps`: `pinball.so` and one

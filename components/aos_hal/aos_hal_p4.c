@@ -1,8 +1,7 @@
 /*
- * P4OS - HAL for the Waveshare ESP32-P4-WIFI6-Touch-LCD-5 (phase 3, first
- * block).
+ * P4OS - HAL for Waveshare LCD-5 and LCD-X (7/8/10.1).
  *
- * What is here: the panel (MIPI-DSI, HX8394, two frame buffers in PSRAM),
+ * What is here: the panel (MIPI-DSI, board-selected controller, frame buffers in PSRAM),
  * LVGL with its own task and lock, the logical rotation done in the flush
  * by the PPA, the GT911, preferences in NVS, the microSD, the time, the log
  * and the basic system facts. Everything else in aos_hal.h still answers
@@ -46,7 +45,7 @@
 #include "esp_lcd_mipi_dsi.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_io.h"
-#include "esp_lcd_hx8394.h"
+#include "aos_board_display.h"
 #include "esp_lcd_touch.h"
 #include "esp_vfs_fat.h"
 #include "sdmmc_cmd.h"
@@ -126,7 +125,7 @@ static char s_app_ctx[48];
 void aos_hal_app_context_set(const char *app_id) { snprintf(s_app_ctx, sizeof s_app_ctx, "%s", app_id ? app_id : ""); }
 const char *aos_hal_app_context(void) { return s_app_ctx[0] ? s_app_ctx : NULL; }
 
-const char *aos_hal_board_name(void) { return "Waveshare ESP32-P4-WIFI6-Touch-LCD-5"; }
+const char *aos_hal_board_name(void) { return AOS_BOARD_NAME; }
 const char *aos_hal_firmware_version(void) { return esp_app_get_description()->version; }
 
 uint32_t aos_hal_caps(void)
@@ -642,13 +641,13 @@ static esp_err_t panel_init(void)
     ESP_ERROR_CHECK(esp_ldo_acquire_channel(&ldo, &phy_ldo));
 
     esp_lcd_dsi_bus_handle_t bus;
-    esp_lcd_dsi_bus_config_t bus_cfg = { .bus_id = 0, .num_data_lanes = 2, .phy_clk_src = 0, .lane_bit_rate_mbps = 700 };
+    esp_lcd_dsi_bus_config_t bus_cfg = { .bus_id = 0, .num_data_lanes = 2, .phy_clk_src = 0, .lane_bit_rate_mbps = AOS_DSI_MBPS };
     ESP_ERROR_CHECK(esp_lcd_new_dsi_bus(&bus_cfg, &bus));
     esp_lcd_panel_io_handle_t io;
     esp_lcd_dbi_io_config_t dbi = { .virtual_channel = 0, .lcd_cmd_bits = 8, .lcd_param_bits = 8 };
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_dbi(bus, &dbi, &io));
 
-    esp_lcd_dpi_panel_config_t dpi = HX8394_720_1280_PANEL_30HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi = aos_board_dpi_config();
     /* The refresh is restarted by an interrupt at the end of each frame, and
      * it has to come within the vertical blanking: 38 lines at 13.8 us, about
      * half a millisecond. Any interrupt latency beyond that on its core (a
@@ -659,6 +658,7 @@ static esp_err_t panel_init(void)
      * 80 (divider 3) is the default since 2026-10-16: room for 60 Hz with a
      * blanking of ~3.9 ms, measured clean under a game filling core 0
      * (docs/MEMORY.md). "pnl_mhz" 60 goes back to the module's. */
+#if AOS_BOARD_ID == 5
     int32_t mhz = 80;
     aos_hal_pref_get_i32("pnl_mhz", &mhz);
     if (mhz == 80) dpi.dpi_clock_freq_mhz = 80;
@@ -667,17 +667,13 @@ static esp_err_t panel_init(void)
     int32_t vfp = mhz == 80 ? 376 : 120;
     aos_hal_pref_get_i32("pnl_vfp", &vfp);
     if (vfp >= 8 && vfp <= 1000) dpi.video_timing.vsync_front_porch = (uint32_t)vfp;
+#endif /* HX8394 tuning is not valid for ILI9881C/JD9365. */
     int32_t nfbs = 3;
     aos_hal_pref_get_i32("fbs", &nfbs);
     s_nfbs = nfbs == 1 ? 1 : 3;
     dpi.num_fbs = s_nfbs;
     dpi.flags.use_dma2d = true;
-    hx8394_vendor_config_t vendor = { .mipi_config = { .dsi_bus = bus, .dpi_config = &dpi, .lane_num = 2 } };
-    esp_lcd_panel_dev_config_t dev = {
-        .bits_per_pixel = 16, .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,
-        .reset_gpio_num = BSP_LCD_RST, .vendor_config = &vendor, .flags.reset_active_high = 1,
-    };
-    ESP_ERROR_CHECK(esp_lcd_new_panel_hx8394(io, &dev, &s_panel));
+    ESP_ERROR_CHECK(aos_board_panel_new(io, bus, &dpi, &s_panel));
     ESP_ERROR_CHECK(esp_lcd_panel_reset(s_panel));
     ESP_ERROR_CHECK(esp_lcd_panel_init(s_panel));
     void *a = NULL, *b = NULL, *c = NULL;
@@ -1853,10 +1849,9 @@ bool aos_hal_init(void)
     lv_display_set_buffers(s_disp, b1, b2, bytes, LV_DISPLAY_RENDER_MODE_PARTIAL);
     lv_display_set_flush_cb(s_disp, flush_cb);
 
-    bsp_display_cfg_t tcfg = { 0 };
     aos_hal_boot_stage("touch");
-    if (bsp_touch_new(&tcfg, &s_touch) != ESP_OK) {
-        ESP_LOGE(TAG, "GT911 not found");
+    if (aos_board_touch_new(&s_touch) != ESP_OK) {
+        ESP_LOGE(TAG, "Goodix touch not found");
         s_touch = NULL;
     }
     lv_indev_t *indev = lv_indev_create();

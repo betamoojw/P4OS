@@ -90,6 +90,10 @@ static int rate_of(int vfp)
 
 int aos_hal_display_refresh_request(int hz)
 {
+#if AOS_BOARD_ID != 5
+    (void)hz;
+    return rate_of(s_vfp_now);
+#endif
     if (!s_line_hz || !s_vact) return rate_of(s_vfp_now);
     int vfp = s_vfp_sys;
     if (hz > 0) {

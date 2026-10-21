@@ -13,7 +13,7 @@ cd sim && P4_SIM_SCRIPT="wait 800; open lua.cubo" ./build-lua/p4os_sim
 LUA_RUN=pelota.lua P4_SIM_SCRIPT="wait 800; open aos.lua" ./build-lua/p4os_sim   # the list app, straight into a script
 
 # the .so for the card
-tools/build_apps.sh lua                       # apps/lua/build/lua.so
+tools/build_apps.sh lua                       # apps/lua/build/rev1_3/lua.so
 # card:  /apps/lua.so, and the scripts in /lua/ (apps/lua/scripts/*.lua and *.aic)
 ```
 
@@ -48,9 +48,9 @@ There are no on-screen controls: the whole screen is the script's.
   426x240 lying down (1278x720). A script reads the size from `aos.W` and
   `aos.H` and never learns the scale; the finger comes in canvas pixels too.
 - **A script may choose.** `-- @canvas WxH` in its first lines (both sides
-  16..1280, at most 720x1280 pixels). The OS takes the biggest factor that
+  16..1280, at most the host panel's pixel count: 720x1280 or 800x1280). The OS takes the biggest factor that
   fits, centred: `184x224` is the watch's canvas at x3, `360x640` is x2,
-  `720x1280` is the screen itself at x1.
+  `720x1280` (LCD-5/7) or `800x1280` (LCD-8/10.1) is the screen itself at x1.
 - **Turning the screen.** A canvas of a chosen size stays the same, pixels
   and all, and is only placed again (in landscape a portrait canvas gets
   smaller). The default canvas takes the new shape: if the script defines

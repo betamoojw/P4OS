@@ -11,7 +11,7 @@ cmake --build sim/build-visor3d -j8
 cd sim && P4_SIM_SCRIPT="wait 800; open demo.visor3d" ./build-visor3d/p4os_sim
 
 # the .so for the card
-tools/build_apps.sh visor3d                   # apps/visor3d/build/visor3d.so -> /apps on the card
+tools/build_apps.sh visor3d                   # apps/visor3d/build/rev1_3/visor3d.so -> /apps on the card
 ```
 
 ## The models

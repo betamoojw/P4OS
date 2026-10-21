@@ -4,7 +4,9 @@
 # Called by build_fw.sh when it flashes and by ota.sh when it uploads.
 set -e
 cd "$(dirname "$0")/.."
-elf="build/${1:-rev1_3}/p4os.elf"
+dir="build/${1:-rev1_3}"
+[ "${AOS_BOARD:-lcd5}" = lcd5 ] || dir="build/$AOS_BOARD/${1:-rev1_3}"
+elf="$dir/p4os.elf"
 [ -f "$elf" ] || exit 0
 mkdir -p build/elf
 sha=$(shasum -a 256 "$elf" | cut -c1-16)

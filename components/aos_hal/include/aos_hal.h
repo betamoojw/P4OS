@@ -3,7 +3,7 @@
  *
  * The single contract between the UI/apps and the platform. There are two
  * implementations:
- *   - aos_hal_p4.c : Waveshare ESP32-P4-WIFI6-Touch-LCD-5
+ *   - aos_hal_p4.c : Waveshare ESP32-P4-WIFI6-Touch-LCD-5/7/8/10.1
  *   - hal_sim.c    : LVGL/SDL simulator on the Mac
  *
  * The contract keeps AmoledOS's names so that apps port with small diffs.
@@ -56,7 +56,7 @@ extern "C" {
 /* --------------------------------------------------------------------------
  * Screen size and orientation
  *
- * The panel is 720x1280, portrait. The system can run in portrait or
+ * The panel is 720x1280 or 800x1280, portrait. The system can run in portrait or
  * landscape (the person picks; there is no IMU), so the size an app sees is
  * the LOGICAL one and changes at run time: AOS_SCREEN_W/H are function calls,
  * not constants. An app that sized a static array with them does not compile
@@ -65,11 +65,17 @@ extern "C" {
  * AOS_PANEL_W/H are the native size, for the rare code (frame buffers,
  * the retro canvas) that needs it.
  * -------------------------------------------------------------------------- */
-#define AOS_PANEL_W         720
-#define AOS_PANEL_H         1280
+#include "aos_board.h"
+#ifdef AOS_DYNAMIC_APP
+/* Native stride comes from the host, so one rebuilt .so serves every panel. */
+#define AOS_PANEL_W ((aos_hal_display_get_rotation() % 180) ? aos_hal_screen_h() : aos_hal_screen_w())
+#else
+#define AOS_PANEL_W AOS_NATIVE_W
+#endif
+#define AOS_PANEL_H AOS_NATIVE_H
 
-int  aos_hal_screen_w(void);        /* logical width, 720 or 1280  */
-int  aos_hal_screen_h(void);        /* logical height, 1280 or 720 */
+int  aos_hal_screen_w(void);        /* logical width for the selected panel */
+int  aos_hal_screen_h(void);        /* logical height for the selected panel */
 #define AOS_SCREEN_W        aos_hal_screen_w()
 #define AOS_SCREEN_H        aos_hal_screen_h()
 #define AOS_SCREEN_RADIUS   0       /* square glass */

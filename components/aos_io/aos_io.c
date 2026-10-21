@@ -22,6 +22,7 @@
 #define J AOS_PIN_USB_JTAG
 #define R AOS_PIN_RESERVED
 
+#if AOS_BOARD_ID == 5
 static const aos_io_pin_t HEADER[40] = {
     { -1,  1, R,     "5V",     "VCC_5V, live with the board off" },
     { -1,  2, R,     "3V3",    "3 A buck, off with POWER" },
@@ -64,6 +65,51 @@ static const aos_io_pin_t HEADER[40] = {
     { 48, 39, V,     "GPIO48", "VO4 domain" },
     { -1, 40, R,     "GND",    "" },
 };
+#else
+/* LCD-X official pinout: rows are numbered from the opposite end. */
+static const aos_io_pin_t HEADER[40] = {
+    { 48,  1, V,     "GPIO48", "VO4 domain" },
+    { -1,  2, R,     "GND",    "" },
+    { 47,  3, V,     "GPIO47", "VO4 domain" },
+    { 52,  4, A,     "GPIO52", "ADC2 ch3, comparator" },
+    { 46,  5, V,     "GPIO46", "VO4 domain: measure first" },
+    { 51,  6, A,     "GPIO51", "ADC2 ch2, comparator" },
+    { -1,  7, R,     "GND",    "" },
+    { 50,  8, A,     "GPIO50", "ADC2 ch1" },
+    { 32,  9, 0,     "GPIO32", "" },
+    { 49, 10, A,     "GPIO49", "ADC2 ch0" },
+    { -1, 11, R,     "GND",    "" },
+    { 35, 12, R | S, "GPIO35", "BOOT" },
+    { -1, 13, R,     "USB D+", "USB 2.0 HS, shared with the OTG port" },
+    { 34, 14, S,     "GPIO34", "JTAG source strapping" },
+    { -1, 15, R,     "USB D-", "USB 2.0 HS, shared with the OTG port" },
+    { -1, 16, R,     "GND",    "" },
+    { 25, 17, J,     "GPIO25", "USB-Serial-JTAG D+" },
+    { 31, 18, 0,     "GPIO31", "" },
+    { 24, 19, J,     "GPIO24", "USB-Serial-JTAG D-" },
+    { 30, 20, 0,     "GPIO30", "" },
+    { -1, 21, R,     "GND",    "" },
+    { 29, 22, 0,     "GPIO29", "" },
+    { 22, 23, A,     "GPIO22", "ADC1 ch6" },
+    { -1, 24, R,     "3V3",    "" },
+    { 21, 25, A,     "GPIO21", "ADC1 ch5" },
+    { 28, 26, 0,     "GPIO28", "" },
+    { -1, 27, R,     "GND",    "" },
+    {  4, 28, 0,     "GPIO4",  "JTAG MTDI" },
+    {  5, 29, 0,     "GPIO5",  "JTAG MTDO" },
+    {  3, 30, 0,     "GPIO3",  "JTAG MTCK" },
+    { 38, 31, R | S, "GPIO38", "UART0 RX from the CH343 (console)" },
+    { -1, 32, R,     "GND",    "" },
+    { 37, 33, R | S, "GPIO37", "UART0 TX to the CH343 (console)" },
+    {  2, 34, 0,     "GPIO2",  "" },
+    { -1, 35, R,     "GND",    "" },
+    {  8, 36, B,     "GPIO8",  "SCL of the board's I2C bus" },
+    { -1, 37, R,     "5V",     "" },
+    {  7, 38, B,     "GPIO7",  "SDA of the board's I2C bus" },
+    { -1, 39, R,     "5V",     "VCC_5V, live with the board off" },
+    { -1, 40, R,     "3V3",    "3V3 supply" },
+};
+#endif
 #undef B
 #undef S
 #undef V

@@ -10,7 +10,7 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j8
 P4_SIM_SCRIPT="wait 1500; open demo.2043" ./build/p4os_sim
 
 # the .so for the card
-tools/build_apps.sh g2043                          # apps/g2043/build/g2043.so
+tools/build_apps.sh g2043                          # apps/g2043/build/rev1_3/g2043.so
 ```
 
 ## On P4OS

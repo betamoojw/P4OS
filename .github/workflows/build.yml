@@ -62,14 +62,13 @@ jobs:
       # git; built once (~150 MB of sources checked by SHA-256, 10-15 min)
       # and kept in the cache while apps/cas/engine/ does not change
       - name: CAS engine (cache)
-        if: matrix.profile == 'rev1_3'
         id: cas-engine
         uses: actions/cache@v4
         with:
           path: apps/cas/engine/lib
           key: cas-engine-${{ hashFiles('apps/cas/engine/build_engine.sh', 'apps/cas/engine/*.cc', 'apps/cas/engine/*.c', 'apps/cas/engine/*.ld') }}
       - name: CAS engine
-        if: matrix.profile == 'rev1_3' && steps.cas-engine.outputs.cache-hit != 'true'
+        if: steps.cas-engine.outputs.cache-hit != 'true'
         continue-on-error: true
         shell: bash
         run: |
@@ -78,7 +77,6 @@ jobs:
       # without its engine CAS cannot be built, and build_apps.sh would stop
       # there: the release goes out without CAS, and says so
       - name: CAS engine missing
-        if: matrix.profile == 'rev1_3'
         shell: bash
         run: |
           if [ ! -f apps/cas/engine/lib/libcasengine.a ]; then
@@ -86,11 +84,11 @@ jobs:
             rm -rf apps/cas
           fi
       - name: apps
-        if: matrix.profile == 'rev1_3'
         shell: bash
         run: |
           . $IDF_PATH/export.sh
-          PROFILE=rev1_3 tools/build_apps.sh
+          python -m unittest discover -s tests -p test_dynamic_apps.py
+          PROFILE=${{ matrix.profile }} tools/build_apps.sh
       - name: bundle
         shell: bash
         run: |
@@ -103,19 +101,25 @@ jobs:
           xz -T0 -6 -c build/$p/p4os.elf > out/p4os-$p.elf.xz
           (cd build/$p && zip -q ../../out/p4os-$p-full.zip p4os.bin bootloader/bootloader.bin \
               partition_table/partition-table.bin ota_data_initial.bin flash_args)
+          mkdir -p out/apps && cp apps/*/build/$p/*.so out/apps/
+          # the modules an app loads itself (aos_hal_module_open), in apps/<app>/
+          for m in apps/*/build/$p/modules; do
+            [ -d "$m" ] || continue
+            a=$(basename "$(dirname "$(dirname "$(dirname "$m")")")")
+            mkdir -p "out/apps/$a"
+            cp "$m"/*.so "out/apps/$a/"
+          done
+          for a in $NOT_IN_RELEASE; do
+            rm -f "out/apps/$a.so"
+            rm -rf "out/apps/$a"
+          done
+          (cd out && zip -qr apps-$p.zip apps)
           if [ "$p" = rev1_3 ]; then
-            mkdir -p out/apps && cp apps/*/build/*.so out/apps/
-            # the modules an app loads itself (aos_hal_module_open), in apps/<app>/
-            for m in apps/*/build/modules; do
-              [ -d "$m" ] || continue
-              a=$(basename $(dirname $(dirname $m)))
-              mkdir -p out/apps/$a && cp $m/*.so out/apps/$a/ 2>/dev/null || true
-            done
             # the apps' own pages in the portal, for the card's /web (docs/PORTAL-PAGES.md)
             mkdir -p out/web && cp apps/*/web/*.js out/web/
             mkdir -p out/lang && cp -r lang/en lang/de out/lang/
             for a in $NOT_IN_RELEASE; do
-              for so in apps/$a/build/*.so; do [ -e "$so" ] && rm -f "out/apps/$(basename "$so")"; done
+              for so in apps/$a/build/$p/*.so; do [ -e "$so" ] && rm -f "out/apps/$(basename "$so")"; done
               rm -rf "out/apps/$a"
               for js in apps/$a/web/*.js; do
                 [ -e "$js" ] || continue
@@ -129,6 +133,8 @@ jobs:
             (cd out && zip -qr apps.zip apps && rm -r apps)
             (cd out && zip -qr web.zip web && rm -r web)
             (cd out && zip -qr lang.zip lang && rm -r lang)
+          else
+            rm -r out/apps
           fi
       - uses: actions/upload-artifact@v5
         with:

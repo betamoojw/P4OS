@@ -711,7 +711,7 @@ static void host_lib_task(void *arg)
             if ((now & ~0xCu) == (shown[c] & ~0xCu)) continue;
             shown[c] = now;
             ESP_LOGI(TAG, "host port %s: connected %u, enabled %u, lines D+%u D-%u, speed %u (0 HS 1 FS 2 LS), "
-                          "power %u, A-session %u, B-session %u, id %u", c ? "21/23" : "25/27",
+                          "power %u, A-session %u, B-session %u, id %u", c ? AOS_USB_FS_PINS : AOS_USB_HS_PINS,
                      (unsigned)(now & 1), (unsigned)(now >> 1 & 1), (unsigned)(now >> 2 & 1), (unsigned)(now >> 3 & 1),
                      (unsigned)(now >> 4 & 3), (unsigned)(now >> 6 & 1), (unsigned)(now >> 7 & 1), (unsigned)(now >> 8 & 1),
                      (unsigned)(now >> 9 & 1));
@@ -898,9 +898,9 @@ static bool host_start(void)
     /* the apps' own drivers (the RF app's radios) */
     if (!aos_p4_usb_raw_start()) ESP_LOGW(TAG, "host: no raw client");
     ESP_LOGI(TAG, "host: waiting for devices on %s",
-             H.map == (BIT0 | BIT1) ? "J3 25/27 (High Speed) and 21/23 (Full Speed)"
-             : H.map & BIT1 ? "J3 21 D- 23 D+ (Full-Speed controller)"
-                            : "J3 25 D- 27 D+ or the OTG connector (High-Speed controller)");
+             H.map == (BIT0 | BIT1) ? "header " AOS_USB_HS_PINS " (High Speed) and " AOS_USB_FS_PINS " (Full Speed)"
+             : H.map & BIT1 ? "header D-/D+ " AOS_USB_FS_PINS " (Full-Speed controller)"
+                            : "header D-/D+ " AOS_USB_HS_PINS " or OTG (High-Speed controller)");
     return true;
 }
 
@@ -964,7 +964,7 @@ static void switch_task(void *arg)
     ESP_LOGI(TAG, "the port is %s now%s", s_mode == AOS_HAL_USB_KEYS ? "keyboard and mouse"
                                          : s_mode == AOS_HAL_USB_DISK ? "the card as a disk"
                                          : s_mode == AOS_HAL_USB_HOST ? "the host of a pendrive" : "idle",
-             s_host_run && H.map == BIT1 ? ", and the host of a pendrive on J3 21/23" : "");
+             s_host_run && H.map == BIT1 ? ", and the host on header " AOS_USB_FS_PINS : "");
     /* remembered for the next boot (aos_hal_usb_restore). Disk mode is
      * not: the boot reads the card, so a restart in disk mode comes back
      * in the mode it had before. */
@@ -1020,8 +1020,8 @@ bool aos_hal_usb_host_port_set(int port)
     aos_hal_pref_set_i32(PREF_HOST_PORT, port);
     if (!s_host_run) return true;
     /* host on: down and up again on the other controller */
-    ESP_LOGI(TAG, "the pendrive's port is J3 %s now", port == AOS_HAL_USB_HOST_BOTH ? "21/23 and 25/27"
-                                                     : port == AOS_HAL_USB_HOST_HEADER ? "21/23" : "25/27");
+    ESP_LOGI(TAG, "the pendrive's port is header %s now", port == AOS_HAL_USB_HOST_BOTH ? AOS_USB_FS_PINS " and " AOS_USB_HS_PINS
+                                                     : port == AOS_HAL_USB_HOST_HEADER ? AOS_USB_FS_PINS : AOS_USB_HS_PINS);
     s_want = (host_map(port) & BIT0) || s_mode == AOS_HAL_USB_HOST ? AOS_HAL_USB_CONSOLE : s_mode;
     s_want_host = true;
     return switch_start();

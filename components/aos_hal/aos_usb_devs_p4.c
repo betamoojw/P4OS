@@ -118,7 +118,7 @@ static void dev_new(uint8_t addr)
     xSemaphoreGive(D.mx);
     ESP_LOGI(TAG, "device %u: %04x:%04x \"%s%s%s\", class %02x, %s speed, on %s%s", addr, d.vid, d.pid, d.vendor,
              d.vendor[0] && d.product[0] ? " " : "", d.product, d.cls, d.speed == 2 ? "high" : d.speed == 1 ? "full" : "low",
-             d.port == AOS_HAL_USB_HOST_HEADER ? "21/23" : "25/27", d.hub_port ? ", behind a hub" : "");
+             d.port == AOS_HAL_USB_HOST_HEADER ? AOS_USB_FS_PINS : AOS_USB_HS_PINS, d.hub_port ? ", behind a hub" : "");
 }
 
 static void client_event(const usb_host_client_event_msg_t *msg, void *arg)

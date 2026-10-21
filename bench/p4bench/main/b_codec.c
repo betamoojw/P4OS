@@ -135,11 +135,11 @@ static int cmd_ppa(int argc, char **argv)
     test_image(full, LCD_W, LCD_H);
     for (int i = 0; i < LCD_W * LCD_H; i++) argb[i] = 0x80FFFFFF;   /* 50 % white glass */
 
-    double up3 = srm(c, small, 240, 426, land, 720, 1280, LCD_FB_BYTES, 0, 1, 3.0f, PPA_SRM_ROTATION_ANGLE_0, 10);
-    double up3w = srm(c, small, 184, 224, land, 720, 1280, LCD_FB_BYTES, 84, 304, 3.0f, PPA_SRM_ROTATION_ANGLE_0, 10);
+    double up3 = srm(c, small, 240, 426, land, LCD_W, LCD_H, LCD_FB_BYTES, 0, 1, 3.0f, PPA_SRM_ROTATION_ANGLE_0, 10);
+    double up3w = srm(c, small, 184, 224, land, LCD_W, LCD_H, LCD_FB_BYTES, 84, 304, 3.0f, PPA_SRM_ROTATION_ANGLE_0, 10);
     double rot = srm(c, full, LCD_W, LCD_H, land, LCD_H, LCD_W, LCD_FB_BYTES, 0, 0, 1.0f, PPA_SRM_ROTATION_ANGLE_90, 10);
     double copy = srm(c, full, LCD_W, LCD_H, land, LCD_W, LCD_H, LCD_FB_BYTES, 0, 0, 1.0f, PPA_SRM_ROTATION_ANGLE_0, 10);
-    double down = srm(c, full, LCD_W, LCD_H, small, 180, 320, 240 * 426 * 2, 0, 0, 0.25f, PPA_SRM_ROTATION_ANGLE_0, 10);
+    double down = srm(c, full, LCD_W, LCD_H, small, LCD_W / 4, LCD_H / 4, 240 * 426 * 2, 0, 0, 0.25f, PPA_SRM_ROTATION_ANGLE_0, 10);
 
     ppa_blend_oper_config_t bo = {
         .in_bg = { .buffer = full, .pic_w = LCD_W, .pic_h = LCD_H, .block_w = LCD_W, .block_h = LCD_H, .blend_cm = PPA_BLEND_COLOR_MODE_RGB565 },
@@ -156,7 +156,7 @@ static int cmd_ppa(int argc, char **argv)
                  up3, up3w, rot, copy, down, blend);
 
     /* what the retro canvas looks like at 3x (nearest or smoothed?) */
-    srm(c, small, 240, 426, land, 720, 1280, LCD_FB_BYTES, 0, 1, 3.0f, PPA_SRM_ROTATION_ANGLE_0, 1);
+    srm(c, small, 240, 426, land, LCD_W, LCD_H, LCD_FB_BYTES, 0, 1, 3.0f, PPA_SRM_ROTATION_ANGLE_0, 1);
     bench_say("ppa: 240x426 canvas scaled x3 - is it sharp (nearest) or blurry (bilinear)?");
     show(land, LCD_W, LCD_H, 3000);
 out:

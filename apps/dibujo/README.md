@@ -13,7 +13,7 @@ cmake -S sim -B sim/build-dibujo -DCMAKE_BUILD_TYPE=Release -DP4OS_SIM_APPS="hel
 cd sim && P4_SIM_SCRIPT="wait 800; open aos.dibujo" ./build-dibujo/p4os_sim
 
 # the .so for the microSD
-tools/build_apps.sh dibujo                         # apps/dibujo/build/dibujo.so
+tools/build_apps.sh dibujo                         # apps/dibujo/build/rev1_3/dibujo.so
 ```
 
 ## On the screen

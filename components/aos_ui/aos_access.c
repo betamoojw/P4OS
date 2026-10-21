@@ -171,7 +171,10 @@ void aos_access_trust(const char *ssid, bool on)
  * does not find it closed. */
 static void first_home(const char *ssid)
 {
-    char probe[8];
+    /* NVS rejects a read into a short buffer. Use the full list capacity,
+     * otherwise a saved SSID longer than seven bytes looks absent and is
+     * rewritten (and logged) on every access check. */
+    char probe[AOS_ACCESS_TRUST_MAX * 34 + 1];
     if (ssid[0] && !aos_hal_pref_get_str(K_TRUST, probe, sizeof probe)) {
         aos_access_trust(ssid, true);
         aos_hal_log("access", "'%s' marked as a home network (the first one)", ssid);

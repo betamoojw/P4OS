@@ -14,7 +14,7 @@ cd sim && P4_SIM_SCRIPT="wait 1200; open py.hola" ./build-py/p4os_sim      # an 
 P4_SIM_SCRIPT="wait 1200; open aos.python" ./build-py/p4os_sim              # the console
 
 # the .so for the card
-tools/build_apps.sh python                    # apps/python/build/python.so
+tools/build_apps.sh python                    # apps/python/build/rev1_3/python.so
 # card: /apps/python.so; the first boot with it writes the samples to /python/apps
 ```
 
@@ -23,6 +23,9 @@ release tarball (checked by its hash) with this app's `main/mpconfigport.h`;
 `main/upy/VENDOR.md` says what the script changes. It is committed, like
 Lua's tree: the CI needs no download. Run the script again after changing
 `mpconfigport.h`, a `main/mod_*.c` with new names, or a module in `frozen/`.
+
+Script canvases may use up to the host panel's pixel count: 720 × 1280 on
+LCD-5/7, or 800 × 1280 on LCD-8/10.1 (either orientation).
 
 ## The console
 

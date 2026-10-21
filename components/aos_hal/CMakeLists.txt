@@ -19,7 +19,7 @@ idf_component_register(
     INCLUDE_DIRS "include"
     LDFRAGMENTS "psram.lf"
     REQUIRES lvgl esp_timer nvs_flash mbedtls
-    PRIV_REQUIRES waveshare__esp32_p4_wifi6_touch_lcd_5 waveshare__esp_lcd_hx8394 espressif__esp_lcd_touch
+    PRIV_REQUIRES aos_board waveshare__esp32_p4_wifi6_touch_lcd_5 waveshare__esp_lcd_hx8394 espressif__esp_lcd_touch
                   esp_lcd esp_driver_ppa esp_driver_sdmmc sdmmc fatfs esp_mm app_update esp_hw_support
                   esp_wifi esp_netif esp_event lwip espressif__esp_wifi_remote espressif__esp_hosted
                   espressif__mdns

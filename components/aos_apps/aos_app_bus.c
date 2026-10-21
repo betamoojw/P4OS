@@ -1768,7 +1768,7 @@ static void build_ow(lv_obj_t *parent)
         ow_chip(pins, txt, mine, can, ow_pin_cb, (void *)(intptr_t)p->gpio);
     }
     ow_chip(pc, OW.pullup ? _("Pull-up interno: sí") : _("Pull-up interno: no"), OW.pullup, true, ow_pull_cb, NULL);
-    caption(col, _("Conexión del DS18B20: GND, datos al pin elegido, VDD a 3V3 (pin 18), y una resistencia de 4,7 kΩ entre datos y 3V3. El pull-up interno alcanza para un sensor con cable corto."), w);
+    caption(col, _("Conexión del DS18B20: GND, datos al GPIO elegido, VDD a 3V3, y una resistencia de 4,7 kΩ entre datos y 3V3. Consultá el mapa de pines de esta placa."), w);
 }
 
 static void ow_tick(void)

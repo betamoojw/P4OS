@@ -12,7 +12,7 @@ cmake --build sim/build-video -j8
 cd sim && P4_SIM_SCRIPT="wait 800; open aos.video" ./build-video/p4os_sim
 
 # the .so for the card
-tools/build_apps.sh video                     # apps/video/build/video.so -> /apps on the card
+tools/build_apps.sh video                     # apps/video/build/rev1_3/video.so -> /apps on the card
 ```
 
 ## Making the videos

@@ -20,7 +20,9 @@ cd "$(dirname "$0")/.."
 HOST=${1:-p4os.local}
 PROFILE=${2:-rev1_3}
 B="http://$HOST"
-BIN="build/$PROFILE/p4os.bin"
+DIR="build/$PROFILE"
+[ "${AOS_BOARD:-lcd5}" = lcd5 ] || DIR="build/$AOS_BOARD/$PROFILE"
+BIN="$DIR/p4os.bin"
 
 # a failed build leaves the previous .bin in place: never upload that one
 if [ -z "$NOBUILD" ]; then

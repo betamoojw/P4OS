@@ -65,6 +65,13 @@ static int cmd_touch(int argc, char **argv)
 {
     const char *sub = arg_str(argc, argv, 1, "info");
 
+#if AOS_BOARD_ID != 5
+    if (!strcmp(sub, "int") || !strcmp(sub, "rst")) {
+        bench_report("touch", "LCD-X touch INT/RST are not connected; GPIO test skipped");
+        return 0;
+    }
+#endif
+
     if (!strcmp(sub, "info")) {
         uint8_t addr = 0;
         if (!gt_dev(&addr)) { bench_report("touch.info", "found=0"); return 0; }

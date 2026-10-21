@@ -7,7 +7,11 @@ cd "$(dirname "$0")/.."
 profile=${1:-rev3_x}; shift || true
 # an environment with ESP-IDF already exported (the CI's container) keeps it
 command -v idf.py >/dev/null || source ~/esp/esp-idf/export.sh >/dev/null 2>&1
+board=${AOS_BOARD:-lcd5}
+case "$board" in lcd5|lcd7|lcd8|lcd10_1) ;; *) echo "Unknown AOS_BOARD: $board"; exit 1 ;; esac
+case "$profile" in rev1_3|rev3_x) ;; *) echo "Unknown silicon profile: $profile"; exit 1 ;; esac
 dir="build/$profile"
+[ "$board" = lcd5 ] || dir="build/$board/$profile"
 # app-flash writes the app into ota_0, but after an update over Wi-Fi
 # (tools/ota.sh) otadata may point at ota_1, and the board would go on
 # booting the old image from there: an app-flash also erases otadata, so the
@@ -17,7 +21,7 @@ for a in "$@"; do
   args+=("$a")
   [ "$a" = "app-flash" ] && args+=("erase-otadata")
 done
-idf.py -B "$dir" -D "SDKCONFIG=$PWD/$dir/sdkconfig" \
+idf.py -D "AOS_BOARD=$board" -B "$dir" -D "SDKCONFIG=$PWD/$dir/sdkconfig" \
   -D "SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.defaults.$profile" \
   "${args[@]:-build}"
 # an image going onto the board: keep its ELF for its core dumps

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-# P4OS firmware for the Waveshare ESP32-P4-WIFI6-Touch-LCD-5.
+# P4OS firmware for Waveshare LCD-5 and LCD-X (7/8/10.1); see docs/BOARDS.md.
 #
 # Only what main needs is built: the components imported from AmoledOS that
 # are not wired to the P4 yet (the web portal, the dynamic loader) wait in
@@ -8,6 +8,7 @@ cmake_minimum_required(VERSION 3.16)
 set(COMPONENTS main)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/board.cmake)
 
 # Before project(): the fonts' definitions go into every component's flags.
 include(${CMAKE_CURRENT_LIST_DIR}/components/aos_fonts/aos_fonts.cmake)

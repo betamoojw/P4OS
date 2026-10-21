@@ -68,9 +68,10 @@ void gfa_layout(app_t *a)
     gf_layout_t *L = &a->L;
     L->W = AOS_SCREEN_W;
     L->H = AOS_SCREEN_H;
-    if (L->W * L->H > GF_MAXPX) {           /* never: the panel is 720x1280 */
-        L->W = L->W > L->H ? 1280 : 720;
-        L->H = L->W == 1280 ? 720 : 1280;
+    if (L->W * L->H > GF_MAXPX) {
+        bool landscape = L->W > L->H;
+        L->W = landscape ? AOS_PANEL_H : AOS_PANEL_W;
+        L->H = landscape ? AOS_PANEL_W : AOS_PANEL_H;
     }
     L->land = L->W > L->H;
     gf_w = L->W;

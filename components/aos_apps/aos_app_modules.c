@@ -522,7 +522,7 @@ static void header_upright(lv_obj_t *parent, int32_t w)
     const int32_t lw = bx - 24;
     for (int i = 0; i < 40; i++) {
         const aos_io_pin_t *p = &hdr[i];
-        int r = i / 2, side = !(i % 2);       /* pin 1 (index 0) on the right */
+        int r = i / 2, side = AOS_BOARD_ID == 5 ? !(i % 2) : i % 2;       /* pin 1 (index 0) on the right */
         int32_t y = top + 4 + r * pitch;
         /* the whole half row is the target */
         lv_obj_t *hit = box(cd, w / 2, pitch);
@@ -575,7 +575,7 @@ static void header_flat(lv_obj_t *parent, int32_t w)
     aos_make_decorative(body);
     for (int i = 0; i < 40; i++) {
         const aos_io_pin_t *p = &hdr[i];
-        int col = i / 2, top = !(i % 2);       /* odd pins (index 0, 2...) on top: the upright drawing turned left */
+        int col = i / 2, top = AOS_BOARD_ID == 5 ? !(i % 2) : i % 2;       /* odd pins (index 0, 2...) on top: the upright drawing turned left */
         int32_t x = bx + 4 + col * pitch, y = by + 4 + (top ? 0 : pitch);
         lv_obj_t *hit = box(cd, pitch, pitch + lab);
         lv_obj_set_pos(hit, x, top ? y - lab : y);
@@ -619,8 +619,12 @@ static void build_header(void)
     int32_t w = U.W - 2 * AOS_UI_PAD, ch = lv_obj_get_height(U.content);
     lv_obj_t *col = column(U.content, w, ch);
     U.scroller = col;
+#if AOS_BOARD_ID == 5
     caption(col, U.land ? _("El conector de atrás, acostado: el pin 1 (5 V) es el cuadrado de arriba a la izquierda. Tocá un pin; abajo, los pines de cada puerto (número de pin físico).")
                         : _("El conector de atrás, como en el dibujo de Waveshare: el pin 1 (5 V) es el cuadrado, arriba a la derecha. Tocá un pin para ver qué es y quién lo tiene."), w);
+#else
+    caption(col, _("LCD-X: pin 1 = GPIO48, pin 2 = GND. Consultá el dibujo de Waveshare antes de conectar alimentación."), w);
+#endif
     legend(col, w);
     if (U.land) {
         header_flat(col, w);
@@ -1634,7 +1638,7 @@ static void build_sensors(void)
         lv_obj_set_flex_flow(e, LV_FLEX_FLOW_COLUMN);
         lv_obj_set_style_pad_row(e, 10, 0);
         aos_label(e, _("No hay sensores"), aos_font_body, AOS_C_TEXT);
-        caption(e, _("Conectá uno a i2c.ext: SDA al GPIO21 (pin 15), SCL al GPIO22 (pin 17), 3V3 (pin 18) y GND (pin 19). Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos; también se pueden declarar en modules.txt."), rw - 48);
+        caption(e, _("Conectá uno a i2c.ext: SDA al GPIO21, SCL al GPIO22, 3V3 y GND. Consultá los números físicos en el mapa de esta placa. Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos; también se pueden declarar en modules.txt."), rw - 48);
     }
     cand_rows(right, rw);
     sens_sig(U.sig, sizeof U.sig);

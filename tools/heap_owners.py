@@ -3,6 +3,7 @@
 
     tools/heap_owners.py p4os.local [build/rev1_3/p4os.elf]
     tools/heap_owners.py saved.json build/elf/<sha>.elf
+    AOS_BOARD=lcd8 PROFILE=rev3_x tools/heap_owners.py p4os.local
 
 Needs a diagnostic build (docs/MEMORY.md, "Internal RAM audit"): heap
 tracing on (CONFIG_HEAP_TRACING_STANDALONE) and, on RISC-V, the frame pointer
@@ -35,7 +36,10 @@ def main():
     if len(sys.argv) < 2:
         sys.exit(__doc__)
     src = sys.argv[1]
-    elf = sys.argv[2] if len(sys.argv) > 2 else "build/rev1_3/p4os.elf"
+    board = os.environ.get("AOS_BOARD", "lcd5")
+    profile = os.environ.get("PROFILE", "rev1_3")
+    build_dir = os.path.join("build", profile) if board == "lcd5" else os.path.join("build", board, profile)
+    elf = sys.argv[2] if len(sys.argv) > 2 else os.path.join(build_dir, "p4os.elf")
     if os.path.exists(src):
         data = json.load(open(src))
     else:

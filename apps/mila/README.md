@@ -42,7 +42,7 @@ cmake --build sim/build-mila -j8
 cd sim && P4_SIM_SCRIPT="wait 1500; open demo.mila" ./build-mila/p4os_sim
 
 # the .so for the card
-tools/build_apps.sh mila                      # apps/mila/build/mila.so
+tools/build_apps.sh mila                      # apps/mila/build/rev1_3/mila.so
 ```
 
 On the card they go in `/apps`: `mila.so` and `mila_p4.pak` with its parts

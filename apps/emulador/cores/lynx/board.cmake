@@ -31,8 +31,10 @@ set(_lynx_one ${CMAKE_BINARY_DIR}/cores/emu_core_lynx_one.o)
 set(_lynx_objcopy ${CMAKE_OBJCOPY})
 if(NOT _lynx_objcopy)
     string(REGEX REPLACE "gcc$" "objcopy" _lynx_objcopy ${CMAKE_C_COMPILER})
+    string(REGEX REPLACE "gcc\\.exe$" "objcopy.exe" _lynx_objcopy ${_lynx_objcopy})
 endif()
 string(REGEX REPLACE "objcopy$" "readelf" _lynx_readelf ${_lynx_objcopy})
+string(REGEX REPLACE "objcopy\\.exe$" "readelf.exe" _lynx_readelf ${_lynx_readelf})
 add_custom_command(TARGET emu_core_lynx POST_BUILD
     COMMAND ${CMAKE_C_COMPILER} -nostdlib -r -o ${_lynx_one}.all "$<TARGET_OBJECTS:emu_core_lynx>"
     COMMAND ${CMAKE_COMMAND} -DIN=${_lynx_one}.all -DOUT=${_lynx_one} -DKEEP=emu_core_lynx

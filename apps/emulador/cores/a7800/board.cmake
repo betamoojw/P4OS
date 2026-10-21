@@ -28,8 +28,10 @@ set(_a78_one ${CMAKE_BINARY_DIR}/cores/emu_core_a7800_one.o)
 set(_a78_objcopy ${CMAKE_OBJCOPY})
 if(NOT _a78_objcopy)
     string(REGEX REPLACE "gcc$" "objcopy" _a78_objcopy ${CMAKE_C_COMPILER})
+    string(REGEX REPLACE "gcc\\.exe$" "objcopy.exe" _a78_objcopy ${_a78_objcopy})
 endif()
 string(REGEX REPLACE "objcopy$" "readelf" _a78_readelf ${_a78_objcopy})
+string(REGEX REPLACE "objcopy\\.exe$" "readelf.exe" _a78_readelf ${_a78_readelf})
 add_custom_command(TARGET emu_core_a7800 POST_BUILD
     COMMAND ${CMAKE_C_COMPILER} -nostdlib -r -o ${_a78_one}.all "$<TARGET_OBJECTS:emu_core_a7800>"
     COMMAND ${CMAKE_COMMAND} -DIN=${_a78_one}.all -DOUT=${_a78_one} -DKEEP=emu_core_a7800

@@ -31,7 +31,7 @@ extern "C" {
  *
  * v100 (2026-09-27): orientation flags, the resize() callback, and the
  * runtime fields after it. */
-#define AOS_ABI_VERSION     100
+#define AOS_ABI_VERSION     101
 
 typedef enum {
     AOS_APP_FLAG_NONE       = 0,

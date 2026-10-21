@@ -519,8 +519,8 @@ static void build_power(lv_obj_t *col)
     else snprintf(t, sizeof t, "%s", _("Datos: el GPIO que elijas en Tira, con una resistencia de 330 Ω en serie."));
     caption(wc, t);
     caption(wc, _("La placa da 3,3 V y muchas tiras de 5 V quieren 3,5 V o más para entender los datos: con un level shifter (74AHCT125 o similar) anda siempre."));
-    caption(wc, _("Masa común: la de la tira, la de la fuente y la de la placa (pin 13, por ejemplo)."));
-    caption(wc, _("Los 5 V de la tira, de una fuente aparte salvo con pocos LEDs. Los pines 1 y 3 de la placa tienen 5 V aun con la placa apagada por POWER. Una tira larga lleva alimentación por los dos extremos."));
+    caption(wc, _("Masa común: la de la tira, la de la fuente y un pin GND de la placa."));
+    caption(wc, _("Los 5 V de la tira, de una fuente aparte salvo con pocos LEDs. Consultá el mapa de la placa para ubicar 5 V y GND. Una tira larga lleva alimentación por los dos extremos."));
     power_refresh();
 }
 

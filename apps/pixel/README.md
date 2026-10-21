@@ -11,7 +11,7 @@ cmake -S sim -B sim/build-pixel -DCMAKE_BUILD_TYPE=Release -DP4OS_SIM_APPS=pixel
 cd sim && P4_SIM_SCRIPT="wait 800; open aos.pixel" ./build-pixel/p4os_sim
 
 # the .so for the microSD
-tools/build_apps.sh pixel                          # apps/pixel/build/pixel.so
+tools/build_apps.sh pixel                          # apps/pixel/build/rev1_3/pixel.so
 ```
 
 ## On the 5" screen

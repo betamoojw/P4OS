@@ -1,0 +1,16 @@
+# Shared by firmware, simulator and the hardware bench. Silicon revision is
+# selected separately through sdkconfig.defaults.rev*.
+set(AOS_BOARD "lcd5" CACHE STRING "Waveshare display: lcd5, lcd7, lcd8, lcd10_1")
+set_property(CACHE AOS_BOARD PROPERTY STRINGS lcd5 lcd7 lcd8 lcd10_1)
+set(_aos_boards lcd5 lcd7 lcd8 lcd10_1)
+list(FIND _aos_boards "${AOS_BOARD}" _aos_board_index)
+if(_aos_board_index LESS 0)
+    message(FATAL_ERROR "Unknown AOS_BOARD=${AOS_BOARD}; choose lcd5, lcd7, lcd8 or lcd10_1")
+endif()
+set(_aos_board_ids 5 7 8 101)
+list(GET _aos_board_ids ${_aos_board_index} AOS_BOARD_ID)
+if(COMMAND idf_build_set_property)
+    idf_build_set_property(COMPILE_DEFINITIONS "AOS_BOARD_ID=${AOS_BOARD_ID}" APPEND)
+else()
+    add_compile_definitions(AOS_BOARD_ID=${AOS_BOARD_ID})
+endif()

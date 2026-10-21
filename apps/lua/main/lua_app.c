@@ -120,7 +120,7 @@
  * x1; the bottom keeps a canvas from being a smear of 80-pixel squares. */
 #define LUA_MIN_SIDE        16
 #define LUA_MAX_SIDE        1280
-#define LUA_MAX_PX          (720 * 1280)
+#define LUA_MAX_PX          (AOS_PANEL_W * AOS_PANEL_H)
 #define LUA_FILL_DIV        3               /* the default canvas: the screen
                                              * over this, x this             */
 

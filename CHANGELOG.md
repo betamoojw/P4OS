@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+- Added LCD-7, LCD-8 and LCD-10.1 hardware profiles, preserving LCD-5 as the
+  default. Firmware, simulator and hardware bench share board geometry;
+  panel initialization and touch now follow the selected model. LCD-X header
+  numbering, USB wiring labels and wiring guidance match the new boards.
+- Dynamic app ABI 101 uses the host's native framebuffer width. Rebuild and
+  reinstall apps when upgrading. See [hardware profiles](docs/BOARDS.md) for
+  commands, touch limits and the pending physical validation checklist.
+- Dynamic apps now build and install from separate silicon-profile directories.
+  The cross-platform builder checks their imports against the actual firmware
+  ELFs and can validate all four boards with both profiles. Shared-object builds
+  track header dependencies and use response files for Windows command limits.
+- Fixed Windows emulator binutils selection and CAS engine source extraction,
+  missing GCC link helper and archive command-length limits. All 50 apps and
+  11 emulator modules per silicon profile pass the four-board static checks.
+- Golf buffers and Lua/Python canvas limits follow the host panel size, including
+  800 × 1280 displays.
+
 ## 0.20.1 — 2026-10-20
 
 - **Buttons with garbage after coming back to an app.** Leaving an app that

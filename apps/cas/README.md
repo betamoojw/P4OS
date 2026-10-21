@@ -89,12 +89,24 @@ bench, which now writes its results into the history as well as the log.
 ## Building
 
 ```bash
-apps/cas/engine/build_engine.sh     # once: downloads and builds the engine (~4 min)
-tools/build_apps.sh cas             # apps/cas/build/cas.so, ~5 MB
+apps/cas/engine/build_engine.sh     # once: downloads and builds the engine
+PROFILE=rev1_3 tools/build_apps.sh cas  # apps/cas/build/rev1_3/cas.so; or use rev3_x
 ```
 
 `build_engine.sh` downloads three source archives into `~/.cache/p4os-cas`
-(checked against their SHA-256) and leaves `engine/lib/` (ignored by git):
+(checked against their SHA-256) and leaves `engine/lib/` (ignored by git).
+
+The engine uses the common `rv32imafc_zicsr_zifencei` / `ilp32f` baseline and
+can be reused for both silicon profiles. The app itself is built separately
+for each profile. First-build time depends heavily on the host.
+
+On Windows, build the engine in an MSYS2 UCRT64 shell with `make`, `m4`,
+native GCC and the ESP-IDF RISC-V toolchain on `PATH`. For example, from the
+repository root: `CAS_WORK="$PWD/build/cas-work" JOBS=3 bash apps/cas/engine/build_engine.sh`.
+Build the app in an activated ESP-IDF terminal with
+`python tools/build_apps.py cas --all-profiles --all-boards` after building
+the eight firmware variants. The engine script excludes unused links to the
+source author's Linux host and retries incomplete source extraction.
 
 | Source | What comes from it | License |
 |---|---|---|

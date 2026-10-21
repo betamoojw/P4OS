@@ -1,5 +1,9 @@
 # Hardware reference (local only)
 
+For supported build selections and LCD-5/LCD-X differences, see
+[Hardware profiles](../BOARDS.md). LCD-X resources are available in
+[Waveshare's official repository](https://github.com/waveshareteam/ESP32-P4-WIFI6-Touch-LCD-X).
+
 Third-party material is kept next to the repo but not committed (licence and size).
 Fetch it again from:
 

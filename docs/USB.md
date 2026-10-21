@@ -1,5 +1,14 @@
 # USB on the P4
 
+## LCD-X wiring
+
+The physical pin numbers in the historical measurements below refer to LCD-5.
+On LCD-7/8/10.1, Full-Speed D−/D+ are **19/17**, High-Speed D−/D+ are
+**15/13**, 5 V is **39 or 37**, and GND is **35**, for example. Pin 1 is
+GPIO48, not power. Use [Hardware profiles](BOARDS.md) and the board's pinout
+before connecting devices. USB API tokens `21/23` and `25/27` remain legacy
+controller names; use `fs`/`hs` and inspect `physical_pins` for new clients.
+
 The board's "OTG" connector is the P4's own USB 2.0 High-Speed port
 (480 Mbit/s). The console lives on the other connector (the CH343 UART), so
 the OTG port is free for whatever it is asked to be. It is chosen in

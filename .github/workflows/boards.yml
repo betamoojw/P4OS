@@ -1,0 +1,45 @@
+name: hardware-profiles
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lcd-x:
+    runs-on: ubuntu-latest
+    container: espressif/idf:release-v5.5
+    strategy:
+      fail-fast: false
+      matrix:
+        board: [lcd7, lcd8, lcd10_1]
+        revision: [rev1_3, rev3_x]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Geometry contract
+        shell: bash
+        run: |
+          . $IDF_PATH/export.sh
+          CC=riscv32-esp-elf-gcc python tests/test_board_profiles.py
+      - name: Firmware
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          . $IDF_PATH/export.sh
+          AOS_BOARD=${{ matrix.board }} tools/build_fw.sh ${{ matrix.revision }}
+      - name: Hardware bench
+        shell: bash
+        working-directory: bench/p4bench
+        run: |
+          . $IDF_PATH/export.sh
+          idf.py -B build/${{ matrix.board }} -D AOS_BOARD=${{ matrix.board }} \
+            -D SDKCONFIG=build/${{ matrix.board }}/sdkconfig \
+            -D "SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.defaults.${{ matrix.revision }}" build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.board }}-${{ matrix.revision }}
+          path: |
+            build/${{ matrix.board }}/${{ matrix.revision }}/p4os.bin
+            build/${{ matrix.board }}/${{ matrix.revision }}/p4os.elf
+            build/${{ matrix.board }}/${{ matrix.revision }}/sdkconfig

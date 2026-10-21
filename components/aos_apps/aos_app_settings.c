@@ -392,7 +392,7 @@ static const char *usb_state_text(uint32_t *color)
         return _("Esperando a la computadora. La tarjeta ya salió de la placa: las apps de la tarjeta no abren.");
     case AOS_HAL_USB_HOST:
         *color = 0x5E5CE6;
-        return _("Lo usa el host de pendrives, en los pines 25 y 27.");
+        return _("Lo usa el host USB de alta velocidad.");
     default:
         return _("El puerto está libre: la placa no aparece en la computadora.");
     }
@@ -446,7 +446,7 @@ static const char *host_state_text(uint32_t *color)
         if (!name[0]) snprintf(name, sizeof name, "%04x:%04x", dv[i].vid, dv[i].pid);
         uses_text(dv[i].uses, use, sizeof use);
         o += snprintf(t + o, sizeof t - o, "%s%s (%s%s): %s", o ? "\n" : "", name,
-                      dv[i].port == AOS_HAL_USB_HOST_HEADER ? "21/23" : "25/27", dv[i].hub_port ? ", hub" : "",
+                      dv[i].port == AOS_HAL_USB_HOST_HEADER ? AOS_USB_FS_PINS : AOS_USB_HS_PINS, dv[i].hub_port ? ", hub" : "",
                       use[0] ? use : _("sin uso todavía"));
     }
     /* why a pendrive is not mounted (the HAL's key, aos_usb_p4.c) */
@@ -645,10 +645,15 @@ static void build_usb(lv_obj_t *p)
     U.host_sw = lv_obj_get_child(row_switch(g, AOS_SYM_USB_PORT, 0x5E5CE6, _("Host USB"), aos_hal_usb_host_on(),
                                             usb_host_cb), -1);
     state_row(g, &U.host_dot, &U.host_state);
+#if AOS_BOARD_ID == 5
     note(p, _("Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 1 y GND del 5."));
+#else
+    note(p, _("Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 39 y GND del 35."));
+#endif
 
     g = group(p, _("PINES DE DATOS"));
     int port = aos_hal_usb_host_port();
+#if AOS_BOARD_ID == 5
     pick_row(g, _("Pines 21 (D−) y 23 (D+)"), port == AOS_HAL_USB_HOST_HEADER, usb_pins_cb,
              (void *)(intptr_t)AOS_HAL_USB_HOST_HEADER);
     pick_row(g, _("Pines 25 (D−) y 27 (D+), o el conector OTG"), port == AOS_HAL_USB_HOST_OTG, usb_pins_cb,
@@ -656,6 +661,15 @@ static void build_usb(lv_obj_t *p)
     pick_row(g, _("Los dos a la vez"), port == AOS_HAL_USB_HOST_BOTH, usb_pins_cb,
              (void *)(intptr_t)AOS_HAL_USB_HOST_BOTH);
     note(p, _("21 y 23 son el segundo controlador USB del P4, de velocidad completa (12 Mbit/s): andan a la vez que cualquier modo del conector OTG. 25 y 27 son los mismos cables que el conector OTG, de alta velocidad, con cables cortos: el host le saca el modo al OTG mientras está prendido. Los dos a la vez son dos puertos, por ejemplo un teclado en uno y un pendrive en el otro."));
+#else
+    pick_row(g, _("Pines 19 (D−) y 17 (D+)"), port == AOS_HAL_USB_HOST_HEADER, usb_pins_cb,
+             (void *)(intptr_t)AOS_HAL_USB_HOST_HEADER);
+    pick_row(g, _("Pines 15 (D−) y 13 (D+), o el conector OTG"), port == AOS_HAL_USB_HOST_OTG, usb_pins_cb,
+             (void *)(intptr_t)AOS_HAL_USB_HOST_OTG);
+    pick_row(g, _("Los dos a la vez"), port == AOS_HAL_USB_HOST_BOTH, usb_pins_cb,
+             (void *)(intptr_t)AOS_HAL_USB_HOST_BOTH);
+    note(p, _("19 y 17 son el segundo controlador USB del P4, de velocidad completa (12 Mbit/s): andan a la vez que cualquier modo del conector OTG. 15 y 13 son los mismos cables que el conector OTG, de alta velocidad, con cables cortos: el host le saca el modo al OTG mientras está prendido. Los dos a la vez son dos puertos, por ejemplo un teclado en uno y un pendrive en el otro."));
+#endif
 
     g = group(p, _("AUDIO USB"));
     row_switch(g, AOS_SYM_VOLUME_HIGH, 0xFF375F, _("Sonido por la placa de audio USB"), aos_hal_usb_audio_enabled(),

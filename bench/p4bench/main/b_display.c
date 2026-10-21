@@ -19,7 +19,7 @@
 #include "esp_ldo_regulator.h"
 #include "esp_lcd_mipi_dsi.h"
 #include "esp_lcd_panel_io.h"
-#include "esp_lcd_hx8394.h"
+#include "aos_board_display.h"
 #include "driver/ppa.h"
 #include "driver/gpio.h"
 #include "bsp/esp-bsp.h"
@@ -68,7 +68,7 @@ esp_err_t disp_init(void)
         .bus_id = 0,
         .num_data_lanes = 2,
         .phy_clk_src = 0,
-        .lane_bit_rate_mbps = 700,
+        .lane_bit_rate_mbps = AOS_DSI_MBPS,
     };
     ESP_RETURN_ON_ERROR(esp_lcd_new_dsi_bus(&bus_cfg, &bus), TAG, "DSI bus");
 
@@ -76,20 +76,10 @@ esp_err_t disp_init(void)
     esp_lcd_dbi_io_config_t dbi = { .virtual_channel = 0, .lcd_cmd_bits = 8, .lcd_param_bits = 8 };
     ESP_RETURN_ON_ERROR(esp_lcd_new_panel_io_dbi(bus, &dbi, &io), TAG, "DBI io");
 
-    esp_lcd_dpi_panel_config_t dpi = HX8394_720_1280_PANEL_30HZ_DPI_CONFIG(LCD_COLOR_PIXEL_FORMAT_RGB565);
+    esp_lcd_dpi_panel_config_t dpi = aos_board_dpi_config();
     dpi.num_fbs = nfb;
     dpi.flags.use_dma2d = true;
-    hx8394_vendor_config_t vendor = {
-        .mipi_config = { .dsi_bus = bus, .dpi_config = &dpi, .lane_num = 2 },
-    };
-    esp_lcd_panel_dev_config_t dev = {
-        .bits_per_pixel = 16,
-        .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,
-        .reset_gpio_num = BSP_LCD_RST,
-        .vendor_config = &vendor,
-        .flags.reset_active_high = 1,
-    };
-    ESP_RETURN_ON_ERROR(esp_lcd_new_panel_hx8394(io, &dev, &s_panel), TAG, "HX8394");
+    ESP_RETURN_ON_ERROR(aos_board_panel_new(io, bus, &dpi, &s_panel), TAG, "panel");
     ESP_RETURN_ON_ERROR(esp_lcd_panel_reset(s_panel), TAG, "reset");
     ESP_RETURN_ON_ERROR(esp_lcd_panel_init(s_panel), TAG, "init");
 

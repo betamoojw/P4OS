@@ -4,7 +4,7 @@
  *     cd sim && cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j8
  *     ./build/p4os_sim
  *
- * A window the size of the 720x1280 panel, scaled to fit a desktop screen
+ * A window the size of the selected panel, scaled to fit a desktop screen
  * (P4_SIM_ZOOM, default 0.6). The mouse is the finger. It runs from sim/, so
  * the fake SD card is sim/sim_fs.
  *
@@ -385,7 +385,7 @@ int main(int argc, char **argv)
     float zoom = getenv("P4_SIM_ZOOM") ? (float)atof(getenv("P4_SIM_ZOOM")) : 0.6f;
     lv_display_t *disp = lv_sdl_window_create(AOS_PANEL_W, AOS_PANEL_H);
     lv_sdl_window_set_zoom(disp, zoom);
-    lv_sdl_window_set_title(disp, "P4OS - ESP32-P4-WIFI6-Touch-LCD-5");
+    lv_sdl_window_set_title(disp, "P4OS - " AOS_BOARD_NAME);
     aos_hal_sim_set_display(disp);
     SDL_AddEventWatch(event_watch, NULL);
     lv_sdl_mouse_create();

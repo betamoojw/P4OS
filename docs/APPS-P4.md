@@ -11,19 +11,29 @@ recipes are in [plan/APPS.md](plan/APPS.md).
 tools/build_fw.sh rev1_3                                   # the firmware first
 python3 tools/gen_symbols.py --build build/rev1_3          # when the HAL or LVGL changed
 tools/build_fw.sh rev1_3                                   # again, with the new table
-tools/build_apps.sh                  # every app, or: tools/build_apps.sh gemas
+PROFILE=rev1_3 tools/build_apps.sh    # every app, or append: gemas
 ```
 
 `build_apps.sh` builds each app for the ESP32-P4 whatever the app's own
 `sdkconfig.defaults` say, with the LVGL configuration taken from the firmware
-of `build/$PROFILE` (default `rev1_3`), and refuses a `.so` that:
+of the selected firmware (default `PROFILE=rev1_3`, `AOS_BOARD=lcd5`),
+and refuses a `.so` that:
 
 - does not export `aos_app_abi` / `aos_app_init`, or says another ABI;
 - is not single-float ABI (the firmware is `ilp32f`);
-- needs a symbol that is not in `components/aos_dynapp/aos_symbols.c`;
+- needs a symbol absent from the linked firmware's runtime resolver tables;
+- uses unsupported dynamic relocations or a different silicon/LVGL configuration;
 - carries a local path.
 
-To install, copy `apps/*/build/*.so` into `/apps` on the card (the portal's
+Build outputs are isolated by silicon profile in `apps/<app>/build/$PROFILE/`.
+ABI **101** apps use the host's runtime panel width and work on all four
+boards within the same silicon profile. Match the app package to the firmware:
+`rev1_3` and `rev3_x` use different instruction sets. See
+[BOARDS.md](BOARDS.md) for the full eight-firmware validation command and reports.
+On Windows, use `python tools/build_apps.py --profile rev3_x` in an activated
+ESP-IDF terminal. Build the CAS engine first as described in its README.
+
+To install, copy `apps/*/build/$PROFILE/*.so` into `/apps` on the card (the portal's
 `PUT /api/fs/put?path=/apps/<name>.so`, or the card in the computer) and
 restart: the card is scanned at boot.
 
@@ -121,8 +131,8 @@ Fps measured with the app's own log line in `/api/log`.
 | Lua (cubes) | 34 fps with 24 cubes | | full-screen present |
 | Neon Snakes | 23 fps in combat | | |
 
-To deploy: `tools/install_apps.sh p4os.local [app…]`. It uploads
-`apps/<name>/build/<name>.so` and the `<name>_p4.pak` with its parts, if the
+To deploy: `PROFILE=rev1_3 tools/install_apps.sh p4os.local [app…]` (or `rev3_x`). It uploads
+`apps/<name>/build/$PROFILE/<name>.so` and the `<name>_p4.pak` with its parts, if the
 app has one, to `/apps`, deletes the stale parts, and restarts the board
 through the portal. The card in the computer works too. The paks are
 gitignored; each app's README says how to build its pak.
@@ -392,10 +402,10 @@ Asked by the emulator (`apps/emulador`, 2026-10-16), for anything like it:
   module exports one that returns its table. The loader keys modules by the
   file's name without `.so`: a module named as a card app is refused (and
   `tools/build_apps.sh` fails on it), and one is open once at a time. The
-  app builds them into `build/modules/*.so`; `tools/build_apps.sh` checks
+  app builds them into `build/<profile>/modules/*.so`; `tools/build_apps.sh` checks
   them like apps (float ABI, the firmware's table, no local paths),
   `tools/install_apps.sh` puts them in the card's `apps/<app>/`, and the CI
-  in `apps.zip` the same way. The app scan never looks into those folders.
+  in `apps-<profile>.zip` the same way. The app scan never looks into those folders.
   In the simulator they are linked into the app.
 - **The USB keyboard's state**: `aos_hal_usb_kbd_held(usages, max, &mods)`,
   the keys held now on every keyboard (HID usages of the keyboard page) and

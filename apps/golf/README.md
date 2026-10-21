@@ -32,7 +32,7 @@ cmake --build sim/build-golf -j8
 cd sim && P4_SIM_SCRIPT="wait 1500; open demo.golf" ./build-golf/p4os_sim
 
 # the .so for the card
-tools/build_apps.sh golf                      # apps/golf/build/golf.so
+tools/build_apps.sh golf                      # apps/golf/build/rev1_3/golf.so
 ```
 
 On the card both go in `/apps`: `golf.so` and `golf_p4.pak` (~4 MB). Neither

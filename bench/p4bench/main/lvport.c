@@ -35,6 +35,7 @@
 #include "esp_lcd_touch.h"
 #include "bsp/esp-bsp.h"
 #include "bsp/touch.h"
+#include "aos_board_display.h"
 #include "lvgl.h"
 #include "demos/lv_demos.h"
 #include "bench.h"
@@ -513,8 +514,7 @@ void lvport_start(void)
     disp_set_trans_done(dma2d_done);
     s_back = 1;
 
-    bsp_display_cfg_t tcfg = { 0 };
-    if (bsp_touch_new(&tcfg, &s_touch) != ESP_OK) {
+    if (aos_board_touch_new(&s_touch) != ESP_OK) {
         ESP_LOGE(TAG, "touch not found");
         s_touch = NULL;
     }

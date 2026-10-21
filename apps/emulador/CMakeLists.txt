@@ -8,7 +8,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/../common.cmake)
 # The consoles. Each core is a static library of its own, compiled here with
 # its own flags (its optimisation, its defines, C++ and assembly where it has
 # them): cores/emu_cores.cmake has the helper every cores/<dir>/board.cmake
-# calls. Each library then becomes a MODULE of its own, build/modules/<dir>.so,
+# calls. Each library then becomes a MODULE in build/<profile>/modules/<dir>.so,
 # which tools/install_apps.sh puts in the card's apps/emulador/ and the app
 # loads with aos_hal_module_open() only while one of its consoles plays: the
 # app itself (emulador.so, the screens) carries none of them. So a console
@@ -66,11 +66,13 @@ foreach(_core ${EMU_CORES})
     set(_mod_so ${_mod_dir}/${_core}.so)
     add_custom_command(OUTPUT ${_mod_so}
         COMMAND ${CMAKE_C_COMPILER} ${so_compile_flags} -I${CMAKE_CURRENT_LIST_DIR}/main
-                ${_mod_dir}/${_core}_module.c -o ${_entry_o}
+                -MMD -MF ${_entry_o}.d ${_mod_dir}/${_core}_module.c -o ${_entry_o}
         COMMAND ${CMAKE_C_COMPILER} ${so_link_flags} -o ${_mod_so} ${_entry_o}
                 ${CMAKE_BINARY_DIR}/cores/libemu_core_${_core}.a -Wl,--allow-shlib-undefined
         COMMAND ${CMAKE_STRIP_SO} ${so_strip_flags} ${_mod_so}
-        DEPENDS emu_core_${_core} ${_mod_dir}/${_core}_module.c
+        DEPENDS emu_core_${_core} ${CMAKE_BINARY_DIR}/cores/libemu_core_${_core}.a
+                ${_mod_dir}/${_core}_module.c ${so_obj_dir}/compile.rsp
+        DEPFILE ${_entry_o}.d
         COMMENT "Build the module ${_core}.so"
         VERBATIM)
     list(APPEND _mod_targets ${_mod_so})

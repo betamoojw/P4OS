@@ -20,8 +20,9 @@
 #include "esp_err.h"
 #include "esp_lcd_panel_ops.h"
 
-#define LCD_W 720
-#define LCD_H 1280
+#include "aos_board.h"
+#define LCD_W AOS_NATIVE_W
+#define LCD_H AOS_NATIVE_H
 #define LCD_BPP 2
 #define LCD_FB_BYTES (LCD_W * LCD_H * LCD_BPP)
 

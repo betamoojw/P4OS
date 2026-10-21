@@ -15,7 +15,7 @@ cmake -S sim -B sim/build -DCMAKE_BUILD_TYPE=Release && cmake --build sim/build 
 P4_SIM_SCRIPT="wait 1500; open demo.claudito" ./sim/build/p4os_sim
 
 # the .so for the microSD
-tools/build_apps.sh claudito                       # apps/claudito/build/claudito.so, ~36 KB
+tools/build_apps.sh claudito                       # apps/claudito/build/rev1_3/claudito.so, ~36 KB
 ```
 
 ## On P4OS

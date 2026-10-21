@@ -29,6 +29,7 @@ set(_md_one ${CMAKE_BINARY_DIR}/cores/emu_core_md_one.o)
 set(_md_objcopy ${CMAKE_OBJCOPY})
 if(NOT _md_objcopy)
     string(REGEX REPLACE "gcc$" "objcopy" _md_objcopy ${CMAKE_C_COMPILER})
+    string(REGEX REPLACE "gcc\\.exe$" "objcopy.exe" _md_objcopy ${_md_objcopy})
 endif()
 add_custom_command(TARGET emu_core_md POST_BUILD
     COMMAND ${CMAKE_C_COMPILER} -nostdlib -r -o ${_md_one}.all "$<TARGET_OBJECTS:emu_core_md>"

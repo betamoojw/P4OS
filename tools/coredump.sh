@@ -86,9 +86,13 @@ elif [ "$(ls build/elf/"$sha"*.elf 2>/dev/null | wc -l)" -eq 1 ]; then
     # by prefix: a dump from older firmware carries only 9 characters
     elf=$(ls build/elf/"$sha"*.elf)
     echo "== the firmware that crashed: $elf"
-elif [ -f build/rev1_3/p4os.elf ] && [ "$(shasum -a 256 build/rev1_3/p4os.elf | cut -c1-${#sha})" = "$sha" ]; then
-    elf=build/rev1_3/p4os.elf
-    echo "== the firmware that crashed: $elf (the one built last)"
+elif matched=$(for candidate in build/rev*/p4os.elf build/lcd*/rev*/p4os.elf; do
+                   [ -f "$candidate" ] || continue
+                   s=$(shasum -a 256 "$candidate" | cut -c1-${#sha})
+                   if [ "$s" = "$sha" ]; then echo "$candidate"; break; fi
+               done) && [ -n "$matched" ]; then
+    elf=$matched
+    echo "== the firmware that crashed: $elf (matching local build)"
 elif ver=$(echo "$info" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version",""))') &&
      echo "$ver" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$' && command -v gh >/dev/null &&
      fetched=$(for p in rev1_3 rev3_x; do

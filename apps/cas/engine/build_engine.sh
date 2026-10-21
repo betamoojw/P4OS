@@ -65,7 +65,11 @@ OLM_SHA=721bab18ff37160fd9e903eb211ff26fdee38c3d0041d556b07d76089c435d17
 
 fetch() {  # url sha file
     local f=$WORK/dl/$3
-    if [ ! -f "$f" ]; then echo "downloading $3"; curl -sSL -o "$f.part" "$1"; mv "$f.part" "$f"; fi
+    if [ ! -f "$f" ]; then
+        echo "downloading $3"
+        curl --fail --location --retry 2 --connect-timeout 20 --max-time 600 -sS -o "$f.part" "$1"
+        mv "$f.part" "$f"
+    fi
     local sum
     if command -v sha256sum >/dev/null; then sum=$(sha256sum "$f"); else sum=$(shasum -a 256 "$f"); fi
     [ "${sum%% *}" = "$2" ] || { echo "$3: wrong checksum"; exit 1; }
@@ -75,9 +79,13 @@ fetch $GCC_URL $GCC_SHA gcc-14.2.0.tar.xz
 fetch $OLM_URL $OLM_SHA openlibm-0.8.8.tar.gz
 
 S=$WORK/src
-if [ ! -d $S/khiext ]; then
+if [ ! -f $S/khiext/.p4os-extracted ]; then
     echo "unpacking KhiCAS"
+    # Discard generated links and unused autotools links to the author's host.
+    # GMP configure recreates gmp-mparam.h for the selected target.
     mkdir -p $S/khiext && tar xjf $WORK/dl/khiext.tar.bz2 -C $S/khiext --strip-components=1 \
+        --exclude='*/.libs/*' --exclude='*/mpfi-1.5.4/m4/*' \
+        --exclude='*/mpfi-1.5.4/build-aux/*' --exclude='*/gmp-6.2.1/gmp-mparam.h' \
         khiext/apps/KhiCAS/src/giac-1.6.0/src khiext/apps/KhiCAS/src/gmp-6.2.1 khiext/apps/KhiCAS/src/mpfr-4.1.0 \
         khiext/apps/KhiCAS/src/mpfi-1.5.4
     # the tarball carries ARM objects and Linux host tools from its own build
@@ -85,17 +93,22 @@ if [ ! -d $S/khiext ]; then
     for f in $S/khiext/apps/KhiCAS/src/gmp-6.2.1/gen-*; do
         case $f in *.c|*.h) ;; *) rm -f "$f" ;; esac
     done
+    touch $S/khiext/.p4os-extracted
 fi
 if [ ! -d $S/gcc-14.2.0 ]; then
     echo "unpacking GCC's libstdc++ and libgcc"
     tar xJf $WORK/dl/gcc-14.2.0.tar.xz -C $S gcc-14.2.0/libstdc++-v3 gcc-14.2.0/libgcc \
         gcc-14.2.0/config gcc-14.2.0/include gcc-14.2.0/config.sub gcc-14.2.0/config.guess \
-        gcc-14.2.0/install-sh gcc-14.2.0/ltmain.sh gcc-14.2.0/config-ml.in gcc-14.2.0/missing \
+        gcc-14.2.0/install-sh gcc-14.2.0/ltmain.sh gcc-14.2.0/libtool-ldflags gcc-14.2.0/config-ml.in gcc-14.2.0/missing \
         gcc-14.2.0/mkinstalldirs gcc-14.2.0/config.rpath gcc-14.2.0/gcc/BASE-VER \
         gcc-14.2.0/gcc/DATESTAMP gcc-14.2.0/gcc/DEV-PHASE gcc-14.2.0/libiberty
     # std::chrono's time-zone database wants threads and a filesystem; the
     # CAS needs neither
     echo "// not built for P4OS" > $S/gcc-14.2.0/libstdc++-v3/src/c++20/tzdb.cc
+fi
+# Older cached extractions omitted this helper used by libstdc++'s link rules.
+if [ ! -f "$S/gcc-14.2.0/libtool-ldflags" ]; then
+    tar xJf "$WORK/dl/gcc-14.2.0.tar.xz" -C "$S" gcc-14.2.0/libtool-ldflags
 fi
 if [ ! -d $S/openlibm ]; then
     mkdir -p $S/openlibm && tar xzf $WORK/dl/openlibm-0.8.8.tar.gz -C $S/openlibm --strip-components=1
@@ -252,7 +265,10 @@ for a in libgmp libmpfr libmpfi libstdc++ libsupc++ libopenlibm libsfp; do
     rmdir $M/$a
 done
 rm -f $OUT/libcasengine.a
-$T-ar rcs $OUT/libcasengine.a $M/*.o
+# A native Windows process cannot accept the 1,500-object command line.
+# Relative names also avoid MSYS path conversion inside the response file.
+(cd "$M" && printf '"%s"\n' *.o > objects.rsp &&
+ $T-ar rcs "$OUT/libcasengine.a" @objects.rsp)
 $T-objcopy \
     --redefine-sym malloc=cas_malloc --redefine-sym free=cas_free \
     --redefine-sym calloc=cas_calloc --redefine-sym realloc=cas_realloc \

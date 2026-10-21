@@ -10,8 +10,8 @@ cmake -S sim -B sim/build -DP4OS_SIM_APPS="hello_app;gemas" && cmake --build sim
 P4_SIM_SCRIPT="wait 800; open demo.gemas" ./sim/build/p4os_sim
 
 # the .so for the microSD
-cd apps/gemas && idf.py so                         # build/gemas.so
-cp build/gemas.so /Volumes/<sd>/apps/
+PROFILE=rev1_3 tools/build_apps.sh gemas           # or PROFILE=rev3_x
+cp apps/gemas/build/rev1_3/gemas.so /Volumes/<sd>/apps/
 ```
 
 ## On the 5" screen

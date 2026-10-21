@@ -15,12 +15,10 @@ and delete what you recorded.
 cd sim && cmake --build build -j8
 P4_SIM_SCRIPT="wait 800; open app.recorder" ./build/p4os_sim
 
-# the .so for the microSD
+# the P4 .so for the microSD, from the repository root
 source ~/esp/esp-idf/export.sh
-cd apps/recorder
-idf.py -G 'Unix Makefiles' set-target esp32s3     # first time only
-idf.py so                                          # build/recorder.so
-cp build/recorder.so /Volumes/<sd>/apps/
+PROFILE=rev1_3 tools/build_apps.sh recorder     # or PROFILE=rev3_x
+cp apps/recorder/build/rev1_3/recorder.so /Volumes/<sd>/apps/
 ```
 
 It needs a firmware with the `aos_hal_rec_*` API (see below).

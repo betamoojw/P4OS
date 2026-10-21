@@ -232,8 +232,12 @@ macro(project_so project_name)
                     endif()
                 endforeach()
 
-                # Ensure component is built first (to get dependencies resolved)
-                if(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
+                # main is compiled independently below. Building idf::main as
+                # well pulls in an entire unused firmware (including LVGL).
+                # Other explicitly requested components retain their targets.
+                if(c STREQUAL "main")
+                    continue()
+                elseif(${CMAKE_GENERATOR} STREQUAL "Unix Makefiles")
                     add_custom_command(OUTPUT so_${c}_app
                             COMMAND +${CMAKE_MAKE_PROGRAM} "__idf_${c}/fast"
                             COMMENT "Build Component: ${c}"
@@ -280,6 +284,15 @@ macro(project_so project_name)
 
         # Compile each C file to .o file
         set(so_obj_dir "${CMAKE_BINARY_DIR}/so_objs")
+        # Response files avoid Windows command-length limits and preserve
+        # spaces/quotes in definitions and include paths on every host.
+        set(_so_compile_rsp "")
+        foreach(_arg IN LISTS so_compile_flags def_flags include_flags)
+            string(REPLACE "\\" "\\\\" _arg "${_arg}")
+            string(REPLACE "\"" "\\\"" _arg "${_arg}")
+            string(APPEND _so_compile_rsp "\"${_arg}\"\n")
+        endforeach()
+        file(GENERATE OUTPUT "${so_obj_dir}/compile.rsp" CONTENT "${_so_compile_rsp}")
         foreach(c_file ${so_c_sources})
             # Create a unique object file name based on relative path
             file(RELATIVE_PATH c_file_rel ${CMAKE_SOURCE_DIR} ${c_file})
@@ -292,23 +305,34 @@ macro(project_so project_name)
             # Use list variables directly, not strings
             add_custom_command(OUTPUT ${obj_file}
                     COMMAND ${CMAKE_COMMAND} -E make_directory ${so_obj_dir}
-                    COMMAND ${CMAKE_C_COMPILER} ${so_compile_flags} ${def_flags} ${include_flags} ${c_file} -o ${obj_file}
-                    DEPENDS ${c_file}
+                    COMMAND ${CMAKE_C_COMPILER} "@${so_obj_dir}/compile.rsp" -MMD -MF "${obj_file}.d" ${c_file} -o ${obj_file}
+                    DEPENDS ${c_file} "${so_obj_dir}/compile.rsp"
+                    DEPFILE "${obj_file}.d"
                     COMMENT "Compile ${c_file} to ${obj_file_name}"
+                    VERBATIM
                     )
         endforeach()
+
+        set(_so_link_rsp "")
+        foreach(_arg IN LISTS so_link_flags so_obj_files so_link_libs)
+            string(REPLACE "\\" "\\\\" _arg "${_arg}")
+            string(REPLACE "\"" "\\\"" _arg "${_arg}")
+            string(APPEND _so_link_rsp "\"${_arg}\"\n")
+        endforeach()
+        file(GENERATE OUTPUT "${so_obj_dir}/link.rsp" CONTENT "${_so_link_rsp}")
 
         # Link all .o files to .so file
         # Use list variables directly for link flags
         add_custom_command(OUTPUT ${so_output}
                 # Undefined symbols are allowed to support modules resolved at runtime.
-                COMMAND ${CMAKE_C_COMPILER} ${so_link_flags} -o ${so_output} ${so_obj_files} ${so_link_libs} -Wl,--allow-shlib-undefined
+                COMMAND ${CMAKE_C_COMPILER} "@${so_obj_dir}/link.rsp" -o ${so_output} -Wl,--allow-shlib-undefined
                 COMMAND ${CMAKE_COMMAND} -DOUT=${so_output} -P ${ELF_LOADER_CMAKE_DIR}/check_shared_object.cmake
                 COMMAND ${CMAKE_COMMAND} -E echo "Linking ${so_output} completed"
                 COMMAND ${CMAKE_STRIP_SO} ${so_strip_flags} ${so_output}
-                DEPENDS ${so_dependencies} ${so_obj_files}
+                DEPENDS ${so_dependencies} ${so_obj_files} ${so_link_libs} "${so_obj_dir}/link.rsp"
                 COMMENT "Build Shared Object: ${so_output}"
                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                VERBATIM
                 )
         add_custom_target(so ALL DEPENDS ${so_output})
     endif()

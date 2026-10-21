@@ -39,7 +39,7 @@ cmake --build sim/build-chatarra -j8
 cd sim && P4_SIM_SCRIPT="wait 1500; open demo.chatarra" ./build-chatarra/p4os_sim
 
 # the .so for the microSD
-tools/build_apps.sh chatarra                       # apps/chatarra/build/chatarra.so
+tools/build_apps.sh chatarra                       # apps/chatarra/build/rev1_3/chatarra.so
 ```
 
 The watch game on the P4OS retro canvas ([`docs/RETRO.md`](../../docs/RETRO.md)),

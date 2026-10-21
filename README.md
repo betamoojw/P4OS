@@ -1,5 +1,11 @@
 # P4OS
 
+Hardware profiles: the original **5-inch** board remains the default; selectable
+**7-, 8- and 10.1-inch LCD-X** profiles are also available. See
+[Hardware profiles](docs/BOARDS.md) for build commands, app compatibility,
+specifications and validation limits. Existing performance measurements below
+are from the 5-inch board.
+
 An iPhone-style operating system for the
 [**Waveshare ESP32-P4-WIFI6-Touch-LCD-5**](https://www.waveshare.com/esp32-p4-wifi6-touch-lcd-5.htm)
 ([wiki](https://docs.waveshare.com/ESP32-P4-WIFI6-Touch-LCD-5)). It is a 5"
@@ -757,7 +763,7 @@ You need ESP-IDF **v5.5** (the C6 link runs esp_hosted 3.0.9 on it).
 [docs/C6.md](docs/C6.md) the C6's own firmware.
 
     tools/build_fw.sh rev1_3                 # the firmware (or rev3_x)
-    tools/build_apps.sh                      # every app in apps/, checked against that firmware
+    PROFILE=rev1_3 tools/build_apps.sh        # match the firmware's silicon profile
     cd sim && cmake -B build && cmake --build build -j8 && ./build/p4os_sim
 
 The first flash goes over the CH340 port:

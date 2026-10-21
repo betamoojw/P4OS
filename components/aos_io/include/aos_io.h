@@ -50,7 +50,8 @@ typedef struct {
     const char *note;
 } aos_io_pin_t;
 
-/* All 40 pins, in physical order (pin 1 = 5 V, pin 2 = 3V3). */
+/* All 40 pins, in physical order for the selected board. See docs/BOARDS.md:
+ * LCD-5 pin 1 is 5 V; LCD-X pin 1 is GPIO48. */
 const aos_io_pin_t *aos_io_header(void);
 const aos_io_pin_t *aos_io_pin_of_gpio(int gpio);   /* NULL: not on the header */
 

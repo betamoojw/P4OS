@@ -6,14 +6,15 @@
 #   ./tools/install_apps.sh p4os.local            all of them
 #   ./tools/install_apps.sh p4os.local turbo mila just these
 #   NORESTART=1 ./tools/install_apps.sh ...       upload only
+#   PROFILE=rev3_x ./tools/install_apps.sh ...   match the target silicon
 #
 # build_apps.sh BUILDS but does not install: it leaves the .so files in
-# apps/<x>/build/. Forget this step and the board goes on running the old
+# apps/<x>/build/<profile>/. Forget this step and the board goes on running the old
 # binaries, and the symptom misleads: the firmware looks updated and the apps
 # do not.
 #
 # What goes to /apps on the card:
-#   apps/<x>/build/<x>.so
+#   apps/<x>/build/<profile>/<x>.so
 #   apps/<x>/build/<x>_p4.pak and its parts (.pak.1, .pak.2...) when the app
 #   has a pack (monsterhop, turbo, mila, golf). The game reads parts until
 #   one is missing, so the parts on the card that this build does not have
@@ -22,7 +23,7 @@
 # (docs/PORTAL-PAGES.md). The portal loads it from there: a page needs no
 # restart, only a reload of the portal in the browser, so when nothing but
 # pages goes up the board is not restarted.
-# And the modules an app loads itself, apps/<x>/build/modules/*.so, to the
+# And the modules an app loads itself, apps/<x>/build/<profile>/modules/*.so, to the
 # card's apps/<x>/ (aos_hal_module_open: an emulator's cores).
 #
 # It speaks the P4 portal: PUT /api/fs/put?path= (the body is the file,
@@ -38,6 +39,9 @@ HOST=${1:?usage: install_apps.sh <ip-or-name> [app...]}
 shift
 WANT=("$@")
 B="http://$HOST"
+PROFILE=${PROFILE:-rev1_3}
+case "$PROFILE" in rev1_3|rev3_x) ;; *) echo "Unknown PROFILE: $PROFILE"; exit 1 ;; esac
+echo "Installing apps for silicon profile $PROFILE"
 
 files=()
 paks=()
@@ -46,7 +50,7 @@ mods=()
 for d in $ROOT/apps/*(/); do
     name=${d:t}
     (( ${#WANT[@]} )) && [[ ${WANT[(Ie)$name]} -eq 0 ]] && continue
-    so=($d/build/*.so(.N))
+    so=($d/build/$PROFILE/*.so(.N))
     (( ${#so[@]} )) && files+=($so[1])
     for pak in $d/build/*_p4.pak(.N); do
         paks+=(${pak:t})
@@ -54,7 +58,7 @@ for d in $ROOT/apps/*(/); do
     done
     webs+=($d/web/*.(js|mjs)(.N))
     # modules the app loads itself (aos_hal_module_open), for apps/<app>/
-    for m in $d/build/modules/*.so(.N); do mods+=("$name/${m:t}:$m"); done
+    for m in $d/build/$PROFILE/modules/*.so(.N); do mods+=("$name/${m:t}:$m"); done
 done
 (( ${#files[@]} + ${#webs[@]} + ${#mods[@]} )) || { echo "nothing built - run ./tools/build_apps.sh first"; exit 1; }
 

@@ -58,7 +58,7 @@
 #define PYS_FILL_DIV    3               /* the default canvas: the screen over this, x this */
 #define PYS_MIN_SIDE    16
 #define PYS_MAX_SIDE    1280
-#define PYS_MAX_PX      (720 * 1280)
+#define PYS_MAX_PX      (AOS_PANEL_W * AOS_PANEL_H)
 #define PYS_EDGE_BOTTOM 36              /* the home swipe's strip */
 #define PYS_TAIL        4096            /* what the script printed last */
 #define PYS_LOOP        "\n__import__('aos')._loop()\n"

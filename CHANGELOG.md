@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.20.1 — 2026-10-20
+
+- **Buttons with garbage after coming back to an app.** Leaving an app that
+  stays alive freed its language catalogue, and coming back loaded it
+  again elsewhere; LVGL's button matrices keep pointers to their labels,
+  so in English or German PWM's mode and knob rows came back blank or
+  showing pieces of other strings. Any app with such buttons could show
+  it. A catalogue now lives as long as its app.
+- **Five servos on a PCA9685 tried on the board** from the PWM app, one by
+  one and then in a wave: the video and photos are in the README.
+
 ## 0.20.0 — 2026-10-19
 
 - **PCA9685 in the PWM app.** A "16 servos" module declared in

@@ -469,7 +469,11 @@ Que necesitan la mano del usuario o equipos:
     El 2026-10-20, con una fuente de 5 V en V+ y cuatro servos en las
     salidas 0-3: la app PWM los movió uno por uno (1000/2000/1500 µs), cada
     uno en su turno, y después los cuatro a la vez en una ola senoidal
-    (4 s, 1000-2000 µs, desfasados 1 s), fluida. Con el chip abierto, el
+    (4 s, 1000-2000 µs, desfasados 1 s), fluida; después con un quinto servo
+    (desfase 0,8 s), filmada para el README. Visto de paso: al salir de PWM
+    y volver, los botones de modo y de la perilla mostraban basura en
+    inglés (el catálogo de la app se liberaba y se cargaba en otro lado);
+    arreglado en eab143c, comprobado en el simulador. Con el chip abierto, el
     servicio de sensores siguió viendo i2c.ext "ok" (el puerto compartido)
     y Datalog siguió grabando. Falta medir el pulso con el osciloscopio
     por si el oscilador del módulo pide `osc=`.

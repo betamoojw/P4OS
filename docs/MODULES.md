@@ -555,6 +555,15 @@ module servos i2c.ext chip=pca9685 addr=0x40 [freq=50] [osc=25000000] [od=1] [in
 - **In the simulator:** `P4_SIM_SENSORS="pca9685@0x40"`, and the log says
   what each output does ("PCA9685 0x40 ch3: 7.5% at 50 Hz (1500 us high)").
 
+On the board (2026-10-20): five servos on outputs 0-4, V+ from a separate
+5 V supply. From the PWM app, each moved alone to 1000 and 2000 us and back,
+then all five in a sine wave (4 s, 1000-2000 us, 0.8 s apart), smooth; the
+sensor service went on reading the same I2C port meanwhile.
+
+<a href="media/pca9685-servos.mp4"><img src="img/pca9685-servos.gif" width="240" alt="Five servos on a PCA9685 moving in a wave"></a>
+<img src="img/photo-pwm-pca9685-centre.jpg" width="240" alt="The PWM app with five servos at 90 degrees">
+
+
 **Wiring for a bench test of PWM** (what was tried on the board): two
 LEDs at two frequencies, a servo at 50 Hz on its own 5 V, and the analog
 level through its RC filter, with a meter on it.

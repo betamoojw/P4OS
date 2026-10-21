@@ -259,6 +259,17 @@ in [docs/MODULES.md](docs/MODULES.md).
   <img src="docs/img/bench-pwm.svg" width="460" alt="Wiring: two LEDs, a servo and an analog level on the header">
 </p>
 
+Since 0.20 the PWM app also drives the outputs of a PCA9685 over I2C. On
+the board, five servos on one module, fed from their own 5 V supply: each
+one moved alone first, then all five in a sine wave, each a fifth of a
+turn behind the last ([video](docs/media/pca9685-servos.mp4)).
+
+<p align="center">
+  <a href="docs/media/pca9685-servos.mp4"><img src="docs/img/pca9685-servos.gif" width="240" alt="Five servos on a PCA9685 moving in a wave, driven by the PWM app on the board"></a>
+  <img src="docs/img/photo-pwm-pca9685-centre.jpg" width="240" alt="The PWM app with the servos at 90 degrees, the PCA9685 and five servos">
+  <img src="docs/img/photo-pwm-pca9685-wave.jpg" width="240" alt="The servos mid-wave, the app showing a 4 s period">
+</p>
+
 ### Datalog
 
 A data logger for the header's sensors (from the card, since 0.19). Each

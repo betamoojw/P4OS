@@ -638,10 +638,12 @@ Google's Noto set, 4012 of them with skin tones, flags and ZWJ sequences,
 from a pack on the card ([docs/EMOJI.md](docs/EMOJI.md)).
 
 **Languages.** The interface is written in Spanish. English and German are
-complete, and travel twice: inside the firmware, so they work with no card,
-and as packs on the card. The two are joined string by string with the
-card's first, so a fix copied to the card wins, and a card older than the
-firmware still gets the new screens translated. A pseudo-locale is used to
+complete. The system's texts travel twice: inside the firmware, so they
+work with no card, and as packs on the card. The two are joined string by
+string with the card's first, so a fix copied to the card wins, and a card
+older than the firmware still gets the new screens translated. An app's
+texts travel only with the app, in `lang.zip` (since 0.20.2: carrying them
+in the firmware too cost 438 KB). A pseudo-locale is used to
 test layouts. The web portal and the apps' pages follow the same language
 (since 0.15.1): their catalogs live only on the card and only the browser
 reads them.

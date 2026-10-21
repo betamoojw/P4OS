@@ -1414,7 +1414,7 @@ static void ports_status(char *out, size_t n)
             else snprintf(cnt, sizeof cnt, _("%d sensores"), ps[i].found);
             if (ps[i].scanned)
                 snprintf(t, sizeof t, _("%s: %s · buscó hace %u s"), ps[i].port, cnt, (unsigned)((now - ps[i].scan_ms) / 1000));
-            else snprintf(t, sizeof t, "%s: %s", ps[i].port, cnt);
+            else snprintf(t, sizeof t, "%.15s: %.23s", ps[i].port, cnt);
         }
         o += (size_t)snprintf(out + o, n - o, "%s%s", o ? "\n" : "", t);
     }

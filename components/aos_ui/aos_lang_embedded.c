@@ -1192,8 +1192,6 @@ static const char blob_en__sistema_lang[] =
     "mín %s · máx %s · últimos %d s\tmin %s · max %s · last %d s\n"
     "%s: los pines los tiene %s\t%s: the pins are held by %s\n"
     "%s: no se pudo abrir\t%s: couldn't open\n"
-    "%s: %d sensores · buscó hace %u s\t%s: %d sensors · scanned %u s ago\n"
-    "%s: %d sensores\t%s: %d sensors\n"
     "%u lecturas · %u errores\t%u readings · %u errors\n"
     "Esperando la primera lectura\tWaiting for the first reading\n"
     "Buscando sensores…\tLooking for sensors…\n"
@@ -2697,6 +2695,9 @@ static const char blob_en__sistema_lang[] =
     "Es otro chip\tAnother chip\n"
     "%s va en un puerto %s, y %s no lo es\t%s goes on a %s port, and %s isn't one\n"
     "Puede ser: %s\tIt may be: %s\n"
+    "1 sensor\t1 sensor\n"
+    "%d sensores\t%d sensors\n"
+    "%s: %s · buscó hace %u s\t%s: %s · scanned %u s ago\n"
     ;
 
 static const char blob_en_aos_ble_lang[] =
@@ -9024,8 +9025,6 @@ static const char blob_de__sistema_lang[] =
     "mín %s · máx %s · últimos %d s\tmin %s · max %s · letzte %d s\n"
     "%s: los pines los tiene %s\t%s: die Pins belegt %s\n"
     "%s: no se pudo abrir\t%s: Öffnen fehlgeschlagen\n"
-    "%s: %d sensores · buscó hace %u s\t%s: %d Sensoren · Suche vor %u s\n"
-    "%s: %d sensores\t%s: %d Sensoren\n"
     "%u lecturas · %u errores\t%u Messwerte · %u Fehler\n"
     "Esperando la primera lectura\tWarte auf ersten Messwert\n"
     "Buscando sensores…\tSuche Sensoren…\n"
@@ -10529,6 +10528,9 @@ static const char blob_de__sistema_lang[] =
     "Es otro chip\tAnderer Chip\n"
     "%s va en un puerto %s, y %s no lo es\t%s gehört an einen %s-Port, und %s ist keiner\n"
     "Puede ser: %s\tEs kann sein: %s\n"
+    "1 sensor\t1 Sensor\n"
+    "%d sensores\t%d Sensoren\n"
+    "%s: %s · buscó hace %u s\t%s: %s · vor %u s gesucht\n"
     ;
 
 static const char blob_de_aos_ble_lang[] =
@@ -15678,7 +15680,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2683, 48, files_en, 49 },
-    { "de", "Deutsch", 2683, 48, files_de, 49 },
+    { "en", "English", 2684, 48, files_en, 49 },
+    { "de", "Deutsch", 2684, 48, files_de, 49 },
 };
 const int aos_lang_pack_count = 2;

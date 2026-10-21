@@ -3901,10 +3901,8 @@ mín %s · máx %s · últimos %d s	min %s · max %s · letzte %d s
 %s: no se pudo abrir	%s: Öffnen fehlgeschlagen
 
 #: components/aos_apps/aos_app_modules.c:1187
-%s: %d sensores · buscó hace %u s	%s: %d Sensoren · Suche vor %u s
 
 #: components/aos_apps/aos_app_modules.c:1188
-%s: %d sensores	%s: %d Sensoren
 
 #: components/aos_apps/aos_app_modules.c:1214
 %u lecturas · %u errores	%u Messwerte · %u Fehler
@@ -7656,3 +7654,6 @@ No se entiende lo que manda: ¿otra velocidad u otro sensor?	Was er sendet, ergi
 Es otro chip	Anderer Chip
 %s va en un puerto %s, y %s no lo es	%s gehört an einen %s-Port, und %s ist keiner
 Puede ser: %s	Es kann sein: %s
+1 sensor	1 Sensor
+%d sensores	%d Sensoren
+%s: %s · buscó hace %u s	%s: %s · vor %u s gesucht

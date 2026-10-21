@@ -3901,10 +3901,8 @@ mín %s · máx %s · últimos %d s	min %s · max %s · last %d s
 %s: no se pudo abrir	%s: couldn't open
 
 #: components/aos_apps/aos_app_modules.c:1187
-%s: %d sensores · buscó hace %u s	%s: %d sensors · scanned %u s ago
 
 #: components/aos_apps/aos_app_modules.c:1188
-%s: %d sensores	%s: %d sensors
 
 #: components/aos_apps/aos_app_modules.c:1214
 %u lecturas · %u errores	%u readings · %u errors
@@ -7656,3 +7654,6 @@ No se entiende lo que manda: ¿otra velocidad u otro sensor?	Cannot make sense o
 Es otro chip	Another chip
 %s va en un puerto %s, y %s no lo es	%s goes on a %s port, and %s isn't one
 Puede ser: %s	It may be: %s
+1 sensor	1 sensor
+%d sensores	%d sensors
+%s: %s · buscó hace %u s	%s: %s · scanned %u s ago

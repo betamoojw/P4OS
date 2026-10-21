@@ -30,10 +30,13 @@ the microSD, loaded as shared objects:
   two ports at once: pendrives, keyboards, mice, gamepads, webcams, sound
   cards, MIDI and serial devices.
 - **A Wi-Fi network of its own,** joined with a QR code.
-- **The workshop:** I2C, SPI, 1-Wire and GPIO on the 40-pin header,
-  addressable LED strips on any free pin (WLED's way), a serial terminal, an
-  ESP32 programmer, Modbus, a bench supply and scope, an EEPROM reader and
-  writer, a PWM and servo generator with an analog level, a learning
+- **The workshop:** I2C, SPI, 1-Wire and GPIO on the 40-pin header, with
+  112 kinds of sensor read by themselves (temperature, pressure, air
+  quality, light, motion, current, distance...), addressable LED strips on
+  any free pin (WLED's way), a serial terminal, an ESP32 programmer,
+  Modbus, a bench supply and scope, an EEPROM reader and writer, a PWM and
+  servo generator with an analog level (and sixteen more servos on a
+  PCA9685), a learning
   infrared remote with SmartIR's codes, and a CAN bus analyser. Each one
   was tried on the bench with real parts, wiring diagrams and photos
   included.
@@ -79,6 +82,15 @@ itself in Modules and by the scan in Bus, and the SPI loopback at 40 MHz
 <p align="center"><em>A MAX6675 with a type K thermocouple on the SPI port:
 Bus's example reads it, and Modules logs it every second; the curve is the
 tip heated with a lighter.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-bus-bme688.jpg" width="300" alt="Bus scanning i2c.ext: one address, 0x76, and the chips that may sit there">
+  <img src="docs/img/photo-modules-bme688.jpg" width="300" alt="Modules reading a Pimoroni BME688: temperature, humidity, pressure and gas resistance, next to the MAX6675 and the DS18B20">
+</p>
+
+<p align="center"><em>A Pimoroni BME688 on i2c.ext: Bus lists what may live at
+0x76, and Modules recognises it by itself as a BME688 (not a BME680), with
+its gas resistance, which fell to half with alcohol near it and came back.</em></p>
 
 ---
 
@@ -661,9 +673,15 @@ reads them.
 - The BOOT button and safe mode.
 - I2C with a real BME280 on the header: found by itself, read once a second
   without errors. SPI with MOSI looped to MISO at 1, 10 and 40 MHz, the port's top speed.
-- A MAX6675 thermocouple on SPI and a DS18B20 on 1-Wire, read every second
-  in Modules, and logged by Datalog in the background through a restart
-  and an update, with five more apps opened over it.
+- Sensors (0.20), each found by itself or declared from the form and read
+  every second in Modules: an AHT10, SGP30, INA219, TSL2561, TCS34725,
+  ADS1115 and BME688 on I2C, a PCF8574A and a PCF8591 declared, a MAX6675
+  thermocouple on SPI and a DS18B20 on 1-Wire. The last two logged by
+  Datalog in the background through restarts, updates and a change of
+  language, with five more apps opened over it.
+- A PCA9685 with five servos on its own 5 V, driven from the PWM app: one
+  by one, then all five in a wave, while the sensor service went on reading
+  the same I2C port.
 - Settings' Storage page and the QR codes.
 - The lock screen with its code, and the languages with no card.
 - The C6 updated from the P4 to esp_hosted 3.0.9, and back to its factory
@@ -708,9 +726,13 @@ reads them.
 
 **Waiting for hardware on the bench:**
 
-- More I2C and SPI chips: the RC522 RFID reader is next (its example is in
-  Bus).
-- A real DS18B20: it runs in the simulator, and the board comes next.
+- More I2C and SPI chips: an MPU-9250 (with its compass) is on the bench,
+  and the RC522 RFID reader (its example is in Bus). The TCS34725's fix
+  for a change of range, again on a tidy bench.
+- Sensors on plain pins (DHT22, HC-SR04, HX711) and on a serial port
+  (MH-Z19, PMS5003, PZEM-004T, LD2410): they run against their emulated
+  twins in the simulator.
+- A PCA9685's real oscillator against a scope, for `osc=`.
 - CAN on a real bus, with two SN65HVD230 transceivers and an ESP32-C3 as
   the other node.
 - A 25xx SPI EEPROM in the EEPROM app.

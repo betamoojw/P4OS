@@ -109,7 +109,9 @@ def main():
     for px in SIZES:
         name = "aos_sym_%d" % px
         out = os.path.join(REPO, "components", "aos_ui", name + ".c")
-        subprocess.run(["lv_font_conv", "--no-compress", "--no-prefilter", "--bpp", "4",
+        # 44 and 72 RLE-compressed, as gen_fonts.py does from 24 px up
+        subprocess.run(["lv_font_conv"] + ([] if px >= 44 else ["--no-compress"]) +
+                       ["--no-prefilter", "--bpp", "4",
                         "--size", str(px), "--font", paths["mdi.ttf"], "-r", ranges,
                         "--format", "lvgl", "--lv-font-name", name,
                         "--force-fast-kern-format", "-o", out], check=True)
@@ -118,6 +120,14 @@ def main():
                      count=1, flags=re.S)
         src = src.replace(paths["mdi.ttf"], "materialdesignicons-webfont.ttf %s" % mdi.MDI_VERSION)
         src = src.replace(out, "components/aos_ui/%s.c" % name)
+        if px >= 44:
+            # compressed: one glyph at a time (components/aos_fonts/aos_font_lock.c)
+            old = ".get_glyph_bitmap = lv_font_get_bitmap_fmt_txt,"
+            if src.count(old) != 1:
+                sys.exit("no get_glyph_bitmap line in %s (lv_font_conv changed?)" % out)
+            src = src.replace(old, ".get_glyph_bitmap = aos_font_bitmap_locked,")
+            src = src.replace('#include "lvgl.h"\n', '#include "lvgl.h"\n\n'
+                              "const void *aos_font_bitmap_locked(lv_font_glyph_dsc_t *g, lv_draw_buf_t *buf);\n", 1)
         open(out, "w").write(src)
         print("  %s  %d glyphs" % (name, len(GLYPHS)))
 

@@ -24,6 +24,12 @@ not boot on the other. `esptool.py --chip esp32p4 chip_id` says which one you
 have. Each profile builds in its own directory (`build/rev3_x`,
 `build/rev1_3`) so their `sdkconfig`s never mix.
 
+An `sdkconfig` already in a build directory wins over a new line in
+`sdkconfig.defaults`. Since 0.20.2 the fonts from 24 px up are compressed and
+need `CONFIG_LV_USE_FONT_COMPRESSED=y`: a build directory from before that
+draws big text as noise. Delete the directory's `sdkconfig` (or set the line
+by hand) once.
+
 ## Flashing
 
     tools/build_fw.sh rev1_3 -p /dev/cu.wchusbserial<id> -b 460800 app-flash

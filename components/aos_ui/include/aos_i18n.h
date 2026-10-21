@@ -153,6 +153,10 @@ bool aos_i18n_set(const char *code);
  * is active, or when the pack ships no catalog for that app, is a no-op. */
 void aos_i18n_app_load(const char *app_id);
 void aos_i18n_app_unload(void);
+/* The app was destroyed: its catalogue goes (aos_ui.c). A catalogue lives
+ * as long as its app, so pointers an app keeps into it stay good while it
+ * is alive in the background. */
+void aos_i18n_app_forget(const char *app_id);
 
 /* For the Settings screen: how many strings each live catalog holds. */
 int aos_i18n_count(void);

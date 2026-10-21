@@ -46,7 +46,21 @@ typedef struct {
 } catalog_t;
 
 static catalog_t s_system;
-static catalog_t s_app;
+
+/* The apps' catalogues, one per app alive, and the one in front (s_app).
+ * An app keeps pointers into its catalogue: an LVGL button matrix does not
+ * copy its labels. Freeing the catalogue when the app left the front and
+ * loading it again elsewhere when it came back left those buttons on freed
+ * memory: blank, or showing pieces of other strings (PWM, 2026-10-20). So a
+ * catalogue lives as long as its app: aos_i18n_app_forget() frees it when
+ * the app is destroyed, and a change of language frees them all (every app
+ * is closed for it). */
+#define APP_CATS 8
+static struct { char id[48]; catalog_t cat; uint32_t used; } s_cats[APP_CATS];
+static uint32_t s_cat_tick;
+static catalog_t s_none;
+static catalog_t *s_appc = &s_none;
+#define s_app (*s_appc)
 static char      s_code[AOS_LANG_CODE_MAX] = BASE_CODE;
 
 /* -------------------------------------------------------------------------
@@ -495,21 +509,59 @@ int aos_i18n_app_count(void)
 
 void aos_i18n_app_load(const char *app_id)
 {
-    catalog_free(&s_app);
+    s_appc = &s_none;
     if (!app_id || strcmp(s_code, BASE_CODE) == 0) {
         return;
     }
-
+    /* already loaded for this app, still alive: the same strings, the same
+     * addresses */
+    int fr = -1, old = 0;
+    for (int i = 0; i < APP_CATS; i++) {
+        if (s_cats[i].id[0] && !strcmp(s_cats[i].id, app_id)) {
+            s_cats[i].used = ++s_cat_tick;
+            s_appc = &s_cats[i].cat;
+            return;
+        }
+        if (!s_cats[i].id[0] && fr < 0) fr = i;
+        if (s_cats[i].used < s_cats[old].used) old = i;
+    }
+    if (fr < 0) {
+        /* more apps alive than slots: the one unused longest goes */
+        aos_hal_log("i18n", "catalogue for %s dropped (%d apps alive)", s_cats[old].id, APP_CATS);
+        catalog_free(&s_cats[old].cat);
+        s_cats[old].id[0] = 0;
+        fr = old;
+    }
     char file[AOS_LANG_CODE_MAX + 64];
     snprintf(file, sizeof(file), "%s.lang", app_id);
-    if (catalog_load(&s_app, s_code, file)) {
-        aos_hal_log("i18n", "catalogue for %s: %d strings", app_id, s_app.count);
+    snprintf(s_cats[fr].id, sizeof s_cats[fr].id, "%s", app_id);
+    s_cats[fr].used = ++s_cat_tick;
+    if (catalog_load(&s_cats[fr].cat, s_code, file)) {
+        aos_hal_log("i18n", "catalogue for %s: %d strings", app_id, s_cats[fr].cat.count);
     }
+    s_appc = &s_cats[fr].cat;
 }
 
+/* The front has no app now: its catalogue stays, for when it comes back */
 void aos_i18n_app_unload(void)
 {
-    catalog_free(&s_app);
+    s_appc = &s_none;
+}
+
+void aos_i18n_app_forget(const char *app_id)
+{
+    for (int i = 0; i < APP_CATS; i++)
+        if (app_id && s_cats[i].id[0] && !strcmp(s_cats[i].id, app_id)) {
+            if (s_appc == &s_cats[i].cat) s_appc = &s_none;
+            catalog_free(&s_cats[i].cat);
+            s_cats[i].id[0] = 0;
+        }
+}
+
+static void forget_all(void)
+{
+    s_appc = &s_none;
+    for (int i = 0; i < APP_CATS; i++) { catalog_free(&s_cats[i].cat); s_cats[i].id[0] = 0; }
 }
 
 bool aos_i18n_set(const char *code)
@@ -519,7 +571,7 @@ bool aos_i18n_set(const char *code)
     }
 
     if (strcmp(code, BASE_CODE) == 0) {
-        catalog_free(&s_app);
+        forget_all();
         catalog_free(&s_system);
         snprintf(s_code, sizeof(s_code), "%s", BASE_CODE);
         aos_hal_pref_set_str(PREF_KEY, BASE_CODE);
@@ -537,7 +589,7 @@ bool aos_i18n_set(const char *code)
 
     /* Only now that the new catalog is in hand do we drop the old one, so a
      * half-readable pack cannot leave the UI with no strings at all. */
-    catalog_free(&s_app);
+    forget_all();
     catalog_free(&s_system);
     s_system = fresh;
     snprintf(s_code, sizeof(s_code), "%s", code);

@@ -210,6 +210,7 @@ static void destroy_app(aos_app_t *app)
     aos_statusbar_app_gone(app->desc.id);      /* its glyph in the bar, if it had one */
     if (app->running && app->destroy) app->destroy(app, app->inst);
     if (app->root) lv_obj_delete(app->root);
+    aos_i18n_app_forget(app->desc.id);         /* its strings, now that nothing points into them */
     app->inst = NULL;
     app->root = NULL;
     app->running = false;

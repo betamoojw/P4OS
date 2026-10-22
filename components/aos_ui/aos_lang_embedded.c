@@ -2184,6 +2184,7 @@ static const char blob_en__sistema_lang[] =
     "Burbujas\tBubbles\n"
     "Buscaminas\tMinesweeper\n"
     "Cámaras\tCameras\n"
+    "Caños\tPipes\n"
     "Chatarra\tChatarra\n"
     "Claude Jump\tClaude Jump\n"
     "Claudito\tClaudito\n"
@@ -4875,6 +4876,7 @@ static const char blob_de__sistema_lang[] =
     "Burbujas\tBlasen\n"
     "Buscaminas\tMinesweeper\n"
     "Cámaras\tKameras\n"
+    "Caños\tRohre\n"
     "Chatarra\tChatarra\n"
     "Claude Jump\tClaude Jump\n"
     "Claudito\tClaudito\n"
@@ -5397,7 +5399,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2684, 0, files_en, 1 },
-    { "de", "Deutsch", 2684, 0, files_de, 1 },
+    { "en", "English", 2685, 0, files_en, 1 },
+    { "de", "Deutsch", 2685, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

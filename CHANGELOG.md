@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.20.2 — 2026-10-21
+
+- **A smaller firmware: 7.52 MB down to 6.09 MB,** its slot from 5 % to
+  23 % free. The fonts from 24 px up and the 44 and 72 px icons are
+  compressed (1 MB less). LVGL decompresses with one shared state and the
+  board draws on two cores, so compressed glyphs are taken one at a time:
+  without that, big text came out as noise. The clock's digits stay
+  uncompressed. Redrawing a whole screen costs 6-9 % more, measured on the
+  board.
+- **The apps' translations live only on the card.** The firmware carried
+  every app's English and German as well as `lang.zip` did (438 KB): now
+  it carries the system's only. An app copied without its language files
+  shows in Spanish.
+- **MPU-9250 tried on the board,** and two fixes for the MPU family: a chip
+  that reset on a loose wire came back awake at its factory ranges with
+  the compass shut off (3.3 g at rest, a frozen compass), and is set up
+  again now; and the first reading after setting it up gave about 4 g.
+- Módulos says "1 sensor", not "1 sensors".
+
 ## 0.20.1 — 2026-10-20
 
 - **Buttons with garbage after coming back to an app.** Leaving an app that

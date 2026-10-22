@@ -17,6 +17,16 @@
  *
  * The scaler steps in sixteenths: the picture that comes out may be a
  * pixel or two smaller than asked, and *out_w / *out_h say what it is.
+ *
+ * Measured on the board (2026-10-22, the doorbell, 704x576 to 720x590 in
+ * the viewer): 40-47 ms a frame, interleaving included, and 6.1 fps on the
+ * panel, against up to 8.9 with the CPU's own conversion. Off by default
+ * (pref "video_hw"). The work is bound by PSRAM, not by arithmetic: the
+ * CPU's conversion reads about 1.5 bytes a pixel and writes 2; this way
+ * reads and writes the interleaved copy (3 bytes a pixel) and then the PPA
+ * reads it again and writes the 2, while the decoder on the other core
+ * wants the same PSRAM. It would pay with a decoder that wrote the PPA's
+ * layout itself.
  */
 #include "aos_hal.h"
 
@@ -57,7 +67,7 @@ static bool setup(void)
 int aos_hal_video_hw(int on)
 {
     if (s_on < 0) {
-        int32_t v = 1;
+        int32_t v = 0;                  /* off: slower than the CPU (above) */
         aos_hal_pref_get_i32("video_hw", &v);
         s_on = v != 0;
     }

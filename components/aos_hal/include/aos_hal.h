@@ -2652,7 +2652,8 @@ void        aos_hal_h264_close(aos_h264_t *dec);
  * came out, rows of *out_w pixels) may be a pixel or two short of it. 'out'
  * from aos_hal_retro_alloc() (aligned to the cache line), out_bytes at
  * least max_w * max_h * 2. Blocking, from a worker. false: not done (no
- * PPA, a size it does not take, or pref "video_hw" 0): convert on the CPU.
+ * PPA, a size it does not take, or pref "video_hw" not 1 - off by default:
+ * slower than the CPU on this board, aos_video_p4.c): convert on the CPU.
  * video_hw(): 1 on, 0 off, -1 only asks; returns whether it is on. The
  * stats are since boot: frames done and microseconds spent on them. */
 bool aos_hal_video_i420(const aos_h264_pic_t *pic, int sx, int sy, int sw, int sh,

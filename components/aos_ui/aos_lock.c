@@ -341,6 +341,33 @@ static bool unlock_pin_cb(const char *pin, void *ud)
 static void pad_cancel_cb(void *ud) { (void)ud; }
 
 static void slide_y(void *o, int32_t v) { lv_obj_set_style_translate_y(o, v, 0); }
+
+/* What is under the lock screen (the wallpaper, the home screen, an app) is
+ * hidden while the lock covers it whole: LVGL drew all of it under the
+ * opaque layer on every frame, the home screen's photo included, and the
+ * lock screen with a photo took 143 ms to redraw instead of ~70
+ * (2026-10-22). It shows again as soon as a finger starts to lift the
+ * lock. Only what this hid comes back: the shell hides the home screen
+ * under an app by itself. */
+static uint8_t s_hid;
+
+static void below(bool hide)
+{
+    lv_obj_t *o[3] = { aos_ui_wall(), aos_ui_home_layer(), aos_ui_app_layer() };
+    for (int i = 0; i < 3; i++) {
+        if (!o[i]) continue;
+        uint8_t bit = (uint8_t)(1u << i);
+        if (hide && !(s_hid & bit) && !lv_obj_has_flag(o[i], LV_OBJ_FLAG_HIDDEN)) {
+            lv_obj_add_flag(o[i], LV_OBJ_FLAG_HIDDEN);
+            s_hid |= bit;
+        } else if (!hide && (s_hid & bit)) {
+            lv_obj_remove_flag(o[i], LV_OBJ_FLAG_HIDDEN);
+            s_hid &= (uint8_t)~bit;
+        }
+    }
+}
+
+static void back_down_done(lv_anim_t *a) { (void)a; if (s_locked && L.layer) below(true); }
 static void slide_done(lv_anim_t *a)
 {
     (void)a;
@@ -354,6 +381,7 @@ static void slide_done(lv_anim_t *a)
 static void unlock(void)
 {
     s_locked = false;
+    below(false);
     aos_lock_pad_close();
     if (!L.layer) return;
     lv_anim_t a;
@@ -379,6 +407,7 @@ static void layer_ev(lv_event_t *e)
     if (c == LV_EVENT_PRESSED) {
         L.drag0 = p.y;
         L.dragging = true;
+        below(false);
     } else if (c == LV_EVENT_PRESSING && L.dragging) {
         int32_t up = L.drag0 - p.y;
         lv_obj_set_style_translate_y(L.layer, up > 0 ? -up : 0, 0);
@@ -404,6 +433,7 @@ static void layer_ev(lv_event_t *e)
         lv_anim_set_values(&a, lv_obj_get_style_translate_y(L.layer, 0), 0);
         lv_anim_set_duration(&a, 220);
         lv_anim_set_path_cb(&a, lv_anim_path_ease_out);
+        lv_anim_set_completed_cb(&a, back_down_done);
         lv_anim_start(&a);
     }
 }
@@ -630,6 +660,7 @@ static void build(void)
     /* the status bar stays above it, as on a phone */
     lv_obj_t *bar = aos_statusbar_obj();
     if (bar) lv_obj_move_foreground(bar);
+    if (s_locked) below(true);
 }
 
 void aos_lock_now(void)

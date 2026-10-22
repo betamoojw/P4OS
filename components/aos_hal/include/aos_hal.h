@@ -144,6 +144,14 @@ typedef struct {
 } aos_display_bench_t;
 bool aos_hal_display_bench(int frames, aos_display_bench_t *out);
 
+/* P4OS: the draw unit of the P4's DMA engines (aos_draw_accel_p4.c) -
+ * plain fills and photos drawn by the PPA or the AXI-GDMA instead of the
+ * CPU. on: the way (0 off, 1 PPA, 2 PPA's blender, 3 GDMA), -1 only asks;
+ * returns the way in force (0 where there is none). The counts are since
+ * boot: what it drew, and what it handed back to the CPU. */
+int  aos_hal_draw_hw(int on);
+void aos_hal_draw_hw_stats(uint32_t *fills, uint32_t *images, uint32_t *skipped);
+
 /* P4OS: the screen as the person sees it (upright, the apps' own drawing
  * included) to /sdcard/photos/Capturas/P4OS_<date>.bmp, an album of
  * Photos; the path, from the card's

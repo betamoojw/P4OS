@@ -57,6 +57,12 @@ __attribute__((weak)) uint32_t aos_hal_display_flips(void)
 __attribute__((weak)) bool aos_hal_display_bench(int frames, aos_display_bench_t *out)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
+__attribute__((weak)) int aos_hal_draw_hw(int on)
+{ int v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) void aos_hal_draw_hw_stats(uint32_t *fills, uint32_t *images, uint32_t *skipped)
+{ }
+
 __attribute__((weak)) bool aos_hal_display_save(char *path_out, size_t n)
 { bool v; memset(&v, 0, sizeof v); return v; }
 

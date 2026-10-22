@@ -192,7 +192,7 @@ EXTRA_SYMBOLS = [
 EXCLUDE_PREFIXES = ("_", ".", "$", "__", "aos_p4_", "aos_access_", "aos_hwkbd_", "aos_hwmouse_",
                     "DRV_", "SENS_", "sens_", "si2c_", "aos_wall_photo_")
 EXCLUDE_EXACT = {"elf_find_sym", "elf_find_sym_default", "elf_set_symbol_resolver",
-                 "aos_font_bitmap_locked"}
+                 "aos_font_bitmap_locked", "aos_draw_accel_init"}
 
 
 def build_target(build):

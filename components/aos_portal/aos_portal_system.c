@@ -20,10 +20,12 @@
  *   POST /api/coredump/erase      forgets it
  *   POST /api/coredump/test?ms=   development: a panic on purpose, to try all
  *                                 of the above (the board restarts)
- *   GET  /api/display/bench?frames=   LVGL redrawing the whole screen, ms a frame
+ *   GET  /api/display/bench?frames=&hw=   LVGL redrawing the whole screen, ms a
+ *                                 frame; hw=0..3 picks the draw unit's way
+ *                                 first (aos_draw_accel_p4.c; it stays so)
  *   GET  /api/tune   POST /api/tune?key=&value=   the tuning preferences read
  *                                 at boot (lvbuf, lvrows, fbs, blit_hw,
- *                                 bands_psram); no
+ *                                 bands_psram, draw_hw); no
  *                                 value erases one
  *   GET  /api/heap                the internal heap block by block: the big
  *                                 ones named after the task whose stack they
@@ -335,7 +337,12 @@ static void api_heap(aos_httpd_req_t *r)
 static void api_display_bench(aos_httpd_req_t *r)
 {
     aos_display_bench_t b;
+    int hw = (int)aos_httpd_query_int(r, "hw", -1);
+    if (hw >= 0) aos_hal_draw_hw(hw);
+    uint32_t f0, i0, s0, f1, i1, s1;
+    aos_hal_draw_hw_stats(&f0, &i0, &s0);
     if (!aos_hal_display_bench((int)aos_httpd_query_int(r, "frames", 30), &b)) { send_err(r, 503, "no display"); return; }
+    aos_hal_draw_hw_stats(&f1, &i1, &s1);
     cJSON *o = cJSON_CreateObject();
     cJSON_AddNumberToObject(o, "frames", b.frames);
     cJSON_AddNumberToObject(o, "ms_per_frame", b.us_per_frame / 1000.0);
@@ -343,12 +350,16 @@ static void api_display_bench(aos_httpd_req_t *r)
     cJSON_AddNumberToObject(o, "lvbuf", b.mode);
     cJSON_AddNumberToObject(o, "rows", b.rows);
     cJSON_AddNumberToObject(o, "buffers", b.buffers);
+    cJSON_AddNumberToObject(o, "draw_hw", aos_hal_draw_hw(-1));
+    cJSON_AddNumberToObject(o, "hw_fills", f1 - f0);
+    cJSON_AddNumberToObject(o, "hw_images", i1 - i0);
+    cJSON_AddNumberToObject(o, "hw_skipped", s1 - s0);
     send_cjson(r, 200, o);
 }
 
 /* GET /api/tune, POST /api/tune?key=&value=: the preferences that tune the
  * system and are read at boot, a closed list (docs/MEMORY.md). */
-static const char *const TUNE_KEYS[] = { "lvbuf", "lvrows", "fbs", "blit_hw", "bands_psram" };
+static const char *const TUNE_KEYS[] = { "lvbuf", "lvrows", "fbs", "blit_hw", "bands_psram", "draw_hw" };
 
 static void api_tune(aos_httpd_req_t *r, bool set)
 {

@@ -1458,10 +1458,12 @@ static const char blob_en__sistema_lang[] =
     "La microSD aparece en la computadora como un pendrive, para copiar apps, música, fotos o mapas a la velocidad del USB. Mientras la tiene la computadora la placa no la toca: al elegirlo se cierran las otras apps, y las de la tarjeta no abren. Expulsala en la computadora y vuelve sola a la placa, con el modo de antes.\tThe microSD shows up on the computer as a USB stick, to copy apps, music, photos or maps at USB speed. While the computer has it the board does not touch it: choosing this closes the other apps, and the card's apps do not open. Eject it on the computer and it comes back to the board by itself, in the mode it had before.\n"
     "El conector OTG es el USB 2.0 de alta velocidad del P4 (480 Mbit/s). La placa puede alimentarse por él o por el UART, y pasar de uno al otro sin reiniciarse.\tThe OTG connector is the P4's High-Speed USB 2.0 (480 Mbit/s). The board can be powered from it or from the UART, and move from one to the other without restarting.\n"
     "Sin conectar\tNot connected\n"
-    "No\tNo\n"
+    "No\tOff\n"
     "Bluetooth\tBluetooth\n"
     "Con código\tWith a code\n"
-    "Sí\tSí\n"
+    "Sí\tOn\n"
+    "Activo\tActive\n"
+    "Inactivo\tInactive\n"
     "Fondo de pantalla\tWallpaper\n"
     "Editar inicio\tEdit Home Screen\n"
     "sin tarjeta\tno card\n"
@@ -4159,10 +4161,12 @@ static const char blob_de__sistema_lang[] =
     "La microSD aparece en la computadora como un pendrive, para copiar apps, música, fotos o mapas a la velocidad del USB. Mientras la tiene la computadora la placa no la toca: al elegirlo se cierran las otras apps, y las de la tarjeta no abren. Expulsala en la computadora y vuelve sola a la placa, con el modo de antes.\tDie microSD erscheint am Computer als USB-Stick, um Apps, Musik, Fotos oder Karten mit USB-Geschwindigkeit zu kopieren. Solange der Computer sie hat, rührt die Platine sie nicht an: Beim Auswählen schließen sich die anderen Apps, und Apps von der Karte starten nicht. Wirf sie am Computer aus, und sie kehrt von selbst zur Platine zurück, im Modus von vorher.\n"
     "El conector OTG es el USB 2.0 de alta velocidad del P4 (480 Mbit/s). La placa puede alimentarse por él o por el UART, y pasar de uno al otro sin reiniciarse.\tDer OTG-Anschluss ist das High-Speed-USB 2.0 des P4 (480 Mbit/s). Die Platine kann darüber oder über den UART versorgt werden und ohne Neustart von einem zum anderen wechseln.\n"
     "Sin conectar\tNicht verbunden\n"
-    "No\tNein\n"
+    "No\tAus\n"
     "Bluetooth\tBluetooth\n"
     "Con código\tMit Code\n"
-    "Sí\tSí\n"
+    "Sí\tEin\n"
+    "Activo\tAktiv\n"
+    "Inactivo\tInaktiv\n"
     "Fondo de pantalla\tHintergrundbild\n"
     "Editar inicio\tHome bearbeiten\n"
     "sin tarjeta\tkeine Karte\n"
@@ -5417,7 +5421,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2694, 0, files_en, 1 },
-    { "de", "Deutsch", 2694, 0, files_de, 1 },
+    { "en", "English", 2696, 0, files_en, 1 },
+    { "de", "Deutsch", 2696, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

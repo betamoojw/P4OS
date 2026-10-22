@@ -135,7 +135,8 @@ void aos_sensor_fmt(int q, float v, char *out, size_t n)
     case AOS_SQ_DIST: if (a >= 1000) snprintf(out, n, "%.2f m", v / 1000); else snprintf(out, n, "%.0f mm", v); break;
     case AOS_SQ_MASS: if (a >= 1000) snprintf(out, n, "%.2f kg", v / 1000); else snprintf(out, n, a < 100 ? "%.1f g" : "%.0f g", v); break;
     case AOS_SQ_OHM: if (a >= 1e6f) snprintf(out, n, "%.2f MΩ", v / 1e6f); else if (a >= 1000) snprintf(out, n, "%.1f kΩ", v / 1000); else snprintf(out, n, "%.1f Ω", v); break;
-    case AOS_SQ_STATE: snprintf(out, n, "%s", v >= 0.5f ? _("Sí") : _("No")); return;
+    /* not "Sí"/"No": those are Settings' on and off, "On"/"Off" in English */
+    case AOS_SQ_STATE: snprintf(out, n, "%s", v >= 0.5f ? _("Activo") : _("Inactivo")); return;
     default: {
         const char *u = aos_sensor_unit(q);
         int d = aos_sensor_decimals(q, v);

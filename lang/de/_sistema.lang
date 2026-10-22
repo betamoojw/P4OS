@@ -4770,7 +4770,7 @@ Sin conectar	Nicht verbunden
 
 #: components/aos_apps/aos_app_settings.c:418
 #: components/aos_apps/aos_app_settings.c:431
-No	Nein
+No	Aus
 
 #: components/aos_apps/aos_app_settings.c:420
 #: components/aos_apps/_pending/aos_app_settings.c:1779
@@ -4781,7 +4781,13 @@ Bluetooth	Bluetooth
 Con código	Mit Code
 
 #: components/aos_apps/aos_app_settings.c:431
-Sí	Sí
+Sí	Ein
+
+#: components/aos_ui/aos_sensor_text.c:139
+Activo	Aktiv
+
+#: components/aos_ui/aos_sensor_text.c:139
+Inactivo	Inaktiv
 
 #: components/aos_apps/aos_app_settings.c:434
 Fondo de pantalla	Hintergrundbild

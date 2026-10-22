@@ -419,6 +419,9 @@ static void home_hide_done(lv_anim_t *a)
 {
     if (!s_cur) return;
     lv_obj_add_flag(s_home, LV_OBJ_FLAG_HIDDEN);
+    /* nobody sees the wallpapers behind an app: 3.7 MB of PSRAM back to it */
+    aos_wall_photo_want(AOS_WALL_HOME, false);
+    if (!aos_lock_is_locked()) aos_wall_photo_want(AOS_WALL_LOCK, false);
     lv_obj_set_style_bg_color(s_appl, lv_obj_get_style_bg_color(s_cur->root, 0), 0);
     lv_obj_set_style_bg_opa(s_appl, LV_OPA_COVER, 0);
 }
@@ -802,6 +805,7 @@ void aos_ui_home(void)
     aos_switcher_close();
     aos_app_t *app = s_cur;
     lv_obj_remove_flag(s_home, LV_OBJ_FLAG_HIDDEN);
+    aos_wall_photo_want(AOS_WALL_HOME, true);
     lv_obj_set_style_bg_opa(s_appl, LV_OPA_TRANSP, 0);
     if (app) {
         uint32_t color = app->desc.color_a ? app->desc.color_a : 0x2C2C2E;

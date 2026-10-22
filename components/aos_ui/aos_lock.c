@@ -375,6 +375,7 @@ static void slide_done(lv_anim_t *a)
         lv_obj_delete(L.layer);
         memset(&L, 0, sizeof L);
     }
+    if (aos_ui_current_app()) aos_wall_photo_want(AOS_WALL_LOCK, false);   /* back into an app */
     aos_hal_activity();
 }
 
@@ -665,6 +666,7 @@ static void build(void)
 
 void aos_lock_now(void)
 {
+    aos_wall_photo_want(AOS_WALL_LOCK, true);      /* let go while an app was in front */
     if (!s_cfg.enabled) return;
     s_locked = true;
     aos_switcher_close();

@@ -13,6 +13,11 @@
  * Under the photo the gradient is still there: the photo missing or not
  * readable, it shows as before. The paths are prefs ("wall_img",
  * "lock_img"); turning the screen decodes again at the new size.
+ *
+ * Only while they can be seen: with an app over the home screen both are
+ * let go (3.7 MB back, which was what the doorbell's 1920x1080 stream was
+ * short of, 2026-10-22), and decoded again - under half a second - on the
+ * way home, or for the lock screen as the screen goes dark and locks.
  */
 #include "aos_internal.h"
 #include "aos_lock.h"
@@ -40,11 +45,13 @@ typedef struct {
     lv_image_dsc_t dsc;
     uint32_t       gen;                 /* the request wanted */
     bool           want;                /* a request not yet on show */
+    int            inflight;            /* decodes running: their results still to free */
     /* the worker's result, under s_mx */
     bool           ready;
     uint16_t      *new_px;
     int            new_w, new_h;
     uint32_t       new_gen;
+    bool           new_thread;          /* from a decode (else from request(), with none) */
 } wall_t;
 
 AOS_BSS_PSRAM static wall_t W[2];
@@ -94,6 +101,7 @@ static void worker(void *arg)
     v->new_w = w;
     v->new_h = h;
     v->new_gen = j->gen;
+    v->new_thread = true;
     v->ready = true;
     aos_hal_mutex_unlock(s_mx);
     free(j);
@@ -110,6 +118,7 @@ static void request(int which)
         v->new_px = NULL;
         v->new_w = v->new_h = 0;
         v->new_gen = v->gen;
+        v->new_thread = false;
         v->ready = true;
         aos_hal_mutex_unlock(s_mx);
     } else {
@@ -122,6 +131,7 @@ static void request(int which)
         j->h = g->h;
         snprintf(j->path, sizeof j->path, "%s", v->path);
         if (!aos_hal_thread_start("wallpaper", worker, j, 8192, 3)) { free(j); v->want = false; return; }
+        v->inflight++;
     }
     lv_timer_resume(s_poll);
 }
@@ -153,10 +163,12 @@ static void poll_cb(lv_timer_t *t)
         uint16_t *px = v->new_px;
         int w = v->new_w, h = v->new_h;
         uint32_t gen = v->new_gen;
+        bool from_thread = v->new_thread;
         v->ready = false;
         v->new_px = NULL;
         aos_hal_mutex_unlock(s_mx);
         if (!ready) continue;
+        if (from_thread && v->inflight > 0) v->inflight--;
         if (gen != v->gen) { if (px) aos_hal_image_free(px); continue; }   /* asked for again since */
         v->want = false;
         uint16_t *old = v->px;
@@ -178,7 +190,32 @@ static void poll_cb(lv_timer_t *t)
         else aos_lock_layout();
         if (old) aos_hal_image_free(old);
     }
-    if (!W[0].want && !W[1].want) lv_timer_pause(t);
+    if (!W[0].want && !W[1].want && !W[0].inflight && !W[1].inflight) lv_timer_pause(t);
+}
+
+/* Lets the photo go (want false) or has it decoded again (true) */
+void aos_wall_photo_want(int which, bool want)
+{
+    if (which < 0 || which > 1 || !s_mx) return;
+    wall_t *v = &W[which];
+    if (!v->path[0]) return;
+    if (want) {
+        if (!v->px && !v->want) request(which);
+        return;
+    }
+    v->gen++;                           /* whatever is being decoded is dropped when it comes */
+    v->want = false;
+    if (which == AOS_WALL_HOME && s_home_img) {
+        lv_obj_delete(s_home_img);
+        s_home_img = NULL;
+    }
+    if (v->px) {
+        lv_image_cache_drop(&v->dsc);
+        aos_hal_image_free(v->px);
+        v->px = NULL;
+        v->w = v->h = 0;
+        memset(&v->dsc, 0, sizeof v->dsc);
+    }
 }
 
 const lv_image_dsc_t *aos_wall_photo_dsc(int which)

@@ -31,6 +31,7 @@ void aos_ui_set_launch_rect(const lv_area_t *icon);
 void aos_wall_photo_init(void);
 void aos_wall_photo_relayout(void);
 const lv_image_dsc_t *aos_wall_photo_dsc(int which);     /* NULL: the gradient */
+void aos_wall_photo_want(int which, bool want);           /* let it go / decode it again */
 
 /* ---- home screen (aos_home.c) ---- */
 void aos_home_create(lv_obj_t *parent);

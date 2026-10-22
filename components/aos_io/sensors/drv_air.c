@@ -35,6 +35,17 @@ static int air_keep(sens_slot_t *s, uint8_t nv)
     return R_OK;
 }
 
+/* A chip that measures on its own and has had nothing new for too long has
+ * stopped: an SCD4x that loses its power for a moment (a loose wire, seen on
+ * the board 2026-10-21) comes back idle, and its last result was handed back
+ * as new for minutes. Set it up again, as a chip found anew. */
+static int air_stalled(sens_slot_t *s)
+{
+    s->inited = false;
+    sens_err(s, "reset");
+    return R_NOTREADY;
+}
+
 /* A value of the sensor named in comp=, if there is one and it has it */
 static bool air_comp(const sens_slot_t *s, const char *key, float *v)
 {
@@ -100,6 +111,7 @@ typedef struct {
     uint8_t  nv;
     uint32_t t;                     /* when it was stopped */
     uint32_t press_ms;              /* last pressure sent from comp= */
+    uint32_t new_ms;                /* last new result, or the start */
 } scd4x_t;
 SPRIV_CHECK(scd4x_t);
 
@@ -151,7 +163,7 @@ static int scd4x_read(sens_io_t *io, sens_slot_t *s)
         scd4x_pressure(b, a, s);
         if (!si2c_cmd16(b, a, 0x21B1)) return R_NACK;           /* start_periodic_measurement */
         p->phase = 1;
-        p->press_ms = sens_now();
+        p->press_ms = p->new_ms = sens_now();
         return R_NOTREADY;
     }
     if (air_comp(s, "press", &(float){ 0 }) && sens_now() - p->press_ms >= 60000) {
@@ -160,7 +172,12 @@ static int scd4x_read(sens_io_t *io, sens_slot_t *s)
     }
     r = sir_read(b, a, 0xE4B8, 1, w, 1);
     if (r != R_OK) return r;
-    if (!(w[0] & 0x07FF)) return air_keep(s, p->nv);
+    if (!(w[0] & 0x07FF)) {
+        /* one every 5 s: four missed, it is not measuring any more */
+        if (sens_now() - p->new_ms > 20000) return air_stalled(s);
+        return air_keep(s, p->nv);
+    }
+    p->new_ms = sens_now();
     r = sir_read(b, a, 0xEC05, 1, w, 3);                        /* read_measurement */
     if (r != R_OK) return r;
     if (w[0] == 0) return air_keep(s, p->nv);                   /* 0 ppm: a result not valid yet */
@@ -188,6 +205,7 @@ typedef struct {
     uint8_t  nv;
     uint16_t press;                 /* the one in force, hPa, 0 none */
     uint32_t press_ms;
+    uint32_t new_ms;                /* last new result, or the start */
 } scd30_t;
 SPRIV_CHECK(scd30_t);
 
@@ -220,7 +238,7 @@ static int scd30_init(sens_io_t *io, sens_slot_t *s)
     }
     p->press = scd30_press(s);
     if (!si2c_cmd16_w(b, a, 0x0010, &p->press, 1)) return R_NACK;   /* continuous, with the pressure */
-    p->press_ms = sens_now();
+    p->press_ms = p->new_ms = sens_now();
     return R_OK;
 }
 
@@ -238,7 +256,12 @@ static int scd30_read(sens_io_t *io, sens_slot_t *s)
     uint16_t w[6];
     int r = sir_read(b, a, 0x0202, 3, w, 1);                    /* get data ready */
     if (r != R_OK) return r;
-    if (w[0] != 1) return air_keep(s, p->nv);
+    if (w[0] != 1) {
+        /* one every 2 s: ten seconds without one, it is not measuring */
+        if (sens_now() - p->new_ms > 10000) return air_stalled(s);
+        return air_keep(s, p->nv);
+    }
+    p->new_ms = sens_now();
     r = sir_read(b, a, 0x0300, 3, w, 6);
     if (r != R_OK) return r;
     float co2 = sir_float(w), t = sir_float(w + 2), h = sir_float(w + 4);

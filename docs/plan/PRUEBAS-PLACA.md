@@ -484,6 +484,14 @@ Que necesitan la mano del usuario o equipos:
     hierro duro da un arco, no los 360°). Mientras el bus tenía falsos
     contactos el portal dejó de contestar 1-2 s varias veces (el servicio
     no tiene el lock durante la lectura): sin explicar todavía.
+  - SCD41 en 0x62 (2026-10-22): reconocido solo como SCD41 (variante del
+    chip), una lectura cada 5 s: 740-767 ppm, 21,7 °C, 60 % en el cuarto.
+    Al moverlo para soplarle se quedó sin medir (un instante sin
+    alimentación lo deja en reposo) y el driver repetía 722 ppm como nuevo
+    con el estado "ok": arreglado (0ec2e67: cuatro períodos sin resultado,
+    se configura de nuevo; lo mismo para el SCD30). Con el arreglo, al
+    soplarle: 519 -> 3067 ppm en 25 s (humedad 63 -> 75 %), y de vuelta a
+    1681 ppm un minuto después.
   - PCA9685 en 0x40: Bus lo nombra, no queda como candidato a sensor.
     El 2026-10-20, con una fuente de 5 V en V+ y cuatro servos en las
     salidas 0-3: la app PWM los movió uno por uno (1000/2000/1500 µs), cada

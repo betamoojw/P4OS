@@ -86,6 +86,8 @@ static struct {
     int        mode;                /* the viewer's cam_mode_t */
     int        rot_restore;         /* -1, or the orientation to go back to */
     bool       feed_rot;            /* the viewer's picture turned a quarter */
+    bool       hd_req;              /* the next viewer opens the camera's main stream */
+    bool       hd_switch;           /* the SD/HD button: reopen on the next tick */
     lv_timer_t *timer;
     uint64_t   stats_t0;
     bool       closing;
@@ -132,6 +134,7 @@ static struct {
         lv_area_t   frect;          /* where the picture is on the screen */
         uint32_t    directs;        /* frames that went straight, since the stats */
         uint32_t    flips0;         /* v->flipped at the last tick */
+        bool        hd;             /* on the camera's main stream (url_full) */
     } vw;
 } A;
 
@@ -1004,6 +1007,14 @@ static void rotate_cb(lv_event_t *e)
     overlay_show(true);
 }
 
+/* SD <-> HD: the viewer opens again on the other stream, on the next tick
+ * (the button's own viewer goes away with it) */
+static void hd_cb(lv_event_t *e)
+{
+    (void)e;
+    A.hd_switch = true;
+}
+
 static void snap_cb(lv_event_t *e)
 {
     (void)e;
@@ -1118,6 +1129,13 @@ static void build_viewer(void)
         A.vw.fit_g = NULL;
     }
     round_btn(row, A.land ? AOS_SYM_PHONE_ROTATE_PORTRAIT : AOS_SYM_PHONE_ROTATE_LANDSCAPE, rotate_cb, NULL, NULL);
+    if (A.vw.cam.url_full[0] && A.vw.src != SRC_EVENT) {
+        lv_obj_t *hl;
+        round_btn(row, "", hd_cb, NULL, &hl);
+        lv_obj_set_style_text_font(hl, aos_font_body, 0);
+        lv_obj_set_style_text_color(hl, A.vw.hd ? AOS_C_ACCENT : AOS_C_TEXT, 0);
+        lv_label_set_text(hl, A.vw.hd ? "HD" : "SD");
+    }
     round_btn(row, AOS_SYM_GRID_LARGE, view_back_cb, NULL, NULL);
     if (many) round_btn(row, AOS_SYM_CHEVRON_RIGHT, step_cb, (void *)(intptr_t)1, NULL);
 
@@ -1156,7 +1174,12 @@ static void open_viewer(int src, int index)
     A.vw.src = src;
     A.vw.index = index;
     A.vw.cam = cam;
-    if (t && t->v && !cam.url_full[0]) {
+    /* SD, the camera's second stream, unless the HD button asked for its
+     * main one: decoded in software, 1920x1080 runs at about a frame a
+     * second here (2026-10-22) */
+    A.vw.hd = A.hd_req && cam.url_full[0] && src != SRC_EVENT;
+    A.hd_req = false;
+    if (t && t->v && !A.vw.hd) {
         /* the tile's connection, re-targeted: no reconnection */
         A.vw.tile = t;
         A.vw.v = t->v;
@@ -1164,7 +1187,7 @@ static void open_viewer(int src, int index)
         A.vw.own = false;
     } else {
         if (t) tile_stop(t);
-        A.vw.v = cam_view_new(&cam, true);
+        A.vw.v = cam_view_new(&cam, src == SRC_EVENT || A.vw.hd);
         A.vw.own = true;
     }
     if (A.vw.v) A.vw.flips0 = A.vw.v->flipped;
@@ -1189,7 +1212,8 @@ static void open_viewer(int src, int index)
         A.vw.skips0 = A.vw.v->skips;
     }
     aos_hal_net_low_latency(true);
-    aos_hal_log("camaras", "open %s (%s)", cam.name, A.vw.own ? "own connection" : "the tile's connection");
+    aos_hal_log("camaras", "open %s (%s, %s)", cam.name, A.vw.own ? "own connection" : "the tile's connection",
+                A.vw.hd ? "HD" : "SD");
 }
 
 static void close_viewer(void)
@@ -1307,6 +1331,16 @@ static void timer_cb(lv_timer_t *tm)
     bool stats = now - A.stats_t0 >= STATS_MS;
     if (A.vw.leave) {
         close_viewer();
+    }
+    if (A.hd_switch) {
+        A.hd_switch = false;
+        if (A.vw.on) {
+            int src = A.vw.src, index = A.vw.index;
+            bool hd = !A.vw.hd;
+            close_viewer();
+            A.hd_req = hd;
+            open_viewer(src, index);
+        }
     }
     if (A.vw.on) {
         viewer_update(now, stats);

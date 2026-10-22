@@ -1501,7 +1501,16 @@ static const char blob_en__sistema_lang[] =
     "Sin tocarla, la pantalla se atenúa diez segundos antes y después se apaga; un toque la despierta. Los juegos, el video y las apps que lo piden la mantienen encendida mientras están al frente.\tWhen left untouched, the screen dims ten seconds before and then turns off; a touch wakes it. Games, video and apps that ask for it keep it on while they are in front.\n"
     "VOLUMEN\tVOLUME\n"
     "Probar el parlante\tTest the speaker\n"
-    "Pronto: una imagen JPEG de la tarjeta.\tComing soon: a JPEG image from the card.\n"
+    "El degradado queda debajo de la foto, si elegís una.\tThe gradient stays under the photo, if you choose one.\n"
+    "FOTO\tPHOTO\n"
+    "Sin foto\tNo photo\n"
+    "Quitar la foto\tRemove the photo\n"
+    "Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.\tChoose the photo in Photos: open it and tap the palette at the top right.\n"
+    "Es el fondo del inicio y de la pantalla de bloqueo\tIt's the home and lock screen wallpaper\n"
+    "Es el fondo del inicio\tIt's the home screen wallpaper\n"
+    "Es el fondo de la pantalla de bloqueo\tIt's the lock screen wallpaper\n"
+    "Fondo del inicio\tHome screen\n"
+    "Los dos\tBoth\n"
     "puerto\tport\n"
     "en uso\tin use\n"
     "El conector de 40 pines de atrás. Cada pin dice qué puerto de modules.txt lo usa, o quién lo tiene tomado ahora.\tThe 40-pin connector on the back. Each pin shows which port in modules.txt uses it, or who has it taken right now.\n"
@@ -4193,7 +4202,16 @@ static const char blob_de__sistema_lang[] =
     "Sin tocarla, la pantalla se atenúa diez segundos antes y después se apaga; un toque la despierta. Los juegos, el video y las apps que lo piden la mantienen encendida mientras están al frente.\tOhne Berührung wird der Bildschirm zehn Sekunden vorher gedimmt und dann ausgeschaltet; eine Berührung weckt ihn. Spiele, Video und Apps, die es verlangen, halten ihn an, solange sie im Vordergrund sind.\n"
     "VOLUMEN\tLAUTSTÄRKE\n"
     "Probar el parlante\tLautsprecher testen\n"
-    "Pronto: una imagen JPEG de la tarjeta.\tDemnächst: ein JPEG-Bild von der Karte.\n"
+    "El degradado queda debajo de la foto, si elegís una.\tDer Verlauf bleibt unter dem Foto, wenn du eines wählst.\n"
+    "FOTO\tFOTO\n"
+    "Sin foto\tKein Foto\n"
+    "Quitar la foto\tFoto entfernen\n"
+    "Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.\tWähle das Foto in Fotos: Öffne es und tippe oben rechts auf die Palette.\n"
+    "Es el fondo del inicio y de la pantalla de bloqueo\tEs ist das Hintergrundbild für Home- und Sperrbildschirm\n"
+    "Es el fondo del inicio\tEs ist das Hintergrundbild des Home-Bildschirms\n"
+    "Es el fondo de la pantalla de bloqueo\tEs ist das Hintergrundbild des Sperrbildschirms\n"
+    "Fondo del inicio\tHome-Bildschirm\n"
+    "Los dos\tBeide\n"
     "puerto\tPort\n"
     "en uso\tbelegt\n"
     "El conector de 40 pines de atrás. Cada pin dice qué puerto de modules.txt lo usa, o quién lo tiene tomado ahora.\tDie 40-polige Leiste auf der Rückseite. Jeder Pin zeigt, welcher Port aus modules.txt ihn nutzt oder wer ihn gerade belegt.\n"
@@ -5399,7 +5417,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2685, 0, files_en, 1 },
-    { "de", "Deutsch", 2685, 0, files_de, 1 },
+    { "en", "English", 2694, 0, files_en, 1 },
+    { "de", "Deutsch", 2694, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

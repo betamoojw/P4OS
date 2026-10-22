@@ -4904,8 +4904,35 @@ VOLUMEN	VOLUME
 #: components/aos_apps/aos_app_settings.c:723
 Probar el parlante	Test the speaker
 
-#: components/aos_apps/aos_app_settings.c:754
-Pronto: una imagen JPEG de la tarjeta.	Coming soon: a JPEG image from the card.
+#: components/aos_apps/aos_app_settings.c
+El degradado queda debajo de la foto, si elegís una.	The gradient stays under the photo, if you choose one.
+
+#: components/aos_apps/aos_app_settings.c
+FOTO	PHOTO
+
+#: components/aos_apps/aos_app_settings.c
+Sin foto	No photo
+
+#: components/aos_apps/aos_app_settings.c
+Quitar la foto	Remove the photo
+
+#: components/aos_apps/aos_app_settings.c
+Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.	Choose the photo in Photos: open it and tap the palette at the top right.
+
+#: components/aos_apps/aos_app_photos.c
+Es el fondo del inicio y de la pantalla de bloqueo	It's the home and lock screen wallpaper
+
+#: components/aos_apps/aos_app_photos.c
+Es el fondo del inicio	It's the home screen wallpaper
+
+#: components/aos_apps/aos_app_photos.c
+Es el fondo de la pantalla de bloqueo	It's the lock screen wallpaper
+
+#: components/aos_apps/aos_app_photos.c
+Fondo del inicio	Home screen
+
+#: components/aos_apps/aos_app_photos.c
+Los dos	Both
 
 #: components/aos_apps/aos_app_settings.c:804
 puerto	port

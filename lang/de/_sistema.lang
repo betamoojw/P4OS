@@ -4904,8 +4904,35 @@ VOLUMEN	LAUTSTÄRKE
 #: components/aos_apps/aos_app_settings.c:723
 Probar el parlante	Lautsprecher testen
 
-#: components/aos_apps/aos_app_settings.c:754
-Pronto: una imagen JPEG de la tarjeta.	Demnächst: ein JPEG-Bild von der Karte.
+#: components/aos_apps/aos_app_settings.c
+El degradado queda debajo de la foto, si elegís una.	Der Verlauf bleibt unter dem Foto, wenn du eines wählst.
+
+#: components/aos_apps/aos_app_settings.c
+FOTO	FOTO
+
+#: components/aos_apps/aos_app_settings.c
+Sin foto	Kein Foto
+
+#: components/aos_apps/aos_app_settings.c
+Quitar la foto	Foto entfernen
+
+#: components/aos_apps/aos_app_settings.c
+Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.	Wähle das Foto in Fotos: Öffne es und tippe oben rechts auf die Palette.
+
+#: components/aos_apps/aos_app_photos.c
+Es el fondo del inicio y de la pantalla de bloqueo	Es ist das Hintergrundbild für Home- und Sperrbildschirm
+
+#: components/aos_apps/aos_app_photos.c
+Es el fondo del inicio	Es ist das Hintergrundbild des Home-Bildschirms
+
+#: components/aos_apps/aos_app_photos.c
+Es el fondo de la pantalla de bloqueo	Es ist das Hintergrundbild des Sperrbildschirms
+
+#: components/aos_apps/aos_app_photos.c
+Fondo del inicio	Home-Bildschirm
+
+#: components/aos_apps/aos_app_photos.c
+Los dos	Beide
 
 #: components/aos_apps/aos_app_settings.c:804
 puerto	Port

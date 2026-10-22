@@ -157,6 +157,9 @@ static void schedule(void);
 static void viewer_open(int index);
 static void viewer_close(void);
 static void apply_view(void);
+static lv_obj_t *box(lv_obj_t *parent);
+static void wall_sheet_close(void);
+static lv_obj_t *glyph(lv_obj_t *parent, const char *sym, const lv_font_t *font, lv_color_t color);
 
 /* ---- names ----------------------------------------------------------------- */
 
@@ -1054,6 +1057,7 @@ static void viewer_open(int index)
 static void viewer_close(void)
 {
     if (!U.viewer) return;
+    wall_sheet_close();
     P.viewing = false;
     lv_obj_add_flag(U.viewer, LV_OBJ_FLAG_HIDDEN);
     lv_timer_pause(U.anim);
@@ -1073,6 +1077,63 @@ static void viewer_close(void)
 }
 
 static void close_cb(lv_event_t *e) { (void)e; viewer_close(); }
+
+/* ---- the photo on show as the wallpaper ------------------------------------ */
+
+static lv_obj_t *s_wall_sheet;          /* a child of the viewer: gone with it */
+
+static void wall_sheet_close(void)
+{
+    if (s_wall_sheet) lv_obj_delete_async(s_wall_sheet);
+    s_wall_sheet = NULL;
+}
+
+/* 1 home, 2 lock, 3 both, 0 cancel */
+static void wall_pick_cb(lv_event_t *e)
+{
+    int k = (int)(intptr_t)lv_event_get_user_data(e);
+    if (k && P.viewing) {
+        char path[300];
+        photo_path(P.cur, path, sizeof path);
+        if (k & 1) aos_ui_wall_photo_set(AOS_WALL_HOME, path);
+        if (k & 2) aos_ui_wall_photo_set(AOS_WALL_LOCK, path);
+        aos_ui_toast(k == 3 ? _("Es el fondo del inicio y de la pantalla de bloqueo")
+                     : k == 1 ? _("Es el fondo del inicio") : _("Es el fondo de la pantalla de bloqueo"), 2000);
+    }
+    wall_sheet_close();
+}
+
+static void wall_cb(lv_event_t *e)
+{
+    (void)e;
+    if (s_wall_sheet || !P.viewing) return;
+    s_wall_sheet = box(U.viewer);
+    lv_obj_set_size(s_wall_sheet, U.W, U.H);
+    lv_obj_set_style_bg_color(s_wall_sheet, lv_color_black(), 0);
+    lv_obj_set_style_bg_opa(s_wall_sheet, LV_OPA_50, 0);
+    lv_obj_add_flag(s_wall_sheet, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(s_wall_sheet, wall_pick_cb, LV_EVENT_CLICKED, (void *)0);
+    lv_obj_t *col = box(s_wall_sheet);
+    lv_obj_set_size(col, U.land ? 560 : U.W - 2 * AOS_UI_PAD, LV_SIZE_CONTENT);
+    lv_obj_set_flex_flow(col, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(col, 12, 0);
+    lv_obj_align(col, LV_ALIGN_BOTTOM_MID, 0, -40);
+    static const char *const OPT[] = { N_("Fondo del inicio"), N_("Pantalla de bloqueo"), N_("Los dos"), N_("Cancelar") };
+    static const int K[] = { 1, 2, 3, 0 };
+    for (int i = 0; i < 4; i++) {
+        lv_obj_t *b = lv_button_create(col);
+        lv_obj_set_size(b, lv_pct(100), 96);
+        lv_obj_set_style_radius(b, 24, 0);
+        lv_obj_set_style_shadow_width(b, 0, 0);
+        lv_obj_set_style_bg_color(b, K[i] ? lv_color_hex(0x2C2C2E) : lv_color_hex(0x3A3A3C), 0);
+        lv_obj_t *l = lv_label_create(b);
+        lv_obj_set_style_text_font(l, aos_font_body, 0);
+        lv_obj_set_style_text_color(l, K[i] ? AOS_C_ACCENT : AOS_C_TEXT, 0);
+        lv_label_set_text(l, _(OPT[i]));
+        lv_obj_center(l);
+        lv_obj_add_event_cb(b, wall_pick_cb, LV_EVENT_CLICKED, (void *)(intptr_t)K[i]);
+    }
+}
 
 /* ---- building -------------------------------------------------------------- */
 
@@ -1417,6 +1478,16 @@ static void build_viewer(void)
     U.v_sub = aos_label_boxed(U.top, "", aos_font_caption, lv_color_hex(0xC7C7CC), U.W - 240, 26);
     lv_label_set_long_mode(U.v_sub, LV_LABEL_LONG_MODE_DOTS);
     lv_obj_align(U.v_sub, LV_ALIGN_TOP_MID, 0, 54);
+    lv_obj_t *wall = box(U.top);                /* this photo as the wallpaper */
+    lv_obj_set_size(wall, 96, 96);
+    lv_obj_set_style_radius(wall, LV_RADIUS_CIRCLE, 0);
+    lv_obj_set_style_bg_color(wall, AOS_C_TEXT, 0);
+    lv_obj_set_style_bg_opa(wall, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_bg_opa(wall, LV_OPA_20, LV_STATE_PRESSED);
+    lv_obj_add_flag(wall, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(wall, wall_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_center(glyph(wall, AOS_SYM_PALETTE, &aos_sym_44, AOS_C_TEXT));
+    lv_obj_align(wall, LV_ALIGN_TOP_RIGHT, -8, 4);
 
     U.bottom = box(U.viewer);
     lv_obj_set_size(U.bottom, U.W, 110);
@@ -1440,6 +1511,7 @@ static void build(void)
     if (U.anim) lv_timer_delete(U.anim);
     U.anim = NULL;
     lv_obj_clean(U.root);
+    s_wall_sheet = NULL;
     U.viewer = U.grid = U.scroll = NULL;
     for (int a = 0; a < MAX_ALBUMS; a++) P.alb[a].img = P.alb[a].side_img = NULL;
     U.W = lv_obj_get_width(U.root);

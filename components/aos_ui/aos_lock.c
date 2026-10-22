@@ -554,6 +554,14 @@ static void build(void)
     lv_obj_remove_flag(L.layer, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_remove_flag(L.layer, LV_OBJ_FLAG_GESTURE_BUBBLE);
     lv_obj_add_event_cb(L.layer, layer_ev, LV_EVENT_ALL, NULL);
+    /* the lock screen's own photo, if one was chosen, over the gradient */
+    const lv_image_dsc_t *photo = aos_wall_photo_dsc(AOS_WALL_LOCK);
+    if (photo) {
+        lv_obj_t *im = lv_image_create(L.layer);
+        lv_obj_remove_flag(im, LV_OBJ_FLAG_CLICKABLE);
+        lv_image_set_src(im, photo);
+        lv_obj_center(im);
+    }
 
     /* the clock: big, under the status bar; in landscape on the left, the
      * messages on the right */

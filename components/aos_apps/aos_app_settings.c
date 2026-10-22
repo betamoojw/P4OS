@@ -1003,6 +1003,7 @@ static void build_sound(lv_obj_t *p)
 }
 
 static void wall_cb(lv_event_t *e) { aos_ui_set_wallpaper((int)(intptr_t)lv_event_get_user_data(e)); show(PG_WALL); }
+static void wall_photo_off_cb(lv_event_t *e) { aos_ui_wall_photo_set((int)(intptr_t)lv_event_get_user_data(e), NULL); show(PG_WALL); }
 
 static void build_wall(lv_obj_t *p)
 {
@@ -1030,7 +1031,21 @@ static void build_wall(lv_obj_t *p)
         lv_obj_add_flag(t, LV_OBJ_FLAG_CLICKABLE);
         lv_obj_add_event_cb(t, wall_cb, LV_EVENT_CLICKED, (void *)(intptr_t)i);
     }
-    note(p, _("Pronto: una imagen JPEG de la tarjeta."));
+    note(p, _("El degradado queda debajo de la foto, si elegís una."));
+
+    /* a photo over the gradient, chosen from Fotos */
+    lv_obj_t *g = group(p, _("FOTO"));
+    static const char *const WHERE[] = { N_("Inicio"), N_("Pantalla de bloqueo") };
+    for (int i = 0; i < 2; i++) {
+        char path[192];
+        bool has = aos_ui_wall_photo(i, path, sizeof path);
+        const char *name = has ? strrchr(path, '/') : NULL;
+        name = name ? name + 1 : path;
+        row(g, i ? AOS_SYM_LOCK : AOS_SYM_PALETTE, i ? 0x8E8E93 : 0x30B0C7, _(WHERE[i]),
+            has ? name : _("Sin foto"), false, NULL, NULL);
+        if (has) row(g, AOS_SYM_CLOSE, 0xFF3B30, _("Quitar la foto"), NULL, false, wall_photo_off_cb, (void *)(intptr_t)i);
+    }
+    note(p, _("Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha."));
 }
 
 /* ---- Expansion ---- */

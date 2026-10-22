@@ -366,6 +366,7 @@ static void relayout_all(void)
     if (s_cur) refit_app(s_cur);
     aos_lock_layout();
     aos_pair_ui_layout();
+    aos_wall_photo_relayout();
 }
 
 void aos_ui_set_landscape(bool landscape)
@@ -1473,6 +1474,7 @@ void aos_ui_init(void)
     int32_t wp = 0;
     aos_hal_pref_get_i32("wall", &wp);
     aos_ui_set_wallpaper(wp);
+    aos_wall_photo_init();
 
     s_curtain = plain(lv_layer_top());
     lv_obj_set_style_bg_opa(s_curtain, LV_OPA_COVER, 0);

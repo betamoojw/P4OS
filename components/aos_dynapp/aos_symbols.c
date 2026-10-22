@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3429 simbolos.
+ * Total: 3431 simbolos.
  */
 
 #include <stddef.h>
@@ -1209,6 +1209,8 @@ extern int aos_ui_toast;
 extern int aos_ui_touch_stats;
 extern int aos_ui_unregister_app;
 extern int aos_ui_wall;
+extern int aos_ui_wall_photo;
+extern int aos_ui_wall_photo_set;
 extern int aos_ui_wallpaper;
 extern int aos_ui_wallpaper_colors;
 extern int aos_ui_widget_find;
@@ -4641,6 +4643,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_touch_stats),
     ESP_ELFSYM_EXPORT(aos_ui_unregister_app),
     ESP_ELFSYM_EXPORT(aos_ui_wall),
+    ESP_ELFSYM_EXPORT(aos_ui_wall_photo),
+    ESP_ELFSYM_EXPORT(aos_ui_wall_photo_set),
     ESP_ELFSYM_EXPORT(aos_ui_wallpaper),
     ESP_ELFSYM_EXPORT(aos_ui_wallpaper_colors),
     ESP_ELFSYM_EXPORT(aos_ui_widget_find),

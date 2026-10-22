@@ -205,6 +205,13 @@ void aos_ui_set_wallpaper(int index);
 int  aos_ui_wallpaper(void);
 void aos_ui_wallpaper_colors(int index, uint32_t *top, uint32_t *bottom);
 
+/* A photo from the card over the gradient (JPEG, PNG or BMP), cropped to
+ * the screen and kept in PSRAM, one behind the home screen and one behind
+ * the lock screen. NULL or "" goes back to the gradient. Saved. */
+enum { AOS_WALL_HOME = 0, AOS_WALL_LOCK = 1 };
+void aos_ui_wall_photo_set(int which, const char *path);
+bool aos_ui_wall_photo(int which, char *out, size_t len);   /* false: none */
+
 /* ---- status bar ---- */
 typedef enum {
     AOS_BAR_LIGHT = 0,      /* white glyphs, for dark content (the default) */

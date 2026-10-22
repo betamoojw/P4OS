@@ -156,5 +156,13 @@ Switches for the simulator (the board's `getenv` gives nothing):
 | `CANOS_UNLOCK=1` | every world and level open |
 | `CANOS_BENCH=1` | with `CANOS_PLAY`: fills the whole run and logs the cost of 100 frames |
 
-In the simulator on an M-series Mac a full cell costs ~30 µs; on the board it
-is expected around a millisecond (not measured yet).
+## Measured
+
+On the board (2026-10-22, the first five levels of water and fuel and two of
+acid, upright): 23-30 fps while the liquid runs, 11-32 ms of drawing a frame.
+A full cell costs 4-8 ms (in the simulator on an M-series Mac, ~30 µs), far
+more than the millisecond expected, so the full cells are already at the
+longest turn (one frame in six) on long runs, and their streaks drift at
+5 fps. Before the valve opens, the tank alone (the wheel's two passes in
+floats) takes 11-15 ms a frame at 116-140 px cells. Both are where to look
+first to make it smoother.

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.21.0 — 2026-10-22
+
+- **Caños, a pipes game** (`apps/canos`, from the card). Join the tank to
+  the drain before the liquid runs: turn the pipes (Turn) or lay the
+  missing ones from a tray (Complete), in Easy (the valve by hand), Normal
+  and Hard (it opens when the countdown ends). Six plants with their own
+  liquid, ten generated levels each: water, fuel, acid, crude oil, lava and
+  liquid nitrogen, each running and looking its own way, drawn per pixel,
+  with leaks that spread into puddles. Gamepad, its own sound, English and
+  German. Played on the board: 23-30 fps while the liquid runs. No firmware
+  change: the app and its language files are new in `apps.zip` and
+  `lang.zip`.
+
 ## 0.20.3 — 2026-10-22
 
 - **An SCD4x that stops measuring is set up again.** A moment without

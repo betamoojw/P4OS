@@ -8,12 +8,13 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and forty-four more on
+portrait or landscape. There are twenty-three built-in apps and forty-five more on
 the microSD, loaded as shared objects:
 
-- **Games:** twenty-three, among them Mila (a Sokoban with a black cat in
+- **Games:** twenty-four, among them Mila (a Sokoban with a black cat in
   Blender 3D), Monster Hop, a racing game, golf, a robot RPG, a 3D pinball
-  with six tables, Doom at 35 fps and Duke Nukem 3D; and an emulator of
+  with six tables, a pipes game with six liquids, Doom at 35 fps and Duke
+  Nukem 3D; and an emulator of
   fourteen consoles, the Game Boy Advance and the Neo Geo at full speed.
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
@@ -557,6 +558,40 @@ ball waits.
   toys' frames), so the ball goes behind ramps and toys; a new table is a
   module and a pack, no new code. 60-70 fps on the board.
 
+### Caños
+
+Join the plant's tank to its drain before the liquid runs
+([apps/canos/README.md](apps/canos/README.md)). **Turn** fills the board
+with pipes turned any way, and a tap turns one; **Complete** leaves gaps,
+and a tray offers the missing pieces as they come, with a few decoys. In
+Easy you open the valve yourself; in Normal and Hard it opens when the
+countdown ends, and you go on fixing ahead of the liquid. Six plants, ten
+generated levels each: water, fuel, acid, crude oil, lava and liquid
+nitrogen.
+
+| The menu | Water | Acid, in glass | Lava leaking | A leak of water |
+|---|---|---|---|---|
+| <img src="docs/img/app-canos-menu.jpg" width="125"> | <img src="docs/img/app-canos-water.jpg" width="125"> | <img src="docs/img/app-canos-acid.jpg" width="125"> | <img src="docs/img/app-canos-lava.jpg" width="125"> | <img src="docs/img/app-canos-leak.jpg" width="125"> |
+
+<p align="center"><img src="docs/img/land-canos.jpg" width="600" alt="Caños in landscape: fuel running through a refinery, the tray on the right"></p>
+
+- **Each liquid its own:** how fast it runs and how round its front is
+  (crude and lava slow and round, nitrogen quick and flat), and how it
+  looks: water's caustics and foam, fuel's rainbow film, acid glowing and
+  fizzing in glass tubes, lava's drifting crust, nitrogen boiling. Each
+  plant has its own pipes (painted steel, hazard bands, glass, old iron,
+  refractory, frosted chrome) and floor.
+- **Drawn per pixel:** every pipe shape keeps a list of its channel's
+  pixels, so the liquid is a few table reads and adds a pixel; the front is
+  measured along the whole run and leads in the middle of a pipe, streaks
+  of noise ride the flow, bubbles ride in slots along it. A leak throws
+  drops into a height field that spreads as a puddle lit by its own slope,
+  with fumes, sparks or mist.
+- **On the board** 23-30 fps while the liquid runs. A full cell costs 4-8 ms
+  to draw, so the full ones take turns (down to one frame in six) and the
+  front, the turning pipes and the leak are drawn every frame. A gamepad
+  plays it, and the liquid has its own sound.
+
 | Maps | Radio | Video | 3D Viewer | Pixel Art | Tuner |
 |---|---|---|---|---|---|
 | <img src="docs/img/app-mapas.jpg" width="125"> | <img src="docs/img/app-radio.png" width="125"> | <img src="docs/img/app-video.png" width="125"> | <img src="docs/img/app-visor3d.png" width="125"> | <img src="docs/img/app-pixel.png" width="125"> | <img src="docs/img/app-tuner.png" width="125"> |
@@ -873,6 +908,7 @@ Where something is a guess, it says so.
 | [MODULES.md](docs/MODULES.md) | the 40-pin header, `modules.txt`, I2C, SPI and GPIO from apps |
 | [apps/emulador/README.md](apps/emulador/README.md) | the emulator: the consoles, the card's folders, the modules, what was measured |
 | [apps/pinball/README.md](apps/pinball/README.md) | the pinball: the tables, the rules, adding a table, rendering and packing, what was measured |
+| [apps/canos/README.md](apps/canos/README.md) | Caños: the modes, the generator, the six liquids and how they are drawn, what was measured |
 | [apps/datalog/README.md](apps/datalog/README.md) | the data logger: a line's choices, the CSV, the alarms, logging in the background |
 | [apps/rf/README.md](apps/rf/README.md) | the software radio: receivers, the signal chain, what was measured, the decoders and their tests |
 | [PORTAL-PAGES.md](docs/PORTAL-PAGES.md) | an app's own page in the web portal, from the card, with no firmware |
@@ -925,7 +961,7 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 45 de la tarjeta (juegos, un pinball 3D de seis mesas, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 46 de la tarjeta (juegos, un pinball 3D de seis mesas, un juego de caños con seis líquidos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
 | Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
 | Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |

@@ -101,13 +101,14 @@ void cam_view_codec(cam_view_t *v, cam_codec_t codec)
     v->codec = codec;
 }
 
-static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geom_t *g);
+static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geom_t *g, bool rot);
 
 /* ---- the three frames ------------------------------------------------------- */
 
 static bool same_target(const cam_target_t *a, const cam_target_t *b)
 {
-    return a->out_w == b->out_w && a->out_h == b->out_h && a->mode == b->mode && a->thumb == b->thumb;
+    return a->out_w == b->out_w && a->out_h == b->out_h && a->mode == b->mode && a->thumb == b->thumb &&
+           a->rot == b->rot;
 }
 
 static cam_target_t target(cam_view_t *v)
@@ -172,6 +173,16 @@ void cam_view_set_target(cam_view_t *v, int out_w, int out_h, cam_mode_t mode, b
         v->want.out_h = out_h;
         v->want.mode = mode;
         v->want.thumb = thumb;
+        v->want_gen++;
+    }
+    aos_hal_mutex_unlock(v->mx);
+}
+
+void cam_view_set_rotation(cam_view_t *v, bool rot)
+{
+    aos_hal_mutex_lock(v->mx);
+    if (v->want.rot != rot) {
+        v->want.rot = rot;
         v->want_gen++;
     }
     aos_hal_mutex_unlock(v->mx);
@@ -331,8 +342,9 @@ void cam_view_nal(cam_view_t *v, const uint8_t *nal, int len, int64_t pts_ms)
     }
     t0 = aos_hal_uptime_ms();
     cam_geom_t g;
-    cam_geometry(pic.width, pic.height, t.out_w, t.out_h, (cam_mode_t)t.mode, &g);
-    if (flip_picture(v, &pic, &g)) {
+    if (t.rot) cam_geometry(pic.height, pic.width, t.out_w, t.out_h, (cam_mode_t)t.mode, &g);
+    else cam_geometry(pic.width, pic.height, t.out_w, t.out_h, (cam_mode_t)t.mode, &g);
+    if (flip_picture(v, &pic, &g, t.rot)) {
         v->conv_ms += (uint32_t)(aos_hal_uptime_ms() - t0);
         return;
     }
@@ -340,12 +352,12 @@ void cam_view_nal(cam_view_t *v, const uint8_t *nal, int len, int64_t pts_ms)
     /* the PPA converts and scales it if it can (a pixel or two short of
      * the box, at most), the CPU otherwise */
     int pw = 0, ph = 0;
-    bool hw = f && aos_hal_video_i420(&pic, g.sx, g.sy, g.sw, g.sh, f->px, f->cap, g.ow, g.oh, &pw, &ph);
+    bool hw = f && !t.rot && aos_hal_video_i420(&pic, g.sx, g.sy, g.sw, g.sh, f->px, f->cap, g.ow, g.oh, &pw, &ph);
     if (hw) {
         f->w = pw;
         f->h = ph;
     }
-    if (f && (hw || cam_conv_i420(&v->conv, &pic, &g, f->px))) {
+    if (f && (hw || (t.rot ? cam_conv_i420_rot(&v->conv, &pic, &g, f->px, g.ow) : cam_conv_i420(&v->conv, &pic, &g, f->px)))) {
         v->conv_ms += (uint32_t)(aos_hal_uptime_ms() - t0);
         v->cur = t;
         publish(v);
@@ -363,7 +375,7 @@ static void black_rows(uint16_t *fb, int x, int y, int w, int h)
  * no frame of our own, no copy to the panel, LVGL not involved. Upright
  * only (the panel's rows are the screen's); the UI turns flip_on off for
  * anything else. false: not now, the frame goes the usual way. */
-static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geom_t *g)
+static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geom_t *g, bool rot)
 {
     if (!v->flip_on || aos_hal_uptime_ms() > v->flip_until) return false;
     int bx = v->flip_x, by = v->flip_y, bw = v->flip_w, bh = v->flip_h;
@@ -393,7 +405,9 @@ static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geo
         v->fbr[k].w = g->ow;
         v->fbr[k].h = g->oh;
     }
-    if (!cam_conv_i420_to(&v->conv, pic, g, fb + (size_t)y * AOS_PANEL_W + x, AOS_PANEL_W)) return false;
+    uint16_t *at = fb + (size_t)y * AOS_PANEL_W + x;
+    if (!(rot ? cam_conv_i420_rot(&v->conv, pic, g, at, AOS_PANEL_W) : cam_conv_i420_to(&v->conv, pic, g, at, AOS_PANEL_W)))
+        return false;
     if (!aos_hal_display_flip(fb)) {
         v->fbr[k].fb = NULL;
         return false;

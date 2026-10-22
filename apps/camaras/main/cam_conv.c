@@ -155,6 +155,45 @@ bool cam_conv_i420_to(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_t
     return true;
 }
 
+/* Turned a quarter clockwise: the geometry was worked out on the turned
+ * picture (src_h x src_w), so its crop and output are the turned ones. The
+ * turned pixel (rx, ry) is the source's (ry, src_h - 1 - rx). The output
+ * goes in bands of BAND rows, column by column inside a band: the source is
+ * read along its rows (rx runs down a source column, ry along a row), which
+ * keeps the reads in a few cache lines at a time. */
+#define BAND 16
+
+bool cam_conv_i420_rot(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_t *g, uint16_t *out, int stride)
+{
+    if (!prepare(c, g)) {
+        return false;
+    }
+    const tables_t *t = s_t;
+    const uint16_t *R = t->r + CLAMP_OFF, *G = t->g + CLAMP_OFF, *B = t->b + CLAMP_OFF;
+    const uint16_t *xm = c->xmap;           /* output column -> turned rx */
+    const int ow = g->ow, H = pic->height;
+    for (int y0 = 0; y0 < g->oh; y0 += BAND) {
+        int n = g->oh - y0 < BAND ? g->oh - y0 : BAND;
+        int ry[BAND];
+        for (int k = 0; k < n; k++) ry[k] = g->sy + ((y0 + k) * g->sh + g->sh / 2) / g->oh;
+        for (int x = 0; x < ow; x++) {
+            int sy = H - 1 - xm[x];             /* the source row for this output column */
+            if (sy < 0) sy = 0;
+            const uint8_t *ry0 = pic->y + (size_t)sy * pic->stride_y;
+            const uint8_t *ru = pic->u + (size_t)(sy >> 1) * pic->stride_uv;
+            const uint8_t *rv = pic->v + (size_t)(sy >> 1) * pic->stride_uv;
+            uint16_t *o = out + (size_t)y0 * stride + x;
+            for (int k = 0; k < n; k++) {
+                int sx = ry[k];
+                int Y = t->y[ry0[sx]];
+                int u = ru[sx >> 1], v = rv[sx >> 1];
+                o[(size_t)k * stride] = R[Y + t->rv[v]] | G[Y - t->gu[u] - t->gv[v]] | B[Y + t->bu[u]];
+            }
+        }
+    }
+    return true;
+}
+
 bool cam_conv_rgb565(cam_conv_t *c, const uint16_t *src, int src_stride, const cam_geom_t *g, uint16_t *out)
 {
     if (!prepare(c, g)) {

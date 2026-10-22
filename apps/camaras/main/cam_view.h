@@ -58,6 +58,7 @@ typedef struct {
     int out_w, out_h;           /* the box the picture goes in */
     int mode;                   /* cam_mode_t */
     bool thumb;                 /* the mosaic's policy */
+    bool rot;                   /* the picture turned a quarter clockwise (the viewer's button) */
 } cam_target_t;
 
 struct cam_view {
@@ -149,6 +150,9 @@ int         cam_view_live(void);
 /* ---- the UI's side ---------------------------------------------------------- */
 
 void cam_view_set_target(cam_view_t *v, int out_w, int out_h, cam_mode_t mode, bool thumb);
+/* The picture turned a quarter clockwise, or not: the viewer's button turns
+ * the camera's picture, not the screen. */
+void cam_view_set_rotation(cam_view_t *v, bool rot);
 /* The newest frame, if one came since the last call: the UI's until the
  * next call. NULL if nothing new. */
 const cam_frame_t *cam_view_take(cam_view_t *v);

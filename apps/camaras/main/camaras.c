@@ -85,6 +85,7 @@ static struct {
     int        tab;
     int        mode;                /* the viewer's cam_mode_t */
     int        rot_restore;         /* -1, or the orientation to go back to */
+    bool       feed_rot;            /* the viewer's picture turned a quarter */
     lv_timer_t *timer;
     uint64_t   stats_t0;
     bool       closing;
@@ -978,6 +979,7 @@ static void view_retarget(void)
 {
     if (A.vw.v) {
         cam_view_set_target(A.vw.v, A.W & ~1, A.H & ~1, (cam_mode_t)A.mode, false);
+        cam_view_set_rotation(A.vw.v, A.feed_rot);
     }
 }
 
@@ -991,11 +993,14 @@ static void fit_cb(lv_event_t *e)
     overlay_show(true);
 }
 
+/* Turns the camera's picture, not the screen: the screen keeps the
+ * orientation the system has (Settings, the control centre), and a
+ * landscape camera fills an upright screen turned (2026-10-22). */
 static void rotate_cb(lv_event_t *e)
 {
     (void)e;
-    if (A.rot_restore < 0) A.rot_restore = aos_ui_landscape();
-    aos_ui_request_landscape(-1);
+    A.feed_rot = !A.feed_rot;
+    if (A.vw.v) cam_view_set_rotation(A.vw.v, A.feed_rot);
     overlay_show(true);
 }
 
@@ -1200,6 +1205,7 @@ static void close_viewer(void)
         /* the tile keeps the connection; back to its size and policy, and
          * to the last frame (it is the UI's until the next take) */
         cam_view_set_target(t->v, t->bw, t->bh, CAM_FILL, true);
+        cam_view_set_rotation(t->v, false);        /* the tiles are never turned */
         t->shown = A.vw.shown;
         if (t->shown && t->canvas) {
             lv_obj_remove_flag(t->canvas, LV_OBJ_FLAG_HIDDEN);

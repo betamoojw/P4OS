@@ -92,6 +92,13 @@ tip heated with a lighter.</em></p>
 0x76, and Modules recognises it by itself as a BME688 (not a BME680), with
 its gas resistance, which fell to half with alcohol near it and came back.</em></p>
 
+<p align="center">
+  <img src="docs/img/photo-modules-scd41.jpg" width="300" alt="Modules reading an SCD41 on i2c.ext: 635 ppm of CO2, 21.4 °C and 63 %, with the CO2 chart falling from 1413 ppm">
+</p>
+
+<p align="center"><em>An SCD41 found by itself at 0x62: the chart is the CO2
+of a breath on it, from 3000 ppm back to the room's 600.</em></p>
+
 ---
 
 ## What it does
@@ -677,7 +684,8 @@ reads them.
   without errors. SPI with MOSI looped to MISO at 1, 10 and 40 MHz, the port's top speed.
 - Sensors (0.20), each found by itself or declared from the form and read
   every second in Modules: an AHT10, SGP30, INA219, TSL2561, TCS34725,
-  ADS1115 and BME688 on I2C, a PCF8574A and a PCF8591 declared, a MAX6675
+  ADS1115, BME688, MPU-9250 (with its compass) and SCD41 on I2C, a
+  PCF8574A and a PCF8591 declared, a MAX6675
   thermocouple on SPI and a DS18B20 on 1-Wire. The last two logged by
   Datalog in the background through restarts, updates and a change of
   language, with five more apps opened over it.
@@ -728,9 +736,10 @@ reads them.
 
 **Waiting for hardware on the bench:**
 
-- More I2C and SPI chips: an MPU-9250 (with its compass) is on the bench,
-  and the RC522 RFID reader (its example is in Bus). The TCS34725's fix
-  for a change of range, again on a tidy bench.
+- More I2C and SPI chips: the RC522 RFID reader (its example is in Bus).
+  The TCS34725's fix for a change of range, again on a tidy bench. The
+  MPU-9250's heading through a whole turn (the bench's wires did not let it
+  turn flat).
 - Sensors on plain pins (DHT22, HC-SR04, HX711) and on a serial port
   (MH-Z19, PMS5003, PZEM-004T, LD2410): they run against their emulated
   twins in the simulator.

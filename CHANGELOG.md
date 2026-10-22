@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- **An SCD4x that stops measuring is set up again.** A moment without
+  power leaves an SCD41 idle, and its last result was shown as new, "ok",
+  for as long as it stayed so. With nothing new for four periods it starts
+  again; the SCD30 likewise. SCD41 tried on the board.
+
 ## 0.20.2 — 2026-10-21
 
 - **A smaller firmware: 7.52 MB down to 6.09 MB,** its slot from 5 % to

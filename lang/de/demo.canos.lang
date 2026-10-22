@@ -1,0 +1,189 @@
+# amoledos-lang 1   es -> de
+# demo.canos.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/canos/main/canos.c:315
+Girar	Drehen
+
+#: apps/canos/main/canos.c:315
+Completar	Ergänzen
+
+#: apps/canos/main/canos.c:320
+Fácil	Leicht
+
+#: apps/canos/main/canos.c:320
+Normal	Normal
+
+#: apps/canos/main/canos.c:320
+Difícil	Schwer
+
+#: apps/canos/main/canos.c:340
+Sin reloj: abrís la llave cuando el recorrido esté listo.	Ohne Uhr: Du öffnest das Ventil, wenn die Leitung fertig ist.
+
+#: apps/canos/main/canos.c:341
+Cuando se acaba el tiempo, la llave se abre sola.	Wenn die Zeit abläuft, öffnet sich das Ventil von selbst.
+
+#: apps/canos/main/canos.c:342
+Menos tiempo, y el líquido corre más rápido.	Weniger Zeit, und die Flüssigkeit fließt schneller.
+
+#: apps/canos/main/canos.c:366
+5 niveles del anterior	5 Level der vorigen
+
+#: apps/canos/main/canos.c:402
+Completá 5 niveles del mundo anterior	Schaffe 5 Level der vorigen Welt
+
+#: apps/canos/main/canos.c:465
+Caños	Rohre
+
+#: apps/canos/main/canos.c:467
+Armá el recorrido antes de que corra el líquido	Baue die Leitung, bevor die Flüssigkeit fließt
+
+#: apps/canos/main/canos.c:475
+Modo	Modus
+
+#: apps/canos/main/canos.c:479
+Tocá los caños para girarlos hasta unir el tanque con el desagüe.	Tippe die Rohre an, um sie zu drehen, bis Tank und Abfluss verbunden sind.
+
+#: apps/canos/main/canos.c:480
+Faltan caños: poné los que ofrece la bandeja, tal como vienen.	Es fehlen Rohre: Lege die aus der Ablage, so wie sie sind.
+
+#: apps/canos/main/canos.c:497
+Dificultad	Schwierigkeit
+
+#: apps/canos/main/canos.c:510
+Mundos	Welten
+
+#: apps/canos/main/canos.c:583
+Primero pasá el nivel anterior	Schaffe zuerst das vorige Level
+
+#: apps/canos/main/canos.c:942
+Elegí un caño de la bandeja	Wähle ein Rohr aus der Ablage
+
+#: apps/canos/main/canos.c:1014
+Girá los caños y abrí la llave	Drehe die Rohre und öffne das Ventil
+
+#: apps/canos/main/canos.c:1014
+Poné los caños y abrí la llave	Lege die Rohre und öffne das Ventil
+
+#: apps/canos/main/canos.c:1016
+Abrir llave	Ventil öffnen
+
+#: apps/canos/main/canos.c:1023
+Abriendo la llave...	Ventil wird geöffnet...
+
+#: apps/canos/main/canos.c:1025
+Corre el líquido: %d caños	Es fließt: %d Rohre
+
+#: apps/canos/main/canos.c:1027
+#: apps/canos/main/canos.c:1300
+¡Llegó al desagüe!	Es ist im Abfluss!
+
+#: apps/canos/main/canos.c:1029
+#: apps/canos/main/canos.c:1321
+¡Fuga!	Leck!
+
+#: apps/canos/main/canos.c:1033
+Más despacio	Langsamer
+
+#: apps/canos/main/canos.c:1033
+Acelerar	Schneller
+
+#: apps/canos/main/canos.c:1292
+Pausa	Pause
+
+#: apps/canos/main/canos.c:1293
+nivel	Level
+
+#: apps/canos/main/canos.c:1295
+Seguir	Weiter
+
+#: apps/canos/main/canos.c:1296
+#: apps/canos/main/canos.c:1316
+#: apps/canos/main/canos.c:1323
+Otra vez	Nochmal
+
+#: apps/canos/main/canos.c:1297
+#: apps/canos/main/canos.c:1315
+#: apps/canos/main/canos.c:1317
+#: apps/canos/main/canos.c:1324
+Niveles	Level
+
+#: apps/canos/main/canos.c:1306
+#: apps/canos/main/canos.c:1309
+Puntos	Punkte
+
+#: apps/canos/main/canos.c:1306
+#: apps/canos/main/canos.c:1309
+Caños llenos	Volle Rohre
+
+#: apps/canos/main/canos.c:1307
+Giros	Drehungen
+
+#: apps/canos/main/canos.c:1310
+Piezas	Teile
+
+#: apps/canos/main/canos.c:1315
+Siguiente	Weiter
+
+#: apps/canos/main/canos.c:1411
+No hay memoria para el tablero	Nicht genug Speicher für das Feld
+
+#: apps/canos/main/canos.c:1557
+¡Se abrió la llave!	Das Ventil ist offen!
+
+#: apps/canos/main/cn_world.c:10
+Agua	Wasser
+
+#: apps/canos/main/cn_world.c:10
+Planta de agua	Wasserwerk
+
+#: apps/canos/main/cn_world.c:10
+¡Se inundó la planta!	Das Werk steht unter Wasser!
+
+#: apps/canos/main/cn_world.c:23
+Combustible	Treibstoff
+
+#: apps/canos/main/cn_world.c:23
+Refinería	Raffinerie
+
+#: apps/canos/main/cn_world.c:23
+¡Combustible por todos lados!	Überall Treibstoff!
+
+#: apps/canos/main/cn_world.c:36
+Ácido	Säure
+
+#: apps/canos/main/cn_world.c:36
+Laboratorio	Labor
+
+#: apps/canos/main/cn_world.c:36
+¡El ácido se está comiendo el piso!	Die Säure frisst den Boden an!
+
+#: apps/canos/main/cn_world.c:49
+Petróleo	Rohöl
+
+#: apps/canos/main/cn_world.c:49
+Yacimiento	Ölfeld
+
+#: apps/canos/main/cn_world.c:49
+¡Derrame de petróleo!	Ölpest!
+
+#: apps/canos/main/cn_world.c:62
+Lava	Lava
+
+#: apps/canos/main/cn_world.c:62
+Fundición	Gießerei
+
+#: apps/canos/main/cn_world.c:62
+¡La lava se escapó del canal!	Die Lava ist aus der Rinne entwichen!
+
+#: apps/canos/main/cn_world.c:75
+Nitrógeno	Stickstoff
+
+#: apps/canos/main/cn_world.c:75
+Criogenia	Kryotechnik
+
+#: apps/canos/main/cn_world.c:75
+¡Una nube de nitrógeno helado!	Eine Wolke aus eiskaltem Stickstoff!

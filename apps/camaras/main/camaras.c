@@ -130,6 +130,7 @@ static struct {
         bool        reblit;         /* LVGL drew over the picture: put it back */
         lv_area_t   frect;          /* where the picture is on the screen */
         uint32_t    directs;        /* frames that went straight, since the stats */
+        uint32_t    flips0;         /* v->flipped at the last tick */
     } vw;
 } A;
 
@@ -900,9 +901,47 @@ static void viewer_present(const cam_frame_t *f)
     canvas_show(A.vw.canvas, f, A.W & ~1, A.H & ~1, A.mode == CAM_FILL);
 }
 
+/* Better still: the camera's thread converts each picture straight into the
+ * panel's free framebuffer and flips to it (cam_view.c, flip_picture): no
+ * frame of the app's, no copy. Said to the thread on every tick while it
+ * holds, taken back as soon as anything is over the viewer or another app
+ * is in front - the HAL does not know whose screen it is. */
+static bool flip_ok(void)
+{
+    const char *front = aos_ui_current_app();
+    cam_view_t *v = A.vw.v;
+    return v && A.vw.on && !A.vw.overlay && !A.closing && v->state == CAM_ST_LIVE &&
+           aos_hal_display_get_rotation() == 0 && aos_ui_overlay() == 0 &&
+           front && !strcmp(front, "aos.cameras");
+}
+
+static void flip_update(void)
+{
+    cam_view_t *v = A.vw.v;
+    if (!v) return;
+    if (flip_ok()) {
+        lv_area_t c;
+        lv_obj_get_coords(A.vw.obj, &c);
+        v->flip_x = c.x1;
+        v->flip_y = c.y1;
+        v->flip_w = A.W & ~1;
+        v->flip_h = A.H & ~1;
+        v->flip_until = aos_hal_uptime_ms() + 300;  /* a tick missed (the app hidden): it stops */
+        __sync_synchronize();
+        v->flip_on = true;
+        if (!A.vw.direct) {
+            A.vw.direct = true;
+            lv_obj_add_flag(A.vw.canvas, LV_OBJ_FLAG_HIDDEN);
+        }
+    } else if (v->flip_on) {
+        v->flip_on = false;
+        direct_leave();
+    }
+}
+
 static void disp_ev(lv_event_t *e)
 {
-    if (!A.vw.direct) return;
+    if (!A.vw.direct || (A.vw.v && A.vw.v->flip_on)) return;   /* flips need no mending */
     lv_event_code_t code = lv_event_get_code(e);
     if (code == LV_EVENT_INVALIDATE_AREA) {
         const lv_area_t *a = lv_event_get_param(e);
@@ -1123,6 +1162,7 @@ static void open_viewer(int src, int index)
         A.vw.v = cam_view_new(&cam, true);
         A.vw.own = true;
     }
+    if (A.vw.v) A.vw.flips0 = A.vw.v->flipped;
     /* the other tiles let go: the viewer gets the CPU, the network and the
      * sockets */
     for (int i = 0; i < A.ntiles; i++) if (&A.tiles[i] != A.vw.tile) tile_stop(&A.tiles[i]);
@@ -1152,6 +1192,7 @@ static void close_viewer(void)
     if (!A.vw.on) return;
     tile_t *t = A.vw.tile;
     A.vw.direct = A.vw.reblit = false;
+    if (A.vw.v) A.vw.v->flip_on = false;        /* before anything else is drawn */
     if (A.vw.obj) lv_obj_delete(A.vw.obj);      /* the canvas goes before its frames */
     if (A.vw.own) {
         cam_view_release(A.vw.v);
@@ -1178,12 +1219,17 @@ static void viewer_update(uint64_t now, bool stats)
         set_text(A.vw.msg, _("Sin memoria"));
         return;
     }
+    flip_update();
+    uint32_t flips = v->flipped;
+    A.vw.frames += flips - A.vw.flips0;
+    A.vw.directs += flips - A.vw.flips0;
+    A.vw.flips0 = flips;
     const cam_frame_t *f = cam_view_take(v);
     if (f) {
         A.vw.shown = f;
         A.vw.frames++;
         viewer_present(f);
-    } else if (A.vw.direct && !direct_ok(A.vw.shown)) {
+    } else if (A.vw.direct && !v->flip_on && !direct_ok(A.vw.shown)) {
         direct_leave();                 /* the bars, a panel or the turn came first */
     }
     if (v->state != A.vw.last_state || v->detail_gen != A.vw.last_detail) {

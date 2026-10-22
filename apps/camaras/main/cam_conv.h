@@ -39,4 +39,7 @@ void cam_conv_release(cam_conv_t *c);
 
 /* The whole output into out (ow x oh, packed). */
 bool cam_conv_i420(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_t *g, uint16_t *out);
+/* The same into rows 'stride' pixels apart: straight into the panel's
+ * framebuffer (cam_view.c) */
+bool cam_conv_i420_to(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_t *g, uint16_t *out, int stride);
 bool cam_conv_rgb565(cam_conv_t *c, const uint16_t *src, int src_stride, const cam_geom_t *g, uint16_t *out);

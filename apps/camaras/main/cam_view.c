@@ -101,6 +101,8 @@ void cam_view_codec(cam_view_t *v, cam_codec_t codec)
     v->codec = codec;
 }
 
+static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geom_t *g);
+
 /* ---- the three frames ------------------------------------------------------- */
 
 static bool same_target(const cam_target_t *a, const cam_target_t *b)
@@ -330,6 +332,10 @@ void cam_view_nal(cam_view_t *v, const uint8_t *nal, int len, int64_t pts_ms)
     t0 = aos_hal_uptime_ms();
     cam_geom_t g;
     cam_geometry(pic.width, pic.height, t.out_w, t.out_h, (cam_mode_t)t.mode, &g);
+    if (flip_picture(v, &pic, &g)) {
+        v->conv_ms += (uint32_t)(aos_hal_uptime_ms() - t0);
+        return;
+    }
     cam_frame_t *f = back_frame(v, g.ow, g.oh);
     /* the PPA converts and scales it if it can (a pixel or two short of
      * the box, at most), the CPU otherwise */
@@ -344,6 +350,56 @@ void cam_view_nal(cam_view_t *v, const uint8_t *nal, int len, int64_t pts_ms)
         v->cur = t;
         publish(v);
     }
+}
+
+/* ---- straight into the panel ---------------------------------------------------- */
+
+static void black_rows(uint16_t *fb, int x, int y, int w, int h)
+{
+    for (int r = 0; r < h; r++) memset(fb + (size_t)(y + r) * AOS_PANEL_W + x, 0, (size_t)w * 2);
+}
+
+/* The picture converted into the panel's free framebuffer and flipped to:
+ * no frame of our own, no copy to the panel, LVGL not involved. Upright
+ * only (the panel's rows are the screen's); the UI turns flip_on off for
+ * anything else. false: not now, the frame goes the usual way. */
+static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geom_t *g)
+{
+    if (!v->flip_on || aos_hal_uptime_ms() > v->flip_until) return false;
+    int bx = v->flip_x, by = v->flip_y, bw = v->flip_w, bh = v->flip_h;
+    if (g->ow > bw || g->oh > bh || bx < 0 || by < 0 || bx + bw > AOS_PANEL_W || by + bh > AOS_PANEL_H) return false;
+    uint16_t *fb = aos_hal_display_back();
+    uint32_t age = 0;
+    bool touched = false;
+    if (!fb || !aos_hal_display_back_age(fb, &age, &touched)) return false;
+    int x = bx + (bw - g->ow) / 2, y = by + (bh - g->oh) / 2;
+    int k = 0;
+    while (k < 3 && v->fbr[k].fb && v->fbr[k].fb != fb) k++;
+    if (k == 3) {                       /* the HAL has three; something changed: start over */
+        memset(v->fbr, 0, sizeof v->fbr);
+        k = 0;
+    }
+    /* the margins: black, as the viewer is, when this buffer last held
+     * something else (LVGL's drawing, or the picture elsewhere) */
+    if (v->fbr[k].fb != fb || age == UINT32_MAX || touched || v->fbr[k].x != x || v->fbr[k].y != y ||
+        v->fbr[k].w != g->ow || v->fbr[k].h != g->oh) {
+        black_rows(fb, bx, by, bw, y - by);
+        black_rows(fb, bx, y + g->oh, bw, by + bh - (y + g->oh));
+        black_rows(fb, bx, y, x - bx, g->oh);
+        black_rows(fb, x + g->ow, y, bx + bw - (x + g->ow), g->oh);
+        v->fbr[k].fb = fb;
+        v->fbr[k].x = x;
+        v->fbr[k].y = y;
+        v->fbr[k].w = g->ow;
+        v->fbr[k].h = g->oh;
+    }
+    if (!cam_conv_i420_to(&v->conv, pic, g, fb + (size_t)y * AOS_PANEL_W + x, AOS_PANEL_W)) return false;
+    if (!aos_hal_display_flip(fb)) {
+        v->fbr[k].fb = NULL;
+        return false;
+    }
+    v->flipped++;
+    return true;
 }
 
 /* ---- JPEG --------------------------------------------------------------------- */

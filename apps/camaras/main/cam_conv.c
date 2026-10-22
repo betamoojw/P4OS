@@ -118,6 +118,11 @@ static bool prepare(cam_conv_t *c, const cam_geom_t *g)
 
 bool cam_conv_i420(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_t *g, uint16_t *out)
 {
+    return cam_conv_i420_to(c, pic, g, out, g->ow);
+}
+
+bool cam_conv_i420_to(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_t *g, uint16_t *out, int stride)
+{
     if (!prepare(c, g)) {
         return false;
     }
@@ -129,7 +134,7 @@ bool cam_conv_i420(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_t *g
     uint16_t *prev = NULL;
     for (int y = 0; y < g->oh; y++) {
         int sy = g->sy + (y * g->sh + g->sh / 2) / g->oh;
-        uint16_t *o = out + (size_t)y * ow;
+        uint16_t *o = out + (size_t)y * stride;
         if (sy == last_sy) {                /* enlarging: the same source row again */
             memcpy(o, prev, (size_t)ow * 2);
             continue;

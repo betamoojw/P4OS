@@ -75,6 +75,18 @@ struct cam_view {
     volatile bool     snap_req;
     volatile int      snap_result;  /* 0 none yet, 1 saved, -1 failed */
 
+    /* Straight into the panel: while the UI says so (the viewer full, the
+     * bars down, nothing over it, upright), the thread converts each picture
+     * into the panel's free framebuffer and flips to it, centred in the box
+     * flip_x/y/w/h (screen pixels). fbr is the thread's own: what each of
+     * the panel's buffers last held, to know when its black margins need
+     * painting again. */
+    volatile bool     flip_on;
+    volatile int      flip_x, flip_y, flip_w, flip_h;
+    volatile uint64_t flip_until;   /* the UI renews it every tick */
+    volatile uint32_t flipped;
+    struct { const uint16_t *fb; int x, y, w, h; } fbr[3];
+
     /* the three frames */
     void        *mx;
     cam_frame_t  fr[3];

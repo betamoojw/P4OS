@@ -158,6 +158,22 @@ anywhere: the screen follows the finger.
 |---|---|---|
 | <img src="docs/img/app-lock.png" width="230"> | <img src="docs/img/app-pad.png" width="230"> | <img src="docs/img/app-wifi-ap.png" width="230"> |
 
+### Wallpapers
+
+Eight gradients, and over them a photo from the card for the home screen
+and another for the lock screen, chosen from Photos (the palette at the top
+right of a photo). Each is cropped to the screen, kept in PSRAM (1.8 MB a
+screen, nothing in internal RAM) and darkened as much as its own
+brightness asks, once, while it is decoded, so the white names read on it
+with no translucent layer to blend each frame. Turning the screen crops it
+again; Settings, Wallpaper shows which photo each has and removes it.
+
+| Home, over a photo | Locked, over another |
+|---|---|
+| <img src="docs/img/board-wallpaper-home.jpg" width="300"> | <img src="docs/img/board-wallpaper-lock.jpg" width="300"> |
+
+<p align="center"><em>Both on the board, both of Mila.</em></p>
+
 The gesture is a free swipe up, as phones do it today, and not a control
 dragged along a track: Apple's 2005 patent on the latter
 ([US 7,657,849](https://patents.google.com/patent/US7657849B2)) expired in

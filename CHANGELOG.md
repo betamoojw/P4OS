@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.20.3 — 2026-10-22
 
 - **An SCD4x that stops measuring is set up again.** A moment without
   power leaves an SCD41 idle, and its last result was shown as new, "ok",

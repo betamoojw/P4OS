@@ -23,6 +23,8 @@
  *   GET  /api/display/bench?frames=&hw=   LVGL redrawing the whole screen, ms a
  *                                 frame; hw=0..3 picks the draw unit's way
  *                                 first (aos_draw_accel_p4.c; it stays so)
+ *   GET  /api/video?hw=0|1        video frames converted by the PPA: on/off
+ *                                 (until the next boot), frames done, ms each
  *   GET  /api/tune   POST /api/tune?key=&value=   the tuning preferences read
  *                                 at boot (lvbuf, lvrows, fbs, blit_hw,
  *                                 bands_psram, draw_hw); no
@@ -333,6 +335,20 @@ static void api_heap(aos_httpd_req_t *r)
 }
 #endif
 
+/* GET /api/video?hw=: the PPA converting video frames (aos_video_p4.c),
+ * turned on or off first if asked, with what it did since boot. */
+static void api_video(aos_httpd_req_t *r)
+{
+    int hw = (int)aos_httpd_query_int(r, "hw", -1);
+    uint32_t frames = 0, us = 0;
+    aos_hal_video_hw_stats(&frames, &us);
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddNumberToObject(o, "hw", aos_hal_video_hw(hw));
+    cJSON_AddNumberToObject(o, "frames", frames);
+    cJSON_AddNumberToObject(o, "ms_per_frame", frames ? us / 1000.0 / frames : 0);
+    send_cjson(r, 200, o);
+}
+
 /* GET /api/display/bench?frames=: LVGL redrawing the whole screen. */
 static void api_display_bench(aos_httpd_req_t *r)
 {
@@ -359,7 +375,7 @@ static void api_display_bench(aos_httpd_req_t *r)
 
 /* GET /api/tune, POST /api/tune?key=&value=: the preferences that tune the
  * system and are read at boot, a closed list (docs/MEMORY.md). */
-static const char *const TUNE_KEYS[] = { "lvbuf", "lvrows", "fbs", "blit_hw", "bands_psram", "draw_hw" };
+static const char *const TUNE_KEYS[] = { "lvbuf", "lvrows", "fbs", "blit_hw", "bands_psram", "draw_hw", "video_hw" };
 
 static void api_tune(aos_httpd_req_t *r, bool set)
 {
@@ -397,6 +413,7 @@ bool aos_portal_system(aos_httpd_req_t *r, const char *m, const char *p)
     } else if (get && !strcmp(p, "coredump")) api_coredump(r);
     else if (get && !strcmp(p, "coredump/elf")) api_coredump_elf(r);
     else if (get && !strcmp(p, "display/bench")) api_display_bench(r);
+    else if (get && !strcmp(p, "video")) api_video(r);
     else if ((get || post) && !strcmp(p, "tune")) api_tune(r, post);
 #ifdef ESP_PLATFORM
     else if (get && !strcmp(p, "heap")) api_heap(r);

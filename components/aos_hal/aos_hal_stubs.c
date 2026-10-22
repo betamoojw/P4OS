@@ -1320,6 +1320,15 @@ __attribute__((weak)) int aos_hal_h264_decode(aos_h264_t *dec, const uint8_t *na
 __attribute__((weak)) void aos_hal_h264_close(aos_h264_t *dec)
 { }
 
+__attribute__((weak)) bool aos_hal_video_i420(const aos_h264_pic_t *pic, int sx, int sy, int sw, int sh, uint16_t *out, size_t out_bytes, int max_w, int max_h, int *out_w, int *out_h)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) int aos_hal_video_hw(int on)
+{ int v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) void aos_hal_video_hw_stats(uint32_t *frames, uint32_t *us)
+{ }
+
 __attribute__((weak)) aos_jpeg_t * aos_hal_jpeg_open(void)
 { return NULL; }
 

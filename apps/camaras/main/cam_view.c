@@ -120,10 +120,11 @@ static cam_target_t target(cam_view_t *v)
 static cam_frame_t *back_frame(cam_view_t *v, int w, int h)
 {
     cam_frame_t *f = &v->fr[v->i_back];     /* only this thread moves i_back */
-    size_t need = (size_t)w * h * 2;
+    /* aligned to the cache line, for the PPA to write it (aos_hal_video_i420) */
+    size_t need = ((size_t)w * h * 2 + 127) & ~(size_t)127;
     if (need > f->cap) {
-        free(f->px);
-        f->px = malloc(need);
+        aos_hal_retro_free(f->px);
+        f->px = aos_hal_retro_alloc(need);
         f->cap = f->px ? need : 0;
         if (!f->px) {
             return NULL;
@@ -330,7 +331,15 @@ void cam_view_nal(cam_view_t *v, const uint8_t *nal, int len, int64_t pts_ms)
     cam_geom_t g;
     cam_geometry(pic.width, pic.height, t.out_w, t.out_h, (cam_mode_t)t.mode, &g);
     cam_frame_t *f = back_frame(v, g.ow, g.oh);
-    if (f && cam_conv_i420(&v->conv, &pic, &g, f->px)) {
+    /* the PPA converts and scales it if it can (a pixel or two short of
+     * the box, at most), the CPU otherwise */
+    int pw = 0, ph = 0;
+    bool hw = f && aos_hal_video_i420(&pic, g.sx, g.sy, g.sw, g.sh, f->px, f->cap, g.ow, g.oh, &pw, &ph);
+    if (hw) {
+        f->w = pw;
+        f->h = ph;
+    }
+    if (f && (hw || cam_conv_i420(&v->conv, &pic, &g, f->px))) {
         v->conv_ms += (uint32_t)(aos_hal_uptime_ms() - t0);
         v->cur = t;
         publish(v);
@@ -446,7 +455,7 @@ static void close_decoders(cam_view_t *v)
 static void view_free(cam_view_t *v)
 {
     for (int i = 0; i < 3; i++) {
-        free(v->fr[i].px);
+        aos_hal_retro_free(v->fr[i].px);
     }
     free(v->jpeg_in);
     cam_conv_release(&v->conv);

@@ -2645,6 +2645,21 @@ aos_h264_t *aos_hal_h264_open(void);
 int         aos_hal_h264_decode(aos_h264_t *dec, const uint8_t *nal, int len, aos_h264_pic_t *pic);
 void        aos_hal_h264_close(aos_h264_t *dec);
 
+/* P4OS: a decoded picture to the screen by the PPA (board: aos_video_p4.c).
+ * The block (sx, sy, sw, sh) of 'pic' (I420, BT.601 limited range, as
+ * cameras send) converted to RGB565 and scaled with the PPA's filter to fit
+ * max_w x max_h; the scaler steps in sixteenths, so *out_w x *out_h (what
+ * came out, rows of *out_w pixels) may be a pixel or two short of it. 'out'
+ * from aos_hal_retro_alloc() (aligned to the cache line), out_bytes at
+ * least max_w * max_h * 2. Blocking, from a worker. false: not done (no
+ * PPA, a size it does not take, or pref "video_hw" 0): convert on the CPU.
+ * video_hw(): 1 on, 0 off, -1 only asks; returns whether it is on. The
+ * stats are since boot: frames done and microseconds spent on them. */
+bool aos_hal_video_i420(const aos_h264_pic_t *pic, int sx, int sy, int sw, int sh,
+                        uint16_t *out, size_t out_bytes, int max_w, int max_h, int *out_w, int *out_h);
+int  aos_hal_video_hw(int on);
+void aos_hal_video_hw_stats(uint32_t *frames, uint32_t *us);
+
 /* --------------------------------------------------------------------------
  * P4OS Cameras: JPEG frames in memory (aos_jpeg_p4.c on the board,
  * sim/jpeg_sim.c in the simulator)

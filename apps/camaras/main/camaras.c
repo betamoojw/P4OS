@@ -232,8 +232,13 @@ static void canvas_show(lv_obj_t *canvas, const cam_frame_t *f, int box_w, int b
 {
     lv_canvas_set_buffer(canvas, f->px, f->w, f->h, LV_COLOR_FORMAT_RGB565);
     int32_t scale = LV_SCALE_NONE;
-    bool fits = fill ? (f->w == box_w && f->h == box_h)
-                     : ((f->w == box_w && f->h <= box_h) || (f->h == box_h && f->w <= box_w));
+    /* the PPA's scaler steps in sixteenths and may leave a frame up to a
+     * few pixels short of the box: centred as it is, not scaled by LVGL,
+     * which would cost the CPU every frame what the PPA saved */
+    const int slack = 4;
+    bool wide = f->w <= box_w && f->w >= box_w - slack, tall = f->h <= box_h && f->h >= box_h - slack;
+    bool fits = fill ? (wide && tall)
+                     : ((wide && f->h <= box_h) || (tall && f->w <= box_w));
     if (!fits) {
         int32_t sx = box_w * 256 / f->w, sy = box_h * 256 / f->h;
         scale = fill ? (sx > sy ? sx : sy) : (sx < sy ? sx : sy);

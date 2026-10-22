@@ -1682,7 +1682,7 @@ static void hang_start(void)
  * defaults - what the safe boot and the BOOT button's safe mode do. */
 void aos_hal_tune_reset(void)
 {
-    static const char *const TUNE[] = { "lvbuf", "lvrows", "fbs", "blit_hw", "bands_psram", "draw_hw" };
+    static const char *const TUNE[] = { "lvbuf", "lvrows", "fbs", "blit_hw", "bands_psram", "draw_hw", "video_hw" };
     for (size_t i = 0; i < sizeof TUNE / sizeof TUNE[0]; i++) aos_hal_pref_erase(TUNE[i]);
 }
 

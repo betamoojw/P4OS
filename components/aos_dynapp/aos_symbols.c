@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3433 simbolos.
+ * Total: 3436 simbolos.
  */
 
 #include <stddef.h>
@@ -647,6 +647,9 @@ extern int aos_hal_uvc_info;
 extern int aos_hal_uvc_start;
 extern int aos_hal_uvc_stop;
 extern int aos_hal_uvc_streaming;
+extern int aos_hal_video_hw;
+extern int aos_hal_video_hw_stats;
+extern int aos_hal_video_i420;
 extern int aos_hal_volume_get;
 extern int aos_hal_volume_set;
 extern int aos_hal_worker_running;
@@ -4083,6 +4086,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_uvc_start),
     ESP_ELFSYM_EXPORT(aos_hal_uvc_stop),
     ESP_ELFSYM_EXPORT(aos_hal_uvc_streaming),
+    ESP_ELFSYM_EXPORT(aos_hal_video_hw),
+    ESP_ELFSYM_EXPORT(aos_hal_video_hw_stats),
+    ESP_ELFSYM_EXPORT(aos_hal_video_i420),
     ESP_ELFSYM_EXPORT(aos_hal_volume_get),
     ESP_ELFSYM_EXPORT(aos_hal_volume_set),
     ESP_ELFSYM_EXPORT(aos_hal_worker_running),

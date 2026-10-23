@@ -142,13 +142,36 @@ bool cam_conv_i420_to(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_t
         const uint8_t *ry = pic->y + (size_t)sy * pic->stride_y;
         const uint8_t *ru = pic->u + (size_t)(sy >> 1) * pic->stride_uv;
         const uint8_t *rv = pic->v + (size_t)(sy >> 1) * pic->stride_uv;
-        for (int x = 0; x < ow; x++) {
-            int sx = xm[x];
-            int Y = t->y[ry[sx]];
-            int u = ru[sx >> 1];
-            int v = rv[sx >> 1];
-            o[x] = R[Y + t->rv[v]] | G[Y - t->gu[u] - t->gv[v]] | B[Y + t->bu[u]];
+        /* The chroma is one sample for two columns of the source: its three
+         * terms are looked up again only when the source column moves on
+         * to another pair (2026-10-22: a third fewer reads). */
+        int lc = -1, cr = 0, cg = 0, cb = 0;
+#define CHROMA(sx) do { int ci_ = (sx) >> 1; if (ci_ != lc) { lc = ci_; int u_ = ru[ci_], v_ = rv[ci_]; \
+            cr = t->rv[v_]; cg = t->gu[u_] + t->gv[v_]; cb = t->bu[u_]; } } while (0)
+#define PIX(sx) ({ int Y_ = t->y[ry[(sx)]]; (uint32_t)(R[Y_ + cr] | G[Y_ - cg] | B[Y_ + cb]); })
+        int x = 0;
+        if ((uintptr_t)o & 2) {             /* to a 4-byte boundary for the pairs */
+            int sx = xm[0];
+            CHROMA(sx);
+            o[0] = (uint16_t)PIX(sx);
+            x = 1;
         }
+        /* two pixels a write */
+        for (; x + 1 < ow; x += 2) {
+            int s0 = xm[x], s1 = xm[x + 1];
+            CHROMA(s0);
+            uint32_t p0 = PIX(s0);
+            CHROMA(s1);
+            uint32_t p1 = PIX(s1);
+            *(uint32_t *)(o + x) = p0 | p1 << 16;
+        }
+        if (x < ow) {
+            int sx = xm[x];
+            CHROMA(sx);
+            o[x] = (uint16_t)PIX(sx);
+        }
+#undef PIX
+#undef CHROMA
         last_sy = sy;
         prev = o;
     }
@@ -172,23 +195,52 @@ bool cam_conv_i420_rot(cam_conv_t *c, const aos_h264_pic_t *pic, const cam_geom_
     const uint16_t *R = t->r + CLAMP_OFF, *G = t->g + CLAMP_OFF, *B = t->b + CLAMP_OFF;
     const uint16_t *xm = c->xmap;           /* output column -> turned rx */
     const int ow = g->ow, H = pic->height;
+    const bool odd = ((uintptr_t)out & 2) != 0;   /* pairs start one column in */
     for (int y0 = 0; y0 < g->oh; y0 += BAND) {
         int n = g->oh - y0 < BAND ? g->oh - y0 : BAND;
         int ry[BAND];
         for (int k = 0; k < n; k++) ry[k] = g->sy + ((y0 + k) * g->sh + g->sh / 2) / g->oh;
-        for (int x = 0; x < ow; x++) {
-            int sy = H - 1 - xm[x];             /* the source row for this output column */
-            if (sy < 0) sy = 0;
-            const uint8_t *ry0 = pic->y + (size_t)sy * pic->stride_y;
-            const uint8_t *ru = pic->u + (size_t)(sy >> 1) * pic->stride_uv;
-            const uint8_t *rv = pic->v + (size_t)(sy >> 1) * pic->stride_uv;
+        /* Two output columns at a time, so each row gets them in one 32-bit
+         * write; each column is a source row, and inside it the chroma is
+         * looked up once for each pair of source columns. */
+        int x = 0;
+        for (;;) {
+            bool single = (x == 0 && odd) || x + 1 >= ow;
+            if (x >= ow) break;
+            int sy0 = H - 1 - xm[x];
+            int sy1 = single ? sy0 : H - 1 - xm[x + 1];
+            if (sy0 < 0) sy0 = 0;
+            if (sy1 < 0) sy1 = 0;
+            const uint8_t *y0p = pic->y + (size_t)sy0 * pic->stride_y, *y1p = pic->y + (size_t)sy1 * pic->stride_y;
+            const uint8_t *u0 = pic->u + (size_t)(sy0 >> 1) * pic->stride_uv, *v0 = pic->v + (size_t)(sy0 >> 1) * pic->stride_uv;
+            const uint8_t *u1 = pic->u + (size_t)(sy1 >> 1) * pic->stride_uv, *v1 = pic->v + (size_t)(sy1 >> 1) * pic->stride_uv;
+            bool same_c = (sy0 >> 1) == (sy1 >> 1);
             uint16_t *o = out + (size_t)y0 * stride + x;
+            int lc = -1, cr0 = 0, cg0 = 0, cb0 = 0, cr1 = 0, cg1 = 0, cb1 = 0;
             for (int k = 0; k < n; k++) {
-                int sx = ry[k];
-                int Y = t->y[ry0[sx]];
-                int u = ru[sx >> 1], v = rv[sx >> 1];
-                o[(size_t)k * stride] = R[Y + t->rv[v]] | G[Y - t->gu[u] - t->gv[v]] | B[Y + t->bu[u]];
+                int sx = ry[k], ci = sx >> 1;
+                if (ci != lc) {
+                    lc = ci;
+                    int u = u0[ci], v = v0[ci];
+                    cr0 = t->rv[v]; cg0 = t->gu[u] + t->gv[v]; cb0 = t->bu[u];
+                    if (same_c) {
+                        cr1 = cr0; cg1 = cg0; cb1 = cb0;
+                    } else {
+                        u = u1[ci]; v = v1[ci];
+                        cr1 = t->rv[v]; cg1 = t->gu[u] + t->gv[v]; cb1 = t->bu[u];
+                    }
+                }
+                int Y0 = t->y[y0p[sx]];
+                uint32_t p0 = R[Y0 + cr0] | G[Y0 - cg0] | B[Y0 + cb0];
+                if (single) {
+                    o[(size_t)k * stride] = (uint16_t)p0;
+                } else {
+                    int Y1 = t->y[y1p[sx]];
+                    uint32_t p1 = R[Y1 + cr1] | G[Y1 - cg1] | B[Y1 + cb1];
+                    *(uint32_t *)(o + (size_t)k * stride) = p0 | p1 << 16;
+                }
             }
+            x += single ? 1 : 2;
         }
     }
     return true;

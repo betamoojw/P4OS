@@ -1,0 +1,61 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Funciones	職能
+una vez, antes del primer cuadro	一次,在第一個框架之前
+cada cuadro; dt en milisegundos	每個圖片; dt 在毫秒
+cada cuadro, después de tick	每個框, 勾選後
+ev es "down", "move" o "up"	"ev"是"下","移動"或"上".
+la pantalla giró (lienzo por defecto)	螢幕翻轉( 預設畫布)
+La tabla aos	桌子
+el lienzo: 240 × 426 parado, a ×3	帆布:240 × 426直,在×3
+llena todo	填滿一切
+relleno	填充
+contorno	概況
+5×7, mayúsculas, dígitos y signos	5×7,大字母,數字和符號
+oscurece (f<0) o aclara, en dieciseisavos	暗色 (f<0) 或亮色,在十六分之一
+x, y, apoyado	壓的 x, y
+desde que arrancó el guión	自從劇本開始
+congela lo dibujado como fondo	凍結所畫的背景
+guión, pantalla y cuadro en ms, filas, píxeles	指令碼,螢幕和框架以 ms,行,畫素
+En las primeras líneas	在第一行
+otro lienzo (16..1280 por lado), a la escala entera que entre	其他帆布 (每側16..1280),以適合的尺度
+o landscape: gira la pantalla al abrirlo desde el inicio	或景觀:從主螢幕開啟時轉動螢幕
+nombre.lua	name.lua
+el último que corrió la placa	最後一個開發板執行
+Correr	跑步
+Bajar	下載
+Editar	編輯
+Todavía no hay guiones. Creá el primero con «Nuevo guión».	建立第一個用"新指令碼".
+En la placa: %s	在板上: %s
+corriendo, sin errores	執行,沒有錯誤
+La placa todavía no corrió ningún guión.	開發板還沒有執行任何劇本.
+No existe %s	%s 沒有
+Hay cambios sin guardar. ¿Volver igual?	沒有儲存的變化.
+Ponele un nombre al guión	給劇本一個名字
+El nombre no puede tener barras ni empezar con punto o guion bajo	這個名字不能含有切片或以點或底線開始
+Ya hay un %s. ¿Reemplazarlo?	目前已有 %s換一個?
+Guardando…	拯救了...
+Guardado: la placa lo está recargando	儲存:板正在重新載入
+Guardado en la placa	在板上儲存
+No se pudo guardar: %s	無法儲存: %s
+Corriendo %s en la placa	執行 %s 在板上
+%s es nuevo: aparece en el inicio después de reiniciar. Abrí la lista de Lua y tocalo ahí.	%s 在重啟後,它會在主螢幕上顯示.開啟Lua列表並點選它.
+¿Borrar %s de la placa?	刪除 %s 在開發板?
+Borrado %s	刪除 %s
+Sólo archivos .lua (y sus íconos .aic)	只有.lua檔案 (和它們的.aic圖示)
+Subido %s	已上傳 %s
+Subidos %d archivos	已上傳 %d 檔案
+Soltá acá archivos .lua para subirlos a %s	放下 . lua 檔案來上傳到 %s
+Nuevo guión	新的劇本
+Subir…	上傳…
+Abriendo Lua en la placa	在板上開啟Lua
+Abrir la app en la placa	在板上開啟應用程式
+← Guiones	← 指令碼
+Guardar en la placa	在板上儲存
+Guardar y correr	儲存和執行
+Borrar de la placa	從板上刪除
+⌘S / Ctrl+S guarda	⌘S / Ctrl+S saves
+Los colores son 0xRRGGBB. Están string, table, math, utf8 y coroutine; no están io, os, package ni debug. Una llamada que tarda más de 400 ms se corta con un error.	顏色格式為 0xRRGGBB。支援 string、table、math、utf8 和 coroutine，不支援 io、os、package 和 debug。單次呼叫超過 400 ms 會報錯並中止。
+Lua	盧亞
+Los .lua viven en /lua de la tarjeta. La placa vigila el archivo del guión que está corriendo y lo recarga cuando cambia, así que guardar acá alcanza. Un error no reinicia nada: sale en la pantalla y acá, con su número de línea. Un guión nuevo es una app del inicio desde el próximo arranque.	現在的 . lua 檔案 /lua 在卡上. 板檢視正在執行的指令碼檔案,當它改變時重新載入,所以在這裡儲存就足夠了. 一個錯誤重啟沒有什麼:它顯示在螢幕上和在這裡,其行號碼. 新的指令碼是從下一個開機開始的主屏上的應用程式.
+Hay cambios sin guardar	有未儲存的變化

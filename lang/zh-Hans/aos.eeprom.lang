@@ -1,0 +1,272 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+El chip no habilita la escritura (WEL no sube): mirá /WP y /HOLD.	芯片不允许写 (WEL保持低):检查 /WP 和 /HOLD.
+No hay un puerto %s en modules.txt.	没有港口. %s 在 modules.txt.
+El GPIO%d lo tiene %s: soltalo ahí primero.	GPIO%d 由 %s首先把它放到那里.
+No se pudo abrir %s (el registro dice por qué).	不能打开 %s (日志说为什么).
+Nadie contesta en 0x%02X de %s: mirá el cableado, A0-A2 y los pull-ups.	没有人回复 0x%02X 在 %s检查电线 A0 -A2和拉升
+La flash no da su JEDEC id (%02X %02X %02X): mirá el cableado y /HOLD.	闪存没有JEDECID (%02X %02X %02X):检查电线和 /HOLD.
+Nadie contesta en el SPI: MISO queda en 1. Mirá el cableado, /CS y /HOLD.	SPI 设备未响应，MISO 保持为 1。请检查接线、/CS 和 /HOLD。
+%s y %s están en el mismo GPIO%d.	%s 和 %s 在同一路上 GPIO%d.
+El GPIO%d (%s) lo tiene %s.	GPIO%d (%s) 是由 %s.
+El GPIO%d (%s) no se puede usar.	GPIO%d (%s) 不可使用.
+Nadie contesta: DO no baja después de la dirección. Mirá el cableado y CS.	没有人回答:DO不下调地址后. CS.
+Abriendo…	开放...
+Leyendo	阅读
+Copia de lo que había	复印件
+Escribiendo y verificando	编写和验证
+Verificando	正在校验
+Guardando la versión	保存版本
+Buscando	寻找
+Nadie contesta entre 0x50 y 0x57 de %s. Mirá el cableado, los pull-ups de SDA y SCL y los 3V3.	在0x50到0x57之间没有人回答 %s检查电缆, SDA 和 SCL 拉升和3V3.
+Responden: %s	答案: %s
+No se pudo leer.	我读不懂.
+El principio está todo en 0x%02X: no se sabe leyendo si toma 1 o 2 bytes de dirección. Elegí el chip; la prueba de tamaño lo confirma.	开始都是0x%02X阅读无法判断需要1个或2个地址字节.
+Toma 1 byte de dirección (24xx01 a 24xx16).	需要1个地址字节 (24xx01至 24xx16).
+Toma 2 bytes de dirección (24xx32 o más grande).	需要2个地址字节 (24xx32或更大).
+El tamaño no se sabe leyendo (el principio es todo igual): probá la prueba de tamaño.	阅读无法判断尺寸 (开始都是相同的):试用尺寸测试.
+Da la vuelta a los %s: un %s.	包裹在 %s: a %s.
+Una flash: JEDEC %02X %02X %02X (%s).	一个闪电:JEDEC %02X %02X %02X (%s).
+fabricante desconocido	不知名制造商
+Tamaño por el id: %s.	从身份证的尺寸: %s.
+Es de más de 16 MB: con 3 bytes de dirección se ven los primeros 16.	容量超过 16 MB，使用 3 字节地址只能访问前 16 MB。
+Protegida: estado 0x%02X (BP2-BP0 = %d).	保护:状态 0x%02X (BP2-BP0 = %d).
+Una EEPROM 25xx: estado 0x%02X.	25xx EEPROM:状态 0x%02X.
+Protegida: BP1 BP0 = %d%d.	保护: BP1 BP0 = %d%d.
+Firma 0x29: un 25xx1024.	签字0x29:一个25xx1024.
+Está todo en 0x%02X: el tamaño no se sabe leyendo. Elegí el chip; la prueba de tamaño lo confirma.	这一切都是0x%02X阅读无法判断尺寸. 选择芯片,尺寸测试证实了这一点.
+No se entiende cuántos bytes de dirección toma.	我不能说需要多少个地址字节.
+Toma %d byte(s) de dirección.	需要 %d 标签:
+Nadie contesta: DO no baja después de la dirección. Mirá el cableado, CS y que DO tenga pull-up.	没有人回复:DO不会下调地址. CS现在,我们在做什么呢?
+DO baja después de %d bits de dirección.	后的DO降低 %d 解决方案.
+Es un %s o un %s: el principio es todo igual y no se distinguen leyendo.	这是一个 %s 或一个 %s开始都是一样的,阅读无法分辨它们.
+Un %s en x%d (ORG a %s).	A %s 在 x%d (ORG到 %s).
+No es ninguno de la tabla.	这不是桌子上的问题.
+No hace falta: la flash dice su tamaño en el JEDEC id y la 93xx en la dirección. Usá Detectar.	没有必要:一个闪存显示其尺寸在JEDECID和93xx的地址.使用检测.
+No se pudo leer el byte 0.	无法读取0字节.
+No se pudo escribir el byte 0: ¿WP está a 3V3?	不能写字节0:WP在3V3?
+El byte 0 volvió a 0x%02X.	字节0是返回0x%02X.
+¡Ojo! El byte 0 no volvió a 0x%02X: escribilo a mano.	注意! 0 字节没有返回0x%02X写字手动.
+desde el portal	从门户
+No contestó en la dirección 0x%X.	没有答案%X.
+Lectura cancelada.	阅读取消了.
+Leídos %s.	读取 %s.
+Sin tarjeta: no se guardó la versión.	没有卡:版本未保存.
+No se pudo guardar la versión en la tarjeta.	我无法保存卡上的版本.
+Igual a la última versión: no se guardó otra.	同上一版本一样:没有新人拯救.
+Sin tarjeta no se escribe: no habría dónde guardar la copia de lo que había.	如果没有卡,就不会有任何地方可以保存其中的副本.
+Está protegida (estado 0x%02X): sacale la protección en la pestaña Chip. No se escribió nada.	它受保护 (状态0x%02X):在芯片标签中删除保护.
+No hay memoria.	内存不足。
+No se pudo guardar la copia en la tarjeta: no se escribió nada.	没有能把副本保存到卡上.
+La copia falló en 0x%X: no se escribió nada.	复印件失败于0x%X没有任何书写.
+Cancelado antes de escribir.	在写作之前取消了.
+copia antes de escribir	在写作前复制
+No se pudo releer la copia: no se escribió nada.	我无法回复阅读:没有任何书写.
+No se pudo releer la copia.	我无法回复阅读.
+No se pudo escribir en 0x%X.	不能在0x上写%X.
+La copia de antes está en Versiones (%s).	之前的副本在版本中 (%s).
+Cancelado a mitad: quedó escrito hasta 0x%X. La copia de antes está en Versiones.	半途取消:写到0x%X之前的副本是版本.
+No se pudo releer 0x%X para verificar.	我读不懂.%X 我们回来检查.
+No verificó en 0x%X: el chip tiene 0x%02X y debería 0x%02X.	检查未能在0x%X: 芯片持有0x%02X 并且应该保持0x%02X.
+¿WP está a 3V3? Para escribir va a GND.	写作是为3V3 GND.
+El chip ya tenía eso: no hizo falta escribir nada.	芯片已经持有了:没有什么需要写.
+Escrito 1 sector y verificado.	1 部门书写和验证.
+Escrita 1 palabra y verificada.	已写入 1 个字并通过校验。
+Escrita 1 página y verificada.	已写入 1 页并通过校验。
+Escritos %u sectores y verificados.	%u 经过编写和验证的部门.
+Escritas %u palabras y verificadas.	%u 经过书面和验证的字体.
+Escritas %u páginas y verificadas.	%u 已编写和验证的页面.
+Esta memoria no tiene registro de estado.	这个内存没有状态登记器.
+Estado 0x%02X.	状态 0x%02X.
+No cambió: el estado quedó en 0x%02X. Con WPEN puesto, /WP tiene que estar a 3V3.	没有变化:状态保持 0x%02X随着WPEN设置, /WP 在3V3上.
+Listo: estado 0x%02X.	完成:状态0x%02X.
+Chip	芯片
+modules.txt no tiene puertos de esa clase	modules.txt 没有这样的港口
+Puerto	港口
+sin pines de dirección	没有地址针
+Dirección	地址
+El del puerto	港口本身
+en modules.txt	在 modules.txt
+pata	引脚
+Chip select	片选
+Reloj	时钟
+Hay un trabajo en curso	一个工作正在进行.
+Buscando…	正在搜索…
+Probando…	测试.
+Prueba de tamaño	尺寸测试
+Escribe dos marcas en el byte 0 y mira dónde da la vuelta la memoria; al final vuelve a poner el byte que estaba. Con WP a 3V3 no puede escribir.	向字节 0 写入两个测试标记，检查存储器的地址回绕位置；测试结束后恢复原字节。WP 接到 3.3 V 时无法写入。
+Probar	测试
+Nada	没有什么.
+¼ de arriba	上半部分
+½ de arriba	上半部分
+Toda	全部
+Proteger: %s. Lo protegido no se puede escribir hasta sacarlo.	保护: %s保护的东西不能写到它被删除之前.
+Protección	保护
+Cambiar	更改
+Bloques protegidos (BP1 BP0)	保护区块 (BP1 BP0)
+Leé el estado primero	首先阅读状态
+WPEN	经济发展
+Con WPEN puesto, la pata /WP en bajo traba el registro de estado.	通过WPEN设置, /WP pin held low locks the status register.
+Sin WPEN, la pata /WP no traba el registro de estado.	没有WPEN, /WP 脚本不锁定状态登记器.
+Quitar protección	删除保护
+Pone en 0 el registro de estado de la flash: se puede escribir toda.	设置闪存状态注册表为0:所有内容都可写.
+Quitar	移除
+sin leer	没有阅读
+ (protegida)	 (受保护)
+MEMORIA	记忆
+%s. Páginas de 256 B, se borra por sectores de 4 KB.	%s. 256 亿页,在 4 KB 的部门中被删除.
+%s. Palabras de 8 o 16 bits según ORG.	%s。根据 ORG 配置，字长为 8 位或 16 位。
+%s. Página de %u B, escritura de %u ms.	%s. %u B页, %u 写下来.
+CONEXIÓN	连接
+del puerto	港口的
+modo	模式
+x8 (ORG a GND)	x8 (ORG到 GND)
+x16 (ORG a 3V3)	x16 (ORG到3V3)
+DETECTAR	检测
+Detectar	检测
+Probar tamaño	尺寸测试
+Busca quién responde entre 0x50 y 0x57 y, leyendo, cuántos bytes de dirección toma y dónde da la vuelta.	查看谁在0x50到0x57之间回答,并通过阅读需要多少字节的地址以及它包裹的地方.
+Pide el JEDEC id: fabricante y tamaño.	要求JEDEC身份证:制造商和尺寸.
+Lee el estado, la firma del 25xx1024 y, leyendo, los bytes de dirección y dónde da la vuelta.	阅读状态,25xx1024的签名,并通过阅读地址字节以及它包裹的地方.
+Cuenta los bits de dirección hasta el 0 de DO: eso da el chip y el ORG.	计算地址比特到DO为0:这给出了芯片和ORG.
+Usar %s en 0x%02X	使用 %s 在0x%02X
+Usar %s x%d	使用 %s x%d
+Usar %s	使用 %s
+PROTECCIÓN	保护
+Las 24xx se protegen con la pata WP (7): a GND se escribe, a 3V3 queda protegida toda. No hay nada que cambiar desde acá.	24xx部件使用 WP pin (7) 保护: GND 他们写道,在3V3时,一切都受到保护.从这里开始,什么也没有改变.
+Las 93xx no guardan protección: la app manda EWEN antes de escribir y EWDS al terminar.	93xx部分没有保护:应用程序在写作前发送EWEN,完成后发送EWDS.
+Estado	状态
+Bloques protegidos	保护区块
+puesto	设置
+no	没有
+BP1 y BP0 protegen un cuarto, la mitad o toda la memoria desde arriba; con WPEN, /WP en bajo traba el estado.	BP1 和 BP0 保护四分之一,一半或全部的内存从顶部; /WP 低锁定了状态.
+La flash protege con BP2-BP0 del estado; la app no escribe mientras estén puestos.	闪光保护与 BP2-BP0 应用程序在设置时不会写作.
+Texto desde 0x%X	0x 的文字%X
+Texto	文本
+Listo	完成
+Leyendo el chip…	阅读芯片...
+Escribiendo el chip…	写着芯片...
+Ojo: la imagen es de un %s y el chip elegido es un %s.	注意:图片来自一个 %s 选择的芯片是 %s.
+1 byte cambiado sin escribir	1 已更改的字节未写
+%u bytes cambiados sin escribir	%u 已更改的字节未写
+Comparando con %s: %u diferencias	与 %s: %u 差异
+Dejar	停止
+Hay %u bytes cambiados sin escribir: leer el chip los pisa.	有一些 %u 没有写的转换字节:阅读芯片会覆盖它们.
+Leer	读取
+Leer igual	无论如何都读
+Leé el chip o abrí una versión primero	阅读芯片或先打开版本
+La imagen no es del tamaño de este chip	图像不是这个芯片的尺寸
+\nOjo: la imagen es de un %s.	\n注意:图片来自一个 %s.
+Escribir %u bytes cambiados en el %s (%s). Antes se guarda una copia de lo que tiene, y después se verifica.%s	写入 %u 转换字节到 %s (%s) 首先保存其内容的一份副本,然后再验证.%s
+Escribir los cambios	写下这些变化
+Escribir	写入
+Escribir la imagen entera (%s) en el %s (%s). Sólo se escriben las páginas que cambian; antes se guarda una copia y después se verifica.%s	写完整的图像 (%s) 进入 %s (%s) 只有变化的页面才会被编写;首先保存一本副本,然后验证.%s
+Escribir la imagen	写下图像
+Fuera de la memoria	在记忆之外
+Ir a la dirección	去地址
+No está	没有找到
+Escribí bytes en hexa, de a dos cifras	字节按六位数输入,每个数字是两位数
+Buscar texto	找到文字
+Buscar bytes (hexa)	找字节 (hex)
+Siguiente: %s	接下来: %s
+DE AD BE EF	DE AD BE EF
+Buscar	找到
+Nada para deshacer	没有什么可取消的.
+Sumas de la imagen	图像的检查总数
+Con los cambios sin escribir.	包括尚未撰写的变化.
+No se pudo guardar en la tarjeta	不能存储卡
+Igual a la última versión: no se guardó otra	同上一版本一样:没有新人保存
+Guardada en Versiones	在版本中保存
+No se pudo leer la versión	无法读取版本
+No hay versiones de este chip	没有这个芯片的版本
+Comparar con	与
+Quedan cambios viejos: leé el chip de nuevo	旧的变化仍然存在:再次阅读芯片
+Nota de la versión	版本的注释
+Dejar el %s (%s) todo en 0xFF. Antes se guarda una copia de lo que tiene.	设置所有 %s (%s) 到0xFF. 首先保留其所持的副本.
+Borrar el chip	抹去芯片
+Borrar	删除
+Sumas: CRC32, MD5, SHA-256	校验和：CRC32、MD5、SHA-256
+Guardar como versión	保存为版本
+con una nota, sin escribir el chip	没有写芯片的笔记
+Comparar con una versión	与版本进行比较
+Dejar de comparar	停止比较
+Deshacer todos los cambios	取消所有变更
+todo en 0xFF	所有到0xFF
+Memoria	内存
+Ir a	走去
+Deshacer	废除
+Más	更多
+Leyendo…	正在读取…
+Todavía no hay nada leído.\nTocá Leer, o abrí una versión en Versiones.	没有读到任何东西.\n按阅读,或在版本中打开版本.
+lectura	阅读
+antes de escribir	在写作之前
+escrita	书写
+del portal	从门户
+guardada	已保存
+archivo	文件
+No hay memoria para la imagen	没有足够的记忆力.
+versión	版本
+No se pudo borrar	无法删除
+No se pudo guardar la nota	我不能保存这张笔记
+Hay %u bytes cambiados sin escribir en la memoria: abrir la versión los pisa.	有一些 %u 已更改的字节未在内存中写入:打开版本会覆盖它们.
+Abrir	打开
+Abrir igual	无论如何,开放
+Leé el chip para ver las diferencias	阅读芯片,看出区别
+La versión no es del tamaño de este chip	版本不是这个芯片的尺寸
+Escribir %s en el %s y verificarlo. Antes se guarda una copia de lo que tiene ahora; sólo se escriben las páginas que cambian.%s	写入 %s 在 %s 现在的复印件先保存,只能写出变化的页面.%s
+\nLos cambios sin escribir de la memoria se pierden.	\n记忆中的未写的变化丢失了.
+Restaurar	恢复
+Nota	备注
+Borrar %s de la tarjeta. No se puede deshacer.	删除 %s 卡上,这不能被撤销.
+Borrar la versión	删除版本
+Abrir en Memoria	在记忆中保持开放
+para verla, editarla o escribirla	查看,编辑或写
+Comparar con la memoria	与记忆相比
+las diferencias en rojo	红色的差异
+Restaurar en el chip	恢复到芯片中
+escribir y verificar	编写和验证
+Sumas	检查金额
+Versiones del %s	版本的 %s
+Sin tarjeta: no hay versiones.	没有卡,没有版本.
+Todavía no hay versiones de este chip. Cada lectura guarda una, y cada escritura guarda lo que había antes y lo que quedó. Desde el portal se pueden subir .bin.	每次阅读都保存一个,每次写都保存了之前的内容和遗留的内容.
+ · comparando	 ·比较
+sin conectar	未连接
+A TENER EN CUENTA	记住这一点
+Todo a 3V3: el header no aguanta 5 V. Si el chip está en una placa a 5 V, no lo conectes así.	所有信号均为 3.3 V，扩展接口无法承受 5 V。芯片若安装在 5 V 电路板上，请勿直接连接。
+Un capacitor de 100 nF entre VCC y GND, pegado al chip.	在 VCC 与 GND 之间接入 100 nF 电容，并尽量靠近芯片。
+SDA y SCL necesitan pull-ups de 4,7 kΩ a 3V3, si el módulo no los trae.	若模块没有自带上拉电阻，SDA、SCL 需分别通过 4.7 kΩ 电阻上拉至 3.3 V。
+A0-A2 eligen la dirección: para 0x%02X van como dice el dibujo (1 = 3V3, 0 = GND).	A0-A2选择地址:为 0x%02X 按图的线程 (1 = 3V3,0 = GND).
+Este chip no usa A0-A2 (los bits altos de la dirección van ahí): a GND.	这个芯片不使用A0-A2 (高地址比特是这样的): GND.
+En el 24xx1025, A2 (pata 3) va a 3V3: no es dirección, y sin eso no anda.	在24xx1025上,A2 (pin 3) 进入3V3:它不是一个地址,而且没有它就不会工作.
+WP (pata 7) a GND para escribir; a 3V3 queda protegida toda.	WP (pin 7) to GND 在3V3时,它全部被保护.
+/WP (3) y /HOLD (7) a 3V3: en bajo, /HOLD congela el bus y /WP traba la protección.	/WP (3) 和 /HOLD (7) 至3V3:低, /HOLD freezes the bus and /WP 锁定保护.
+El chip select es el GPIO%d, no el cs= del puerto.	选择芯片是 GPIO%d这不是港口的CS=.
+Una flash soldada en una placa puede estar alimentando al resto: mejor sacarla, o con la placa sin su micro.	板上的闪光焊子最终可能给其余部分供电: 最好把它脱下来, 或者用板上的微粒除掉。
+ORG (6) elige palabras de 16 bits (a 3V3) o de 8 (a GND): tiene que coincidir con lo elegido en Chip.	ORG (6) 选择16位字 (在3V3) 或8位字 (在 GND):必须与Chip中所选的内容相匹配.
+DO usa el pull-up interno; con cables largos, uno de 10 kΩ a 3V3.	在长线上,将10 kΩ的电源添加到3V3中.
+Hay 93xx en SOIC con las patas rotadas (las \"X\" de Microchip): mirá la hoja de datos.	一些SOIC 93xx有旋转的针 (微芯片的 \"X\" 检查数据表.
+CS es activo en alto, al revés que en SPI.	CS 是高活跃的,不同于 SPI.
+Cómo se conecta el %s	如何将电线 %s
+La placa está ocupada con otro trabajo.	开发板还忙着另一个工作.
+No conozco ese chip.	我不知道这个芯片.
+En la placa está elegido el %s, no el %s.	开发板有 %s 选择,而不是 %s.
+En la placa hay cambios sin escribir: escribilos o descartalos allá primero.	开发板保留未被写的变更:先写或丢弃.
+No se pudo empezar a leer.	我无法开始阅读.
+El portal pidió leer el chip	门户网站要求阅读芯片
+Falta la versión.	版本是缺失的.
+No se pudo leer esa versión, o no es del tamaño del chip.	读不到版本,或者不是芯片的尺寸.
+No se pudo empezar a escribir.	我无法开始写作.
+El portal pidió escribir el chip	门户网站要求写芯片
+Pedido desconocido.	不知名的请求.
+Cancelar	取消
+Aceptar	确定
+Versiones	版本
+Cableado	电缆
+No se pudo empezar	不能开始
+No hay cambios para escribir	没有变化
+ (pedido del portal)	 (从门户网站问)
+Falló.	失败了.
+leída	阅读
+No se pudo leer	我读不懂.
+borrada	删除
+No se pudo escribir	我不能写

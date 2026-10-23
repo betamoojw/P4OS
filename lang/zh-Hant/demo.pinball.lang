@@ -1,0 +1,93 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+¡A JUGAR!	我們玩吧!
+TILT	標籤
+¡CUIDADO!	危險!
+MISIÓN	任務
+MODO FINAL	最終模式
+MULTIBOLA	多種型別
+TODO VALE x5	所有的東西 x5
+JACKPOT EN LA RAMPA	強尼姆堡的傑克波特
+JACKPOT	寶馬
+¡MISIÓN CUMPLIDA!	任務完成!
+MISIÓN LISTA	任務準備
+TIRÁ AL EMBUDO	拍那個女孩
+MINIJUEGO LISTO	影片模式
+TRABA LISTA	洛克是LIT
+¡GOLPE!	擊中!
+¡DERROTADO!	失敗了!
+BOLA %d TRABADA	球 %d 鎖定
+BOLA TRABADA	球鎖定
+¡COMPLETO!	完成了!
+¡BLANCO!	胡說!
+¡CERO!	零!
+ROJO	紅色
+NEGRO	黑色
+LA CASA GANA	房子獲勝
+¡VOLVIÓ!	這是回來的!
+MINIJUEGO	影片模式
+BOLA EXTRA	額外的球
+¡BOLA EXTRA!	額外的球!
+¡TIRO PERFECTO!	射擊技巧!
+BONUS x%d	獎金 x%d
+KICKBACK LISTO	快速回來
+¡COMBO!	快速到達!
+BUMPERS MÁS FUERTES	彈簧起立
+JACKPOT MÁS GRANDE	巨人賈基波特
+TIRÁ A LA RAMPA	拍攝滑鼠
+¡SALVADA!	球被拯救了!
+FIN DE LA MULTIBOLA	多重超級
+BOLA PERDIDA	失去了球
+¡APUNTÁ!	目標!
+LANZÁ PARA DISPARAR	發射火災
+¡ATRAPADA!	預見!
+KICKBACK	雞巴
+SE ACABÓ EL TIEMPO	時間已經結束了
+TIRÁ DE NUEVO	再一次射擊
+RÉCORD %s	高分數 %s
+LANZÁ PARA JUGAR	開始玩
+BOLA %d	球 %d
+BONUS %s x%d	獎金 %s x%d
+FIN DEL JUEGO	遊戲結束
+¡JACKPOT 777!	777 JACKPOT! 777 JACKPOT! 777 JACKPOT! 777 JACKPOT! 777 JACKPOT! 777 JACKPOT! 777 JACKPOT! 777 JACKPOT!
+¡TRIPLE!	這類三種!
+¡PREMIO!	贏家!
+SUERTE LA PRÓXIMA	下次更好運氣
+¡GANASTE EL DUELO!	你贏得了這場鬥爭!
+ZOMBIS	動物
+INVASORES	侵略者
+CORRÉ	走吧!
+GLOBOS	氣球
+TRAGAMONEDAS	小型機器
+DUELO	雙重
+Efectos: sí	音效:在
+Efectos: no	音效:關閉
+Música: sí	音樂:上
+Música: no	音樂:關閉
+Pausa	暫停
+Seguir	繼續
+Empezar de nuevo	重新開始
+Cómo se juega	如何玩
+Elegir otra mesa	選擇另一個桌子
+Fin del juego	遊戲結束
+¡Récord nuevo!	新的高分!
+Récord: %s	高分: %s
+Otra vez	再一次玩.
+Tocá acá:\npaleta izquierda	觸控這裡:\n左翼
+Tocá acá:\npaleta derecha	觸控這裡:\n右翼
+Deslizá rápido el dedo por acá para sacudir la mesa.\n¡Si la sacudís mucho, TILT!	快速來這裡推進桌子.\n用力過頭了,它就是TILTs!
+Cuando aparece este botón, tocalo para lanzar la bola. Mantenelo apretado para elegir la fuerza.	當這個按鈕出現時, 點選它來啟動球。 按住它來選擇強度 。
+¡A jugar!	讓我們玩吧!
+No hay memoria para la mesa: cerrá otras apps y probá de nuevo	桌子記憶體不足:關閉其他應用程式,再試一次
+No se pudo cargar la mesa	桌子無法載入.
+Preparando la mesa...	設定桌子...
+Récord:	高分:
+El tutorial sale en la próxima partida	在下一場比賽中,教程將顯示
+Récords borrados	高分清除
+Ajustes	設定
+Ver el tutorial otra vez	再一次顯示教程
+Borrar los récords	清除高分數
+Listo	完成
+Pinball 3D	彈丸 3D
+No hay mesas en la tarjeta.\n\nCopiá los archivos pinball_*_p4.pak a la carpeta apps de la tarjeta.	卡上沒有桌子.\n\nCopy the pinball_*_p4.pak files to the card's apps folder.
+Jugar	開始遊戲

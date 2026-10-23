@@ -12,7 +12,7 @@
  *
  * The consoles listed here are the app's (emu_cores.c): a new core adds
  * its line to CONSOLES. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('emulador') : window.P4OS;
 const { h, put, toast, fmtBytes, fsPut, fsList, fsDelete, fsMkdir, fsBytes, fsText, fsUrl, openApp, saveBlob } = P;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 

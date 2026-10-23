@@ -1,5 +1,6 @@
-# P4OS, 32 MB flash. Two app slots for OTA, a FAT store for when there is
-# no card, and a coredump the portal can serve.
+# P4OS, 32 MB flash. Two app slots for OTA, the offline SC/TC font resource,
+# and a coredump the portal can serve. storage retains its legacy FAT subtype
+# but holds a read-only font image; it is not mounted as a filesystem.
 #
 # Both app slots must lie whole in the first 16 MB: the cache maps the flash
 # with 24-bit addresses, and an image past 0x1000000 fails its verification
@@ -8,7 +9,7 @@
 # in this IDF. So the slots are 0x7F0000 (7.94 MB) each, the most that fits;
 # until 2026-10-19 they were 8 MB and ota_1's last 128 KB were past 16 MB.
 # Growing them needs that 32-bit mapping or a smaller firmware; storage
-# (nothing mounts it) does not help, being above 16 MB. A new table goes on
+# (fonts read with esp_partition_read) does not help, being above 16 MB. A new table goes on
 # by serial (esptool), never by OTA (docs/BUILDING.md).
 # Name,     Type, SubType,  Offset,     Size
 nvs,        data, nvs,      0x9000,     0x6000

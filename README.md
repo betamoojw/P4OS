@@ -903,3 +903,7 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 | Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |
 | Cómo se instala | la primera vez por el CH340; después `tools/ota.sh p4os.local` o el portal |
+
+### 中文支持 / 中文支援
+
+支持简体中文及繁體中文，设备与管理网页同步切换。字库保存在板载 Flash，无需 SD 卡或在线翻译。首次安装与升级方法见 [中文与离线字库](docs/I18N.md)。

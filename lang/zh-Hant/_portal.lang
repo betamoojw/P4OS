@@ -1,0 +1,660 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Pantalla	螢幕
+Inicio	主頁
+Wi-Fi	Wi-Fi
+Red	網路
+Terminal	終端
+Programador	燒錄工具
+Banco	測試臺
+Macro pad	宏鍵盤
+Expansión	擴充套件
+Archivos	檔案
+Ajustes	設定
+Firmware	韌體
+Registro	日誌
+sin red	沒有網路
+sin conexión	沒有連線
+pantalla	螢幕
+En vivo	實時
+Abrir una app…	開啟應用…
+Atrás	返回
+Girar	旋轉
+Guardar PNG	儲存 PNG
+Un clic es un toque; arrastrar es deslizar. Desde el borde de abajo hacia arriba vas al inicio, como en la placa.	單擊模擬輕觸，拖動模擬滑動。從底部邊緣向上滑動可返回主頁，與裝置上的操作一致。
+La placa	開發板
+Nombre	名稱
+Placa	開發板
+Dirección	地址
+Encendida hace	執行時長
+Memoria libre	可用記憶體
+%s KB internos · %s PSRAM	內部記憶體 %s KB · PSRAM %s
+%s libres de %s	可用 %s，總容量 %s
+sin tarjeta	未檢測到儲存卡
+Hora	時間
+sin hora	時間未設定
+Tocá Buscar redes.	點選“掃描網路”。
+Conectada	已連線
+Conectando…	正在連線…
+Sin conexión	未連線
+Apagado	關
+Estado	狀態
+Señal	訊號
+¿Olvidar esta red?	要忘記此網路嗎？
+Red olvidada	已忘記此網路
+Olvidar esta red	忘記此網路
+contraseña	密碼
+Conectando a %s…	連線到 %s…
+Unirse a %s	連線到 %s
+Contraseña	密碼
+Red abierta.	開放網路，無需密碼。
+Unirse	連線
+Cancelar	取消
+Buscando…	正在搜尋…
+No se encontraron redes.	未找到網路。
+Nombre de la red (SSID)	網路名稱（SSID）
+Buscar redes	掃描網路
+Redes	網路
+Red oculta…	隱藏網路…
+La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.	P4 透過板載 ESP32-C6 連線網路，僅支援 2.4 GHz。
+pegá acá el token de larga duración	在此貼上長期訪問令牌
+Sin configurar	未配置
+Esperando el Wi-Fi	正在等待 Wi-Fi
+Token rechazado	令牌無效
+Cargando…	正在載入…
+Conectado	已連線
+Nombre de la casa	家庭名稱
+guardado	已儲存
+falta	缺失
+Entidades	實體
+%s en %s ambientes	%s 個實體，分佈在 %s 個區域
+Guardado, conectando…	已儲存，正在連線…
+Buscar entidad…	搜尋實體…
+Sin ambiente	未分配區域
+Favorito	收藏
+Guardar y conectar	儲存並連線
+El token se crea en Home Assistant: tu perfil > Seguridad > Tokens de acceso de larga duración. Queda guardado en la placa; no se vuelve a mostrar.	在 Home Assistant 中開啟“個人資料 > 安全 > 長期訪問令牌”建立令牌。令牌儲存在裝置上，儲存後不再顯示。
+Favoritos	收藏夾
+La estrella elige qué aparece en la página de favoritos y en el widget del inicio, en el orden en que las marcás.	點選星標選擇要顯示在收藏夾和主螢幕小元件中的內容，按收藏順序排列。
+Guardado %s	已儲存 %s
+Guardar	儲存
+se cortó	連線已斷開
+Subido %s	已上傳 %s
+Subidos %s archivos	已上傳 %s 個檔案
+¿Borrar %s y todo lo que tiene adentro?	確定刪除 %s 及其全部內容嗎？
+¿Borrar %s?	要刪除 %s 嗎？
+Nuevo nombre	新名稱
+Editar	編輯
+Bajar	下載
+Renombrar	重新命名
+Borrar	刪除
+Carpeta vacía.	資料夾為空。
+Soltá archivos acá para subirlos a	拖動檔案到此處，上傳至
+Nombre de la carpeta	資料夾名稱
+Subir…	上傳…
+Nueva carpeta	新建資料夾
+Editar:	編輯：
+menu.txt ordena el inicio, modules.txt dice qué hay conectado al header; los dos se aplican al guardar. cameras.txt son las cámaras de la app Cámaras (y su Frigate), que la relee al guardar. El firmware para el Programador va en /firmware.	menu.txt 配置主螢幕，modules.txt 配置擴充套件介面上的模組，兩者均在儲存後生效。cameras.txt 配置攝像頭應用及 Frigate，儲存後重新載入。燒錄工具使用的韌體請放入 /firmware 目錄。
+Canal A	通道 A
+Canal B	通道 B
+Conectar	連線
+Grabar	錄製
+Seguir	自動滾動
+Filtrar…	篩選…
+nada	無
+Enviar al puerto…	傳送到串列埠…
+Avisar cuando aparezca…	出現以下內容時提醒…
+lo tiene %s	已被 %s 佔用
+Detener	停止
+● Grabando	● 正在錄製
+%s líneas	%s 行
+%s recibidos	已接收 %s
+Sin conexión.	未連線。
+grabando en	錄製到
+Tocá para cambiar el texto	點選修改文字
+1 vez	1 次
+%s veces	%s 次
+Aviso	提醒
+Pitido	提示音
+Sin avisos.	暫無提醒。
+Limpiar	清除
+Enviar	傳送
+Avisos	提醒
+Textos que se buscan en cada línea de los dos canales, sin importar mayúsculas: la línea se marca en ámbar y, con Aviso o Pitido, la placa avisa (una vez cada 10 s como mucho).	兩個頻道的每行都有文字搜尋, 忽略了情況: 這條線用安培標記, 並且用警告或Beep, 開發板會告訴你(最多每10個頻道中就有一次) 。
+Listo	就緒
+Abriendo el puerto	正在開啟串列埠
+Conectando con la placa	正在連線開發板
+Cargando el stub	正在載入燒錄程式
+Subiendo la velocidad	正在提高波特率
+Leyendo el chip	正在讀取晶片資訊
+Borrando	正在擦除
+Grabando	正在寫入
+Verificando	正在校驗
+Reiniciando la placa	正在重啟開發板
+Grabación terminada	燒錄完成
+Falló	失敗
+Cancelado	已取消
+Subidos %s archivos a /firmware	已上傳 %s 個檔案到 /firmware
+EN/BOOT por RTS/DTR	透過 RTS/DTR 控制 EN/BOOT
+con EN/BOOT	使用 EN/BOOT
+sin EN/BOOT	不使用 EN/BOOT
+sin detectar	未檢測到
+Flash cifrada o arranque seguro: no se puede grabar desde acá	密碼快閃記憶體或安全啟動:從這裡無法快閃記憶體
+Detectar	檢測
+para %s	適用於 %s
+chip desconocido	未知晶片
+1 archivo	1 個檔案
+%s archivos	%s 個檔案
+No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.	沒有韌體 /firmware. Upload an ESP-IDF build folder or a .bin.
+archivo %s de %s: %s	第 %s 個檔案，共 %s 個：%s
+%s de %s	%s / %s
+faltan %s	剩餘 %s
+en %s	用時 %s
+MD5 verificado	MD5 校驗透過
+La placa a programar	待燒錄開發板
+Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).	連線到標題:TX,RX和 GND 到港口, EN 和 BOOT to the pins modules.txt 名稱 (模組目標... en= boot=).
+Firmware en la tarjeta	儲存卡中的韌體
+Subir carpeta de build…	上傳構建目錄…
+Subir .bin…	上傳 .bin…
+Grabación	燒錄
+Registro del programador	燒錄日誌
+Ciudad de México (UTC−6)	墨西哥城 (UTC−6)
+Nueva York (UTC−5/−4)	紐約 (UTC−5/−4)
+Londres (UTC+0/+1)	倫敦 (UTC+0/+1)
+Zona horaria cambiada	時區已更改
+Nombre en la red	網路名稱
+Ahora responde como %s.local	現在可透過 %s.local 訪問
+Cambiar	更改
+Letras minúsculas, números y guiones. Es lo que responde como <nombre>.local.	微字母,數字和字串. <name>在本地.
+Zona horaria	時區
+Idioma	語言
+Orientación	方向
+Vertical	縱向
+Horizontal	橫向
+Brillo	亮度
+Volumen	音量
+Fondo de pantalla	桌布
+Seguridad	安全
+La contraseña, las redes de confianza y HTTPS se cambian sólo en la placa: Ajustes, Portal web.	密碼,可信網路和 HTTPS 只有在板上進行更改:設定,網頁門戶.
+Bajar la autoridad HTTPS de la placa	下載板的 HTTPS 權威
+Instalada una vez como confiable en la Mac (Acceso a Llaveros, "Confiar siempre") o en el iPhone (Ajustes, General, Información, Confianza de certificados), el navegador deja de avisar por https://%s.local. Sólo sirve para nombres .local y direcciones de la red de casa.	一旦安裝在Mac上 (Keychain Access, "Always Trust") 或iPhone上 (設定,一般,關於,證書信任設定),瀏覽器停止警告 https://%s.local. 它只涵蓋家庭網路上的本地名稱和地址.
+Sistema	系統
+¿Reiniciar la placa?	確定重啟裝置嗎？
+Reiniciando…	正在重啟…
+Reiniciar	重啟
+%s de %s líneas	%s 行，共 %s 行
+(se ven las últimas %s)	（顯示最後 %s 行）
+Pausar	暫停
+filtrar (texto o /regex/)	filter (text or /regex/)
+Ver el arranque actual	讓我們看看.
+Ver el arranque anterior	顯示前一個 boot
+Descargar	下載
+un firmware que no se sabe	一個未知的韌體
+La placa se cayó: hay un volcado sin leer (%s, visto %s).	開發板崩潰: 有一個未讀的傾棄處 (U)%s已見 %s).
+La placa se cayó: hay un volcado sin leer (%s).	開發板崩潰: 有一個未讀的傾棄處 (U)%s).
+Verlo en Firmware	在Firmware中檢視
+Lo último que escribió el arranque anterior (se conserva al reiniciar, no al desenchufar).	之前的開啟寫的最後一行 (透過重新啟動,而不是切斷).
+En vivo. El anillo guarda los últimos 256 KB.	實時顯示，環形緩衝區保留最近 256 KB 資料。
+No hay registro del arranque anterior: la placa se desenchufó, o arrancó un firmware distinto (el anillo cambia de lugar con cada compilación).	之前的啟動沒有日誌:板塊被斷開,或者另一個韌體啟動 (環隨著每個構建移動).
+No se pudo leer: %s	我讀不懂: %s
+Reiniciar con el firmware nuevo	在新的韌體中重新啟動
+Tiene que ser el .bin del firmware (build/rev1_3/p4os.bin)	它必須是韌體的 .bin (構建)/rev1_3/p4os.bin)
+Subiendo %s de %s…	裝載 %s 的 %s…
+Listo: %s escritos en %s s. Arranca a prueba al reiniciar.	完成: %s 寫在 %s 在下一次重新啟動時,它會開始審判.
+Falló: %s	失敗: %s
+Se cortó la conexión	連線下來.
+Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranque anterior.	在之前的韌體上,新的韌體沒有啟動.
+Corriendo %s a prueba: se confirma a los 30 s…	執行 %s 在審判中:確認30秒後...
+Confirmado: %s es el firmware ahora.	確認: %s 是現在的韌體.
+La placa no contestó en un minuto y medio: mirala.	開發板已經沒有回答了半分鐘.
+Versión	版本
+Compilado	建成
+Ranura	機場
+a prueba	在審判中
+La otra ranura	另一個插槽
+vacía	空
+Actualizar por Wi-Fi	更新 Wi-Fi
+Elegí build/rev1_3/p4os.bin. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.	選擇構建/rev1_3/p4os.bin. 在重新啟動時,它開始試用,如果它沒有達到30秒,板本身就會回到當前的韌體./ota.sh.
+Elegir el .bin…	選擇一個.bin...
+¿Arrancar %s (%s) en el próximo reinicio?	靴子 %s (%s) 在下一次重啟時?
+Arranca %s al reiniciar	%s 下一次重啟時的靴子
+Volver a la otra ranura	返回另一個插槽
+Último cuelgue	最後一次撞車
+Volcado	垃圾
+dañado	損壞
+Tarea	任務
+el de ahora	目前的
+el de la otra ranura	在另一個插槽裡
+ninguna de las dos ranuras: uno viejo	沒有插槽:一箇舊的
+no se sabe	未知
+Visto	看到的
+sin leer	沒有閱讀
+Para ver funciones y líneas: tools/coredump.sh en la Mac. Decodifica sólo con la ELF de ese firmware (build/elf/<sha>.elf, que tools/ota.sh guarda en cada instalación); descargarlo entero cuenta como leído.	用於函式和線:工具/coredump.sh 在Mac上.它只使用該韌體的ELF (構建) 來解碼/elf/<sha>.elf,哪些工具/ota.sh 在每次安裝過程中都會進行下載.
+Descargar el volcado	下載垃圾桶
+Marcar como leído	標記閱讀
+¿Borrar el volcado?	刪除垃圾?
+Ver el registro	顯示日誌
+No hay: la placa no se colgó desde que se borró el último.	沒有: 開發板自從上一個被刪除後就沒有墜毀過。
+Salida	輸出
+Dirección del osciloscopio (192.168.1.50)	示波器地址（192.168.1.50）
+Pidiendo la captura…	要求截圖...
+Captura del osciloscopio	望遠鏡截圖
+Tiempo	時間
+Disparo CH%s	觸發器 CH%s
+Vmáx	維馬克
+Vmín	時間:
+Vmed	排放量
+Frec	頻率
+Período	時間
+Ningún canal encendido.	沒有通道.
+APAGADA	關閉
+Apagar la salida	關閉輸出
+Encender la salida	啟動輸出
+Ajuste %s V · %s A · entrada %s V (tope %s V)	設定 %s V · %s 輸入 %s V (最大) %s V)
+%s filas	%s 排列
+Detenido	停止了
+Archivo:	檔案:
+Una fila por toma en un CSV de la carpeta logs de la tarjeta.	每個樣本一行, 在儲存卡日誌資料夾中的 CSV 中 。
+Desconectar	斷開連線
+%s trazas/s	%s 痕跡/s
+Sin conectar.	未連線。
+Fuente Riden	Riden 供應
+Fijar V	集 V
+Fijar A	設定A
+Registro a CSV	登入到CSV
+cada	每一個
+Osciloscopio Rigol	螺旋示波儀
+Medidas	測量
+Captura	截圖
+La pantalla del propio osciloscopio, tal cual.	示波器的螢幕 和現在一樣
+Generador	訊號發生器
+El UNI-T UTG932E habla USBTMC por USB y espera un hub USB con alimentación: el puerto OTG de la placa no da 5 V.	UNI-T UTG932E 透過 USB 使用 USBTMC 通訊，需要外部供電的 USB 集線器；開發板的 OTG 埠不提供 5 V。
+recién	現在
+hace %s s	%s 在此之前
+hace %s min	%s 幾分鐘前
+hace %s h	%s 在此之前
+Sin red	沒有網路
+Rechazado	拒絕
+Guardado	儲存
+En cola: sale cuando haya conexión	排隊:一旦連線,它會關閉
+Publicado en %s	發表於 %s
+Filtrar tópicos	過濾主題
+%s de %s tópicos	%s 的 %s 主題
+binario · %s bytes	二進位制 %s 位元組
+(vacío)	(空)
+Ningún tópico coincide.	沒有主題匹配.
+Todavía no llegó nada.	沒有什麼到達.
+máx %s	最大值 %s
+mín %s	最小值 %s
+Elegí un tópico de la lista.	從列表中選擇一個主題.
+Retenido	儲存
+%s mensajes	%s 資訊
+valor	價值
+Mensaje	訊息
+(binario)	(二進位制)
+(recortado: %s en total)	(簡稱: %s 總體)
+Publicar en este tópico	釋出到這個主題
+cliente %s	客戶端 %s
+%s enviados	%s 傳送
+%s conexiones	%s 連線
+(guardada; escribí otra para cambiarla)	(儲存;輸入另一個字元來更換)
+sin contraseña	沒有密碼
+Conexión	連線
+Puerto	港口
+Usuario	使用者
+ID de cliente (vacío: automático)	客戶ID (空:自動)
+Suscripción (separá con comas)	訂閱 (以逗號分開)
+Reconectando…	重新連線...
+Reconectar	再連線
+Encendido	已啟用
+Publicar	釋出
+Tópico	主題
+Retener	保持
+QoS 1 espera la confirmación del broker. Un mensaje vacío y retenido borra el retenido del tópico.	QoS 1 會等待訊息代理確認。傳送空的保留訊息可清除該主題已保留的訊息。
+Tópicos	主題
+Vaciar la tabla	清理桌子
+se renueva en %s	%s 後重置
+Sesión iniciada	簽署
+La sesión venció	會議結束
+Sin sesión	沒有簽署
+recién leído	剛才讀到
+leído hace %s	閱讀 %s 之前
+¿Cerrar la sesión de Claude en la placa?	在開發板上籤署克勞德?
+Cerrar sesión	報名
+5 horas	5個小時
+Semana	周
+Semana, Opus	週刊
+Semana, Sonnet	星期,索內特
+Uso extra	額外使用
+Pegá acá el código (código#estado)	在此貼上程式碼 (程式碼#狀態)
+2. En la página de Claude iniciá sesión y autorizá. Te va a mostrar un código: copialo y pegalo acá.	2. 在 Claude 頁面登入並授權，複製顯示的程式碼，再貼上到此處。
+Verificando…	檢查了...
+Iniciar sesión	登入
+La placa tiene su propio inicio de sesión con tu cuenta de Claude: no usa ni toca el de Claude Code en ninguna computadora, y los números son los de la cuenta. Los toma del mismo lugar que el /usage de Claude Code, que no es una API pública de Anthropic: puede cambiar sin aviso.	開發板有自己的登入與您的克勞德賬戶:它不使用或觸控克勞德程式碼在任何計算機上, /usage,這不是公開的人類API:它可以在沒有通知的情況下改變.
+1. Abrí la página de inicio de sesión de Claude.	1.開啟克勞德的登入頁面.
+Si no se abrió una pestaña nueva:	如果沒有新的標籤開啟:
+abrí la página de Claude acá	在這裡開啟克勞德的頁面
+Iniciar sesión con Claude	與克勞德簽約
+Atajo de teclado	鍵盤快捷方式
+Escribir un texto	輸入一個文字
+Secuencia	序列
+Publicar MQTT	釋出 MQTT
+Abrir una app	開啟應用程式
+%s pasos	%s 步驟
+Descartar cambios	丟棄變更
+Guardar cambios	儲存更改
+La computadora tiene el teclado y el mouse	計算機有鍵盤和滑鼠
+El USB se está preparando…	USB 準備好了.
+Esperando a la computadora: conectá el puerto OTG	在電腦等待:插入OTG埠
+USB apagado: se prende al abrir el Macro pad o al tocar un atajo	USB 關閉:當Macropad開啟或點選快捷方式時啟動
+en la tarjeta: macropad.json	在卡上: macropad.json
+sin tarjeta: sólo en memoria	沒有卡:僅儲存
+Último envío:	最後傳送:
+Guardado: la placa ya lo muestra	儲存:板上已經顯示了
+(sin nombre)	(沒有名字)
+Página %s	頁面 %s
++ Página	+ 頁面
+Esta página se llena sola con las escenas y luces de Home Assistant la primera vez que la placa conecte con HA. Si agregás botones a mano, deja de hacerlo.	這個頁面充滿了 Home Assistant's scenes and lights the first time the board connects to HA. If you add buttons by hand, it stops doing so.
+Página	頁面
+← Mover	← 移動
+Mover →	移動 →
+¿Borrar la página «%s» con sus botones?	刪除頁面%s用它的按鈕?
+Borrar página	刪除頁
+Tocá un botón para editarlo, o un lugar vacío para crear uno. Arrastrá los botones para cambiarlos de lugar.	按一鍵來編輯它,或者在一個空白點上建立一個.
+Buscar un ícono…	搜尋圖示...
+Modificadores cmd, ctrl, alt, shift con + y una tecla. Medios: play, next, prev, mute, volup, voldown.	調整器:cmd,ctrl,alt,轉換+和鍵.媒體:播放,下一步,prev,默音,volup,voldown.
+La placa conoce esa tecla.	開發板知道這個鑰匙.
+La placa no conoce esa tecla.	開發板不知道這個鑰匙.
+Combinación	組合
+Texto	文字
+Se escribe como un teclado de EE. UU.: los acentos y la ñ no llegan.	它是美國鍵盤上打字的:口音和 ñ不穿過.
+Pasos	步驟
+Una orden por línea:	每行一個命令:
+STRING texto	字串文字
+HA entidad	哈單位
+o	或
+HA dominio.servicio entidad {json}	HA域.服務實體 {json}
+MQTT tópico mensaje	MQTT 主題資訊
+Las líneas con # son comentarios.	開始於#的行是評論.
+Entidad	實體
+Home Assistant no está conectado: la lista de entidades aparece cuando la placa lo tenga.	Home Assistant 不連線:一旦開發板有了實體列表,就會出現.
+Servicio	服務
+vacío: lo de siempre (prender/apagar, abrir, ejecutar)	空:通常的 (上)/off開放,執行)
+Datos del servicio (JSON, opcional)	服務資料 (JSON,可選)
+El botón muestra el estado de la entidad: una luz prendida se ve llena de color; un sensor, su valor.	按鈕顯示實體的狀態: 以彩色顯示的光線; 感測器顯示其值 。
+Tópico de estado (opcional)	國家主題 (可選)
+Si lo tiene, el botón se prende y apaga con lo que llegue ahí (ON/OFF, 1/0, {"state":"ON"}).	If set, the button turns on and off with whatever arrives there (ON/OFF, 1/0沒有任何其他方法.
+Elegí una app…	選擇一個應用程式...
+Botón %s	按鈕 %s
+Probar en la placa	在板上試看.
+La página está llena	頁面已經滿了
+Duplicar	建立副本
+Copiar	複製
+Acción	行動
+Color	顏色
+Ícono	標誌
+¿Volver a la botonera de fábrica? Se pierde la actual.	返回工廠佈局?
+De fábrica	工廠
+En la placa: 3×5 parada, 5×3 acostada, en este mismo orden. Arrastrá para mover; el cambio llega a la placa al guardar.	在板上:直立3×5,側面5×3,在同一順序.拖動;轉換到板上儲存.
+Hay cambios sin guardar	有未儲存的變化
+libre	可用
+en un puerto	在一個港口
+tomado	採用
+de la placa	開發板
+con cuidado	謹慎地
+reservado	已保留
+Buscando sensores…	尋找感測器...
+Buscar de nuevo	再一次搜尋
+Agregar al texto	加入文字
+Se puede guardar, pero:	它可以儲存,但:
+Bien: %s puertos y %s módulos	很好. %s 港口和 %s 模組
+No se guardó	沒有儲存
+Guardado: %s puertos, %s módulos	儲存: %s 港口, %s 模組
+No hay puertos UART.	否 UART 港口.
+No hay puertos I2C.	否 I2C 港口.
+no es un GPIO	沒有一個 GPIO
+Qué es	這是什麼?
+Lo tiene	用於
+nadie, ahora	現在沒有人.
+ninguno en modules.txt	沒有 modules.txt
+Módulos	模組
+ninguno	無
+Ahora lo usa: %s	在使用中: %s
+Sin módulos declarados en este puerto.	在這個埠上沒有任何模組.
+Detectados ahora: %s	現在發現了: %s
+Tocá un pin para ver qué es, quién lo tiene y a qué puerto pertenece.	按一下一個針來看它是什麼,誰擁有它以及它屬於哪個埠.
+No hay tarjeta: no se puede guardar.	沒有卡:不能儲存.
+modules.txt, en la raíz de la tarjeta. Se aplica al guardar.	modules.txt在卡的根部,它適用於儲存.
+No hay modules.txt en la tarjeta: esto es el perfil por defecto. Al guardar se crea el archivo.	沒有. modules.txt 在卡上:這是預設的配置檔案.儲存建立了檔案.
+mín %s · máx %s · últimos %s	最小值 %s ·最大 %s ·最後一次 %s
+los pines los tiene %s	針頭被使用 %s
+no se pudo abrir	不能開啟
+%s sensores	%s 感測器
+buscó hace %s s	搜尋 %s 在此之前
+detectado	檢測
+%s lecturas · %s errores	%s 讀數 · %s 錯誤
+Esperando la primera lectura	等待第一次閱讀
+No hay sensores. Conectá uno a i2c.ext: SDA al GPIO21 (pin 15), SCL al GPIO22 (pin 17), 3V3 (pin 18) y GND (pin 19). Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos.	沒有感測器,連線一個到i2c.ext: SDA 在 GPIO21 (第15節), SCL 在 GPIO22 (點17),3V3 (點18),以及 GND (第19條) BME280美國/4x, AHT20, INA219/226 和 ADS1115 它們是自行識別的.
+Parece que hay	似乎有.
+¿Es un %s?	是不是一個 %s?
+no dice qué es	沒有說它是什麼
+Agregar	新增
+Estos chips no tienen cómo decir qué son sin que alguien les escriba: agregalos a modules.txt si son lo que parecen.	這些晶片沒有辦法說它們是什麼,除非有東西寫給它們: modules.txt 如果它們是他們看起來像.
+Sin lecturas todavía	目前沒有讀數
+Sensores	感測器
+Puertos y módulos	埠和模組
+Agregar módulo	新增模組
+Sintaxis: port <nombre> <pines> y module <nombre> <puerto> [addr= chip= shunt= gain= cs=]. Los sensores que se reconocen solos no hace falta declararlos; declarados, se leen aunque no se identifiquen (docs/MODULES.md).	語法:埠 <name> <pins> 和模組 <name> <port> [addr=chip=shunt= gain= cs=].自行識別的感測器不需要宣告;即使無法識別,也可以讀取已宣告的感測器 (doc/MODULES.md).
+Reloj	時鐘
+Monitor	監視器
+Clima	天氣
+Degradé vertical	垂直梯度
+Degradé diagonal	縱向梯度
+Radial	半徑
+Liso	固體
+General	總
+Juegos	遊戲
+Multimedia	媒體
+Herramientas	工具
+Casa	主頁
+Salud	衛生
+Varios	混合物
+línea %s: %s	線 %s: %s
+el archivo pasa de 24 KB	檔案超過24 KB
+línea demasiado larga	線路太長
+%s sin id de app	%s 沒有應用程式身份證
+id de app demasiado largo	應用ID太長
+demasiadas líneas	太多的行
+dock adentro de una carpeta o del dock	在資料夾或程式塢中停靠
+dos secciones dock	兩個程式塢部分
+page o widget adentro de una carpeta o del dock	資料夾或程式塢中的頁面或部件
+el widget necesita un tipo y un tamaño como 2x2	一個 widget 需要型別和尺寸,例如 2x2
+tipo de widget demasiado largo	外掛型別太長
+una carpeta adentro de otra o del dock	在另一個或程式塢內的資料夾
+más de 32 carpetas	超過32個資料夾
+la carpeta necesita id, dos colores, relleno, glifo, color del glifo y nombre	資料夾需要一個代號、兩個顏色、一個填充、一個格調、一個格調和一個名稱
+id de carpeta demasiado largo	資料夾ID 過長
+los colores son seis dígitos hexadecimales	顏色是六個六位數
+el relleno es s, v, d o r	填充是s,v,d或r
+el color del glifo es w o b	字型顏色是w或b
+dos carpetas con el mismo id	兩個帶有相同id的資料夾
+end sin carpeta ni dock	結束沒有資料夾或程式塢
+línea desconocida (app, folder, dock, page, widget, end, hide)	未知行( 應用程式、 資料夾、 程式塢、 頁面、 部件、 結束、 隱藏)
+la última carpeta o el dock no tiene end	最後一個資料夾或程式塢沒有結束
+El dock tiene %s apps: la placa muestra 4 parada y 6 acostada.	程式塢已經 %s 應用程式:板上顯示4個直立和6個側面.
+El dock tiene %s apps: parada la placa muestra las 4 primeras.	程式塢已經 %s 應用程式:直,板上顯示了第4個.
+Hay %s carpetas: la placa lee 32 como mucho.	有一些 %s 資料夾: 開發板最多讀取32。
+La carpeta «%s»	資料夾“%s”
+%s: el id va sin espacios y con hasta 15 caracteres.	%s:ID沒有空格,最多為15個字元.
+%s: hay dos carpetas con el id %s.	%s:有兩個帶有 ID 的資料夾 %s.
+%s no tiene nombre.	%s 沒有名字.
+%s: el nombre pasa de 39 bytes.	%s:名稱超過39位元組.
+%s: los colores son seis dígitos hexadecimales.	%s顏色是六位數.
+%s: el glifo no es válido.	%s: 字型不有效.
+%s tiene ninguna app: al editar el inicio en la placa, desaparece.	%s 沒有應用程式:在板上編輯主螢幕會使它消失.
+%s tiene una sola app: al editar el inicio en la placa, se deshace.	%s 只有一個應用程式:在板上編輯主螢幕將它分解.
+El widget «%s»: el tipo va sin espacios y con hasta 15 caracteres.	外掛%s”:該型別沒有空格,最多有15個字元。
+El widget «%s»: el tamaño va de 1x1 a 8x8.	外掛%s”:大小從1x1到8x8。
+El widget «%s»: el dato pasa de 63 bytes.	外掛%s”:資料超過63位元組。
+Hay %s páginas: la placa muestra 16 como mucho.	有一些 %s 頁面:表顯示最多為16頁.
+Las páginas vacías no se guardan.	沒有空頁面可以儲存.
+El archivo no pasaría la lectura de la placa: %s.	開發板無法讀取檔案: %s.
+no se pudo leer menu.txt	我讀不懂. menu.txt
+menu.txt cambió en la placa desde que lo cargaste (¿lo editaste en la pantalla?). ¿Guardar igual y reemplazarlo?	menu.txt 在你載入後,板上發生了變化 (你在螢幕上編輯嗎?). 無論如何儲存並更換它?
+la placa guardó otra cosa	開發板還儲存了其他東西
+Guardado, pero al releerlo no queda igual	儲存了,但當回讀時卻不一樣.
+La tarjeta no tiene menu.txt todavía: la placa usa el orden de siempre	卡沒有 menu.txt 然而,開發板使用通常的順序
+así se va a guardar	這就是它將被拯救的方式.
+Aplicar	應用
+Ahí sólo van apps	只有應用程式才能進入
+El dock admite 4 apps	程式塢需要4個應用程式
+La placa lee 32 carpetas como mucho	開發板最多讀取32個資料夾
+Carpeta	資料夾
+Carpeta %s · %s apps	資料夾 %s · %s 應用程式
+Página vacía: arrastrá algo acá. Vacía no se guarda.	空頁:拖到這裡.空頁不會儲存.
+apps nombradas en menu.txt que no están instaladas	在 menu.txt 沒有安裝
++%s sin instalar	+%s 沒有安裝
+la placa no la muestra	板上沒有顯示.
+Mover a la izquierda	往左移動
+Mover a la derecha	移向右
+Quitar la página	刪除頁面
+¿Quitar la página %s? Lo que tiene pasa a la página %s.	除頁面 %s在上面的東西移動到頁面 %s.
+El dock está vacío: arrastrá apps acá (hasta 4).	程式塢是空的:拖動應用程式在這裡 (高達4).
+Mostrar	展示
+Ninguna. Arrastrá una app acá para sacarla del inicio sin desinstalarla.	沒有,拖動一個應用程式來從主螢幕上移除它.
+%s más ocultas que no están instaladas (se conservan).	%s 更多未安裝 (維護) 的隱藏裝置.
+Página nueva	新頁面
+Carpeta %s	資料夾 %s
+Ocultas	隱藏
+Cómo se usa	它是如何工作的
+Arrastrá los íconos para cambiarlos de lugar, entre páginas y al dock. Soltá una app sobre otra para armar una carpeta, o en el centro de una carpeta para meterla. Tocá cualquier cosa para editarla. Nada llega a la placa hasta que tocás Guardar.	拖動圖示以在頁面和程式塢之間移動它們。 將一個應用程式丟到另一個資料夾上, 或者放在資料夾中間放進去。 單擊任何檔案來編輯它。 在單擊儲存之前, 任何檔案都無法到達桌面 。
+◀ Antes	早些時候
+Después ▶	後來 ▶
+En el dock	在程式塢上
+Oculta	隱藏
+En la página %s	在頁面上 %s
+En la carpeta «%s», página %s	在資料夾“%s頁 次 %s
+Mover a…	移動到...
+Ocultar	隱藏
+Sacar de la carpeta	從資料夾中刪除
+Oculta sigue instalada: se abre desde el portal o desde otra app, y no aparece en el inicio.	隱藏的應用程式仍然安裝:它從門戶或其他應用程式中開啟,
+Tipo	型別
+Tamaño	大小
+%s celdas	%s 細胞
+Dato (opcional)	資料 (可選)
+lo que el widget lea	不管該小工具是什麼
+Hasta 63 bytes. La mayoría de los widgets no lo usan.	最多 63 位元組。大多數小元件不使用此項。
+Quitar widget	刪除 widget
+Buscar un glifo…	搜尋字型...
+Ninguno se llama así.	沒有什麼名字.
+Cargando los glifos…	填充字型...
+pág. %s	p. %s
+%s sin instalar, se conservan	%s 沒有安裝,保持
+Arrastrá para ordenarlas o para sacarlas a una página, o marcá cuáles van:	拖動重新排序或將它們移到一個頁面,或者點選進入:
+Color y glifo	顏色和字型
+Glifo blanco	白色字型
+Glifo negro	黑色字型
+En P4OS la carpeta se ve esmerilada, como en el iPhone, y el glifo aparece mientras está vacía. Los colores quedan guardados en menu.txt.	On P4OS a folder looks frosted, as on the iPhone, and the glyph shows while it is empty. The colors are kept in menu.txt.
+¿Borrar la carpeta «%s»? Sus apps vuelven a la página, donde estaba la carpeta.	刪除資料夾“%s”?它的應用程式可以回到資料夾所在的頁面。
+Borrar carpeta	刪除資料夾
+La tarjeta no tiene menu.txt: la placa muestra el orden de siempre.	卡沒有 menu.txt板上顯示了通常的順序.
+menu.txt en la tarjeta	menu.txt 在卡上
+%s apps instaladas · %s carpetas · %s páginas · %s ocultas · %s bytes	%s 應用程式安裝 %s 資料夾 □ %s 頁面 · %s 隱藏 · %s 位元組
+cambios sin guardar	未儲存的變化
+igual que en la placa	像板上一樣
+La placa ignora el menu.txt de la tarjeta (%s) y muestra el orden de siempre. Descargá el respaldo si lo querés; Guardar lo reemplaza.	開發板忽略了儲存卡的 menu.txt (%s) 並顯示通常的順序. 如果您想要下載備份;儲存取代它.
+Ya hay una página vacía al final	在最後已經有一個空白的頁面
++ Carpeta	+資料夾
+Hay cambios sin guardar. ¿Recargar desde la placa y perderlos?	有沒有儲存的變化.
+Recargar	重新載入
+Descargar menu.txt	下載 menu.txt
+Páginas	頁面
+Parada, la placa muestra 4 × 6 íconos por página en este orden; acostada reparte el mismo orden en 7 × 3. Lo que no entra en una página pasa a la siguiente.	站立地,板上每頁面的圖示有4 × 6個順序;其側面則在7 × 3中列出相同的順序.
+se cortó la conexión con la placa	連線到板子已經下降.
+no se pudo leer %s	我讀不懂. %s
+no existe %s	%s 不存在.
+Impresora	印表機
+Puertos	港口
+Nombres y redes Wi-Fi	姓名和 Wi-Fi 網路
+MAC aleatoria	隨機 MAC
+Canales %s GHz	%s GHz頻道
+oculta	隱藏
+canal %s	頻道 %s
+(oculta)	(隱藏)
+Barrer la red	掃描網路
+Parar	停止
+Completo: también los que no contestan el ping	完全:也那些不回答ping的人
+Red abierta en la placa	網路在板上開放
+Abrir Red en la placa	在板上開放網路
+Todavía no hay relevamientos guardados. Cada barrido de la red queda en la tarjeta: hacé uno con el botón de arriba o desde la pestaña Hosts de la app Red.	還沒有儲存調查。 每個網路掃描都保留在儲存卡上: 使用上面的按鈕執行一個, 或者從網路應用程式的主機標籤執行一個 。
+CSV de equipos	裝置CSV
+CSV de redes	網路CSV
+Comparar con	與
+redes Wi-Fi	Wi-Fi 網路
+equipos	裝置
+puertos abiertos	開放港口
+con nombre	名稱
+sin fecha	沒有日期
+desde %s (%s)	在 %s (%s)
+barrido completo	完全掃除
+cortado a mitad	在半路上切斷
+incompleto	不完整
+equipo nuevo	新裝置
+ya no está	消失了
+antes en %s	在 %s
+abrió %s	開放 %s
+cerró %s	關閉 %s
+red nueva	新網路
+red que no se ve	網路不再被檢視
+Cambios desde el %s	自此以來的變化 %s
+Nada cambió: los mismos equipos, puertos y redes.	沒有什麼改變:相同的裝置,埠和網路.
+Equipos	裝置
+esta placa	這個板
+sí	是的
+sólo ARP	只有ARP
+no	沒有
+«Sólo ARP» es un equipo que no contestó el ping ni ningún puerto, pero sí quién tiene esa dirección: existe igual, con el firewall puesto (celulares, Windows). Una MAC aleatoria es la dirección privada de un teléfono: no tiene fabricante y puede cambiar. Los puertos web abren el equipo en otra pestaña.	“ ARP ” 是一個既不回答 ping 也不回答任何埠的裝置, 但卻回答誰有這個地址: 防火牆( 手機、 Windows) 後面是相同的。 隨機 MAC 是手機的私人地址: 它沒有製造器, 也可以更改。 網路埠在另一個標籤中開啟了裝置 。
+Para ver el fabricante de todas las MAC, poné la lista de la IEEE (oui.txt) en /redes de la tarjeta.	要檢視每個MAC的製造商,請輸入IEEE列表 (oui.txt) 在儲存卡中 /redes.
+De los canales que no se pisan (1, 6 y 11), el menos cargado por los vecinos es el %s.	在不重疊的頻道 (1, 6 和 11 中,鄰居使用最少的是 %s.
+De los canales que no se pisan (1, 6 y 11), el menos cargado por los vecinos es el %s, y es el que usa %s.	在不重疊的頻道 (1, 6 和 11 中,鄰居使用最少的是 %s,這是一個 %s 使用.
+De los canales que no se pisan (1, 6 y 11), el menos cargado por los vecinos es el %s; %s está en el %s.	在不重疊的頻道 (1, 6 和 11 中,鄰居使用最少的是 %s; %s 現在 %s.
+Redes Wi-Fi	Wi-Fi 網路
+Canal	頻道
+Ancho	寬度
+abierta	開放
+Este relevamiento no encontró nada.	這項調查沒有發現任何東西.
+¿Borrar el relevamiento %s?	刪除調查 %s?
+Borrado	刪除
+El barrido falló	掃描失敗了
+Último barrido: 1 equipo en %s s	最後掃描: 1 個裝置 %s s
+Último barrido: %s equipos en %s s	最後一次掃描: %s 在 %s s
+Guardado.	拯救了.
+Barre la red de la placa (su /24): quién contesta, qué puertos tiene abiertos y cómo se llama; al final mira las redes Wi-Fi de alrededor y lo guarda en la tarjeta.	掃描板的網路 /24):誰回答,哪些埠開放以及它叫什麼; Wi-Fi 網路在周圍,並將所有資訊儲存到卡上.
+%s encontrados: %s	%s 發現: %s
+Barrido guardado	掃除儲存
+Relevamientos guardados	儲存的調查
+registerPage: id y render	登記頁面: id 和顯示
+registerPage: "%s" es del portal	註冊頁面: "%s"屬於門戶
+La página falló: %s	頁面失敗: %s
+No cargó: %s	沒有載入: %s
+/web/%s no cargó: %s	/web/%s 沒有載入: %s
+Esta red pide la contraseña del portal.	這個網路要求門戶的密碼.
+Entrar	登入
+Se pone, se cambia o se quita en la placa: Ajustes, Portal web.	在板上設定,更改或刪除:設定,網頁門戶.
+La autoridad HTTPS de la placa	開發板的 HTTPS 權威
+, para que el navegador confíe en ella.	所以瀏覽器信任它.
+Grabar firmware	閃電韌體
+Confirmar	確認
+CS del puerto	港口的 CS
+No hay puertos SPI.	沒有. SPI 港口.
+GPIO%d (puerto nuevo)	GPIO%d (新港口)
+segundo pin GPIO%d	second pin GPIO%d
+No queda ningún pin libre en el conector.	在頭上沒有任何免費針.
+El segundo pin tiene que ser otro.	第二個針必須是不同的.
+Puede ser: %s	可能是: %s
+El idioma de la placa cambió. Recargá la página después de guardar los cambios.	裝置語言已更改。請儲存當前更改後重新整理網頁。
+Shanghái (UTC+8)	上海（UTC+8）
+Taipéi (UTC+8)	臺北（UTC+8）
+Hong Kong (UTC+8)	香港（UTC+8）
+Idioma no disponible.	此語言不可用。
+No se pudo cambiar el idioma. Comprobá que el paquete de fuentes esté instalado.	無法切換語言，請檢查是否已安裝字型檔資源。

@@ -1,0 +1,46 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+no es un GLB	沒有GLB
+un GLB comprimido con Draco no se puede leer	無法讀取DRACO壓縮GLB
+no es un M3D	沒有M3D
+el M3D está cortado	M3D 已經縮短了.
+Convertir y guardar en la placa	轉換並儲存到板上
+Subir el STL tal cual	裝載STL當前
+Soltá acá un STL, un OBJ (con su .mtl) o un GLB, o %s.	放下STL,OBJ (含其 .mtl) 或GLB,或 %s.
+elegilo	選擇它
+Ver	檢視
+Bajar	下載
+¿Borrar %s de la placa?	刪除 %s 在開發板?
+Borrado %s	刪除 %s
+Borrar	刪除
+Todavía no hay modelos en la placa.	目前還沒有模型.
+Leyendo %s…	閱讀 %s…
+%s: %s triángulos, %s vértices, con colores.	%s: %s 三角形, %s 帶有顏色的頂峰
+%s: %s triángulos, %s vértices.	%s: %s 三角形, %s 它們的頂點.
+%s: soldando %s triángulos…	%s:焊接 %s 在三角形上.
+%s: %s triángulos en el archivo, %s al reducirlo.	%s: %s 檔案中的三角形, %s 一次減少.
+%s: %s triángulos en el archivo.	%s: %s 在檔案中的三角形.
+Leyendo…	正在讀取…
+hace falta un .stl, un .obj o un .glb	需要 .stl,obj或glb
+no tiene triángulos	它沒有三角形.
+No se pudo leer: %s	我沒有讀到. %s
+Reduciendo…	減少了...
+Soldando…	焊接...
+%s triángulos en el archivo → %s al reducir, %s vértices, con colores.	%s 檔案中的三角形 → %s 一旦減少, %s 帶有顏色的頂峰
+%s triángulos en el archivo → %s al reducir, %s vértices.	%s 檔案中的三角形 → %s 一旦減少, %s 它們的頂點.
+%s triángulos en el archivo → %s, sin reducir, %s vértices, con colores.	%s 檔案中的三角形 → %s沒有減少, %s 帶有顏色的頂峰
+%s triángulos en el archivo → %s, sin reducir, %s vértices.	%s 檔案中的三角形 → %s沒有減少, %s 它們的頂點.
+%s pieza (%s abiertas), %s triángulos dados vuelta hacia afuera.	%s 部分 (%s 開放) %s 三角形面向外面.
+%s piezas (%s abiertas), %s triángulos dados vuelta hacia afuera.	%s 零件 (%s 開放) %s 三角形面向外面.
+Ya hay un %s en la placa. ¿Reemplazarlo?	目前已有 %s 在板上.取代它?
+Guardado %s (%s)	儲存 %s (%s)
+Visor 3D	3D 顯示器
+Abriendo el Visor 3D en la placa	在板上開啟3D觀看器
+Abrir el Visor 3D en la placa	在板上開啟3D影片器
+Los modelos van en /3d de la tarjeta, STL o M3D.	模型進入 /3d 在卡上,如STL或M3D.
+Agregar un modelo	新增一個模型
+Triángulos como máximo:	最長三角形:
+El visor dibuja hasta 150 000; más que eso lo reduciría él mismo al abrirlo. Menos triángulos es más fluido al girar.	最多繪製 150,000 個三角形。超過上限時，開啟模型會自動簡化。三角形越少，旋轉越流暢。
+Color, si el archivo no trae	顏色,如果檔案沒有
+Vista previa, con la luz de la placa: arrastrá para girar, la rueda acerca, doble clic vuelve al principio.	預覽,板上燈光:拖轉,輪子放大,雙擊重置.
+Todo se hace en este navegador: el STL, el OBJ o el GLB se leen, se sueldan, cada pieza suelta se orienta hacia afuera (el visor no dibuja la cara de atrás de un modelo cerrado) y se guarda un .m3d con sus colores. De un GLB se toma el color base de cada material; las texturas no.	此瀏覽器中的一切都會發生: STL、 OBJ 或 GLB 會被讀取和焊接, 每個鬆動的片段都轉向向外( 檢視器不繪製封閉型號的背面) , 並且以其顏色儲存 .m3d 。 從 GLB 中, 每一個材料的基本顏色都被取出; 紋理沒有 。

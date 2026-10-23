@@ -1,0 +1,118 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+FM	广播电视
+Aire	空气
+Marina	海军
+Sin audio	没有音频
+AM	时间
+FM angosta	窄频道
+Datos	数据
+Sólo el espectro y la cascada	只有光谱和瀑布
+Radio comercial, de 88 a 108 MHz	调频广播，88 至 108 MHz
+La banda de aviación (118 a 137 MHz) y otras en AM	空气带 (118至137 MHz) 和其他AM
+Radioaficionados, PMR, la banda marina, servicios	Hams、PMR、海洋乐队、服务
+Controles remotos, sensores y timbres de 433 y 868 MHz	433和868 MHz的遥控器、传感器和门铃
+Paquetes LoRa: Meshtastic, LoRaWAN, sensores. Cuánto ocupan el canal y con qué ajustes	洛拉包:Mestastic,LoRaWAN,传感器.
+Sin memoria	没有记忆
+La RTL-SDR no empezó a mandar muestras	RTL-SDR没有开始发送样本
+Se desconectó la RTL-SDR	电源的RTL-SDR断开
+Reproduciendo una grabación: no se puede sintonizar	播放录音:无法调整
+Buscando una RTL-SDR…	寻找一个RTL-SDR...
+señal	信号
+silenciado	无声
+estéreo	立体音频
+perdidos	失去了
+Sin radio	没有电台
+reproduciendo	播放
+recibidos	收到的
+LoRa · en el canal, el último minuto: %u paquetes, ocupado %d,%d %%	在频道,最后一分钟: %u 包装,繁忙 %d.%d %%
+Señal ahora: %d dB sobre el ruido	现在给我信号: %d 噪音的dB
+No se pudo decodificar (muy débil, o ya salió del buffer).	无法解码 (太弱,或从缓冲器中消失).
+Frecuencia en MHz	频率在MHz
+Automática	自动
+Todo a la izquierda es automática. Subila hasta que aparezcan las señales sin que suba el piso de ruido.	在左边全路是自动的. 抬起它,直到信号显示而无噪音地板升高.
+Siempre abierto	始终开放
+Activar el sonido	无言的
+Silenciar	无声
+Volumen	音量
+El volumen es el de la placa, el mismo de todo el sistema. Silenciar calla sólo la radio, que sigue sintonizada.	音量是板块的,整个系统都是相同的.
+Corta el audio de AM y FM angosta mientras el canal no supera al ruido por esos dB; entre 6 y 15 suele andar. Todo a la izquierda, siempre abierto. La FM comercial no lo usa.	频道在噪音上不太多的db; 6至15通常工作.左边,始终开放.广播FM不会使用它.
+Canal público puesto (AQ==)	公共频道设置 (AQ==)
+Clave quitada	关键清除
+Ajustes de la radio	无线电设置
+Muestras por segundo (cuánto se ve a la vez)	每秒的样本 (一次看到多少)
+El modo Datos escucha siempre a 240 mil.	数据模式总是在240公里时收听.
+LoRa abre a 0,96: un canal y sus vecinos. Más muestras muestran más banda, pero la placa puede perder muestras y con ellas paquetes.	洛拉开放在0.96:一个频道及其邻居.更多的样本显示了更多的带,但板可能会丢失样本,和包裹.
+Paso de las flechas	箭头的步骤
+Qué lista LoRa (el CSV guarda todo)	洛拉列出的内容 (CSV保存一切)
+Sólo paquetes LoRa: lo que no tiene chirps no se muestra	只显示 LoRa 包: 没有鸣叫的东西不显示
+Sólo el canal sintonizado (el paso de ancho)	只有调节的频道 (步骤宽)
+Clave del canal (Meshtastic): %s	频道键 (Mestastic): %s
+Clave del canal (Meshtastic): ninguna	频道键 (Meshtastic):没有
+Canal público	公共频道
+Ninguna	无
+Para un canal privado, pegá su PSK (base64) en la página del portal; la clave se guarda en la tarjeta, no en el teléfono ni en la nube.	对于私人频道,将其PSK (base64) 粘贴在门户网站页面上;钥匙存储在卡上,而不是在电话或云中.
+Ganancia	收益
+Silenciador	挤压
+Modo	模式
+Bandas	带
+Meshtastic: el canal por defecto de una región y un preset	测量:区域的默认频道和设置
+Escuchar ahí	听我说.
+Con un nombre de canal propio el número de canal cambia: la frecuencia está en la app de Meshtastic, en LoRa.	一个有自己的名称的频道移动到另一个插槽:Mestastic应用程序显示其频率,在LoRa下.
+ID %u · canal %d · %.1f °C	身份证 %u 频道 %d · %.1f °C
+batería baja	电池低
+código %.8s · datos %s	代码 %.8s ·数据 %s
+ID %05X · botón %X	身份证 %05X · 按钮 %X
+Desconocido	未知
+Esperando transmisiones en la banda: controles remotos, sensores de temperatura, timbres…	等待带里的传输: 遥控器、温度传感器、门铃...
+Otra señal	其他信号
+%u kHz de ancho · 	%u 宽度为 kHz 
+Esperando paquetes LoRa en la banda. Bandas tiene el canal por defecto de cada región y preset de Meshtastic.	在乐队中等待LoRa包.乐队的默认频道是每个Mestastic区域和预设.
+De !%08x a todos (broadcast)\n%d saltos%s\n	从!%08x 给所有人 (广播)\n%d 跳跃%s\n
+ · pide acuse	 · 想要的
+De !%08x a !%08x\n%d saltos%s\n	从!%08x 让我们去!%08x\n%d 跳跃%s\n
+Texto: %s	文本: %s
+No es un mensaje de texto (tipo %d, %d bytes)	没有短信 (类型 %d, %d 字节)
+Sin clave de canal: solo la cabecera. Cargá una en Ajustes o en la página del portal.	没有频道密钥: 仅信头。 在设置或门户页面中设置一个 。
+Descifrando…	解码...
+Hora: %02d:%02d:%02d\n	时间: %02d:%02d:%02d\n
+Frecuencia: %s (%+d kHz del centro) · %u kHz de ancho\n	频率: %s (%+d 距离中心的 kHz) · %u 宽度为 kHz\n
+En el aire: %u ms · %.0f dB sobre el ruido en su ancho\n	在空中: %u 其他: %.0f 噪音的宽度超过dB\n
+LoRa: SF%d, %u kHz (el preámbulo concentró el %.0f %% de su energía)	洛拉:SF%d, %u kHz (上述序列收集 %.0f %% 它们的能量)
+\nEn el canal por defecto de Meshtastic %s en %s	\n在Mestastic默认频道上 %s 在 %s
+No se encontraron chirps de LoRa en su comienzo: es otra cosa, o llegó demasiado débil para saberlo.	一开始没有罗拉鸣叫:这是别的东西,
+Leer y descifrar (Meshtastic)	阅读和解密 (Meshtastic)
+Leer la cabecera (Meshtastic)	阅读标题 (Mestastic)
+Hora: %02d:%02d:%02d · %d veces\n	时间: %02d:%02d:%02d · %d 时间\n
+Frecuencia: %u,%03u MHz (%+d kHz del centro) · %.0f dB sobre el ruido\n	频率: %u.%03u 频率:%+d 距离中心的 kHz) · %.0f 噪音的dB\n
+Modulación: %s · corto %d µs · largo %d µs · pausa %d µs\n	调节: %s ·短暂 %d 长度 %d 微分间隙 %d µs\n
+%d bits: %s	%d 零件: %s
+\nTambién se lee como PT2262: %.8s %s	\n另外, PT2262: %.8s %s
+Captura guardada: %s	保存的截图: %s
+No se pudo guardar la captura	截图无法保存
+Grabando el audio en la carpeta de la Grabadora	将音频记录到记录器文件夹
+Grabación de audio terminada	音频录制完成
+Grabando la señal en rf/iq de la tarjeta	记录信号到卡的rf中/iq
+Grabación de la señal terminada	信号记录完成
+Guardar	保持
+Captura de pantalla	截图
+Terminar la grabación de audio	停止录音
+Grabar el audio	录音
+Terminar la grabación de la señal	停止记录信号
+Grabar la señal (I/Q)	记录信号 (I)/Q)
+Dejar de reproducir	停止玩
+Reproducir una grabación	播放录音
+Guardar lo recibido en Datos y LoRa (rf/datos- y rf/lora-<día>.csv)	保持数据和LoRa收到的信息 (rf/datos- 和rf/lora-<day>.csv)
+Publicarlo por MQTT	发表它 MQTT
+Publicarlo por MQTT (no conectado)	发表它 MQTT (没有连接)
+La señal ocupa %u MB por minuto a la tasa de ahora; la tarjeta escribe unos 3 MB/s.	当前采样率下，每分钟信号约占 %u MB；存储卡写入速度约为 3 MB/s。
+Grabaciones	录音
+No hay grabaciones todavía.	目前没有录音.
+No sé a qué frecuencia está grabada	它的频率不在它的名字中
+No pude arrancar la radio	电台无法启动
+No hay ninguna RTL-SDR en el host USB	没有RTL-SDR USB 接待者
+archivo	文件
+La RTL-SDR no respondió al abrirla	在开放时,RTL-SDR没有回答
+Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.	连接到高速 USB host with wires shorter than 15 cm. Check data and power pins in Settings and this board’s pin map. Full Speed supports 240 thousand samples per second.
+El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí.	其他 USB 主机已关闭:在设置中启用 → USB → USB 接收并将RTL-SDR连接到在那里显示的高速端口.
+En USB Full Speed sólo entran 240 mil muestras por segundo	USB 全速只支持每秒240万个样本

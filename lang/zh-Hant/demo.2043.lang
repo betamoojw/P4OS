@@ -1,0 +1,47 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+DOBLE	兩次
+TRIPLE	三次
+LASER	鐳射
+ONDA	浪潮
+ENERGIA	能源
+ESCUDO	盾牌
+NAVE EXTRA	額外的船隻
+ALERTA	警報
+PLANETA LIBERADO	計劃自由
+SISTEMA LIBERADO	系統的自由
+GRACIAS POR JUGAR	感謝您的玩法
+AUTO SI	開車
+AUTO NO	自動關閉
+SONIDO SI	響起了
+SONIDO NO	聲音關閉
+FPS SI	電氣轉換
+FPS NO	關閉FPS
+RECORD  %lu	最好的 %lu
+LA BATALLA DE CERES	CEERES 版圖
+JUGAR	玩遊戲
+arrastrá el dedo para volar	拉你的手指飛
+ARRASTRÁ EL DEDO Y LA NAVE LO SIGUE	拉你的手指,船的波浪
+DISPARAR: MANTENELO APRETADO	火:保持壓力
+TONEL: UN GIRO INVULNERABLE	遊艇: 一種可投資的遊艇
+PAUSA: ARRIBA A LA DERECHA	暫停:右上
+RECORD 0	最好的0
+SALIR	退出
+PAUSA	暫停
+SEGUIR	總結
+FIN DEL JUEGO	遊戲結束
+OTRA VEZ	再一次
+MENU	選單
+PUNTOS  %lu\nRECORD  %lu	評分 %lu\n最好的 %lu
+DISPARAR	燃燒
+TONEL	滾動
+DISPARO\nAUTO	汽車\n燃燒
+GUARDIAN CARMESI	克里姆森衛士
+KRAKEN ORBITAL	軌道破裂
+NUCLEO DEL CINTURON	皮帶核心
+TITAN ROJO	紅色泰坦
+LLANURAS DE OXIDO	腐蝕平原
+MAR DE NEPTUNO	尼普圖尼海
+OCEANO DE METANO	海洋金屬
+CINTURON DE CERES	餐廳之門
+CAMPO DE ESCOMBROS	德布里斯菲爾德

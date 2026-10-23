@@ -1,0 +1,52 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Escribiendo	打字
+Tecla	关键
+Espera	待一点.
+Mouse	鼠标
+Rueda	车轮
+Clic	单击
+Listo	完成
+Volver	返回
+Se perdió el teclado	失去了键盘
+Parar	停止
+Escribir	类型
+Esperar	待一点.
+Repetir	复制
+Comentario	评论
+texto a escribir	字体到类型
+Se escribe tal cual en la computadora.	在电脑上打字.
+Una tecla o combo: enter, esc, up, cmd+space,\nctrl+alt+supr, f5. Prefijos: cmd+ ctrl+ alt+ shift+	键或组合:输入,esc,上升,cmd+空间\nctrl+alt+del, f5. 前缀: cmd+ ctrl+ alt+ 移动+
+Espera, en milisegundos (0 a 60000).	在毫秒 (0至60000) 中等待.
+Mueve el puntero: dx a la derecha, dy hacia abajo.	移动指针:dx右,dy下.
+Rueda: positivo arriba, negativo abajo.	轮子:正高,负低.
+izquierdo	左右
+derecho	的确
+Repite el paso anterior esta cantidad de veces.	重复前一步几次.
+nota	备注
+No se ejecuta: sólo una nota para vos.	不是跑步,只是给你留言.
+Flujo vacío. Agregá el primer paso.	放空流量,再加上第一步.
+Ponele un nombre	给它一个名字
+No se pudo guardar	不能挽救
+Guardado	保存
+pasos	步骤
+Demasiados pasos	太多的步骤
+Borrado	删除
+Pasá el USB a Teclado, o emparejá por Bluetooth	转换器 USB 在Bluetooth上使用键盘,或
+El script está vacío	剧本是空的
+No se pudo leer el script	我读不懂脚本.
+Detenido	停止了
+El USB está cambiando de modo	USB 是切换模式
+No hay scripts todavía.\nCreá uno con «Nuevo script»,\no desde el portal (página Pato goma).	没有脚本.\n用"新脚本"做一个,\n或从门户网站 (Pato goma页面).
+Teclado listo (USB o Bluetooth)	键盘准备 (USB 或蓝牙)
+Pasalo a «Teclado» o emparejá Bluetooth	切换到“键盘”或双蓝牙
+Nuevo script	新的剧本
+Pasar el USB a Teclado	转换器 USB 在键盘上
+Se enviará al teclado y mouse de la computadora.	它将被发送到计算机的键盘和鼠标.
+Editar	编辑
+Ejecutar	跑步
+Nombre del script	脚本名称
+Agregar paso	添加步骤
+Guardar	保存
+Borrar	删除
+Paso	步骤

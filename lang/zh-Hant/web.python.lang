@@ -1,0 +1,97 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Programas	專案
+Corren en la consola de la placa.	他們在開發板的控制檯中執行.
+Apps	應用
+Cada .py es una app del inicio (desde el próximo arranque) que dibuja con aos.	每個 .py 是一個主屏應用程式 (從下一個啟動)
+Bibliotecas	庫館
+Lo que import encuentra; mip instala acá.	進口的發現,Mip安裝在這裡.
+Dos maneras	兩種方式
+la app las llama en cada cuadro; también init(), touch(x, y, ev), gesture(ev, x, y, …), resize(w, h)	應用程式將它們稱為每一個框架;也 init(),觸控(x,y,ev),手勢(ev,x,y, ...),大小(w,h)
+un bucle propio: frame() muestra lo dibujado y espera el cuadro siguiente	一個自己的迴圈:框架() 顯示了繪製的內容,等待下一個框
+El módulo aos	Aos 模組
+el lienzo: 240 × 426 parado, a ×3	畫布:肖像式240 × 426 × 3
+colores 0xRRGGBB	顏色 0xRRGGBB
+relleno / contorno	填充/ 大綱
+esquinas mordidas	圓角
+oscurece (f<0) o aclara	暗 (f<0) 或亮
+8×8, ASCII; devuelve el ancho	8×8,ASCII;返回寬度
+píxeles RGB565	RGB565 畫素
+lo dibujado queda de fondo	繪製的東西仍然是背景.
+lo que llegó con el cuadro	框中是什麼來的
+x, y, apoyado	x,y,觸控
+el framebuf de MicroPython sobre el lienzo; aos.rgb565(c)	MicroPython 畫布上的框架布; aos.rgb565(c)
+En las primeras líneas	在第一行
+el del inicio	在主螢幕上
+otro lienzo, a la escala entera que entre	另一個帆布,最大的整體尺度適合
+o landscape: gira la pantalla	或景觀:螢幕旋轉
+La consola	控制檯
+salen y entran por la consola de la placa	輸出和輸入透過板塊的控制檯
+la tarjeta es /, se arranca en /python	卡是/,它開始在 /python
+la red de la placa, https con sus certificados	開發板的網路,https及其證書
+mip.install('nombre') baja de micropython-lib a /python/lib	在 micropython-lib 中下載了 /python/lib
+y help('modules') para el resto	其他型別的輔助
+Detener	停止
+KeyboardInterrupt en lo que corre	鍵盤中斷正在執行
+una línea de Python, y Enter	字串,然後輸入
+lista	準備好
+corriendo…	跑步.
+esperando input()	等待輸入()
+sin intérprete	沒有翻譯
+cerrada	關閉
+La consola no está abierta en la placa. «Abrir en la placa», o escribí una línea: se abre sola.	控制檯不在板上開啟。 按“ 開啟” 鍵, 或者輸入一條線: 它自己開啟 。
+Está corriendo: Detener, o esperá a que termine	一些東西正在執行:停止它,或者等待它完成
+Limpiar	清除
+Abriendo la consola en la placa	在板上開啟控制檯
+Abrir en la placa	在板上開放
+Hay algo corriendo en la consola: Detener primero	在控制檯上有什麼執行:先停止.
+Corriendo %s en la consola	執行 %s 在控制檯上
+La app está abierta y no imprimió nada.	應用程式開放,沒有列印任何東西.
+La app no está abierta en la placa. Lo que imprima con print() y sus errores salen acá.	在板上沒有開啟的應用程式.它用印花印刷了什麼(),以及它的錯誤,顯示在這裡.
+nombre.py	name.py
+carpeta	資料夾
+nueva: en el inicio después de reiniciar	新:重新啟動後在主螢幕上
+Correr	跑步
+Abrir	開啟
+Bajar	下載
+Editar	編輯
+Borrar	刪除
+Vacía.	沒有任何東西.
+¿Borrar %s y todo lo que tiene de la placa?	刪除 %s 和所有的東西從板上?
+¿Borrar %s de la placa?	刪除 %s 在開發板?
+Borrado %s	刪除 %s
+%s es nueva: aparece en el inicio de la placa después de reiniciarla	%s 是新的:在重新啟動後顯示在板主螢幕上
+Abriendo %s en la placa	開放 %s 在板上
+Lo que imprime la app en la placa	應用程式在板上列印的內容
+No existe %s	%s 沒有
+Hay cambios sin guardar. ¿Volver igual?	沒有儲存的變化.
+Un nombre con letras sin acento, dígitos, _ - y punto, terminado en .py	一個名字,沒有口音的字母,數字和點,以 .py 結束
+Empieza con _: es un módulo para las otras apps, no una app	它始於 _:它是其他應用程式的模組,而不是應用程式
+¿Guardarlo como %s? (el viejo se borra)	儲存作為 %s? (舊版本被刪除)
+Ya hay un %s en %s. ¿Reemplazarlo?	目前已有 %s 在 %s換一個?
+Guardando…	拯救了...
+Guardado: si la app está abierta, la placa la vuelve a correr	儲存:如果應用程式開啟,板將其再次執行
+Guardado en la placa	在板上儲存
+No se pudo guardar: %s	無法儲存: %s
+Sólo archivos .py, .mpy y .aic	只有 .py, .mpy和 .aic檔案
+Subido %s	已上傳 %s
+Subidos %s archivos	已上傳 %s 個檔案
+Soltá acá archivos .py, .mpy o .aic para subirlos	放下 .py, .mpy或 .aic檔案來上傳它們
+Un nombre de paquete de micropython-lib, o github:usuario/repo	一個micropython-lib包名,或 github:user/repo
+La consola está ocupada	控制檯忙了.
+Instalando %s: mirá la consola	安裝 %s監視控制檯
+Consola	控制檯
+la de la placa: lo que escribas acá corre allá	板的:你打字在這裡執行在那裡
+Nuevo programa	新計劃
+Nueva app	新的應用程式
+Subir a	上傳到
+Subir…	上傳…
+Instalar una biblioteca	安裝圖書館
+con mip, desde micropython-lib, a /python/lib	with mip, from micropython-lib, to /python/lib
+Instalar	安裝
+Guardar en la placa	儲存到開發板
+Guardar y correr	儲存和執行
+Borrar de la placa	從板上刪除
+⌘S guarda · ⌘↩ guarda y corre	=S 儲存 □ 儲存和執行
+MicroPython 1.29 en la placa. Los programas viven en /python de la tarjeta y corren en su consola; las apps, en /python/apps, y cada una es una app del inicio que dibuja con el módulo aos (aparece después del próximo arranque). Mientras una app está abierta, la placa vigila su archivo y la vuelve a correr cuando cambia: guardar acá alcanza. Un error no reinicia nada: sale en la pantalla y acá, con su línea.	微字thon 1.29 在板上. /python 在卡上執行在其控制檯;應用程式在 /python/apps在一個應用程式開放時,板檢視其檔案並再次執行它當它發生變化:在這裡儲存就足夠了.錯誤重新啟動什麼都不存在:它顯示在螢幕上和在這裡,它的線條.
+Hay cambios sin guardar	有未儲存的變化

@@ -7671,3 +7671,9 @@ Pines 15 (D−) y 13 (D+), o el conector OTG	Pins 15 (D−) and 13 (D+), or the 
 Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 39 y GND del 35.	Pendrives are read at /usb, from Files and the portal; with a hub, up to three: /usb, /usb2 and /usb3, in FAT32. A keyboard types where the on-screen one would, while it is open. The OTG connector gives no 5 V: everything goes on the 40-pin header, 5 V from pin 39 and GND from pin 35.
 19 y 17 son el segundo controlador USB del P4, de velocidad completa (12 Mbit/s): andan a la vez que cualquier modo del conector OTG. 15 y 13 son los mismos cables que el conector OTG, de alta velocidad, con cables cortos: el host le saca el modo al OTG mientras está prendido. Los dos a la vez son dos puertos, por ejemplo un teclado en uno y un pendrive en el otro.	19 and 17 are the P4's second USB controller, Full Speed (12 Mbit/s): they work alongside any mode of the OTG connector. 15 and 13 are the same wires as the OTG connector, High Speed, with short wires: the host takes the OTG's mode away while it is on. Both at once are two ports, say a keyboard on one and a pendrive on the other.
 LCD-X: pin 1 = GPIO48, pin 2 = GND. Consultá el dibujo de Waveshare antes de conectar alimentación.	LCD-X: pin 1 = GPIO48, pin 2 = GND. Check Waveshare’s diagram before connecting power.
+Shanghái (UTC+8)	Shanghai (UTC+8)
+Taipéi (UTC+8)	Taipei (UTC+8)
+Hong Kong (UTC+8)	Hong Kong (UTC+8)
+Falta la fuente china: instalá el paquete completo por USB.	Chinese font missing: install the full package over USB.
+No se pudo cambiar el idioma.	Could not change language.
+idioma no disponible	language unavailable

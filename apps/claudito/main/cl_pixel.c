@@ -407,16 +407,22 @@ static const uint8_t cl_font5x7[][5] = {
     { 0x7E, 0x09, 0x11, 0x22, 0x7D },   /* '~' */
 };
 
+#define AOS_PIXEL_BUF cl_buf_t
+#define AOS_PIXEL_PX cl_px
+#include "aos_pixel_text.h"
+
 int cl_text_w(const char *s)
 {
-    int n = (int)strlen(s);
-    return n > 0 ? n * CL_CH_ADV - 1 : 0;
+    return pixel_text_width(s, CL_CH_ADV);
 }
 
 void cl_text(cl_buf_t *b, int x, int y, const char *s, uint16_t c)
 {
-    for (; *s; s++, x += CL_CH_ADV) {
-        uint8_t ch = (uint8_t)*s;
+    for (int advance = 0; *s; x += advance) {
+        uint32_t cp = pixel_codepoint(&s);
+        advance = (cp >= 0x2e80 ? AOS_PIXEL_CJK_ADV : CL_CH_ADV) * 1;
+        if (cp >= 128) { pixel_unicode(b, x, y, cp, c, 1); continue; }
+        uint8_t ch = (uint8_t)cp;
         if (ch < CL_FONT_FIRST || ch > CL_FONT_LAST) {
             continue;
         }

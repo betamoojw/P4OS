@@ -1,14 +1,4 @@
-/* This app is deliberately NOT translated.
- *
- * The calls of truco -envido, quiero retruco, falta envido- and the vocabulary
- * of the table are not interface copy: they are the names of the plays.
- * Translating them would give a game that is no longer truco. That is why
- * there is not a single _() here and the aos.truco.lang catalogue does not
- * exist: the system may be in English and this screen stays in Spanish, which
- * is the right thing.
- *
- * The only thing translated is the menu's "Truco" name, which comes from the
- * system catalogue like any other app's. See docs/I18N.md. */
+/* Interface text is localized. Named Truco calls retain their game terminology. */
 
 /*
  * P4OS - TRUCO (from AmoledOS)
@@ -67,6 +57,7 @@
  *   TRUCO_MENU=1        open the menu
  */
 #include "aos_app.h"
+#include "aos_i18n.h"
 #include "aos_theme.h"
 #include "aos_fonts.h"
 #include "aos_hal.h"
@@ -459,18 +450,29 @@ static void banner_hide(void)
 /* -------------------------------------------------------------------------- */
 /* Button row                                                                  */
 
+static const char *display_call_name(tr_call_t call)
+{
+    switch (call) {
+    case TR_C_REAL: return _("REAL ENVIDO");
+    case TR_C_FALTA: return _("FALTA ENVIDO");
+    case TR_C_VALE4: return _("VALE CUATRO");
+    case TR_C_MAZO: return _("ME VOY AL MAZO");
+    default: return aos_tr(tr_call_name(call));
+    }
+}
+
 static const char *btn_text(tr_call_t c)
 {
     switch (c) {
-    case TR_C_ENVIDO:   return "ENVIDO";
-    case TR_C_REAL:     return "REAL";
-    case TR_C_FALTA:    return "FALTA";
-    case TR_C_TRUCO:    return "TRUCO";
-    case TR_C_RETRUCO:  return "RE TRUCO";
-    case TR_C_VALE4:    return "VALE 4";
-    case TR_C_QUIERO:   return "QUIERO";
-    case TR_C_NOQUIERO: return "NO QUIERO";
-    case TR_C_MAZO:     return "AL MAZO";
+    case TR_C_ENVIDO:   return _("ENVIDO");
+    case TR_C_REAL:     return _("REAL");
+    case TR_C_FALTA:    return _("FALTA");
+    case TR_C_TRUCO:    return _("TRUCO");
+    case TR_C_RETRUCO:  return _("RE TRUCO");
+    case TR_C_VALE4:    return _("VALE 4");
+    case TR_C_QUIERO:   return _("QUIERO");
+    case TR_C_NOQUIERO: return _("NO QUIERO");
+    case TR_C_MAZO:     return _("AL MAZO");
     default:            return "";
     }
 }
@@ -479,13 +481,13 @@ static const char *btn_text(tr_call_t c)
  * is one, "ELLOS" for the machine. The scoreboard keeps NOS/ELLOS. */
 static const char *who_name(int who)
 {
-    if (who == ME) return "VOS";
-    return s_t.link && s_t.pname[0] ? s_t.pname : "ELLOS";
+    if (who == ME) return _("VOS");
+    return s_t.link && s_t.pname[0] ? s_t.pname : _("ELLOS");
 }
 
 static const char *side_name(int who)
 {
-    return who == ME ? "NOS" : "ELLOS";
+    return who == ME ? _("NOS") : _("ELLOS");
 }
 
 static void wait_show(bool on)
@@ -494,7 +496,7 @@ static void wait_show(bool on)
     if (!s_t.wait_lbl) return;
     if (on) {
         static char t[48];
-        lv_snprintf(t, sizeof(t), "ESPERANDO A %s", who_name(THEM));
+        lv_snprintf(t, sizeof(t), _("ESPERANDO A %s"), who_name(THEM));
         lv_label_set_text(s_t.wait_lbl, t);
         lv_obj_remove_flag(s_t.wait_lbl, LV_OBJ_FLAG_HIDDEN);
     } else {
@@ -566,7 +568,7 @@ static void refresh_bar(void)
          * afterwards, so it is put back here WITHOUT a timeout: if something
          * has to be answered, it has to be written down what it is. */
         char q[48];
-        lv_snprintf(q, sizeof(q), "%s: %s", who_name(THEM), tr_call_name(g->pending));
+        lv_snprintf(q, sizeof(q), "%s: %s", who_name(THEM), display_call_name(g->pending));
         banner(q, 0);
 
         opts[n++] = TR_C_QUIERO;
@@ -599,7 +601,7 @@ static void refresh_bar(void)
     if (s_t.tantos) {
         if (g->trick == 0 && !g->env_closed) {
             static char t[24];
-            lv_snprintf(t, sizeof(t), "tengo %d", g->env_points[ME]);
+            lv_snprintf(t, sizeof(t), _("tengo %d"), g->env_points[ME]);
             lv_label_set_text(s_t.tantos, t);
             lv_obj_remove_flag(s_t.tantos, LV_OBJ_FLAG_HIDDEN);
         } else {
@@ -682,7 +684,7 @@ static void present(const tr_ev_t *ev)
 
     case TR_EV_SAY:
         lv_snprintf(buf, sizeof(buf), "%s: %s", who_name(ev->who),
-                    tr_call_name((tr_call_t)ev->a));
+                    display_call_name((tr_call_t)ev->a));
         banner(buf, delay(1100));
         aos_hal_beep(ev->who == ME ? 700 : 480, 45);
         s_t.wait_until = now_ms() + (uint32_t)delay(750);
@@ -705,10 +707,10 @@ static void present(const tr_ev_t *ev)
 
     case TR_EV_ENVIDO:
         if (ev->a < 0) {
-            lv_snprintf(buf, sizeof(buf), "ENVIDO NO QUERIDO: %d PARA %s",
+            lv_snprintf(buf, sizeof(buf), _("ENVIDO NO QUERIDO: %d PARA %s"),
                         ev->n, side_name(ev->who));
         } else {
-            lv_snprintf(buf, sizeof(buf), "%d A %d: %d PARA %s",
+            lv_snprintf(buf, sizeof(buf), _("%d A %d: %d PARA %s"),
                         ev->a, ev->b, ev->n, side_name(ev->who));
         }
         banner(buf, delay(1900));
@@ -718,7 +720,7 @@ static void present(const tr_ev_t *ev)
         break;
 
     case TR_EV_HAND:
-        lv_snprintf(buf, sizeof(buf), "LA MANO ES DE %s  (+%d)",
+        lv_snprintf(buf, sizeof(buf), _("LA MANO ES DE %s  (+%d)"),
                     side_name(ev->who), ev->n);
         banner(buf, delay(1900));
         score_refresh();
@@ -735,8 +737,8 @@ static void present(const tr_ev_t *ev)
         break;
 
     case TR_EV_GAME:
-        lv_snprintf(buf, sizeof(buf), "%s LA PARTIDA  %d-%d",
-                    ev->who == ME ? "GANASTE" : "PERDISTE",
+        lv_snprintf(buf, sizeof(buf), _("%s LA PARTIDA  %d-%d"),
+                    ev->who == ME ? _("GANASTE") : _("PERDISTE"),
                     s_t.g.score[ME], s_t.g.score[THEM]);
         banner(buf, 0);
         if (ev->who == ME) s_t.won++; else s_t.lost++;
@@ -843,7 +845,7 @@ static void link_tick(void)
             on_hello((const tl_hello_t *)f.data);
         } else if (f.data[0] == TL_ACT && f.len >= sizeof(tl_act_t)) {
             if (s_t.lk == LK_PLAY && !inbox_push((const tl_act_t *)f.data)) {
-                link_lost("SE DESINCRONIZO");
+                link_lost(_("SE DESINCRONIZO"));
             }
         }
     }
@@ -862,7 +864,7 @@ static void link_tick(void)
     }
     if (s_t.lk != LK_PLAY) return;
     if (aos_hal_link_reliable_lost()) {
-        link_lost("SE PERDIO EL ENLACE");
+        link_lost(_("SE PERDIO EL ENLACE"));
         return;
     }
     /* The partner stopped beaconing (left the link) or offers another app
@@ -883,7 +885,7 @@ static void link_tick(void)
         s_t.unseen_ms = now;
     } else if (now - s_t.unseen_ms > 6000) {
         char buf[48];
-        lv_snprintf(buf, sizeof buf, "SE FUE %s", who_name(THEM));
+        lv_snprintf(buf, sizeof buf, _("SE FUE %s"), who_name(THEM));
         link_lost(buf);
     }
     if (s_t.await_echo && now - s_t.echo_ms > 4000) {
@@ -905,7 +907,7 @@ static bool link_apply_one(void)
             aos_hal_log("truco", "guest move refused: %d/%d", (int)a.call, (int)a.arg);
             return false;               /* not legal here: it is simply not echoed */
         }
-        link_lost("SE DESINCRONIZO");   /* the host's stream must always apply */
+        link_lost(_("SE DESINCRONIZO"));   /* the host's stream must always apply */
         return false;
     }
     if (s_t.is_host) send_act(a.who, (tr_call_t)a.call, a.arg);
@@ -1193,7 +1195,7 @@ static void menu_refresh(void)
 {
     if (!s_t.menu) return;
     char buf[96];
-    lv_snprintf(buf, sizeof buf, "NOS %d  -  ELLOS %d\nGANADAS %ld  -  PERDIDAS %ld",
+    lv_snprintf(buf, sizeof buf, _("NOS %d  -  ELLOS %d\nGANADAS %ld  -  PERDIDAS %ld"),
                 s_t.g.score[ME], s_t.g.score[THEM], (long)s_t.won, (long)s_t.lost);
     lv_label_set_text(s_t.menu_stats, buf);
 
@@ -1203,16 +1205,16 @@ static void menu_refresh(void)
     const char *note = "";
     bool        on   = true;
     if (s_t.link) {
-        lv_label_set_text(s_t.menu_duo_lbl, "CONTRA LA MAQUINA");
+        lv_label_set_text(s_t.menu_duo_lbl, _("CONTRA LA MAQUINA"));
     } else if (s_t.link_avail && s_t.have_partner) {
-        lv_snprintf(buf, sizeof buf, "A DOS: CONTRA %s", s_t.pname);
+        lv_snprintf(buf, sizeof buf, _("A DOS: CONTRA %s"), s_t.pname);
         lv_label_set_text(s_t.menu_duo_lbl, buf);
     } else {
-        lv_label_set_text(s_t.menu_duo_lbl, "A DOS JUGADORES");
+        lv_label_set_text(s_t.menu_duo_lbl, _("A DOS JUGADORES"));
         on   = false;
         note = s_t.link_avail
-               ? "Para jugar de a dos, emparejá los dos equipos en Enlace."
-               : "Este equipo todavía no tiene el enlace por radio: por ahora se juega contra la máquina.";
+               ? _("Para jugar de a dos, emparejá los dos equipos en Enlace.")
+               : _("Este equipo todavía no tiene el enlace por radio: por ahora se juega contra la máquina.");
     }
     if (on) lv_obj_remove_state(s_t.menu_duo, LV_STATE_DISABLED);
     else    lv_obj_add_state(s_t.menu_duo, LV_STATE_DISABLED);
@@ -1335,7 +1337,7 @@ static void build_menu(lv_obj_t *root)
     int rw = o->land ? cw - rx - in : lw;
 
     lv_obj_t *t = lv_label_create(c);
-    lv_label_set_text(t, "TRUCO");
+    lv_label_set_text(t, _("TRUCO"));
     lv_obj_set_style_text_font(t, &aos_inter_64, 0);
     lv_obj_set_style_text_color(t, lv_color_hex(0xF3D874), 0);
     lv_obj_set_style_text_letter_space(t, 8, 0);
@@ -1353,14 +1355,14 @@ static void build_menu(lv_obj_t *root)
 
     const int bh = 96, gap = 18;
     int y = o->land ? (chh - (4 * bh + 3 * gap)) / 2 : 272;
-    s_t.menu_resume = menu_button(c, "SEGUIR", rx, y, rw, bh, 0x0E4A2A, menu_resume_cb, NULL);
+    s_t.menu_resume = menu_button(c, _("SEGUIR"), rx, y, rw, bh, 0x0E4A2A, menu_resume_cb, NULL);
     y += bh + gap;
-    s_t.menu_new = menu_button(c, "PARTIDA NUEVA", rx, y, rw, bh, 0x0E4A2A, menu_new_cb, NULL);
+    s_t.menu_new = menu_button(c, _("PARTIDA NUEVA"), rx, y, rw, bh, 0x0E4A2A, menu_new_cb, NULL);
     y += bh + gap;
-    s_t.menu_duo = menu_button(c, "A DOS JUGADORES", rx, y, rw, bh, 0x16365E, menu_duo_cb,
+    s_t.menu_duo = menu_button(c, _("A DOS JUGADORES"), rx, y, rw, bh, 0x16365E, menu_duo_cb,
                                &s_t.menu_duo_lbl);
     y += bh + gap;
-    s_t.menu_exit = menu_button(c, "SALIR", rx, y, rw, bh, 0x53311E, menu_exit_cb, NULL);
+    s_t.menu_exit = menu_button(c, _("SALIR"), rx, y, rw, bh, 0x53311E, menu_exit_cb, NULL);
     y += bh + 28;
 
     s_t.menu_note = lv_label_create(c);
@@ -1414,7 +1416,7 @@ static void build_chooser(lv_obj_t *root)
         lv_obj_set_size(b, w, h);
         lv_obj_set_pos(b, x, y + i * (h + 24));
         lv_obj_set_style_text_font(s_t.btn_lbl[BTN_MAX + i], &aos_inter_36, 0);
-        lv_label_set_text(s_t.btn_lbl[BTN_MAX + i], i == 0 ? "LA MAQUINA" : s_t.pname);
+        lv_label_set_text(s_t.btn_lbl[BTN_MAX + i], i == 0 ? _("LA MAQUINA") : s_t.pname);
         lv_obj_remove_flag(b, LV_OBJ_FLAG_HIDDEN);
         s_t.choose[i] = b;
     }
@@ -1666,7 +1668,7 @@ static void *truco_create(aos_app_t *self, lv_obj_t *root)
     s_t.fast      = dev_flag("TRUCO_FAST");
 
     if (!view_build(root)) {
-        aos_ui_toast("Sin memoria", 2000);
+        aos_ui_toast(_("Sin memoria"), 2000);
         view_free();
         return NULL;
     }
@@ -1710,7 +1712,7 @@ static void *truco_create(aos_app_t *self, lv_obj_t *root)
         link_begin();
     } else if (s_t.have_partner && !s_t.auto_play) {
         s_t.lk = LK_CHOOSE;
-        banner("CONTRA QUIEN?", 0);
+        banner(_("CONTRA QUIEN?"), 0);
         build_chooser(root);
     } else {
         solo_begin();
@@ -1770,7 +1772,7 @@ static void link_begin(void)
     s_t.link_up = aos_hal_link_start();
     if (!s_t.link_up) {
         /* the radio said yes at the start and no now: say so, and play on */
-        aos_ui_toast("Sin enlace: jugás contra la máquina", 2500);
+        aos_ui_toast(_("Sin enlace: jugás contra la máquina"), 2500);
         s_t.link       = false;
         s_t.link_avail = false;
         solo_begin();
@@ -1783,7 +1785,7 @@ static void link_begin(void)
     s_t.hello_ms = 0;
     bar_hide();
     char buf[48];
-    lv_snprintf(buf, sizeof buf, "BUSCANDO A %s", s_t.pname[0] ? s_t.pname : "LA PAREJA");
+    lv_snprintf(buf, sizeof buf, _("BUSCANDO A %s"), s_t.pname[0] ? s_t.pname : _("LA PAREJA"));
     banner(buf, 0);
 }
 

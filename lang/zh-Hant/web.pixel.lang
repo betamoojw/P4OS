@@ -1,0 +1,50 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Deshacer	廢除
+Borrar cuadro	刪除框架
+Lápiz	筆
+Rellenar	填充
+Tomar color	選擇顏色
+%s no se lee	%s 是不可讀的
+Lienzo %d	帆布 %d
+vacío	空
+%d×%d · %d cuadro	%d×%d · %d 框架
+%d×%d · %d cuadros	%d×%d · %d 框架
+Bajar	下載
+¿Borrar %s?	要刪除 %s 嗎？
+Borrar	刪除
+Todavía no hay nada exportado. Desde el menú de la app en la placa, o con PNG y GIF de acá.	現在還沒有出口任何東西. 使用應用程式的選單在板上,或 PNG 和 GIF 這裡.
+Lienzo %d nuevo	新建畫布 %d
+Cancelar	取消
+No hay lienzos libres: borrá uno primero	沒有免費畫布: 先刪除一個
+no es un .pix que se pueda leer	沒有可讀的.pix
+%s → lienzo %d	%s → 帆布 %d
+%s, pasado a la paleta: guardalo si te gusta	%s,繪製到調色盤上: 喜歡就省下吧
+sólo .pix o imágenes	只有影象或圖片
+Lienzo %d · %d×%d · cuadro %d/%d	帆布 %d · %d×%d · 框架 %d/%d
+cambios sin guardar	未儲存的變化
+16 cuadros como máximo	最多16個框架
+Hace falta más de un cuadro	需要不止一個框架
+guardando…	節省...
+guardado en la placa	儲存到板上
+no se pudo guardar: %s	無法儲存: %s
+¿Borrar el lienzo %d de la placa?	刪除帆布 %d 在開發板?
+Lienzo %d borrado	帆布 %d 刪除
+Hay cambios sin guardar. ¿Salir igual?	有沒有儲存的變化.
+Soltá acá un .pix, o una imagen para pasarla a la paleta (a 8, 16, 32 o 64 de lado)	放下一個 .pix 這裡,或圖片將其對映到板塊上 (一側 8, 16, 32 或 64)
+Abriendo Pixel Art en la placa	在板上開啟Pixel藝術
+Abrir Pixel Art en la placa	在板上開啟Pixel藝術
+Subir…	上傳…
+PNG y GIF de:	在:
+Exportados en la tarjeta	在卡上出口
+← Lienzos	← 畫布
+Cuadros	框架
+Duplicar	建立副本
+En blanco	沒有任何東西
+Limpiar	清除
+Velocidad	速度
+Guardar en la placa	儲存到開發板
+Borrar de la placa	從板上刪除
+Pixel Art	畫素藝術
+Los .pix viven en /pixel de la tarjeta, doce lienzos de 8, 16, 32 o 64 de lado con hasta 16 cuadros. La app los relee sola cuando cambian: si la tenés abierta en ese lienzo, se actualiza en la pantalla. Los de 8 y 16 pasan tal cual a un reloj con AmoledOS.	.pix檔案在 /pixel 在儲存卡上:12個8, 16, 32或 64 張帆布一邊,最大16個框.當它們改變時,應用程式自動重新載入它們:如果它在那塊帆布上開啟,螢幕會更新.8和16的手錶就像執行 AmoledOS 的手錶一樣.
+Hay cambios sin guardar	有未儲存的變化

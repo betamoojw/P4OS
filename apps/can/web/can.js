@@ -15,10 +15,10 @@
  * So the app must be open on the board (in front or not); the bus is
  * opened there. The recordings are the CSVs in /can (SavvyCAN's format),
  * the saved frames /can/enviar.txt and the signals /can/senales.dbc. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('can') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
-const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE', 'zh-Hans': 'zh-CN', 'zh-Hant': 'zh-TW' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const APP_ID = 'aos.can';
 const CMD = '/data/can_cmd.txt';
 const LIVE = '/data/can_live.json';

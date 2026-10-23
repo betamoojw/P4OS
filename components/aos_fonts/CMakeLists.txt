@@ -14,4 +14,5 @@ idf_component_register(
     SRCS ${FONT_SRCS}
     INCLUDE_DIRS "include"
     REQUIRES lvgl
+    PRIV_REQUIRES esp_partition
 )

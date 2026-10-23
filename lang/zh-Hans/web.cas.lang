@@ -1,0 +1,42 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+columna %d	列表 %d
+No se pudo leer la pantalla (%s)	无法读取屏幕 (%s)
+CAS	标准化法
+CAS abierta en la placa	在板上打开的CAS
+Abrir CAS en la placa	在板上开放的CAS
+Copiar abajo	下面的副本
+Sumar al final de lo que escribís	添加到你打字的东西
+calculando…	在计算...
+Todavía no hay cuentas.	没有计算.
+Abrí CAS en la placa primero	开启CAS第一位
+Funciones enviadas	发送的函数
+Pegá una tabla (de una planilla, separada por comas, punto y coma o tabulaciones) o elegí un archivo .csv	粘贴表 (从电子表格中,以逗号,半柱或图标分开) 或选择 .csv文件
+No encontré columnas de números.	没有找到数字列.
+Hay %d columnas: van las cuatro primeras.	有一些 %d 列:使用第四列.
+Cada lista toma hasta 500 valores.	每个列表都含有500个值.
+No hay columnas de números para cargar	不需要加载数字列
+Listas cargadas en la placa	在板上加载的列表
+Listas guardadas: las ve CAS cuando abra Estadística	保存的列表:CAS在开关统计时会看到它们
+Las listas están vacías	这些名单是空的.
+Guardar el gráfico como PNG	保存图为 PNG
+La placa no muestra ningún gráfico ahora	现在板上没有图表.
+En la placa	在板上
+Calculadora	计算器
+Calcular	计算
+Sintaxis de Xcas: factor(x^4-1), int(sin(x)^2,x), solve(x^2=2,x), diff(f1(x),x), limit(sin(x)/x,x,0).	Xcas语法:因子 (x^4-1), int(sin(x) ^2,x),解 ((x^2=2,x),diff ((f1(x),x),限 ((sin(x)/x,x,0).
+La cuenta se hace en la placa y queda en su historial. ↑ y ↓ traen lo que escribiste antes; tocar una cuenta la copia abajo, tocar un resultado lo suma.	计算在板上运行并保持其历史. ↑ 和 ↓ 将您之前输入的内容带回来;点击一个计算,将它复制到下面,点击一个结果添加.
+Funciones del gráfico	图表函数
+Enviar	发送
+Mostrar el gráfico en la placa	在板上显示图表
+Listas de Estadística	统计列表
+Cargar en L1…L4	装载到L1...L4
+Bajar las listas (CSV)	下载列表 (CSV)
+Cargar reemplaza las cuatro listas de la placa.	装载取代了板上的四个列表.
+Imagen	图片
+Lo que la placa muestra ahora: el gráfico solo (de Gráfico, Geometría, Estadística, Finanzas o Ciencias) o la pantalla entera.	现在板上显示的:仅图 (从图形,几何,统计,财务或科学) 或整个屏幕.
+Guardar la pantalla	保存屏幕
+Abierta, arrancando el motor	打开,启动引擎
+Abierta, calculando	开放,计算
+Abierta	打开
+Cerrada	关闭

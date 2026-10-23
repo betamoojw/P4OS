@@ -1,0 +1,693 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+paquetes/s (máx. %d)	包装/s (最大) %d)
+equipos/s (máx. %d)	设备/s (最大) %d)
+Sin datos de fabricante	没有制造商数据
+Conectable	可连接
+Dirigido	导航
+Escaneable	可扫描
+No conectable	无连接
+Responde al escaneo	扫描响应
+La memoria guarda %d equipos: %u se olvidaron para hacer lugar (los que hacía más que no se oían). Los favoritos no se olvidan.	记忆保持 %d 设备: %u 喜欢的人永远不会被遗忘.
+cerca ahora	在附近.
+paquetes por segundo	每秒的包装
+vistos desde que abrió	从发射以来
+paquetes perdidos	丢弃的包裹
+Los últimos dos minutos	在过去的两分钟里
+Qué son	他们是什么
+Por lo que anuncian: servicios, apariencia, mensajes de Apple, Microsoft y Google, formatos de sensores.	广告内容:服务、外观、苹果、微软和谷歌信息、传感器格式。
+Fabricantes	制造商
+Por el identificador de compañía de sus datos de fabricante.	通过其制造商数据中的公司标识符.
+Direcciones	地址
+Las privadas resolubles cambian cada pocos minutos: así los teléfonos evitan que los sigan. Las públicas y las estáticas son siempre las mismas.	解决性私人手机每隔几分钟都会发生变化:这就是为什么电话不会被追踪.
+Tipos de anuncio	广告类型
+Señal (dBm)	信号 (dBm)
+Pública	公众
+Aleatoria estática	随机静态
+Privada resoluble	可解决的私人
+Privada no resoluble	无法解决的私人
+Desconocido	未知
+Sensor BTHome	BTHOMA 传感器
+Termómetro (pvvx)	温度计 (pvvx)
+Termómetro (ATC)	温度计 (ATC)
+Sensor Xiaomi	小米传感器
+Termómetro SwitchBot	转换机温度计
+Sensor Qingping	清平传感器
+Termómetro Inkbird	墨鸟温度计
+Termómetro Govee	热度仪
+Otro	其他
+cargando	充电
+modelo	模型
+izq.	左右
+der.	的确
+estuche	案例
+Equipo Apple	苹果设备
+Accesorio Find My	找到我的配件
+batería llena	电池充满
+batería media	电池介质
+batería baja	电池低
+batería muy baja	电池关键
+lejos del dueño	远离所有者
+cerca del dueño	接近所有者
+Teléfono	电话
+Computadora	计算机
+Tableta	平板电脑
+Reloj	看着
+Audio	音频
+Rastreador	追踪器
+Sensor	传感器
+Baliza	灯塔
+Teclado o mouse	键盘或鼠标
+Joystick	玩具
+Tele	电视
+Salud	卫生
+Luz	浅色
+Deporte	运动
+Placa de desarrollo	开发板
+AirTag (lejos del dueño)	航空标签 (远离所有者)
+Find My (lejos del dueño)	找我的 (远离所有者)
+iPhone (punto de acceso)	iPhone (热点)
+Accesorio HomeKit	家庭套装配件
+Impresora AirPrint	空气打印机
+Teclado (Swift Pair)	键盘 (Swift Pair)
+Mouse (Swift Pair)	鼠标 (Swift Pair)
+Joystick (Swift Pair)	快速配对
+Audio (Swift Pair)	音频 (快速配对)
+PC con Windows	窗户PC
+Teléfono con Windows	窗户手机
+Notebook con Windows	窗户笔记本电脑
+Tableta con Windows	窗户平板电脑
+Teclado	键盘
+Mouse	鼠标
+Control remoto	远程控制
+Termómetro	温度计
+UART de Nordic	北欧国家 UART
+Auriculares (Fast Pair)	耳机 (快速对)
+Teléfono (exposición)	电话 (暴露)
+Sensor de pulso	心率传感器
+Tensiómetro	血压监测器
+Glucómetro	葡萄糖计
+Balanza	规模
+Oxímetro	氧仪
+nada	无
+pulsado	媒体
+doble	双重
+triple	三次
+largo	长时间
+largo doble	长双
+largo triple	长三
+cifrado, sin lecturas	密码,没有读数
+rocío	露
+suelo	土壤
+abierto	开放
+cerrado	关闭
+movimiento	运动
+quieto	仍然存在
+botón	按钮
+mantenido	持有
+batería	电池
+contador	计数
+lpm	公分钟
+(sobran bytes)	(额外的字节)
+Datos	数据
+mayor	大专
+menor	年轻人
+a 1 m	在1米
+a 0 m	在0m
+Fabricante	制造商
+demasiado corto	太短
+desconocido	未知
+tipo	类型
+Datos de servicio	服务数据
+emparejado, no visible	配对,不可发现
+aleatoria	随机
+pública	公众
+LE Limited Discoverable	LE 限量可查找
+LE General Discoverable	总体可发现
+sin BR/EDR	没有BR/EDR
+LE y BR/EDR a la vez (controlador)	欧盟/EDR 立即 (控制器)
+LE y BR/EDR a la vez (host)	欧盟/EDR 一次 (主机)
+Flags	旗帜
+vacío	空
+ninguno	无
+Servicios (16 bits)	服务 (16位)
+Servicios (32 bits)	服务 (32位)
+Servicio 128 bits	128位服务
+incompleto	不完整
+Nombre corto	短名
+Nombre	名称
+Potencia TX	TX 功率
+Clase de dispositivo	设备类
+Varios	多种
+Red	网络
+Audio y video	音频/video
+Periférico	周边
+Imagen	图像
+Vestible	可穿戴
+Juguete	玩具
+Sin categoría	不分类
+Hash C (SSP)	标签:
+Aleatorio R (SSP)	随机化器 R (SSP)
+ID de dispositivo	设备身份证
+producto	产品
+versión	版本
+Clave TK	TK值
+Flags OOB	标志
+Intervalo de conexión	连接间隔
+Pide servicios (16 bits)	要求服务 (16位)
+Pide servicios (32 bits)	要求服务 (32位)
+Pide servicio 128 bits	要求提供128位服务
+Destino	目标
+Apariencia	外观
+Intervalo de anuncios	广告间隔
+Dirección LE	欧盟地址
+sólo periférico	仅为外围设备
+sólo central	只有中央
+periférico y central, prefiere periférico	周边和中央,更喜欢周边
+periférico y central, prefiere central	周边和中央,更喜欢中央
+Rol LE	欧盟的角色
+Hash C-256	哈什C-256
+Aleatorio R-256	随机化仪 R-256
+Confirmación LE SC	证实LESC
+Aleatorio LE SC	LE SC 随机
+Posicionamiento en interiores	室内定位
+Descubrimiento de transporte	交通发现
+Funciones LE	LE特征
+Mapa de canales	频道映射
+Mensaje mesh	网格信息
+Baliza mesh	网灯
+Identificador de conjunto	设置标识符
+Nombre de difusión	广播名称
+Datos cifrados	加密数据
+Tipo	类型
+Error	错误
+la longitud se pasa del paquete	长度经过包
+sin dato	没有数据
+axila	手脚
+cuerpo	身体
+oído	耳朵
+dedo	指
+tracto digestivo	肠道干部
+boca	嘴巴
+recto	直肠
+dedo del pie	脚趾
+tímpano	耳鼓
+contacto	联系
+sin contacto	无接触
+Pecho	胸部
+Muñeca	手腕
+Dedo	手指头
+Mano	双手
+Lóbulo de la oreja	欧罗贝
+Pie	脚
+latencia	延迟时间
+supervisión	休息时间
+medición fallida	测量失败
+rueda	车轮
+vueltas	转换值
+pedal	曲柄
+balance	平衡
+pasos/min	步骤/min
+corriendo	运行
+caminando	步行
+notificaciones e indicaciones	通知和指示
+notificaciones	通知
+indicaciones	指标
+apagado	关闭
+difusión	广播
+escritura confiable	可靠的写作
+descripción escribible	可写的描述
+ninguna	无
+unidad	单位
+entrada	输入
+salida	输出
+característica	功能
+reporte	报告
+puertas y espera	门和时间
+leer los parámetros	读取参数
+modo ingeniería	工程模式
+fin del modo ingeniería	工程模式结束
+sensibilidad	敏感性
+versión del firmware	固件版本
+velocidad del puerto	电波速率
+valores de fábrica	工厂重新设置
+reinicio	重启
+Bluetooth	蓝牙
+dirección MAC	马克地址
+permiso de Bluetooth	蓝牙许可
+contraseña de Bluetooth	蓝牙密码
+resolución de distancia	距离分辨率
+leer la resolución de distancia	读取距离分辨率
+fin de la configuración	配置结束
+configuración	配置
+nadie	没有人
+alguien moviéndose	一个人移动
+alguien quieto	一个人仍然
+alguien moviéndose y quieto	一个人在移动
+en movimiento a	移动
+quieto a	仍然在
+detección	检测
+puertas	门户
+luz	光
+respuesta a	答案
+comando	命令
+error	错误
+bien	没有问题.
+Favorito	收藏
+Marcar	星星
+Un nombre para este equipo	这个设备的名称
+bytes	字节
+Con la clave	有关钥匙
+sin lecturas en este paquete	在此包中没有读数
+no coincide	不符合.
+Anuncio	广告
+Respuesta al escaneo	扫描响应
+Todavía no se lo oyó esta vez.	这次还没有听到.
+Tienen que ser 32 cifras hexadecimales	这必须是32个六位数.
+La clave del equipo (32 cifras)	设备的钥匙 (32位数)
+Cifra sus lecturas. Con su clave (en Xiaomi, la «bindkey»: 32 cifras hexadecimales) la app las descifra.	它加密其读数. 用其钥匙 (对于小米来说",绑定键":32个六位数) 应用程序解码它们.
+Clave correcta: las lecturas se descifran.	关键是正确的:读数已解密.
+La clave no coincide con lo que anuncia.	钥匙不符合它宣传的内容.
+Usa un cifrado viejo (MiBeacon v2/v3) que la app no descifra.	它使用了旧的加密 (MiBeacon v2/v3) 应用程序无法解密.
+Clave cargada: esperando un paquete cifrado para probarla.	钥匙装载:等待加密包来试用.
+Cambiar la clave	换钥匙
+Cargar la clave	输入钥匙
+Borrar la clave	删除钥匙
+La bindkey de un sensor Xiaomi sale de su cuenta de Mi Home (por ejemplo con «Xiaomi Cloud Tokens Extractor»), o de Home Assistant si ya lo lee. También se puede pegar desde la página BLE del portal.	一个Xiaomi传感器的绑定键来自其Mi Home帐户 (例如"Xiaomi Cloud Tokens Extractor") 或从 Home Assistant 如果它已经阅读了. BLE 网站的页面.
+descifrado	解密
+cifrados: hace falta la clave del equipo	加密:需要设备的钥匙
+Temperatura	温度
+Humedad	湿度
+Presión	气压
+Punto de rocío	露点
+Humedad del suelo	土壤湿度
+Conductividad	导电性
+Peso	重量
+Potencia	功率
+Energía	能量
+Distancia	距离
+Giro	旋转
+Abertura	开放
+abierta	开放
+cerrada	关闭
+Movimiento	议案
+sí	是的
+no	没有
+Botón	按钮
+evento %d	事件 %d
+Pulso	心率
+Aceleración	加速
+Batería	电池
+Tensión	电压
+Contador	计数器
+Mayor / menor	大/小
+Espacio	名称空间
+Instancia	实例
+Potencia a 1 m	在1米时的功率
+Potencia a 0 m	在0m时的功率
+Mín. %d · prom. %s · máx. %d dBm · ≈ %s m\nCada %s · %u anuncios, %u respuestas · cambió %u veces\nOído %s · desde hace %s	时间 %d · 欧盟 %s ·最大 %d ≈ %s m\n每一个 %s · %u 广告 %u 回复 · 变化 %u 时间\n最后听说 %s · 视为 %s
+Compañía	公司
+Nombre propio	广告名称
+Su dirección es privada y cambia cada pocos minutos: cuando cambie, va a aparecer como otro equipo.	它的地址是私密的,每隔几分钟就会发生变化.
+Buscar	找到
+Conectar	连接
+Señal	信号
+pide un enlace autenticado (emparejar)	需要一个认证的链接 (对)
+pide un enlace cifrado (emparejar)	需要加密链接 (对)
+pide autorización	需要许可
+no se puede leer	无法读取
+no se puede escribir	不可写
+atributo inexistente	没有找到的属性
+largo no válido	无效长度
+pedido no soportado	没有支持的请求
+no contestó a tiempo	的时间
+desconectado	断开连接
+error de ATT	ATT错误
+no contestó: puede que no acepte conexiones o esté lejos	没有答案:它可能不接受连接或太远
+se perdió la señal	信号丢失
+el equipo cortó	设备被挂了
+cortado desde acá	从这里断开
+la conexión no llegó a armarse	连接从来没有出现
+no hay lugar para otra conexión	没有其他连接的空间
+ya había una conexión con ese equipo: probá de nuevo	这已经有了联系:再试一次
+falló	失败
+(vacío)	(空)
+Hex incompleto: van de a dos cifras	不完整的六合:数字是偶数
+No se pudo escribir	我不能写
+escrito en %s: %s bytes	写给 %s: %s 字节
+permiso de Hi-Link pedido en %s%s	要求使用 Hi-Link %s%s
+Escribir: texto, o bytes con 0x (0x01 A0)	写:文字或字节 0x (0x01 A0)
+leyendo %s atributos	阅读 %s 属性
+preparando	准备
+pidiendo su identificación	要求其身份证
+intercambiando claves	交换钥匙
+esperando que la acepte	等它接受
+activando el sensor...	激活传感器...
+activado: clave nueva guardada	激活:新钥匙保存
+activado, pero no está en la lista: anotá la clave	启动,但不在列表中:写下键
+Sensor activado	传感器激活
+no se activó:	没有激活:
+Activar este sensor Xiaomi	激活这个小米传感器
+Le da una clave nueva y la guarda en la placa, para leer lo que anuncia cifrado. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva, o volver a agregarlo en Mi Home.	传感器忘记了它所拥有的:Mi Home和使用旧键阅读者 (Home Assistant需要新的,或者再添加它到Mi Home.
+Activar	激活
+Cancelar	取消
+Activando	激活
+Clave nueva (bindkey), ya guardada para leerlo acá:	新钥匙 (bindkey),已经保存,可以在这里阅读:
+No se activó	没有激活
+Probar de nuevo	再试一次
+conectando...	连接...
+Bluetooth apagado	关闭蓝牙
+lee	阅读
+escribe	写作
+escribe sin respuesta	写在/o 响应
+notifica	通知
+indica	表示
+difunde	广播
+firma	签名
+Servicio %s · handles %u a %u	服务 %s ·手柄 %u 在 %u
+Leer	读取
+Escribir	写入
+Pedir los datos (Hi-Link)	要求其数据 (Hi-Link)
+Dejar de escuchar	停止听
+Notificaciones	通知
+Indicaciones	指标
+Nada todavía.	没有什么.
+Conectando...	连接...
+Conectado, listando servicios...	连接,列表服务...
+Conectado · %d servicios, %d características	连接 %d 服务 %d 的特征
+Señal %d dBm · MTU %u	信号 %d dBm / MTU / MTU 移动键 %u
+ · leyendo %d de %d	 ·阅读 %d 的 %d
+Sin conexión	未连接
+Desconectado	未连接
+servicios listados	列出的服务
+sin conexión:	没有连接:
+la activación quedó a medias	激活已经完成了一半.
+leer %s: %s	阅读 %s: %s
+suscribir %s: %s	订阅 %s: %s
+escuchando %s%s	倾听 %s%s
+ya no escucha %s%s	停止了听 %s%s
+escribir %s: %s	写作 %s: %s
+escritura aceptada en %s%s	收到的书 %s%s
+Leer todo	阅读所有
+Activar (Xiaomi)	激活 (Xiaomi)
+Desconectar	断开连接
+Conectar de nuevo	再连接
+Si tarda, puede que el equipo no acepte conexiones o que ya esté conectado a otro (muchos aceptan uno solo).	如果需要很长时间,设备可能无法接受连接或已经连接到另一个 (许多只接受一个).
+Lo último	最新的
+Todos	全部
+Con nombre	名称
+Favoritos	收藏夹
+Conectables	可连接
+Sensores	传感器
+Balizas	灯具
+Por señal	通过信号
+Por nombre	姓名
+Nuevos primero	最新的第一
+hace %s · %s	%s 之前 · %s
+y %d más (filtrá o subí la señal mínima)	和 %d 以上(过滤器或提高最小信号)
+En pausa.	停下来.
+Nadie con este filtro.	没有符合此过滤器 。
+Escuchando... los equipos aparecen a medida que anuncian.	在广告时,设备出现.
+se cortó la conexión	连接丢了
+no se pudo generar la clave	钥匙不能做
+la clave del sensor no es válida	传感器的密钥不有效
+no se pudo derivar la clave	关键无法获得
+el sensor no dio su identificación	传感器没有提供ID
+el sensor se cansó de esperar	传感器已经厌倦了等待
+el sensor cortó el intercambio	传感器打断了交换
+el sensor mandó algo inesperado	传感器发出了一些意想不到的东西
+el sensor rechazó el registro	传感器拒绝登记
+el sensor no pudo verificar el registro	传感器无法验证登记
+el sensor dice que ya está registrado	传感器表示已经注册
+el sensor pide que se apriete su botón antes	传感器要先按下按钮
+no deja escuchar sus avisos	它不让我们听到它的通知
+no aceptó lo que se le escribió	它没有接受所写的.
+el sensor no contestó a tiempo	传感器没有及时回复
+Computadora de escritorio	桌面计算机
+Servidor	服务器
+Notebook	电脑
+Computadora de mano	手动计算机
+Computadora de bolsillo	棕榈型计算机
+Computadora vestible	可穿戴的计算机
+Base de acoplamiento	码头站
+Computadora todo en uno	一个全部的电脑
+Servidor blade	刀片服务器
+Notebook convertible	可转换式笔记本电脑
+Notebook desmontable	可拆卸的笔记本电脑
+Gateway IoT	物联网门户
+Mini PC	小电脑
+PC en un stick	棒PC
+Reloj deportivo	运动表
+Reloj inteligente	智能手表
+Reloj de mesa o de pared	时钟
+Pantalla	屏幕
+Anteojos	眼镜
+Etiqueta	标签
+Llavero	关键字
+Reproductor multimedia	媒体播放器
+Lector de códigos de barras	条码扫描仪
+Termómetro de oído	耳朵温度计
+Banda de pulso	心率带
+Tensiómetro de brazo	上臂血压监测器
+Tensiómetro de muñeca	手腕血压监测器
+Dispositivo HID	隐藏装置
+Control de juegos	游戏板
+Tableta digitalizadora	数字化平板电脑
+Lector de tarjetas	读卡器
+Lápiz digital	数字笔
+Touchpad	触摸板
+Control de presentaciones	演示遥控器
+Sensor para correr o caminar	跑步或走路传感器
+Sensor dentro del calzado	鞋内传感器
+Sensor sobre el calzado	鞋子上的传感器
+Sensor de cadera	腰部传感器
+Ciclismo	自行车
+Computadora de bicicleta	自行车计算机
+Sensor de velocidad	速度传感器
+Sensor de cadencia	Cadence 传感器
+Medidor de potencia	电力计
+Sensor de velocidad y cadencia	速度和声带传感器
+Dispositivo de control	控制装置
+Interruptor	转换器
+Interruptor múltiple	连接器
+Deslizador	滑动器
+Perilla	旋钮
+Panel táctil	触摸板
+Interruptor simple	单个开关
+Interruptor doble	双开关
+Interruptor triple	三次开关
+Interruptor a pila	电池开关
+Interruptor sin pila	无电池开关
+Pulsador	按下按钮
+Dial	拨号
+Equipo de red	网络设备
+Punto de acceso	接入点
+Equipo mesh	网格设备
+Proxy de red mesh	网格代理
+Sensor de movimiento	运动传感器
+Sensor de calidad del aire	空气质量传感器
+Sensor de temperatura	温度传感器
+Sensor de humedad	湿度传感器
+Sensor de pérdidas de agua	泄漏传感器
+Sensor de humo	烟雾传感器
+Sensor de presencia	占用率传感器
+Sensor de contacto	接触传感器
+Sensor de monóxido de carbono	二氧化碳传感器
+Sensor de CO2	CO2 传感器
+Sensor de luz ambiente	环境光传感器
+Sensor de energía	能量传感器
+Sensor de color de luz	轻色传感器
+Sensor de lluvia	降雨传感器
+Sensor de fuego	消防传感器
+Sensor de viento	风传感器
+Sensor de proximidad	接近感应器
+Sensor múltiple	多传感器
+Sensor empotrado	插电式传感器
+Sensor de techo	天井传感器
+Sensor de pared	墙壁传感器
+Multisensor	多传感器
+Medidor de energía	能量计
+Detector de llama	燃烧探测器
+Sensor de presión de neumáticos	轮胎压力传感器
+Luminaria	灯具
+Aplique de pared	墙灯
+Luz de techo	天花板灯
+Lámpara de pie	楼层灯
+Luz de mueble	柜子灯
+Lámpara de escritorio	桌面灯
+Plafón empotrado	托弗灯
+Lámpara colgante	悬挂灯
+Luz de piso	地面灯
+Reflector	灯具
+Luz subacuática	水下灯
+Baliza con luz	玻璃灯
+Luz de camino	路径灯
+Luz de jardín	园林灯
+Luz de poste	极顶灯
+Spot	焦点
+Luz lineal	线性灯
+Luz de calle	路灯
+Luz de estante	货架灯
+Luz de nave	湾灯
+Luz de salida de emergencia	紧急出口灯
+Controlador de luz	光控制器
+Driver de luz	轻型驾驶员
+Lámpara	灯泡
+Luz de nave baja	低湾灯
+Luz de nave alta	高海湾灯
+Ventilador	风扇
+Climatización	气候变暖
+Aire acondicionado	空调
+Humidificador	湿气器
+Calefacción	热器
+Control de acceso	访问控制
+Dispositivo motorizado	电动设备
+Equipo de energía	电源装置
+Fuente de luz	光源
+Lámpara incandescente	发光灯
+Lámpara LED	LED灯泡
+Lámpara de descarga	排放灯
+Lámpara fluorescente	荧光灯
+Arreglo de LED	LED阵列
+Arreglo de LED de colores	多色LED阵列
+Halógena de bajo voltaje	低压卤素
+OLED	隐形
+Cortina o persiana	窗口覆盖
+Equipo de audio	音频设备
+Parlante	发言人
+Barra de sonido	音频条
+Parlante de estante	书架扬声器
+Parlante de pie	优秀的演讲者
+Manos libres	扬声器手机
+Fuente de audio	音频来源
+Micrófono	麦克风
+Alarma	闹钟
+Campana	钟声
+Bocina	角
+Equipo de difusión	广播设备
+Mostrador de atención	服务台
+Kiosco	基奥斯克
+Sala de difusión	广播室
+Auditorio	礼堂
+Vehículo	车辆
+Electrodoméstico	家庭电器
+Audio vestible	可穿戴的音频
+Auriculares in-ear	耳机
+Auriculares con micrófono	耳机
+Auriculares	耳机
+Auriculares de cuello	项链
+Aeronave	飞机
+Equipo de audio y video	AV设备
+Amplificador	放大器
+Receptor	接收器
+Radio	无线电
+Sintonizador	通纳
+Tocadiscos	转机
+Reproductor de CD	电脑播放器
+Reproductor de DVD	视频播放器
+Reproductor de Blu-ray	蓝光播放器
+Reproductor de discos	磁盘播放器
+Decodificador	设置顶盒
+Equipo de imagen	显示设备
+Monitor	监视器
+Proyector	投影机
+Audífono	助听器
+Audífono intrauricular	耳朵内助听器
+Audífono retroauricular	耳后助听器
+Implante coclear	胆固体植入物
+Videojuegos	游戏
+Consola de videojuegos	游戏控制台
+Consola portátil	手动控制台
+Cartelería	标志
+Oxímetro de dedo	指尖氧化仪
+Oxímetro de muñeca	手腕氧仪
+Vehículo de movilidad personal	个人移动设备
+Silla de ruedas eléctrica	动力轮椅
+Scooter de movilidad	移动滑板车
+Monitor continuo de glucosa	连续的葡萄糖监测器
+Bomba de insulina	胰岛素泵
+Bomba de insulina durable	耐用胰岛素泵
+Bomba de insulina de parche	补丁胰岛素泵
+Lapicera de insulina	胰岛素笔
+Administración de medicamentos	提供药物
+Espirómetro	气体计
+Espirómetro portátil	手持式螺旋计
+Deporte al aire libre	户外运动
+Pantalla de ubicación	位置显示
+Pantalla de ubicación y navegación	位置和导航显示
+Módulo de ubicación	位置舱
+Módulo de ubicación y navegación	位置和导航舱
+Tocá un punto	按一个点
+La distancia es una estimación por la señal: las paredes y el cuerpo la cambian mucho. El ángulo no dice nada: Bluetooth no sabe de direcciones.	距离是信号的估计:墙壁和身体改变它很多.角度没有什么意义:蓝牙没有方向感.
+≈ %s m · %s	≈ %s m · %s
+Detalle	详细信息
+Con sonido	音频启动
+Sin sonido	听起来.
+Caminá despacio y girá sobre vos mismo: el cuerpo tapa la señal, así que el lado de donde viene se oye más fuerte.	慢慢走,然后在现场转身:你的身体阻断了信号,所以它来自的侧面声音更响亮.
+Más cerca	接近
+Más lejos	更多
+Igual	同样.
+≈ %s m	≈ %s m
+Sin señal hace %s	没有信号 %s
+ahora	现在
+Sin nombre	没有命名
+cifrado	编码
+bat.	蝙蝠.
+tocá para cargar su clave	输入密钥
+%s · %d dBm · 2 h	%s · %d dBm · 2 小时
+guardando en CSV	登录到CSV
+sin CSV	没有CSV
+sin MQTT	没有 MQTT
+publicando por MQTT	出版 MQTT
+MQTT sin conectar	MQTT 未连接
+se cambia en Ajustes del escaneo	在扫描设置中更改
+Ningún sensor a la vista	没有传感器.
+Aparecen solos los que anuncian sus lecturas en un formato conocido: BTHome (Shelly y firmwares abiertos), pvvx y ATC (los termómetros de Xiaomi con firmware cambiado), MiBeacon sin cifrar, Govee, Ruuvi, SwitchBot, Qingping, Inkbird y la telemetría de Eddystone.	如果它们在已知格式中宣传读数,它们会自行出现:BTHome (Shelly和开放的固件),pvvx和ATC (Xiaomi温度计与定制固件),未加密的MiBeacon,Govee,Ruuvi,SwitchBot,Qingping,Inkbird和Eddystone远程测量.
+Cerca	在附近
+Radar	雷达
+Aire	风波
+%d cerca · en pausa	%d 在附近 · 停下来
+%d cerca · %s paq/s · %s %d %%	%d 附近 · %s 部分/s · %s %d %%
+activo	活跃
+pasivo	动态
+Prendiendo Bluetooth...	启动蓝牙...
+Bluetooth está apagado	蓝牙已关闭
+Para escuchar lo que anuncian los equipos de alrededor hace falta el Bluetooth. Se puede apagar de nuevo en Ajustes.	需要蓝牙来听到周围的设备广告.你可以在设置中再次关闭它.
+Prender Bluetooth	启动蓝牙
+Lista vaciada (los favoritos quedan)	清除名单 (保留首选)
+Ajustes del escaneo	扫描设置
+Activo	活动
+Pasivo	动态
+Escaneo	扫描
+Activo le pide a cada equipo su respuesta de escaneo, donde muchos dicen su nombre. Pasivo sólo escucha: no se anuncia ante nadie.	动态只倾听,它从来没有宣布自己.
+Tiempo escuchando	听取时间
+La radio es una sola para Wi-Fi y Bluetooth: escuchar todo el tiempo oye más paquetes y hace más lento el Wi-Fi.	Wi-Fi 和蓝牙共享一台无线电:每次听到更多的数据包, Wi-Fi 在下面.
+Al aire libre	在户外
+Casa	主页
+Oficina	办公室
+Entorno, para la distancia	周围,用于距离
+La distancia sale de cuánto se debilita la señal, y eso depende de las paredes y la gente: es una estimación.	距离取决于信号的衰弱程度,这取决于墙壁和人:这是一个估计.
+Señal mínima	最低信号
+Esconde los que están lejos (los favoritos se ven siempre).	隐藏那些很远的地方 (最喜欢的人总是显示).
+Sí	是
+No	否
+Esconder los que se fueron	隐藏那些离开的人
+Los que no se oyen hace 30 segundos.	那些30秒没听到的人.
+Sonido del buscador	搜索器的声音
+Guardar los sensores en CSV	记录传感器到CSV
+Una línea por minuto y por sensor en ble/sensores-<día>.csv de la tarjeta, también con la app cerrada.	每分钟每条传感器一线/sensores-<date>在卡上.csv,即使应用程序已关闭.
+Publicar los sensores por MQTT	将传感器发布到 MQTT
+Publicar los sensores por MQTT (no conectado)	将传感器发布到 MQTT (没有连接)
+<placa>/ble/<dirección> con las lecturas en JSON, una vez por minuto. El servidor se configura en la app MQTT.	<board>/ble/<address> 服务器设置在JSON中. MQTT 应用程序.
+Lista	列表
+Olvida lo escuchado hasta ahora. Los favoritos y sus nombres quedan.	他忘记了听到的一切,但最喜欢的人和他们的名字仍然存在.
+Vaciar la lista	清晰的列表
+el teléfono	电话
+la computadora	计算机
+el Wi-Fi	在 Wi-Fi
+ y 	 和 
+recién	现在
+hace %s	%s 之前
+Mientras escaneaba se desconectó %s (%s). El Bluetooth y el Wi-Fi comparten una sola radio: escuchar menos tiempo (en los ajustes del escaneo) o pausar el escaneo les deja más aire.	在扫描过程中, %s 断开连接 (%s蓝牙和 Wi-Fi 分享单个无线电:在扫描设置中,听得更少或暂停扫描使他们有更多的播放时间.
+Entendido	得到了.
+No hay memoria para abrir BLE	没有足够的记忆来打开 BLE

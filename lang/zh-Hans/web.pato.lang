@@ -1,0 +1,48 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Escribir	类型
+Tecla	关键
+Esperar	待一点.
+Mouse	鼠标
+Rueda	车轮
+Clic	单击
+Repetir	复制
+Comentario	评论
+Otro	其他
+Pato goma	帕托古马
+Todavía no hay scripts. Creá el primero con «Nuevo script».	没有脚本. 用"新脚本"做第一个.
+Scripts	脚本
+Nuevo script	新的剧本
+Nombre del script	脚本名称
+Constructor	建筑师
+Texto	文本
+Agregar paso	添加步骤
+Comandos	命令
+teclea el texto	输入文本
+una tecla o combo: <code>enter</code>, <code>cmd+space</code>, <code>f5</code>	一个键或组合: <code>输入</code>, <code>cmd+空间</code>, <code>f5</code>
+milisegundos	毫秒
+mueve el puntero <code>dx dy</code>	移动指针 <code>dx 衰变</code>
++ arriba, − abajo	+ 上升, - 下降
+izquierdo o derecho	左或右
+repite el paso anterior n veces	复制前一步 n 次
+no se ejecuta	没有运行
+Prefijos de combo: cmd+ ctrl+ alt+ shift+ sobre una tecla.	组合前缀: cmd+ ctrl+ alt+ 移动+ 键前的键。
+← Scripts	← 脚本
+Guardar en la placa	保存到开发板
+Borrar de la placa	从板上删除
+Los scripts de teclado y mouse que la placa puede ejecutar por USB (o como teclado Bluetooth) en la computadora. Se guardan en la tarjeta; en la placa los elegís y confirmás antes de que se envíe nada. También podés editarlos ahí.	键盘和鼠标脚本板可以在计算机上运行 USB 它们存储在卡上; 在任何东西发送之前,你选择和确认它们.
+Los archivos .pato viven en /pato de la tarjeta. No pongas contraseñas: cualquier computadora lee lo que escribe un teclado USB.	帕托文件在 /pato 任何计算机都会阅读一个字符. USB 键盘类型.
+Esta app es sólo con fines educativos y demostrativos de las capacidades HID de la placa. No nos hacemos responsables de los scripts que ejecuten terceros ni de los malos usos que le puedan dar.	这款应用程序仅用于教育目的,并展示了开发板的隐藏能力.我们不负责第三方运行的脚本或任何滥用.
+Editar	编辑
+texto a escribir	字体到类型
+izquierdo	左右
+derecho	的确
+nota	备注
+No se pudo leer el script: %s	我读不到脚本: %s
+Ponele un nombre al script	给剧本一个名字
+Ya hay un script con ese nombre	已经有了这个名字的脚本
+Guardando…	拯救了...
+Guardado · %d pasos	保存 · %d 步骤
+No se pudo guardar: %s	无法保存: %s
+¿Borrar este script de la placa?	删除这个脚本?
+Borrado	删除

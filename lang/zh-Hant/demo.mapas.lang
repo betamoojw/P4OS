@@ -1,0 +1,97 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Sin memoria	沒有記憶
+Buscar un lugar o una calle	尋找地方或街道
+Descargando	下載
+Sin datos aquí	這裡沒有資料
+Sin conexión	未連線
+Esperando la hora	等待時間
+Error de descarga	下載錯誤
+Zona	區域
+Guardada	儲存
+No se pudo guardar	不能挽救
+Descargar: sí	下載:是的
+Descargar: no	下載:沒有
+Caché borrada	快取清除
+Mapas	地圖
+Buscar	搜尋
+Guardar esta vista	儲存此檢視
+Zonas	區域
+Ciudad de Clima	天氣的城市
+teselas	瓷磚
+Ajustes	設定
+Borrar caché	清除快取
+Datos: OpenFreeMap, OpenMapTiles, OpenStreetMap	資料:OpenFreeMap,OpenMapTiles,OpenStreetMap
+Descargado:	下載:
+parque	公園
+aeropuerto	機場
+cerro	丘陵
+comercio	商店
+escuela	校園
+restaurante	餐廳
+oficina	辦公
+autos	汽車
+ropa	服裝
+almacén	雜貨
+café	咖啡館
+hospital	醫院
+comida rápida	快餐
+farmacia	藥房
+carnicería	屠夫
+peluquería	髮型師
+panadería	麵包廠
+templo	敬拜的地方
+club deportivo	運動中心
+bar	巴
+alojamiento	住宿
+universidad	大學院
+edificio público	市政廳
+heladería	冰淇淋 冰淇淋 冰淇淋 冰淇淋 冰淇淋
+galería de arte	藝術畫廊
+biblioteca	相簿
+policía	警察
+bicis de alquiler	腳踏車租金
+veterinaria	獸醫
+estación	站點
+cancha	發射
+estacionamiento	停車場
+consultorio	醫生
+bicicletería	腳踏車店
+cervecería	釀酒廠
+museo	博物館
+lavandería	洗衣
+vinoteca	無許可證
+teatro	劇院
+dentista	牙醫
+atracción	吸引力
+banco	銀行
+estación de servicio	汽油站
+estadio	球場
+bomberos	消防局
+música	音樂
+cajero	現金機
+monumento	紀念碑
+cine	電影院
+cementerio	墓地
+juegos infantiles	遊戲場
+información	資訊
+correo	郵局
+pileta	游泳池
+jardín	園林
+puerto	港口
+parque temático	主題公園
+terminal de ferry	渡輪終端
+cárcel	監獄
+camping	露營場
+castillo	城堡
+baños	衛生間
+zoológico	動物園
+acuario	水族館
+lugar	地方
+calle	街道
+agua	水
+Escribí un lugar, una calle o un comercio.	輸入一個地方,街道或商店.
+Buscando...	在搜尋...
+Nada con ese nombre.	沒有什麼名字.
+Nada con ese nombre en las zonas descargadas.	在下載區中沒有任何名字.
+Buscando en línea...	在網上搜尋...

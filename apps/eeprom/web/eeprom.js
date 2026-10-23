@@ -13,7 +13,7 @@
  * copy of what the chip had is kept first, and everything is read back.
  * The browser computes an upload's CRC-32, MD5 and SHA-256 itself: the
  * portal is plain HTTP, where crypto.subtle does not exist. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('eeprom') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const DIR = '/eeprom';

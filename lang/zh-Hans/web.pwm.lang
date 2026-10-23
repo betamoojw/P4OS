@@ -1,0 +1,64 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+PWM	PWM
+Servo	服务器
+LED	灯光
+Nivel	关卡
+Fijo	稳定
+Respirar	呼吸
+Barrido	扫除
+Estrobo	纹身
+Rampa	车轮
+Seno	犯罪
+Pasos	步骤
+%s · %d bits	%s · %d 零件
+ciclo %s	关税 %s
+%d de 255	%d 在255中
+Generador PWM	PWM 发电机
+nombre del preset	预设名称
+No se pudo mandar: %s	不能发送: %s
+La app no está abierta en la placa: lo toma al abrirla	在板上没有打开的应用程序:它在打开时接收了这个
+Borrar el canal	删除频道
+Frecuencia	频率
+Pin	引脚
+Patrón	模式
+Período	时间
+Desde	通过
+Hasta	为了
+Pasos (%)	步骤 (%)
+Invertir la salida	转换输出
+Mínimo	最低
+Máximo	极限
+Recorrido	旅行
+Gamma	甘玛
+Con 1 kΩ en serie y 1 µF a GND: de 0 a 3,3 V.	串联 1 kΩ 电阻，并通过 1 µF 电容接到 GND，输出范围为 0 至 3.3 V。
+sin pin	没有针
+GPIO%d · pata %d (otro canal)	GPIO%d · 针 %d (其他频道)
+GPIO%d · pata %d	GPIO%d · 针 %d
+real %s · %d bits	实际的 %s · %d 零件
+apagado	关闭
+entre %s y %s	之间的 %s 和 %s
+La app está abierta en la placa	应用程序在板上开放
+La app no está abierta en la placa: las salidas están apagadas	在板上应用程序不开放:输出已关闭
+Abierta en la placa	在板上打开
+Abrir en la placa	在板上开放
+Apagar todo	关闭所有
++ Canal	+ 频道
+Ningún PWM encendido	否 PWM 在
+(%d de 3 frecuencias): el LEDC no da más de tres	(%d 频率3个):LEDC给出不超过3个
+(%d de 3 frecuencias)	(%d 频率3个)
+Guardar	保存
+Subir	上传
+Cargar	负载
+Bajar	下载
+Borrar	删除
+Todavía no hay presets.	没有预设.
+Guardado: %s	保存: %s
+el preset no tiene canales	预设没有通道
+Cargado: %s	装载: %s
+¿Borrar el preset %s?	删除预设 %s?
+Los canales de la app PWM de la placa, en vivo. Las perillas giran como en la placa (Mayúsculas o la rueda: más fino). Los patrones se ven animados acá con su forma, no con la fase de la placa.	The channels of the board's PWM 图案在此以其形状进行动画,而不是板块的阶段.
+Presets	预设
+En /pwm de la tarjeta, una línea por canal. Al cargar uno, los canales encendidos se encienden en la placa.	在 /pwm 在卡上,每个频道都有一个线.
+salida %d (otro canal)	输出 %d (另一个频道)
+salida %d	输出 %d

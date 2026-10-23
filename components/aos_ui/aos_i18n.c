@@ -13,6 +13,12 @@
 #include "aos_i18n.h"
 #include "aos_hal.h"
 #include "aos_lang_embedded.h"
+#include "aos_cjk.h"
+#ifdef ESP_PLATFORM
+#include "miniz.h"
+#else
+#include <zlib.h>
+#endif
 
 #include <dirent.h>
 #include <stdio.h>
@@ -424,10 +430,29 @@ static char *embedded_dup(const char *code, const char *file)
     }
     for (int i = 0; i < p->nfiles; i++) {
         if (strcmp(p->files[i].file, file) == 0) {
-            size_t n = strlen(p->files[i].blob);
+            size_t n = p->files[i].plain_size;
             char *copy = malloc(n + 1);
             if (copy) {
-                memcpy(copy, p->files[i].blob, n + 1);
+#ifdef ESP_PLATFORM
+                /* The decompressor is too large for the UI task's stack. */
+                tinfl_decompressor *decoder = malloc(sizeof(*decoder));
+                size_t actual = n, input = p->files[i].compressed_size;
+                bool ok = false;
+                if (decoder) {
+                    tinfl_init(decoder);
+                    ok = tinfl_decompress(decoder, p->files[i].blob, &input,
+                        (mz_uint8 *)copy, (mz_uint8 *)copy, &actual,
+                        TINFL_FLAG_PARSE_ZLIB_HEADER | TINFL_FLAG_USING_NON_WRAPPING_OUTPUT_BUF)
+                        == TINFL_STATUS_DONE && actual == n && input == p->files[i].compressed_size;
+                    free(decoder);
+                }
+#else
+                uLongf actual = n;
+                bool ok = uncompress((Bytef *)copy, &actual, p->files[i].blob,
+                    p->files[i].compressed_size) == Z_OK && actual == n;
+#endif
+                if (!ok) { free(copy); return NULL; }
+                copy[n] = 0;
             }
             return copy;
         }
@@ -569,12 +594,17 @@ bool aos_i18n_set(const char *code)
     if (!code || !*code) {
         return false;
     }
+    if ((!strcmp(code, "zh-Hans") || !strcmp(code, "zh-Hant")) && !aos_cjk_init()) {
+        aos_hal_log("i18n", "Chinese font resource missing or corrupt; full resource flash required");
+        return false;
+    }
 
     if (strcmp(code, BASE_CODE) == 0) {
         forget_all();
         catalog_free(&s_system);
         snprintf(s_code, sizeof(s_code), "%s", BASE_CODE);
         aos_hal_pref_set_str(PREF_KEY, BASE_CODE);
+        aos_cjk_language(BASE_CODE);
         aos_hal_log("i18n", "language: es (source, no pack)");
         return true;
     }
@@ -592,6 +622,7 @@ bool aos_i18n_set(const char *code)
     forget_all();
     catalog_free(&s_system);
     s_system = fresh;
+    aos_cjk_language(code);
     snprintf(s_code, sizeof(s_code), "%s", code);
     aos_hal_pref_set_str(PREF_KEY, s_code);
     aos_hal_log("i18n", "language: %s, %d strings (%s)", s_code, s_system.count, where);
@@ -600,6 +631,7 @@ bool aos_i18n_set(const char *code)
 
 void aos_i18n_init(void)
 {
+    aos_cjk_init(); /* Language names must be readable before Chinese is selected. */
     char saved[AOS_LANG_CODE_MAX] = { 0 };
     if (!aos_hal_pref_get_str(PREF_KEY, saved, sizeof(saved)) || !saved[0]) {
         return;                         /* never chosen: Spanish, nothing to do */
@@ -773,3 +805,7 @@ int aos_i18n_scan(aos_lang_t *out, int max)
     closedir(d);
     return scan_add_embedded(out, max, n);
 }
+
+#ifdef AOS_I18N_SELFTEST
+#include "../../tests/i18n_device_selftest.inc"
+#endif

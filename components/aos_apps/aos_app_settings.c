@@ -1934,6 +1934,8 @@ static void build_lang(lv_obj_t *p)
 }
 
 static const struct { const char *name, *tz; } TZS[] = {
+    { N_("Shanghái (UTC+8)"), "CST-8" }, { N_("Taipéi (UTC+8)"), "CST-8" },
+    { N_("Hong Kong (UTC+8)"), "HKT-8" },
     { N_("Buenos Aires (UTC−3)"), "<-03>3" }, { N_("Santiago (UTC−4/−3)"), "<-04>4<-03>,M9.1.6/24,M4.1.6/24" },
     { N_("São Paulo (UTC−3)"), "<-03>3" }, { N_("Ciudad de México (UTC−6)"), "CST6" },
     { N_("Nueva York (UTC−5/−4)"), "EST5EDT,M3.2.0,M11.1.0" }, { N_("Madrid (UTC+1/+2)"), "CET-1CEST,M3.5.0,M10.5.0/3" },

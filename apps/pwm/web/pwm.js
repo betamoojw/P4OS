@@ -15,7 +15,7 @@
  * The knobs turn like the board's: by how much the pointer turns, never to
  * where it is; Shift (or the wheel) goes ten times finer. A pattern is
  * animated here from its parameters, so its phase is not the board's. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('pwm') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));

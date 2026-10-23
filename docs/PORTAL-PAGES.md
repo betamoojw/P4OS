@@ -1,5 +1,43 @@
 # An app's own page in the portal
 
+## Portal regression checks
+
+Run `node --test tests/test_portal_web.cjs` for offline tests of the production
+portal helpers. They cover touch coordinates at and beyond image edges for
+720/800 x 1280 panels in both orientations, unloaded images, upload destination
+stability, JSON/non-JSON errors, transport failures and empty file selections.
+`node --check components/aos_portal/web/app.js` checks JavaScript syntax.
+
+These tests use simulated responses, not a browser or connected board. The
+2026-10-21 portal review could not inspect the live page because the browser
+tool's URL security policy rejected access. The prior LCD-10.1 hardware bring-up
+results in `BOARDS.md` predate these portal changes.
+
+The fixed LCD-10.1 / rev3_x firmware was subsequently flashed on COM24 at
+230400 baud; esptool verified the written data. Image size is 7,861,376 bytes,
+SHA-256 `de8a8541c688e723265533463c63315b6106f58906c854df57fa9e6efa027cea`.
+Its embedded compressed `/app.js` was extracted locally and compared byte for
+byte with the fixed source; that compressed payload is present in the flashed
+image. Boot reports the expected ELF hash `ba5930a496870630...`, PSRAM memory
+test OK, LCD/touch initialized and the HTTP service running on port 80.
+
+This confirms deployment and startup, not end-to-end browser behavior. The
+browser restriction still prevents automated interaction tests. During the
+90-second capture, Wi-Fi acquired `192.168.71.120` at 44.7 s, disconnected
+at 46.5 s (reason 8), and reacquired the address at 78.8 s. The cause of that
+disconnect was not established. No panic or unexpected reboot was recorded.
+The operator subsequently confirmed normal operation after the requested
+page refresh, screen-edge clicks and dragging outside the displayed image,
+and confirmed the device address as `http://192.168.71.120/`. This is an
+operator-reported hardware result, not an automated browser test.
+The operator deferred file-upload testing. Card-backed upload success,
+failure feedback and destination stability therefore remain covered only by
+offline regression tests, not by device tests. Evidence is in
+`build/lcd10_1/rev3_x/portal-flash.log`, `portal-boot.log` and
+`portal-assets-verification.json`.
+
+## App pages
+
 An app on the card can bring a page of its own to the board's web portal,
 the way it brings its icon: no firmware to build, no OTA. The page is a
 JavaScript module in the app's `web/` folder; `tools/install_apps.sh` puts
@@ -210,8 +248,18 @@ P.registerPage({ id: 'hola', name: tr('Hola'), icon: '☺', render(main) {
   en --only web.<page>.lang` writes it with every key, `check en` says what
   is missing; `tools/install_lang.sh` puts them on the card, and the
   browser asks for them at `/lang/<code>/<file>` (public, like the page:
-  the login screen is translated too). They never go into the firmware nor
-  into the board's memory.
+  the login screen is translated too). Firmware and simulator also package
+  the repository's `_portal.lang` and `web.*.lang` files as compressed assets
+  at `/builtin-lang/<code>/<file>`. The browser loads these first and overlays
+  non-empty card entries, so the existing English and German translations work
+  without microSD. Spanish remains the source-language fallback; adding a new
+  device language also needs its portal catalogue for a translated web UI.
+- **Following the device:** `/api/auth` supplies the initial language, including
+  on the login page. The ten-second `/api/info` refresh reports the active
+  device language and reloads an untouched portal when it changes. After form
+  input or an upload starts, automatic reload is deferred to preserve user
+  work; a notice asks the user to save and refresh. The page URL/hash is kept.
+  An explicit language change in the portal's settings retains its reload flow.
 - **Numbers for the eye** with `P.num(v, decimals)` (a comma in Spanish and
   German, a point in English), dates with the board's language
   (`P.lang()` gives its code). What is sent to the board or written to a
@@ -219,3 +267,22 @@ P.registerPage({ id: 'hola', name: tr('Hola'), icon: '☺', render(main) {
 - **Never test a message's text** (`/no existe/.test(e.message)`): the
   board's API answers in its language too.
 
+Run `node --test tests/test_portal_language.cjs tests/test_portal_web.cjs`
+and `python -m unittest discover -s tests -p test_web_assets.py` to check
+language fallback, SD overrides, switching back to Spanish, safe live sync,
+and byte-for-byte inclusion of all repository web catalogues. These are local
+tests; browser security restrictions still prevent automated device-page tests.
+The LCD-10.1 / rev3_x language-update firmware built successfully on 2026-10-21
+(`build/lcd10_1/rev3_x/portal-language-build.log`), with about 4% of the app
+partition free. Its 50 compressed web catalogues occupy 127,094 bytes. This
+language update has not yet been flashed; the deployment record above refers
+to the preceding touch/upload fixes.
+
+
+### Chinese and device-language confirmation
+
+`zh-Hans` and `zh-Hant` work from the built-in catalogues without SD. The settings page waits until `/api/info.lang` confirms the requested language, reports an error on failure and retains edits during language changes from another client. App date/number locales use `zh-CN` or `zh-TW`. See [I18N.md](I18N.md) for Flash fonts, full installation and validation.
+
+Built-in app pages use `P4OS.forPage(id)` to scope `P.tr` to `web.<id>.lang`. Catalogues loaded concurrently cannot overwrite portal or other app translations. Pages retain a fallback to the original `P4OS` API for older firmware.
+
+Older SD pages using the original `P4OS.tr` retain catalogue fallback, with portal keys taking priority. Update the app pages to use `forPage` for complete per-app context isolation.

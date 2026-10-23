@@ -1,0 +1,41 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+cámara %d	攝像頭 %d
+%s: el nombre, de 1 a 31 caracteres y sin corchetes	%s:名稱,從1到31個字元,沒有方括號
+%s: hay dos con ese nombre	%s有兩個名字:
+Frigate va en su propio lugar, abajo	Frigate 走到自己的地方,下面
+%s: la dirección empieza con rtsp://, http:// o https://	%s:地址以 rtsp://, http://或 https:// 開始
+%s: la dirección de pantalla completa no es válida	%s:全屏地址不有效
+%s: el refresco es un número de segundos	%s: 更新時間是幾秒鐘
+Frigate: la dirección empieza con http:// o https://	Frigate:地址以http://或 https://開始
++ Agregar una cámara	+ 新增相機
+Guardar en la tarjeta	儲存到卡上
+Sin nombre	沒有命名
+Separé el usuario y la contraseña de la dirección	取出了使用者和密碼的地址
+RTSP no se puede ver en el navegador: miralo en la placa.	在瀏覽器中不能檢視RTSP:在板上檢視.
+No se pudo ver desde este navegador (la cámara pide usuario y contraseña, que el navegador no manda en una imagen).	無法從這個瀏覽器檢視 (相機需要一個使用者和密碼,
+No se pudo ver desde este navegador.	我無法從這個瀏覽器檢視.
+Todavía no hay cámaras: agregá una.	沒有相機,加一個.
+Ver acá	在這裡檢視
+Subir	走上
+Bajar	走下去
+¿Quitar %s?	移除 %s?
+¿Quitar esta cámara?	取下這部相機?
+Quitar	移除
+Nombre	名稱
+Timbre	門鈴
+Refresco (s, sólo para un JPEG suelto)	更新 (僅適用於單個JPEG)
+Dirección (la grilla: el stream secundario)	地址 (網格:子流)
+Pantalla completa (opcional: el stream principal)	全螢幕 (可選:主流)
+Usuario	使用者
+Contraseña	密碼
+Guardado. La app lo lee al abrirse.	應用程式在開啟時會閱讀它.
+No se pudo guardar: %s	無法儲存: %s
+No se pudo leer %s: %s	我讀不懂. %s: %s
+Cámaras	攝像頭
+Abrir Cámaras en la placa	在板上開放的攝像頭
+Las cámaras	攝像頭
+Opcional: la pestaña Frigate de la app, con los eventos y los clips.	選項:應用程式的 Frigate 標籤,事件和錄影.
+Qué puede mostrar la placa	開發板可以顯示的
+Directo de la cámara, con rtsp://: H.264 en perfil Baseline o MJPEG (en una Hikvision, el segundo stream: rtsp://IP/Streaming/Channels/102). Para todo lo demás, un transcodificador que lo entregue como MJPEG por http://, como go2rtc (el que trae Home Assistant): http://IP:1984/api/stream.mjpeg?src=NOMBRE. Si pegás una dirección con usuario y contraseña adentro, se separan solos. Las contraseñas quedan en /cameras.txt de la tarjeta, como las guarda la app.	直接從攝像頭,在基線配置檔案或MJPEG中使用rtsp://:H.264 (在Hikvision上,第二流:rtsp:/)/IP/Streaming/Channels/102對於其他的一切,一個轉碼器將它作為MJPEG提供 http://, 如go2rtc (一個 Home Assistant 附帶: http://IP:1984/api/stream.mjpeg?src=NAME. 如果您貼上一個使用者地址和密碼,它們會自行分開. /cameras.txt 在卡上,因為應用程式保留它們.
+Hay cambios sin guardar	有未儲存的變化

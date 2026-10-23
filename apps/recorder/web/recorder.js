@@ -8,10 +8,10 @@
  * at its folder every two seconds, so a recording deleted here leaves its
  * list too. The list here follows the card every five seconds, while
  * nothing plays. Texts in Spanish, through tr() (web.recorder.lang). */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('recorder') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
-const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE', 'zh-Hans': 'zh-CN', 'zh-Hant': 'zh-TW' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const DIR = '/recordings';
 const APP_ID = 'app.recorder';
 

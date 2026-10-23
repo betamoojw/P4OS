@@ -1043,10 +1043,13 @@ static const uint8_t ch_font5x7[CH_FONT_LAST - CH_FONT_FIRST + 1][CH_FW] = {
     { 0x40, 0x40, 0x40, 0x40, 0x40 },   /* '_' */
 };
 
+#define AOS_PIXEL_BUF ch_buf_t
+#define AOS_PIXEL_PX ch_px
+#include "aos_pixel_text.h"
+
 int ch_text_w(const char *s)
 {
-    int n = (int)strlen(s);
-    return n > 0 ? n * CH_FADV - 1 : 0;
+    return pixel_text_width(s, CH_FADV);
 }
 
 /* THE 2x FONT (P4OS, ASSETS.md): the same 64 letters redrawn by hand at
@@ -1105,8 +1108,11 @@ static void glyph(ch_buf_t *b, int x, int y, uint8_t ch, uint16_t c, int m)
 
 void ch_text(ch_buf_t *b, int x, int y, const char *s, uint16_t c)
 {
-    for (; *s; s++, x += CH_FADV) {
-        glyph(b, x, y, (uint8_t)*s, c, 1);
+    while (*s) {
+        uint32_t cp = pixel_codepoint(&s);
+        if (cp >= 128) pixel_unicode(b, x, y, cp, c, 1);
+        else glyph(b, x, y, (uint8_t)cp, c, 1);
+        x += cp >= 0x2e80 ? AOS_PIXEL_CJK_ADV : CH_FADV;
     }
 }
 
@@ -1127,12 +1133,18 @@ void ch_text_big(ch_buf_t *b, int x, int y, const char *s, uint16_t c,
     if (m < 1) m = 1;
     if (sh) {
         const char *p = s;
-        for (int xx = x + 1; *p; p++, xx += CH_FADV * m) {
-            glyph(b, xx, y + 1, (uint8_t)*p, sh, m);
+        for (int xx = x + 1; *p;) {
+            uint32_t cp = pixel_codepoint(&p);
+            if (cp >= 128) pixel_unicode(b, xx, y + 1, cp, sh, m);
+            else glyph(b, xx, y + 1, (uint8_t)cp, sh, m);
+            xx += (cp >= 0x2e80 ? AOS_PIXEL_CJK_ADV : CH_FADV) * m;
         }
     }
-    for (; *s; s++, x += CH_FADV * m) {
-        glyph(b, x, y, (uint8_t)*s, c, m);
+    while (*s) {
+        uint32_t cp = pixel_codepoint(&s);
+        if (cp >= 128) pixel_unicode(b, x, y, cp, c, m);
+        else glyph(b, x, y, (uint8_t)cp, c, m);
+        x += (cp >= 0x2e80 ? AOS_PIXEL_CJK_ADV : CH_FADV) * m;
     }
 }
 

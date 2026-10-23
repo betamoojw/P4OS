@@ -1,0 +1,19 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Deslizá el dedo hacia donde quieras ir: alcanza con un toque corto, y un mismo trazo puede doblar varias veces. También podés tocar al costado de la cabeza.	往你想要的方向轉動:只需一點輕動就足夠了,一個拍子可以多次轉動.
+NORMAL	常態
+COMBATE	戰鬥
+UN JUGADOR	一個玩家
+MULTIJUGADOR	多玩家
+VOLVER	返回
+El juego de a dos necesita el enlace, y este equipo todavía no lo tiene	兩個玩家需要連線,而這個裝置還沒有.
+CANCELAR	取消
+SEGUIR	總結
+MENÚ	選單
+OTRA VEZ	再一次
+Sin memoria	沒有記憶
+Buscando al otro equipo...	在尋找另一個裝置...
+%s salió del juego	%s 離開了遊戲
+Sin señal de %s	沒有訊號 %s
+Sin pareja: apareá los equipos en Enlace	沒有合作伙伴:在Link中將裝置結合
+Esperando a %s...	在等待 %s...

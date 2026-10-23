@@ -1,0 +1,580 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+ATACAR	战斗
+OBJETO	项目
+CAMBIAR	标签:
+ANALIZAR	扫描
+HUIR	运行
+TE ATACA %s!	%s 攻击你!
+%s USA %s	%s 使用 %s
+EL RIVAL	竞争
+TU ROBOT	你的船
+%s ESTA	%s 它们是
+EN CORTOCIRCUITO Y	短圈和
+NO PUEDE MOVERSE.	没有动力.
+PERO NO TIENE ENERGIA.	但它没有能量.
+PERO FALLA.	但它缺失了.
+CRITICO! %d DE DANO	关键! %d 伤害
+MUY EFICAZ! %d DE DANO	非常有效! %d 伤害
+POCO EFICAZ. %d DE DANO	这不是很好的. %d 伤害
+%d DE DANO.	%d 伤害.
+SE CURA %d.	它会治愈 %d.
+Y OTRA VEZ: %d MAS.	再一次: %d 还有更多.
+BAJA SU DEFENSA.	它的防卫.
+BAJA SU ATAQUE.	它的攻击滴.
+SUBE SU ATAQUE.	它的攻击风险。
+SUBE SU DEFENSA.	它的防守升起.
+QUEDA RECALENTADO.	这太热了.
+QUEDA EN CORTOCIRCUITO.	这是一个短路.
+ABSORBE %d DE VIDA.	排水 %d 惠普,你好吗?
+RECARGA LA BATERIA.	电池充电.
+SE REPARA %d.	修复 %d.
+%s SE APAGO!	%s 关闭!
+SACAN A %s!	他们发送 %s!
+GANAS %d EXP.	你得到了 %d 现在,我们要去.
+GANASTE EL COMBATE!	你赢得了这场战斗!
+SUBISTE DE NIVEL!	你已经升级了!
+TE DEJA: %s	爱德鲁斯: %s
+GANAS %d EXP Y %d CRED.	你得到了 %d 消耗量, %d 其他地方
+MOCHILA LLENA!	你的包装充满了!
+ARRANCAS: %s	你会脱离: %s
+SUBISTE AL NIVEL %d!	你已经达到水平 %d!
+TU EQUIPO SE APAGO.	你的团队关闭.
+GANARON ELLOS.	他们赢了.
+PIERDES %d CREDITOS.	你输了 %d 信用.
+TU ROBOT SE APAGO...	你的机器人关闭...
+TE LLEVAN AL TALLER.	他们带你回家.
+SACA OTRO ROBOT.	派另一个机器人.
+%s SE RECALIENTA	%s 过热
+Y PIERDE %d DE VIDA.	并且损失 %d 惠普,你好吗?
+SALE %s!	出来 %s!
+SE REPARA SOLO!	它自行修复!
+VUELVE A EMPEZAR.	让我们重新开始.
+SE BLINDA.	它的装甲起来。
+REPARA %d DE VIDA.	修复 %d 惠普,你好吗?
+RECUPERA %d DE ENERGIA.	收获者 %d 能量.
+LO USARAS AL GANAR.	当你赢得时,它就会发挥作用.
+NO PASA NADA.	没有什么发生.
+USAS %s	你使用 %s
+NO SE PUEDE HUIR	没有跑步.
+DE UN COMBATE ASI.	从这样的战斗中.
+TE ESCAPASTE.	你走了.
+NO PUDISTE ESCAPAR!	你无法逃脱!
+%s  NV %d	%s LV %d
+TIPO %s   A%d D%d V%d	类型 %s   A%d D%d S%d
+CAMBIAN DE ROBOT.	两者都是SWAP机器人.
+NADIE ATACA ESTE TURNO.	没有人会攻击这场转折.
+N%d	LV%d
+VOLVER	返回
+ESPERANDO...	在等待...
+CINTA DE CHATARRA	废旧的带
+%d PIEZAS	%d 部分
++%d CREDITOS	+%d 贷款
+RECORD %d	最好的 %d
+TE GANASTE UNA PIEZA!	你赢得了一部分!
+TE GANASTE UNA PIEZA	你赢得了一部分
+PERO NO TENES LUGAR	但你没有房间
+TOCA PARA SALIR	输入
+PIEZAS %d	部分 %d
+LA CABINA ESTA CERRADA:	这艘船是关闭的.
+ESTE EQUIPO TODAVIA NO	这个设备没有
+TIENE ENLACE.	连接还在.
+BUSCANDO EL OTRO EQUIPO...	找到另一个设备...
+BUEN COMBATE.	很好的战斗.
+TU EQUIPO QUEDO COMO NUEVO.	你的团队就像一个新团队一样好.
+CAMBIO HECHO!	滚开!
+EL OTRO EQUIPO TIENE	另一个设备有
+OTRA VERSION DEL JUEGO.	另一个游戏版本.
+CONECTADO CON	连接
+LOS DOS COMBATES	两大战斗
+SE DESINCRONIZARON.	离开脚步。
+SE CORTO LA PELEA.	战斗结束了.
+TE OFRECEN UN ROBOT:	他们提供了一个机器人:
+ELEGI QUE DAS A CAMBIO.	选择你给的东西.
+TE OFRECEN UNA PIEZA:	他们提供了一部分:
+COLGARON DEL OTRO LADO.	他们挂了起来.
+SE CORTO LA LLAMADA.	电话被放弃.
+EL OTRO NO CONTESTA.	没有对方的回答.
+SE FUE DE CHATARRA.	在左边.
+NO CONTESTAN.	没有答案.
+SE CORTO LA ESPERA.	放弃等待.
+LLAMANDO...	呼叫...
+NO HAY OTRO EQUIPO	没有其他设备
+EMPAREJADO. EMPAREJALOS	双,双.
+EN LA APP ENLACE.	在链接应用程序中.
+NO ESTA EN CHATARRA.	没有在卡塔拉.
+QUE ABRAN CHATARRA Y	让他们打开.
+ENTREN A UNA CABINA.	走进一个船.
+CABINA	电话机
+SIN PAREJA	没有合作伙伴
+SALIR	离开
+COMBATIR	战斗
+ROBOT	机器人
+PIEZA	部分
+COLGAR	挂起来
+%d-%d DE %d	%d-%d 关于 %d
+RETIRAR	返回它
+DESAFIO MANDADO.	挑战发送.
+ESPERANDO AL OTRO EQUIPO.	等待另一个设备.
+QUE ROBOT OFRECES?	你给什么机器人?
+QUE PIEZA OFRECES?	你会做什么?
+OFERTA MANDADA.	报价发送
+RETIRADO.	回来吧.
+%s\nENCONTRASTE %s!	%s\n你发现了 %s!
+ENCONTRASTE %s!	你发现了 %s!
+TU ROBOT QUEDO COMO NUEVO.	你的机器人就像新一样好.
+IMPACTO	影响
+PLASMA	塑料
+FUEGO	燃烧
+CRIO	克劳
+VOLT	电气
+ACIDO	酸性
+Golpe	拳头
+Martillazo	锤子吹
+Embestida	收费
+Doble Puno	双拳
+Aplastar	碎片
+Barrido	扫除
+Pisoton	脚步声
+Cabezazo	头部
+Rayo Plasma	激光射线
+Lanza Ionica	扬·兰斯
+Pulso	脉冲
+Sobrecarga	过载
+Haz Guia	导光束
+Absorber Carga	排水电荷
+Lanzallamas	射火器
+Chispa Termica	热点
+Fundicion	融化
+Soplete	喷雾器
+Horno	发酵
+Escarcha	冻
+Nitrogeno	氮学
+Congelador	深冻
+Viento Polar	北极风
+Rocio Helado	冰雾
+Descarga	排放
+Chispazo	扎普语
+Tormenta	风暴
+Electroiman	电磁铁
+Cortocircuito	短路
+Salpicon	喷洒
+Corrosion	腐蚀
+Bidon Acido	酸鼓
+Oxido	腐蚀
+Parasito	寄生虫
+Vapor Toxico	毒气
+Diagnostico	诊断
+Blindaje	装甲升起
+Recarga	充电
+Autoreparar	自我修复
+Mira Laser	激光视觉
+Placa Extra	额外的盘子
+Refrigerar	放心
+Turbo	涡轮
+Purga	清除
+Aceite	石油
+Repara 40 de vida.	修理40个HP
+Aceite Puro	纯油
+Repara 120 de vida.	修理120个HP。
+Bateria	电池
+Devuelve 30 de energia.	恢复了30个能量.
+Bateria Densa	密集电池
+Devuelve toda la energia.	恢复了所有的能量.
+Soldador	焊接器
+Revive con media vida.	半个HP时重生
+Chip de Datos	数据芯片
+Suma 300 de experiencia.	增加了300年的经验.
+Iman de Rescate	拯救磁铁
+Mas chance de arrancar una pieza.	更多的机会会撕裂一个角色.
+Llave Oxidada	Rusty 键
+Abre una puerta trabada.	打开一个堵塞的门.
+Pase de Sector	部门通行
+Permite cruzar un control.	让你走过一个检查站.
+Caja de Tornillos	螺栓盒
+Alguien la esta buscando.	有人正在寻找它.
+Ancla Oxidada	拉斯蒂·安克
+Pesa como para hundir un barco.	足够重,可以淹没一艘船.
+Fusible Grueso	重引信
+Aguanta lo que le tires.	无论你扔什么东西,都会被.
+Molde de Acero	钢模
+Sigue caliente.	仍然很温暖.
+Termo	热水器
+Todavia tiene agua caliente.	还有热水.
+Clave Maestra	主钥匙
+Abre lo que no deberia.	开放不应该的东西.
+Engranaje Grande	巨型机器
+De una maquina que ya no existe.	从一个早已消失的机器.
+Repelente	报复
+200 pasos sin encuentros.	没有遇见的200步.
+Orugas	线路
+Caminas al doble. Para siempre.	走得两倍快,永远.
+Bolsa Grande	大袋子
++2 lugares en la mochila.	在你的包里有+2个插槽.
+Ojo Simple	简单的眼睛
+Visor	视光器
+Casco	头盔
+Cupula	圆顶
+Antena	电台
+Radar	雷达
+Ciclope	独眼巨人
+Faro	灯塔
+Craneo	头骨
+Tri-Ojo	三眼
+Yelmo	伟大的头盔
+Sensor	传感器
+Farola	灯头
+Mascara	面具
+Torreta	塔楼
+Nucleo	核心
+Caja	箱子
+Barril	桶
+Coraza	库伊拉斯
+Reactor	反应堆
+Panel	面板
+Blindado	装甲
+Cofre	坚固框
+Nucleo V	核心 V
+Chasis	底盘
+Fragua	福吉( Forge)
+Celda	细胞
+Boveda	收藏箱
+Turbina	涡轮
+Placa Madre	主板
+Motor	发动机
+Prisma	棱柱
+Garras	爪子
+Pinzas	点燃器
+Martillos	锤子
+Canones	炮弹
+Muelles	锅炉
+Tenazas	Tongs
+Sierras	锯齿波
+Puas	斯派克丝
+Guantes	手套
+Taladros	钻孔
+Latigos	鞭子
+Escudos	盾牌
+Lanzas	兰斯
+Imanes	磁铁
+Sopletes	灯火
+Rotores	轮子
+Patas	腿部
+Zancos	平板块
+Rueda	车轮
+Triciclo	崔克,你别这样
+Flotador	飞行
+Aracnidas	蜘蛛腿
+Resortes	泉源
+Botas	靴子
+Cadenas	链
+Monociclo	单轮车
+Cuadrupedas	四脚
+Cohetes	导弹
+Garras Sup.	抓住爪子
+Pistones	活塞
+Deslizador	滑翔机
+JUEGO PURO	完整的集合
+TRIO	试验室
+DUO	双价
+MENU	菜单
+MAPA	地图
+%dC	%dC
+VID	公司
+ENE	EN
+EXP	消耗量
+%s  N%d	%s  L%d
+LO TUYO	你的东西
+EL JUEGO	游戏
+TALLER	工作室
+OBJETOS	项目
+EQUIPO	团队
+REGISTRO	记录
+DIARIO	日记
+AYUDA	帮助
+SONIDO	声音
+DIFICULTAD	困难
+GUARDAR	保存
+CERRAR	接近
+NORMAL	常态
+FACIL	简单
+DURO	硬的
+MUDO	关闭
+EFECTOS	只有FX
+TODO	所有
+DESLIZA PARA VOLVER	快回去
+CAB	其他类型
+TOR	职权范围
+BRA	手臂
+PIE	脚
+%s  %s +%d%%	%s  %s +%d%%
+TIPO %s	类型 %s
+GANA COMBATES	赢得斗争
+PARA PIEZAS	部分
+TOCA 2 VECES	打两次
+NO TENES OTRA DE ESTE TIPO	没有其他的.
+TOCA 2X	技术咨询方案 2X
+JUEGO %d>%d	设置 %d>%d
+PV%d E%d	公司%d E%d
+PUESTA	装备
+TOCA UNO PARA USARLO	按一下使用它
+NO TENES NADA.	你没有任何东西.
+NADA SE TE ACERCA	没有什么能靠近你
+AHORA CAMINAS AL DOBLE	你走得很快
+MOCHILA: %d LUGARES	现在,我们要去做什么? %d 机场
++%d DE VIDA	+%d 公司
++%d DE ENERGIA	+%d 能源
+NIVEL %d	级别 %d
+NIVEL %d   TIPO %s	级别 %d 类型 %s
+VACIO	无效
+SALE	退出
+ROTO	死亡
+NUMEROS	州
+GOLPES	动作
+VIDA	公司
+ENER	ENE 电子网络
+ATAQ	其他技术
+DEFE	防腐剂
+VELO	专业部门
+%d/%dE	%d/%dE
+ARMAR OTRO	建立一个
+QUE SALGA ESTE	送这个
+DESARMAR	施压
+ROBOT ARMADO!	打造机器人!
+FALTAN PIEZAS SUELTAS	没有足够的零部件
+ESTA ROTO: AL TALLER	死亡:去一个工作室
+CAMBIASTE DE ROBOT	你换了机器人
+PIEZAS A LA MOCHILA	零部件进入袋子
+TENES %d CREDITOS	你有了 %d 贷款
+TIENDA	商店
+%dC x%d	%dC x%d
+NO TE ALCANZA	没有足够的信用
+COMPRADO	买了
+SIN DATOS	没有数据
+PV%d A%d D%d V%d E%d	公司%d A%d D%d S%d E%d
+CAMPEON	冠军
+COMBATES %d	战斗 %d
+PIEZAS %d/%d	部分 %d/%d
+PASOS %d	步骤 %d
+NI UNA PIEZA TE LA REGALARON	一切都不是礼物
+TU ROBOT SON CUATRO PIEZAS:\nCABEZA, TORSO, BRAZOS Y\nPIERNAS.\n\nCADA UNA APORTA VIDA,\nATAQUE, DEFENSA, VELOCIDAD\nY ENERGIA, Y TRAE SUS\nPROPIOS ATAQUES.\n\nEL TORSO ADEMAS DECIDE EL\nTIPO DE TU ROBOT.	你的机器人有四个部分:\n头、头、头、枪和\n腿部.\n\n每一个都会增加HP,攻击,\n防御,速度和能量\n带来自己的\n攻击.\n\n托尔索也会给你带来影响\n机器人类型.
+AL GANAR UN COMBATE PODES\nARRANCARLE UNA PIEZA AL\nRIVAL.\n\nVA A LA MOCHILA Y SE MONTA\nEN EL MENU, EN TALLER.\n\nLA QUE TENIAS PUESTA VUELVE\nA LA MOCHILA: NUNCA SE\nPIERDE NADA.	当你赢得战斗时\n能够运行一部分\n失败者.\n\n它进入你的行李和\n你从菜单中取出了.\n在工作室里.\n\n旧部分回归\n没有什么丢失.
+HAY SEIS TIPOS Y SE GANAN\nENTRE ELLOS:\n\nIMPACTO > CRIO Y ACIDO\nPLASMA  > IMPACTO Y VOLT\nFUEGO   > CRIO Y ACIDO\nCRIO    > PLASMA Y VOLT\nVOLT    > FUEGO E IMPACTO\nACIDO   > VOLT Y PLASMA\n\nPEGAR CON TU PROPIO TIPO\nHACE MAS DANO.	六种类型互相击败:\n\n影响 > CRYO 和 ACID\n塑料 > 冲击和电压\n火灾 > 危险和酸性\n危机 > 激光和电压\nvolt > 火灾和影响\n可卡因 > 伏尔特和皮拉西马\n\n与你自己的类型打\n这会造成更多的伤害.
+CADA ZONA TIENE UN DUNGEON\nY UN SUBJEFE AL FONDO.\n\nVENCERLO TE DA UN PASE DE\nSECTOR, Y ESE PASE ABRE EL\nCONTROL DE LA ZONA QUE\nSIGUE.\n\nTOCA DONDE QUERES CAMINAR.\nEL BOTON MENU, O TOCAR TU\nROBOT, ABRE ESTE MENU.\nCON DOS DEDOS ACERCAS O\nALEJAS EL MAPA.	每个区都有个地标\n终于有一个副老板.\n\n击败它赢得你一个\n部门通过,以及那个通过\n开放了检查点\n接下来的区域.\n\n按到你想去的地方.\n门铃或你的\n机器人打开了这个菜单.\n用两个手指来近距离\n在地图中,在地图中.
+CHATARRERO	废物经销商
+NO TENES PIEZAS SUELTAS	你没有备用零件
++%dC	+%dC
+LO QUE TE PIDIERON	你被要求做什么?
+NADIE TE PIDIO NADA	没有人问你任何事
+ENTREGADO	发送
+LO TENES: VOLVE	你有了它:回去
+TRAE: %s	现在,我们要做什么? %s
+PENDIENTE	在等待中
+TOCA PARA SEGUIR	继续前进的战术
+TODAVIA NO ESTUVISTE AHI	你还没有去过那里
+YA ESTAS AHI	你已经在那里了
+VIAJANDO...	旅行...
+TOCA PARA VIAJAR	旅行的火车
+SIN EXPLORAR	没有被探索
+ESTAS AQUI	你在这里
+VENCIDA - VIAJAR	清晰的旅行
+VIAJAR	旅行
+RPG DE ROBOTS	机器人游戏
+EMPEZAR	开始
+TOCA DONDE QUERES CAMINAR	打到你想去的地方
+DOS DEDOS: ACERCAR Y ALEJAR	两个手指:/OUT
+EL BOTON MENU, O TU ROBOT	墨宁・布顿,或你的机器人
+PARTIDA GUARDADA	游戏被拯救
+ABUELA TUERCA: BUEN DIA,\nDORMILON.\nTE ARME UN ROBOT CON LO\nQUE HABIA EN EL GALPON.\nNO ES GRAN COSA, PERO\nCAMINA Y PEGA.\nANDA AL TALLER Y TE\nEXPLICO COMO SE CAMBIAN\nLAS PIEZAS.	现在,我们在这个世界里.\n睡眠头.\n我为你建造了一个机器人.\n是什么在羊群。\n这不是太多,但它\n走路和它击中.\n来到工作室和\n我会告诉你如何.\n换个零件.
+UNA FOTO VIEJA: TU\nABUELA JOVEN, AL LADO\nDE UN ROBOT ENORME.\nABAJO DICE:\nCAMPEONA, ANO 12.	一张旧照片:你的\n祖母,年轻,下一个\n在一个巨大的机器人.\n在下面说:\n冠军,12岁.
+UNA ESTANTERIA DE\nREPUESTOS.\nTODO ETIQUETADO A MANO.	一个备用零部件的货架.\n所有的标签是手工.
+UNA PLANTA EN UN RINCON.\nSOBREVIVE AL ACEITE.	一个角落的植物.\n油能存活下来.
+UN PLANO DE UN ROBOT,\nCLAVADO A LA PARED.\nTIENE CORRECCIONES DE\nTRES LETRAS DISTINTAS.	标有蓝印的机器人\n在墙上.\n它有纠正\n三种不同的手.
+UNA VASIJA CON RETAZOS\nDE CHAPA.	一大批的人类资源\n沙发的金属。
+VECINO: SE ME CAYERON\nLOS TORNILLOS EN EL\nDEPOSITO DEL DESGUACE.\nESTA AL NORTE, PASANDO\nEL SENDERO.\nSI ME LOS TRAES TE DOY\nALGO QUE TE VA A SERVIR.	邻居:我放弃了我的\n沙滩上的尖叫声\n储备室.\n这是北方,过去\n路上.\n带他们回来和我\n我会给你一些东西.
+VECINO: MIS TORNILLOS!\nTOMA, ESTE SOLDADOR ERA\nDE MI PADRE.	我的猫咪!\n这铁是我的.\n爸爸的.
+UN BANCO DE PLAZA.\nMIRA AL ESTANQUE.	一个朴峰株。\n它面对庞德。
+UNA MACETA DE LA VEREDA.\nALGUIEN LE PUSO UN\nCARTELITO: NO PISAR.	一个计划在KERB上。\n某人打了一张笔记\n没有人能让你走.
+UN GATO NEGRO.\nTE MIRA, BOSTEZA, Y\nSIGUE EN LO SUYO.	一只黑猫.\n它看着你,YAWNS,\n然后又回来了.\n业务.
+MECANICO: EL TALLER ES\nDE LA ABUELA TUERCA.\nSI TE ROMPEN EL ROBOT,\nTE LO DEJA COMO NUEVO\nY NO TE COBRA.	机械师:工作室\n这是奶奶的.\n如果他们打破你的鞋子\n她就像一个新人一样.\n没有任何费用.
+UN BANCO GASTADO.\nACA ESPERAN LOS QUE\nDEJAN EL ROBOT EN EL\nTALLER.	一个沃恩本奇。\n这就是人们的所在\n在工作坊中等待\n他有他们的机器人.
+UN PAJARO PICOTEA\nTORNILLOS DEL PISO.\nNO PARECE UNA BUENA\nDIETA.	鸟儿正在捕捉尖叫\n在场外.\n这不可能是好事.\n饮食.
+VILLA TUERCA\nPOBLACION: 34 PERSONAS\nY UNOS CUANTOS ROBOTS.	科维尔\n人口:34人\n一些机器人.
+CHICO: MI HERMANA DICE\nQUE EN EL DESGUACE HAY\nPIEZAS BUENISIMAS.\nYO NO ENTRARIA. HAY\nROBOTS SUELTOS.	孩子:我的妹妹说\n斯克拉皮亚德充满了\n很棒的部分.\n我不会进去.\n没有什么机器人.
+UN BANCO FRENTE A LA\nFUENTE.\nABAJO HAY ALGO.	一张窗子\n芬诺。\n有什么东西\n在下面.
+OTRO GATO. O EL MISMO,\nQUE SE MUEVE MAS RAPIDO\nDE LO QUE PARECE.	另一个猫或同样的猫\n一个更快的移动\n这看起来很像.
+UN BANCO AL LADO DE LA\nCABINA.\nPARA ESPERAR TURNO.	底部的骨头\n两者.\n在等待你的轮到.
+UN PAJARO EN EL CANTERO.\nSE VA APENAS TE ACERCAS.	一个鸟在Flowerbed。\n它很快就会离开你\n走近.
+CHATARRERO: TRAEME LO\nQUE NO USES.\nTE LO PAGO POR LO QUE\nPESA, NO POR LO QUE FUE.	给我带来你的东西\n不要使用.\n我付出了重量,不是.\n曾经是什么.
+EL BANCO DE TRABAJO DE\nLA ABUELA.\nTU ROBOT QUEDA COMO\nNUEVO.	爷爷的工作。\n你的机器人出现在\n很好.
+ABUELA TUERCA: TENGO\nACEITE, BATERIAS Y\nALGUNA COSA MAS.\nMIRA TRANQUILO.	我有石油.\n电池和少数\n其他事情.\n给你一个时间.
+ABUELA TUERCA: UN ROBOT\nSON CUATRO PIEZAS:\nCABEZA, TORSO, BRAZOS\nY PIERNAS.\nCADA UNA CAMBIA LAS\nESTADISTICAS Y TRAE SUS\nPROPIOS ATAQUES.\nCUANDO GANES UN COMBATE\nA VECES PODES ARRANCARLE\nUNA PIEZA AL RIVAL.\nESAS VAN A LA MOCHILA\nY SE MONTAN DESDE EL\nMENU, EN TALLER.	一个机器人是\n四个部分 头部,托索,\n双臂和腿.\n每个人都会改变\n国家和经济\n攻击.\n当你赢得战斗时\n有时可能会撕裂一片\n在失败者身上.\n这些都在你的行李箱里,\n它们来自\n菜单,在工作室.
+UN CUADRO DE UN LAGO.\nLA FIRMA DICE: TUERCA,\nANO 9.	一幅湖泊画作。\n署名：齿轮，9 年。
+LA FOTO DE UN ROBOT\nVIEJO, CON UNA MEDALLA.\nATRAS ALGUIEN ESCRIBIO:\nSIEMPRE VOLVIA.	一个老机器人的照片\n穿着奖牌.\n在某人的背后\n字母:他总是来\n回来吧.
+UNA BIBLIOTECA LLENA DE\nMANUALES.\nATRAS DE UN TOMO HAY\nALGO GUARDADO.	一个书房里充满了\n这是一份手册.\n什么东西是吃屎的\n在一个卷后面.
+UNA TERMINAL VIEJA.\nEN LA PANTALLA PARPADEA\nUNA PARTIDA DE AJEDREZ\nSIN TERMINAR.	一个旧的终端.\n一个不完结的游戏\n选择点\n屏幕.
+UNA VASIJA DE BARRO.\nADENTRO HAY TORNILLOS\nDE TODAS LAS MEDIDAS.	一个克莱波特.\n里面是一股\n每个尺寸.
+LA MESA, PUESTA PARA\nDOS.\nHACE RATO QUE ESPERA.	这张桌子,为两个.\n现在,我一直在等待.\n在哪里?
+LA CAMA, TENDIDA.\nMEJOR NO.	床, 做起来的。\n没有.
+UNA PLANTA DE INTERIOR.\nALGUIEN LA RIEGA TODOS\nLOS DIAS.	一个房子植物.\n一个人 吞下它的一切\n时间.
+UN CONTROL BAJADO.\nCARTEL: PROHIBIDO PASAR AL\nESTE SIN PASE DE SECTOR.\nEL PASE LO DA EL GUARDIAN\nDEL DESGUACE.	这是一个较低的障碍.\n标志:没有东路\n没有行业护照.\n过去来自\n警卫队.
+EL CONTROL ESTA LEVANTADO.\nAL ESTE: PUERTO BUJIA.	障碍已经升高了.\n东部:港火灾.
+UN CONTROL BAJADO.\nAL ESTE NO SE PASA SIN\nPASE DE SECTOR.	检查点较低.\n没有东方的经历\n一个行业通行.
+EL CONTROL ESTA LEVANTADO.	检查点上了.
+SENDERO NORTE\nAL DESGUACE.\nCUIDADO: HAY ROBOTS\nSUELTOS ENTRE LOS\nYUYOS.	北路\n爬到垃圾堆里去\n小心点,有松散的\n杂草中的行尸。
+UN CARTEL TORCIDO:\nDESGUACE MUNICIPAL\nNO ALIMENTE A LOS\nROBOTS.	一个扭曲的标志:\n城市的破产场\n不要解雇员工。
+GUARDIAN DEL DESGUACE:\nALTO AHI.\nNADIE SE LLEVA CHATARRA\nDE ACA SIN PASAR POR\nENCIMA MIO.\nA VER QUE TRAJISTE.	警卫队:\n保持它正确的地方.\n没有人会采取 scrap\n没有去的地方\n通过我.\n让我们看看你有什么.
+PLAYA DEL CANGREJO.\nNO SE PERMITE OXIDARSE\nEN LA ARENA.	CRAB海滩。\n不允许腐蚀\n在沙子上.
+PUERTO BUJIA\nAQUI SE DESCARGA TODO LO\nQUE SE OXIDA DESPUES.\nAL NORTE: LA BODEGA.	港口蒸发\n任何东西都会腐烂.\n后者在这里没有装载.\n北方:抓住.
+CHICO: EN LA BODEGA HAY\nAGUA HASTA LAS RODILLAS\nY ROBOTS QUE NO SALEN\nNUNCA DE AHI.	孩子: 悬浮着\n在深处,还有\n机器人下来在那里\n永远不要出去.
+CONTROL DEL PUERTO.\nAL ESTE SUBE LA CUESTA\nHACIA ALTO VOLTIO.\nNO SE PASA SIN PASE.	港口检查点.\n东路上升\n超高压.\n没有过度,没有过度.
+EL CONTROL ESTA ABIERTO.\nAL ESTE: LA CUESTA.	检查点开放.\n东部:登山.
+CONTROL DEL PUERTO.\nAL ESTE SUBE LA CUESTA.	港口检查点.\n关闭的滑坡上升。
+EL CONTROL ESTA ABIERTO.	检查点开放.
+PESCADORA: EL AGUA SALADA\nSE COME LOS CIRCUITOS.\nPOR ESO ACA TODO PEGA\nCON ACIDO.	渔夫:盐水\n吃电路活着.\n这就是为什么一切\n这里有酸.
+CAPITAN: PERDI EL ANCLA\nDE MI BARCO EN LA BODEGA.\nTRAEMELA Y TE DOY LA\nMEJOR BATERIA QUE TENGO.	我失去了我的\nAnchor在大厅里。\n让它回来,我会\n给你最好的东西\n我有电池.
+CAPITAN: EL ANCLA! AHORA\nSI PUEDO SALIR A PESCAR.\nTOMA, TE LA GANASTE.	天使号!\n现在我 CAN 走出去\n再次钓鱼。\n现在,你赢得了它.
+FERIANTE: PASA, PASA.\nLA CINTA TRAE CHATARRA\nDE TODO EL PUERTO.\nAGARRA LAS VERDES Y\nDEJA PASAR LAS OXIDADAS.\nTE PAGO POR PIEZA.	步骤上,步骤上.\n铃声从\n在港口上.\n抓住绿色的,\n让腐蚀过来.\n我付出了大部分钱.
+EL BANCO DEL PUERTO.\nHUELE A SALITRE PERO\nDEJA EL ROBOT COMO NUEVO.	港口工作。\n盐的气味,但\n离开一个机器人像新的.
+MECANICO: TENGO DE TODO,\nY TODO UN POCO OXIDADO.\nMIRA TRANQUILO.	机械师:我有一点\n关于一切,以及所有\n这种情况是很可靠的.\n给你一个时间.
+ABUELA TUERCA: TE SEGUI\nHASTA ACA PARA DECIRTE\nUNA COSA.\nEL TIPO DEL TORSO MANDA:\nSI PEGAS CON TU PROPIO\nTIPO, HACES MAS DANO.\nACA TODOS PEGAN CON\nACIDO. LLEVA ALGO QUE\nRESISTA.	我跟随了\n你是这里的唯一方法\n我告诉你一个事.\n托尔索设定你的类型:\n与你自己的类型打\n你会打得更厉害.\n这里一切都很好.\n带有酸.\n一些东西会保持.
+BODEGA MUNICIPAL\nNIVEL DEL AGUA: ALTO.\nNO RESPONDEMOS POR\nCIRCUITOS MOJADOS.	城市持有权\n水平:高.\n没有对湿的责任\n电路.
+CAPATAZ DE LA BODEGA:\nASI QUE VOS SOS EL QUE\nANDA LEVANTANDO PIEZAS.\nACA ABAJO TODO SE OXIDA,\nPIBE. TAMBIEN VOS.	现在,我们要做什么呢?\n所以你就是那个要去的人\n周围收集部分.\n在下面,一切.\n鲁斯,孩子,你也是
+LA CUESTA.\nARRIBA: ALTO VOLTIO.\nNO TOQUE LOS CABLES\nCON LAS MANOS.	登上.\n上面:高压.\n不要碰电缆\n随着你的手.
+ALTO VOLTIO\nALTURA: 900 METROS\nCONSUMO: TODO EL QUE\nHAGA FALTA.	高电压\n高度:900米\n消费:无论如何\n接下来.
+CHICO: SI TOCAS UN CABLE\nPELADO se te frien los\nCIRCUITOS.\nA MI HERMANO LE PASO.	小孩: 塔台可兑换\n你的电路会被烧掉.\n这发生在我身上\n兄弟.
+SENORA: LA SUBESTACION\nSE LLENO DE ROBOTS Y\nNADIE PUEDE ENTRAR.\nSIN ELLA NO HAY LUZ.	女士: 基础是\n充满机器人和\n没有人 CAN 进入.\n没有它\n力量.
+TECNICO: NECESITO UN\nFUSIBLE GRUESO DE LOS\nQUE HAY EN LA SUBESTACION.\nSI ME LO TRAES TE DOY\nUN CHIP DE DATOS.	技术人员:我需要一个\n这种类型\n他们一直在\n它们是什么?\n给我一个和一个\n数据芯片是你的.
+TECNICO: EL FUSIBLE!\nAHORA SI PUEDO ARREGLAR\nEL TABLERO. TOMA.	法丝!\n现在我 CAN 解决了问题.\n这里你去.
+EL BANCO DE ALTO VOLTIO.\nAca la corriente sobra.	高荡妇。\n权力是唯一的东西\n这座城市必须留下.
+TENDERA: BATERIAS,\nACEITE Y LO DE SIEMPRE.\nTODO CON GARANTIA DE\nTRES DIAS.	电池,\n石油和习惯.\n一切都在三天内\n保证.
+ABUELA TUERCA: PRESTA\nATENCION A LA VELOCIDAD.\nEL QUE PEGA PRIMERO PEGA\nDOS VECES, PORQUE EL OTRO\nPUEDE NO LLEGAR A PEGAR.\nUNAS PIERNAS BUENAS VALEN\nMAS QUE UN BRAZO CARO.	付钱.\n注意位置。\n谁先打他?\n两次,因为另一个\n一个人可能永远不会被打.\n良好的腿更值得\n这是一个昂贵的武器.
+TABLERO GENERAL.\nNO OPERAR SIN GUANTES.\n(ALGUIEN TACHO LO DE\nLOS GUANTES.)	主板.\n没有操作\n戴手套.\n(某人通过\n关于手套的部分.)
+INGENIERA JEFA:\nASI QUE VENIS A ARREGLAR\nLA SUBESTACION.\nPRIMERO ARREGLA ESTO:\nMI ROBOT CONTRA EL TUYO.	工程师总监:\n所以你来解决问题.\n它们是什么?\n首先要解决这个问题:\n我与你的机器人.
+VALLE DEL HUMO.\nNO SE DETENGA.\nEL AIRE NO ES BUENO\nPARA NADIE.	烟谷.\n不要停止.\n空气不适合\n没有人.
+FUNDICION\nAQUI SE FUNDE TODO LO\nQUE EL PUERTO OXIDA.\nAL NORTE: EL HORNO.	发现\n所有的港口\n劳斯在这里被蒙住。\nNORTH: THE FURNACE.
+FUNDIDOR: EL METAL\nCALIENTE NO PERDONA.\nSI TU ROBOT ES DE HIELO,\nACA LA VAS A PASAR MAL.	热金属的作用\n没有原谅.\n如果你的机器人是被制造的\n冰,你会受苦.
+CHICA: DICEN QUE EN EL\nHORNO VIVE UN ROBOT\nHECHO DE LAVA.\nYO NO LO VI, EH.	女孩:他们说是机器人\n活下来\n软糖。\n我没有看到它.
+MOLDEADORA: SE ME QUEDO\nUN MOLDE ADENTRO DEL\nHORNO Y NO PIENSO IR.\nTRAEMELO Y ARREGLAMOS.	我离开了A\n潜伏在森林里\n我不会回来.\n把它带来,我们会谈.
+MOLDEADORA: EL MOLDE!\nSOS DE FIERRO, PIBE.\nTOMA ESTO PARA EL CAMINO.	模具制造商:模具!\n你是铁的.\n拿这东西走路上.
+EL BANCO DE LA FUNDICION.\nSe suelda todo de una.	发现台.\n一次性焊接任何东西
+HERRERO: LO QUE NECESITES\nPARA AGUANTAR EL CALOR.	无论你是谁\n需要生存的热量.
+ABUELA TUERCA: ACORDATE\nDE MIRAR LOS TIPOS.\nEL FUEGO DERRITE EL HIELO\nY CORROE EL ACIDO, PERO\nCONTRA EL VOLT NO HACE\nNADA.\nMIRA LA FICHA ANTES DE\nPEGAR.	记住\n检查这些人.\n火药片 冰和食物\n酸,但与电压相反\n这没有什么效果.\n在你之前阅读这篇文章\n旋转.
+MAESTRO FUNDIDOR:\nTREINTA ANOS METIENDO\nCHATARRA EN ESE HORNO.\nSE CUANDO UNA PIEZA\nSIRVE Y CUANDO NO.\nLA TUYA TODAVIA NO SE.	马斯特·斯梅尔特:\n30年来,\n在那块森林里乱晃\n我知道一个部分是什么时候\n值得一点.\n我还不确定.
+PASO HELADO.\nSI SE LE CONGELAN LOS\nSERVOS, NO INSISTA.\nESPERE AL DESHIELO.	弗罗森・帕斯。\n如果你的服务冷却,\n不要推它.\n等待的Thaw。
+CRIOVALLE\nTEMPERATURA MEDIA: -12.\nLOS CIRCUITOS DURAN MAS\nPERO LAS BATERIAS MENOS.	克罗瓦奥\n平均温度: -12\n电路最后的时间\n但电池没有.
+CHICO: EN LA CUEVA EL\nPISO ES DE HIELO PURO.\nMI PAPA DICE QUE ADENTRO\nHAY ALGO QUE NO SE\nDERRITE NUNCA.	洞穴的地板是\n固体冰.\n我爸爸说有\n在那里有什么东西\n永远不要考试.
+LENADOR: LOS BICHOS DE\nACA PEGAN CON CRIO.\nSI LLEVAS ALGO DE FUEGO\nLA VAS A PASAR MEJOR.	一切都是\n这里是与CRYO的打击.\n带着一些东西\n火焰和你会做\n这更好.
+ABUELA DEL VALLE: SE ME\nQUEDO EL TERMO EN LA\nCUEVA Y SIN EL NO HAY\nMATE.\nTRAEMELO, SI?	我离开了我\n在洞穴里,\n没有它\n茶叶.\n你会发现吗?
+ABUELA DEL VALLE: MI\nTERMO! GRACIAS, HIJO.\nTOMA ESTE SOLDADOR QUE\nERA DE MI MARIDO.	现在,我在做什么?\n谢谢你,亲爱的.\n接下来,这是\n我丈夫的.
+EL BANCO DE CRIOVALLE.\nHay que soplarle el hielo\nantes de usarlo.	克里奥瓦区。\n你必须吹掉冰.\n在使用前将其移除.
+TENDERO: ACEITE QUE NO\nSE CONGELA. LO DEMAS SI.	水手们:\n没有冷.\n剩下的确实是.
+ABUELA TUERCA: TE VOY A\nDECIR LO ULTIMO Y DESPUES\nTE DEJO EN PAZ.\nNO TE ENAMORES DE UNA\nPIEZA. LA MEJOR CABEZA\nDEL MUNDO NO SIRVE SI EL\nTORSO NO LE DA ENERGIA.\nMIRA EL CONJUNTO.	最后的事情\n然后我会离开你\n一个人.\n不要爱上\n一个部分. 最好的头脑\n世界是无用的如果\n托尔索拒绝了\n能源,看整个\n机器人.
+GUARDABOSQUE:\nTE VI SUBIR DESDE EL\nPASO. TARDASTE MENOS DE\nLO QUE PENSE.\nVEAMOS SI TU ROBOT\nAGUANTA EL FRIO.	警卫:\n我看着你醒来\n从过去,你也得到了\n时间比我想象的要少.\n让我们看看你的机器人\n处理寒冷.
+AUTOPISTA A MALLA.\nVELOCIDAD MAXIMA: LA QUE\nTE DEN LAS PIERNAS.	快速到梅什.\n速度限制:任何情况\n你的腿 CAN 让你做.
+CIUDAD MALLA\nAQUI NO SE FABRICA NADA.\nSOLO SE PIENSA.	梅什城\n这里没有任何东西.\n我只是想过.
+CHICA: TODO EL PUEBLO\nCORRE SOBRE EL SERVIDOR\nDE ABAJO.\nSI SE APAGA, SE APAGA\nTODO.	整个城镇\n在服务器上运行\n在下面.\n如果它成功,\n一切都会出去。
+PROGRAMADOR: LOS BICHOS\nDE ACA PEGAN CON PLASMA.\nEL PLASMA NO PUEDE CON\nEL CRIO. PENSALO.	程序员:一切\n这儿充满了戏剧。\n普莱斯玛不能手\n克里奥,想一想.
+ARCHIVISTA: PERDI LA\nCLAVE MAESTRA EN EL\nSERVIDOR.\nSIN ELLA NO PUEDO ENTRAR\nA MI PROPIA OFICINA.	我失去了\n在某个地方\n服务员.\n没有它,我不能得到\n在我的办公室.
+ARCHIVISTA: LA CLAVE!\nTOMA UN CHIP, TE LO\nGANASTE.	关键!\n拿着船,你早知道\n关于它.
+EL BANCO DE MALLA.\nTe lo diagnostica solo.	迈森本奇。\n它自己运行.\n诊断.
+TENDERA: TODO CARO, TODO\nBUENO. Es una ciudad.	价格都很高.\n这是一个城市.
+TECNICO: DEJAME VER TU\nROBOT... MIRA, LE SOBRA\nATAQUE Y LE FALTA VIDA.\nUN TORSO GRANDE TE\nSALVARIA MAS DE UN\nCOMBATE.	让我看看\n你的机器人...\n很多攻击,但没有\n足够的生命.\n一个大土狼会拯救\n你比一场战斗多.
+ADMINISTRADORA:\nTE ESTUVE MIRANDO DESDE\nQUE ENTRASTE AL PUEBLO.\nSE QUE PIEZAS LLEVAS Y\nSE COMO PELEAS.\nIGUAL VENIS, CLARO.	管理员:\n我一直在看着你\n自从你进入城镇以来.\n我知道你有什么部分\n卡里和你如何战斗.\n无论如何,你来自\n很有可能.
+EL PARAMO.\nACA TERMINA TODO LO QUE\nNO SIRVE.\nUSTED TAMBIEN, SI SE\nDESCUIDA.	荒野.\n所有事情都无用.\n在这里.\n你也是,如果你不是\n很小心.
+VILLA OXIDO\nEL PUEBLO MAS VIEJO Y EL\nMAS CERCANO A LA TORRE.\nNADIE SABE CUAL DE LAS\nDOS COSAS ES PEOR.	拉斯维尔\n最古老的城市和\n最接近塔楼.\n没有人知道\n两个是更糟糕的.
+VIEJO: YO SUBI A LA TORRE\nUNA VEZ. HACE MUCHO.\nNO TE VOY A CONTAR COMO\nME FUE.	我爬上了这座山\n一次,很久以前.\n我不会说.\n你的情况.
+CHICO: EN EL CEMENTERIO\nLOS ROBOTS SE ARMAN SOLOS\nCON LO QUE ENCUENTRAN.\nPOR ESO SON TAN RAROS.	在墓地里\n机器人建造\n他们自行脱离\n无论他们发现什么.\n这就是他们如此的原因.\n奇怪的.
+CHATARRERA: BUSCO UN\nENGRANAJE GRANDE, DE LOS\nVIEJOS. EN EL CEMENTERIO\nTIENE QUE HABER.\nTE PAGO BIEN.	我在后面.\n一个巨大的工具之一\n必须有.\n一个在墓地里.\n我付得很好.
+CHATARRERA: MIRA ESO.\nHACIA VEINTE ANOS QUE NO\nVEIA UNO ENTERO.\nTOMA, TE LO GANASTE.	现在看看.\n这样,从20年前\n我看到一个.\n现在,你赢得了它.
+EL BANCO DE VILLA OXIDO.\nViejo pero impecable.	古斯塔尔本奇。\n旧,但没有缺陷.
+CHATARRERO: LO QUE VES\nes lo que hay. Alcanza.	你看到的\n这就是我们所需要的.
+ABUELA TUERCA: LLEGASTE\nLEJOS, EH.\nARRIBA DE LA TORRE ESTA\nEL CAMPEON. NO TE VOY A\nMENTIR: SU ROBOT ES MEJOR\nQUE EL TUYO.\nPERO EL NO ARMO EL SUYO.\nSE LO ARMARON.	你走了很远,\n你没有.\n在那座塔上,\n我不会撒谎.\n为了你:他的机器人是\n比你更好.\n但他并没有建造它.\n它是为他而建造的.
+CHATARRERO MAYOR:\nTODO ESTO ERAN ROBOTS\nCOMO EL TUYO.\nCADA UNO CREYO QUE ERA\nDISTINTO.\nA VER VOS.	切夫史帕兹:\n所有这些都是机器人\n像你一样.\n他们都以为\n这种情况是不同的.\n让我们了解你.
+ULTIMO TRAMO.\nDE ACA NO SE VUELVE\nIGUAL QUE COMO SE VINO.	最后一条.\n没有人回来.\n在这里,他们也是这样.\n起来。
+PRISMA\nAL NORTE: LA TORRE.\nSUBEN MUCHOS. BAJAN\nBASTANTES MENOS.	总体\n北:塔楼.\n许多人上升,少一些\n走下来.
+CHICO: MI HERMANA SUBIO\nAYER. TODAVIA NO BAJO.\nDICE MAMA QUE NO ME\nPREOCUPE.	孩子:我的妹妹上了\n她没有.\n走下来.\n妈妈说不用担心。
+GUARDIA: DOS PISOS Y LA\nCUMBRE.\nREPARA ANTES DE SUBIR.\nARRIBA NO HAY BANCO.	警卫:两层\n峰会.\n在你上楼之前修复.\n根本就没有东西\n在那里.
+EL ULTIMO BANCO ANTES\nDE LA TORRE.\nUsalo bien.	上次的本钱\n塔楼.\n用它好.
+TENDERO: LLEVA TODO LO\nQUE PUEDAS PAGAR.\nArriba no se compra nada.	买吧!\n你的一切 CAN 付费\n没有任何东西被卖掉\n在那里.
+ABUELA TUERCA: BUENO.\nHASTA ACA TE ACOMPANO.\nACORDATE DE UNA COSA\nSOLA: EL ROBOT QUE VAS A\nPELEAR ES EL QUE VOS\nARMASTE.\nNINGUNA PIEZA TE LA\nREGALARON.\nANDA.	爷爷的狗:\n这就像我去的地方.\n记住一个事:\n你的机器人\n要与一个人作斗争\n你建造了.\n没有人给你一个\n这也是其中的一部分.\n继续前进.
+CAMPEON:\nTE VI SUBIR PISO POR\nPISO. NO SALTEASTE\nNINGUNO.\nESO YA TE HACE DISTINTO\nA CASI TODOS.\nAHORA VEAMOS EL ROBOT.	冠军:\n我看着你醒来\n接下来,你会发现.\n没有飞船一号.\n这已经让你变得更好了.\n差异与几乎不同\n每个人都会.\n现在让我们看看机器人.
+GUARDIANA DE LA CUMBRE:\nESE SILLON DE METAL ES\nDEL CAMPEON.\nTODAVIA NO ES TUYO.	峰会负责人:\n机器机座所属\n为了冠军.\n这不是你的.
+GUARDIANA: SENTATE, DALE.\nTE LO GANASTE.\nDESDE ACA SE VE TODO:\nEL PARAMO, LA CIUDAD,\nEL VALLE, EL PUERTO.\nY ALLA LEJOS, CHIQUITO,\nVILLA TUERCA.\nTU ROBOT NO SE PARECE EN\nNADA AL QUE TE ARMO LA\nABUELA.\nNI UNA PIEZA.\nFIN.	继续,坐下来.\n你是值得的.\n从这里你看到了.\n所有的:荒地,\n城市,山谷,\n港口.\n远,蒂妮,\n科格维尔.\n你的机器人看不到任何东西\n像一个大大的建筑\n你的.\n没有一个部分.\n最后.
+CONTROL DE ALTO VOLTIO.\nAL ESTE BAJA AL VALLE\nDEL HUMO. CERRADO HASTA\nQUE ALGUIEN ARREGLE LA\nSUBESTACION.	高压检查点.\n吃掉它,放进吸烟中\n瓦利,直到关闭\n有人修复了问题\n它们是什么?
+CONTROL ABIERTO.\nAL ESTE: EL VALLE DEL\nHUMO.	检查点开放.\n东部:烟谷.
+CONTROL DE ALTO VOLTIO.\nCERRADO.	高压检查点.\n关闭了.
+CONTROL ABIERTO.	检查点开放.
+CONTROL DE LA FUNDICION.\nAL ESTE EMPIEZA EL PASO\nHELADO. NO SE PASA SIN\nPASE DE SECTOR.	检查点.\n东 花 屁股\n开始,没有经历\n没有行业护照.
+CONTROL ABIERTO.\nAL ESTE: EL PASO HELADO.	检查点开放.\n东西。
+CONTROL DE LA FUNDICION.\nCERRADO.	检查点.\n关闭了.
+CONTROL DE CRIOVALLE.\nAL ESTE BAJA LA AUTOPISTA\nA CIUDAD MALLA.\nCERRADO POR NIEVE.	克里奥瓦尔检查点.\n在高速公路东部\n在梅什城.\n为了雪.
+CONTROL ABIERTO.\nAL ESTE: LA AUTOPISTA.	检查点开放.\n东:高速公路.
+CONTROL DE CRIOVALLE.\nCERRADO POR NIEVE.	克里奥瓦尔检查点.\n为了雪.
+CONTROL DE MALLA.\nAL ESTE EMPIEZA EL\nPARAMO. NO SE PASA SIN\nPASE DE SECTOR.	检查点.\n东部的荒野\n开始,没有经历\n没有行业护照.
+CONTROL ABIERTO.\nAL ESTE: EL PARAMO.	检查点开放.\n东部:荒地.
+CONTROL DE MALLA.\nCERRADO.	检查点.\n关闭了.
+CONTROL DE VILLA OXIDO.\nAL ESTE SOLO QUEDA LA\nTORRE PRISMA.\nNO SE PASA SIN PASE.	鲁斯维尔检查点.\n东方只有\n普里斯姆塔左.\n没有过度,没有过度.
+CONTROL ABIERTO.\nAL ESTE: LA TORRE.	检查点开放.\n东部:塔楼.
+CONTROL DE VILLA OXIDO.\nCERRADO.	鲁斯维尔检查点.\n关闭了.
+TU CASA	你的家
+VILLA TUERCA	科维尔
+TUERCA NORTE	东北地区
+PLAZA DE LA FUENTE	泉源广场
+TUERCA ESTE	东部
+CASA VECINA	邻居之家
+SENDERO NORTE	北方轨道
+DESGUACE	破碎机
+DESGUACE -2	飞艇2号
+DEPOSITO	存储室
+SALA DEL GUARDIAN	沃登霍尔
+COSTA DEL CANGREJO	CRABCOAST 煤炭,二氧化碳
+PUERTO BUJIA	港口蒸发
+MUELLES DE BUJIA	布吉亚港口
+TALLER DEL PUERTO	港口工作室
+LA BODEGA	持有者
+BODEGA -2	持有 - 2
+MUELLE HUNDIDO	苏恩·皮尔
+LA CUESTA	登山
+ALTO VOLTIO	高电压
+ALTO VOLTIO ESTE	高电压东
+TALLER DE ALTO VOLTIO	高压工作室
+LA SUBESTACION	基础
+SUBESTACION -2	基础 - 2
+SALA DE BARRAS	公共汽车室
+VALLE DEL HUMO	烟谷
+FUNDICION	发现
+PLAZA DEL HORNO	货币货币计算法
+TALLER DE FUNDICION	发现工作室
+EL HORNO	法兰西
+HORNO -2	FURNACE - 2号
+BOCA DE COLADA	电气管洞
+PASO HELADO	福罗森·帕斯
+CRIOVALLE	克罗瓦奥
+CRIOVALLE ESTE	克里奥瓦尔东
+TALLER DE CRIOVALLE	克里奥瓦尔工作室
+CUEVA DE HIELO	冰洞
+CUEVA -2	冰洞 -2
+EL NUCLEO HELADO	冰冷的心脏
+AUTOPISTA	高速公路
+CIUDAD MALLA	梅什城
+MALLA ESTE	中东
+TALLER DE MALLA	梅什工作室
+EL SERVIDOR	服务者
+SERVIDOR -2	服务器-2
+SALA DE MAQUINAS	机器室
+LLANURA MUERTA	死亡的平坦
+VILLA OXIDO	拉斯维尔
+PLAZA DEL OXIDO	腐蚀方块
+TALLER DE VILLA OXIDO	拉斯维尔工作室
+CEMENTERIO DE ROBOTS	罗伯特·格威特
+CEMENTERIO -2	格拉维亚德-2
+LA FOSA	坑
+ULTIMO TRAMO	最后一条线
+PRISMA	总体
+PRISMA ESTE	普里斯姆东
+TALLER DE PRISMA	普里斯姆工作室
+LA TORRE	塔楼
+TORRE -2	塔楼-2
+LA CUMBRE	峰会
+EL OTRO EQUIPO	另一种设备

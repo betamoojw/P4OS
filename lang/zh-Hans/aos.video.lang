@@ -1,0 +1,14 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+No es un AVI de MJPEG	没有MJPEGAVI
+Sin sonido	没有声音
+Videos	视频
+1 video en %s	1 个视频，位于 %s
+%d videos en %s	%d 在视频中 %s
+No hay videos en la tarjeta.\n\nCopiá archivos .avi de MJPEG a la carpeta videos, con el sonido en un .wav del mismo nombre.\n\nPara convertirlos: apps/video/convert.sh (ver el README).	卡上没有视频.\n\n复制 MJPEG . avi 文件到视频文件夹, 声音以相同名称的. wav 形式出现 。\n\n转换它们:应用程序/video/convert.sh (参见README).
+-10 s	-10 s
++10 s	+10 s
+Abriendo...	开放...
+No hay lugar para la tarea de video	没有视频任务的空间
+No hay memoria para este video	没有足够的内存来录像
+No es un AVI de MJPEG que se pueda leer	没有可读的MJPEGAVI

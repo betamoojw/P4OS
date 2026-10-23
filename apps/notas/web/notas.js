@@ -10,7 +10,7 @@
  * components/aos_portal/web/app.js), "notas" is the portal's and
  * registerPage() would refuse it: so it registers only when the menu has no
  * Notas of its own, and the portal's goes on working meanwhile. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('notas') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const { h, put, $, api, toast } = P;

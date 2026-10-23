@@ -14,10 +14,13 @@ idf_component_register(
 )
 
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
+    file(GLOB AOS_WEB_LANG CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_LIST_DIR}/../../lang/*/_portal.lang"
+        "${CMAKE_CURRENT_LIST_DIR}/../../lang/*/web.*.lang")
     idf_build_get_property(python PYTHON)
     add_custom_command(OUTPUT ${AOS_WEB_C}
         COMMAND ${python} ${CMAKE_CURRENT_LIST_DIR}/../../tools/gen_web_assets.py ${AOS_WEB_C} ${AOS_WEB_FILES}
-        DEPENDS ${AOS_WEB_FILES} ${CMAKE_CURRENT_LIST_DIR}/../../tools/gen_web_assets.py
+        DEPENDS ${AOS_WEB_FILES} ${AOS_WEB_LANG} ${CMAKE_CURRENT_LIST_DIR}/../../tools/gen_web_assets.py
         COMMENT "Packing the portal's page")
     add_custom_target(aos_portal_assets DEPENDS ${AOS_WEB_C})
     add_dependencies(${COMPONENT_LIB} aos_portal_assets)

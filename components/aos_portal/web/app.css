@@ -275,3 +275,7 @@ a.redport { color: var(--accent); }
 .login { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
 .login form { width: 100%; max-width: 380px; }
 .login h1 { margin-top: 0; }
+
+/* Local platform fonts: no CDN or network font dependency. */
+html:lang(zh-Hans) body { font-family: "Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", sans-serif; }
+html:lang(zh-Hant) body { font-family: "Noto Sans CJK TC", "Microsoft JhengHei", "PingFang TC", sans-serif; }

@@ -5,6 +5,7 @@
  ******************************************************************************/
 
 #include "lvgl.h"
+LV_FONT_DECLARE(aos_cjk_96);
 #ifndef AOS_INTER_NUM_96
 #define AOS_INTER_NUM_96 1
 #endif
@@ -3790,7 +3791,7 @@ lv_font_t aos_inter_num_96 = {
 #endif
     .dsc = &font_dsc,          /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
 #if LV_VERSION_CHECK(8, 2, 0) || LVGL_VERSION_MAJOR >= 9
-    .fallback = NULL,
+    .fallback = &aos_cjk_96,
 #endif
     .user_data = NULL,
 };

@@ -1,0 +1,12 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+TOCA	點選
+Tocá el centro para empezar	擊中開始
+Mirá y escuchá	看著,聽著
+¡Nuevo récord! %d pasos	新的記錄! %d 步驟
+Fallaste en el paso %d	你錯過了步驟 %d
+¡Bien!	這很好!
+Tu turno	現在是你的輪子.
+SIMON	西蒙
+Paso	步驟
+Récord	最好的

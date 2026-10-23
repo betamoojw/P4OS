@@ -1,0 +1,58 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+no es un AMP1	沒有 AMP1 檔案
+Acercar	放大
+Alejar	放大
+El mapa necesita internet en esta computadora (OpenFreeMap).	這張地圖需要在這個計算機上使用網際網路 (OpenFreeMap).
+Buscar un lugar: ciudad, calle, barrio…	尋找一個地方:城市,街道,社群...
+Nombre de la zona	區域名稱
+Calles, con sus nombres (lo más completo)	街道,名稱 (最完整)
+Avenidas y barrios	公路和社群
+Rutas y ciudades	高速公路和城市
+Descargar y guardar en la placa	下載並儲存到板上
+Cancelar	取消
+Centro %s, %s · zoom %s en la placa	中心 %s, %s · 放大 %s 在板上
+No se encontró nada.	沒有找到任何東西.
+Enviado: la placa abre Mapas ahí	機板開啟了地圖.
+Ir	走吧.
+En la placa	在板上
+Nuevo nombre	新名稱
+Renombrar	重新命名
+¿Borrar la zona «%s»?	刪除區域 "%s"?
+Borrar	刪除
+Todavía no hay zonas. Mové el mapa hasta un lugar y guardalo: en la placa aparece en el menú ☰ de la app.	還沒有區域 。 將地圖移到一個位置並儲存它 : 它出現在 應用程式的 {{} 選單中 。
+Primero ponele un nombre	首先給它一個名字
+Zona guardada	儲存區
+nombre ⇥ lat×1e6 ⇥ lon×1e6 ⇥ zoom×10	縮放 10
+Una línea no es una zona y la app la va a ignorar:	一行不是一個區塊,應用程式會忽略它:
+%s líneas no son una zona y la app las va a ignorar:	%s 線條不是區塊,應用程式會忽略它們:
+¿Guardar igual?	無論如何?
+zones.txt guardado	zones.txt 已儲存
+Guardar	儲存
+¿Borrar «%s» de la placa?	刪除"%s"從開發板?
+Borrado %s	刪除 %s
+No hay mapas guardados en la placa.	在板上沒有儲存的地圖.
+/maps/cache: lo visto en línea, que la app guarda sola (se vacía desde su menú).	/maps/cache:在網上看到的內容,應用程式自行儲存 (從選單中刪除).
+%s teselas: demasiado grande. Acercá el mapa o elegí menos detalle.	%s 太大了.放大地圖或選擇更少的細節.
+%s teselas del zoom %s al %s: calculando el tamaño…	%s 縮放後的瓷磚 %s 在 %s工作的尺寸...
+%s teselas del zoom %s al %s: unos %s en la tarjeta (medido sobre %s teselas de muestra).	%s 縮放後的瓷磚 %s 在 %s關於: %s 在卡上 (測量在 %s (樣本瓷磚)
+%s teselas del zoom %s al %s. No se pudo calcular el tamaño (¿sin internet?).	%s 縮放後的瓷磚 %s 在 %s沒有網際網路嗎?
+Empezando…	開始了.
+No se pudo bajar la tesela %s	無法下載牌 %s
+Descargando %s de %s teselas…	下載 %s 的 %s 瓷磚...
+Cancelado.	取消了.
+Guardado: %s teselas en %s (%s), %s nombres para buscar.	儲存: %s 瓷磚在 %s (%s), %s 找個名字.
+Armando el paquete…	建立一群...
+Guardando en la placa: %s (%s)…	儲存到開發板: %s (%s)…
+Guardando el índice de nombres…	儲存名字索引...
+Mapas	地圖
+Buscar	搜尋
+Zonas	區域
+Guardar lo que se ve como zona	儲存檢視為區域
+Mostrarlo en la placa	在板上顯示
+Editar zones.txt	編輯 zones.txt
+Sin conexión	線上
+Se descarga lo que se ve en el mapa de arriba, con este nombre:	上面的地圖顯示的是下載,
+Hasta qué detalle	詳細的情況
+Todo se hace en este navegador: baja las teselas de OpenFreeMap, les quita lo que la placa no dibuja, arma el índice de nombres para buscar y las guarda en /maps de la tarjeta, un archivo por zona. En la app, lo guardado se usa antes que la red y lo que se ve en línea queda en la tarjeta para la próxima vez. Datos © colaboradores de OpenStreetMap, OpenMapTiles y OpenFreeMap; búsqueda de Photon (komoot).	Everything happens in this browser: it downloads the tiles from OpenFreeMap, strips what the board does not draw, builds the name index for searching and saves them in /maps 在卡上,每區一個檔案.在應用程式中,儲存的內容會在網路之前使用,而線上看到的內容將在卡上留下來一次.資料 © OpenStreetMap貢獻者,OpenMapTiles和OpenFreeMap;搜尋透過Photon (komoot).
+Hay una descarga en curso	下載正在進行

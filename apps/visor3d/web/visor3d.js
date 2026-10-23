@@ -2,12 +2,12 @@
  * of the firmware's app.js on 2026-10-04 as it was: tools/install_apps.sh
  * puts this file in the card's /web and the portal loads it from there.
  * window.P4OS (version 1) is all it uses, and its styles come with it. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('visor3d') : window.P4OS;
 const { main, h, put, $, api, post, toast, row, fmtBytes, fmtDate, fsPut, fsList, fsDelete, fsMkdir, fsUrl,
   fsText, fsBytes, openApp, saveBlob, fsSlug } = P;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
-const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE', 'zh-Hans': 'zh-CN', 'zh-Hant': 'zh-TW' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 
 if (!document.getElementById('css-visor3d')) {
   const st = document.createElement('style');

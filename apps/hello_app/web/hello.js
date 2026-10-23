@@ -11,7 +11,7 @@
  *   - a timer that stops when the page is left (render returns a function).
  * The texts are in Spanish, like the rest of the portal, and go through
  * tr(): web.hello.lang has them in the board's language. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('hello') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const FILE = '/data/hello.txt';

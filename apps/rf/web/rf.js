@@ -9,11 +9,11 @@
  * log, mqtt), the same as rf/control.txt. The recordings and the CSVs are
  * plain card files (fsList, fsUrl). The texts are in Spanish and go through
  * tr(), with this page's catalog (web.rf.lang). */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('rf') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));
-const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE', 'zh-Hans': 'zh-CN', 'zh-Hant': 'zh-TW' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const APP = 'aos.rf';
 const LIVE = 'live?app=' + APP;
 

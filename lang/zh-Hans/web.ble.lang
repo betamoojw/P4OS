@@ -1,0 +1,157 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Teléfono	电话
+Computadora	计算机
+Tableta	平板电脑
+Reloj	看着
+Audio	音频
+Rastreador	追踪器
+Sensor	传感器
+Baliza	灯塔
+Teclado o mouse	键盘或鼠标
+Joystick	玩具
+Tele	电视
+Salud	卫生
+Luz	浅色
+Deporte	运动
+Placa de desarrollo	开发板
+Desconocido	未知
+ahora	现在
+Sin nombre	没有命名
+cifrado	编码
+abierto	开放
+cerrado	关闭
+movimiento	运动
+quieto	仍然存在
+%s lpm	%s 公分钟
+bat. %s	战斗. %s
+Buscar por nombre, dirección o fabricante	用名称,地址或制造商搜索
+Todo	全部
+Bajar la tabla (CSV)	下载表 (CSV)
+Bajar todo (JSON)	下载所有内容 (JSON)
+Equipos	设备
+Sólo los que se oyen	只有那些听说的
+La app BLE no está abierta en la placa: los datos en vivo salen de ella.	其他 BLE 在板上没有打开的应用程序:现场数据来自于它.
+Abriendo BLE en la placa	开放 BLE 在板上
+Abrir BLE en la placa	打开 BLE 在板上
+Seguir	继续
+Pausa	暂停
+Escaneo	扫描
+activo	活跃
+pasivo	动态
+Escuchando	倾听
+Entorno	环境
+al aire libre	户外
+casa	家庭
+oficina	办公
+Señal mínima	最低信号
+todos	所有的
+CSV de los sensores	传感器CSV
+MQTT (no conectado)	MQTT (没有连接)
+¿Vaciar la lista? Los favoritos quedan.	清除列表?
+Vaciar la lista	清晰的列表
+el teléfono	电话
+la computadora	计算机
+el teléfono y la computadora	电话和计算机
+el Wi-Fi	在 Wi-Fi
+el teléfono y el Wi-Fi	电话和 Wi-Fi
+la computadora y el Wi-Fi	电脑和 Wi-Fi
+el teléfono, la computadora y el Wi-Fi	电话,计算机和 Wi-Fi
+recién	现在
+hace %s	%s 之前
+⚠ Mientras escaneaba se desconectó %s (%s). El Bluetooth y el Wi-Fi de la placa comparten una sola radio: escuchar menos tiempo o pausar el escaneo les deja más aire.	在扫描过程中, %s 断开连接 (%s电路板的蓝牙和 Wi-Fi 分享一台无线电:不少时间收听或暂停扫描,让他们有更多的播放时间.
+Entendido	得到了.
+paquetes/s (máx. %s)	包装/s (最大. %s)
+equipos/s (máx. %s)	设备/s (最大. %s)
+Bluetooth apagado en la placa (se prende en Ajustes o desde la app).	在板上Bluetooth是关闭的 (在设置中或从应用程序中启动).
+%s cerca	%s 在附近
+%s vistos	%s 看到的
+%s paquetes/s	%s 包装/s
+%s en total	%s 总计
+%s perdidos	%s 失去了
+en pausa	暂停
+la placa guarda %s equipos y olvidó %s para hacer lugar	开发板保持 %s 设备和遗忘 %s 让空间
+la tabla de abajo muestra los %s más fuertes de %s	下面的表显示 %s 最强的 %s
+Nombre	名称
+Qué es	这是什么?
+Fabricante	制造商
+Dirección	地址
+Señal	信号
+Distancia	距离
+Intervalo	间隔
+Paquetes	包装
+Oído	我听说过
+Datos	数据
+Nadie con este filtro.	没有符合此过滤器 。
+Escuchando...	听着...
+Sensores	传感器
+%s de humedad	%s 湿度
+Ninguno a la vista. Aparecen solos los que anuncian en BTHome, pvvx/ATC, MiBeacon sin cifrar, Govee, Ruuvi, SwitchBot, Qingping, Inkbird o Eddystone TLM.	在BTHome,Pvvx上广告的人/ATC没有加密的MiBeacon,Govee,Rouvi,SwitchBot,Chingping,Inkbird或Eddystone TLM自行出现.
+Desconectado	未连接
+Conectando...	连接...
+Conectado, listando servicios...	连接,列表服务...
+Conectado	已连接
+Sin conexión	未连接
+lee	阅读
+escribe	写作
+escribe sin respuesta	写在/o 响应
+notifica	通知
+indica	表示
+Activar este sensor Xiaomi: le da una clave nueva y la guarda en la placa. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva. ¿Seguir?	传感器忘记了它所拥有的:Mi Home和使用旧键阅读者 (Home Assistant需要一个新的.继续?
+Escribir: texto, o bytes con 0x (por ejemplo 0x01 A0)	写:文字,或字节有0x (例如0x01 A0)
+Conectarse para ver sus servicios y características, leerlas, escribirlas y escuchar sus notificaciones. Mientras tanto la placa deja de escanear un momento; muchos equipos aceptan una sola conexión a la vez.	连接以查看其服务和特性,阅读它们,写下它们并倾听他们的通知.
+Conectar por GATT	通过GATT进行连接
+señal %s dBm	信号 %s dBm
+leyendo %s de %s	阅读 %s 的 %s
+Servicio %s · handles %s a %s	服务 %s ·手柄 %s 在 %s
+Leer	读取
+Escribir	写入
+Pedir los datos (Hi-Link)	要求数据 (Hi-Link)
+Dejar de escuchar	停止听
+Notificaciones	通知
+Indicaciones	指标
+Activando: %s...	激活: %s...
+Sensor activado.	传感器启动.
+Clave nueva (bindkey), ya guardada en la placa para leerlo:	新键 (bindkey),已经存储在板上以读取:
+No se activó: %s	没有激活: %s
+Leer todo	阅读所有
+Probar de nuevo la activación	再试激活
+Activar (Xiaomi)	激活 (Xiaomi)
+Desconectar	断开连接
+Conectar de nuevo	再连接
+Lo último	最新的
+32 cifras hexadecimales (la bindkey)	32个六位数 (关键)
+Sin clave: sus lecturas van cifradas.	没有钥匙:它的读数是加密的.
+Clave correcta: las lecturas se descifran.	关键是正确的:读数已解密.
+La clave no coincide con lo que anuncia.	钥匙不符合它宣传的内容.
+Usa un cifrado viejo (MiBeacon v2/v3) que la app no descifra.	它使用了旧的加密 (MiBeacon v2/v3) 应用程序不会解密.
+Clave cargada: esperando un paquete cifrado para probarla.	钥匙装载:等待加密包来试用.
+Clave	关键
+Tienen que ser 32 cifras hexadecimales	这必须是32个六位数.
+Clave enviada: la app la guarda y la prueba con el próximo paquete	关键发送:应用程序保存它,并试用下一个包
+Guardar la clave	保存钥匙
+Borrar la clave	删除钥匙
+La bindkey de un sensor Xiaomi sale de su cuenta de Mi Home (por ejemplo con "Xiaomi Cloud Tokens Extractor"), o de Home Assistant si ya lo lee. BTHome cifrado usa la clave que le pusiste al configurarlo.	一个Xiaomi传感器的绑定键来自其Mi Home帐户 (例如"Xiaomi Cloud Tokens Extractor") 或从 Home Assistant 如果它已经阅读了,BTHome使用你在设置时给出的钥匙.
+Un nombre propio	你自己的名字
+★ Favorito	★ 最喜欢的
+☆ Marcar	☆ 马克
+Guardar el nombre	保存这个名字
+Cerrar	关闭
+%s dBm · prom. %s · mín. %s · máx. %s	%s dBm 和 avg , 包括: %s · 分钟 %s ·最大. %s
+≈ %s m (estimada por la señal)	≈ %s m (根据信号估计)
+%s anuncios, %s respuestas, cambió %s veces	%s 广告, %s 已改变的反应 %s 时间
+hace %s · desde hace %s	%s 之前 · 为 %s
+Conectable	可连接
+sí (abajo, GATT)	是的 (下面,GATT)
+no	没有
+Señal, dos minutos	信号,两个分钟
+Temperatura, dos horas	气温,两个小时
+Mayor / menor	大/小
+Potencia de referencia	参考功率
+Anuncio · %s bytes	广告 %s 字节
+Respuesta al escaneo · %s bytes	扫描响应 · %s 字节
+Pidiendo los paquetes a la placa...	问开发板包裹...
+Lecturas guardadas (CSV)	保存的读数 (CSV)
+Todavía no hay. Se prende con "CSV de los sensores", arriba o en los ajustes de la app.	在"传感器CSV"上或在应用程序的设置中启动.
+Bajar	下载
+¿Borrar %s?	要删除 %s 吗？

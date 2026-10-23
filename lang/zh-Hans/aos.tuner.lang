@@ -1,0 +1,30 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+referencia	参考
+soltando el códec	释放代码
+sonando	播放
+no abrió el micrófono	麦克风没有打开
+abriendo el micrófono	打开麦克风
+satura: alejate del micrófono	剪切:远离麦克风
+tocá una cuerda	打一个弦
+afinada	调整
+casi: subila un poco	近点:往上一点
+casi: bajala un poco	关闭:稍微下降
+subila	调整起来
+bajala	调低
+satura	剪切
+Leq de %u:%02u	接下来 %u:%02u
+%u kHz  ·  PGA %d dB  ·  ponderación A, rápida	%u kHz · PGA %d 毫米 · A-权重,快速
+SATURA: el número no vale	填写:读取无效
+a %u Hz la curva A vale hasta 4 kHz	在 %u A曲线对 4 kHz 有利
+dB relativos hasta que lo calibres	在您校准之前
+Tono	音调
+tocá una cuerda para oír su nota	打一个弦来听到它的音符
+escuchar y sonar no van juntos	听和演奏不要混在一起
+mínimo	最低
+máximo	极限
+últimos 60 s	最后60秒
+Reiniciar	重置
+Afinador	通纳
+Sonómetro	声音计
+sin memoria	没有记忆

@@ -1,0 +1,18 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+FUEGO	燃烧
+USAR	使用
+MENÚ	菜单
+MAPA	地图
+ARMA	枪支
+LATERAL	斯特拉费
+No hay ningún WAD	没有发现
+Copiá doom1.wad (shareware) o doom.wad a la carpeta	复制末日1. wad( 共享软件) 或末日. wad 到文件夹
+Tocá para salir	击出口
+Doom se detuvo	毁灭停止了.
+Doom se juega con la pantalla horizontal	毁灭是通过屏幕在景观中进行的
+Girá la pantalla para seguir	转动屏幕继续
+Doom ya corrió en este simulador: reinicialo para jugar otra vez	在这个模拟器中已经运行了Doom:重新启动它以再次播放
+Cargando...	装载...
+Doom no pudo arrancar	灭绝不能开始
+Falta memoria	没有足够的记忆

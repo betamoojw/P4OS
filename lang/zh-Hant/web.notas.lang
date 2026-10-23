@@ -1,0 +1,98 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Punto	點
+Círculo	圓圈
+Cuadrado	方形
+Guion	達什
+Flecha	箭頭
+Estrella	星星
+Tilde	標籤
+Rombo	鑽石
+Sin título	無標題
+Leyendo %s notas…	閱讀 %s 筆記.
+Buscar	搜尋
+Todas	全部
+Notas	備忘錄
+Listas	列表
+Papelera (%s)	賓( Bin)%s)
+Papelera	二進位制
+La papelera está vacía.	垃圾桶是空的.
+Nada coincide con la búsqueda.	沒有什麼匹配搜尋.
+Todavía no hay notas.	沒有筆記.
+Fijada	貼上
+lista	列表
+nota	備註
+Restaurar	恢復
+Borrar para siempre	永遠刪除
+Restaurada	恢復
+¿Borrar "%s" para siempre?	刪除"%s"永遠嗎?
+Borrada	刪除
+Título	標題
+sin color	沒有顏色
+Fijada arriba	被綁在頂部
+Nueva: se guarda al tocar Guardar	新:在單擊儲存到板時儲存
+Convertir en nota	把它變成一張筆記.
+Convertir en lista	變成一個名單
+Ver el Markdown	顯示標記
+Ver la lista	顯示列表
+Ver con formato	顯示格式
+Estilo del párrafo	段落的風格
+Cuerpo	身體
+Encabezado	標題
+Subtítulo	分類
+Cita	引用
+Tamaño	大小
+Chica	小型
+Normal	正常
+Grande	大型
+Enorme	巨大的
+Viñetas	彈子
+Numeradas	編號
+normal	正常
+sin resaltado	沒有亮點
+Color del texto	文字顏色
+Resaltado	亮點
+Negrita (⌘B)	Bold (⌘B)
+Cursiva (⌘I)	Italic (⌘I)
+Subrayado (⌘U)	Underline (⌘U)
+Tachado	突破
+Casillas	檢查盒
+Menos sangría (⇧Tab)	Outdent (⇧Tab)
+Más sangría (Tab)	額外 (Tab)
+Línea	線條
+Borrar el formato	清晰的格式化
+Deshacer (⌘Z)	Undo (⌘Z)
+Rehacer	排放
+Prioridad	優先事項
+Más afuera	瘋狂
+Más adentro	收益額
+Subir	走上
+Bajar	走下去
+Borrar	刪除
++ Agregar tarea (Enter)	+ 新增一個任務 (輸入)
+%s de %s	%s / %s
+Completadas (%s)	完成 (%s)
+La nota está vacía	這張紙是空的.
+Guardando…	拯救了...
+La nota cambió en la placa mientras la editabas. ¿Reemplazarla con esta versión?	在你編輯時,紙板上的筆記發生了變化.
+Guardada en notas/%s	儲存到記號%s
+No se pudo guardar: %s	無法儲存: %s
+¿Mover "%s" a la papelera?	移動"%s"到垃圾桶裡?
+Movida a la papelera	搬到垃圾桶裡
+Hay cambios sin guardar. ¿Volver igual?	沒有儲存的變化.
+Sólo archivos .md o .txt	只有 .md或 .txt檔案
+Subida %s	已上傳 %s
+Subidas %s notas	已上傳 %s 筆記
+Convertir	轉換
+Soltá acá archivos .md o .txt para sumarlos a %s	放下 .md或 .txt檔案來新增它們 %s
+Nueva nota	新的筆記
+Nueva lista	新的列表
+Subir…	上傳…
+Abriendo Notas en la placa	在板上開放的筆記
+Abrir la app en la placa	在板上開啟應用程式
+Guardar en la placa	儲存到開發板
+Descargar .md	下載 .md
+Mover a la papelera	轉到垃圾桶裡
+⌘S / Ctrl+S guarda	⌘S / Ctrl+S saves
+Las notas son archivos Markdown en /notas de la tarjeta, los mismos que abre la app. Si la app tiene abierta la nota que guardás acá, la vuelve a leer sola. Lo borrado va a /notas/papelera.	筆記是標記檔案中的 /notas 如果應用程式有你在這裡儲存的筆記開啟,它會自動重新載入. /notas/papelera.
+Hay cambios sin guardar	有未儲存的變化

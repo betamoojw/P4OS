@@ -46,6 +46,7 @@
 #include "aos_hal.h"
 #include "aos_theme.h"
 #include "aos_i18n.h"
+#include "aos_cjk.h"
 #include "aos_menu.h"
 #include "aos_icon_ops.h"
 #include "aos_io.h"
@@ -84,7 +85,7 @@ static int  s_last_swipe = LV_DIR_NONE;
 static volatile bool s_req_menu, s_req_icons, s_req_nav_pending;
 static volatile aos_ui_nav_t s_req_nav;
 static volatile int  s_req_landscape = -2;
-static char s_req_open[48], s_req_lang[8], s_req_toast[96];
+static char s_req_open[48], s_req_lang[AOS_LANG_CODE_MAX], s_req_toast[96];
 static volatile bool s_req_open_pending, s_req_lang_pending, s_req_toast_pending;
 
 static void relayout_all(void);
@@ -1285,6 +1286,12 @@ void aos_ui_request_toast(const char *text)
 
 static void apply_language(const char *code)
 {
+    if (!strcmp(code, aos_i18n_current())) return;
+    if ((!strcmp(code, "zh-Hans") || !strcmp(code, "zh-Hant")) && !aos_cjk_init()) {
+        aos_ui_toast(_("Falta la fuente china: instalá el paquete completo por USB."), 5000);
+        return;
+    }
+
     /* text is copied into the objects, and apps may keep pointers into the
      * catalogue about to be freed: every app is closed (as on the watch).
      * One working in the background (Datalog logging) starts again hidden in
@@ -1299,11 +1306,12 @@ static void apply_language(const char *code)
             snprintf(again[na++], sizeof again[0], "%s", s_apps[i].desc.id);
         destroy_app(&s_apps[i]);
     }
-    aos_i18n_set(code);
+    if (!aos_i18n_set(code)) aos_ui_toast(_("No se pudo cambiar el idioma."), 3000);
     for (int i = 0; i < na; i++) aos_ui_start_hidden(again[i]);
     aos_home_rebuild();
     aos_statusbar_layout();
     aos_panels_layout();
+    aos_lock_layout();
 }
 
 static void requests_tick(void)
@@ -1447,6 +1455,10 @@ void aos_ui_init(void)
     aos_hal_set_button_cb(ui_button_cb);
     aos_theme_init();
     aos_i18n_init();
+#ifdef AOS_I18N_SELFTEST
+    extern void aos_i18n_device_selftest(void);
+    aos_i18n_device_selftest();
+#endif
     aos_icon_scan_files();
     aos_menu_load();
 

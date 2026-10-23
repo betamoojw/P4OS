@@ -1,0 +1,132 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Tramas	框架
+Por id	通过ID
+Enviar	发送
+Señales	信号
+Conectá el bus primero	首先连接巴士.
+No hay tarjeta	未插入存储卡
+Grabando en la tarjeta, carpeta can	正在录入存储卡, 文件夹可以
+Recuperando: 128 silencios de 11 bits y vuelve	恢复:128个11位的沉默,它回来了
+Desconectar	断开连接
+Conectar	连接
+Desconectado. Tocá la conexión para elegir pines, velocidad y modo.	切断了. 点击连接,选择针头,速度和模式.
+%s · errores TX %u RX %u · de bus %u · %.0f tramas/s · carga %.0f %%	%s ·错误 TX %u RX %u ·公共汽车 %u · %.0f 框架/s · 负载 %.0f %%
+%u recibidas · %u enviadas · %u perdidas	%u 收到的 %u 发送 %u 失去了
+ · %u sin confirmar	 · %u 没有被确认
+ · grabando %s, %u:%02u, %u tramas	 ·记录 %s, %u:%02u, %u 框架
+ (%u perdidas)	 (%u 丢失)
+ · repitiendo %s, %u	 ·重播 %s, %u
+Recuperar	恢复
+No hay memoria para el espía	间谍没记忆了
+Un solo pin para TX y RX sirve sólo en la autoprueba	TX和RX的一针 只在自我测试中有效
+El GPIO%d lo tiene %s	GPIO%d 是由 %s
+El controlador no arrancó: mirá el registro	控制器未启动:查看日志
+No hay lugar para otra tarea	没有其他任务的空间
+desconectado	断开连接
+activo	活跃
+con avisos	警告
+pasivo	动态
+fuera del bus	开车
+Normal	正常
+Autoprueba	自行测试
+Solo escucha	只是听着
+No está %s	%s 失踪
+El archivo no tiene señales (BO_ y SG_)	文件没有信号 (BO_和 SG_)
+No se pudo guardar en la tarjeta	不能存储到卡上
+Un id de 11 bits llega hasta 7FF: marcá 29 bits	一个11位的ID上升到7FF:标记29位
+En solo escucha no sale nada: cambiá el modo	只有在听话中,没有什么能出来.
+La cola de envío está llena	发送队列满了
+La lista está llena	这个名单是完整的
+Ya hay 8 periódicas andando	8个周期性已经运行
+Sin tramas guardadas. Armá una arriba y tocá Guardar; también se editan desde el portal.	没有保存的框架. 在上面建立一个,然后点击保存;它们也可以从门户端编辑.
+cada %u ms	每一个 %u ms
+a mano	用手
+Sin bus: conectalo arriba para mandar.	没有公共汽车:连接上去发送.
+En solo escucha no sale nada: cambiá el modo en la conexión.	只有在听话中,没有什么能出来.
+Autoprueba: lo que mandes vuelve sólo a esta placa.	自我测试:你发送的信息只返回这个板块.
+Normal: lo que mandes sale al bus.	正常:你发送的东西会到巴士.
+29 bits	29位
+Remota	远程
+Guardar	保存
+Entre 25 y 1000 kbit/s	在25到1000kbit之间/s
+Velocidad en kbit/s	在 kbit 中的速度/s
+Normal: la placa confirma tramas y puede mandar. En un auto, no.	常见:开发板承认框架,可以发送.
+En hexa, como 0C0	在 hex,像 0C0
+En hexa, como 7FF	在魔术,像7FF
+Id del filtro, en hexa	过滤 ID, 以十六进制
+Máscara del filtro, en hexa	过滤面罩, 在十六进制中
+pata	引脚
+Conexión	连接
+Pines del header	标题针
+TX va a la D (CTX) del transceptor y RX a su R (CRX). En la autoprueba alcanza un pin: elegí el mismo en los dos y no hace falta cablear nada.	TX进入收发机的D(CTX)和RX进入R(CRX)。在自我测试中,一个针就足够了:在两种情况下都选同一针,不需要电线。
+Velocidad	速度
+Otra…	其他...
+Otra: %u.%u k	其他: %u.%u k
+Modo	模式
+No confirma ni manda nada: para espiar un bus ajeno, como el de un auto. Arranca siempre así.	他承认并没有发送任何东西,因为他监视了别人的公共汽车.
+Participa: confirma las tramas de los otros y puede mandar.	参与:承认其他人的框架,可以发送.
+Sin transceptor: manda y se escucha a sí misma. No sale al bus.	没有接收器,发送和听到自己.
+Filtro del controlador	主计长过滤器
+Sin filtro	无过滤器
+11 bits	11位
+Id %X	标签: %X
+Máscara %X	面具 %X
+Pasa la trama cuyo id coincide con el del filtro en los bits de la máscara: 7FF deja un id solo, 700 los de 0x100 en 0x100. Lo que no pasa no llega ni a la grabación.	仅当帧 ID 在掩码指定位上与过滤器一致时才会通过：7FF 仅允许一个 ID，700 允许以 0x100 为步长的 ID。未通过的帧也不会被记录。
+Reconectar con esto	再连接到这个
+Cableado	电缆
+P4 · header	标题
+TX GPIO%d · p%u	TX GPIO%d · p%u
+RX GPIO%d · p%u	RX GPIO%d · p%u
+3V3 · p18	3V3 · p18
+GND · p19	GND · p19
+bus	公共汽车
+En un auto, sólo escucha. Una trama mandada al bus de un auto puede apagar el motor, el tablero o los frenos asistidos, y un nodo que no confirma bien lo puede trabar entero. La app arranca siempre en Solo escucha.	在汽车上,只听。一个被发送到汽车上的框架可以阻止引擎、仪表板或刹车辅助器,而一个承认错误的节点可以阻塞所有的。应用程序总是从听开始。
+· El transceptor tiene que ser de 3,3 V: SN65HVD230, 231 o 232. Uno de 5 V (MCP2551, TJA1050) le devuelve 5 V al pin RX, y el header no los aguanta.	必须使用 3.3 V 收发器，例如 SN65HVD230、231 或 232。5 V 型号（MCP2551、TJA1050）会向 RX 引脚输出 5 V，扩展接口无法承受此电压。
+· Una resistencia de 120 Ω en cada punta del bus: con todo apagado se miden 60 Ω entre CANH y CANL. Muchos módulos traen la suya; si la placa no va en una punta, sacala.	· 公共汽车的两端都有120 Ω阻力:所有东西都关闭,CANH和CANL之间有60 Ω.许多模块都带来自己的电池板;如果板子没有在一端,请移除它.
+· GND común con el resto del bus, y la misma velocidad en todos los nodos.	· GND 在每一个节点上都相同的速度.
+· En el conector OBD-II de un auto: CANH en la pata 6, CANL en la 14, masa en la 4 o 5; casi siempre a 500 kbit/s.	· On a car's OBD-II connector: CANH on pin 6, CANL on 14, ground on 4 or 5; nearly always at 500 kbit/s.
+· Sin transceptor: modo Autoprueba con TX y RX en el mismo pin. La placa se manda y se escucha.	·无接收器:自行测试模式,TX和RX在同一针上.板发送到自己并听到自己.
+Para repetir hace falta modo Normal o Autoprueba	复制需要正常或自行测试模式
+Ya hay una repitiéndose	一个已经重演了
+Se está grabando: pará la grabación primero	它正在录音:先停止录音
+¿Borrar?	删除?
+Grabaciones	录音
+Repitiendo %s	复制 %s
+Parar	停止
+En la tarjeta, carpeta can, en el CSV de SavvyCAN (GVRET). Se bajan desde la página CAN del portal. Repetir manda cada trama a su tiempo: hace falta modo Normal o Autoprueba.	On the card, folder can, in SavvyCAN's CSV (GVRET). They are downloaded from the portal's CAN 每个图像都需要正常或自我测试模式.
+Todavía no hay grabaciones: el botón rojo de arriba graba.	还没有录音 上面的红色按钮
+Repetir	再播放
+En bucle	循环
+Borrar	删除
+30 s · de %s a %s	30 秒 %s 在 %s
+Esperando su id…	等待他的身份证...
+Sin bus	没有公共汽车
+Sin señales	没有信号
+Señales leídas de nuevo	信号再次读取
+%d señales de can/senales.dbc (se edita desde el portal)	%d signals from can/senales.dbc (从门户网站编辑)
+Leer de nuevo	再次阅读
+   tiempo   id        n  datos                    ascii	 时间 id n 数据
+   tiempo   id        n  datos	 时间 id n 数据
+Esperando tramas…	正在等待框架...
+Sin bus. Conectalo arriba.	没有公共汽车.
+Seguir	自动滚动
+Filtro: sólo un id	过滤器: 只有一个id
+Filtro: %d ocultos	过滤器 : %d 隐藏
+1 id	1 个标识
+%d ids	%d 个人身份证
+id	标签
+datos	数据
+por s	每个月
+vistas	看到的
+%u bytes · %u.%u por segundo · cada %u.%u ms · %u vistas	%u 字节 %u.%u 每秒 · 每次 %u.%u 其他: %u 看到的
+16 bits: Intel	16位:英特尔
+16 bits: Motorola	16位:摩托罗拉
+Id %s (29 bits)	标签: %s (共 29 位)
+Id %s	标签: %s
+Naranja: bits que cambiaron alguna vez; amarillo: recién.	橙色: 曾经改变的比特; 黄色: 刚刚。
+Sólo este id	只有这个身份证
+Ocultarlo	隐藏它
+Mostrar todos	展示所有
+Llevar a Enviar	接收发送
+Graficar un byte, o dos juntos:	一个字节或两个字节.

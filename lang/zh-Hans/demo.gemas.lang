@@ -1,0 +1,33 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Fácil	简单的
+Normal	正常
+Difícil	很难
+Nivel %d	关卡 %d
+Mejor %s	最好的 %s
+Cadena x%d	链 x%d
+Sin jugadas	没有动作
+Se acabó el tiempo	时间已经过去了.
+Contrarreloj	时间攻击
+Sin apuro	放松
+Sí	是
+No	否
+Nivel %d  ·  Mejor %s	关卡 %d · 最好的 %s
+Próximo nivel	下一个层次
+Cuatro en línea	连续四次
+Llama: explota alrededor	火焰:周围爆炸
+En L o en T	L或T形状
+Estrella: fila y columna	星:行和列
+Cinco en línea	连续五次
+Hipercubo: todo un color	超立方:一个整体颜色
+Gemas	宝石
+Alineá tres o más	匹配三或多个
+Modo	模式
+Dificultad	困难
+Sonido	声音
+Jugar	开始游戏
+Pausa	暂停
+Seguir	继续
+Menú	菜单
+Salir	出口
+Otra vez	再一次

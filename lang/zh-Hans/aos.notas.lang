@@ -1,0 +1,133 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Ayer	昨天
+No se pudo guardar la nota	记 note不能保存
+Escritura cancelada	打字取消
+Conectá una computadora en modo Teclado (USB o Bluetooth)	在键盘模式下连接计算机 (USB 或蓝牙)
+Nota escrita en la computadora	在计算机中输入的注释
+En 3 segundos: poné el cursor donde va el texto	在3秒钟内:把标记放在文本的位置
+Escaneá con el teléfono	用你的手机扫描它
+La nota es larga: el código lleva el principio.	这笔记很长,代码有它的开始.
+Información	信息
+Palabras	词语
+Caracteres	角色
+Párrafos	部分
+%d de %d	%d 的 %d
+Tareas hechas	完成任务
+Creada	创造
+Modificada	修改时间
+(sin guardar)	(没有保存)
+Archivo	文件
+Color	颜色
+Movida a la papelera	搬到垃圾桶里
+Duplicada	复制
+Fijada arriba	被绑在顶部
+Ya no está fijada	不再被钉住
+¿Mover a la papelera?	搬到垃圾桶里?
+Se puede recuperar desde la papelera.	它可以从垃圾桶中得到.
+Mover	移动
+Mostrar completadas	演出完成
+Ocultar completadas	隐藏完成
+Desmarcar todas	解锁所有
+Borrar completadas	删除完成
+Ordenar por prioridad	按优先级排序
+Desfijar	取消
+Fijar arriba	向上拉动
+Convertir en nota	把它变成一张笔记.
+Convertir en lista de tareas	转换为任务列表
+Compartir con un QR	作为一个QR代码共享
+Parar de escribir	停止打字
+Escribir en la computadora	输入到电脑中
+Duplicar	创建副本
+Mover a la papelera	转到垃圾桶里
+Sin título	无标题
+Título	标题
+Encabezado	标题
+Subtítulo	分类
+Cuerpo	身体
+Cita	引用
+Línea	线条
+Tamaño	大小
+Chica	小型
+Normal	正常
+Grande	大型
+Enorme	巨大的
+Color del texto	文本颜色
+Resaltado	亮点
+Viñetas	弹子
+Numeradas	编号
+Casillas	检查盒
+Sin lista	没有列表
+Notas	备忘录
+Abrir	打开
+Otras	其他
+Fijadas	粘贴
+Nada coincide con la búsqueda	没有什么相匹配搜索
+Todavía no hay listas	目前没有列表
+Todavía no hay notas	目前没有笔记
+Tocá + para crear una	击+来创建一个
+Nota	备注
+Lista de tareas	任务列表
+Crear	创建
+%d borradas	%d 删除
+Última modificación	最后修改
+Fecha de creación	创建日期
+Ordenar por	按分类
+Fondo claro	亮背景
+Fondo oscuro	黑暗的背景
+Ordenar por...	按照...
+Ver en cuadrícula	作为一个网格显示
+Ver en lista	作为列表显示
+Papelera	二进制
+Buscar	搜索
+Todas	全部
+Listas	列表
+Restaurada	恢复
+Restaurar	恢复
+Borrar para siempre	永远删除
+¿Vaciar la papelera?	清除垃圾桶?
+Las notas se borran para siempre.	这些笔记永远被删除.
+Vaciar	没有任何东西
+La papelera está vacía	垃圾桶是空的
+La nota se borró desde el portal	这笔记已从门户网站上删除.
+Actualizada desde el portal	从门户网站上更新
+Escribí acá	写在这里.
+Copiado	复制
+Cortar	剪切
+Copiar	复制
+Pegar	粘贴
+Todo	全部
+Seleccionar	选择
+(copia)	(复制)
+Lo que se puede hacer	它能做什么?
+Texto en **negrita**, *cursiva*, <u>subrayado</u> y ~~tachado~~.	字母是*大胆**, * italic*, <u>突显</u> 打破了它.
+<span style=\"color:red\">Colores</span>, <span style=\"background:yellow\">resaltado</span> y <span style=\"font-size:x-large\">tamaños</span>.	<span style=\"color:red\">颜色</span>, <span style=\"background:yellow\">主要内容</span> 和 <span style=\"font-size:x-large\">尺寸</span>.
+Con viñetas	有弹子
+y con sangría	已被扣除
+De varios tipos	其他类型
+Que se cuentan solas	它们自数.
+Y con casillas	和支票箱
+Que se tildan con un toque	滴答声响起
+Las notas son archivos Markdown en la carpeta notas de la tarjeta: también se editan desde el portal.	便笺是存储卡公证人文件夹中的 Markdown 文件: 它们也可以从门户中编辑 。
+Tocá **Aa** para el formato. Escribir \"- \", \"1. \" o \"[] \" al principio de una línea también arma la lista.	输入字符. \"- \", \"1. \" 或 \"[] \" 在一行开始时,它也会成为列表.
+Pan	面包
+Leche	牛奶
+Alimento para Mila	食物给米拉
+Café	咖啡
+Pilas AA	AA 电池
+Compras	购物
+Bienvenida a Notas	欢迎来到笔记
+Sin prioridad	没有优先事项
+Baja	低水平
+Media	平均值
+Alta	高级
+Prioridad	优先事项
+Editar	编辑
+Más adentro	收益额
+Más afuera	疯狂
+Borrar	删除
+Nueva tarea	新任务
+Todavía no hay tareas	目前没有任务
+Agregar tarea	添加任务
+Completadas (%d)	完成 (%d)
+Cancelar	取消

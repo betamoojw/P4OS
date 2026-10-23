@@ -1,0 +1,2681 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Home Assistant: configurar en Ajustes	Home Assistant：請在設定中配置
+Clima: próximamente	天氣：即將推出
+Listo	完成
+Nombre de la carpeta	資料夾名稱
+Editar	編輯
+Carpeta vacía	空資料夾
+No se pudo guardar el inicio	無法儲存主螢幕
+Carpeta	資料夾
+Español	西班牙語
+Demasiados intentos: esperá %u s	嘗試次數過多，請等待 %u 秒
+Cancelar	取消
+Código incorrecto	密碼錯誤
+Ingresá el código	請輸入密碼
+domingo	星期日
+lunes	星期一
+martes	星期二
+miércoles	星期三
+jueves	星期四
+viernes	星期五
+sábado	星期六
+enero	1月
+febrero	2月
+marzo	3月
+abril	4月
+mayo	5月
+junio	6月
+julio	7月
+agosto	8月
+septiembre	9月
+octubre	10月
+noviembre	11月
+diciembre	12月
+%s %d de %s	%s %d %s
+sin hora todavía	時間尚未同步
+Mensaje	訊息
+Notificación	通知
+y %d más	還有 %d 項
+Música	音樂
+Modo seguro: deslizá hacia arriba, sin código	安全模式：向上滑動，無需密碼
+Deslizá hacia arriba para desbloquear	向上滑動解鎖
+Ajustes	設定
+Apagar	關機
+Inicio	主頁
+Bloquear	鎖定
+Home Assistant	Home Assistant
+Sin notificaciones	暫無通知
+Borrar todo	全部清除
+ahora	現在
+Horizontal	橫向
+Vertical	縱向
+Sin reproducción	未在播放
+Deslizá el dedo	滑動手指
+No hay apps abiertas	沒有開啟的應用
+dia\x04DOM	週日
+dia\x04LUN	週一
+dia\x04MAR	週二
+dia\x04MIÉ	週三
+dia\x04JUE	週四
+dia\x04VIE	週五
+dia\x04SÁB	週六
+mes\x04ENE	1月
+mes\x04FEB	2月
+mes\x04MAR	3月
+mes\x04ABR	4月
+mes\x04MAY	5月
+mes\x04JUN	6月
+mes\x04JUL	7月
+mes\x04AGO	8月
+mes\x04SEP	9月
+mes\x04OCT	10月
+mes\x04NOV	11月
+mes\x04DIC	12月
+Captura guardada en	截圖已儲存到
+No se pudo guardar la captura (¿hay tarjeta?)	無法儲存截圖，請檢查儲存卡是否可用。
+Osciloscopio	示波器
+Fuente	電源
+Generador	訊號發生器
+Registro	資料記錄
+Aplicar	應用
+conectando…	正在連線…
+sin conexión	未連線
+sin configurar	未配置
+apagada	關閉
+buscando…	正在搜尋…
+sin enlace	未連線
+falta el USB	未連線 USB
+%u filas	%u 行
+detenido	已停止
+CSV a la tarjeta	將 CSV 儲存到儲存卡
+Tensión de salida	輸出電壓
+Límite de corriente	電流限制
+firmware	韌體
+buscando la fuente…	正在查詢電源…
+APAGADA	關閉
+Salida encendida	輸出已開啟
+Salida apagada	輸出已關閉
+Tope %s V: la entrada es de %s V y la fuente no eleva.	最高 %s V：輸入電壓為 %s V，此電源不支援升壓。
+ninguna	無
+Salida	輸出
+Tensión	電壓
+Corriente	電流
+Entrada	輸入
+Temperatura	溫度
+Protección	保護
+ÚLTIMOS 2 MINUTOS	最近 2 分鐘
+La fuente se conecta por su puerto TTL (3,3 V) al puerto que elegiste en Modbus, pestaña Riden; el enlace es el mismo. Cada valor que se escribe se vuelve a leer, porque la Riden rechaza en silencio lo que no le gusta.	將電源的 TTL 介面（3.3 V）連線到 Modbus 的 Riden 頁中所選串列埠。寫入後會回讀數值，因為 Riden 可能直接忽略無效設定而不返回錯誤。
+generador de funciones, 2 canales, 30 MHz	函式訊號發生器，2 個通道，30 MHz
+Necesita un hub USB con alimentación	需要外接供電的 USB 集線器
+El generador habla USBTMC por USB, sin red ni puerto serie. El puerto USB-OTG de la placa no entrega 5 V, así que el generador se enchufa a un hub alimentado y el hub a la placa. Cuando esté el hub, esta pestaña maneja los dos canales.	訊號發生器透過 USB 使用 USBTMC 通訊，無需網路或串列埠。開發板的 USB-OTG 埠不提供 5 V，請將訊號發生器接入外部供電的 USB 集線器，再將集線器連線到開發板。連線後可在此頁控制兩個通道。
+LO QUE VA A HACER	功能說明
+Forma, frecuencia, amplitud, offset y fase de cada canal	各通道的波形、頻率、幅度、偏置與相位
+Encender y apagar cada salida	開啟或關閉各路輸出
+Barridos y ráfagas	掃頻與突發
+Arbitrarias propias desde la tarjeta	從儲存卡載入自定義任意波形
+Mirar lo que sale en el osciloscopio de al lado	在旁邊的示波器中檢視輸出
+Lo aprendido con el panel de la Mac: el firmware 1.07 no tiene cola de errores y descarta en silencio los comandos mal escritos, así que cada ajuste se va a releer, como con la Riden.	根據 Mac 控制面板的測試，1.07 韌體沒有錯誤佇列，會直接忽略格式錯誤的命令。因此與 Riden 一樣，每次設定後都會回讀確認。
+Pará el registro para cambiar las columnas.	請先停止記錄，再更改列。
+Pará el registro para cambiar el intervalo.	請先停止記錄，再更改取樣間隔。
+sin grabar	未在記錄
+Cada toma, una fila de un CSV en la carpeta logs de la tarjeta.	每次取樣在儲存卡 logs 目錄的 CSV 檔案中寫入一行。
+Detener	停止
+Grabar	寫入
+mín	最小值
+máx	最大值
+QUÉ SE ANOTA	記錄內容
+* canal apagado en el osciloscopio: su columna queda vacía.	* 示波器中已關閉的通道，其對應列留空。
+CADA	間隔
+EN VIVO	實時
+Un valor que el equipo no tiene en ese momento (fuente desenchufada, canal apagado, medida inválida) queda como celda vacía, nunca repetido. El registro sigue con la app cerrada.	當前無法獲取的數值（如電源未連線、通道關閉或測量無效）以空單元格儲存，不會重複寫入舊值。關閉應用後仍會繼續記錄。
+libre	可用
+Buscando…	正在搜尋…
+Sin escanear	尚未掃描
+Respondió 1 dirección	1 個地址響應
+Respondieron %d direcciones   %s	%d 個地址響應   %s
+DISPOSITIVOS	裝置
+desconocido	未知
+Nadie respondió. ¿Pull-ups en SDA y SCL? ¿El módulo tiene 3V3?	裝置未響應。請檢查 SDA、SCL 的上拉電阻及模組的 3.3 V 供電。
+Tocá Escanear.	點選“掃描”。
+Escanear	掃描
+Leyendo…	正在讀取…
+No contestó a la lectura de registros. Hay chips que no usan registros (los SHT3x, por ejemplo, reciben comandos).	讀取暫存器時裝置未響應。部分晶片不使用暫存器，例如 SHT3x 透過命令進行操作。
+Tocá un byte para escribirlo. En naranja, lo que cambió desde la lectura anterior.	點選位元組可寫入資料。橙色表示與上次讀取相比發生變化的內容。
+Escribir en 0x%02X, registro 0x%02X	寫入地址 0x%02X，暫存器 0x%02X
+Escribir	寫入
+Dispositivo desconocido	未知裝置
+Leer	讀取
+En vivo	實時
+Enviando…	正在傳送…
+%s no está en modules.txt	modules.txt 中未配置 %s
+GPIO%d lo tiene %s	GPIO%d 已被 %s 佔用
+El módulo %s no tiene un cs= que sirva	模組 %s 未配置有效的 cs= 引腳
+No se pudo abrir el puerto	無法開啟埠
+La transferencia falló (el registro dice por qué)	傳輸失敗，具體原因請檢視日誌。
+Lazo bien: volvieron los %d bytes	迴環測試成功，收到全部 %d 位元組。
+No volvió nada. Puenteá el pin 34 (MOSI) con el 36 (MISO).	未收到資料。請短接引腳 34（MOSI）和 36（MISO）。
+Volvieron bien %d de %d bytes: ¿cable flojo, o el reloj alto para el cable?	正確收到 %d 位元組，共 %d 位元組。請檢查接線是否鬆動，或時脈頻率是否過高。
+Todo 0xFF: no contestó nadie (MISO quedó en 1). ¿Alimentación, CS, cables?	全部為 0xFF：裝置未響應，MISO 保持高電平。請檢查供電、片選和接線。
+Todo 0x00: MISO quedó en 0. ¿Está a masa, o el chip sin alimentar?	全部為 0x00：MISO 保持低電平。請檢查是否短接到地，或晶片未供電。
+Fabricante %02X%s%s%s, tipo %02X%s%s	製造商 %02X%s%s%s,型別 %02X%s%s
+La termocupla está abierta (o no está conectada)	熱電偶開路或未連線
+La termocupla está en corto a masa	熱電偶對地短路
+La termocupla está en corto a VCC	熱電偶與 VCC 短路
+El MAX31855 marca una falla	MAX31855 檢測到故障
+Termocupla %.2f °C · chip %.2f °C	熱電偶 %.2f °C · 晶片 %.2f °C
+Canal %d: %d de 1023\n%.3f V con VREF de 3.3 V	通道 %d：%d / 1023\n電壓 %.3f V，參考電壓 3.3 V
+Contestó %s (versión %02X): el lector está bien conectado	裝置 %s 已響應（版本 %02X），讀卡器連線正常。
+Contestó %02X: no es una versión de RC522 conocida. ¿RST a 3V3? ¿El CS es el SDA del módulo?	返回版本 %02X，無法識別為 RC522。請檢查 RST 是否接到 3.3 V，以及片選是否接到模組的 SDA 引腳。
+Tocá Enviar o un ejemplo.	點選“傳送”或選擇示例。
+1 byte · tocá para editar	1 位元組 · 點選編輯
+%d bytes · tocá para editar	%d 位元組 · 點選編輯
+sin CS	無片選
+GPIO%d · puerto	GPIO%d · 埠引腳
+Bytes a enviar, hasta %d	待傳送位元組，最多 %d 個
+Enviar	傳送
+Reloj	時鐘
+Modo (CPOL, CPHA)	模式（CPOL、CPHA）
+Chip select	片選
+Primero va el bit	位序
+BYTES A ENVIAR	待傳送位元組
+RESULTADO	結果
+EJEMPLOS	示例
+Memoria flash: leer ID (9F)	快閃記憶體：讀取 ID（9F）
+MAX31855: temperatura	MAX31855：溫度
+MCP3008: canal	MCP3008：通道
+RC522 (RFID): leer la versión	RC522 (RFID):閱讀版本
+Lazo: puentear los pines 34 y 36	迴環測試：短接引腳 34 和 36
+No hay puertos SPI	暫無 SPI 埠
+Agregá uno a modules.txt (Módulos > Puertos), por ejemplo:	請在 modules.txt 中新增埠（模組 > 埠），例如：
+Header	擴充套件介面
+Soltar	釋放
+Tocá el modo para cambiarlo. En OUT, tocá el nivel para invertirlo. Los pines quedan así al cerrar la app, hasta que los sueltes.	點選可切換模式。在 OUT 模式下，點選電平可翻轉輸出。關閉應用後引腳仍保持當前狀態，直到手動釋放。
+reservado	已保留
+de la placa	開發板
+IN ↑ / IN ↓: con pull-up o pull-down interno. Los pines 35 a 39 van por el LDO VO4: medí antes de colgarles algo.	IN ↑ / IN ↓: with internal pull-up or pull-down. Pins 35 to 39 go through the VO4 在連線任何東西之前測量.
+Abriendo el bus…	正在開啟匯流排…
+No se pudo abrir el bus en GPIO%d	無法在 GPIO%d 上開啟匯流排
+Nadie contestó. ¿La resistencia de 4,7 kΩ entre datos y 3V3? ¿VDD a 3V3 y GND?	裝置未響應。請檢查資料線與 3.3 V 之間的 4.7 kΩ 上拉電阻，以及 VDD、GND 接線。
+GPIO%d · %d dispositivo(s) en el bus	GPIO%d · 匯流排上有 %d 個裝置
+sin lectura	暫無讀數
+Resolución guardada en el sensor	解析度已儲存到感測器
+Buscar	搜尋
+Resolución	解析度
+Pin de datos	資料引腳
+Pull-up interno: sí	內部上拉：開
+Pull-up interno: no	內部上拉：關
+Error	錯誤
+lun\x04L	一
+mar\x04M	二
+mie\x04M	三
+jue\x04J	四
+vie\x04V	五
+sab\x04S	六
+dom\x04D	日
+Enero	1月
+Febrero	2月
+Marzo	3月
+Abril	4月
+Mayo	5月
+Junio	6月
+Julio	7月
+Agosto	8月
+Septiembre	9月
+Octubre	10月
+Noviembre	11月
+Diciembre	12月
+Domingo	星期日
+Lunes	星期一
+Martes	星期二
+Miércoles	星期三
+Jueves	星期四
+Viernes	星期五
+Sábado	星期六
+Sin eventos	暫無日程
+Los eventos del calendario de Home Assistant van a aparecer acá.	事件 Home Assistant 這裡會出現日曆.
+%d de %s	%d %s
+Reloj sin ajustar	時鐘未設定
+Hoy	今天
+Mañana	明天
+Ayer	昨天
+Dentro de %ld días	%ld 天后
+Hace %ld días	%ld 天前
+Semana %d  ·  día %d del año	周 %d · 日 %d 年度
+sem	周
+Eventos	日程
+Volver al mes	返回月檢視
+se renueva en %s	%s 後重置
+La placa guarda el historial desde que inicia sesión: vuelve a mirar en un rato.	開發板自簽署以來一直記住歷史.
+En la computadora abrí http://%s.local/#claude (o http://%s/#claude), tocá «Iniciar sesión» y seguí los pasos.	在你的電腦上,開啟 http://%s.local/#claude (或 http://%s/#claude), 單擊“簽署在”並跟隨步驟。
+Verificando el código…	正在驗證程式碼…
+Esperando el código que te dio la página de Claude.	在等待克勞德的頁面給你的程式碼.
+actualizado hace %s	%s 前更新
+recién actualizado	剛剛更新
+pidiendo los datos…	正在獲取資料…
+sin sesión	未登入
+uso extra %.0f%%	額外用量 %.0f%%
+midiendo…	正在測量…
+El ritmo sale de lo que la placa va anotando: hace falta al menos 20 minutos de historial.	根據開發板所記錄的速度,至少需要20分鐘的歷史.
+por hora	每小時
+Casi sin consumo: el tope no se acerca.	幾乎沒有使用:極限不接近.
+A este ritmo la ventana se renueva antes de llegar al tope.	在你達到極限之前,視窗會重新設定.
+A este ritmo llegás al tope de 5 h a las %02d:%02d, en %s.	在這種速度,你將達到5小時的極限 %02d:%02d在 %s.
+Uso de Claude	Claude 用量
+Iniciá sesión con tu cuenta de Claude	登入用你的克勞德賬戶
+La placa tiene su propio inicio de sesión: no usa ni toca el de Claude Code en ninguna computadora, y los números son los de la cuenta, uses las máquinas que uses. Los lee del mismo lugar que el /usage de Claude Code, que no es una API pública: si Anthropic la cambia, esta app avisa.	任何電腦上都沒有使用或觸控克勞德程式碼,並且數字都是賬戶的,無論你使用哪種機器. 它從同一個地方讀取它們 /usage如果人類改變它,這個應用程式會告訴你.
+Ventana de 5 h	5 小時用量
+Semana	周
+Ritmo de la ventana de 5 h	5 小時用量趨勢
+HISTORIAL	歷史記錄
+5 h, último día	過去一天的 5 小時用量
+Semana, 7 días	過去 7 天的周用量
+5 h: se renueva en %s	5 小時用量：%s 後重置
+iniciá sesión desde el portal	請在管理網頁中登入
+5 h	5 h
+Mundial	世界時鐘
+Alarmas	鬧鐘
+Cronómetro	秒錶
+Temporizador	計時器
+Pomodoro	番茄鍾
+Honolulu	檀香山
+Anchorage	安克雷奇
+Los Ángeles	洛杉磯
+Denver	丹佛
+Ciudad de México	墨西哥城
+Chicago	芝加哥
+Bogotá	波哥大
+Lima	利馬
+Nueva York	紐約
+Toronto	多倫多
+Caracas	加拉加斯
+Santiago	聖地亞哥
+Buenos Aires	布宜諾斯艾利斯
+Montevideo	蒙得維的亞
+São Paulo	聖保羅
+Londres	倫敦
+Lisboa	里斯本
+Madrid	馬德里
+París	巴黎
+Berlín	柏林
+Roma	羅馬
+Lagos	拉各斯
+Atenas	雅典
+Helsinki	赫爾辛基
+El Cairo	開羅
+Johannesburgo	約翰內斯堡
+Estambul	伊斯坦布林
+Moscú	莫斯科
+Nairobi	內羅畢
+Dubái	迪拜
+Nueva Delhi	新德里
+Bangkok	曼谷
+Yakarta	雅加達
+Pekín	北京
+Hong Kong	香港
+Singapur	新加坡
+Tokio	東京
+Seúl	首爾
+Sídney	悉尼
+Auckland	奧克蘭
+Cerrar	關閉
+Agregar ciudad	新增城市
+Mantené apretada una ciudad para quitarla	按住一個城市來拆除它
+Todos los días	每天
+Lunes a viernes	工作日
+Fines de semana	週末
+Ya hay seis alarmas	最多可設定 6 個鬧鐘
+Alarma	鬧鐘
+Borrar	刪除
+Guardar	儲存
+Sin alarmas. Tocá + para agregar una.	沒有警報,點選+來新增一個.
+Vuelta	計次
+Reiniciar	重置
+Iniciar	開始
+Seguir	繼續
+Pausa	暫停
+horas            minutos            segundos	時間
+Foco	專注
+Pausa corta	短休息
+Pausa larga	長休息
+Saltar	跳過
+Temporizador terminado	計時結束
+Pomodoro: a descansar	番茄鍾：休息一下
+Pomodoro: a trabajar	番茄鍾：開始專注
+Longitud	長度
+milímetro	毫米
+centímetro	釐米
+metro	米
+kilómetro	千米
+pulgada	英寸
+pie	英尺
+yarda	碼
+milla	英里
+milla náutica	海里
+Masa	質量
+miligramo	毫克
+gramo	克
+kilogramo	千克
+tonelada	噸
+onza	盎司
+libra	磅
+stone	英石
+grado Celsius	攝氏度
+grado Fahrenheit	華氏度
+kelvin	開爾文
+Volumen	音量
+mililitro	毫升
+centilitro	釐升
+litro	升
+metro cúbico	立方米
+onza líquida (EE. UU.)	液量盎司（美製）
+taza (EE. UU.)	杯（美製）
+pinta (EE. UU.)	品脫（美製）
+cuarto (EE. UU.)	夸脫（美製）
+galón (EE. UU.)	加侖（美製）
+Velocidad	速度
+metro por segundo	米每秒
+kilómetro por hora	千米每小時
+milla por hora	英里每小時
+pie por segundo	英尺每秒
+nudo	節
+Área	面積
+centímetro cuadrado	平方釐米
+metro cuadrado	平方米
+hectárea	公頃
+kilómetro cuadrado	平方千米
+pulgada cuadrada	平方英寸
+pie cuadrado	平方英尺
+yarda cuadrada	平方碼
+acre	英畝
+milla cuadrada	平方英里
+Presión	氣壓
+pascal	帕斯卡
+hectopascal	百帕
+kilopascal	千帕
+bar	巴
+atmósfera	標準大氣壓
+libra por pulgada²	磅每平方英寸
+milímetro de mercurio	毫米汞柱
+Datos	資料
+byte	位元組
+kilobyte	千位元組
+megabyte	兆位元組
+gigabyte	吉位元組
+terabyte	太位元組
+kibibyte	KiB
+mebibyte	MiB
+gibibyte	GiB
+Energía	能量
+joule	焦耳
+kilojoule	千焦
+caloría	卡路里
+kilocaloría	千卡
+watt-hora	瓦時
+kilowatt-hora	千瓦時
+BTU	工業化技術
+Tiempo	時間
+milisegundo	毫秒
+segundo	秒
+minuto	分鐘
+hora	小時
+día	天
+semana	周
+año (365,25 días)	年（365.25 天）
+Potencia	功率
+miliwatt	毫瓦
+watt	瓦
+kilowatt	千瓦
+megawatt	兆瓦
+caballo de fuerza	英制馬力
+caballo de vapor	公制馬力
+BTU por hora	BTU 每小時
+kilocaloría por hora	千卡每小時
+Ángulo	角度
+grado	度
+radián	弧度
+milirradián	毫弧度
+gradián	百分度
+vuelta completa	整圈
+minuto de arco	角分
+segundo de arco	角秒
+Convertir de	原單位
+Convertir a	目標單位
+Colores	顏色
+Ohm	歐姆定律
+Divisor	分壓器
+LED	燈光
+555	555
+SMD	其他型別
+No es un número	不是有效數字
+negro	黑色
+marrón	棕色
+rojo	紅色
+naranja	橙色
+amarillo	黃色
+verde	綠色
+azul	藍色
+violeta	紫色
+gris	灰色
+blanco	白色
+dorado	金色
+plateado	銀色
+Valor de la resistencia	電阻值
+4 bandas	四色環
+5 bandas	五色環
+Escribir valor	輸入數值
+Cifra	有效數字
+Multiplicador	倍率
+Tolerancia	誤差
+Tensión (V)	電壓（V）
+Corriente (A)	電流（A）
+Resistencia (Ω)	電阻（Ω）
+Potencia (W)	功率（W）
+Alimentación	電源
+Tensión del LED	LED 正向壓降
+Código SMD	貼片電阻程式碼
+Escribí dos valores; los otros dos salen solos.	輸入兩個值;其他兩個值已確定.
+Vin (V)	葡萄酒 (V)
+Potencia R1+R2	R1+R2 功耗
+Vout = Vin · R2 / (R1 + R2)	Vout = Vin R2 /(R1 + R2)
+Alimentación (V)	供電電壓（V）
+Tensión del LED (V)	LED 正向壓降（V）
+Rojo	紅色
+Amarillo	黃色
+Verde	綠色
+Azul	藍色
+Blanco	白色
+IR	其他型別
+Resistencia	電阻
+E12 más cercana	最接近的 E12 阻值
+Potencia en R	電阻功耗
+Astable: R1 entre Vcc y descarga, R2 entre descarga y umbral.	表:Vcc與排放之間的R1, 排放與閾值之間的R2。
+Frecuencia	頻率
+Tiempo alto	高電平時間
+Ciclo útil	佔空比
+El código impreso en una resistencia SMD: 472, 4R7, 1002, 01C (EIA-96).	在SMD阻力上列印的程式碼:472,4R7,1002,01C (EIA-96).
+Código	程式碼
+Valor	數值
+Falta el nombre.	請輸入名稱。
+Ese nombre no se puede usar.	此名稱不可用。
+Un nombre que empieza con punto queda oculto.	一個以點開始的名稱隱藏了.
+El nombre no puede llevar / \\ : * ? \" < > |	這個名字不能包含 \\ : * ? \" < > |
+El nombre no puede terminar en espacio ni en punto.	這個名字不能以一個空間或點結束.
+El nombre es demasiado largo.	名稱過長。
+1 byte	1 位元組
+%u bytes	%u 位元組
+1 elemento	1 項
+%s elementos	%s 項
+ene	1月
+feb	2月
+mar	3月
+abr	4月
+may	5月
+jun	6月
+jul	7月
+ago	8月
+sep	9月
+oct	10月
+nov	11月
+dic	12月
+Hoy %02d:%02d	今天 %02d:%02d
+Ayer %02d:%02d	昨天 %02d:%02d
+Imagen	影象
+Audio	音訊
+Texto	文字
+Tabla CSV	CSV 表格
+Datos o configuración	資料或配置
+Firmware	韌體
+App de P4OS	P4OS 應用
+Ícono de app	應用圖示
+Archivo	檔案
+menu.txt ordena la pantalla de inicio.	menu.txt 設定主螢幕的應用排列順序。
+modules.txt dice qué hay conectado al header.	modules.txt 宣告擴充套件介面上連線的模組。
+ha.txt tiene los paneles de Home Assistant.	ha.txt 儲存 Home Assistant 面板配置。
+prefs.txt guarda los ajustes del sistema.	prefs.txt 儲存系統設定。
+En /apps están las apps instaladas.	已安裝的應用位於 /apps 目錄。
+En /firmware está lo que graba el Programador.	燒錄工具使用的韌體位於 /firmware 目錄。
+En /data guardan su estado las apps.	應用將狀態資料儲存在 /data 目錄。
+En /lang están los idiomas.	語言包位於 /lang 目錄。
+En /icons están los íconos de las apps.	應用圖示位於 /icons 目錄。
+Nombre	名稱
+Fecha	日期
+Tamaño	大小
+Tipo	型別
+No se pudo leer %s	無法讀取 %s
+No se pudo crear %s	無法建立 %s
+Error al leer %s	讀取 %s 時出錯
+No entra %s: la tarjeta está llena	無法儲存 %s：儲存卡已滿
+Error al escribir %s	寫入 %s 時出錯
+No se encontró %s	未找到 %s
+No se pudo crear la carpeta %s	無法建立資料夾 %s
+Ruta demasiado larga: %s	路徑過長：%s
+No se pudo borrar la carpeta %s	無法刪除資料夾 %s
+No se pudo borrar %s	無法刪除 %s
+No hay memoria.	記憶體不足。
+Hace falta %s y quedan %s libres.	需要 %s 只有 %s 是免費的.
+No hay memoria para copiar.	記憶體不足，無法複製。
+No se puede copiar %s dentro de sí misma.	無法將 %s 複製到其自身內部。
+No hay un nombre libre para %s	%s 沒有可用名稱
+No se puede mover %s dentro de sí misma.	無法將 %s 移動到其自身內部。
+No se pudo mover %s	無法移動 %s
+Tarjeta	儲存卡
+Buscando… %s encontrados, %s revisados	正在搜尋… %s 發現 %s 檢查
+%s resultados · la búsqueda se cortó ahí	%s 結果 ·搜尋停止
+1 resultado	1 個結果
+%s resultados	%s 個結果
+Leyendo… %s	正在讀取… %s
+%s de %s	%s / %s
+%s · %s disponibles	%s · 可用 %s
+ · leyendo tamaños (%d %%)	 · 正在讀取大小（%d %%）
+ · no entran todos	 · 空間不足，無法全部容納
+No se pudo abrir la carpeta	無法開啟資料夾
+No se encontró nada	未找到內容
+Nada coincide en esta carpeta	此資料夾中無匹配內容
+Fotos	照片
+Registros	日誌
+Apps	應用
+Esa carpeta no está en la tarjeta	那資料夾不在儲存卡上
+Calculando el espacio…	正在計算空間…
+%s libres de %s	可用 %s，總容量 %s
+Ubicaciones	位置
+Favoritos	收藏夾
+Mantené apretada una carpeta y elegí Agregar a favoritos.	按下並保持一個資料夾, 並選擇新增到最喜愛的內容 。
+Archivos	檔案
+Mantené apretada una carpeta para agregarla.	按下並持有一個資料夾新增它 。
+OK	確定
+Seleccionar	選擇
+Subcarpetas	子資料夾
+No se pudo abrir Fotos	無法開啟照片
+No se pudo abrir Música	無法開啟音樂
+No se pudo abrir el Programador	無法開啟燒錄工具
+Ya no está	內容已不存在
+Quitada de favoritos	已取消收藏
+Ya hay 8 favoritos: quitá uno primero	已經有8個最喜歡的:先刪除一個
+La ruta es demasiado larga para favoritos	這條路太長了.
+Agregada a favoritos	已新增到收藏夾
+Demasiados elementos a la vez	一次選擇的專案過多
+Cortado: andá a otra carpeta y tocá Pegar	剪下: 轉到另一個資料夾並點選貼上
+Copiado: andá a otra carpeta y tocá Pegar	收到: 轉到另一個資料夾並點選貼上
+%s elementos para mover: tocá Pegar en otra carpeta	%s 要移動的專案: 在另一個資料夾中呼叫貼上
+%s elementos copiados: tocá Pegar en otra carpeta	%s 複製的專案: 在另一個資料夾中呼叫貼上
+Es del sistema: %s Si lo movés, lo que depende de él deja de encontrarlo.	系統的一部分: %s 如果你移動它,任何取決於它都不會找到它.
+¿Mover archivos del sistema?	要移動系統檔案嗎？
+Cortar igual	仍然剪下
+Ya hay una copia en curso	已經在進行復印
+Hay otra operación en curso	另一個行動正在進行
+¿Borrar «%s»?	確定刪除“%s”嗎？
+Se borra la carpeta con todo lo que tiene adentro. La tarjeta no tiene papelera.	資料夾已刪除, 裡面有全部內容, 儲存卡上沒有垃圾 。
+Se borra de la tarjeta. No tiene papelera.	它被刪除了,沒有垃圾.
+¿Borrar %s elementos?	確定刪除 %s 項嗎？
+Se borran de la tarjeta, las carpetas con todo lo que tienen adentro. No hay papelera.	他們從儲存卡上被刪除了 裡面裝滿了所有東西的資料夾 沒有垃圾
+Es del sistema: %s	系統檔案：%s
+Borrar igual	仍然刪除
+El nombre es demasiado largo	名稱過長
+Ya hay algo con ese nombre	有這樣的名字的東西已經存在
+No se pudo cambiar el nombre	無法重新命名
+Cambiar nombre	重新命名
+Es del sistema: %s Con otro nombre, lo que lo busca no lo encuentra.	系統的一部分: %s 在另一個名字下,任何尋找它都不會找到它.
+¿Cambiar el nombre?	要重新命名嗎？
+Cambiar igual	仍然重新命名
+No se pudo crear la carpeta	無法建立資料夾
+Carpeta nueva	新建資料夾
+Crear	建立
+Mover acá	移動到此處
+Pegar acá	貼上到此處
+Quitar de favoritos	取消收藏
+Agregar a favoritos	新增到收藏夾
+Información de la carpeta	資料夾資訊
+Volver a leer	重新載入
+Abrir	開啟
+Abrir en Fotos	在照片中開啟
+Reproducir en Música	在音樂中播放
+Abrir en el Programador	在燒錄工具中開啟
+Ver	檢視
+Ver el contenido	檢視內容
+Información	資訊
+Mostrar en su carpeta	在資料夾中顯示
+Duplicar	建立副本
+Copiar	複製
+Cortar	剪下
+Ninguno	無
+Todos	全部
+Elegí archivos	選擇檔案
+1 elegido	已選 1 項
+%s elegidos	已選 %s 項
+Renombrar	重新命名
+Info	資訊
+%s elementos para mover	待移動 %s 項
+%s elementos copiados	已複製 %s 項
+No hay tarjeta	未插入儲存卡
+Poné una microSD en la ranura de la placa.	插入一個microSD卡在板塊的插槽.
+%s y contando…	已統計 %s，繼續計算…
+%s archivos, %s carpetas	%s 個檔案，%s 個資料夾
+Selección	所選專案
+Calculando…	正在計算…
+Contiene	包含
+Modificado	修改時間
+La tarjeta	儲存卡
+Ubicación	位置
+Preparando…	正在準備…
+Moviendo…	正在移動…
+Duplicando…	正在建立副本…
+Borrando…	正在刪除…
+Copiando…	複製...
+Seguir usando	繼續使用
+%s de %s · %s de %s%s%s	%s 的 %s · %s 的 %s%s%s
+Cancelado	已取消
+%s (y %d problemas más)	%s (和 %d 更多問題)
+Copiado	複製
+Movido	移動
+Duplicado	複製
+Borrado	刪除
+%s elementos movidos	%s 轉移的物品
+%s elementos duplicados	%s 複製的專案
+%s elementos borrados	%s 已刪除的條款
+%s · se muestra en hexadecimal	%s · 顯示為六
+%s filas · %d columnas · %s	%s 排列 · %d 列表 %s
+1 línea · %s	一行 · %s
+%s líneas · %s	%s 執行緒 · %s
+ · leyendo %d %%	 ·閱讀 %d %%
+ · se muestra el primer millón de filas	 ·顯示第一百萬行
+Leyendo la columna…	閱讀這篇文章...
+Esa columna no tiene números	這列沒有數字.
+mín %s · máx %s · media %s · %s valores, de %s a %s %s	最小值 %s ·最大 %s ·平均值 %s · %s 價值,從 %s 在 %s %s
+mín %s · máx %s · media %s · %s valores	最小值 %s ·最大 %s ·平均值 %s · %s 價值
+Gráfico	圖表
+Leyendo el archivo hasta el final…	讀完檔案...
+Ajustar	包裝
+No se pudo abrir el archivo	無法開啟檔案
+Listo para grabar	準備閃耀
+Abriendo el puerto	正在開啟串列埠
+Conectando	連線
+Cargando el stub	正在載入燒錄程式
+Subiendo la velocidad	正在提高波特率
+Leyendo el chip	正在讀取晶片資訊
+Borrando	正在擦除
+Grabando	燒錄
+Verificando	正在校驗
+Reiniciando la placa	正在重啟開發板
+Grabación terminada	燒錄完成
+No se pudo grabar	無法錄製
+Grabación cancelada	閃光取消
+Terminal	終端
+de flash	閃光
+flash ?	閃光?
+Buscando la placa…	在找開發板...
+No respondió	沒有回應
+Placa sin detectar	沒有發現板
+Conectala al header y tocá Detectar	連線到標題,然後點選檢測
+Buscando	尋找
+Detectar	檢測
+%s tiene %s	%s 使用 %s
+Sin EN/BOOT en modules.txt: poné la placa en modo descarga a mano	否 EN/BOOT 在 modules.txt:手動將板放入下載模式
+No se pudo empezar	我不能開始.
+Liberar	釋放
+CONEXIÓN	連線
+RX de la placa (U0RXD)	板 RX (U0RXD)
+TX de la placa (U0TXD)	開發板TX (U0TXD)
+EN / RST	EN / RST
+GPIO0 (GPIO9 en C3/C6/H2, GPIO35 en P4)	GPIO0 (GPIO9 在C3上/C6/H2, GPIO35 在P4上
+GND, común a las dos	GND兩者共享
+1 firmware en la tarjeta	卡上有一個韌體
+Tarjeta leída	讀取卡
+Flash	燒錄
+Imagen de app: va a 0x10000, sobre el bootloader que la placa ya tenga	應用影象:到0x10000,透過板上已經設定的啟動器
+Imagen completa: va entera desde 0x0	完整影象:從0x0寫成全
+La dirección sale del nombre del archivo	地址來自檔名
+FIRMWARE EN LA TARJETA	儲存卡上的密碼
+No hay firmware en /firmware	沒有韌體 /firmware
+Copiá ahí la carpeta build/ de un proyecto de ESP-IDF (la que tiene flasher_args.json) o un .bin. Un nombre como app@0x10000.bin dice dónde va.	Copy the build/ folder of an ESP-IDF project there (the one with flasher_args.json一個名字如app@0x10000.bin說它去哪裡.
+Para	對於
+chip ?	一個晶片?
+archivos	檔案
+en	在
+MD5 verificado	MD5 校驗透過
+sin verificar	未經驗證
+Quedó a medio grabar: grabala de nuevo para que arranque	只閃過一部分光,再閃一次,這樣它就會穿靴子
+archivo	檔案
+de	的
+con stub	帶有根管
+con la ROM	透過ROM
+TIEMPO	時間
+RESTANTE	剩下的
+TRANSFERIDO	轉移
+VELOCIDAD	速度
+ARCHIVOS	檔案
+REGISTRO	標籤
+Monitor	監視器
+Elegí un firmware	選擇一個韌體
+Programador	燒錄工具
+Ese archivo no es un firmware que se pueda grabar	那份檔案不是可以閃現的堅固軟體
+Grabación terminada: %s en %s	閃光完成: %s 在 %s
+No se pudo grabar: %s	無法閃爍 : %s
+Frío	很棒.
+Calor	熱量
+Frío/calor	熱量/cool
+Auto	汽車
+Seco	乾燥
+Ventilación	只有風扇
+Apagado	關
+No disponible	不可用
+Encendida	開
+Apagada	關
+Encendido	開
+Abriendo…	開放...
+Cerrando…	關閉...
+Abierta	開啟
+Cerrada	關閉
+Con llave	鎖定
+Sin llave	開鎖
+Reproduciendo	現在玩
+En pausa	暫停
+Inactiva	無事
+Escena	場景
+En marcha…	跑步.
+Guion	劇本
+Botón	按鈕
+Movimiento	議案
+Sin movimiento	沒有動議
+Activado	活動
+Normal	正常
+¿Abrir %s?	解鎖 %s?
+¿Cerrar %s con llave?	鎖定 %s?
+Home Assistant no está conectado	Home Assistant 沒有連線
+Agregado a favoritos	已新增到收藏夾
+Quitado de favoritos	從最喜歡的中刪除
+Encender	開啟
+Sin datos numéricos en este período.	在此期間沒有數字資料.
+Home Assistant no dio el historial.	Home Assistant 沒有回報任何歷史.
+Hace falta la hora para pedir el historial.	需要時間來尋求歷史.
+Pidiendo el historial…	要求歷史...
+hace %u días  ·  ahora	%u 幾天前 ·現在
+hace %u h  ·  ahora	%u 之前 ·現在
+7 días	7天
+Ahora	現在
+Actualizado recién	剛更新
+Actualizado hace %u min	更新 %u 幾分鐘前
+Activar	啟用
+Ejecutar	跑步
+Apretar	打壓
+Reproducir / pausar	播放/暫停
+Cerrar con llave	鎖定
+La dirección empieza con http://	地址以http://開始
+Dirección de Home Assistant	Home Assistant 地址
+Por ejemplo http://192.168.1.10:8123, o https://… si entrás con certificado (Nabu Casa)	例如: http://192.168.1.10:8123, 或 https://… 如果您使用證書 (Nabu Casa) 連線
+Leí ha.txt	讀取 ha.txt
+No hay nada nuevo en ha.txt	沒有什麼新鮮事 ha.txt
+Sin configurar	未配置
+Esperando el Wi-Fi	正在等待 Wi-Fi
+Conectando…	正在連線…
+Token rechazado	令牌無效
+Cargando la casa…	裝滿了房子.
+Conectado	已連線
+Sin conexión	未連線
+Dirección	地址
+tocá para escribirla	打點進入
+Token	標誌
+guardado	已儲存
+falta	缺失
+Estado	狀態
+Leer ha.txt de la tarjeta	讀取 ha.txt 從卡
+Reconectar	再連線
+El token se crea en Home Assistant: tu perfil > Seguridad > Tokens de acceso de larga duración. Escribirlo acá es un suplicio, así que va en un archivo ha.txt en la raíz de la tarjeta, con dos renglones: url=http://… (o https://…) y token=…. Al leerlo, P4OS se guarda el token y lo borra del archivo. Un tercer renglón opcional, favs=light.living,switch.cafetera, arma los favoritos.	標誌是在 Home Assistant在此輸入是酷刑,所以它進入一個 ha.txt 在卡的根上,有兩個行: url=http://… (或 https://…) 在閱讀時,P4OS儲存了代幣並從檔案中刪除.一個可選的第三行,favs=light.living,switch.cafetera,設定了最喜歡的.
+Conexión	連線
+Otros	其他
+El token no sirve	標誌不起作用
+Conectá tu Home Assistant	連線你的 Home Assistant
+Home Assistant lo rechazó. Generá uno nuevo y ponelo en ha.txt.	Home Assistant 建立一個新的,然後將它放進 ha.txt.
+Hace falta la dirección y un token de acceso.	需要地址和訪問令牌.
+Sin favoritos todavía	目前還沒有最喜歡的
+Mantené apretado un mosaico en cualquier ambiente y tocá la estrella.	按下,在任何房間都拿一塊瓷磚, 並敲擊恆星。
+SENSORES	感測器
+CONTROLES	控制
+Tocá para configurar la conexión	擊點設定連線
+Marcá favoritos en la app con la estrella	在應用程式中標記最喜歡的星
+Sin escenas en Home Assistant	沒有場景 Home Assistant
+Efectos	影響
+Tira	條紋
+Consumo	功率
+Sólido	固體
+Parpadeo	閃爍
+Respirar	呼吸
+Barrido	清除
+Arcoíris	彩虹
+Arcoíris en ciclo	彩虹週期
+Teatro	劇院
+Escáner	掃描器
+Destellos	閃閃發光
+Fuego	火災
+Meteoro	氣象
+Degradé	漸進式
+Ondas	波浪
+Tiempo prendido	時間到了.
+Arcoíris en la tira	帶上有彩虹
+Ancho	寬度
+Cantidad	伯爵
+Llamas	火焰
+Cola	尾巴
+Ondas en la tira	波浪線上
+Sin tira: elegí el pin en Tira. Mientras, se ve acá.	沒有條紋:選擇在條紋處的針。同時,它顯示在這裡。
+No se pudo abrir la tira en %s	沒有開啟條 %s
+Apagada · GPIO%d · %d LEDs	關閉 · GPIO%d · %d 燈光
+GPIO%d · %s · %d LEDs · %d fps · %u mA%s	GPIO%d · %s · %d 燈光 · %d 時間 %u 其他%s
+ (limitada)	 (有限)
+Segundo color	第二色
+Color	顏色
+Prendida	開
+Brillo	亮度
+EFECTO	影響
+COLORES	顏色
+Segundo	秒
+Blanco (canal W)	白色 (W頻道)
+PIN DE DATOS	資料 PIN
+GPIO · pin del conector. Los que tiene otra app aparecen apagados. * con cuidado: arranque, dominio VO4 o USB (Ajustes, Expansión).	GPIO ·標題針. 其他應用程式所持有的標籤是灰色的. VO4 域名或 USB (設定,擴充套件)
+TIPO DE LED	LED型別
+WS2812B también sirve para WS2813, WS2815 y WS2811 de 800 kHz. Las RGBW llevan un cuarto LED blanco.	WS2812B 對於 WS2813, WS2815 和800kHz WS2811在RGBW帶上有第四個白色LED.
+ORDEN DE LOS COLORES	顏色順序
+Si el rojo sale verde, probá otro orden: las WS2812B son GRB.	如果紅色出現綠色,請嘗試另一個訂單:WS2812B是GRB.
+CANTIDAD DE LEDS	LED 的數量
+Efectos al revés	逆轉效果
+Limitada: pedía %u mA, brillo %d %%	限量:要求 %u mA,亮度 %d %%
+Dentro del límite	在限度範圍內
+Consumo estimado ahora	預計的抽獎現在
+Toda la tira en blanco al máximo: %u mA (%.1f A)	全條全白色: %u 澳大利亞%.1f A)
+LA FUENTE	供應
+USB 2.0 (450 mA)	USB 2.0（450 mA）
+USB 3 (850 mA)	USB 3 (850 mA)
+Sin límite	沒有限制
+Lo que la fuente le puede dar a la tira. Si un efecto pediría más, se baja el brillo de todo el cuadro para que entre, como el limitador de WLED. Alimentada desde el USB de la placa, dejá USB 2.0.	What the supply can give the strip. If an effect would ask for more, the whole frame is dimmed to fit, like WLED's limiter. Powered from the board's USB離開 USB 2.0.
+CONSUMO DE CADA LED	每個LED的圖
+5 V típica (55 mA)	典型 5 V（55 mA）
+5 V eco (35 mA)	5 V 環保 (35 mA)
+12 V (30 mA)	12 V (30 mA)
+WS2815 (15 mA)	WS2815（15 mA）
+RGBW (80 mA)	電動壓力 (80 mA)
+Un LED en blanco al máximo, sus tres colores prendidos: los valores de WLED. Cada canal suma su parte según cuánto brilla.	白色的 LED , 三個顏色 : WLED 的圖形 。 每個頻道都透過它有多亮來增加它的份額 。
+CÓMO CONECTARLA	如何傳輸
+Datos: GPIO%d, pin %d del conector, con una resistencia de 330 Ω en serie.	資料: GPIO%d標題針 %d,以330 Ω連續電阻.
+Datos: el GPIO que elijas en Tira, con una resistencia de 330 Ω en serie.	資料: GPIO 您可以選擇"條紋",連續330 Ω阻力.
+La placa da 3,3 V y muchas tiras de 5 V quieren 3,5 V o más para entender los datos: con un level shifter (74AHCT125 o similar) anda siempre.	開發板輸出為 3.3 V，而許多 5 V 燈帶需要至少 3.5 V 才能可靠識別資料。建議使用 74AHCT125 等電平轉換器。
+Sopa	湯
+Cañones	槍支
+Bellota	橡子
+R-pentominó	R-pentomino 筆記本
+Planeadores	滑翔機
+Generación %lu  ·  %lu celdas	世代 %lu  ·  %lu 細胞
+Hormiga	螞蟻
+Vida	生命
+La hormiga de Langton	蘭頓的螞蟻
+Tu dibujo	你的繪畫
+Dibujá con el dedo y tocá Seguir	用手指繪圖,然後點選簡歷
+Paso	步驟
+Patrón	模式
+Sin memoria	沒有記憶
+Edad de las celdas	細胞年齡
+recién nacida	新生兒
+vieja	年老
+Arrastrá el dedo sobre el tablero para dibujar.	把手指拉到板上畫.
+Página %d	頁面 %d
+Hay 8 páginas como mucho	最多8頁
+Nombre de la página	頁面名稱
+El USB es un disco ahora (Ajustes → USB)	USB 是一個現在的磁碟 (設定 → USB)
+El USB se está preparando…	USB 準備好了.
+La computadora todavía no abrió el MIDI	電腦還沒有開啟MIDI埠
+Sin computadora por USB	沒有電腦 USB
+La computadora tomó el mando del puerto OTG	電腦拿走了OTG埠的遊戲板
+La computadora tomó el MIDI del puerto OTG	電腦拿到了OTG埠的MIDI
+La computadora tomó el teclado y el mouse del puerto OTG	電腦接管了OTG埠的鍵盤和滑鼠
+Conectá el puerto OTG de la placa a la computadora: la placa aparece como mando y como teclado MIDI	連線板的OTG埠到電腦:板塊顯示為遊戲盤和MIDI鍵盤
+Conectá el puerto OTG de la placa a la computadora: la placa aparece como teclado y mouse	連線板的OTG埠到電腦:板塊顯示為鍵盤和滑鼠
+USB	USB
+USB…	USB…
+Sin USB	否 USB
+Trackpad	軌道板
+Mando	遊戲板
+MIDI	午夜
+Un dedo mueve · tocar = clic · dos dedos o la franja = rueda · pellizcar = zoom	一個手指移動 · 點選 · · 兩個手指或條形 = 輪子 · 捏 = 縮放
+Dos dedos a la vez: el stick y un botón	雙手指 一根棍子和一個按鈕
+Dos dedos, dos notas · deslizá para un glissando	兩根手指,兩個音符 · 滑梯
+Tocá un botón · mantenelo apretado para editarlo	點選按鈕 ─ 按住它編輯
+no disponible	無法使用
+Las escenas y luces de la casa	房子的場景和燈
+Esta página se llena sola con las escenas, luces y enchufes de Home Assistant la primera vez que conecte. Configuralo desde el portal (Home Assistant) o con un ha.txt en la tarjeta.	這個頁面充滿了 Home Assistant電路上第一次連線時的場景,燈光和插座.Home Assistant) 或使用 ha.txt 在卡上.
+Home Assistant rechazó el token: revisalo en el portal.	Home Assistant 拒絕了代幣:請在門戶檢視.
+Esperando a Home Assistant para llenar esta página…	在等待 Home Assistant 為了填寫這個頁面...
+También podés agregar botones a mano: mantené apretada esta página arriba para vaciarla o renombrarla.	也可以手動新增按鈕:按下並在頂部保持此頁面以清除或重新命名。
+Enviado: clic derecho	傳送:右鍵
+Enviado: clic	傳送:點選
+No salió el clic	這點選沒有透過
+Enviado: el puntero, %d px	傳送者:指標, %d px
+Enviado: zoom %+d	傳送:放大 %+d
+Enviado: la rueda, %+d	傳送:輪子, %+d
+Vel. %d	速度 %d
+Escribir en la computadora	在電腦上輸入
+Lo que escribas va directo a la computadora	你輸入的東西直接進入電腦.
+Teclado de EE. UU.: los acentos y la ñ no llegan. Enter manda Enter.	美國鍵盤:口音和 ñ 不能透過.輸入傳送輸入.
+Escribir en la computadora…	在電腦上打字...
+Clic	單擊
+Arrastrar	拖動
+Clic derecho	右鍵
+Rueda	滾動
+Suave	軟
+Medio	平均值
+Fuerte	強大
+Enviado: %s	傳送: %s
+Enviado: %s%d	傳送: %s%d
+Bend	彎曲
+Mod.	現在,我們要做什麼?
+Tocá otra vez para borrarla	再擊,刪除
+Mover a la izquierda	往左移動
+Mover a la derecha	移向右
+Vaciar	清除
+Borrar la página	刪除頁
+Desde el portal (Macro pad) se ordenan los botones arrastrándolos y se edita todo más cómodo.	在門戶( Macro 墊) 中, 您可以透過拖動按鈕並更舒適地編輯所有按鈕來重新排序 。
+Atajo	快捷方式
+Secuencia	序列
+App	應用程式
+(sin nombre)	(未命名)
+Nombre del botón	按鈕名稱
+Combinación de teclas	關鍵組合
+Texto a escribir	字型到型別
+Hola	您好.
+Servicio (vacío = tocar)	服務 (空 = 點選)
+Datos del servicio (JSON)	服務資料 (JSON)
+Tópico	主題
+Tópico de estado (opcional)	國家主題 (可選)
+Entidad	實體
+Elegí una entidad	選擇一個實體
+Home Assistant no tiene entidades todavía.	Home Assistant 目前沒有實體.
+tocá para elegir	點選選擇
+Modificadores cmd, ctrl, alt, shift unidos con + y una tecla: cmd+shift+4, ctrl+alt+t, f5. Teclas de medios: play, next, prev, mute, volup, voldown.	修改器 cmd, ctrl, alt, shift 加上 + 和一個鍵: cmd+shift+4, ctrl+alt+t, f5. 媒體鍵:播放,下一步, prev,默音,volup,voldown.
+Tecla válida.	有效的鑰匙.
+No conozco esa tecla: revisá el nombre.	我不知道那個鑰匙,檢視這個名字.
+tocá para escribirlo	打點鍵
+Se escribe como un teclado de EE. UU.: los acentos y la ñ no llegan.	鍵入為美國鍵盤:口音和NN不能透過。
+Pasos	步驟
+tocá para escribirlos	輸入它們
+Una orden por línea: STRING texto · KEY cmd+c · DELAY 300 · MOUSE dx dy · SCROLL n · CLICK 1|2 · REPEAT n · HA entidad · MQTT tópico mensaje · OPEN app	每行一條命令：STRING 文字 · KEY cmd+c · DELAY 300 · MOUSE dx dy · SCROLL n · CLICK 1|2 · REPEAT n · HA 實體 · MQTT 主題 訊息 · OPEN 應用
+tocá para elegirla	點選選擇它
+Servicio	服務
+ninguno: lo de siempre (prender/apagar, abrir, ejecutar)	沒有:常見 (上)/off開放,執行)
+Tocar	打點
+Datos (JSON, opcional)	資料 (JSON,可選)
+Home Assistant no está conectado: la entidad se escribe a mano.	Home Assistant 沒有連線:手動輸入實體.
+(vacío)	(空)
+Tópico de estado	國家主題
+ninguno: el botón no muestra estado	無:按鈕顯示無狀態
+Retenido	儲存
+Probando…	測試.
+Tocá otra vez para borrarlo	再擊,刪除
+Botón nuevo	新建按鈕
+Editar botón	編輯按鈕
+Probar	測試
+ACCIÓN	行動
+ÍCONO	標籤:
+COLOR	顏色
+Explorar	探索
+Entradas	謹慎
+La fuente no aceptó %s	電源沒有接受 %s
+modelo	模型
+presets	預設
+lectura	閱讀
+contadores	計數器
+sensores	感測器
+relés	聯結器
+módulos	模組
+dimmers	dimmers 點數
+magnéticos	磁性
+Falta la dirección del equipo.	裝置的地址不見.
+unidad	單位
+Unidad (esclavo)	單位 (奴隸)
+Equipo Modbus TCP (dirección:puerto)	Modbus TCP裝置 (地址:埠)
+Unidad	單位
+tocá para poner la dirección	點選設定地址
+encender	啟動
+apagar	關閉
+SALIDA APAGADA	關閉
+bloqueado	鎖定
+Teclado	鍵盤
+POTENCIA, ÚLTIMOS 60 s	最後60秒
+PRESETS: TOCÁ UNO PARA CARGARLO	預示:按一下才能載入
+La fuente habla por su puerto TTL a 115200 (3,3 V): TX, RX y GND al puerto elegido. Cada valor que se escribe se vuelve a leer, porque la Riden rechaza en silencio lo que no le gusta.	電力供應商談判 TTL 在 115200 (3.3 V) 的港口:TX,RX和 GND 每個寫入的值都會被讀回,因為 Riden 沉默地拒絕不喜歡的東西.
+relé %d	繼電器 %d
+módulo %d	模組 %d
+Humedad	溼度
+Calidad del aire	空氣質量
+Encendido hace	執行時長
+sin red	沒有網路
+ausente	缺席
+error de sensor	感測器錯誤
+Abierto	開啟
+Cerrado	關閉
+Poné la dirección del gateway (el puerto Modbus TCP es 502 salvo que lo hayas cambiado).	輸入門口地址 ( Modbus 如果您沒有更改 TCP 埠,則是502.
+RELÉS Y MÓDULOS	連線和模組
+Relé %d	繼電器 %d
+Módulo %d	模組 %d
+DIMMERS	鑽石
+SENSORES MAGNÉTICOS	磁感測器
+Puerta %d	門 %d
+Dirección inicial	啟動地址
+Escribir el registro %u	寫註冊 %u
+Tocá Leer.	打點閱讀.
+%u valores desde %u	%u 的值 %u
+PEDIDO	要求
+Desde	透過
+Tocá una coil para invertirla.	貼個圈子來切開它
+Tocá un registro para escribirlo (FC 06).	按一個登錄檔來寫 (FC 06).
+RESPUESTA	答案
+Puertos	港口
+Sensores	感測器
+VCC_5V: vivo aun con la placa apagada	VCC_5V:即使板子被切除,也可以活下去
+Buck de 3 A: se apaga con POWER	3 一塊錢:用電源關閉
+SDA del bus I2C de la placa (táctil, códecs)	SDA 開發板 I2C 匯流排 (觸控,編碼)
+SCL del bus I2C de la placa (táctil, códecs)	SCL 開發板 I2C 匯流排 (觸控,編碼)
+UART0 TX al CH343: la consola	UART0 透過 TX CH343: 控制檯
+La INT del táctil, si R108 está puesta	如果安裝R108,觸控INT
+UART0 RX desde el CH343: la consola	UART0 來自 CH343: 控制檯
+JTAG MTDO	JTAG MTDO 賈塔格·馬多
+JTAG MTCK	日託·姆塔克
+JTAG MTDI	JTAG 導彈防禦系統
+ADC1 canal 5	ADC1 5號頻道
+ADC1 canal 6	ADC1 頻道 6
+USB-Serial-JTAG D−: libre si no se usa	USB- 連續JTAG D−:如果未使用,免費
+USB-Serial-JTAG D+: libre si no se usa	USB- 系列-JTAG D+:如果未使用,則免費
+USB 2.0 HS, en paralelo con el puerto OTG: no es un GPIO	USB 2.0 HS，與 OTG 埠共用訊號線，不是 GPIO
+Strapping de la fuente del JTAG: usable después del arranque	JTAG 源綁帶: 啟動後可用
+BOOT: strapping, con pull-up de 4,7K	BOOT: strapping, with 4.7K pull-up
+ADC2 canal 0	ADC2 頻道0
+ADC2 canal 1	ADC2 頻道1
+Dominio VO4: medí la tensión antes de usarlo	VO4 域:在使用之前測量電壓
+ADC2 canal 2, comparador	ADC2 channel 2, comparator
+Dominio VO4	VO4 域名
+ADC2 canal 3, comparador	ADC2 channel 3, comparator
+Temperatura, presión y humedad	溫度,壓力和溼度
+Temperatura y presión	溫度和壓力
+Temperatura y humedad	氣溫和溼度
+Luz, en lux	燈,在盧克斯
+Tensión, corriente y potencia, hasta 26 V	電壓,電流和功率,最大26V
+Tensión, corriente y potencia, hasta 36 V	電壓,電流和功率最高36V
+ADC de 16 bits, 4 entradas	16 位 ADC, 4個輸入
+Luz	淺色
+En el shunt	橫穿支流
+No contesta en esa dirección	在這個地址沒有答案
+Llegó una lectura con el CRC mal	一個讀物到達了,有壞的CRC
+En esa dirección hay otro chip (dice %s)	在那個地址還有另一個晶片 (它說 %s)
+Todavía no midió	還沒有測量
+Los pines los tiene %s	釘子是握著的 %s
+Ahí está el %s de la placa	開發板的 %s 有沒有?
+la línea es demasiado larga	排行太長了
+se esperaba «port» o «module», un nombre y lo demás	或“模組”、名稱和其他
+demasiados puertos (%d como mucho)	太多的港口 (%d 最多)
+el nombre del puerto es demasiado largo	港口名稱太長了
+los puertos se llaman uart…, i2c…, spi… o gpio…	港口的名稱是Uart...,i2c...,Spi...或Gpio...
+un GPIO que no está en el header	a GPIO 這不是標題上
+un pin reservado (la consola o BOOT)	a reserved pin (the console or BOOT)
+le falta un pin (tx/rx, sda/scl, sck/mosi o pin)	缺失一個針 (tx)/rx美國/scl沒有什麼./mosi or pin)
+hay dos puertos que se llaman %s	有兩個港口. %s
+demasiados módulos (%d como mucho)	太多的模組 (%d 最多)
+al módulo le falta el puerto	模組沒有埠
+no es ni «port» ni «module»	它既不是埠也不是模組
+GPIO%d está en %s y en %s	GPIO%d 在 %s 在 %s
+%s está en %s, que no está declarado	%s 現在 %s沒有公佈的
+Línea %d: %s	線條 %d: %s
+en un puerto	在一個港口
+tomado	採用
+con cuidado	謹慎地
+USB 2.0, no es un GPIO	USB 2.0，不是 GPIO
+la consola	控制檯
+dominio VO4	VO4 域名
+strapping	連線
+bus de la placa	板車
+Pin %d · %s	引腳 %d · %s
+compartido con la placa	與開發板分享
+No es un GPIO	沒有一個 GPIO
+Qué es	這是什麼?
+Lo tiene	透過
+Nadie, ahora	現在沒有人
+Puerto	港口
+Módulos en ese puerto	在該埠的模組
+Ninguno en modules.txt	沒有任何 modules.txt
+Ver el puerto	檢視埠
+El conector de atrás, acostado: el pin 1 (5 V) es el cuadrado de arriba a la izquierda. Tocá un pin; abajo, los pines de cada puerto (número de pin físico).	背面的聯結器橫放時，引腳 1（5 V）為左上角的方形焊盤。點選引腳可檢視詳情；下方列出各埠的物理引腳編號。
+El conector de atrás, como en el dibujo de Waveshare: el pin 1 (5 V) es el cuadrado, arriba a la derecha. Tocá un pin para ver qué es y quién lo tiene.	按 Waveshare 圖示檢視背面的聯結器：引腳 1（5 V）為右上角的方形焊盤。點選引腳可檢視用途和當前佔用者。
+%s  GPIO%d · pin %d	%s  GPIO%d · 針 %d
+El bus de la placa: lo comparte con el táctil y los códecs, y ya tiene 0x14/0x5D, 0x18 y 0x40.	板塊巴士:與觸控面板和編碼器共享,它已經有0x14/0x5D它們是0x18和0x40.
+Ahora lo usa: %s	現在使用的是: %s
+Sin módulos declarados en este puerto.	在這個埠上沒有任何模組.
+Detectados ahora: %s	現在發現了: %s
+modules.txt: %d puertos, %d módulos	modules.txt: %d 港口, %d 模組
+Agregar	新增
+Recargar	重新載入
+Leído de modules.txt, en la raíz de la tarjeta. Las apps abren un puerto por su nombre, así que mover un módulo de pines es editar este archivo.	閱讀 modules.txt應用程式將一個埠以其名稱開啟,所以把模組轉移到其他指令碼意味著編輯這個檔案.
+No hay modules.txt en la tarjeta: esto es el perfil por defecto. Editar o agregar un módulo crea el archivo.	沒有. modules.txt 在卡上:這是預設的配置檔案.編輯或新增模組建立了檔案.
+Ojo con modules.txt	謹慎使用 modules.txt
+PUERTOS	港口
+Se puede guardar, pero: %s	它可以儲存,但: %s
+Bien: %d puertos y %d módulos	接下來, %d 港口和 %d 模組
+No se pudo escribir en la tarjeta	我不能寫到卡
+Guardado: %d puertos, %d módulos	儲存: %d 港口, %d 模組
+Es el perfil por defecto: al guardar se crea modules.txt en la tarjeta.	這就是預設的配置檔案:儲存建立 modules.txt 在卡上.
+Agregado a modules.txt	加入 modules.txt
+Agregar módulo	新增模組
+QUÉ ES	什麼是
+Un transceptor RS485 (MAX485 o uno automático) para Modbus RTU; el DE va en el pin de del puerto.	一個 RS485 接收器 (MAX485 或是自動) Modbus 港口的電源.
+PUERTO	港口
+No hay puertos UART en modules.txt.	沒有. UART 港口 modules.txt.
+No hay puertos I2C en modules.txt.	沒有. I2C 港口 modules.txt.
+Ojo: el bus de la placa ya tiene el ES7210 en 0x40, donde suelen estar los INA219.	注意：板載匯流排的 0x40 地址已被 ES7210 佔用，INA219 常用的也是此地址。
+DIRECCIÓN	地址
+RESISTENCIA DEL SHUNT	阻力
+RANGO	範圍
+LA LÍNEA	線條
+Sin lecturas todavía	目前沒有讀數
+mín %s · máx %s · últimos %d min	最小值 %s ·最大 %s ·最後一次 %d 最小值
+mín %s · máx %s · últimos %d s	最小值 %s ·最大 %s ·最後一次 %d s
+%s: los pines los tiene %s	%s:針被 %s
+%s: no se pudo abrir	%s無法開啟
+%s: %d sensores · buscó hace %u s	%s: %d 感測器 ·掃描 %u 在此之前
+%s: %d sensores	%s: %d 感測器
+%u lecturas · %u errores	%u 讀數 · %u 錯誤
+Esperando la primera lectura	等待第一次閱讀
+Buscando sensores…	尋找感測器...
+detectado	檢測
+PARECE QUE HAY	似乎有.
+¿Es un %s?	是不是一個 %s?
+no dice qué es	沒有說它是什麼
+Estos chips no tienen cómo decir qué son sin que alguien les escriba: agregalos a modules.txt si son lo que parecen.	這些晶片是什麼,除非有人寫給他們: modules.txt 如果它們是他們看似的.
+Buscar de nuevo	再一次搜尋
+No hay sensores	沒有感測器
+Publicar	釋出
+recién	現在
+hace %u s	%u 在此之前
+hace %u min	%u 幾分鐘前
+hace %u h	%u 在此之前
+hace %u días	%u 幾天前
+Sin red	沒有網路
+Rechazado	拒絕
+binario · %u bytes	二進位制 %u 位元組
+%u tópico	%u 主題
+%u tópicos	%u 主題
+y %d más: usá la búsqueda	還有 %d 項，請使用搜尋
+Ningún tópico coincide	沒有任何主題.
+Esperando mensajes…	等待訊息...
+Conectá un broker	連線一個經紀人
+Sin mensajes todavía	目前沒有訊息
+Probá con otra parte del nombre.	試看這個名字的另一個部分.
+Suscripto; los tópicos aparecen acá a medida que llegan.	報名;當他們到達時,這些話題會出現.
+Poné la dirección en Conexión, o un mqtt.txt en la raíz de la tarjeta.	在連線中輸入地址,或設定一個 mqtt.txt 在卡的根上.
+Cuando haya conexión, los tópicos aparecen acá.	一旦連線,這些話題就會出現.
+%s · %s tópicos · %s msg/s	%s · %s 主題 · %s 簡訊/s
+Sin broker configurado	沒有配置的經紀人
+Buscar tópicos	搜尋主題
+Elegí un tópico	選擇一個主題
+Su último mensaje, cuándo llegó y un gráfico de cada número que trae.	它的最後一封資訊,當它到達時和每一個數字的圖表.
+MENSAJE	資訊
+Mandar una orden	發一個命令.
+Publicar acá	在此釋出
+%s mensaje	%s 資訊
+%s mensajes	%s 資訊
+valor	價值
+Hace falta más de un valor para el gráfico.	一張圖表需要多個值.
+%d valores · %s	%d 價值 · %s
+\n… (recortado: %s en total)	\n... (縮短: %s 總計)
+Falta el tópico	缺失的主題
+Un tópico para publicar no lleva + ni #	一個發表的主題不能包含+或#
+Primero configurá el broker en Conexión	首先設定連線中的經紀人
+MQTT está apagado en Conexión	MQTT 在連線中關閉
+La cola de envío está llena	傳送佇列滿了
+Publicado en %.100s	發表於 %.100s
+En cola: sale cuando haya conexión	排隊:一旦連線,就會關閉
+Cargado en el formulario	在表格中載入
+vacío	空
+Retener	保持
+Retenido: el broker lo guarda y se lo da a cada uno que se suscriba después. Un mensaje vacío retenido lo borra.	儲存:經紀人保留它,並將其交給後續訂閱者.
+QoS 1 espera la confirmación del broker (PUBACK) y reintenta si no llega.	QoS 1 等待訊息代理返回 PUBACK 確認，未收到時會重試。
+RECIENTES	最近
+Lo que publiques queda acá, para mandarlo de nuevo con un toque.	你釋出的內容留在這裡,以一次擊中再次傳送.
+Tocá uno para publicarlo otra vez; mantenelo apretado para cargarlo arriba. El alfiler lo deja fijo.	按一下,然後再發行.
+Broker (dirección:puerto)	經紀人 (地址:港口)
+Usuario	使用者
+sin usuario	沒有使用者
+Contraseña	密碼
+sin contraseña	沒有密碼
+ID de cliente (vacío: automático)	客戶ID (空:自動)
+Suscripción (separá con comas)	訂閱 (以逗號分開)
+Reconectando…	重新連線...
+Configuración leída de mqtt.txt	讀取設定 mqtt.txt
+No hay un mqtt.txt nuevo en la tarjeta	沒有新的 mqtt.txt 在卡上
+Tabla vacía: los retenidos vuelven al reconectar	清除表:保留的迴歸重新連線
+%s:%d · desde %s	%s:%d · 為 %s
+Poné la dirección del broker abajo, o un mqtt.txt en la tarjeta.	輸入下面的經紀人地址,或放一個 mqtt.txt 在卡上.
+Prendelo para conectar.	讓它連線起來.
+MQTT 3.1.1 · cliente %s	MQTT 3.1.1 · 客戶 %s
+BROKER	經紀人
+Servidor	伺服器
+ninguno	無
+ID de cliente	客戶身份證
+automático	自動
+Suscripción	訂閱
+CONTADORES	計數
+Recibidos	收到
+Enviados	傳送
+Tópicos	主題
+Datos recibidos	收到的資料
+Datos enviados	傳送的資料
+Mensajes/s	訊息/s
+Conexiones	連線
+Sin confirmar	沒有開放
+Leer mqtt.txt de la tarjeta	讀取 mqtt.txt 從卡
+Vaciar la tabla de tópicos	清除主題表
+La contraseña es incómoda de tipear: poné un mqtt.txt en la raíz de la tarjeta con renglones host=, port=, user=, password=, client_id= y sub=. P4OS la guarda y la borra del archivo. Sin TLS: sólo brokers de la red local.	密碼很難輸入: mqtt.txt 在卡的根底裡有 host=, port=, user=, password=, client_id=和 sub=. P4OS 儲存並從檔案中刪除它.沒有 TLS:僅是本地網路經紀人.
+a %s:%d como %s	在 %s:%d 作為 %s
+No hay memoria para abrir MQTT.	沒有足夠的記憶來開啟 MQTT.
+No se pudo reproducir	我不能玩.
+Aleatorio apagado	關閉
+Aleatorio	混合物
+Continuar desde %s	簡歷 %s
+Nada sonando	沒有什麼玩
+Elegí una canción de la lista	從列表中選出一首歌
+En pausa: otra app usa el parlante	暫停:另一個應用程式正在使用揚聲器
+%d de %d	%d 的 %d
+%d carpetas \xC2\xB7 %d canciones	%d 資料夾 \xC2\xB7 %d 歌曲
+1 carpeta	1 個資料夾
+%d carpetas	%d 資料夾
+1 canción	一首歌
+%d canciones	%d 歌曲
+Reproducir	開始遊戲
+No hay música en la tarjeta	卡上沒有音樂
+Copiá archivos .mp3 o .wav a la carpeta %s	複製.mp3或 .wav檔案到 %s 資料夾
+REPRODUCIENDO DESDE	玩法
+Un nombre (homeassistant.local, google.com) o una dirección (192.168.1.10).	一個名稱 (homeassistant.local, google.com) 或一個地址 (192.168.1.10).
+Equipo a medir	測量的主機
+hace 2 min	兩分鐘前
+Tocá Empezar para medir	點選開始測量
+Empezar	開始
+Tocá para elegir un equipo	擊下一個主機
+%s · DNS en %u ms	%s · DNS 在 %u ms
+sin ICMP: mide conectar por TCP al puerto 80	沒有ICMP:測量TCP連線到80埠
+buscando la dirección…	查詢地址...
+Desde %s, un ping por segundo	透過 %s,每秒一個 ping
+esperando la primera respuesta	等待第一回復
+sin medir	沒有測量
+la última se perdió · %u enviados	最後一個失去了 · %u 傳送
+TTL %d · %u enviados	TTL %d · %u 傳送
+%u enviados	%u 傳送
+Latencia y pérdida hacia un equipo · estás en %s	延遲和損失對主機 · %s
+mínimo	最低
+promedio	平均值
+máximo	極限
+LATENCIA, UNA BARRA POR PING	延遲,每一條酒吧
+Pérdida	損失
+Respondidos	答案
+El jitter es cuánto cambia la latencia de un ping al siguiente, en promedio. La línea punteada del gráfico es el promedio.	平均的延遲從一個ping到另一個ping變化是多少.
+Ya hay otro escaneo de puertos en marcha	另一個埠掃描已經在執行
+Buscando equipos…	在尋找裝置...
+Todavía no se buscó	目前還沒有搜尋
+Buscar equipos	找到裝置
+%s · %d encontrado	%s · %d 發現
+%s · %d encontrados	%s · %d 發現
+Los equipos de tu red y lo que tienen abierto	網路上的裝置以及它們開放的內容
+Ping a todas las direcciones	在每一個地址上.
+Probando los puertos conocidos	試著熟悉的港口
+Buscando los nombres (mDNS)	查詢名字 (mDNS)
+Listo en %s: %d equipo%s	完成 %s: %d 裝置%s
+Listo en %s: %d equipos%s	完成 %s: %d 裝置%s
+, también los que no responden ping	包括那些不響應 ping 的
+sin ICMP: sólo por TCP	沒有ICMP:只有TCP
+Detenido: quedan los que se encontraron hasta ahí	停止:迄今發現的儲存
+Rápido: los que responden ping. Completo: también los que no, tarda cerca de un minuto.	快速:響應 ping的人. 完整:其他也需要一分鐘.
+Puertos 1-1024	港口1-1024
+Prueba del 1 al 1024 y los altos de siempre (1883, 8123, 6053, 8080...).	嘗試1到1024加上通常高的1883,8123,6053,8080...
+%d/%d · %d abiertos · %s	%d/%d · %d 開放 %s
+Detenido en %d/%d · %d abiertos	停在 %d/%d · %d 開放
+%d abiertos de %d, en %s%s	%d 開放的 %d在 %s%s
+ · no contestó nada: puede tener un firewall	 ·沒有答案:可能有防火牆
+Respondió el ping en %s ms	響應的通訊 %s ms
+No responde el ping; contestó por TCP	沒有響應ping;透過TCP回覆
+No responde el ping; contestó por ARP	沒有響應ping;透過ARP回覆
+PUERTOS CONOCIDOS	眾所周知的港口
+TODOS LOS PUERTOS	所有港口
+ANUNCIA POR mDNS	關於MDNS的公告
+Rápido	快速
+Completo	全面
+Simulador: barre 127.0.0.1, o el rango que diga la variable P4_SIM_NET_SCAN.	模擬器:掃描127.0.0.1,或在P4_SIM_NET_SCAN變數中的範圍.
+Tocá un equipo para ver todos sus puertos	按一下裝置,檢視所有埠
+Excelente	非常好.
+Buena	很好.
+Regular	公平
+Débil	軟弱
+Muy débil	非常弱.
+(oculta)	(隱藏)
+Nada en esta banda	這樂隊沒有什麼.
+Escaneando…	正在掃描…
+(red oculta)	(隱藏網路)
+canal %u · %u MHz · %s · %s	頻道 %u · %u MHz □ 兆赫 %s · %s
+El escaneo falló: ¿está prendida la radio?	掃描失敗:電臺開了嗎?
+%d puntos de acceso (%d en 2,4 GHz, %d en 5 GHz) · hace %u s	%d 接入點 (%d 在2.4 GHz上, %d 在 5 GHz 上) · %u 在此之前
+canal %u · %u MHz · %s · %02X:%02X:%02X:%02X:%02X:%02X	頻道 %u · %u MHz □ 兆赫 %s · %02X:%02X:%02X:%02X:%02X:%02X
+Conectado a %s · %s	連線到 %s · %s
+La placa no está asociada a ninguna red	開發板與任何網路都沒有聯絡.
+Las redes de alrededor y sus canales	你周圍的網路和他們的頻道
+CANALES 2,4 GHz	頻道2.4 GHz
+CANALES 5 GHz	頻道 5 GHz
+REDES	網路
+Simulador: las redes son de ejemplo; en la placa las escanea el ESP32-C6, que sólo tiene 2,4 GHz.	模擬器:網路是樣本; ESP32-C6 掃描它們,只有2.4 GHz.
+Todos (%d)	所有 (%d)
+Preguntando en la red…	問網路...
+Nadie anunció nada	沒有人宣佈任何事情
+Preguntando…	問一個問題.
+Buscar servicios	尋找服務
+%d servicios, respondieron en %s	%d 在 %s
+Preguntando por 15 tipos de servicio a la vez…	一次要求15種服務型別...
+Quién anuncia qué en la red (.local)	誰在網路上宣佈什麼 (.本地)
+TIPOS	型別
+Simulador: son servicios de ejemplo; en la placa se le pregunta a la red de verdad.	模擬器:這些是樣本服務;在板上要求真正的網路.
+No hay memoria para abrir Red	沒有足夠的記憶體來開啟網路
+No se pudo abrir esta foto	我無法開啟這張照片.
+%d fotos \xC2\xB7 1 álbum	%d 照片 \xC2\xB7 一張專輯
+%d fotos \xC2\xB7 %d álbumes	%d 照片 \xC2\xB7 %d 專輯
+1 foto	一張照片
+%d fotos	%d 照片
+Biblioteca	庫
+Álbumes	專輯
+No hay fotos en la tarjeta	卡上沒有照片
+Las fotos están en los álbumes	這些照片都在專輯中.
+Copiá fotos .jpg o .png a la carpeta %s	複製.jpg或png照片到 %s 資料夾
+nada	無
+grabando	記錄
+líneas	線條
+Sin conexión: elegí el puerto y la velocidad	不連線:選擇埠和速度
+Conectar	連線
+Filtro	過濾器
+Avisos	提醒
+%s lo tiene %s	%s 由 %s
+Conectá un puerto primero	首先連線一個埠
+Hace falta la tarjeta	需要卡
+Grabación guardada en /logs	儲存到 /logs
+Grabando en /logs	根據 /logs
+Mostrar sólo las filas con… (texto, o bytes como «DE AD»)	僅顯示行... (文字, 或位元組如“ DE AD” ) 。
+Mostrar sólo las líneas con…	只有用...
+Ya hay 8 avisos	已經有8個警報
+Avisar cuando aparezca…	警報當這個出現時...
+Cada línea de los dos canales se compara con estos textos, sin importar mayúsculas. Una coincidencia se marca en ámbar y se cuenta; con aviso o pitido, además avisa, como mucho una vez cada 10 segundos.	兩條頻道的每條線都要對照這些文字進行檢查, 忽略大小寫 。 匹配以安柏標註並計數; 提醒或按鈴也通知您, 最多每10秒一次 。
+1 vez	一次
+%u veces	%u 時間
+Aviso	提醒
+Pitido	提示音
+Sin avisos.	暫無提醒。
+Agregar un texto…	新增文字…
+SUGERENCIAS	建議
+Hexa	十六進位制
+Final	結束
+Enviar al puerto…	傳送到串列埠…
+Wi-Fi	Wi-Fi
+Pantalla	螢幕
+Sonido	聲音
+Fondo	桌布
+Expansión	擴充套件
+Idioma	語言
+Fecha y hora	時間和日期
+Acerca de	關於
+Almacenamiento	儲存空間
+Actualización	更新
+Diagnóstico	診斷
+Pantalla de bloqueo	鎖屏
+Teclado y mouse	鍵盤和滑鼠
+Disco	磁碟
+Cambiando de modo…	切換模式...
+La computadora tomó la placa como teclado y mouse. El portal también contesta por el cable: 192.168.7.1	計算機已將開發板識別為鍵盤和滑鼠。也可透過 USB 連線訪問管理網頁：192.168.7.1。
+La computadora tomó la placa como teclado y mouse.	計算機已將開發板識別為鍵盤和滑鼠。
+Esperando a la computadora. Conectá el cable al conector OTG.	正在等待計算機連線。請將資料線接入 OTG 介面。
+La computadora tiene la tarjeta. Cuando termines, expulsala ahí: vuelve sola a la placa.	儲存卡正由計算機使用。操作完成後，請在計算機上安全彈出，裝置將自動重新接管。
+Esperando a la computadora. La tarjeta ya salió de la placa: las apps de la tarjeta no abren.	正在等待計算機連線。裝置已解除安裝儲存卡，暫時無法開啟卡上的應用。
+El puerto está libre: la placa no aparece en la computadora.	介面處於空閒狀態，計算機不會識別到此裝置。
+El USB está cambiando de modo	USB 是切換模式
+Mejor expulsar la tarjeta en la computadora antes	最好先把卡扔到電腦上.
+AHORA	現在
+QUÉ ES EL PUERTO OTG	什麼是OTG港口
+El puerto queda libre y la placa no aparece en la computadora. La consola sigue por el conector UART, y el registro en el portal.	機器的埠保持自由,板塊不會顯示在計算機上. UART 聯結器和門戶的日誌.
+La placa es un teclado, un mouse, las teclas multimedia, un joystick y un teclado MIDI de la computadora: lo que usa el Macro pad. Además, una red por el cable: el portal contesta en 192.168.7.1 aunque no haya Wi-Fi. La tarjeta sigue en la placa. Abrir el Macro pad lo elige solo.	機板是計算機的鍵盤,滑鼠,媒體鍵盤,遊戲pad和MIDI鍵盤:Macropad所使用的.加上電纜上的網路:門戶端在192.168.7.1號碼上回答即使沒有 Wi-Fi儲存卡留在板上,開啟宏盤就會自行選擇.
+La microSD aparece en la computadora como un pendrive, para copiar apps, música, fotos o mapas a la velocidad del USB. Mientras la tiene la computadora la placa no la toca: al elegirlo se cierran las otras apps, y las de la tarjeta no abren. Expulsala en la computadora y vuelve sola a la placa, con el modo de antes.	微SD顯示在計算機上作為一個 USB 它們可以複製應用,音樂,照片或地圖 USB 在電腦擁有它的時候,板塊不會觸控它:選擇這個方法會關閉其他應用程式,卡的應用程式不會開啟.
+El conector OTG es el USB 2.0 de alta velocidad del P4 (480 Mbit/s). La placa puede alimentarse por él o por el UART, y pasar de uno al otro sin reiniciarse.	OTG 聯結器使用 P4 的高速 USB 2.0（480 Mbit/s）。開發板可由此介面或 UART 介面供電，兩者之間切換時無需重啟。
+Sin conectar	沒有連線
+No	否
+Bluetooth	藍芽
+Con código	有一個程式碼
+Sí	Sí
+Fondo de pantalla	桌布
+Editar inicio	編輯首頁螢幕
+sin tarjeta	未檢測到儲存卡
+modo seguro	安全模式
+hubo un cuelgue	有一個絞刑
+La contraseña WPA2 lleva de 8 a 63 caracteres	A WPA2 密碼有8至63個字元
+Contraseña de	的密碼
+Unirse	連線
+La búsqueda falló	掃描失敗
+No se encontraron redes	沒有發現網路
+La radio está ocupada: probá de nuevo en un momento	收音機忙了:在一瞬間再試一次
+Tocá otra vez: los conectados se caen	再擊:誰都在滴下
+RED PROPIA	自己的網路
+Punto de acceso	接入點
+Levantándolo…	提起這個問題...
+La placa arma su propia red Wi-Fi, para conectarte desde el teléfono donde no hay otra. Queda prendida al reiniciar.	開發板做了自己的 Wi-Fi 連線到電話的網上,可以從電話中連線到沒有其他電話.
+Portal	入口網站
+Conectados	已連線
+Cambiar la contraseña	改變密碼
+1. Unite a la red de la placa con la cámara del teléfono.	1. 透過電話的相機加入開發板網路.
+2. Después abrí el portal.	2. 然後開啟管理網頁。
+Mientras está prendida, la placa deja de buscar la red de casa (si ya estaba conectada, sigue). El teléfono puede avisar que esta red no tiene internet: es así, quedate conectado igual.	電話可能會警告這個網路沒有網際網路:那就是說,無論如何保持連線.
+Red	網路
+Señal	訊號
+Olvidar esta red	忘記此網路
+La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.	P4 透過板載 ESP32-C6 連線網路，僅支援 2.4 GHz。
+ORIENTACIÓN	方向
+La placa no tiene acelerómetro: la orientación se elige acá o en el Centro de control. Las apps que sólo tienen sentido de una forma giran la pantalla mientras están abiertas.	電腦板上沒有加速儀:選擇在這裡或控制中心的方向.只有一個道理的應用程式在開放時旋轉螢幕.
+BRILLO	亮度
+APAGAR LA PANTALLA	螢幕關閉
+Nunca	從不
+1 minuto	一分鐘
+2 minutos	2分鐘
+5 minutos	五分鐘
+10 minutos	10分鐘
+30 minutos	30分鐘
+Sin tocarla, la pantalla se atenúa diez segundos antes y después se apaga; un toque la despierta. Los juegos, el video y las apps que lo piden la mantienen encendida mientras están al frente.	當未觸動的螢幕在10秒前就暗淡了,然後就關了;觸控會喚醒它。遊戲、影片和應用程式在前面要求它保持它。
+VOLUMEN	卷
+Probar el parlante	測試揚聲器
+Pronto: una imagen JPEG de la tarjeta.	很快:卡上的JPEG影象.
+puerto	港口
+en uso	使用中的
+El conector de 40 pines de atrás. Cada pin dice qué puerto de modules.txt lo usa, o quién lo tiene tomado ahora.	背面的 40 針聯結器。各引腳會顯示 modules.txt 中使用它的埠，或當前佔用它的應用。
+PUERTOS (modules.txt)	港口 (modules.txt)
+MÓDULOS	模組
+Apps y sus datos	應用程式及其資料
+Videos	影片
+Mapas	地圖
+Grabaciones	錄音
+La tarjeta la tiene la computadora (modo Disco)	電腦有卡 (磁碟模式)
+Esperá a que termine de contar	等到它完成數量
+Tocá otra vez para expulsarla	再點選,將它排出
+Ya podés sacar la tarjeta	你現在可以拿出儲存卡
+No se pudo expulsar la tarjeta	沒有能放出儲存卡
+Tarjeta montada	儲存卡安裝
+No hay tarjeta, o no se pudo leer	沒有儲存卡,否則無法閱讀
+en la computadora	在電腦上
+no hay	無
+Montar la tarjeta	放上儲存卡
+Con una microSD puesta, montala acá. En modo Disco del USB la tiene la computadora: vuelve sola al expulsarla allá.	如果有微SD,就把它安裝在這裡. USB 電腦的磁碟模式是這樣的:當它被丟擲時,它會自動回來.
+%s usados de %s	%s 用於 %s
+Libre	免費
+Contando lo que hay en la tarjeta…	計算卡上的內容...
+%u archivos.	%u 檔案.
+No se pudo recorrer la tarjeta.	我無法檢視儲存卡.
+LA TARJETA	儲存卡
+Modelo	模型
+Capacidad	產能
+%u MHz, %d bits	%u 頻率為 MHz, %d 零件
+Bus	公共汽車
+Fabricada	製造
+Expulsar la tarjeta	丟擲儲存卡
+Expulsala antes de sacarla: se cierran las otras apps, y las de la tarjeta no abren hasta que se monte de nuevo. Para copiar archivos desde la computadora, el modo Disco del USB.	在刪除之前將卡丟棄:其他應用程式關閉,卡的應用程式直到重新安裝才不會開啟. USB 磁碟模式.
+Tocá otra vez para reiniciar con esa	再鍵來重新啟動
+La otra ranura no tiene una imagen entera	另一個插槽沒有完整的影象
+Reiniciando con la versión anterior…	重新開始之前的版本...
+anduvo: se puede volver	工作了:你可以回去.
+sin probar	未經測試
+a prueba	在審判中
+marcada como mala	標記為壞
+a medio instalar	半安裝
+LA QUE CORRE	跑步
+Versión	版本
+Compilada	建成
+Ranura	機場
+confirmada	確認
+LA ANTERIOR	最古老的
+No se pudo leer la otra ranura	我讀不到另一個插槽.
+Volver a esta versión	返回這個版本
+Las versiones nuevas llegan por el portal (Firmware) o con tools/ota.sh, y se escriben en la otra ranura. Arrancan a prueba: si la placa se reinicia antes de confirmarla, a los 30 s, vuelve sola a la anterior.	新版本透過門戶 (Firmware) 或工具到達/ota.sh試機開始:如果板在確認一個之前重新啟動,30秒後,它會自行返回前一個.
+al encender	在電源上
+por software	透過軟體
+por un error (pánico)	由於錯誤 (恐慌)
+watchdog de interrupciones	打斷監護犬
+watchdog de tareas	任務監督犬
+watchdog	監護犬
+caída de tensión	棕色外觀
+al salir del sueño profundo	從深夜的睡眠中醒來.
+botón de reset	重置按鈕
+por el USB	過去了 USB
+por JTAG	在JTAG上
+error de eFuse	eFuse 錯誤
+pico en la alimentación	電源故障
+CPU trabada	處理器鎖定
+%u KB (mínimo %u)	%u KB (最低) %u)
+Volcado borrado	垃圾被刪除
+No se pudo borrar	無法刪除
+Temperatura del chip	晶片溫度
+CPU (núcleos 0 · 1)	處理器 (核心0 · 1)
+Interna libre	內部自由
+PSRAM libre	PSRAM 可用
+Encendida hace	執行時長
+ESTE ARRANQUE	這 BOOT
+Motivo del reinicio	重新設定原因
+Modo seguro	安全模式
+sí: sin las apps de la tarjeta	是的:沒有卡的應用程式
+no	沒有
+Reinicios por cuelgue	絞刑後休息
+Se arrancó con BOOT apretado: sin las apps de la tarjeta y con los ajustes de pantalla de fábrica. Reiniciá para volver a la normalidad.	它啟動了 BOOT 沒有卡的應用程式,並且有工廠顯示器調整. 重啟恢復正常.
+RADIO (ESP32-C6)	廣播電 (ESP32-C6)
+Firmware del C6	C6 韌體
+todavía no arrancó	沒有起床
+no la informa (firmware viejo)	它沒有報告 (舊的韌體)
+El Wi-Fi lo hace el ESP32-C6 de la placa; el P4 le habla por SDIO. Esta es la versión del firmware que corre en el C6.	開發板的 ESP32-C6 是否 Wi-Fi這就是C6執行的韌體版本.
+ÚLTIMO CUELGUE	最後一次破碎
+Volcado	垃圾
+dañado	損壞
+Tarea	任務
+Firmware (ELF)	軟體 (ELF)
+Borrar el volcado	抹去垃圾桶
+El volcado se baja desde el portal (Firmware, Último cuelgue) o con tools/coredump.sh, y se lee con la ELF de esa compilación.	The dump downloads from the portal (Firmware, Last crash) or with tools/coredump.sh並且可以用該構建的ELF來讀取.
+Abrir el Monitor	開放監視器
+No coinciden: empezá de nuevo	他們不匹配:重新開始
+Código guardado	儲存的程式碼
+Repetí el código nuevo	重複新的程式碼
+Elegí el código nuevo	選擇新的程式碼
+Sin código	沒有程式碼
+Ingresá el código actual	輸入當前程式碼
+La hora, los mensajes y la música sobre el fondo de pantalla; deslizá hacia arriba para entrar. Aparece al arrancar y cuando la pantalla estuvo apagada el tiempo que elijas.	時間,資訊和音樂在桌布上; 滑到上面進入. 它會出現在啟動時,
+BLOQUEAR	鎖
+Al apagarse la pantalla	當螢幕關閉時
+1 minuto después	一分鐘後
+5 minutos después	在5分鐘後
+15 minutos después	在15分鐘後
+1 hora después	一個小時後
+Cuánto tiempo apagada antes de bloquearse. Cuándo se apaga la pantalla se elige en Pantalla.	在螢幕關閉之前,它停了多少時間.
+CÓDIGO	程式碼
+Código de 4 dígitos	四位數碼
+Código de 6 dígitos	六位數碼
+Cambiar el código	改變程式碼
+Modo seguro: el código no se pide, así que podés quitarlo o cambiarlo sin saberlo.	安全模式不要求輸入密碼，可直接移除或更改密碼。
+¿Te olvidaste el código? Reiniciá con BOOT apretado (modo seguro): ahí no se pide, y lo quitás desde acá. Después de 5 intentos mal, espera 30 s, y más cada vez.	忘記了程式碼嗎? BOOT (安全模式):它沒有被要求在那裡,你把它從這裡. 5次錯誤嘗試後它等30秒,每次更長時間.
+QUÉ SE MUESTRA	顯示內容
+Mensajes	訊息
+Ocultar el texto con código	設定鎖屏密碼後隱藏訊息內容
+Los mensajes son las notificaciones: hoy las de las apps, y las del teléfono por Bluetooth y las de Home Assistant cuando lleguen. Con código y el texto oculto, se ve de qué app son pero no qué dicen.	訊息即通知，目前包括應用通知；之後還會支援透過藍芽接收手機通知以及 Home Assistant 通知。設定鎖屏密碼並隱藏訊息內容後，只顯示通知來源，不顯示正文。
+Bloquear ahora	立即鎖屏
+PORTAL WEB	網頁
+En la red	在網路上
+Por Wi-Fi	透過 Wi-Fi
+Por su red propia	透過裝置熱點
+Por el cable USB	透過 USB 資料線
+Sin Wi-Fi no hay código QR: el teléfono tiene que estar en la misma red que la placa, o en la red propia de la placa (Ajustes, Wi-Fi).	未連線 Wi-Fi 時無法顯示二維碼。手機必須與裝置連線同一網路，或連線裝置熱點（設定 → Wi-Fi）。
+Escaneálo con el teléfono para abrir el portal.	用手機掃描它,開啟門戶.
+Cambiar el idioma cierra las apps abiertas.	切換語言會關閉已開啟的應用。
+Buenos Aires (UTC−3)	布宜諾斯艾利斯 (UTC−3)
+Santiago (UTC−4/−3)	聖地亞哥 (UTC−4/−3)
+São Paulo (UTC−3)	聖保羅 (UTC−3)
+Ciudad de México (UTC−6)	墨西哥城 (UTC−6)
+Nueva York (UTC−5/−4)	紐約 (UTC−5/−4)
+Madrid (UTC+1/+2)	馬德里 (UTC+1/+2)
+Londres (UTC+0/+1)	倫敦 (UTC+0/+1)
+Sólo a-z, 0-9 y guiones	只有z,0-9和字串
+Nombre en la red	網路名稱
+sin hora (esperando la red)	時間未同步（正在等待網路）
+ZONA HORARIA	時間區
+La hora llega por la red (SNTP). La placa no tiene reloj con pila todavía.	時間來自網路 (SNTP).板上還沒有電池支援的鐘.
+Placa	開發板
+MEMORIA	記憶
+microSD libre	免於微SD
+QUÉ HAY	在內面有什麼?
+Micrófono	麥克風
+Parlante	發言人
+Audio full dúplex	全雙音訊
+Conector de expansión	擴充套件標題
+Batería	電池
+Cámara	攝像頭
+Acelerómetro	快速儀
+sí	是的
+Paneles con tus entidades, escenas y sensores, por la API WebSocket.	透過WebSocket API,使用你的實體,場景和感測器.
+Monitor serie de los puertos del header y del USB, con disparadores y grabación.	標題的連續顯示器 USB 有觸發器和錄音機.
+Graba ESP32, ESP8266 y STM32 por el header, o desde la Mac por RFC2217.	閃光 ESP32, ESP8266 和 STM32 透過標題,或從Mac RFC2217.
+Scanner I2C, registros, GPIO en vivo, PWM y ADC.	I2C 掃描器,登記器,直播 GPIO, PWM 和 ADC.
+Maestro RTU y TCP, con perfiles para el gateway DOMCOM y la Riden.	對於DOMCOM門口和 Riden.
+Colores de resistencias, códigos SMD, Ohm, divisores, 555.	阻力顏色, SMD 程式碼,哦,分裂器,555。
+WiFi, pantalla, sonido, idioma, módulos, respaldo.	Wi-Fi、螢幕、聲音、語言、模組與備份。
+Reloj mundial, alarmas, temporizador, cronómetro y pomodoro, en una app.	世界時鐘,警報,計時器,止步表和波莫多羅,在一個應用.
+Las canciones de la SD y la radio por internet.	在SD卡和網際網路廣播上.
+Las fotos de la SD, con zoom de dos dedos.	照片來自SD卡,用兩指縮小.
+El mes, y más adelante el calendario de Home Assistant.	之後的月份 Home Assistant 時間表.
+En construcción · fase %d	在施工階段 %d
+CPU	處理器
+Tareas	任務
+Memoria	記憶體
+Sistema	系統
+Pila	堆疊
+tareas	任務
+sin WiFi	沒有 Wi-Fi
+hora: prom. %d %% · máx. %d %%	時間: 8月 %d %% ·最大. %d %%
+hora: sin muestras todavía	時間:尚未有樣品
+hora: %s a %s	時間: %s 在 %s
+sensor del chip	晶片感測器
+%d núcleos RISC-V a %d MHz	%d 風險-V核 %d MHz
+Núcleo %d	核心 %d
+fija, sin DFS	固定,沒有DFS
+Núcleo 0	核心 0
+Núcleo 1	核心1
+ÚLTIMA HORA, PROMEDIO POR MINUTO	最後一個小時,每分鐘平均
+La primera muestra llega al minuto de encender.	電源啟動一分鐘後,第一樣品到達.
+La carga de cada núcleo es el tiempo que no pasó en su tarea IDLE. LVGL y la pantalla corren en el núcleo 1; la red, el audio y los servicios, casi todos en el 0.	每個核心的負載是它沒有花在IDLE任務上的時間. LVGL 顯示屏執行在核心1上;網路,音訊和服務主要執行在核心0上.
+activa	執行
+lista	準備好
+en espera	預備
+suspendida	暫停
+borrada	刪除
+%s (n.º %u): pila de %s en %s, prioridad base %u, %s de CPU desde el arranque	%s (沒有. %u): %s 堆疊到 %s基本優先事項 %u, %s 自啟動以來的CPU
+RAM interna	內部RAM
+%d tareas	%d 任務
+activas	在
+listas	準備好
+suspendidas	暫停
+TAREA	任務
+NÚCLEO	核心
+PRIO	首批
+ESTADO	國家
+PILA LIBRE	免費的股票
+NÚC.	核心
+Pila libre: lo mínimo que tuvo libre cada tarea desde que arrancó (la marca de agua); en rojo, menos de 512 bytes. CPU: el porcentaje de un núcleo desde el refresco anterior. Una flecha junto a la prioridad es una heredada de un mutex. Tocá una tarea para ver el resto.	免費堆疊: 每一個任務自開始( 高水標記) 以來最少是空的 ; 紅色的, 低於 512 位元組 。 CPU: 上次重新整理後一個核心的百分比 。 優先順序旁邊的箭頭意味著從一個啞巴繼承下來的。 掛起一個任務來檢視其餘的 。
+libres de %s\nbloque mayor %s	免除 %s\n最大的區塊 %s
+Interna %s	內部 %s
+2 × %s	2 × %s
+%s de %s, bloque %s	%s 的 %s區塊 %s
+el malloc del sistema	系統商場
+POR CAPACIDAD (HEAP_CAPS)	透過能力 (HEAP_CAPS)
+Interna	內部
+Ejecutable	可執行
+LIBRE	免費
+TOTAL	總數
+MAYOR	最大的
+MÍNIMO	最少
+Objetos en pantalla	螢幕上的物體
+Temporizadores	計時器
+Buffers de dibujo	繪製緩衝
+LIBRE, ÚLTIMOS 2 MINUTOS	免費,最後2分鐘
+LIBRE, ÚLTIMA HORA	免費,最後一個小時
+Cada curva va de cero a su total. Si el bloque mayor es mucho más chico que lo libre, la memoria está fragmentada: hay lugar, pero no en un solo pedazo. El mínimo es lo menos libre que hubo desde el arranque. LVGL pide su memoria a la PSRAM.	每個曲線從零到總數.如果最大的塊比自由記憶體小得多,那麼記憶體就會被碎片化:有空間,但不是單一部分.自啟動以來最小是最少的自由. LVGL 它從 PSRAM.
+excelente	非常好
+buena	很好
+regular	公平
+débil	軟弱
+conectado	插入
+conectando	連線
+falló	失敗
+apagado	關閉
+Tarjeta microSD	微SD卡
+%s (%d %% usado)	%s (%d %% 使用)
+%d bits a %u MHz	%d 在 %u MHz
+id %d · %s %d	標籤 %d · %s %d
+Sin tarjeta	未插入儲存卡
+%s · %s de %s	%s · %s 的 %s
+%s v%d.%d, %d núcleos	%s v%d.%d, %d 核心
+IP	專業知識
+Puerta de enlace	門口
+Máscara	面具
+DNS	伺服器
+MAC	馬克
+Canal	頻道
+Conectada hace	連線到
+Caídas desde el arranque	開始下降
+Tráfico	交通
+TARJETA	卡
+Fabricante	製造商
+FIRMWARE	公司製品
+Partición	分割槽
+Chip	晶片
+Último reinicio	最後重新設定
+El tráfico en bytes no se cuenta: lwIP lo haría con sus estadísticas, que este firmware tiene apagadas.	透過資料的資料, lwIP可以使用其統計資料來計算.
+RAM	儲存器
+No se pudo escribir en la tarjeta.	我不能寫信給卡.
+No hay tarjeta.	沒有卡.
+Elegí al menos un valor.	選擇至少一個值.
+No se pudo crear el archivo.	無法建立檔案.
+Autoajuste: el osciloscopio busca las señales…	自動設定: 示波器正在尋找訊號...
+Todavía no hay medidas de ese canal	尚未測量該頻道
+Dirección del osciloscopio	望遠鏡地址
+La IP que muestra el Rigol en Utility → IO Setting → LAN Conf. El puerto es 5555 si no ponés otro (192.168.1.50:5555).	在 Rigol 的 Utility → IO Setting → LAN Conf 中檢視 IP。未指定埠時使用 5555，例如 192.168.1.50:5555。
+No hay osciloscopio conectado	沒有連線示波器
+Pantalla del osciloscopio	望遠鏡螢幕
+Pidiendo la pantalla al osciloscopio…	要求從示波器上...
+Abriendo la imagen…	開啟影象...
+Sin memoria para abrir la imagen	沒有足夠的記憶體來開啟影象
+El osciloscopio no mandó su pantalla	示波器沒有傳送螢幕
+No se pudo leer la imagen	無法讀取影象
+tocá para cerrar	按下去刪除
+Osciloscopio Rigol	螺旋示波儀
+En el Rigol: Utility → IO Setting → LAN Conf, con la LAN activada. P4OS le habla SCPI por el puerto 5555.	在Rigol上:Utility → IO Setting → LAN Conf,有LAN啟用.P4OS在5555埠中與SCPI通話.
+Tocá para poner la IP	打點設定IP
+reintentando…	再試一次.
+Sin conectar.	未連線。
+Poné la IP del osciloscopio para empezar.	輸入要啟動的顯微鏡 。
+Desconectar	斷開連線
+En marcha	執行
+Única	單身
+Captura	截圖
+V/div	V/div
+Posición · tocá para 0	位置 · 0 的鍵
+Disparo	觸發器
+Base de tiempo	時間基礎
+Nivel · tocá para el 50 %	· 50%的水龍頭
+Disparado	觸發
+Esperando	在等待
+Detenido	停止了
+sin conectar	未連線
+Sin osciloscopio	沒有示波器
+media	平均值
+no se encuentra el servidor (DNS)	伺服器未找到 (DNS)
+no se pudo conectar	無法連線
+la placa todavía no tiene hora para validar el certificado	開發板還沒有時間驗證證書
+el certificado del servidor no se pudo verificar	伺服器證書無法驗證
+la red cortó la respuesta	網路切斷響應
+Renovando la sesión: %s	更新會議: %s
+La sesión venció (%.100s). Volvé a iniciarla desde el portal.	會議已結束 (%.100s) 從門戶端再次登入.
+Primero tocá «Iniciar sesión»: el código sirve sólo para ese pedido.	首個錄音“簽名”:程式碼只對這個請求起作用。
+Ese código es de otro pedido de inicio de sesión: empezá de nuevo.	這程式碼屬於另一個登入請求:重新開始.
+No se pudo iniciar la sesión: %.130s	不能登入: %.130s
+La respuesta no es JSON: ¿cambió el formato?	答案不是JSON:格式是否改變了?
+La respuesta no trae five_hour ni seven_day: ¿cambió el formato?	答案沒有5小時或7天:格式是否改變了?
+La dirección tiene que empezar con http:// o https://	地址必須由http://或 https://開始
+El certificado no es de una autoridad confiable	證書不是來自可信的機構
+El certificado es de otra dirección	證書是另一個地址的
+El certificado venció	證書過期
+Falta la hora para verificar el certificado	證書的驗證時間沒有
+No encuentro %.80s en la red	找不到 %.80s 在網路上
+Eso no parece Home Assistant	這看起來不像 Home Assistant
+No contesta %.96s	沒有答案 %.96s
+Se cortó mientras cargaba los estados	在載入狀態時切斷
+Home Assistant rechazó el token	Home Assistant 拒絕了標誌
+No terminó la autenticación	驗證未完成
+Se perdió la conexión	連線丟失
+No se pudo arrancar el servicio	無法啟動服務
+Falta la combinación de teclas	關鍵組合是缺失的
+No conozco esa tecla	我不知道那個鑰匙.
+Falta el texto	文字缺失
+La secuencia está vacía	序列是空的
+Falta la entidad de Home Assistant	其他 Home Assistant 實體失蹤
+El tópico no puede tener + ni #	這個話題不能包含+或#
+Esa app no está	這款應用程式沒有安裝
+Botón sin acción	按鈕無動作
+El USB se está preparando: probá de nuevo en un segundo	USB 準備好了:再試一下
+Sin computadora: conectá el puerto OTG a la computadora	沒有計算機:將OTG埠連線到計算機上
+Servicio inválido: %s	無效服務: %s
+Home Assistant no está configurado	Home Assistant 沒有配置
+Home Assistant no aceptó la llamada	Home Assistant 沒有接受邀請
+MQTT no está configurado	MQTT 沒有配置
+MQTT no pudo publicar	MQTT 無法釋出
+No conozco la tecla «%s»	我不知道鑰匙%s»
+No encuentro la app %s	找不到應用程式 %s
+Abriendo %s	開放 %s
+Escrito: %d caracteres (%d no existen en un teclado US)	型別: %d 字元 (%d 在美國鍵盤上不存在)
+Escrito: «%.60s»	型別:%.60s»
+Escrito: %d caracteres	型別: %d 字元
+Listo: %s	完成: %s
+La secuencia no tiene pasos que entienda	序列沒有步驟,我理解.
+sin memoria	沒有記憶
+no se pudo abrir %s (¿lo tiene otra app?)	無法開啟 %s (有沒有其他應用程式使用它?)
+%s no acepta 8%c%d	%s 不接受8個%c%d
+no contesta %s:%d	沒有答案 %s:%d
+sin respuesta	沒有答案
+respuesta dañada (CRC)	腐敗反應 (CRC)
+respuesta que no corresponde	不匹配的反應
+falló el puerto o la conexión	埠或連線故障
+pedido inválido	無效的請求
+función no soportada (01)	沒有支援的函式 (01)
+dirección inválida (02)	無效地址 (02)
+valor inválido (03)	無效值 (03)
+falla del esclavo (04)	失敗的奴隸 (04)
+esclavo ocupado (06)	忙碌的奴隸 (06)
+gateway sin camino (0A)	閘道器路徑不可用 (0A)
+el equipo tras el gateway no contesta (0B)	門口後的裝置沒有響應 (0B)
+excepción Modbus	Modbus 例外
+El broker rechazó %d de %d suscripciones	經紀人拒絕 %d 的 %d 訂閱
+No encuentro %.60s en la red	找不到 %.60s 在網路上
+No quedan conexiones TCP libres	沒有免費的TCP連線
+%.60s:%d no contesta	%.60s:%d 沒有回答.
+El broker no habla MQTT 3.1.1	經紀人不說話 MQTT 3.1.1
+El broker rechazó el ID de cliente	經紀人拒絕了客戶身份證
+El broker no está disponible	經紀人不可用
+Usuario o contraseña incorrectos	錯誤的使用者或密碼
+El broker no autorizó la conexión	經紀人沒有授權連線
+El broker rechazó la conexión	經紀人拒絕了連線
+El broker no contestó al CONNECT	經紀人沒有回答連線.
+El broker dejó de contestar	經紀人停止回答
+Se perdió la conexión con el broker	與經紀人失聯
+No se encontró ese nombre	沒有找到這個名字.
+No hay memoria para empezar	沒有足夠的記憶來開始
+Páginas web	網頁
+Impresoras	印表機
+Impresoras (LPD)	印刷機 (LPD)
+Cámaras RTSP	電腦攝像頭
+Carpetas compartidas	共享資料夾
+Arduino OTA	無線電 OTA
+Computadoras	計算機
+Este P4OS	這個P4OS
+Rigol (SCPI)	裡戈爾 (SCPI)
+Cámara RTSP	RTSP攝像頭
+Broker MQTT	MQTT 經紀人
+Impresora	印表機
+Servidor Linux	Linux 伺服器
+Equipo con SSH	有SSH的裝置
+Equipo con página web	有網頁的裝置
+Sólo responde al ping	只有答案 ping
+Sin puertos conocidos	沒有已知港口
+Equipo de red	網路裝置
+mDNS no está andando: ¿hay red?	mDNS不執行:有沒有網路?
+P4_SIM_NET_SCAN no es un rango válido (a.b.c.d/24 a /32)	P4_SIM_NET_SCAN 不是有效範圍 (a.b.c.d)/24 在 /32)
+Sin conexión a la red WiFi	沒有連線到一個 Wi-Fi 網路
+No hay memoria para el barrido	沒有足夠的記憶體
+Sin sockets libres: probá de nuevo en un rato	沒有免費插座:稍後再試一次
+orden demasiado larga	命令太長
+se cortó la conexión	連線丟了
+respuesta demasiado larga	反應太長
+el equipo no respondió a tiempo	裝置沒有及時回覆
+cancelado	取消
+el equipo cortó la conexión	裝置關閉了連線
+respuesta inesperada del equipo	裝置的意外反應
+no se encuentra «%s»	«%s找不到“ ”
+no quedan conexiones libres	沒有自由連線
+%s:%d no contesta	%s:%d 沒有回答.
+%s:%d no respondió a *IDN?	%s:%d 沒有回答身份證?
+No hay lugar para mas alarmas	沒有更多的報警空間
+Elegi al menos un dia	選擇至少一個天
+todos los dias	每天
+Sin alarmas	沒有警報
+Nueva	新的
+Parar	停止
+El USB esta cambiando de modo	USB 是切換模式
+Sin teclado USB	否 USB 鍵盤
+Sin gamepad USB	否 USB 遊戲板
+Sin puerto MIDI	沒有MIDI埠
+Vel.	速度
+cambiando...	換一個...
+teclado y red USB listos	USB 鍵盤和網路準備
+esperando a la computadora	等待電腦
+teclado USB apagado	USB 關閉鍵盤
+Conecta el reloj a la computadora con el cable USB	連線手錶到電腦上 USB 電纜
+El puerto esta en modo disco. Pasarlo a teclado saca la tarjeta de la computadora.	埠處於磁碟模式.轉換到鍵盤將卡從電腦中移除.
+El puerto USB es la consola. Como teclado, el reloj es ademas una red: el portal en http://192.168.7.1	其他 USB 作為鍵盤,手錶也是網路: http://192.168.7.1
+Pantalla negra	黑色螢幕
+espacio	空間
+Centrar	中心
+Inclinar	傾斜
+Teclas	關鍵
+Inclina el reloj o desliza el dedo.\nToca: clic. Dos dedos: scroll,\nzoom y clic derecho.	傾斜時鐘或滑動一個手指.\n按點選.兩個手指:滾動,\n放大,右鍵點選.
+Inv X	其他型別
+Inv Y	其他型別
+Ejes	軸
+Activar teclado USB	開啟 USB 鍵盤
+ENFOQUE	專注
+DESCANSO	暫停
+DESCANSO LARGO	長時間休息
+hoy: %d	今天: %d
+EN PAUSA	暫停
+A descansar	時間休息.
+A enfocar	集中注意力的時候了
+enfoque / descanso	專注/休息
+hoy: 0	今天: 0
+origen del idioma\x04firmware	韌體
+origen del idioma\x04tarjeta	卡
+Menu: lista	選單:列表
+Menu: grilla	選單:網格
+Menu: panal	選單:蜜蜂
+Siempre encendido	總是開放
+La pantalla se apaga	螢幕關閉
+Programa el no molestar para que funcione	設定勿擾時段後，啟用“勿擾模式”即可生效
+Sincronizando hora...	正在同步時間…
+Sin conexion	未連線
+No se pudo levantar la red	無法啟動網路
+Clave nueva cada vez que se levanta la red	每次啟動熱點時生成新密碼
+Clave fija	固定密碼
+Red de configuracion	配置熱點
+clave	密碼
+Escanea el QR con la camara del celular	使用手機相機掃描二維碼
+Red de configuracion apagada	配置熱點已關閉
+Levantando red...	開始網路...
+Red olvidada	已忘記此網路
+Hora ajustada	時間設定
+No se pudo ajustar	無法設定
+Ene\nFeb\nMar\nAbr\nMay\nJun\nJul\nAgo\nSep\nOct\nNov\nDic	1月\n2月\n3月\n4月\n5月\n6月\n7月\n8月\n9月\n10月\n11月\n12月
+Calibración descartada, repetila	校準被拒絕,再試一次
+Tactil calibrado	觸控校準
+Tocá el centro de la cruz\n%d de %d	觸控十字架的中心\n%d 的 %d
+Recorré todo el vidrio con el dedo	整片玻璃上都用手指
+crudo %d,%d  ->  %d,%d\nx %d..%d\ny %d..%d\n%u lecturas	原材料 %d,%d  ->  %d,%d\nx %d..%d\ny %d..%d\n%u 樣本
+sin CST820: no hay registros para ver	沒有 CST820:沒有登記記錄
+g=%02X  dedos=%u (max %u)\nP1 %d,%d   P2 %d,%d\nd = %d\n%.24s\n%s\ncon P2: %u de %u   chip %u Hz	g=%02X 手指頭=%u (最大) %u)\nP1 %d,%d   P2 %d,%d\nd = %d\n%.24s\n%s\n與P2: %u 的 %u 晶片 %u Hz
+Escaneo %d ms	掃描 %d ms
+Escaneo n/d	掃描 n/a
+dedos %d   %u lect/s   %u Hz   x%d.%02d	手指頭 %d   %u 閱讀/s   %u Hz x%d.%02d
+Tocá, arrastrá, pellizcá\ncon uno o dos dedos	踢,拖,捏\n一個或兩個手指
+Mantene apretado para reiniciar	等待重新啟動
+teclado y red listos\n192.168.7.1	鍵盤和網路準備\n192.168.7.1
+la computadora tiene la tarjeta	電腦有卡
+la tarjeta volvio al reloj	卡又在監視中.
+esperando un pendrive	等待一個快閃記憶體驅動器
+consola y grabacion del firmware	控制檯和韌體閃爍
+Telefono emparejado	電話配對
+Abri Ajustes -> Bluetooth en el telefono y elegi AmoledOS	開啟設定 -> 在手機上使用藍芽,然後選擇 AmoledOS
+¿El telefono muestra este numero?	電話顯示這個號碼嗎?
+Emparejar telefono	雙手機
+Coincide	它匹配.
+Telefono olvidado	電話被遺忘了
+Llamadas	電話
+Llamadas perdidas	錯過的電話
+Buzon de voz	語音郵件
+Agenda	日曆
+Correo	郵件
+Noticias	新聞
+Salud	衛生
+Finanzas	財政
+Ubicacion	位置
+Entretenimiento	娛樂
+Otras	其他
+Que notificaciones mostrar	顯示哪些通知
+Las llamadas pasan igual si esta puesto \"Llamadas siempre\"	電話仍然透過如果 \"總是打電話\" 現在
+Wifi	Wi-Fi
+Notificaciones	通知
+Menu	選單
+Hora	時間
+Tactil	觸控
+Acerca del reloj	關於這個手錶
+Conecta el wifi para usar el portal	連線 Wi-Fi 使用門戶
+Grilla	電網
+Panal	蜜蜂
+Lista	列表
+Teclado y red	鍵盤+網路
+Disco (la tarjeta)	磁碟 (儲存卡)
+Host (un pendrive)	主機 (快閃記憶體驅動器)
+Consola	控制檯
+conectando...	連線...
+sin conexion	未連線
+buscando	搜尋
+sin telefono	沒有電話
+emparejando	配對
+No molestar	不要打擾
+programado	計劃
+CONEXIONES	連線
+RELOJ	觀察
+SISTEMA	系統
+Wifi encendida	Wi-Fi 在
+Configurar red	設定網路
+ver clave y QR	密碼和QR程式碼
+Ya conectado, abri\nhttp://%s/wifi	一旦連線,開放\nhttp://%s/wifi
+Olvidar red	忘記網路
+Olvidar telefono	忘記電話
+QUE ES EL PUERTO USB	什麼是 USB 港口
+Esfera	看著臉
+la hora sigue a la vista, tenue, con la pantalla atenuada	當螢幕被暗淡時, 時間仍停留在視線中, 微弱
+Levantar la muñeca	起起來,醒來
+girar la muñeca hacia vos enciende la pantalla	轉移手腕向你燈螢幕
+BRILLO ATENUADA	骯髒的燈光
+nunca	永遠不會
+SE ATENUA DESPUES DE	之後的深水
+ATENUADA, SE APAGA DESPUES DE	死後,關閉
+Sin \"Siempre encendido\" la pantalla se apaga en vez de atenuarse. Con la bateria por debajo del 15 % se apaga igual.	沒有 \"總是開放\" 在15%的電池下,它仍然會關閉.
+Sonido de los avisos	通知聲音
+Mezclar música y apps	混合音樂和應用程式
+un juego con sonido suena sobre tu música, más baja, en vez de pausarla	一場遊戲的聲音播放你的音樂,拒絕,而不是暫停它
+los avisos quedan en la lista, pero no encienden la pantalla ni suenan	通知保持在列表中,但不點亮螢幕或聲音
+Llamadas siempre	總是打電話
+una llamada entra aunque este No molestar	一個電話甚至可以透過不要打擾
+NO MOLESTAR PROGRAMADO	計劃不發作
+Hasta	直到
+Categorias	類別
+No molestar desde	沒有干擾
+No molestar hasta	沒有干擾到
+ESTILO	風格
+ORDEN Y CARPETAS	命令和食物
+Se arman desde el portal: escanea el QR con el telefono	從門戶端安排:用手機掃描QR
+Sincronizar ahora	現在同步
+Ajustar a mano	手動設定
+La hora llega sola por wifi y por el telefono.	時間自行到來. Wi-Fi 和從電話.
+La hora todavia no se ajusto: conecta el wifi o el telefono, o ajustala a mano.	時間還未確定:連線 Wi-Fi 或是手機,或者手動設定.
+sin packs en la tarjeta	卡上沒有包裝
+%d cadenas, %d apps cubiertas	%d 弦, %d 覆蓋的應用程式
+espanol del codigo fuente	西班牙語,來源
+goteo	滴水
+precarga	預充電
+corriente constante	恆定電流
+tensión constante	恆定電壓
+carga completa	收費完成
+sin datos de la batería	沒有電池資料
+cargando	充電
+a batería hace %s	在電池上 %s
+a batería	在電池上
+quedan ~%s	~%s 左右
+midiendo...	測量...
+%.1f %%/h	%.1f %%/h
+ÚLTIMAS 24 H	最後24小時
+una muestra cada 5 minutos: se va llenando	每5分鐘就有一個樣本:隨著時間的推移,它充滿了
+-24 h	-24 h
+-12 h	-12 h
+Cargador	充電器
+Ciclos	週期
+Uso a batería	電池時間
+AHORRO	節省
+Ahorro de energia	節省電力
+CPU a 80 MHz y wifi dormida con la pantalla apagada. Se prende sola bajo el 20 %	CPU 執行於 80 MHz，熄屏後 Wi-Fi 休眠。電量低於 20 % 時自動開啟。
+Cuidar la bateria	電池護理
+carga hasta 4,1 V y a media corriente: llega a un 87 % y la celda dura mas anos	以一半電流充電至 4.1 V，電量約達到 87 %，有助於延長電池壽命。
+Apagar el panel a fondo	深度調整器睡眠
+la pantalla en reposo profundo al apagarse; despierta en una decima	顯示器在關閉時會深入睡覺;一秒十分鐘內醒來
+Dormir el chip	晶片睡眠
+con la pantalla apagada el procesador duerme entre avisos	在螢幕關閉時,處理器在事件之間睡著
+Reposo profundo de noche	深夜的睡眠
+en el horario de no molestar se apaga casi del todo; se despierta al tocarla	在不干擾時間內,它幾乎完全關閉;一個觸控會喚醒它
+Calibrar	校準
+Ver crudo	現象
+Probar gestos	嘗試手勢
+Calibrar pide tocar cinco cruces. \"Ver crudo\" muestra lo que lee el chip tactil, sin correccion.	校準要求你觸控五個十字架. \"現象\" 顯示觸控晶片所讀的內容,未經糾正.
+%.1f de %.1f GB  ·  %d apps	%.1f 的 %.1f GB · %d 應用程式
+PORTAL	門戶
+Todo esto y mas, desde el navegador	瀏覽器中的所有這些和更多
+Mantene para reiniciar	等待重新啟動
+%s libres	%s 可用
+%d apps cargadas, con el código en PSRAM	%d 應用程式載入,程式碼輸入 PSRAM
+reserva apps: %u K libres (mayor %u K, %d en uso)	應用程式庫: %u 免費 (最大) %u K, %d 在使用中)
+bloque mayor para código: %s\n%s	程式碼最大塊: %s\n%s
+ahorro	儲蓄
+PSRAM	PSRAM
+Código de apps	應用程式程式碼
+PROCESADOR	處理器
+una muestra por minuto: se va llenando	每分鐘一個樣本:隨著時間的推移,它充滿了
+-60 min	-60分鐘
+-30 min	-30分鐘
+TEMPERATURAS	氣溫
+Procesador	處理器
+PMU	農業單位
+Arranque	靴子
+PMU encendido por	電源的 PMU
+Último apagado	最後停電
+fallo la conexion	連線失敗
+wifi apagado	Wi-Fi 關閉
+sin red configurada	沒有網路設定
+emparejando...	結合.
+buscando el telefono...	在找電話...
+sin telefono emparejado	沒有連線的電話
+bluetooth apagado	關閉藍芽
+Reset	重置
+Maximo de vueltas	圓圈限度達到
+Se acabo el tiempo	時間已經過去了.
+%u min	%u 最小值
+%u h	%u h
+Los Angeles	洛杉磯
+Ciudad de Mexico	墨西哥城
+Bogota	波哥塔
+Sao Paulo	聖保羅
+Paris	巴黎
+Berlin	柏林
+Moscu	莫斯科
+Dubai	迪拜
+Pekin	北京
+Seul	首爾
+Sidney	悉尼
+manana	明天
+ayer	昨天
+hoy	今天
+Ya hay ocho ciudades	已經有八個城市
+AQUI	在這裡
+sin ciudades	沒有城市
+Ciudades	城市
+La computadora tiene la tarjeta.\nExpulsala ahí para volver a usar las apps.	電腦有卡.\n放棄它,以便再次使用應用程式.
+Sin memoria.\n%s sigue en segundo plano:\ncerrala para liberar	記憶體不足。\n%s 在後臺:\n關閉它以免費的記憶
+No se pudo cargar la app	無法載入應用程式
+Modo seguro: sin las apps de la tarjeta. Reiniciá para volver a la normalidad.	安全模式下不載入儲存卡應用。重啟後恢復正常模式。
+Banco	測試臺
+Calculadora	計算器
+Calendario	日曆
+Claude	克勞德
+Conversor	轉換器
+Electrónica	電子
+Tiras LED	燈光帶
+Macro pad	宏鍵盤
+Modbus	Modbus
+Módulos	模組
+MQTT	MQTT
+Pato goma	帕託古馬
+Control PC	電腦控制
+Cronometro	秒錶
+Reloj mundial	世界時鐘
+Afinador	通納
+ARKANOS	阿卡諾斯
+Atasco	交通堵塞
+Blackjack	黑龍江
+Blit test	影象傳輸測試
+Burbujas	泡沫
+Buscaminas	礦山掃描機
+Cámaras	攝像頭
+Chatarra	查塔拉
+Claude Jump	克勞德跳躍
+Claudito	克勞迪託
+Clima	天氣
+Cotizaciones	貨幣
+Dados	骰子
+Doom	毀滅
+Flappy	快樂的
+2043	2043
+Gemas	寶石
+Golf	高爾夫球
+tap	打點
+Mila	邁拉
+Monster Hop	怪物跳
+Neon Snakes	尼奧蛇
+Pixel Art	畫素藝術
+Radio	無線電
+Grabadora	記錄器
+Simon	西蒙
+Topos	閃閃發光
+Truco	Truco 紙牌
+Turbo	渦輪
+Video	影片
+Visor 3D	3D 顯示器
+mandando… %u %%	傳送... %u %%
+listo: reiniciando	完成:重新啟動
+Tocá otra vez: sin Wi-Fi un minuto y reinicia	再擊:沒有 Wi-Fi 一分鐘,然後重新啟動
+LA RADIO (ESP32-C6)	無線電 (ESP32-C6)
+En el C6	在C6上
+de fábrica (sin versión)	工廠 (沒有版本)
+En la tarjeta	在卡上
+Una versión nueva del firmware del C6 se copia a /firmware/c6.bin de la tarjeta (portal o tools/install_c6.sh) y se instala desde acá.	新的C6韌體進入儲存卡 /firmware/c6.bin (門戶或工具)/install_c6.sh) 並從這裡安裝.
+Instalar en el C6	在C6上安裝
+El C6 la escribe en su otra ranura y la revisa antes de cambiar. Mientras tanto no hay Wi-Fi, y al terminar la placa se reinicia.	在C6中寫入其他的插槽,然後在切換之前檢查它. Wi-Fi 與此同時,開發板在最後重新開始.
+¿El teléfono muestra este número?	電話顯示這個號碼嗎?
+Tocá otra vez para olvidarlo	再點選,忘記
+Con el Bluetooth prendido, la placa recibe las notificaciones y la música del iPhone, y puede ser el teclado de una computadora.	透過藍芽,板接收到iPhone的通知和音樂,
+TELÉFONO	電話
+esperando que vuelva	等它回來
+visible, sin emparejar	可見,不配對
+Batería del teléfono	電話電池
+Olvidar el teléfono	忘記電話.
+En el iPhone: Ajustes, Bluetooth, tocá el nombre de la placa y confirmá el número en los dos.	在iPhone上:設定,藍芽,點選板名並確認兩個電腦的號碼.
+TECLADO BLUETOOTH	藍芽鍵盤
+Teclado Bluetooth	藍芽鍵盤
+Computadora	計算機
+La placa como teclado, mouse y teclas de medios de una computadora: se empareja desde los ajustes de Bluetooth de la Mac o la PC, y el Macro pad y las apps mandan las teclas por ahí cuando no hay un cable USB. El teléfono sigue conectado.	板作為計算機的鍵盤,滑鼠和媒體鍵:將其與Mac或PC的藍芽設定結合起來. USB 電話保持連線.
+%s usa la placa como teclado y mouse por Bluetooth	%s 使用板作為鍵盤和滑鼠透過藍芽
+La computadora	電腦
+Notas	備忘錄
+El teléfono no pudo hacerlo	電話不能做.
+El teléfono no está conectado	電話沒有連線.
+Llamada entrante	接收電話
+Número desconocido	不知名號碼
+Rechazar	衰退
+Atender	答案
+Aceptar	接受
+Borrar en el teléfono	在電話上.
+Música del iPhone	iPhone音樂
+Con la música del iPhone, el centro de control y la pantalla de bloqueo muestran lo que suena en el teléfono y lo manejan, cuando la placa no está reproduciendo nada. Usa un poco más la radio.	控制中心和鎖屏顯示了電話播放的內容,
+Desarrollador	開發人員
+Tocá otra vez para volver a lo de fábrica	再擊,返回工廠設定
+Tocá otra vez para reiniciar	再擊重新啟動
+Tocá otra vez para reiniciar en modo seguro	再擊安全模式重新啟動
+EN PANTALLA	在螢幕上
+Mostrar los toques	顯示觸控
+Mostrar los fps	顯示fps
+Un círculo bajo cada dedo que informa el táctil (hasta dos), y los cuadros por segundo que llegan a la pantalla, arriba a la derecha. Quedan prendidos después de reiniciar.	觸控面板每手指下都有一個環( 最多兩個) , 每秒到達螢幕的框, 右上角。 它們會在重新啟動後繼續 。
+Sólo errores	只有錯誤
+Errores y avisos	錯誤和警告
+Todo (de fábrica)	所有的東西 (工廠)
+Lo que llega al Registro del portal y a la consola serie. Este firmware no trae los mensajes de depuración.	這種軟體沒有內建的除錯資訊.
+DÓNDE DIBUJA LVGL	在哪裡 LVGL 繪圖
+Dos búferes en PSRAM (de fábrica)	兩個緩衝器 PSRAM (工廠)
+Uno en PSRAM	一個在 PSRAM
+Dos en RAM interna	內部記憶體 RAM 中兩個
+Uno en RAM interna	一個內部RAM中
+FILAS POR BÚFER	每個緩衝器的房間
+128 (de fábrica)	128 (工廠)
+Medido en la placa: la pantalla entera se redibuja en 67 ms con dos internos de 56 filas, 67 ms con dos en PSRAM de 128 y 60 ms con 320; pero 320 filas le dejan poca PSRAM a Monster Hop. En RAM interna, si no alcanza, usa menos filas o vuelve a la PSRAM.	開發板實測：兩個 56 行的內部緩衝區整屏重繪約需 67 ms；兩個 128 行的 PSRAM 緩衝區也需 67 ms，320 行時約需 60 ms。但 320 行會使 Monster Hop 可用的 PSRAM 減少。內部 RAM 不足時會減少緩衝行數，或改用 PSRAM。
+PANTALLA Y COPIAS	螢幕和副本
+Tres búferes del panel (de fábrica)	三個面板緩衝器 (工廠)
+Uno solo	只有一個.
+Copias con el PPA	影印件與PPA
+Bandas de los juegos en PSRAM	遊戲樂隊 PSRAM
+Con un solo búfer del panel, las apps que dibujan la pantalla entera (los juegos) no tienen el suyo. Sin el PPA, las copias las hace la CPU. Las bandas en PSRAM hacen a Monster Hop acostado la mitad de rápido: están para medir.	透過單個面板緩衝器,繪製整個螢幕的應用程式 (遊戲) 都沒有自己的. PSRAM 讓怪物跳到景觀中快一半:它們是為了測量.
+Volver a lo de fábrica	返回工廠設定
+Estos se leen al arrancar: hay que reiniciar. Si un ajuste no deja arrancar, el tercer arranque fallido seguido vuelve solo a lo de fábrica.	如果設定阻止了板塊啟動,則連續第三次失敗的開機將自行返回工廠設定.
+Reiniciar en modo seguro	在安全模式中重新啟動
+El modo seguro arranca sin las apps de la tarjeta, con el dibujo de fábrica y el USB quieto, como con BOOT apretado al encender. El reinicio siguiente vuelve a la normalidad.	安全模式開始沒有卡的應用程式, USB 無效,如同 BOOT 下一次重啟將恢復正常.
+Portal web	網站門戶
+abierto	開放
+con contraseña	使用密碼
+cerrado acá	在這裡關閉
+Tocá otra vez para quitarla	再點選才能刪除
+No coinciden: la contraseña no cambió	密碼沒有改變
+Contraseña guardada: los navegadores vuelven a entrar	儲存密碼:瀏覽器必須重新登入
+Repetí la contraseña	重複密碼
+Tiene que tener 6 caracteres o más	它需要6個字元或更多.
+La contraseña nueva del portal	門戶的新密碼
+Una contraseña para el portal	門戶的密碼
+Siguiente	下一步
+Tocá otra vez: el token de ahora deja de andar	再擊:當前的代幣停止工作
+Tocá otra vez para cerrarlas	再點選來關閉它們
+Sesiones cerradas	會議結束
+ESTA RED	這個網路
+De confianza: en esta red el portal está abierto.	在這個網路上,門戶開放.
+En esta red el portal pide la contraseña.	在這個網路上,入口網站要求密碼.
+En esta red el portal está cerrado y la placa no anuncia su nombre. Se entra por la red propia de la placa o por el cable USB.	在這個網路上,門戶是關閉的,開發板不公佈其名稱. USB 電纜.
+REDES DE CONFIANZA	值得信賴的網路
+Ninguna	無
+quitar	刪除
+En una red de confianza el portal se abre como siempre. En cualquier otra, la placa no anuncia su nombre y el portal queda cerrado, o pide la contraseña si así se elige abajo.	在一個可信網路上,入口網站會像往常一樣開啟.在任何其他網路上,開發板不會公佈其名稱,門戶端將保持關閉,或者如果下面選擇了密碼.
+CONTRASEÑA	密碼
+Poner una contraseña	設定密碼
+Quitar la contraseña	刪除密碼
+PEDIRLA	問一個問題
+Sólo fuera de casa	只有遠離家
+También en casa y en la red de la placa	在家和開發板的網路上
+EN REDES QUE NO SON DE CONFIANZA	在不可信賴的網路上
+Portal cerrado	門戶關閉
+Abierto con la contraseña	用密碼開啟
+El cable USB entra siempre, sin contraseña: quien tiene el cable tiene la placa. La contraseña y estas reglas se cambian sólo acá, nunca desde el portal.	其他 USB 電纜總是進來,沒有密碼:誰持有電纜,誰持有板.密碼和這些規則只能在這裡改變,從門口上永遠不會.
+SESIONES Y SCRIPTS	會議和指令碼
+Navegadores con sesión	登入的瀏覽器
+Cerrar todas las sesiones	關閉每次會議
+Token nuevo para scripts	新的指令碼代幣
+El token reemplaza a la contraseña en los scripts de tools/ (cabecera Authorization: Bearer). Se le pasa así: P4OS_TOKEN=<token> tools/ota.sh p4os.local	符號是工具/指令碼中的密碼 (許可權:載體頭) 中的程式碼.透過這樣:P4OS_TOKEN=<token> 工具/ota.sh 在本地
+Se hace uno nuevo al reiniciar	在下一次重新啟動時,會製造一個新的
+HTTPS (puerto 443)	HTTPS (第443號港口)
+Reiniciar para aplicarlo	重新啟動應用
+Tocá otra vez: habrá que volver a instalarla	再擊:將不得不重新安裝
+Autoridad nueva	新權威
+Con HTTPS, lo que viaja va cifrado, la contraseña incluida, y fuera de casa el portal manda del HTTP al HTTPS. La placa tiene su propia autoridad: se baja desde el portal (Ajustes, Seguridad) y se instala una vez como confiable en la Mac o el iPhone, y el navegador deja de avisar. Lo de arriba es su huella SHA-256, para compararla. Se aplica al reiniciar.	在 HTTPS透過密碼,包括密碼, HTTP 透過 HTTPS機器具有自己的權力:從門戶端 (設定,安全) 下載並安裝它一旦作為可靠的Mac或iPhone,瀏覽器停止警告.上述行是它的SHA-256指紋,比較.
+Pines 21 (D−) y 23 (D+)	第21頁(D-)和第23頁(D+)
+Apagado.	走了.
+Primero expulsá la tarjeta en la computadora	首先將卡放到電腦上
+Pines 25 (D−) y 27 (D+), o el conector OTG	第25號(D-)和第27號(D+),或 OTG 聯結器
+PENDRIVES Y TECLADOS	機器和鍵盤
+Host USB	USB 接待者
+Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 1 y GND del 5.	可在檔案管理或網頁中透過 /usb 訪問 U 盤。使用集線器最多支援三個 FAT32 裝置，對應 /usb、/usb2、/usb3。開啟螢幕鍵盤時，外接鍵盤可在同一輸入位置鍵入。OTG 不提供 5 V，裝置需連線到 40 針介面，從引腳 1 取 5 V、引腳 5 接 GND。
+PINES DE DATOS	資料 PINS
+Los dos a la vez	兩者同時
+21 y 23 son el segundo controlador USB del P4, de velocidad completa (12 Mbit/s): andan a la vez que cualquier modo del conector OTG. 25 y 27 son los mismos cables que el conector OTG, de alta velocidad, con cables cortos: el host le saca el modo al OTG mientras está prendido. Los dos a la vez son dos puertos, por ejemplo un teclado en uno y un pendrive en el otro.	引腳 21、23 屬於 P4 的第二個 USB 控制器，支援全速 12 Mbit/s，可與 OTG 的任意模式同時工作。引腳 25、27 與高速 OTG 埠共用訊號線，應使用短線；啟用主機後會佔用 OTG 的模式。兩個控制器同時使用時，可分別連線鍵盤和 U 盤。
+TECLADO USB	USB 鍵盤
+Latinoamericano	拉丁美洲
+Estadounidense	美國
+teclado	鍵盤
+mouse	滑鼠
+joystick	遊戲板
+teclas multimedia	媒體金鑰
+teclas de sistema	系統金鑰
+hub	樞紐
+disco sin montar	磁碟,未安裝
+puerto serie	序列埠
+cámara	攝像頭
+Esperando dispositivos en el conector de 40 pines.	正在等待連線到 40 針介面的裝置。
+sin uso todavía	未使用
+AUDIO USB	USB 音訊
+Sonido por la placa de audio USB	透過聲音 USB 音訊卡
+Con una placa de sonido o unos auriculares USB conectados, todo lo que suena (la música, la radio, las apps, los avisos) sale por ahí, con el volumen de la placa, y el parlante se calla. Tiene que aceptar 48 kHz.	連線 USB 音效卡或耳機後，音樂、電臺、應用和提示音均從該裝置輸出，音量由開發板控制，板載揚聲器停止輸出。USB 音訊裝置必須支援 48 kHz。
+parlante	揚聲器
+micrófono	麥克風
+Grabar con su micrófono	用麥克風錄音
+CAN	CAN
+Dibujo	繪畫
+EEPROM	EEPROM
+Infrarrojo	紅外線
+PWM	PWM
+VNC	其他
+BLE	BLE
+RF	頻率
+La placa se cayó la vez anterior: el volcado está en el portal, en Registro.	上次板子崩潰了: 垃圾場在入口處, 在登記簿頁面上。
+Tocá otra vez para cerrarla	再擊,以關閉它
+en segundo plano	在背景下
+trabajando	工作
+usa pines del header	使用標題針
+sonando	播放
+con el micrófono	使用麥克風
+APPS EN SEGUNDO PLANO	背景中的應用
+Automático (de fábrica)	自動 (預設)
+Cerrar al salir	接近離開
+Mantener abiertas	保持開放
+Al salir de una app, Automático la cierra si ocupa 1 MB de PSRAM o más y no tiene nada andando; Cerrar al salir la cierra si no tiene nada andando; Mantener abiertas la deja, como antes. Andando es usar pines del header, sonar, el micrófono, grabar o trabajar en segundo plano. Con menos de 8 MB de PSRAM libre se cierran también las escondidas que no tienen nada andando.	退出應用時，“自動”會關閉佔用至少 1 MB PSRAM 且沒有任務執行的應用；“退出時關閉”會關閉沒有任務執行的應用；“保持開啟”則保留應用。執行任務包括佔用擴充套件引腳、播放聲音、使用麥克風、錄製或後臺工作。可用 PSRAM 少於 8 MB 時，也會關閉沒有任務執行的隱藏應用。
+ABIERTAS AHORA	現在開放
+Ninguna, fuera de Ajustes	除了設定之外
+Lo que ocupa cada una se mide al salir de ella. Tocar una la cierra.	每個人的手裡拿著什麼東西,都會被測量.
+Reiniciar la placa	重新啟動板
+CAS	標準化法
+Python	字串
+sin FAT32 que montar: exFAT y NTFS no se leen	沒有 FAT32 將安裝:exFAT和NTFS不讀取
+bien	很好
+no respondió a tiempo	沒有及時回答
+la imagen no entra en la flash	影象不適合閃光
+el MD5 no coincide	在 MD5 不符合
+parámetro inválido	無效引數
+chip desconocido	未知晶片
+chip no soportado	不支援的晶片
+el chip no lo soporta	晶片不支援它
+respuesta inválida	無效的反應
+El stub no arrancó (%s): sigo con la ROM	根沒有開始( )%s):繼續使用ROM
+La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT	開發板沒有回答:檢視TX/RX 交叉, GND, EN 和 BOOT
+No se pudo conectar: %s	無法連線: %s
+Secure boot o descarga segura activos	安全啟動或安全下載模式已啟動
+La flash está cifrada: grabarla en claro la deja sin arrancar	閃光是加密的:寫在清晰的會讓板無法啟動
+El firmware es para %s y la placa es %s	韌體是為了 %s 而開發板是 %s
+El firmware acepta la revisión v%u.%u a v%u.%u y el chip es v%u.%u: no arrancaría	韌體進行了修改.%u.%u 到v%u.%u 而晶片是v%u.%u:它不會開始
+Velocidad: %u baudios	速度: %u 電壓
+A %u baudios no contesta: vuelvo a 115200	沒有答案 %u Baud: 回到115200
+La placa quedó a %u baudios: reseteala y probá de nuevo	開發板被留在 %u 波特:重新設定並再次嘗試
+No se pudo abrir %s	不能開啟 %s
+0x%x: no empezó (%s)	0x%x:沒有開始 (%s)
+%s: no se pudo leer de la tarjeta	%s:無法從卡上讀取
+0x%x: falló la escritura (%s)	0x%x: 寫作失敗 (%s)
+: escrito	書面:
+: escrito, MD5 bien	書面: MD5 很好
+No hay un puerto serie %s	沒有連線埠 %s
+No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?	不能開啟 %s:它是連線的,還是在終端開放的?
+%s está ocupado: lo tiene %s	%s 忙碌: %s 有沒有?
+%s: la USB-Serial-JTAG del chip, se reinicia sola	%s: 晶片本身 USB- 連續JTAG,它自行重新設定
+%s, EN por RTS y BOOT por DTR	%s, EN 在 RTS 和 BOOT 在 DTR
+%s, EN GPIO%d, BOOT GPIO%d	%s, EN GPIO%d, BOOT GPIO%d
+%s: EN/BOOT ocupados por %s	%s: EN/BOOT 透過 %s
+otro	另一個
+%s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)	%s 沒有 EN/BOOT: 將板放入下載模式 (保持) BOOT and press reset)
+No entra: llega a %u KB y la flash tiene %u KB	它不適合:它達到 %u KB和閃光已經 %u KB
+Placa reiniciada	板重新啟動
+Reseteá la placa para que arranque el firmware nuevo	重新設定板以啟動新的韌體
+Listo en %u,%u s	完成 %u.%u s
+%s %s en %s	%s %s 在 %s
+No se pudo lanzar la tarea	不能開始任務
+Falta esp-serial-flasher: compilá el firmware una vez (managed_components)	esp-serial-flasher 缺失:建立一個韌體 (managed_components)
+no se pudo abrir la imagen	影象無法開啟
+el C6 no aceptó empezar	C6不會啟動
+se cortó al mandar la imagen	在傳送影象時,連結斷裂
+el C6 rechazó la imagen	C6 拒絕了影象
+el C6 no activó la imagen	C6 沒有啟用影象
+FM17522 (clon)	FM17522 (克隆)
+FM17522E (clon)	FM17522E (克隆)
+clon (sin marca)	克隆 (沒有品牌)
+falta id	沒有ID
+sin ícono AIC	沒有AIC圖示
+red o contraseña inválidas (WPA2: de 8 a 63 caracteres)	無效的網路或密碼 (WPA2: 8至63個字元)
+\"mode\": console o keys; \"host\": true o false; \"pins\": 21/23, 25/27 o both; \"layout\": latam o us	\"模式\":控制檯或鍵; \"接待者\":真實或假; \"針\": 21/23, 25/27 或是兩者; \"佈局\"拉坦或我們
+el USB está cambiando de modo	在 USB 是切換模式
+falta \"on\", \"keyboard\", \"music\" o \"forget\"	缺失 \"在\", \"鍵盤\", \"音樂\" 或 \"忘記\"
+no hay una imagen del C6 en /firmware/c6.bin	沒有C6影象 /firmware/c6.bin
+no se pudo empezar (¿ya hay una en curso?)	沒有啟動 (一個已經執行了嗎?)
+la búsqueda falló	掃描失敗
+la dirección empieza con http://	地址始於 http://
+sin tarjeta o ruta inválida	沒有卡或無效路徑
+ruta inválida	無效的路徑
+no existe	沒有
+no se pudo leer	讀不懂
+menu.txt inválido: %s	無效 menu.txt: %s
+no se pudo abrir	無法開啟
+falta Content-Length	內容-長度缺失
+no entra en la tarjeta	它不適合卡
+no se pudo crear (¿existe la carpeta?)	無法建立( 資料夾是否存在 ? )
+se cortó la subida	上傳已被切斷
+no se pudo guardar	不能儲存
+ya hay una grabación en curso	一個閃光已經在進行中
+no se pudo empezar	不能開始
+falta path	路徑不存在
+ya hay un trabajo en curso	一個工作已經在執行
+no se pudo abrir el puerto (¿lo tiene otra app?)	無法開啟埠 (還有其他應用程式嗎?)
+el canal no está conectado	頻道沒有連線
+hace falta el canal conectado y la tarjeta	需要連線的通道和卡
+texto vacío	空文字
+ya hay 8 avisos	已經有8個警報.
+el nombre va con a-z, 0-9 y guiones	這個名字是 a-z,0-9和字串
+falta \"on\"	缺失 \"在\"
+la radio está ocupada	電臺忙了.
+no hay enlace que congelar	沒有結冰的聯絡.
+demasiados intentos: esperá un poco	太多的嘗試:等一點
+contraseña incorrecta	錯誤的密碼
+nombre desconocido: entrá por la IP de la placa o por su nombre .local	不知名名稱:使用板塊的IP或本地名稱
+pedido desde otra página: rechazado	來自另一個頁面的請求:拒絕
+pedido sin origen: rechazado	沒有來源的申請:被拒絕
+el portal está cerrado en esta red	在這個網路上,門戶已關閉.
+todavía no hay certificado: prendé HTTPS en Ajustes, Portal web, y reiniciá	目前沒有證書:啟動 HTTPS 在設定,網頁門戶和重啟中
+hace falta entrar con la contraseña	你需要使用密碼登入.
+todavía no hay captura	目前沒有截圖
+falta el cuerpo	屍體失蹤了
+la fuente tiene la cola llena	電源的排隊滿了
+comando no válido o cola llena	無效命令或排隊滿
+no se pudo armar el enlace	不能建立聯絡
+eso no parece un código	這不像一個程式碼.
+falta app	沒有應用程式
+mensaje de 1 KB como mucho	最多1 KB的訊息
+la cola de la app está llena	應用程式的排隊滿.
+GET o POST	GET 或 POST
+no hay datos: ¿está abierta la app?	沒有資料:應用程式是否開放?
+sin cuerpo, o de más de 128 KB	沒有機體,或超過128 KB
+page y slot	頁面和插槽
+ese lugar está vacío (¿guardaste?)	那個插槽是空的 (你儲存了嗎?)
+falta el texto (8 KB como mucho)	文字缺失 (8 KB最多)
+no se pudo escribir en la tarjeta	沒有能寫到卡
+no hay tarjeta	未檢測到儲存卡
+falta t	t 缺失
+ese tópico no está en la tabla	這個話題不在表中
+falta el tópico	這個話題缺失了
+un tópico para publicar no lleva + ni #	一個發表的主題不能包含+或#
+no hay broker configurado	沒有配置的經紀人
+MQTT está apagado	MQTT 已關閉
+mensaje demasiado largo o la cola está llena	簡訊太長,或者排隊滿
+ya hay un barrido en marcha	一個掃描已經開始了
+no se pudo empezar el barrido	不能開始掃描
+\"do\" es scan o stop	\"做什麼?\" 是掃描或停止
+no hay memoria para la Red	網路記憶體不足
+el nombre tiene que tener entre 1 y 47 bytes	名稱必須是1到47位元組
+la dirección tiene que empezar con http:// o https://	地址必須以http://或 https://開始
+la dirección no es válida	地址是不有效的
+falta \"do\"	缺失 \"做什麼?\"
+no existe esa tecla	這個鑰匙不存在.
+teclas inválidas	無效的金鑰
+esa tecla está vacía	那個鑰匙是空的
+falta \"v\"	缺失 \"v\"
+acción desconocida	不知名的行動
+solo GET	只有GET
+se cortó la subida: %ld de %ld B (%s)	上傳被切斷: %ld 的 %ld B (%s)
+no hay volcado	沒有垃圾
+clave desconocida	不知名鑰匙
+se leen al arrancar: reiniciar para aplicar	在啟動時讀取:重新啟動
+la otra ranura no tiene una imagen	另一個插槽沒有影象
+no se pudo borrar	無法刪除
+dma y cache van de 0 a 15, vfp de 8 a 1000, mhz 60 u 80	dma和快取從0到15,vfp從8到1000,mhz60或80
+Duke Nukem 3D	杜克核3D
+sin ruta	沒有路徑
+%s no es un .so	%s 是不是一個.所以
+%s se llama como una app de la tarjeta: renombralo	%s 在卡上有應用程式的名字:更名
+no se pudo cargar %s: %s	無法載入 %s: %s
+Emulador	模擬器
+Contestó %04X: no es lo que manda un MAX6675. ¿Es otro chip, o el modo SPI?	它回答了. %04X: 不是什麼 MAX6675 另一個晶片,或者 SPI 什麼樣的模式?
+Termocupla %.2f °C	熱偶 %.2f °C
+MAX6675: temperatura	MAX6675溫度:
+Termocupla tipo K, de 0 a 1024 °C, por SPI	Type K thermocouple, 0 to 1024 °C, over SPI
+No hay puertos SPI en modules.txt.	沒有. SPI 港口 modules.txt.
+El del puerto (GPIO%d)	港口的 (GPIO%d)
+El del puerto (no tiene)	港口的 (沒有)
+Cada chip en los mismos cables lleva su propio CS.	每個同一執行緒的晶片都有自己的 CS.
+Pinball 3D	彈丸 3D
+No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?	沒有答案: MISO 保持高. CS電線?
+Temperatura por 1-Wire: todos los que haya en el bus, cada uno con su número de serie	在1線以上的溫度:公交車上的每個感測器都有其序列號
+No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?	1-Wire 匯流排上的裝置未響應，請檢查供電、4.7 kΩ 上拉電阻和接線。
+EL BUS (UN PIN)	公共汽車 (一號碼)
+Datos al pin, VDD a 3V3 y 4,7 kΩ entre datos y 3V3. Los sensores del bus aparecen solos, cada uno con su número de serie.	輸入資料, VDD 在資料和3V3之間的 3V3 和 4.7 kΩ 之間. 公交車上的感測器自行顯示,每個都有其序列號碼.
+Tocá otra vez para sacarla	再擊下來.
+ARRANCAN CON LA PLACA	從板開始
+no está en la tarjeta	在卡上沒有
+Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.	應用程式需要它 (例如,資料記錄器) 在板上啟動時開始隱藏起來,就像你開啟了它們,然後離開了它們.
+Datalog	資料表
+Tensión 1	電壓1
+Tensión 2	電壓2
+Tensión 3	電壓3
+Corriente 1	電流 1
+Corriente 2	電流 2
+Corriente 3	電流3
+Índice VOC	排氧化碳指數
+Índice NOx	NOx 指數
+Resistencia del gas	氣體阻力
+Etanol	乙醇
+Índice UV	紫外線指數
+Visible	可見
+Espectro completo	全頻譜
+Sin filtro	未過濾
+Temperatura de color	顏色溫度
+Proximidad	接近性
+Distancia	距離
+Aceleración X	加速 X
+Aceleración Y	加速 Y
+Aceleración Z	速度Z
+Giro X	旋轉 X
+Giro Y	旋轉 Y
+Giro Z	旋轉Z
+Campo X	欄位 X
+Campo Y	欄位 Y
+Campo Z	欄位Z
+Rumbo	標題
+Cabeceo	投籃
+Alabeo	滾動
+Carga	收費
+Tensión de la celda	電池電壓
+Peso	重量
+Crudo	其他產品
+Pulsos	豆類
+Caudal	流量
+Lluvia	雨
+Dosis	劑量
+Cuentas por minuto	每分鐘計數
+Factor de potencia	電力因子
+Presencia	存在
+Toques	觸控
+Humedad del suelo	土壤溼度
+Pulso	脈衝
+Oxígeno en sangre	血液氧氣
+Objeto	物件
+Ambiente	環境
+Junta fría	寒冷通道
+En movimiento	移動
+Quieto	現在還在
+Calibración	校準
+VOC crudo	原始 VOC
+NOx crudo	原始 NOx
+Imán	磁鐵
+Personas	人們
+Distancia en movimiento	移動距離
+Distancia quieto	距離仍然
+Señal en movimiento	移動訊號
+Señal quieto	訊號仍然存在
+Velocidad 1	速度1
+Velocidad 2	速度2
+Velocidad 3	速度3
+Carga por hora	每小時收費
+Lluvia por hora	每小時的降雨
+No contesta en el pin. ¿Alimentación, cables, el modelo?	電源,電纜,模型?
+No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?	連續埠沒有答案.
+La RTD está abierta o le falta un cable	研發系統開放,或者有線電失蹤
+La termocupla está en corto a GND	熱偶的縮短為 GND
+Una punta de la termocupla toca VCC o GND	A thermocouple lead touches VCC 或 GND
+La RTD está en corto	研發專案縮短
+Fuera de rango	超出範圍
+Falta %s= en la línea del módulo	缺少模組線 %s=
+Temperatura, presión, humedad y gas (calidad del aire)	溫度,壓力,溼度和氣體 (空氣質量)
+Temperatura y presión, de precisión	溫度和壓力,精確
+Temperatura y presión (altímetro)	溫度和壓力 (高度計)
+Temperatura, ±0,25 °C	溫度 ±0.25 °C
+Temperatura, ±0,1 °C	溫度 ±0,1 °C
+Temperatura sin contacto (infrarrojo) y del ambiente	無接觸 (紅外) 和環境溫度
+CO₂ real (fotoacústico), temperatura y humedad	真正的二氧化碳 (光聲),溫度和溼度
+CO₂ real (NDIR), temperatura y humedad	真的二氧化碳 (NDIR),溫度和溼度
+eCO₂ y TVOC	eCO2和TVOC
+Índice de VOC y de NOx (algoritmo de Sensirion)	排放量和NOx指數 (Sensirion的演算法)
+Calidad del aire, eCO₂ y TVOC	空氣質量,eCO2和TVOC
+Partículas PM1, PM2,5 y PM10	顆粒 PM1, PM2.5 和 PM10
+Partículas, temperatura, humedad, VOC y NOx	顆粒,溫度,溼度,VOC和NOx
+Partículas PM1 a PM10	顆粒 PM1 在 PM10
+UVA, UVB e índice UV	紫外線,UVB和UV指數
+Luz, en lux (visible e infrarrojo)	光,在Lux (可見和紅外)
+Luz, en lux, de alto rango	輕型,高檔,寬範圍
+Color (rojo, verde, azul), lux y temperatura de color	顏色 (紅色,綠色,藍色),光和顏色溫度
+Proximidad y color	接近度和顏色
+Índice UV y luz	紫外線指數和光
+Temperatura, de precisión	溫度,精確
+Distancia por LiDAR, hasta 8 m	根據LiDAR的距離,最大8m
+Índice UV, visible e infrarrojo	紫外線指數,可見和紅外
+Acelerómetro y giróscopo (y brújula en el MPU-9250)	加速計和陀螺儀(和MPU-9250上的羅盤)
+Acelerómetro, giróscopo y brújula	加速計、陀螺儀和羅盤
+Acelerómetro y giróscopo	加速儀和陀螺鏡
+Orientación absoluta (fusión de 9 ejes)	絕對方向 (9軸融合)
+Brújula (campo magnético)	指南針(磁場)
+Distancia por láser, hasta 2 m	鐳射距離,最大2米
+Distancia por láser, hasta 4 m	鐳射距離,最大4米
+Distancia por láser hasta 20 cm, y luz	鐳射距離可達20釐米和光
+Distancia por ultrasonido	超聲波距離
+Distancia por ultrasonido y temperatura	超聲波距離和溫度
+Tensión, corriente y potencia, con su shunt adentro (15 A)	電壓、電流和電源,內建分流(15A)
+Tres canales de tensión y corriente	三個電壓和現有頻道
+Tensión, corriente, potencia y energía, hasta 85 V	電壓,電流,功率和能量,最高85V
+Batería de litio: tensión y carga	鋰電池:電壓和電壓
+ADC de 12 bits, 4 entradas	12 位 ADC, 4個輸入
+ADC de 8 bits, 4 entradas	八位 ADC, 4個輸入
+ADC de 18 bits	18 位 ADC
+Celda de carga (balanza), 24 bits	負載電池 (尺度),24位
+Termocupla por I2C	熱電偶過去了 I2C
+Pulso (MAX30102) y la luz roja e infrarroja, en crudo	Pulse (MAX30102) 和紅色和紅外光
+12 teclas táctiles	12個觸控鍵
+Humedad del suelo y temperatura (Adafruit)	土壤溼度和溫度 (Adafruit)
+Ángulo magnético	磁角
+Temperatura del reloj DS3231	氣溫 DS3231 鐘錶
+8 entradas digitales	8 數字輸入
+Termocupla, de −200 a 1350 °C, por SPI	Thermocouple, −200 to 1350 °C, over SPI
+Termocupla de cualquier tipo, por SPI	任何型別的熱偶,以上 SPI
+PT100 o PT1000 (RTD), por SPI	PT100 或 PT1000 (RTD),結束 SPI
+ADC de 10 bits, 8 entradas, por SPI	10 位 ADC,8輸入,超過 SPI
+ADC de 12 bits, 8 entradas, por SPI	12 位 ADC,8輸入,超過 SPI
+Temperatura y humedad (DHT11)	溫度和溼度 (DHT11)
+Temperatura y humedad (DHT22, AM2302)	溫度和溼度 (DHT22, AM2302)
+Distancia por ultrasonido (disparo y eco)	透過超聲波 (觸發器和回聲) 的距離
+Celda de carga (balanza)	負載電池 (規模)
+Distancia por ultrasonido con un solo pin (Grove, PING)	單個針的超聲波距離 (Grove,PING)
+Pulsos contados y su frecuencia: un medidor, un contador	計時脈衝及其頻率:儀表,計數器
+Caudal de agua (YF-S201 y parecidos): litros por minuto y litros	水流 (YF-S201等):每分鐘升和升
+Lluvia, con un pluviómetro de cubeta basculante	雨,有小桶計
+Velocidad del viento, con un anemómetro de cazoletas	風速,帶有杯狀動畫儀
+Radiación: cuentas por minuto y dosis (tubo Geiger)	輻射:每分鐘計數和劑量 (蓋格管)
+Una entrada digital: un botón, un contacto, un módulo KY	數字輸入: 按鈕、 聯絡人、 KY 模組
+Movimiento: un PIR (HC-SR501, AM312) o un radar RCWL-0516	提議:PIR (HC-SR501, AM312) 或RCWL-0516雷達
+CO₂ real (NDIR) por puerto serie	連續埠的真二氧化碳 (NDIR)
+CO₂ real (NDIR), Senseair S8	真正二氧化碳 (NDIR),感氣S8
+Partículas PM1, PM2,5 y PM10 por puerto serie	顆粒 PM1, PM2.5 和 PM10 透過串列埠
+Partículas PM2,5 y PM10 por puerto serie	顆粒 PM2.5 和 PM10 透過串列埠
+Energía de 220 V: tensión, corriente, potencia y energía	電源:電壓,電流,功率和能量
+Presencia humana por radar	透過雷達測試的人類存在
+Presencia y posición de hasta tres personas por radar	在雷達上,最多3人的存在和位置
+Presión y clima	壓力和天氣
+Luz y color	光和顏色
+Movimiento y brújula	運動和圖針
+Tensión, corriente y ADC	電壓,電流和 ADC
+Distancia y presencia	距離和存在
+QUÉ MIDE	衡量什麼?
+PRIMER PIN	第一號碼
+EL PIN	號碼
+No queda ningún pin libre en el conector.	在頭上沒有任何免費針.
+SEGUNDO PIN	第二個 PIN
+El primero es el disparo o el reloj (TRIG, SCK); el segundo, el eco o los datos (ECHO, DT).	第一個是觸發器或時鐘 (TRIG,SCK);第二個是回聲或資料 (ECHO,DT).
+TX del sensor al RX del puerto y RX al TX; la velocidad la pone el sensor.	感測器的TX到埠的RX和RX到TX;感測器設定速度.
+No se entiende lo que manda: ¿otra velocidad u otro sensor?	不能理解它傳送什麼:另一個速度或另一個感測器?
+Es otro chip	另一個晶片
+%s va en un puerto %s, y %s no lo es	%s 在一個 %s 港口和 %s 是不是一個
+Puede ser: %s	可能是: %s
+Lo usa el host USB de alta velocidad.	高速飛行器使用 USB 接待者.
+Conexión del DS18B20: GND, datos al GPIO elegido, VDD a 3V3, y una resistencia de 4,7 kΩ entre datos y 3V3. Consultá el mapa de pines de esta placa.	DS18B20 接線：GND 接地，資料線接所選 GPIO，VDD 接 3.3 V，並在資料線與 3.3 V 之間連線 4.7 kΩ 上拉電阻。請參照本開發板的引腳圖。
+Masa común: la de la tira, la de la fuente y un pin GND de la placa.	燈帶、電源與開發板的 GND 引腳必須共地。
+Los 5 V de la tira, de una fuente aparte salvo con pocos LEDs. Consultá el mapa de la placa para ubicar 5 V y GND. Una tira larga lleva alimentación por los dos extremos.	除非 LED 很少，否則燈帶應使用獨立的 5 V 電源。請參照開發板引腳圖連線 5 V 與 GND。較長燈帶需在兩端同時供電。
+Conectá uno a i2c.ext: SDA al GPIO21, SCL al GPIO22, 3V3 y GND. Consultá los números físicos en el mapa de esta placa. Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos; también se pueden declarar en modules.txt.	連線到 i2c.ext：SDA 接 GPIO21，SCL 接 GPIO22，並連線 3V3 與 GND。請參照此開發板的引腳圖確認物理針腳位置。BME280、SHT3x/4x、AHT20、INA219/226 和 ADS1115 可自動識別，也可在 modules.txt 中宣告。
+Pines 19 (D−) y 17 (D+)	引腳 19（D−）與 17（D+）
+Pines 15 (D−) y 13 (D+), o el conector OTG	引腳 15（D−）與 13（D+），或 OTG 介面
+Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 39 y GND del 35.	可在檔案管理或網頁中透過 /usb 訪問 U 盤。使用集線器最多支援三個 FAT32 裝置，對應 /usb、/usb2、/usb3。開啟螢幕鍵盤時，外接鍵盤可在同一輸入位置鍵入。OTG 不提供 5 V，裝置需連線到 40 針介面，從引腳 39 取 5 V、引腳 35 接 GND。
+19 y 17 son el segundo controlador USB del P4, de velocidad completa (12 Mbit/s): andan a la vez que cualquier modo del conector OTG. 15 y 13 son los mismos cables que el conector OTG, de alta velocidad, con cables cortos: el host le saca el modo al OTG mientras está prendido. Los dos a la vez son dos puertos, por ejemplo un teclado en uno y un pendrive en el otro.	引腳 19、17 屬於 P4 的第二個 USB 控制器，支援全速 12 Mbit/s，可與 OTG 的任意模式同時工作。引腳 15、13 與高速 OTG 埠共用訊號線，應使用短線；啟用主機後會佔用 OTG 的模式。兩個控制器同時使用時，可分別連線鍵盤和 U 盤。
+LCD-X: pin 1 = GPIO48, pin 2 = GND. Consultá el dibujo de Waveshare antes de conectar alimentación.	LCD-X：引腳 1 為 GPIO48，引腳 2 為 GND。連線電源前請先查閱 Waveshare 接線圖。
+Shanghái (UTC+8)	上海（UTC+8）
+Taipéi (UTC+8)	臺北（UTC+8）
+Hong Kong (UTC+8)	香港（UTC+8）
+Falta la fuente china: instalá el paquete completo por USB.	缺少中文字型檔，請透過 USB 安裝完整韌體包。
+No se pudo cambiar el idioma.	無法切換語言。
+idioma no disponible	此語言不可用

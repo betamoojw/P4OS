@@ -1,0 +1,76 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+No entran más computadoras	没有更多电脑的空间
+sólo mirar	只有视频
+Ninguna computadora todavía.\nAgregala con + o desde la página VNC del portal.\n\nEn la Mac: Compartir pantalla, con «Los visores VNC pueden controlar la pantalla con contraseña».	没有电脑.\n添加一个+或从门户网站的VNC页面.\n\n在Mac上:屏幕共享,使用VNC观众可以通过密码控制屏幕.
+Automática	自动
+16 bits (rápido)	16位 (快速)
+24 bits	24位
+Falta la dirección	没有地址
+No se pudo guardar en la tarjeta	不能存储到卡上
+Guardada	保存
+Tocá otra vez para borrar	再击删除
+Nueva computadora	新的计算机
+Computadora	计算机
+Nombre	名称
+Dirección (IP o nombre)	地址 (IP或名称)
+Puerto	港口
+Contraseña VNC	VNC密码
+Queda guardada en la tarjeta (vnc.txt) y se puede leer. VNC usa sólo los primeros 8 caracteres.	它存储在卡上vnc.txtVNC只使用第8个字符.
+Codificación	编码
+Colores	颜色
+Sólo mirar (no manda mouse ni teclado)	仅显示 (没有鼠标或键盘发送)
+Guardar	保存
+Borrar	删除
+Trackpad: el dedo mueve el puntero	轨道板:你的手指移动指针
+Toque: el dedo es el mouse	触摸:你的手指是鼠标
+Ajustar	适合的
+Llenar	填充
+Qué pantalla ver	显示哪个屏幕
+Todas · %d×%d	所有 · %d×%d
+Monitor %d · %d×%d	监视器 %d · %d×%d
+Zona elegida · %d×%d	选择的区域 · %d×%d
+La lista la manda la computadora.	电脑发送了这个名单.
+Reintentar	重试
+Volver	返回
+No se pudo empezar: la conexión anterior todavía se está cerrando	无法启动:之前的连接仍在关闭
+Conectando…	正在连接…
+Entrando…	签署了...
+Se cortó la conexión	连接下来.
+El servidor dejó de mandar datos	服务器停止发送数据
+El servidor cerró la conexión	服务器关闭了连接
+Datos comprimidos incompletos	压缩数据截短
+Datos comprimidos dañados	损坏的压缩数据
+Rectángulo demasiado ancho	矩形太宽
+Sin memoria para ZRLE	对于ZRLE没有记忆
+ZRLE: una tira se pasa del bloque	ZRLE: 跑过瓷砖
+ZRLE: datos inválidos	ZRLE:无效数据
+JPEG demasiado grande	太大的JPEG
+Sin memoria para el JPEG	没有JPEG的内存
+El decodificador JPEG no abrió	JPEG解码器没有打开
+Tight: compresión desconocida	紧张:未知压缩
+Tight: rectángulo demasiado ancho	紧:矩形太宽
+Tight: filtro desconocido	紧凑: 未知过滤器
+Sin memoria para Tight	没有记忆.
+La pantalla remota no entra en la memoria	远程屏幕不适合内存
+Tamaño de pantalla inválido	无效的屏幕尺寸
+Un rectángulo cae fuera de la pantalla	一个矩形落在屏幕外
+Codificación %d no soportada	编码 %d 没有支持
+Mensaje desconocido del servidor (%d)	来自服务器的未知消息 (%d)
+El servidor rechazó la conexión: %s	服务器拒绝连接: %s
+El servidor rechazó la conexión	服务器拒绝连接
+El servidor pide contraseña: cargala en la computadora	服务器需要密码:输入这个计算机
+No es un servidor VNC	没有VNC服务器
+La Mac no ofrece contraseña VNC: activá «Los visores VNC pueden controlar la pantalla con contraseña» en Compartir pantalla	Mac 没有 VNC 密码: 在屏幕共享中打开“ VNC 查看器可以使用密码控制屏幕 ”
+Ningún tipo de seguridad que la placa conozca (%s)	开发板不知道的安全类型 (%s)
+Tipo de seguridad %d no soportado	安全类型 %d 没有支持
+Contraseña incorrecta	错误的密码
+Sin memoria	没有记忆
+No se encontró la computadora (DNS)	计算机未找到 (DNS)
+Sin conexiones libres en la placa	没有免费连接.
+La computadora no contesta	电脑没有回答
+No se pudo conectar (¿VNC activado? ¿puerto?)	无法连接 (VNC上线?右端口?)
+Marcar con el dedo	用手指标
+Arrastrá un rectángulo sobre la parte que querés ver	拉一个矩形过你想看到的部分
+Muy chico: arrastrá un rectángulo más grande	太小:拖着一个更大的矩形
+Para ver una sola parte (un monitor de varios), marcala con el dedo; acercá antes con dos dedos si querés más precisión.	为了显示一个部分 (一块显示器中的几个),用手指标记它;先用两个手指放大,以获得更精确的准确性.

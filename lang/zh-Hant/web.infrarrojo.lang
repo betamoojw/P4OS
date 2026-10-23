@@ -1,0 +1,140 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+NEC extendido	擴大NEC
+NEC 32 bits	NEC 32 位
+Otro botón	其他按鈕
+Encender/apagar	功率
+Encender	開啟
+Apagar	關機
+Fuente	來源
+Silencio	無聲
+Volumen +	大量+
+Volumen −	大量 −
+Canal +	頻道+
+Canal −	頻道
+Arriba	升起
+Abajo	下面
+Izquierda	左邊
+Derecha	沒有.
+Volver	返回
+Inicio	主頁
+Menú	選單
+Info	資訊
+Guía	指南
+Reproducir	開始遊戲
+Pausa	暫停
+Reproducir/pausa	開始遊戲/pause
+Detener	停止
+Retroceder	倒帶
+Adelantar	快速前進
+Anterior	上一步
+Siguiente	下一步
+Grabar	錄製
+Rojo	紅色
+Verde	綠色
+Amarillo	黃色
+Azul	藍色
+Tele	電視
+Audio	音訊
+Aire	空氣控制
+Ventilador	風扇
+Luz	淺色
+Otro	其他
+Frío	很棒.
+Calor	熱量
+Seco	乾燥
+Ventilación	風扇
+Auto	汽車
+Frío/calor	熱量/cool
+Bajo	低水平
+Mínimo	最低
+Medio	平均值
+Alto	高階
+Máximo	最高的
+Silencioso	沉默
+Turbo	渦輪
+Eco	環境
+Noche	睡眠
+Ninguno	無
+Normal	正常
+Sí	是
+No	否
+Oscila	旋轉
+Fijo	固定
+crudo · %s duraciones · %s kHz	原材料 · %s 持續時間 %s kHz
+sin código	沒有程式碼
+no es un código IR de Broadlink	沒有Broadlink IR程式碼
+Pronto mal formado	錯誤的Pronto程式碼
+no reconozco el formato del código	不識別的程式碼格式
+sin la base de códigos	程式碼資料庫缺失
+la base de códigos no es válida	程式碼資料庫不有效
+ese aire no está en la base	該空調不在資料庫中
+no se pudo	它失敗了
+la app no contesta: ¿está abierta en la placa?	應用程式沒有答案:它是否在板上開放?
+Infrarrojo	紅外線
+Cargando…	正在載入…
+Escuchar	聽我說
+Abierta en la placa	在板上開啟
+Mandado: %s	傳送: %s
+Mandar	傳送
+Subir	走上
+Borrar	刪除
+Nombre	名稱
+Tipo	型別
+Sin botones.	沒有按鈕。
+Guardado	儲存
+Guardar	儲存
+Descartar	丟棄
+Bajar el JSON	下載JSON
+¿Borrar %s y sus botones?	刪除 %s 和它的按鈕?
+Borrar aparato	刪除裝置
+Modo especial	預設
+Oscilación	旋轉
+Opción	選擇
+⏻ Encendido	⏻ On
+⏻ Apagado	關
+Modo	模式
+%s · %s · código %s de SmartIR (licencia MIT). Cada cambio se guarda y se manda con el estado entero.	%s · %s ·智慧IR程式碼 %s 每個變更都會被儲存並送給整個州.
+Mandado	傳送
+Apagado	關閉了
+No se pudo leer: %s	我讀不懂: %s
+Editar	編輯
+%s botones	%s 按鈕
+Todavía no hay aparatos. Creá uno abajo, importalo, o agregalo desde Códigos en la placa.	在下面建立一個,進口一個或從板上的程式碼中新增一個.
+Nombre del botón	按鈕名稱
+Aparato nuevo…	新的裝置...
+Guardar en	儲存到
+Botón	按鈕
+Nombre del aparato nuevo	新裝置名稱
+Aparato nuevo	新裝置
+Guardado en %s	儲存到 %s
+Copiado	複製
+Copiar las duraciones	複製時間
+Apuntá el control al receptor y apretá un botón.	將遙控器指向接收器 按下按鈕 。
+Tocá Escuchar y apretá un botón del control.	錄音聽器 按遙控器上的按鈕
+La placa está escuchando	開發板正在聽
+La placa no está escuchando	開發板不聽
+Receptor en GPIO%s, LED en GPIO%s (se cambian en la app, pestaña Cableado)	接收器 GPIO%s, LED 燈 GPIO%s (在應用程式中更改,電纜標籤)
+Abrir la app en la placa	在板上開啟應用程式
+La app todavía no habló: abrila en la placa.	應用程式還沒有報道:
+Parar	停止
+Nombre (Tele del living)	名稱 (客廳電視)
+Falta el nombre	這個名字不見
+un aire de SmartIR se agrega desde Códigos en la placa (la base ya lo trae)	從板上的程式碼中新增一個SmartIR空調 (資料庫已經擁有它)
+no es un aparato ni un archivo de SmartIR	既不是裝置也不是SmartIR檔案
+Importado: %s, %s botones	進口: %s, %s 按鈕
+Un código: Broadlink en base64, Pronto (0000 006D …), Tuya, o duraciones [9000, 4500, 560, …]	程式碼格式：Broadlink base64、Pronto（0000 006D …）、Tuya，或時長陣列 [9000, 4500, 560, …]
+dirección y comando en hexa	在 hex 中的地址和命令
+Aparatos	裝置
+Aprender	學習
+La placa escucha con su receptor y cada botón que apretás aparece acá, decodificado.	開發板用接收器 監聽你按的每個按鈕 都在這裡出現 解碼了
+Agregar	新增
+Crear	建立
+Importar un aparato (un JSON bajado de acá) o un archivo de SmartIR de televisor, ventilador o luz:	匯入裝置 (下載的JSON) 或用於電視,風扇或燈具的SmartIR檔案:
+Mandar un código	傳送一個程式碼
+Protocolo	議定書
+Dirección (hexa)	地址 (六)
+Comando (hexa)	命令 (六)
+Mandado: %s duraciones	傳送: %s 持續時間
+Mandar el código pegado	傳送已貼上的程式碼
+Los códigos de la base son de SmartIR (licencia MIT, © 2019 Vassilis Panos, 2024 Li Tin O've Weedle). El receptor va a 3,3 V y el LED con un transistor: el cableado está en la pestaña Cableado de la app.	資料庫程式碼來自 SmartIR（MIT 許可證，© 2019 Vassilis Panos、2024 Li Tin O've Weedle）。接收頭使用 3.3 V，LED 透過三極體驅動；接線說明見應用的“接線”頁。

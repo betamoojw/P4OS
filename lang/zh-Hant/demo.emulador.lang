@@ -1,0 +1,166 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Juegos	遊戲
+Copiá acá los juegos de esta consola (también en subcarpetas).\nbios/ guarda los archivos de sistema que la consola pueda usar;\nsaves/ y states/ los escribe el emulador.	在此複製此控制檯的遊戲( 子資料夾也工作 ) 。\n控制檯可能使用的系統檔案;\n儲存/和狀態/由模擬器編寫.
+Tocá para volver	打回來
+Cargando...	裝載...
+menos de 1 min	不到1分鐘
+Empezar desde el principio borra el estado automático. Las partidas guardadas por el juego y las ranuras quedan.	從一開始就刪除了自動狀態,遊戲的儲存和插槽保持.
+Seguir donde quedó	繼續去那裡.
+Desde el principio	從一開始
+CONTINUAR	繼續
+JUGAR DE NUEVO	再一次玩
+Todos	全部
+Recientes	最近
+A-Z	A-Z
+Todavía no hay juegos	沒有遊戲
+Copiá los juegos a la tarjeta, una carpeta por consola:	將遊戲複製到卡片上, 每個控制檯有一個資料夾 :
+También se pueden subir desde el portal web de la placa, en la página Emulador. Los archivos de sistema (como la BIOS de la GBA) van en la carpeta bios de cada consola.	系統檔案(如GBA BIOS)進入每個控制檯的生物資料夾。
+Emulador	模擬器
+%d juego	%d 遊戲
+%d juegos	%d 遊戲
+Ajustada	裝備
+Entera	整體乘法
+Estirada	拉伸
+Automático	自動
+Nunca	從不
+1 de cada 2	每 2 幀取 1 幀
+2 de cada 3	在3中2
+No	否
+Sí	是
+Jugador 1	玩家1
+Jugador 2	玩家2
+Ranura %d	機場 %d
+vacía	空
+guardado	已儲存
+Guardando...	拯救了...
+Continuar	繼續
+Reiniciar	重置
+Salir	放棄
+Estados	國家
+Guardar	儲存
+Cargar	負載
+Opciones	選項
+Tamaño de la imagen	圖片大小
+Saltear cuadros	框架跳轉
+Sonido	聲音
+Mostrar cuadros por segundo	每秒顯示框架
+Seguir donde quedó al abrir	簡歷開放
+Pantalla al ritmo de la consola	螢幕在控制檯的速度
+El teclado USB juega como	其他 USB 鍵盤播放為
+Recompilador (al abrir un juego)	複製器 (當遊戲開幕時)
+Estado guardado	儲存狀態
+No se pudo guardar el estado	無法拯救國家
+No se pudo cargar el estado	不能載入狀態
+No se pudo cargar el juego	無法載入遊戲
+Falta memoria	沒有足夠的記憶
+Otra app está usando el procesador	另一個應用程式正在使用處理器
+Paleta	板塊
+Compuesta	複合材料
+Suave	平滑
+Recortar bordes	農作物過度掃描
+Recortar costados	農作物側面
+Límite de sprites	酒精限量
+No se pudo abrir el archivo	無法開啟檔案
+No es un juego de NES	沒有NES遊戲
+El archivo es demasiado grande	檔案太大了
+No hay memoria	沒有記憶
+Falta la BIOS del Famicom Disk System (disksys.rom)	缺失了Famicom磁碟系統BIOS (disksys.rom)
+Paleta (juegos de Game Boy)	調色盤( Game Boy 遊戲)
+Verde (DMG)	綠色 (DMG)
+Gris	灰色
+Pocket	錢包
+Color automático	自動顏色
+No es un juego de Game Boy	沒有遊戲
+Este tipo de cartucho no está soportado	不支援此墨盒型別
+No se pudo leer el juego	沒能讀到遊戲
+BIOS	生物系統
+Automática	自動
+Integrada	嵌入式
+Corrección de color	顏色糾正
+Mezcla de cuadros	框架混合
+El archivo no es un juego de Game Boy Advance	檔案不是一個Game Boy Advance遊戲
+El juego es más grande que un cartucho de Game Boy Advance	遊戲比遊戲男孩推進彈夾大
+No hay memoria suficiente para el juego	沒有足夠的記憶力.
+No se pudo abrir el juego	無法開啟遊戲
+Calidad del sonido	聲音質量
+Alta	高階
+Normal	正常
+Rápida	快速
+Sin sonido	沒有聲音
+No se pudo leer el archivo	無法讀取檔案
+No es un juego de Super Nintendo	沒有超級任天堂遊戲
+Este juego usa el chip Super FX, que el emulador no tiene	這款遊戲使用了超級FX晶片,
+Este juego usa el chip SA-1, que el emulador no tiene	這款遊戲使用SA-1晶片,該模擬器缺乏
+Este juego usa el chip S-DD1, que el emulador no tiene	這個遊戲使用S-DD1 晶片,該模擬器缺乏
+Este juego usa el chip SPC7110, que el emulador no tiene	這個遊戲使用了 SPC7110 晶片,該模擬器缺乏
+Región	地區
+Estados Unidos	美國
+Europa	歐洲
+Japón	日本
+Modos anchos	寬模式
+Proporción de TV	電視比例
+Píxeles enteros	整個畫素
+Izq	左邊
+Der	沒有.
+No es un juego de Master System	不是一個主系統遊戲
+No es un juego de Game Gear	沒有遊戲器
+No es un juego de ColecoVision	這不是一個 ColecoVision 遊戲
+No es un juego de PC Engine	這不是PC Engine遊戲.
+El juego es más grande que un cartucho de ColecoVision	遊戲比 ColecoVision 的子彈還要大
+Falta la BIOS de ColecoVision (coleco.rom)	沒有 ColecoVision BIOS (coleco.rom)
+Mando	移動
+3 botones	3個按鈕
+6 botones	6個按鈕
+América	美國
+Completo	全面
+Rápido	快速
+Sin FM	沒有FM
+No es un juego de Mega Drive	這不是一個大型驅動遊戲.
+Los juegos de 32X no se pueden jugar	32X遊戲不能播放
+Sistema	系統
+MVS (arcade)	影片直播
+AES (consola)	電腦控制檯
+EE. UU.	美國
+Asia	亞洲
+Calidad de sonido	聲音質量
+Alta (44 kHz)	高度 (44 kHz)
+Media (22 kHz)	中位 (22 kHz)
+Baja (11 kHz)	低調 (11 kHz)
+Caché de sprites	精油快取
+No es un juego de Neo Geo conocido (el zip tiene que llamarse como en MAME)	不是已知的NeoGeo遊戲 (zip必須被命名為MAME)
+No se pudo abrir el zip del juego	我無法開啟遊戲的密封機
+No se pudo leer el zip del juego	沒能讀到遊戲的密碼.
+El zip del juego está dañado	遊戲的密封圈受損.
+Falta un archivo del juego en el zip	沒有遊戲的檔案.
+Falta el zip del juego original (este es una variante)	原始遊戲的Zip缺失 (這是一個變體)
+Falta la BIOS de Neo Geo: neogeo.zip de MAME (sp-s2.sp1, sfix.sfix) en la carpeta bios	沒有NeoGeo BIOS: neogeo.zip (sp-s2.sp1, sfix.sfix) in the bios folder
+Falta sfix.sfix (la BIOS de Neo Geo está incompleta)	sfix.sfix 缺失 (Neo Geo BIOS 不完整)
+Este juego tiene los gráficos cifrados: hace falta su caché hecha en una computadora	這款遊戲的圖形是加密的:它需要在計算機上進行快取
+No hay lugar en la tarjeta para la caché del juego	卡上沒有遊戲快取的空間
+No se pudo escribir la caché del juego en la tarjeta	我不能把遊戲的快取寫到卡上.
+No se pudo leer la caché del juego	我無法讀取遊戲的快取.
+Dificultad izquierda	左側難度
+Dificultad derecha	正確的困難
+Televisor	電視
+Suavizar parpadeo	滑動閃爍
+BIOS de la 7800	7800 BIOS
+Girar la pantalla	旋轉螢幕
+Según el juego	正如遊戲所說
+A (difícil)	一 (硬)
+B (fácil)	B (簡單)
+Color	顏色
+Blanco y negro	黑白
+No usar	不要使用
+Usar si está	如果存在,應使用
+Izquierda	左邊
+Derecha	沒有.
+No es un juego de Atari 2600	這不是阿塔裡2600遊戲.
+No es un juego de Atari 7800	這不是阿塔裡7800遊戲.
+No es un juego de Atari Lynx	這不是阿塔裡林克斯遊戲.
+Tipo de cartucho no soportado	不支援墨盒型別
+El zip no tiene un juego de esta consola	這臺機器沒有遊戲.
+No hay lugar en la tarjeta para descomprimir el juego	卡上沒有地方開啟遊戲.
+No está el módulo de esta consola	這臺機器的模組缺失了
+No se pudo cargar el módulo	無法載入模組
+El módulo es de otra versión del emulador	模組來自另一個版本的模擬器

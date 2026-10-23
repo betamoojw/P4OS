@@ -1,0 +1,26 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Oficial	官方
+Blue	蓝色
+Bolsa (MEP)	股票 (MEP)
+Contado c/liqui	卡塔尔/liqui
+Mayorista	市长
+Cripto	密码
+Tarjeta	塔吉塔
+Euro	欧元
+Real	巴西真实
+Peso chileno	智利比索
+Peso uruguayo	乌拉圭比索
+Cotizaciones	货币
+Cargando…	正在加载…
+Dólar %s	%s 美元
+Elegí al menos una	选择至少一个
+Guardado: la placa lo toma en unos segundos	在几秒钟内,板子会接收它.
+Compra / venta, de dolarapi.com, actualizado %s.	从 dolarapi.com 购买/出售,更新 %s.
+Compra / venta, de dolarapi.com.	买卖,从dulapi.com.
+No se pudieron traer los valores: %s	没有收到价格: %s
+Qué muestra la placa	开发板所显示的内容
+Guardar	保存
+Abierta en la placa	在板上打开
+Abrir Cotizaciones en la placa	在板上开放货币
+La placa las muestra siempre en este orden; si la app está abierta, cambia sola en unos segundos.	板上总是以这种顺序显示它们;如果应用程序打开,它会自动更新在几秒钟内.

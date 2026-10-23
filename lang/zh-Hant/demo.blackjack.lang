@@ -1,0 +1,36 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+BLACKJACK PAGA 3 A 2	3比2 黑傑克的付款
+LA BANCA SE PLANTA EN 17	經銷商在所有17S
+Blackjack	黑龍江
+Ganás	獲勝
+Empate	推進
+Perdés	失敗
+Te pasaste	破裂
+Banca	銀行
+Seguro	保險
+La banca muestra un as. ¿Seguro?	經銷商表現得很好.
+Apuesta	投注
+Mezclando el sabot	擦鞋 擦鞋 擦鞋
+El seguro paga	保險支付
+Seguro perdido	失敗的保險
+Banca nueva: 1000	新銀行:1000
+Manos	雙手
+Ganadas	贏得了
+Blackjacks	二十一點
+Mejor banca	最好的銀行
+Sonido	聲音
+Mudo	沉默
+Consejo	提示
+Borrar	清除
+Repartir	達成協議
+No	否
+Doblar	兩倍
+Dividir	分裂
+Pedir	擊中了
+Plantarse	站立
+Otra mano	再一次交易.
+Banca nueva	新銀行
+Seguir	繼續
+Salir	出口
+La estrategia básica marca en dorado la jugada que sugiere.	基本的策略是黃金.

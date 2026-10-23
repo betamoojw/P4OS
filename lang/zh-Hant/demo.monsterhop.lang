@@ -1,0 +1,249 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Buscando a	在尋找
+está listo. Elige el nivel:	選擇一個級別:
+elige el nivel...	是選擇水平...
+El enlace no arrancó	連線沒有開始
+Preparando la carrera...	準備賽事...
+El otro reloj tiene otra versión de Monster Hop.	另一個手錶有另一種版本的怪物跳.
+Actualiza los dos para jugar juntos.	更新兩者一起玩.
+%s salió de la carrera	%s 離開了比賽
+Sin señal de %s	沒有訊號 %s
+Esperando a	在等待
+Primer paso	第一步
+Sin un rasguño	沒有一絲劃痕
+Valiente	勇敢的
+Rey del Pueblo Zombi	殭屍城之王
+Señor del Castillo	城堡的主人
+Sultán del Desierto	沙漠的蘇丹
+Guardián del Bosque	森林的守護者
+Cazador de jefes	亨特老闆
+Álbum completo	完整的專輯
+Llavero	鑰匙戒指
+Saltarín	霍伯號
+A la moda	在風格上
+Mejor amigo	最好的朋友
+Todas las estrellas	每個星球
+Domador del Valle	谷塔默
+Capitán de la Bahía	灣的船長
+Termina un nivel	完成一個級別
+Termina un nivel sin perder una vida	完成一個級別,沒有失去生命.
+Termina un nivel en Difícil	在Hard上完成一個級別
+Tres estrellas en todo el Pueblo Zombi	殭屍城三顆星星
+Tres estrellas en todo el Castillo Vampiro	在吸血鬼城堡上有三顆星
+Tres estrellas en todo el Desierto de las Momias	三個星星 遍佈媽媽沙漠
+Tres estrellas en todo el Bosque Lobizón	在狼森林裡有三顆星
+Gana en todas las guaridas	在每一個洞穴中都能贏得勝利
+Encuentra las %d figuritas	找到所有 %d 貼紙
+Junta 100 llaves	收集100個鑰匙
+Da 5000 saltos	跳5000次
+Compra 10 cosas en la tienda	在商店裡買10件東西.
+Gana una carrera contra el otro reloj	贏得一場比賽與其他時鐘
+Las %d estrellas	全部 %d 恆星
+Tres estrellas en todo el Valle Perdido	在整個迷失谷中,有三顆星
+Tres estrellas en toda la Bahía Abisal	三顆星星遍佈阿比斯灣
+Gorra roja	紅帽
+Gorra azul	藍色帽子
+Gorra verde	綠色帽子
+Gorra al revés negra	黑色的逆向帽子
+Gorra al revés naranja	橙色後蓋
+Gorro de lana violeta	紫豆
+Gorro de lana menta	薄荷豆
+Piluso caqui	卡基桶帽子
+Piluso rosa	粉紅色的桶帽子
+Gorrito con hélice	螺旋蓋
+Corona	皇冠
+Rayas azules	藍色條紋
+Remera verde	綠色的T恤
+Remera roja	紅色的T恤
+Remera amarilla	黃色的T恤
+Rayas rosa	粉紅色條紋
+Violeta con estrella	有明星的紫色
+Negra con luna	有月亮的黑色
+Calabaza	南瓜
+Galaxia	銀河系
+Mochila	揹包
+Capa de héroe	英雄之衣
+Mochila cazafantasmas	獵鬼包
+Alas de murciélago	蝙蝠翅膀
+Linterna	閃電燈
+Antorcha	火炬
+Globo	氣球
+Balde de golosinas	糖果桶
+Perrito	狗狗
+Gatito negro	黑貓
+Murcielaguito	小蝙蝠
+Chispas	閃爍
+Huellas	足跡
+Confeti	麵糰
+Corazones	他們的心
+Piel muy clara	皮膚很公平
+Piel clara	白色的皮膚
+Piel media	中型皮膚
+Piel trigueña	橄欖皮
+Piel morena	棕色皮膚
+Piel oscura	黑色的皮膚
+Piel muy oscura	非常黑色的皮膚
+Piel ébano	蛋白質皮膚
+Marciano	火星人
+Fantasma	幽靈
+Zombi	殭屍
+Robot	機器人
+Lava	岩漿
+Arcoíris	彩虹
+Pelo negro	黑頭髮
+Pelo castaño oscuro	黑色棕色的頭髮
+Pelo castaño	棕色頭髮
+Pelo rubio	白髮
+Pelo colorado	紅髮
+Pelo azul	藍色頭髮
+Pelo rosa	粉紅髮
+Pelo verde	綠色頭髮
+Gorras	帽子
+Remeras	T恤衫
+Espalda	返回
+En la mano	在手裡
+Mascotas	寵物
+Estelas	軌跡
+Piel	皮膚
+Pelo	頭髮
+Perro zombi	殭屍狗
+Pueblo Zombi	殭屍城
+El Grandote	野蠻人
+Vampiro	吸血鬼
+Armadura embrujada	護甲
+Murciélago	蝙蝠
+El Conde	伯爵
+Momia	媽媽
+Escarabajo	斯卡布( 斯卡布 )
+Desierto de las Momias	媽媽沙漠
+El Faraón	法老
+Hombre lobo	狼人
+Cuervo	烏鴉
+Raptor	猛龍
+Pterodáctilo	皮特羅達克蒂爾
+Triceratops	三角形圖
+El T-Rex	T -Rex 樂團
+Cangrejo gigante	巨型螃蟹
+Medusa	水母魚
+Hombre pez	魚人
+El Kraken	克拉肯
+Bosque Lobizón	人狼森林
+El Alfa	阿爾法
+moneda	貨幣
+monedas	貨幣
+Jugar	開始遊戲
+La casa de Tommy	湯米的房子
+Hacen falta %d estrellas para abrir esta zona	你需要 %d 星球將開啟這個區域
+Termina el nivel anterior	在完成之前
+Récord	最好的
+Figurita	貼紙
+encontrada	發現
+escondida	隱藏
+Próximamente: una zona nueva	快要到達:一個新的區域
+Estrellas	恆星
+Cerrar	關閉
+Zonas	區域
+Faltan %d estrellas	%d 更多的星星
+Primero aparea otro reloj en Enlace	首先,請在連結上加一雙手錶.
+Guardarropas	衣櫃
+Tienda	商店
+Álbum	專輯
+Trofeos	獎盃
+Estadísticas	統計
+Jugar con un amigo	與一個朋友一起玩
+Ajustes	設定
+Al mapa	在地圖上
+Comprar	購買
+Sacárselo	離開
+Puesto	穿著
+Ponérselo	戴上
+Te faltan monedas	不夠的硬幣
+Escondida en %s	隱藏在 %s
+Álbum de figuritas	貼紙專輯
+Niveles terminados	完成的水平
+Figuritas	貼紙
+Llaves juntadas	收集的鑰匙
+Monedas juntadas	收藏的硬幣
+Saltos	跳躍
+Atrapado por monstruos	被怪物捕捉
+Al agua	進入水中
+Caídas	秋天
+Carreras ganadas	賽事勝利
+Tiempo jugado	時間被玩了
+Dificultad	困難
+Fácil	簡單的
+Normal	正常
+Difícil	很難
+Fácil: 5 vidas y sin reloj. Normal: 3 vidas y reloj. Difícil: 1 vida y un poco menos de tiempo.	簡單：5 條生命，無計時。普通：3 條生命，有計時。困難：1 條生命，時間更短。
+Sonido	聲音
+Efectos	聲音
+Música	音樂
+Controles	操作說明
+Flechas en pantalla	在螢幕上的箭頭
+Desliza el dedo para saltar, o toca para saltar hacia adelante. El botón dorado tira de las palancas, empuja cajas, abre cofres y, si no hay nada, da un súper salto.	如果沒有任何東西,就會跳到超級飛躍.
+Cargando...	裝載...
+Pausa	暫停
+Seguir	繼續下去
+Reintentar	再試一次
+Salir al mapa	返回地圖
+Carrera de llaves	關鍵的比賽
+Una llave, un punto. El primero en salir suma dos.	一個關鍵是一個點,第一個得到了兩個.
+¡A correr!	競賽!
+Cancelar	取消
+Llaves	關鍵
+Monedas	貨幣
+Vidas	生命
+Tiempo	時間
+Trofeo	獎盃
+¡Ganaste la carrera!	你贏了這場比賽!
+Perdiste la carrera	你輸了比賽.
+Dejaste la carrera	你離開了比賽.
+Tú	你
+Otra carrera	另一場比賽
+¡Nivel completo!	級別完成!
+Fin del juego	遊戲結束
+  ¡récord!	 最好的!
+Vidas perdidas	失去的人生
+¡Encontraste la figurita!	你找到了貼紙!
+Siguiente nivel	下一個層次
+Calle Principal	主街
+Las Cloacas	汙水系統
+El Desarmadero	垃圾場
+La Municipalidad	市政廳
+El Foso	摩特號
+El Gran Salón	大廳
+La Torre del Reloj	鐘塔
+La Cámara del Conde	伯爵的房間
+Mar de Dunas	杜納海
+El Oasis	綠洲
+Salas del Templo	廟堂
+La Tumba del Faraón	法老的墳墓
+El Sendero	道路
+El Río Bravo	衝河
+El Viejo Molino	舊的磨坊
+El Claro de la Luna	月亮清理
+La Selva Humeante	蒸汽叢林
+Los Pozos de Brea	塔爾坑
+El Río de Lava	拉瓦河
+La Carrera del T-Rex	賽車
+El Muelle	碼頭
+Marea Alta	高潮
+El Barco Hundido	廢墟
+La Guarida del Kraken	克拉肯的萊爾
+Campo de Prueba	測試場
+Castillo Vampiro	吸血鬼城堡
+Valle Perdido	迷失谷
+Bahía Abisal	阿比斯灣
+No hay memoria para girar la pantalla	沒有足夠的記憶體來旋轉螢幕
+¡Llave!	鑰匙!
+¡Se abrió la salida!	門是開放的!
+Punto de control	檢查點
+¡Sin tiempo!	時間已經過去了!
+¿Listo?	準備好了嗎?
+¡Ya!	走吧!
+¡Una vida más!	一個額外的生命!
++30 segundos	30秒以上
+¡Rápido!	趕緊!
+Falta monsterhop.pak en la tarjeta	monsterhop.pak 在卡上沒有
+No se pudo cargar el nivel	不能載入水平

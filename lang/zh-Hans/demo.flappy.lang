@@ -1,0 +1,8 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Tocá para empezar\nRécord  %d	打开\n最好的 %d
+¡Nuevo récord!	新的最佳!
+Récord  %d	最好的 %d
+Perdiste	你输了
+Pausa	暂停
+Tocá para reiniciar	击重新启动

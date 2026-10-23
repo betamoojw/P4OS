@@ -1,0 +1,29 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+archivo demasiado corto	檔案太短
+no es un STL	沒有STL
+no tiene triángulos	沒有三角形
+cancelado	取消
+error de lectura	讀取錯誤
+sin memoria	沒有記憶
+no se pudo reducir	不能減少
+no es un M3D	沒有M3D
+demasiados triángulos	太多的三角形
+índice inválido	壞指數
+archivo incompleto	檔案縮短
+no se pudo abrir el archivo	無法開啟檔案
+Reduciendo...	減少...
+Cargando...	裝載...
+No se pudo abrir	不能開啟
+Fondo oscuro	黑暗的BG
+Fondo gris	灰色 bg
+Fondo claro	光 bg
+alambre	電纜框架
+sólido	固體
+no se pudo leer	我讀不懂.
+Visor 3D	3D 顯示器
+Un dedo lo gira; dos lo acercan, lo mueven y lo tuercen	一個手指旋轉,兩個縮小,移動和扭曲它
+No hay modelos.\nCopiá archivos .stl o .m3d a\n%s\n(o subilos desde el portal: Archivos).	沒有模特.\n複製 .stl 或 .m3d檔案到\n%s\n(或從門戶端上傳它們:檔案).
+Carpeta	資料夾
+Girar	轉身
+Sin memoria	沒有記憶

@@ -8,7 +8,7 @@
  * drawn here in the browser (through wsrv.nl, a public image proxy, when a
  * station's site does not let its logo be read). The search and "listen
  * here" are the browser's own, straight to radio-browser and the stream. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('radio') : window.P4OS;
 const { main, h, put, api, post, toast, fsText, fsPut, fsDelete, fsMkdir, fsUrl, openApp } = P;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;

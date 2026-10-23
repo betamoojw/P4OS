@@ -1,0 +1,90 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Tocá para empezar	開啟
+Par	平均值
+¡Muy bien!	非常好!
+Jugar	開始遊戲
+Tienda	商店
+Ajustes	設定
+Amigo	朋友
+Próximamente	很快就來了.
+Falta mila_p4.pak en la tarjeta	mila_p4.pak 沒有卡
+No hay memoria para girar la pantalla	沒有足夠的記憶體來旋轉螢幕
+No se pudo cargar el nivel	不能載入水平
+El otro reloj tiene otra versión de Mila.	另一個手錶有另一種版本的米拉.
+Actualizá los dos para jugar juntos.	更新兩者一起玩.
+Buscando a	在尋找
+está listo. ¿Qué hacemos?	我們要做什麼?
+está eligiendo...	是選擇...
+El enlace no arrancó	連線沒有開始
+Primero emparejá los relojes en Enlace	連線手錶先搭配
+No hay un nivel abierto en los dos	兩者都沒有一個水平
+Preparando...	準備好...
+%s se fue a su casa	%s 回家了
+%s se desconectó	%s 斷開連線
+Sin señal de %s	沒有訊號 %s
+Moño	弓
+Gorrito de fiesta	黨帽
+Gorro de lana	連線豆子
+Flor	鮮花
+Boina	貝雷特
+Orejas de conejo	兔子耳朵
+Sombrero de bruja	魔女帽子
+Corona	皇冠
+Collar con cascabel	領帶帶鈴
+Collar con pescadito	有魚的領
+Moño al cuello	弓領
+Pañuelo	圍巾
+Pañuelo a lunares	波爾卡點圍巾
+Collar de perlas	珍珠項鍊
+Ratoncito	玩具滑鼠
+Ovillo	彈珠
+Pelota con cascabel	鐘聲響起
+Caña con pluma	羽毛棒
+Caja de cartón	紙板盒
+Plantita de catnip	Catnip 裝置
+Túnel	隧道
+Rascador	剪貼紙
+Hamaca de ventana	窗戶吊床
+Pecera	魚碗
+Mantené el dedo sobre Mila para ver todo el nivel.	抓住米拉的手指看整個層面.
+Tocá una casilla y Mila camina sola hasta ahí.	打一個手機,米拉獨自走到那裡.
+El botón de abajo a la izquierda deshace el último paso.	左下方的按鈕取消最後一步 。
+Arrastrá el ratoncito y Mila lo va a perseguir.	拉玩具滑鼠,米拉會追趕它.
+Terminar un mundo le regala algo a Mila.	結束一個世界給米拉帶來了禮物.
+Pellizcá con dos dedos para ver todo el nivel.	用兩根手指抓住整個水平.
+Cada día hay un regalito junto a la cucha.	每天,床邊都有一個小禮物.
+Cargando...	裝載...
+Seguir	繼續
+Empezar de nuevo	再開始.
+Mapa	地圖
+Casita	主頁
+¡Nivel completo!	級別完成!
+Siguiente	下一步
+Otra vez	再一次
+Movimientos: %d   (par %d)	移動: %d (引數) %d)
++%d monedas	+%d 貨幣
+¡Perfecto!	完美!
+Probá llegar al par	試圖達到等級
+¡Regalo: %s!	禮物: %s!
+¡Ganaste la carrera!	你贏了這場比賽!
+Ganó tu amigo	你的朋友贏了
+Vos: %d movimientos   %s: %d	你: %d 動作 %s: %d
+En la casita	在家裡
+Sacar	離開
+Ponérselo	穿著它.
+Premio por terminar %s	完成的獎勵 %s
+Bloqueado	鎖定
+Comprar  %d	購買 %d
+Te faltan monedas	不夠的硬幣
+Gorros	帽子
+Cuello	頸部
+Juguetes	玩具
+Volver	返回
+Niveles resueltos: %d\nMovimientos: %d\nCaricias: %d\nEstrellas: %d	解決的水平: %d\n移動: %d\n寵物: %d\n星球: %d
+Efectos	影響
+Música	音樂
+Con un amigo	我和一個朋友在一起
+Visitar su casita	拜訪他們的家
+Carrera en un nivel	在一個水平上競賽
+Cancelar	取消

@@ -1,0 +1,13 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+El Python de P4OS es MicroPython 1.29.\n\nEscribí una expresión y Enter:\n  2**100, sum(range(10)), 'hola'.upper()\ndef, for, if... siguen con '...'; una\n  línea vacía los corre.\nMódulos: math, random, json, re, time,\n  os, struct, collections, gc...\n  help('modules') los lista;\n  help(math) muestra uno.\nArchivos: la tarjeta es '/' y se\n  empieza en /python. open(), os e\n  import como en cualquier Python.\nRed: requests.get(url), socket.\nBibliotecas: import mip, y\n  mip.install('nombre') la baja de\n  micropython-lib a /python/lib.\nApps: cada .py de /python/apps es una\n  app del inicio que dibuja con aos.\nDetener corta lo que está corriendo.\n	P4OS的Python是MicroPython 1.29.\n\n輸入一個表示式,然後輸入:\n 2**100,總數(範圍 ((10)), "你好.上面")\n如果...繼續使用"......";\n 它們的空線.\n模組:數學,隨機,json,re,時間\n 其他型別:\n 幫助"模組")列出它們;\n 幫助數學) 表示一個.\n檔案:卡是"/",然後開始\n 在 /python. open(), os and import\n 像任何Python.\n網路:請求.get(url),插座\n圖書館:進口 mip,\n 設定"名字") 從\n micropython-lib into /python/lib.\n應用程式:每一個 .py /python/apps 是一個\n 在主螢幕上,使用AOS繪製.\n停止干擾正在執行的東西.\n
+Y los .py y .mpy de /python y /python/lib.\n	並且在 .py 和 .mpy 中 /python 和 /python/lib.\n
+Hay algo corriendo: detenelo primero\n	一些東西正在執行:先停下來\n
+No se pudo leer %s\n	我讀不懂. %s\n
+MicroPython no arrancó	微字thon沒有啟動
+esperando una línea	等待一個排隊
+corriendo…	跑步.
+Detener	停止
+Limpiar	清除
+MicroPython 1.29 en P4OS · help() para empezar\n	在P4OS上使用MicroPython 1.29 ·幫助()\n
+Tocá para correrlo de nuevo	擊下來再執行

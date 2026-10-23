@@ -33,6 +33,25 @@ env:
   CARRIED_PACKS: monsterhop_p4.pak turbo_p4.pak golf_p4.pak mila_p4.pak mila_p4.pak.1 mila_p4.pak.2 infrarrojo_p4.pak pinball_zombis_p4.pak pinball_robots_p4.pak pinball_jungla_p4.pak pinball_circo_p4.pak pinball_casino_p4.pak pinball_piratas_p4.pak
 
 jobs:
+  languages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: offline languages and Flash font resource
+        run: |
+          python -m unittest discover -s tests -p test_chinese.py
+          python -m unittest discover -s tests -p test_web_assets.py
+          python -m unittest discover -s tests -p test_utf8_native.py
+          node --test tests/test_portal_language.cjs tests/test_portal_web.cjs
+          python tools/gen_lang.py check zh-Hans
+          python tools/gen_lang.py check zh-Hant
+
   firmware:
     runs-on: ubuntu-latest
     # IDF 5.5: the ESP32-C6 link (esp_hosted 1.4) is only validated there
@@ -100,7 +119,7 @@ jobs:
           # (tools/coredump.sh fetches it by the dump's version)
           xz -T0 -6 -c build/$p/p4os.elf > out/p4os-$p.elf.xz
           (cd build/$p && zip -q ../../out/p4os-$p-full.zip p4os.bin bootloader/bootloader.bin \
-              partition_table/partition-table.bin ota_data_initial.bin flash_args)
+              partition_table/partition-table.bin ota_data_initial.bin cjk.bin flash_args)
           mkdir -p out/apps && cp apps/*/build/$p/*.so out/apps/
           # the modules an app loads itself (aos_hal_module_open), in apps/<app>/
           for m in apps/*/build/$p/modules; do
@@ -117,17 +136,20 @@ jobs:
           if [ "$p" = rev1_3 ]; then
             # the apps' own pages in the portal, for the card's /web (docs/PORTAL-PAGES.md)
             mkdir -p out/web && cp apps/*/web/*.js out/web/
-            mkdir -p out/lang && cp -r lang/en lang/de out/lang/
+            mkdir -p out/lang && cp -r lang/en lang/de lang/zh-Hans lang/zh-Hant out/lang/
             for a in $NOT_IN_RELEASE; do
               for so in apps/$a/build/$p/*.so; do [ -e "$so" ] && rm -f "out/apps/$(basename "$so")"; done
               rm -rf "out/apps/$a"
               for js in apps/$a/web/*.js; do
                 [ -e "$js" ] || continue
                 rm -f "out/web/$(basename "$js")"
-                pg=$(basename "$js" .js); rm -f out/lang/en/web.$pg.lang out/lang/de/web.$pg.lang
+                pg=$(basename "$js" .js)
+                for lc in en de zh-Hans zh-Hant; do rm -f "out/lang/$lc/web.$pg.lang"; done
               done
               id=$(grep -ho '\.id *= *"[^"]*"' apps/$a/main/*.c | head -1 | sed 's/.*"\(.*\)"/\1/')
-              [ -n "$id" ] && rm -f out/lang/en/$id.lang out/lang/de/$id.lang
+              if [ -n "$id" ]; then
+                for lc in en de zh-Hans zh-Hant; do rm -f "out/lang/$lc/$id.lang"; done
+              fi
               echo "left out of the release: $a ($id)"
             done
             (cd out && zip -qr apps.zip apps && rm -r apps)

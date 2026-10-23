@@ -6,10 +6,13 @@
  * else.
  */
 #pragma once
+#include <stddef.h>
 
 typedef struct {
     const char *file;   /* "_sistema.lang", "demo.2043.lang", ... */
-    const char *blob;   /* the whole catalogue, without the "#:" comments */
+    const unsigned char *blob; /* zlib-compressed UTF-8 catalogue */
+    size_t compressed_size;
+    size_t plain_size;
 } aos_lang_file_t;
 
 typedef struct {

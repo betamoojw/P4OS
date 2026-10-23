@@ -10,7 +10,7 @@
  * both sides read and write the same text. The page's texts are in Spanish,
  * like the rest of the portal, and tr() puts them in the board's language
  * (web.pato.lang); the script's commands (STRING, KEY, DELAY...) never. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('pato') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const DIR = '/pato';

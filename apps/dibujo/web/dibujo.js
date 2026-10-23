@@ -16,7 +16,7 @@
  *     decoder does not take progressive JPEGs and a drawing is never bigger.
  *
  * Only window.P4OS (version 1). */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('dibujo') : window.P4OS;
 const { h, put, toast, fmtBytes, fmtDate, fsList, fsBytes, fsPut, fsDelete, fsMkdir, fsUrl, fsSlug, saveBlob, openApp } = P;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;

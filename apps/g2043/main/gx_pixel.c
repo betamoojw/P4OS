@@ -606,16 +606,22 @@ static const uint8_t gx_font5x7[GX_FONT_LAST - GX_FONT_FIRST + 1][GX_CH_W] = {
     { 0x40, 0x40, 0x40, 0x40, 0x40 },   /* '_' */
 };
 
+#define AOS_PIXEL_BUF gx_buf_t
+#define AOS_PIXEL_PX gx_px
+#include "aos_pixel_text.h"
+
 int gx_text_w(const char *s)
 {
-    int n = (int)strlen(s);
-    return n > 0 ? n * GX_CH_ADV - 1 : 0;
+    return pixel_text_width(s, GX_CH_ADV);
 }
 
 void gx_text(gx_buf_t *b, int x, int y, const char *s, uint16_t c)
 {
-    for (; *s; s++, x += GX_CH_ADV) {
-        uint8_t ch = (uint8_t)*s;
+    for (int advance = 0; *s; x += advance) {
+        uint32_t cp = pixel_codepoint(&s);
+        advance = (cp >= 0x2e80 ? AOS_PIXEL_CJK_ADV : GX_CH_ADV) * 1;
+        if (cp >= 128) { pixel_unicode(b, x, y, cp, c, 1); continue; }
+        uint8_t ch = (uint8_t)cp;
         if (ch >= 'a' && ch <= 'z') {
             ch = (uint8_t)(ch - 32);        /* the font is upper case only */
         }

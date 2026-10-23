@@ -46,6 +46,7 @@ import argparse
 import os
 import re
 import sys
+import zlib
 from collections import OrderedDict
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -524,42 +525,7 @@ def cmd_check(args):
             for k in orphan[:6]:
                 print("        %s" % k)
 
-    # The apps that draw with their own bitmap font have a MUCH smaller
-    # character set than the screen, and whatever falls outside is silently
-    # discarded. It is impossible to see by reading the catalogue, so it is
-    # checked here. See docs/I18N.md, F4.
-    #
-    # Only NON-ASCII is flagged, for two measured reasons:
-    #   - gx_text() and ak_text() FOLD lower case to upper, so a-z draws
-    #     perfectly even though the table starts at 0x20.
-    #   - the catalogue does not know which string goes to the canvas and which
-    #     to an LVGL label; in these apps both coexist. An accent is the one
-    #     case that fails by EITHER path, so it is the only one that can be
-    #     asserted without looking at the code.
-    CHARSETS = {
-        "demo.2043.lang":     "gx_text(), fuente 5x7 propia",
-        "demo.arkanos.lang":  "ak_text(), fuente 5x7 propia",
-        "demo.claudito.lang": "cl_text(), fuente 5x7 propia",
-        "demo.chatarra.lang": "ch_text(), fuente 5x7 propia",
-    }
-    strip = re.compile(r"\\[ntr]|\\x[0-9A-Fa-f]{2}"
-                       r"|%[-+ #0]*[0-9*]*(?:\.[0-9*]+)?(?:hh|h|ll|l|z|j|t|L)?[a-zA-Z%]")
-    for filename, why in CHARSETS.items():
-        path = os.path.join(pack_dir, filename)
-        if not os.path.exists(path):
-            continue
-        malos = []
-        for key, val in read_pack(path).items():
-            fuera = {c for c in strip.sub("", val) if ord(c) > 0x7E}
-            if fuera:
-                malos.append((val, "".join(sorted(fuera))))
-        if malos:
-            problems += 1
-            print("  %s: %d texts with non-ASCII characters" % (filename, len(malos)))
-            print("     this app draws with %s: accents are discarded"
-                  " silently. Transliterate (ae, oe, ue, ss)." % why)
-            for val, fuera in malos[:6]:
-                print("        %r  ->  %s" % (val, fuera))
+    # Pixel canvases decode UTF-8 and use the shared font fallback.
 
     # Catalogs in the pack that no longer match any app.
     known = set(catalogs)
@@ -618,9 +584,8 @@ PSEUDO_KEEP = re.compile(
     r'%[-+ #0]*[0-9*]*(?:\.[0-9*]+)?(?:hh|h|ll|l|z|j|t|L)?[diouxXeEfgGaAcsp%]'
     r'|\\x[0-9A-Fa-f]{2}|\\[ntr\\]')
 
-# Catalogues that are expanded but NOT accented: these three apps draw their
-# text with their own bitmap font -ASCII and nothing else- so an accent there
-# does not render and only adds noise. See docs/I18N.md, F4.
+# Preserve the legacy ASCII art style in pseudo-localized pixel games.
+# Real language packs may use the shared UTF-8 font fallback.
 PSEUDO_NO_ACCENT = {"demo.2043.lang", "demo.arkanos.lang", "demo.claudito.lang",
                     "demo.chatarra.lang"}
 
@@ -798,24 +763,28 @@ def cmd_embed(args):
     out.append("")
 
     for code, name, strings, apps, files in packs:
+        ident = re.sub(r'[^A-Za-z0-9]', '_', code)
         for fn, pairs in files:
-            sym = "blob_%s_%s" % (code, re.sub(r"[^A-Za-z0-9]", "_", fn))
-            out.append("static const char %s[] =" % sym)
-            for k, v in pairs:
-                out.append('    "%s\\t%s\\n"' % (c_escape(k), c_escape(v)))
-            out.append("    ;")
+            sym = "blob_%s_%s" % (ident, re.sub(r"[^A-Za-z0-9]", "_", fn))
+            raw = ''.join(k + '\t' + v + '\n' for k, v in pairs).encode('utf-8')
+            compressed = zlib.compress(raw, 9)
+            out.append("static const unsigned char %s[] = {" % sym)
+            for offset in range(0, len(compressed), 24):
+                out.append('    ' + ','.join(str(b) for b in compressed[offset:offset + 24]) + ',')
+            out.append("};")
             out.append("")
-        out.append("static const aos_lang_file_t files_%s[] = {" % code)
+        out.append("static const aos_lang_file_t files_%s[] = {" % ident)
         for fn, pairs in files:
-            sym = "blob_%s_%s" % (code, re.sub(r"[^A-Za-z0-9]", "_", fn))
-            out.append('    { "%s", %s },' % (fn, sym))
+            sym = "blob_%s_%s" % (ident, re.sub(r"[^A-Za-z0-9]", "_", fn))
+            size = len(''.join(k + '\t' + v + '\n' for k, v in pairs).encode('utf-8'))
+            out.append('    { "%s", %s, sizeof(%s), %d },' % (fn, sym, sym, size))
         out.append("};")
         out.append("")
 
     out.append("const aos_lang_pack_t aos_lang_packs[] = {")
     for code, name, strings, apps, files in packs:
         out.append('    { "%s", "%s", %d, %d, files_%s, %d },'
-                   % (code, c_escape(name), strings, apps, code, len(files)))
+                   % (code, c_escape(name), strings, apps, re.sub(r'[^A-Za-z0-9]', '_', code), len(files)))
     out.append("};")
     out.append("const int aos_lang_pack_count = %d;" % len(packs))
     out.append("")

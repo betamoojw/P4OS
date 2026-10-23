@@ -1,0 +1,18 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Grabación	录制
+Grabadora	记录器
+grabación	记录
+grabaciones	记录
+en total	总计
+en la tarjeta	在卡上
+Abierta en la placa	在板上打开
+Abrir la Grabadora en la placa	在板上打开录音器
+Actualizar	刷新
+Se graba desde la placa. Acá se escuchan, se bajan como WAV y se borran; la app ve los cambios sola.	录音发生在板上.在这里你可以听录音,下载它们作为WAV并删除它们;应用程序会自动检测变化.
+¿Borrar %s? No se puede deshacer.	删除 %s这不能被撤销.
+Borrada	删除
+Todavía no hay grabaciones. Se graban desde la app en la placa.	现在还没有录音,用电脑板上的应用程序来记录它们.
+Bajar	下载
+Borrar	删除
+Grabaciones	录音

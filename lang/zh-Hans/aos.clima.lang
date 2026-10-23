@@ -1,0 +1,54 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+dia\x04Dom	太阳
+dia\x04Lun	星期一
+dia\x04Mar	星期四
+dia\x04Mie	结婚
+dia\x04Jue	Thu
+dia\x04Vie	星期五
+dia\x04Sab	卫星
+Clima	天气
+Hoy	今天
+Sin datos todavia	目前没有数据
+Elegi una ciudad	选择一个城市
+ST %s\xC2\xB0     HUM %d%%     %d km/h	美国 %s\xC2\xB0 它们 %d%%     %d 公里/h
+actualizando...	更新...
+sin datos	没有数据
+sin conexion	离线
+guardado	缓存
+%s   -   recien	%s - 现在
+%s   -   hace %d min	%s   -   %d 几分钟前
+No se pudo actualizar	无法更新
+No hay ninguna ciudad asi	没有那个城市.
+No se pudo buscar	搜索失败
+Escribi al menos dos letras	输入至少两个字母
+Sin conexion a la red	没有网络连接
+Buscando...	在搜索...
+Ciudad	城市
+Buscar una ciudad	寻找一个城市
+Buscar otra ciudad	寻找另一个城市
+Buscar tu ciudad	搜索你的城市
+o desde http://%s/clima	或从 http://%s/clima
+sin conexion a la red	没有网络连接
+Demostracion	演示
+Despejado	清除
+Mayormente despejado	大部分是清晰的
+Parcialmente nublado	部分阴云
+Nublado	阴云
+Niebla	雾
+Llovizna	细雨
+Llovizna helada	冻细雨
+Lluvia debil	轻微的雨
+Lluvia	雨
+Lluvia fuerte	大雨
+Lluvia helada	冰冷的雨
+Nieve debil	轻雪
+Nieve	雪
+Nieve fuerte	沉重的雪
+Granizo fino	雪粒
+Chaparrones	淋浴
+Chaparrones fuertes	大雨
+Chaparrones de nieve	降雪雨
+Tormenta	雷暴
+Tormenta con granizo	雷暴带冰雹
+Sin datos	没有数据

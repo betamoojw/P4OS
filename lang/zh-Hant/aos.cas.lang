@@ -1,0 +1,588 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Motor apagado	發動機關閉
+Iniciando...	開始了.
+Calculando...	計算...
+El motor no aceptó el cálculo	發動機沒有做出計算
+Memoria del motor: %u KB	發動機記憶體: %u KB
+Parar el cálculo	停止計算
+Borrar el historial	清除歷史
+Banco de pruebas	標準標誌
+Cálculo	計算
+Gráfico	圖表
+Geometría	幾何
+Estadística	統計
+Finanzas	財政
+Ciencias	科學
+No se pudo arrancar el motor. Cerrá la app y volvé a abrirla.	發動機無法啟動,關閉應用程式並再次開啟.
+hasta %d genes	到 %d 基因
+sólo letras: AaBb	只有字母: AaBb
+cada gen son dos letras: AaBb	每個基因都是兩個字母:AABb
+%c y %c no son el mismo gen	%c 和 %c 不是相同的基因
+los dos padres necesitan los mismos genes	兩個父母都需要相同的基因.
+los dos padres necesitan los mismos genes, en el mismo orden	兩個父母都需要相同的基因,
+Error	錯誤
+El motor no está listo	發動機還沒有準備.
+demasiados elementos	太多的元素
+falta cerrar un paréntesis	一個支架沒有關閉
+paréntesis mal cerrado	不匹配的支架
+no hay elemento %s	沒有元素 %s
+un subíndice no puede ser 0	一個字母不能為 0
+no se entiende: %s	沒有理解: %s
+falta la fórmula	公式沒有
+la carga va así: ^2+ o ^-	這樣寫電荷: ^2+ 或 ^-
+falta una sustancia	一種物質缺失
+demasiadas sustancias	太多的物質
+separá los lados con = o ->	用=或 -> 分開側面
+falta un lado	一個側面缺失了
+no se puede balancear: revisá las fórmulas	無法平衡:檢查公式
+tiene más de una forma de balancearse: son varias reacciones juntas	它以多種方式平衡:
+Hidrógeno	氫
+Helio	Helium
+Litio	鋰
+Berilio	Beryllium
+Boro	Boron
+Carbono	碳
+Nitrógeno	氮學
+Oxígeno	氧氣
+Flúor	氟
+Neón	霓虹
+Sodio	鈉
+Magnesio	Magnesium
+Aluminio	鋁
+Silicio	矽
+Fósforo	磷
+Azufre	硫
+Cloro	氯
+Argón	條形
+Potasio	鉀
+Calcio	鈣
+Escandio	Scandium
+Titanio	Titanium
+Vanadio	Vanadium
+Cromo	鉻
+Manganeso	錳
+Hierro	鐵
+Cobalto	鈷
+Níquel	鎳
+Cobre	銅
+Zinc	鋅
+Galio	Gallium
+Germanio	德國
+Arsénico	砷
+Selenio	Selenium
+Bromo	溴問題
+Kriptón	克里普頓
+Rubidio	Rubidium
+Estroncio	Strontium
+Itrio	圓形
+Circonio	Zirconium
+Niobio	Niobium
+Molibdeno	圓柱
+Tecnecio	Technetium
+Rutenio	Ruthenium
+Rodio	Rhodium
+Paladio	Palladium
+Plata	銀子
+Cadmio	Cadmium
+Indio	Indium
+Estaño	錫
+Antimonio	抗藥物
+Telurio	Tellurium
+Yodo	碘類
+Xenón	賢
+Cesio	Caesium
+Bario	Barium
+Lantano	蘭塔努姆
+Cerio	Cerium
+Praseodimio	Praseodymium
+Neodimio	Neodymium
+Prometio	Promethium
+Samario	薩馬裡姆
+Europio	歐洲
+Gadolinio	Gadolinium
+Terbio	Terbium
+Disprosio	溶解劑
+Holmio	荷爾米
+Erbio	Erbium
+Tulio	Thulium
+Iterbio	Ytterbium
+Lutecio	Lutetium
+Hafnio	氫
+Tantalio	鉭
+Wolframio	東斯滕
+Renio	Rhenium
+Osmio	Osmium
+Iridio	Iridium
+Platino	白金
+Oro	金
+Mercurio	汞問題
+Talio	Thallium
+Plomo	鉛
+Bismuto	布斯穆特
+Polonio	Polonium
+Astato	亞斯塔丁
+Radón	弧度
+Francio	Francium
+Radio	半徑
+Actinio	Actinium
+Torio	Thorium
+Protactinio	Protactinium
+Uranio	鈾
+Neptunio	Neptunium
+Plutonio	鈽
+Americio	Americium
+Curio	Curium
+Berkelio	Berkelium
+Californio	加州
+Einstenio	Einsteinium
+Fermio	Fermium
+Mendelevio	Mendelevium
+Nobelio	Nobelium
+Lawrencio	勞倫西亞
+Rutherfordio	Rutherfordium
+Dubnio	Dubnium
+Seaborgio	海洋園區
+Bohrio	Bohrium
+Hasio	Hassium
+Meitnerio	Meitnerium
+Darmstatio	達姆施塔迪姆
+Roentgenio	Roentgenium
+Copernicio	科珀尼奇
+Nihonio	Nihonium
+Flerovio	氟化物
+Moscovio	莫斯科維
+Livermorio	Livermorium
+Teneso	泰納西
+Oganesón	歐根森
+No tiene solución con esos valores	沒有這些值的解決方案
+N (períodos)	N (週期)
+I% anual	每年1%
+VA (valor actual)	PV (當前價值)
+PAGO (por período)	PMT (每期)
+VF (valor final)	未來價值
+pagos por año	每年支付
+capitalizaciones por año	每年複合量
+Pago al final	結期付款
+Pago al inicio	開始支付
+Completá cuatro y tocá =? en la que falta. El dinero que recibís va positivo, el que pagás negativo: un préstamo de 200 000 se paga con cuotas negativas.	填寫其中四項，再點選缺失項的 =?。收到的金額填正數，支出的金額填負數。例如借入 200 000，償還時的分期付款應填負數。
+interés	利息
+capital	資本
+Cuota	付款
+Interés	利息
+Saldo	均衡
+Francés	法語
+Alemán	德語
+Americano	彈子
+Monto	額度
+TNA %	額定利率 %
+Plazo (meses)	期限 (幾個月)
+Primera cuota	第一次支付
+Última cuota	最後支付
+Total de intereses	總利息
+Total a pagar	應支付的總
+La tasa del período es la TNA dividida por 12. Sin IVA ni gastos: el costo financiero total del banco puede ser mayor.	每期利率是名額利率分為12:沒有稅收或手續費,銀行總成本可能更高.
+Tasa %	利率 %
+capitaliza cada (días)	每天的化合物
+Equivalentes	同等產品
+TNA (cada %.0f días)	名稱 (每一個) %.0f 日)
+TEM (30 días)	每月有效期 (30天)
+Diaria efectiva	每日有效
+Plazo fijo	固定期存款
+Capital	校長
+Días	時間
+Monto al vencer	在到期時
+Contra la inflación	與通貨膨脹
+Inflación mensual %	月通貨膨脹 %
+Tasa real mensual	實際月率
+no hay	無
+nunca	永遠不會
+Tasa de descuento %	折扣利率 %
+VAN	產品總值
+TIR	紅色電池
+Recupero (períodos)	退款 (期)
+Flujos	現金流
+período %d	時間 %d
+inversión (0)	投資 (0)
++ período	時間
+Quitar el último	刪除最後一個
+Préstamo	貸款
+Tasas	利率
+VAN / TIR	總值 (NPV)
+Eso no es un número	這不是一個數字.
+Mover	移動
+Punto	問題
+Punto medio	中點
+Intersección	交叉路口
+Segmento	部分
+Recta	線條
+Semirrecta	雷
+Perpendicular	垂直
+Paralela	同步
+Mediatriz	犯罪者:雙向
+Bisectriz	角分隔器
+Circunferencia	圓圈
+Circ. por 3 puntos	圓 3 分
+Polígono	多角形
+Longitud	長度
+Ángulo	角度
+Área	面積
+Ecuación	方程
+Coordenadas	座標
+Eliminar	刪除
+Nada para deshacer	沒有什麼可取消的.
+La figura está llena	這個數字是滿的.
+Arrastrá un punto, o tocá algo para verlo	拖著一個點,或擊點來看到它
+Tocá donde va el punto	按點的方向
+Tocá el segundo punto	按第二個點
+Tocá un segmento o el primer punto	點選一個段子或第一點
+Tocá la otra línea	擊另一個行
+Tocá dos líneas, o donde se cruzan	打兩條線,或者它們交叉的地方
+Tocá el primer punto	按第一點
+Ahora el otro: la recta o el punto	現在另一個:直線或點
+Tocá una recta y un punto	按一條線和一個點
+Tocá un punto del primer lado	在第一邊點選一個點
+Tocá el vértice	擊頂點
+Tocá un punto del otro lado	在另一邊點選一個點
+Tocá un punto de la circunferencia	在圓上點選一個點
+Tocá el centro	按一下中心
+Tocá el tercer punto	按第三個點
+Tocá los vértices	敲打頂部
+Tocá el primero para cerrarlo	按第一個開啟它
+Tocá dos puntos, un segmento o una figura	打兩個點,一個段子或一個形狀
+Tocá un polígono o un círculo	點選多邊形或圓
+Tocá una recta o una circunferencia	按一條線或圓
+Tocá un punto	擊點
+Tocá lo que querés borrar	打擊想要刪除的內容
+No se cruzan	他們不會過渡.
+Puntos	問題
+Líneas	線條
+Figuras	形狀
+Medir y editar	測量和編輯
+Cuadrícula	電網
+Ajustar a la grilla	連線到電網
+Borrar todo	全部清除
+Las medidas aparecen acá: elegí Longitud, Ángulo, Área o Ecuación.	在這裡顯示了測量:選擇長度,角度,面積或方程.
+Sin memoria para la figura	沒有記憶.
+Circ.	圓圈
+Perímetro	周邊
+no existe	沒有
+no se puede graficar	無法圖表
+no se entiende	沒有理解
+tocá para escribir	打到鍵
+Listo	完成
+Sin memoria para el gráfico	沒有記憶圖表
+mcd	其他型別
+mcm	lcm
+primos	總數
+media	平均值
+desv	工作人員
+masa	質量
+velocidad	速度
+velocidad inicial	起始速度
+aceleración	加速
+tiempo	時間
+gravedad	重力
+altura	高度
+fuerza	強勢
+distancia	距離
+radio	半徑
+constante del resorte	春季常數
+estiramiento	擴充套件
+densidad	密度
+volumen	大量
+Cinemática	動力學
+Movimiento uniforme	統一動議
+posición	位置
+posición inicial	起始位置
+Velocidad (MRUV)	速度 (常數a)
+Posición (MRUV)	位置 (常數a)
+Torricelli	托里塞利
+Caída libre	自由跌倒
+Dinámica	動態
+Segunda ley de Newton	牛頓的第二定律
+Peso	重量
+peso	重量
+Rozamiento	摩擦
+fuerza de rozamiento	摩擦力
+coeficiente de rozamiento	摩擦係數
+fuerza normal	常態力
+Ley de Hooke	胡克的定律
+Cantidad de movimiento	動力
+cantidad de movimiento	動力
+Impulso	衝動
+impulso	衝動
+Energía	能量
+Energía cinética	動力能量
+energía cinética	動力能量
+Energía potencial	潛在能源
+energía potencial	潛在能量
+Energía elástica	彈效能量
+energía elástica	彈效能量
+Trabajo	工作
+trabajo	工作
+ángulo	角度
+Potencia	功率
+potencia	電力
+Circular y gravitación	迴圈運動和重力
+Aceleración centrípeta	中心加速
+aceleración centrípeta	中心加速
+Velocidad angular	角度速度
+velocidad angular	角速度
+Período	時間
+período	時間
+Gravitación universal	全球引力
+constante de gravitación	引力常數
+masa 1	質量1
+masa 2	質量 2
+Péndulo simple	簡單鐘擺
+largo	長度
+Fluidos	液體
+Densidad	密度
+Presión	氣壓
+presión	壓力
+área	面積
+Presión hidrostática	液態壓力
+profundidad	深度
+Empuje (Arquímedes)	浮力 (阿基米德斯)
+empuje	漂浮力
+Caudal	流量
+caudal	流量
+sección	截面
+Ondas	波浪
+Velocidad de una onda	波速
+longitud de onda	波長
+frecuencia	頻率
+Frecuencia y período	頻率和時間
+Electricidad	電力
+Ley de Ohm	吳門的律法
+tensión	電壓
+corriente	電流
+resistencia	阻力
+Potencia eléctrica	電力
+Ley de Coulomb	庫倫布的定律
+constante de Coulomb	庫倫姆常數
+carga 1	電荷 1
+carga 2	電荷 2
+Resistencias en paralelo	同步阻力
+resistencia total	總阻力
+resistencia 1	阻力 1
+resistencia 2	阻力 2
+Capacitor	電容器
+carga	收費
+capacidad	電容量
+Energía en un capacitor	電容器中的能量
+energía	能源
+Calor	熱量
+Calor sensible	合理的熱量
+calor	熱量
+calor específico	特定的熱量
+cambio de temperatura	氣溫變化
+Gas ideal	理想氣體
+moles	摩爾
+constante de los gases	氣體常量
+temperatura	氣溫
+Dilatación lineal	線性擴張
+cambio de largo	長度變化
+coeficiente de dilatación	擴張係數
+largo inicial	最初的長度
+Óptica	光學
+Ley de Snell	斯內爾的定律
+índice 1	指數1
+ángulo de incidencia	發生角
+índice 2	指數 2
+ángulo de refracción	折射角
+Lente delgada	薄透鏡
+distancia focal	焦距
+distancia al objeto	物件距離
+distancia a la imagen	影象距離
+Moderna	現代
+Masa y energía	質量和能量
+velocidad de la luz	光速
+Energía de un fotón	光子能量
+constante de Planck	普朗克常數
+constante de Planck reducida	降低的Planck常量
+carga elemental	基本費用
+número de Avogadro	阿瓦戈德羅常數
+constante de Boltzmann	波爾茨曼常數
+constante de Faraday	費拉迪常數
+gravedad estándar	標準重力
+masa del electrón	電子質量
+masa del protón	質子質量
+masa del neutrón	中子質量
+unidad de masa atómica	原子質量單位
+permitividad del vacío	吸塵容量
+permeabilidad del vacío	吸塵透性
+constante de Stefan-Boltzmann	斯蒂芬-博爾茨曼常數
+radio de Bohr	波爾半徑
+volumen molar (0 °C, 1 atm)	摩拉體積 (0 °C,1 atm)
+atmósfera estándar	標準氣氛
+electronvoltio	電壓
+masa de la Tierra	地球的質量
+radio medio de la Tierra	地球的平均半徑
+Molaridad	偶數
+concentración	濃度
+masa de soluto	溶化物質量
+masa molar	摩拉質量
+volumen de solución	溶液量
+Dilución	稀釋
+concentración inicial	初始濃度
+volumen inicial	開始量
+concentración final	最終濃度
+volumen final	最終量
+Metal alcalino	阿爾卡利金屬
+Alcalinotérreo	鹼土金屬
+Metal de transición	過渡金屬
+Otro metal	過渡後金屬
+Metaloide	金屬
+No metal	不金屬
+Halógeno	鹵素
+Gas noble	貴族氣體
+Lantánido	蘭塔尼德
+Actínido	抗氧化物
+Falta %s	%s 失蹤
+También es solución: %s = %s	還有一個解決方案: %s = %s
+Masa atómica	原子質量
+Configuración	配置
+Grupo · período	集團 ·時期
+sólido	固體
+líquido	液體
+gas	氣體
+ (previsto)	 (預測)
+Estado a 25 °C	在25°C的狀態
+Electronegatividad	電子負面性
+Fusión · ebullición	熔化 沸騰
+Estados de oxidación	氧化狀態
+Sumar %s a la fórmula	新增 %s 在公式中
+Fórmula (Ca(OH)2, CuSO4.5H2O, SO4^2-)	公式 (Ca(OH) 2,CuSO4.5H2O, SO4^2-)
+Gramos y moles	Grams 和 moles( 鼠類和鼠類)
+masa (g)	質量 (g)
+cantidad (mol)	數量 (mol)
+partículas	顆粒
+Sustancia	質量
+Coef.	庫夫。
+Gramos de %s	克數 %s
+Ecuación (Fe + O2 = Fe2O3; iones: Fe^3+)	方程 (Fe + O2 = Fe2O3;離子:Fe^3+)
+Estequiometría: tocá una sustancia para escribir cuántos gramos hay; el resto sale de ahí.	靜脈測量:打一個物質,輸入有多少克;剩下的則是這樣.
+Llená cuatro y tocá =? en el que falta. La temperatura va en kelvin: 0 °C son 273,15 K.	填寫4個,然後點選缺失的.溫度是Kelvin: 0 °C=273.15 K.
+Ácido fuerte	強酸
+Base fuerte	強大的基礎
+Ácido débil	軟酸
+Base débil	弱的基礎
+concentración (mol/L)	concentration (mol/L)
+A 25 °C (Kw = 10⁻¹⁴).	在25°C (Kw=10−14).
+ionizado	離子化
+Fórmulas	公式
+Llená los datos y tocá =? en el que querés saber. Los ángulos van en grados.	填寫你知道的東西,然後點選你想要的東西.
+Con esa altura no llega al suelo.	從那個高度,它從來沒有達到地面.
+Tiempo de vuelo	飛行時間
+Alcance	範圍
+Altura máxima	最長高度
+Velocidad al caer	降落速度
+Ángulo al caer	登陸的角度
+v₀ velocidad inicial (m/s)	v0初始速度 (m)/s)
+θ ángulo (°)	θ角 (°)
+h₀ altura inicial (m)	h0初始高度 (m)
+g gravedad (m/s²)	g 重力 (m)/s²)
+CODATA 2018. Desde 2019 c, h, e, Nₐ y kB son exactas por definición.	2018年CODATA.自2019年以來,c,h,e,Na和kB按定義是準確的.
+Padre 1	父母1
+Padre 2	父母2
+Fenotipos	型別
+Genotipos	基因型
+Mayúscula: el alelo dominante. A_ quiere decir AA o Aa.	資本:佔支配地位的Alele。A_是指AA或AA。
+Con los genotipos contados	從基因型計數
+Con la frecuencia del fenotipo recesivo	從衰退性現象型別的頻率
+Esperados (AA, Aa, aa)	預期 (AA, Aa, aa)
+valor p	p值
+No está en equilibrio (p < 0,05)	沒有平衡 (p < 0.05)
+Compatible con el equilibrio (p ≥ 0,05)	與平衡相一致 (p ≥ 0.05)
+AA (p²)	AA (p2)
+portadores Aa (2pq)	運輸商 Aa (2pq)
+Secuencia (ADN o ARN)	序列 (DNA或RNA)
+Se dejaron afuera %d letras que no son bases.	%d 其他字母都被排除在外.
+Largo	長度
+Masa (hebra simple)	質量 (單線)
+Complementaria	補充
+Reversa complementaria	逆補充
+ARN mensajero	傳遞器RNA
+Marco 1	框架1
+Marco 2	框架2
+Marco 3	框架3
+Desde ATG	來自ATG
+Proteína (código estándar; * es stop)	蛋白質 (標準程式碼; *是停止)
+Tm: regla de Wallace hasta 13 bases, la fórmula de GC desde 14. Una estimación: no reemplaza a la de la sal y la concentración.	華萊斯的規則為13個基,GC公式從14個.
+exponencial	指數值
+logística	後勤
+Exponencial N(t)	增量 N (t)
+Logística N(t)	後勤服務
+Tiempo de duplicación	時間翻倍
+Tubo %d	管道 %d
+Dilución total	總稀釋
+Crecimiento de una población	人口增長
+N₀ población inicial	N0初始人口
+r tasa de crecimiento	增長率
+K capacidad de carga	運輸能力 K
+t tiempo	時間
+Diluciones seriadas	系列稀釋
+factor por paso	每一步的因素
+pasos	步驟
+Fórmula	公式
+Secuencia	序列
+Temperatura	溫度
+Química	化學
+Física	物理
+Biología	生物學
+Tabla	表
+Masa molar	摩拉質量
+Balancear	均衡
+Gases	氣體
+Soluciones	解決方案
+Tiro oblicuo	彈藥
+Constantes	常數
+Punnett	雙關語
+Hardy-W.	哈迪-W.
+ADN	DNA
+Crecimiento	增長
+Med	醫療
+Rango	範圍
+Sin datos: tocá una celda para escribir	沒有資料:鍵入一個單元
+Resumen de L%d	L 的總結%d
+Ordenar	一種型別
+Borrar	清除
+L%d: %d clases de ancho %.4g	L%d: %d 寬度類 %.4g
+Dispersión: hacen falta datos en L1 (x) y L2 (y)	分散:需要在L1 (x) 和L2 (y) 中的資料
+Sin datos en esta lista	在本列表中沒有資料
+Histograma	歷史圖
+Cajas	盒子地塊
+Dispersión	散佈
+Hacen falta al menos dos pares en L1 (x) y L2 (y)	在L1 (x) 和L2 (y) 中至少需要兩對
+Este modelo no se ajusta a estos datos (¿valores negativos o cero?)	這種模型不符合這些資料 (負值或零值?)
+Va al gráfico como f%d(x)	在圖表中傳送為f%d(x)
+El gráfico ya tiene seis funciones	圖表已經有6個函式
+Lineal	線性
+Cuadr.	四分之一.
+Cúbica	立方體
+Pot.	功率
+x en L1, y en L2	在L1中x,在L2中y
+Al gráfico como f(x)	按圖為 f ((x)
+Ver los puntos	顯示點
+Binomial	雙字母
+grados de libertad	自由度
+Inversa	逆轉
+Se rechaza H₀ (p < %.2g)	拒絕 (p < %.2g)
+No se rechaza H₀ (p ≥ %.2g)	沒有被拒絕 (p ≥ %.2g)
+t media	的意思
+z proporción	z比例
+t dos medias	兩種方式
+éxitos x	取得成功 x
+media ₁	平均值1
+media ₂	平均值2
+nivel de confianza	信心水平
+Tomar media, s y n de L%d	從L中取平均,s和n%d
+Tomar de L1 y L2	從L1和L2中取
+gl	其他
+intervalo	間隔
+Datos	資料
+Regresión	逆轉
+Distrib.	給人帶來.
+Pruebas	測試

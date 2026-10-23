@@ -1,0 +1,62 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+activo	活跃
+con avisos	警告
+pasivo	动态
+fuera del bus	开车
+Solo escucha	只是听着
+Normal	正常
+Autoprueba	自行测试
+CAN	CAN
+Abierta en la placa	在板上打开
+Abrir CAN en la placa	打开 CAN 在板上
+Parar la grabación	停止录音
+Grabar	录制
+Limpiar	清除
+La app dejó de contestar.	应用程序停止响应.
+Esperando a la app…	在等待应用程序...
+La página ve el bus a través de la app CAN: tiene que estar abierta en la placa (al frente o atrás). El bus se conecta desde ahí.	这个页面看到巴士通过 CAN 应用程序:必须在板上开放 (前面或后台).从那里连接公共汽车.
+desconectado	断开连接
+Sin bus: se conecta desde la app, tocando la conexión.	没有公共汽车:通过点击连接,将其从应用程序中连接.
+tramas/s	框架/s
+de carga	负载
+recibidas	收到的
+enviadas	发送
+perdidas	失去了
+errores TX / RX	TX / RX 错误
+Grabando %s: %d tramas.	录制 %s: %d 框架.
+Repitiendo %s.	复制 %s.
+Esperando tramas…	正在等待框架...
+Sin tramas.	没有框架.
+id	标签
+n	n
+datos	数据
+por s	每个月
+vistas	看到的
+La app no está contestando: lo que mandes se manda cuando vuelva.	应用程序没有回复:你发送的东西返回时会被删除.
+El bus está desconectado en la app.	公共汽车在应用程序中断开.
+La app está en Solo escucha: no sale nada. El modo se cambia en la placa.	应用程序只在听话中,没有任何东西会输出.
+Autoprueba: vuelve sólo a la placa, no sale al bus.	自行测试:它只返回板上,而不是去公共汽车.
+Normal: sale al bus. Nunca al de un auto en marcha.	通常,它会走到公共汽车上.
+Como en candump: 123#11223344, 18FEF100#FF00 o 7DF#R	As in candump: 123#11223344, 18FEF100#FF00 或 7DF#R
+Mandada a la app: %s	发送到应用程序: %s
+cada %d ms (las periódicas se arrancan en la placa)	每一个 %d ms (定期的开始在板上)
+Mandar	发送
+Sin tramas guardadas.	没有保存的框架.
+Guardadas en la placa	在板上保存
+Bajar	下载
+Se está grabando: pararla primero	它正在录制:先停止它
+¿Borrar %s? No se puede deshacer.	删除 %s这不能被撤销.
+Borrada	删除
+Borrar	删除
+Todavía no hay grabaciones: se graba desde la placa o con el botón de arriba.	尚未录制任何录音:从开发板或上面的按钮中录制。
+Guardado: la app lo vuelve a leer	保存:应用程序再次阅读
+Guardar	保存
+Tramas guardadas	保存的框架
+can/enviar.txt: una por línea, la trama, el período en ms (0 a mano) y un nombre.	可以/enviar.txt:每行一个,框架, ms (0 手动) 的时间和名称.
+Señales	信号
+can/senales.dbc: un .dbc (BO_ y SG_; lo demás se saltea). La app las decodifica y grafica.	可以/senales.dbc: .dbc (BO_和 SG_;其余部分是省略的).
+Por id	通过ID
+Últimas tramas	最新框架
+Grabaciones	录音
+Archivos de la app	应用程序的文件

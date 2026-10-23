@@ -6,10 +6,10 @@
  * The app draws them in its own fixed order, not the line's, so ticking one
  * more does not reorder the screen. The values come from dolarapi.com, asked
  * from the browser, as the app asks from the board. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('cotiz') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
-const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE', 'zh-Hans': 'zh-CN', 'zh-Hant': 'zh-TW' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const FILE = '/data/cotiz.txt';
 const APP_ID = 'aos.cotiz';
 /* the app's CZ_ESPECIES, in its order; 'match' is dolarapi's casa or moneda */

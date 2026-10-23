@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- Added offline Simplified Chinese (`zh-Hans`) and Traditional Chinese
+  (`zh-Hant`) for the system, native apps and portal pages. Regional SC/TC
+  glyphs, GB2312/Big5 common characters and punctuation are stored in the
+  existing board Flash partition, with a bounded, thread-safe glyph cache.
+  Full serial packages include the font image; see [I18N](docs/I18N.md).
+- Language selection now waits for the device to apply the change. Invalid
+  choices are rejected, and missing fonts no longer close running apps.
+  Chinese date/number locales, region time zones and UTF-8 pixel-canvas text
+  are supported without changing ABI 101.
+
+- Embedded portal English/German/Chinese catalogues now work without microSD, with
+  per-key SD overrides. Open portal pages follow device language changes;
+  pages with edits defer reloading until the user saves and refreshes.
+
+- Portal remote touch clamps coordinates to the displayed image and ignores
+  unloaded images/cancelled gestures. File uploads keep their starting folder,
+  handle non-JSON and transport errors, and no longer report success on failure.
+
 - Added LCD-7, LCD-8 and LCD-10.1 hardware profiles, preserving LCD-5 as the
   default. Firmware, simulator and hardware bench share board geometry;
   panel initialization and touch now follow the selected model. LCD-X header

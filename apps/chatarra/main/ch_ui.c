@@ -1,3 +1,4 @@
+#include "aos_utf8.h"
 /*
  * CHATARRA - the interface
  *
@@ -128,35 +129,7 @@ void ch_barra(ch_buf_t *b, int x, int y, int w, int v, int vmax, uint16_t c)
  * breaks it already carries. Returns how many lines came out. */
 int ch_wrap(const char *s, int ancho, char dst[][30], int max)
 {
-    int n = 0, k = 0;
-
-    if (ancho > 29) ancho = 29;
-    dst[0][0] = 0;
-
-    while (*s && n < max) {
-        if (*s == '\n') {
-            dst[n][k] = 0;
-            n++; k = 0;
-            if (n < max) dst[n][0] = 0;
-            s++;
-            continue;
-        }
-        if (k >= ancho) {
-            /* search backwards for the last space so words are not split */
-            int corte = k;
-            while (corte > 0 && dst[n][corte - 1] != ' ') corte--;
-            if (corte == 0) corte = k;      /* one very long word             */
-            else            s -= (k - corte);
-            dst[n][corte] = 0;
-            n++; k = 0;
-            if (n < max) dst[n][0] = 0;
-            while (*s == ' ') s++;
-            continue;
-        }
-        dst[n][k++] = *s++;
-    }
-    if (n < max) { dst[n][k] = 0; if (k) n++; }
-    return n;
+    return aos_utf8_wrap(s, ancho * CH_FADV, CH_FADV, (char *)dst, 30, max);
 }
 
 /* --------------------------------------------------------------------------
@@ -489,7 +462,7 @@ static int dlg_largo(ch_t *g)
     for (int i = 0; i < DLG_N; i++) {
         int l = g->dlg_pag * DLG_N + i;
         if (l >= s_nlineas) break;
-        n += (int)strlen(s_lineas[l]);
+        n += (int)aos_utf8_length(s_lineas[l]);
     }
     return n;
 }
@@ -512,12 +485,11 @@ static void dlg_texto(ch_t *g)
         char corte[30];
 
         if (l >= s_nlineas) break;
-        n = (int)strlen(s_lineas[l]);
         if (quedan <= 0) break;
-        if (n > quedan) n = quedan;
+        n = (int)aos_utf8_prefix_bytes(s_lineas[l], (size_t)quedan);
         memcpy(corte, s_lineas[l], (size_t)n);
         corte[n] = 0;
-        quedan -= (int)strlen(s_lineas[l]);
+        quedan -= (int)aos_utf8_length(s_lineas[l]);
         ch_text_sh(b, DLG_X + 6, DLG_Y + 7 + i * 12, corte, ch_rgb(0xFFFFFF),
                    ch_rgb(0x05060C));
     }

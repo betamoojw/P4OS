@@ -7,7 +7,7 @@
  * the board and reads when it changes, within three seconds if it is open.
  * The search and the forecast are Open-Meteo's (open-meteo.com, free, no
  * key), asked from the browser, as the app asks from the board. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('clima') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const FILE = '/data/clima_lugar.txt';
@@ -122,7 +122,7 @@ P.registerPage({
       results.style.display = '';
       put(results, h('div', { class: 'row muted' }, tr('Buscando…')));
       try {
-        const lang = (navigator.language || 'es').slice(0, 2);
+        const lang = (P.lang ? P.lang() : 'es').slice(0, 2);
         const d = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=10&language=${lang}&format=json`)).json();
         const list = d.results || [];
         put(results, list.length ? list.map(r => h('div', { class: 'row click', onclick: () => choose(r) },

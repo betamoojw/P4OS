@@ -1,0 +1,49 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Automática (Tight, ZRLE, Hextile)	自动( ight, ZRLE, Hextile)
+Tight (JPEG en las fotos)	紧( 照片用JPEG)
+ZRLE (la de la Mac)	ZRLE( 麦克)
+Raw (sin comprimir)	原始( 未压缩)
+computadora %d	计算机 %d
+%s: el nombre, de 1 a 47 caracteres y sin corchetes	%s:名称,从1到47个字符,没有方形括号
+%s: hay dos con ese nombre	%s有两个名字:
+%s: falta la dirección (IP o nombre, sin espacios)	%s: 缺失地址 (IP或名称,没有空间)
+%s: el puerto va de 1 a 65535 (VNC suele ser 5900)	%s:端口从1到65535 (VNC通常是5900)
+%s: la calidad va de 0 a 9	%s: 质量从0到9
+%s: la contraseña es muy larga	%s:密码太长了
+%s: la zona va como x,y,ancho,alto (o vacía: toda la pantalla)	%s:面积是x,y,宽度,高度 (或空:整个屏幕)
++ Agregar una computadora	+ 添加计算机
+Guardar en la tarjeta	保存到卡上
+Sin nombre	没有命名
+Todavía no hay computadoras: agregá una.	没有电脑:添加一个.
+Contraseña VNC	VNC密码
+con contraseña	使用密码
+Subir	走上
+Bajar	走下去
+¿Quitar %s?	移除 %s?
+¿Quitar esta computadora?	删除这个电脑?
+Quitar	移除
+Nombre	名称
+Mac del estudio	工作室Mac
+Dirección (IP o nombre)	地址 (IP或名称)
+Puerto	港口
+Mostrar la contraseña	显示密码
+Codificación	编码
+Colores	颜色
+16 bits (rápido)	16位 (快速)
+24 bits (exactos)	24位 (精确)
+Calidad JPEG (Tight)	JPEG质量 (严格)
+Sólo mirar: no manda el mouse ni el teclado	仅查看:不发送鼠标或键盘
+Monitor (zona x,y,ancho,alto; vacía: todos)	监视器 (区域 x,y,宽度,高度;空:全部)
+se elige en la app, con el botón de monitor	在应用程序中选择, 使用显示器按钮
+La contraseña queda en /data/vnc.txt de la tarjeta, legible. VNC usa sólo los primeros 8 caracteres.	密码是保留的. /data/vnc.txt 在卡上,可读.VNC只使用第8个字符.
+Guardado. La app lo toma sola.	应用程序可以自动接收它.
+No se pudo guardar: %s	无法保存: %s
+No se pudo leer %s: %s	我读不懂. %s: %s
+VNC	其他
+Abrir VNC en la placa	在板上打开VNC
+Las computadoras	电脑
+Cómo prepararlas	如何设置它们
+En una Mac: Ajustes del Sistema → General → Compartir → Compartir pantalla → (i) → «Los visores VNC pueden controlar la pantalla con contraseña», y una contraseña de hasta 8 caracteres. La Mac manda su resolución real (en una Retina, el doble): la placa la achica sola. En Windows o Linux, un servidor VNC como TightVNC, TigerVNC o x11vnc; Tight es la codificación más rápida con fotos y video.	在Mac上:系统设置 + 通用 + 共享 + 屏幕共享 + i) + + + “ VNC 查看者可以使用密码控制屏幕” 和一个最多8个字符的密码 。 Mac 发送其真实分辨率( 双倍于 视网膜 ) : 板自行缩放 。 在 Windows 或 Linux 上, 一个 VNC 服务器, 如 TightVNC 、 TiggerVNC 或 x11vnc ; 抓紧是照片和视频的最快编码 。
+En la placa: un toque es un clic, arrastrar arrastra, dos dedos tocando son clic derecho, pellizcar hace zoom. El mouse y el teclado USB pasan directo.	On the board: a tap is a click, dragging drags, a two-finger tap is a right click, pinching zooms. A USB 鼠标和键盘直接通过.
+Hay cambios sin guardar	有未保存的变化

@@ -12,7 +12,7 @@
  * The passwords are in the file in the clear, as the app keeps them, and
  * both say so where they are typed. VNC uses only their first 8
  * characters. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('vnc') : window.P4OS;
 const { main, h, put, toast, fsText, fsPut, openApp } = P;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;

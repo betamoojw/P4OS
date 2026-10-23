@@ -1,0 +1,44 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+No se pudo guardar	不能挽救
+no se lee	無法讀取
+cuadros	框架
+vacío	空
+sin tarjeta: memoria interna	沒有卡:記憶體
+No se pudo leer la tarjeta	我讀不到儲存卡
+Tocá un lienzo para editarlo	按一下畫布來編輯
+Nuevo lienzo	新建畫布
+Cancelar	取消
+Zoom	放大
+Hace falta más de un cuadro	需要不止一個框架
+Velocidad	速度
+Cuadrícula	電網
+sí	是的
+no	沒有
+¿Seguro? Tocá de nuevo	確實嗎?
+Borrar lienzo	刪除帆布
+Máximo 16 cuadros	最多16個框架
+Exportado:	出口:
+No se pudo exportar	無法出口
+Reproducir	開始遊戲
+Duplicar cuadro	複製框架
+Cuadro en blanco	空格框架
+Exportar GIF	輸出GIF
+Exportar PNG	輸出 PNG
+Enviar a %s	傳送到 %s
+Borrar cuadro	刪除框架
+Limpiar cuadro	清晰的框架
+Lápiz	筆
+Rellenar	填充
+Tomar color	選擇顏色
+Deshacer	廢除
+No se pudo abrir	不能開啟
+Dibujo de %s en el lienzo %d	圖為 %s 在帆布上 %d
+Llegó al lienzo %d de %s	在帆布上登陸 %d 的 %s
+%s no tiene lugar	%s 沒有房間
+%s no pudo guardarlo	%s 沒有能拯救它.
+No se pudo enviar	不能傳送
+Sólo viajan los de 8×8 y 16×16	只有8×8和16×16可以傳送
+%s no está en Pixel Art	%s 不在Pixel Art中
+Enviando a %s...	傳送到 %s...
+Actualizado desde el portal	從入口網站上更新

@@ -1,0 +1,35 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Despejado	清除
+Parcialmente nublado	部分陰雲
+Nublado	陰雲
+Niebla	霧
+Llovizna	細雨
+Lluvia	雨
+Nieve	雪
+Tormenta	雷暴
+dom	太陽
+lun	星期一
+mar	星期四
+mié	結婚
+jue	Thu
+vie	星期五
+sáb	衛星
+Clima	天氣
+Cargando…	正在載入…
+Ciudad, pueblo o barrio	城市,城鎮或社群
+La placa todavía no tiene un lugar elegido: buscalo abajo.	開發板還沒有選擇的地方:
+%s · cargando el pronóstico…	%s · 預測的載入...
+Sensación %s° · humedad %s % · viento %s km/h	感覺像 %s° · 溼度 %s % ·風 %s 公里/h
+hoy	今天
+No se pudo traer el pronóstico: %s	沒有得到預測: %s
+%s: la placa lo toma en unos segundos	%s在幾秒鐘內,開發板接收.
+Buscando…	正在搜尋…
+Elegir	選擇
+No se encontró ningún lugar con ese nombre.	沒有找到那個名字的地方.
+No se pudo buscar: %s	搜尋失敗: %s
+Cambiar el lugar	換個地方.
+Buscar	搜尋
+El pronóstico es de Open-Meteo. La app lo toma en unos segundos si está abierta, o la próxima vez que se abra.	預測來自Open-Meteo. 如果它開放,應用程式會在幾秒鐘內找到新的位置.
+Abierta en la placa	在板上開啟
+Abrir Clima en la placa	開放的天氣

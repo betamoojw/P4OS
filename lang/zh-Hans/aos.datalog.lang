@@ -1,0 +1,226 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Alarma de Datalog	数据记录警报
+ya volvió a lo normal	已经恢复正常了.
+y %d más	还有 %d 项
+Ver	展示
+Entendido	得到了.
+a las	在
+sin horario	没有时间
+cada %u h	每一个 %u h
+cada %u min	每一个 %u 最小值
+cada %u s	每一个 %u s
+fecha	日期
+hora	时间
+nota	备注
+Analógica %s	类似的 %s
+Nombre	名称
+Cada cuántas horas	每几个小时
+Cada cuántos minutos	每几分钟
+Cada cuántos segundos	每几秒钟
+Hasta 8 horas por lectura	每次阅读最多8次
+A qué hora lee	阅读时间
+Rango de ±%s V guardado en modules.txt	范围 ±%s 存储到 modules.txt
+No se pudo cambiar modules.txt	不能改变. modules.txt
+Buscando sensores…	寻找传感器...
+Alarma baja: menos de	低报警:下面
+Alarma alta: más de	高级警报:以上
+Histéresis	歇斯底里
+Tensión del punto 1 (V)	1 (V) 点的电压
+Valor del punto 1	第1点的值
+Tensión del punto 2 (V)	2 (V) 点的电压
+Valor del punto 2	第2点的值
+Unidad	单位
+Falta elegir qué lee	首先选择它读什么
+Agregá al menos una hora	加入至少一次
+La alarma baja tiene que ser menor que la alta	低报警必须在高报警之下
+La salida de la alarma no puede ser el pin que lee	报警的输出不能是它读取的针头
+El GPIO%d lo lee «%s»	GPIO%d 改为“%s”
+El GPIO%d es la salida de una alarma de «%s»	GPIO%d 是“ ” 的提醒输出。%s”
+Lectura	阅读
+No se pudo guardar	不能挽救
+Guardado	保存
+Guardado. Tocá ▶ para empezar a registrar.	保存. 点击 ▶ 来开始开采.
+Lectura borrada; su CSV queda en la tarjeta	读取删除;其CSV留在卡上
+¿Borrar esta lectura? Deja de leer; el archivo con lo que ya anotó queda en la tarjeta.	删除这个读数?它停止阅读;记录的文件仍然存在于卡上.
+Borrar	删除
+CADA CUÁNTO LEE	如何经常阅读
+Cada cierto tiempo	偶尔会发生这样的事情.
+A ciertas horas	在特定时间
+Cada	每一个
+segundos	秒钟
+minutos	分钟
+horas	时间
+Lee apenas empieza a registrar y después a horario fijo: cada 5 min es a las :00, :05, :10…	据报道,每5分钟就在:00,:05,:10...
++ Hora	时间
+Todos los días a esas horas. Necesita la hora de la red: sin ella no lee.	每天在这些时间. 它需要网络的时间:没有它,它不会读取.
+Buscar de nuevo	再一次搜索
+Abrir Módulos	开放模块
+No hay ningún ADS1115. Conectalo a i2c.ext (SDA GPIO21 pin 15, SCL GPIO22 pin 17, 3V3 y GND): se reconoce solo en unos segundos.	没有. ADS1115连接到i2c.ext (SDA GPIO21 pin 15, SCL GPIO22 17,3V3和 GND):它在几秒钟内自行识别.
+No hay sensores 1-Wire. Un bus de DS18B20 se declara en Módulos (Puertos, Agregar, DS18B20): se elige el pin.	无1线传感器. DS18B20s的巴士在模块 (端口,添加, DS18B20): you pick the pin.
+BUS 1-WIRE	1-Wire 总线
+BUS	公共汽车
+SENSOR	传感器
+Ese sensor no está ahora: la lectura anota el error hasta que vuelva.	读数记录错误,直到它回来.
+ENTRADA	输入
+VARIABLE	价值
+RANGO	范围
+Es el gain= del ADS1115 en modules.txt y vale para sus cuatro entradas; se guarda al elegirlo. Nunca más de 3,3 V en una entrada, sea cual sea el rango.	对应 modules.txt 中 ADS1115 的 gain= 设置，对四路输入同时生效，选择后立即保存。无论量程如何，输入电压均不得超过 3.3 V。
+QUÉ ANOTA	什么会发生?
+Tensión (V)	电压（V）
+Crudo (cuentas)	原材料 (计数)
+Estimado (escala)	估计 (规模)
+Las cuentas del convertidor, de -32768 a 32767: 32767 son %s V con este rango.	转换器的原始计数范围为 -32768 到 32767；在当前量程下，32767 对应 %s V。
+Punto 1: tensión	点1:电压
+Punto 1: valor	校准点 1：数值
+Punto 2: tensión	校准点 2：电压
+Punto 2: valor	校准点 2：数值
+ninguna	无
+Una recta por los dos puntos: un sensor de presión que da 0,5 V a 0 bar y 4,5 V a 10 bar es 0,5 → 0 y 4,5 → 10, en bar.	通过两个校准点进行线性换算。例如压力传感器在 0 bar 时输出 0.5 V，在 10 bar 时输出 4.5 V，应填写 0.5 → 0 和 4.5 → 10，单位为 bar。
+PIN	号码
+Es el pin %d del header; ahora lo tiene %s.	是针头 %d 的标题; %s 现在已经有了.
+Es el pin %d del header. Sólo 3,3 V: nunca 5 V en un GPIO.	对应扩展接口的引脚 %d。仅支持 3.3 V，切勿向 GPIO 输入 5 V。
+Los pines que no son de un bus de sensores (i2c.ext, spi.a, un 1-Wire) ni de otra app; los de un puerto serie o un módulo, al final.	不属于传感器巴斯 (i2c.ext, spi.a,1-Wire) 和其他应用程序的针头;连接端口或模块的针头,最后.
+RESISTENCIA	阻力
+Ninguna	无
+Con pull-up un contacto o botón a GND lee 0 cuando se cierra.	With a pull-up, a contact or button to GND 当它关闭时会读到0
+Con pull-down un contacto a 3V3 lee 1 cuando se cierra.	在拉下时, 3V3的接触读为1 当它关闭.
+Sin resistencia: para una salida que siempre maneja el nivel (un módulo con su propio pull-up).	没有阻力:用于总是驱动水平的输出 (一个具有自动拉升的模块).
+LÓGICA	逻辑
+Normal: alto es 1	通常:高为1
+Invertida: alto es 0	逆转:高为0
+QUÉ VALOR	什么值
+Valores de la placa misma, para seguir la red o la memoria a lo largo de un día.	在一天内跟踪网络或记忆.
+ALARMAS	警报
+Baja	低水平
+Alta	高级
+Una alarma avisa cuando el valor pasa un límite: con sonido y un mensaje, o sólo con una nota en el CSV; y puede manejar un GPIO (un relé, una luz).	一个警报告诉你当值超过一个极限时:通过声音和消息,或者仅用一个注释在CSV;它可以驱动 GPIO (一个继电器,一个灯).
+Baja: menos de	低:下
+Alta: más de	高:以上
+Para que no se prenda y se apague cerca del límite: una alarma alta termina cuando el valor baja de alta menos la histéresis (y una baja, al revés).	这样它就不会在极限上和下闪烁:当值降到高下,再减去歇斯底里(另一圈低一个)时,高提醒就会结束。
+AVISO	通知
+Sonido y mensaje en pantalla	声音和信息在屏幕上
+Sólo una nota en el CSV	只有一个注释在CSV中
+SALIDA	退出
+NIVEL CON ALARMA	警报的程度
+Alto (3V3)	高 (3V3)
+Bajo (GND)	低 (GND)
+El GPIO%d (pin %d) queda en ese nivel mientras dure la alarma, y en el otro el resto del tiempo y en pausa. Para un módulo de relé, el nivel con el que se activa (muchos, con GND).	GPIO%d (笔) %d) 在警报持续期间保持在这个水平,而在另一个状态下保持其余时间和暂停.GND 对于许多人来说.
+Elegí qué lee	选择它所读的
+El pin se lee una vez guardada la lectura	一旦读数被保存后,笔子会被读取.
+Ahora: %s	现在: %s
+(se pone solo)	(自行设置)
+TIPO DE SENSOR	传感器的类型
+Digital	数字化
+Analógica (ADS1115)	类似 (ADS1115)
+Borrar esta lectura	删除此阅读
+Cancelar	取消
+Guardar	保存
+Editar	编辑
+Nueva lectura	新的阅读
+El GPIO%d lo tiene %s	GPIO%d 已被 %s 占用
+No se pudo tomar el GPIO%d	我不能接受. GPIO%d
+sin hora	没有手表
+ALTA: más de %s	高:以上 %s
+BAJA: menos de %s	低:下 %s
+Vuelve a lo normal	恢复正常
+alta	高度
+baja	低
+No se pudo escribir en la tarjeta	没有能写到卡
+Primero agregá una lectura con +	首先添加一个读数
+Todavía no hay hora de la red: anota el tiempo desde el arranque	目前没有网络时间:它记录了启动后的时间
+Registrando	伐木
+En pausa	暂停
+Ya hay 16 lecturas: es el máximo	目前已有16个读数:这是最多的
+sin hora de la red	没有网络时间
+Formato del CSV	CSV格式
+Coma y punto decimal	逗号和数分点
+Punto y coma y coma decimal	半标和十码逗号
+Coma y punto es el estándar (LibreOffice, Google Sheets, Python). Punto y coma con coma decimal es lo que espera Excel en castellano. Vale para las líneas nuevas: un archivo que ya existe sigue con lo suyo hasta que se borre.	逗号和点是标准的 (LibreOffice,Google Sheets,Python).以西班牙语或德语为期望的零形符号是Excel.它适用于新行:一个已经存在的文件将保持其自己的直到被删除.
+AJUSTES	设置
+Punto y coma	半角
+Coma	逗号
+Sensores y puertos	传感器和端口
+Módulos	模块
+Cada lectura va a su archivo en %s de la tarjeta (se bajan desde el portal, en Datalog). Mientras registra, la app sigue con la pantalla en otra cosa y arranca sola con la placa; en pausa no.	每个阅读都会进入自己的文件 %s 在卡上 (从门户端下载,在数据库中). 当它登录时,应用程序继续使用屏幕上的其他东西并自动启动与板;暂停,它没有.
+Todavía no hay lecturas	目前没有读数
+Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un sensor (I2C, SPI, 1-Wire, de pines o por puerto serie), una entrada del ADS1115 o un pin del header, cada tanto o a ciertas horas, con alarmas si querés.	每个读数是 CSV 上记录的值,其日期和时间:传感器 (I2C, SPI, 1-Wire, on pins or on a serial port), an ADS1115 如果您愿意,请按时或设置时间输入或标题的针头.
+Agregar una lectura	添加一个读数
+ALTA	高度
+BAJA	低水平
+Otros	其他
+Señal Wi-Fi	Wi-Fi 信号
+PSRAM libre	免费 PSRAM
+RAM interna libre	免费内部内存
+Tiempo encendida	工作时间
+Temperatura	温度
+Humedad	湿度
+Presión	气压
+Luz	浅色
+Tensión	电压
+Corriente	电流
+Potencia	功率
+En el shunt	横穿支流
+No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?	设备未响应，MISO 保持为 1。请检查供电、片选和接线。
+No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?	1-Wire 总线上的设备未响应，请检查供电、4.7 kΩ 上拉电阻和接线。
+No contesta en esa dirección	在这个地址没有答案
+Llegó una lectura con el CRC mal	一个读物出现了坏的CRC
+En esa dirección hay otro chip (dice %s)	另一个芯片在这个地址 (它说 %s)
+Todavía no midió	它还没有测量
+Los pines los tiene %s	%s 有针头
+No se pudo abrir el puerto	无法打开端口
+Ahí está el %s de la placa	开发板的 %s 有没有?
+La termocupla está abierta (o no está conectada)	热电偶开放 (或没有连接)
+No se pudo leer el pin	我读不懂笔
+Sin Wi-Fi	否 Wi-Fi
+El sensor no está: ¿se desconectó o se borró de modules.txt?	传感器不存在:断开,或从 modules.txt?
+La escala tiene los dos puntos en la misma tensión	比例尺有两个点, 同一电压
+sin resistencia	没有阻力
+ · invertida	 ·逆转
+en volts	在伏尔特
+crudo	原材料
+escalado	缩小
+No es un número	不是有效数字
+Listo	完成
+7 días	7天
+30 días	30天
+Todo	全部
+No hay lecturas en este rango.	在这个范围内没有读数.
+Todavía no hay lecturas en el archivo.	目前还没有数据.
+mín %s · máx %s · promedio %s\nde %d lecturas tomadas a lo largo del archivo	最小值 %s ·最大 %s ·平均值 %s\n的 %d 在文件中收集的读数
+mín %s · máx %s · promedio %s\n%d lecturas en el rango	最小值 %s ·最大 %s ·平均值 %s\n%d 在范围内的读数
+la última: %s	最后一个: %s
+todavía sin leer	没有读到
+mantené apretado para leer	保持读一点
+sin lecturas	没有读数
+Datos borrados	删除的数据
+No había datos	没有数据.
+¿Borrar %s.csv con todas sus lecturas? La línea sigue y empieza un archivo nuevo.	删除 %s读数继续,开始一个新的文件.
+Sin alarmas. Se agregan desde Editar.	没有警报,从编辑中添加.
+Alta: más de %s	高:以上 %s
+Baja: menos de %s	低:下 %s
+Histéresis %s. 	歇斯底里 %s. 
+Avisa con sonido y en pantalla, y lo anota en el CSV.	它通过声音和屏幕来说,并记录在CSV中.
+Sólo lo anota en el CSV.	它只写在CSV中.
+ El GPIO%d va a %s mientras dure.	 GPIO%d 进入 %s 在它持续的时间.
+ARCHIVO	文件
+todavía no existe	目前还不存在
+Se baja desde el portal (Datalog) o se abre en Archivos, que también lo grafica.	在网页上下载 (数据库) 或在文件中打开,
+Borrar los datos	删除数据
+Cargando…	正在加载…
+No hay sensores I2C. Los conocidos se reconocen solos en i2c.ext (SDA GPIO21, SCL GPIO22); los pocos que no se pueden reconocer sin riesgo (PCF8591, PCF8574, LM75…) se declaran en Módulos.	否 I2C 已知传感器自行识别在 i2c.ext (SDA GPIO21, SCL GPIO22);少数不能安全地识别 (PCF8591, PCF8574, LM75) 在模块中声明.
+No contesta en el pin. ¿Alimentación, cables, el modelo?	电源,电缆,模型?
+No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?	连续端口没有答案.
+Fuera de rango	超出范围
+No hay sensores SPI. Una termocupla (MAX6675, MAX31855), una PT100 (MAX31865) o un MCP3008 se declaran en Módulos (Puertos, Agregar): el puerto spi.a y su CS.	否 SPI 传感器.一个热偶 (MAX6675, MAX31855), a PT100 (MAX31865) 或一个 MCP3008 在模块 (港口,添加) 中声明: CS.
+No hay sensores de pines. Un DHT22, un HC-SR04, una balanza HX711, un caudalímetro o un PIR se declaran en Módulos (Puertos, Agregar): se eligen sus pines.	没有针头传感器. DHT22一个HC-SR04一个 HX711 scale, a flow meter or a PIR is declared in Modules (Ports, Add): you choose its pins.
+No hay sensores por puerto serie. Un MH-Z19, un PMS5003, un PZEM-004T o un radar LD2410 se declaran en Módulos (Puertos, Agregar), en uart.a.	暂无串口传感器。MH-Z19、PMS5003、PZEM-004T 或 LD2410 雷达需在“模块 > 端口 > 添加”中配置到 uart.a。
+Pines	引脚
+Serie	系列
+La RTD está abierta o le falta un cable	研发系统开放,或者有线电失踪
+La termocupla está en corto a GND	热偶的缩短为 GND
+La termocupla está en corto a VCC	热偶的缩短为 VCC
+Una punta de la termocupla toca VCC o GND	A thermocouple lead touches VCC 或 GND
+La RTD está en corto	研发项目缩短
+Falta %s= en la línea del módulo	缺少模块线 %s=
+No se entiende lo que manda: ¿otra velocidad u otro sensor?	不能理解它发送什么:另一个速度或另一个传感器?

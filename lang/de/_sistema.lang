@@ -7666,3 +7666,9 @@ Pines 19 (D−) y 17 (D+)	Pins 19 (D−) und 17 (D+)
 Pines 15 (D−) y 13 (D+), o el conector OTG	Pins 15 (D−) und 13 (D+), oder der OTG-Anschluss
 Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 39 y GND del 35.	USB-Sticks sind unter /usb lesbar, in Dateien und im Portal; mit einem Hub bis zu drei: /usb, /usb2 und /usb3, in FAT32. Eine Tastatur schreibt dorthin, wo die Bildschirmtastatur schreiben würde, solange sie offen ist. Der OTG-Anschluss liefert keine 5 V: alles kommt an die 40-polige Leiste, 5 V von Pin 39 und GND von Pin 35.
 19 y 17 son el segundo controlador USB del P4, de velocidad completa (12 Mbit/s): andan a la vez que cualquier modo del conector OTG. 15 y 13 son los mismos cables que el conector OTG, de alta velocidad, con cables cortos: el host le saca el modo al OTG mientras está prendido. Los dos a la vez son dos puertos, por ejemplo un teclado en uno y un pendrive en el otro.	19 und 17 sind der zweite USB-Controller des P4, Full Speed (12 Mbit/s): sie laufen neben jedem Modus des OTG-Anschlusses. 15 und 13 sind dieselben Leitungen wie der OTG-Anschluss, High Speed, mit kurzen Kabeln: solange der Host an ist, nimmt er dem OTG seinen Modus. Beide gleichzeitig sind zwei Ports, etwa eine Tastatur am einen und ein USB-Stick am anderen.
+Shanghái (UTC+8)	Shanghai (UTC+8)
+Taipéi (UTC+8)	Taipeh (UTC+8)
+Hong Kong (UTC+8)	Hongkong (UTC+8)
+Falta la fuente china: instalá el paquete completo por USB.	Chinesische Schrift fehlt: vollständiges Paket per USB installieren.
+No se pudo cambiar el idioma.	Sprache konnte nicht geändert werden.
+idioma no disponible	Sprache nicht verfügbar

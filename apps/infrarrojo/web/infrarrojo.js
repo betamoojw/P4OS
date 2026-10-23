@@ -14,7 +14,7 @@
  * is open (its modes, fans and temperatures). Codes pasted or imported are
  * converted here: Broadlink base64 or hex, Pronto, Tuya, or a raw list.
  * Texts in Spanish through tr() (web.infrarrojo.lang). */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('infrarrojo') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));

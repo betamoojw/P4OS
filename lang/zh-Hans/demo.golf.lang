@@ -1,0 +1,135 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+¡Hoyo en uno!	一个洞!
+¡Albatros!	信天翁们!
+¡Águila!	鹰!
+¡Birdie!	鸟儿!
+Par	平均值
+Bogey	怪兽
+Doble bogey	双倍重击
+Triple bogey	3个敌机
+¡Increíble!	这令人难以置信!
+Recogida	接收了
+Contra la otra placa	面对另一板
+El enlace no arrancó	连接没有开始
+Esperando a	在等待
+%s salió del juego	%s 离开了游戏
+Sin señal de %s	没有信号 %s
+Polo blanco	白色波罗
+Polo azul marino	海军波罗
+Polo verde	绿色波罗
+Polo amarillo	黄色波罗
+Polo rosa	粉红色波罗
+Rayas rojas	红色条纹
+Rayas lila	花纹条纹
+Celeste y blanco	天空蓝白
+Naranja fuego	火橙
+Negro y dorado	黑色和黄金
+Pantalón caqui	卡基裤子
+Pantalón blanco	白裤子
+Pantalón azul	蓝裤子
+Pantalón gris	灰色裤子
+Pantalón negro	黑裤子
+Escocés rojo	红塔塔
+Escocés azul	蓝塔
+Sin gorro	没有帽子
+Gorra blanca	白色帽子
+Gorra roja	红帽
+Visera azul	蓝色视光器
+Piluso	桶帽子
+Gorro de lana	波波帽
+Boina	平板盖
+Sombrero de ala	宽边帽子
+Gorra dorada	黄金帽
+Zapatos blancos	白色鞋子
+Negros y blancos	黑白
+Marrones clásicos	经典棕色
+Rojos	红色
+Dorados	黄金
+Palos de acero	钢铁俱乐部
+Palos negros	黑色球
+Palos azules	蓝色球
+Palos dorados	黄金球
+Piel clara, pelo castaño	白色皮肤,棕色头发
+Piel clara, pelo rubio	白皮,金发
+Piel trigueña, pelo negro	橄榄皮,黑头发
+Piel morena, pelo negro	黑色皮肤,黑头发
+Piel clara, pelo colorado	白皮,红发
+Canoso	灰色头发
+Remeras	衬衫
+Pantalones	裤子
+Gorros	帽子
+Zapatos	鞋子
+Palos	俱乐部
+Aspecto	看起来
+Rough	粗糙
+Fairway	公平之道
+Primer corte	第一次切割
+Salida	茶叶
+Antegreen	边缘
+Green	绿色
+Búnker	舱
+Agua	水
+Camino	货车路径
+Rough alto	粗糙
+Bosque	森林
+Arena y matas	废物区
+Fuera de límites	没有限制
+Hoyo	洞穴
+J	P
+Golpe	射击
+Putter	普特
+Tocá: carga, potencia, precisión	打点:旋转,功率,精度
+Juega	游戏:
+Turno del jugador	玩家的轮到:
+¡Al agua! +1	落水！+1
+Fuera de límites +1	超出限制 +1
+Puesto	穿着
+Tuyo	拥有者
+Usar	穿着
+Comprar	购买
+Tienda	商店
+Golpear	旋转
+Pegar	普图
+Juego rápido	快速的游戏
+Torneo	赛事
+Práctica	实践
+Multijugador	多人玩家
+Fácil	简单的
+Normal	正常
+Profesional	专业
+Poco viento, medidor lento, ves dónde cae	轻风,缓慢的计量器,看它落地
+Viento real, medidor ágil	真正的风,快速计
+Viento fuerte, medidor rápido, sin ayudas	强风,快速计量,没有帮助
+En esta placa, pasándola	在这个板上,传递它
+jugadores	玩家
+Contra	反对
+Aparea otra placa en Enlace para jugar a distancia	在Link中再加上一个板块,可以远程玩
+Metros	计量
+Yardas	码头
+Sonido: sí	声音:上
+Sonido: no	声音:关闭
+Vos	你
+Jugador	玩家
+golpes	射击
+Monedas	货币
+Terminaste	地方
+¡Campeón!	冠军!
+¡Ganaste!	你赢了!
+Empate	领带
+Perdiste	你输了
+¡Nuevo récord!	新的最佳!
+Fin de la vuelta	周围
+monedas	货币
+Total	总数
+Ajustes	设置
+Distancias en	距离
+Ganás monedas al jugar: más en torneo, en difícil y con birdies. Gastalas en la tienda.	玩更多的比赛,更艰难的水平和鸟类.
+Cargando	装载
+Preparando la cancha	准备课程
+Pausa	暂停
+Seguir	继续
+Menú	菜单
+Salir	出口
+Continuar	继续
+Otra vez	再一次

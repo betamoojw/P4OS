@@ -13,7 +13,7 @@
  * send them inside an image's address). RTSP has no preview in a browser.
  * The passwords are in the file in the clear, as the app keeps them; the
  * page shows them masked. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('camaras') : window.P4OS;
 const { main, h, put, toast, fsText, fsPut, openApp } = P;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;

@@ -210,6 +210,9 @@ def fix_include(path):
         die("unexpected include block in %s (lv_font_conv changed?)" % path)
     # the "Opts:" line repeats the command: no path of this machine in it
     src = re.sub(r'(--font|-o) /\S*/([^/\s]+)', r'\1 \2', src)
+    size = int(re.search(r'_(\d+)\.c$', path).group(1))
+    src = src.replace('#include "lvgl.h"', '#include "lvgl.h"\nLV_FONT_DECLARE(aos_cjk_%d);' % size)
+    src = src.replace('.fallback = NULL', '.fallback = &aos_cjk_%d' % size)
 
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(src)

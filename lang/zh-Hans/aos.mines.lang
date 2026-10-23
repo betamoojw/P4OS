@@ -1,0 +1,20 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Fácil	简单的
+Medio	平均值
+Difícil	很难
+Experto	专家
+Maestro	师父
+Récord %s	录制 %s
+Sin récord	没有记录
+¡Ganaste!	你赢了!
+%s, nuevo récord	%s,新记录
+¡Boom!	轰!
+Pisaste una mina	你踏上了一个矿山.
+Dificultad	困难
+%d\xC3\x97%d, %d minas	%d\xC3\x97%d, %d 矿山
+Cavar	挖掘
+Bandera	旗帜
+Jugar otra	再一次玩.
+minas	矿山
+Sin memoria	没有记忆

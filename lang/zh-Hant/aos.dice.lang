@@ -1,0 +1,8 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+1 dado	1 個骰子
+%d dados	%d 骰子
+TIRAR	滾動
+Últimas	最近
+Agitá la placa o tocá los dados	搖盤或敲骰子
+Tocá los dados para tirar	敲骰子滾動

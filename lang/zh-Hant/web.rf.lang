@@ -1,0 +1,81 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Sin audio	沒有音訊
+FM angosta	窄頻道
+Datos	資料
+Aire	空氣
+Marina	海軍
+ID %s · canal %s · %s °C	身份證 %s 頻道 %s · %s °C
+batería baja	電池低
+código %s · datos %s	程式碼 %s ·資料 %s
+ID %s · botón %s	身份證 %s · 按鈕 %s
+%s %s/%s µs · %s bits · %s	%s %s/%s µs · %s 位 · %s
+Tocar para escribir una frecuencia	點選鍵入頻率
+Frecuencia en MHz	頻率在MHz
+Silenciador	擠壓
+Silenciar	無聲
+Volumen	音量
+Meshtastic, canal por defecto:	預設頻道:
+Escuchar ahí	聽我說.
+PSK en base64 (p. ej. AQ==)	base64 格式的 PSK，例如 AQ==
+Clave del canal:	頻道鍵:
+Poner	設定
+Canal público	公共頻道
+Quitar	清除
+La clave se guarda en la tarjeta de la placa, no en el navegador ni en la nube. Los mensajes directos cifrados a otro nodo no se leen.	金鑰儲存在板塊的卡上,而不是在瀏覽器或雲中.
+Muestreo	樣本率
+Ganancia	收益
+Paso	步驟
+Tocar para ir a esa frecuencia; la rueda mueve de a un paso	單擊到這個頻率;輪子一步一步移動
+La app RF no está abierta en la placa (o la placa no tiene la RTL-SDR).	在板上沒有RF應用程式開啟 (或板上沒有RTL-SDR).
+Abierta en la placa	在板上開啟
+Abrir RF en la placa	在板上開放的射頻
+Buscando la radio…	在找收音機...
+Sin radio	沒有電臺
+señal %s dB	訊號 %s dB
+silenciado	無聲
+estéreo	立體音訊
+%s recibidos	已接收 %s
+LoRa en el canal, el último minuto: %s paquetes, ocupado %s %	洛拉在頻道上,最後一分鐘: %s 包裝,繁忙 %s %
+reproduciendo %s	播放 %s
+grabando la señal (%s MB, perdiendo)	記錄訊號 (%s MB, 下降)
+grabando la señal (%s MB)	記錄訊號 (%s 其他
+grabando el audio (%s)	錄音 (%s)
+Automática	自動
+no	關閉
+Activar el sonido	無言的
+puesta ✓	設定
+ninguna	無
+Esperando transmisiones en la banda: controles remotos, sensores de temperatura, timbres…	等待帶裡的傳輸: 遙控器、溫度感測器、門鈴...
+Desconocido	未知
+%s MHz · %s · corto %s µs · largo %s µs · pausa %s µs · %s bits: %s	%s MHz □ 兆赫 %s ·短暫 %s 長度 %s 微分間隙 %s µs · %s 零件: %s
+Tocá una fila para ver sus pulsos y sus bits. Todo queda también en rf/datos-<día>.csv de la tarjeta.	按一行,看其脈衝和節點./datos-<day>在卡上.
+Esperando paquetes LoRa en la banda.	在樂隊裡等著洛拉包.
+Otra señal	其他訊號
+%s kHz de ancho	%s 寬度為 kHz
+todos (broadcast)	所有 (廣播)
+De %s a %s · %s saltos	透過 %s 在 %s · %s 跳躍
+Texto: %s	文字: %s
+tipo %s (no es texto)	型別 %s (沒有文字)
+No se pudo decodificar.	無法解碼.
+Tocá un paquete LoRa para leer su cabecera (y el texto, con la clave puesta). El SF y el ancho salen del preámbulo; todo queda en rf/lora-<día>.csv de la tarjeta.	按一下LoRa包閱讀其標題 (以及文字,與鍵盤集)./lora-<day>在卡上.
+Guardar	保持
+La placa guarda la captura en Fotos → Capturas	板將螢幕截圖儲存在照片 →螢幕截圖中
+Captura de la placa	板塊截圖
+Imagen del espectro (PNG)	頻譜影象 (PNG)
+Grabar el audio	錄音
+Terminar el audio	停止錄音
+Grabar la señal (I/Q)	記錄訊號 (I)/Q)
+Terminar la señal	停止記錄訊號
+Dejar de reproducir	停止玩
+Guardar lo recibido en Datos y LoRa (rf/datos- y rf/lora-<día>.csv)	保持資料和LoRa收到的資訊 (rf/datos- 和rf/lora-<day>.csv)
+Publicarlo por MQTT	發表它 MQTT
+Publicarlo por MQTT (no conectado)	發表它 MQTT (沒有連線)
+La señal ocupa %s MB por minuto a esta tasa; la tarjeta escribe unos 3 MB/s.	當前取樣率下，每分鐘訊號約佔 %s MB；儲存卡寫入速度約為 3 MB/s。
+¿Borrar %s?	要刪除 %s 嗎？
+Señales grabadas (I/Q)	記錄的訊號 (I/Q)
+Todavía no hay.	沒有一個.
+Reproducir	開始遊戲
+Bajar	下載
+Audio grabado	錄製音訊
+Datos recibidos (CSV)	接收資料 (CSV)

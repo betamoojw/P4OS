@@ -1,0 +1,46 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+NOS	我方
+ELLOS	對方
+MANO	先手
+PIE	後手
+REAL ENVIDO	皇家比點
+FALTA ENVIDO	滿額比點
+VALE CUATRO	四分加註
+ME VOY AL MAZO	棄牌
+ENVIDO	比點
+REAL	皇家比點
+FALTA	滿額比點
+TRUCO	Truco
+RE TRUCO	Retruco
+VALE 4	四分加註
+QUIERO	接受
+NO QUIERO	拒絕
+AL MAZO	棄牌
+VOS	你
+ESPERANDO A %s	正在等待 %s
+tengo %d	我有 %d 點
+ENVIDO NO QUERIDO: %d PARA %s	拒絕比點，%d 分歸 %s
+%d A %d: %d PARA %s	比點 %d 比 %d：%d 分歸 %s
+LA MANO ES DE %s  (+%d)	本局由 %s 勝出（+%d）
+%s LA PARTIDA  %d-%d	%s  %d-%d
+GANASTE	你贏了
+PERDISTE	你輸了
+SE DESINCRONIZO	狀態不同步
+SE PERDIO EL ENLACE	連線已斷開
+SE FUE %s	%s 已離開
+NOS %d  -  ELLOS %d\nGANADAS %ld  -  PERDIDAS %ld	我方 %d  -  對方 %d\n勝場 %ld  -  負場 %ld
+CONTRA LA MAQUINA	對戰電腦
+A DOS: CONTRA %s	雙人對戰：%s
+A DOS JUGADORES	雙人對戰
+Para jugar de a dos, emparejá los dos equipos en Enlace.	雙人對戰前，請先在“連線”中配對兩臺裝置。
+Este equipo todavía no tiene el enlace por radio: por ahora se juega contra la máquina.	此裝置暫不支援無線聯機，目前可與電腦對戰。
+SEGUIR	繼續
+PARTIDA NUEVA	新一局
+SALIR	退出
+LA MAQUINA	電腦
+Sin memoria	記憶體不足
+CONTRA QUIEN?	選擇對手
+Sin enlace: jugás contra la máquina	沒有連線，將與電腦對戰
+BUSCANDO A %s	正在搜尋 %s
+LA PAREJA	搭檔

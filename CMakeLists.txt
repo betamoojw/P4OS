@@ -18,6 +18,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/components/aos_fonts/aos_fonts.cmake)
 # watch.
 project(p4os)
 
+# Offline Chinese glyphs occupy the previously unused storage partition.
+# Included in a full serial flash; application OTA preserves this resource.
+configure_file("${CMAKE_CURRENT_LIST_DIR}/assets/cjk/cjk.bin" "${CMAKE_BINARY_DIR}/cjk.bin" COPYONLY)
+esptool_py_flash_to_partition(flash "storage" "${CMAKE_BINARY_DIR}/cjk.bin")
+
 # TinyUSB's endpoint buffers in PSRAM (components/aos_hal/tusb/aos_tusb_config.h
 # says why and how): every library that compiles TinyUSB's headers takes that
 # configuration file instead of esp_tinyusb's, which it includes. The managed

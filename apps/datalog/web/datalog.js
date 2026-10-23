@@ -8,10 +8,10 @@
  * read straight from the card (/datalog/<id>.csv): a big one only by its
  * last 8 MB, with a Range request. The lines themselves are made on the
  * board; datalog.txt in /data is plain text too. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('datalog') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
-const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[P.lang ? P.lang() : 'es'] || 'es-AR';
+const LOC = { es: 'es-AR', en: 'en-US', de: 'de-DE', 'zh-Hans': 'zh-CN', 'zh-Hant': 'zh-TW' }[P.lang ? P.lang() : 'es'] || 'es-AR';
 const APP = 'aos.datalog';
 const LIVE = 'live?app=' + APP;
 const DIR = '/datalog';

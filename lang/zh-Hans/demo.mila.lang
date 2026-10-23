@@ -1,0 +1,90 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Tocá para empezar	打开
+Par	平均值
+¡Muy bien!	非常好!
+Jugar	开始游戏
+Tienda	商店
+Ajustes	设置
+Amigo	朋友
+Próximamente	很快就来了.
+Falta mila_p4.pak en la tarjeta	mila_p4.pak 没有卡
+No hay memoria para girar la pantalla	没有足够的内存来旋转屏幕
+No se pudo cargar el nivel	不能加载水平
+El otro reloj tiene otra versión de Mila.	另一个手表有另一种版本的米拉.
+Actualizá los dos para jugar juntos.	更新两者一起玩.
+Buscando a	在寻找
+está listo. ¿Qué hacemos?	我们要做什么?
+está eligiendo...	是选择...
+El enlace no arrancó	连接没有开始
+Primero emparejá los relojes en Enlace	连接手表先搭配
+No hay un nivel abierto en los dos	两者都没有一个水平
+Preparando...	准备好...
+%s se fue a su casa	%s 回家了
+%s se desconectó	%s 断开连接
+Sin señal de %s	没有信号 %s
+Moño	弓
+Gorrito de fiesta	党帽
+Gorro de lana	连接豆子
+Flor	鲜花
+Boina	贝雷特
+Orejas de conejo	兔子耳朵
+Sombrero de bruja	魔女帽子
+Corona	皇冠
+Collar con cascabel	领带带铃
+Collar con pescadito	有鱼的领
+Moño al cuello	弓领
+Pañuelo	围巾
+Pañuelo a lunares	波尔卡点围巾
+Collar de perlas	珍珠项链
+Ratoncito	玩具鼠标
+Ovillo	弹珠
+Pelota con cascabel	钟声响起
+Caña con pluma	羽毛棒
+Caja de cartón	纸板盒
+Plantita de catnip	Catnip 装置
+Túnel	隧道
+Rascador	剪贴纸
+Hamaca de ventana	窗户吊床
+Pecera	鱼碗
+Mantené el dedo sobre Mila para ver todo el nivel.	抓住米拉的手指看整个层面.
+Tocá una casilla y Mila camina sola hasta ahí.	打一个手机,米拉独自走到那里.
+El botón de abajo a la izquierda deshace el último paso.	左下方的按钮取消最后一步 。
+Arrastrá el ratoncito y Mila lo va a perseguir.	拉玩具鼠标,米拉会追赶它.
+Terminar un mundo le regala algo a Mila.	结束一个世界给米拉带来了礼物.
+Pellizcá con dos dedos para ver todo el nivel.	用两根手指抓住整个水平.
+Cada día hay un regalito junto a la cucha.	每天,床边都有一个小礼物.
+Cargando...	装载...
+Seguir	继续
+Empezar de nuevo	再开始.
+Mapa	地图
+Casita	主页
+¡Nivel completo!	级别完成!
+Siguiente	下一步
+Otra vez	再一次
+Movimientos: %d   (par %d)	移动: %d (参数) %d)
++%d monedas	+%d 货币
+¡Perfecto!	完美!
+Probá llegar al par	试图达到等级
+¡Regalo: %s!	礼物: %s!
+¡Ganaste la carrera!	你赢了这场比赛!
+Ganó tu amigo	你的朋友赢了
+Vos: %d movimientos   %s: %d	你: %d 动作 %s: %d
+En la casita	在家里
+Sacar	离开
+Ponérselo	穿着它.
+Premio por terminar %s	完成的奖励 %s
+Bloqueado	锁定
+Comprar  %d	购买 %d
+Te faltan monedas	不够的硬币
+Gorros	帽子
+Cuello	颈部
+Juguetes	玩具
+Volver	返回
+Niveles resueltos: %d\nMovimientos: %d\nCaricias: %d\nEstrellas: %d	解决的水平: %d\n移动: %d\n宠物: %d\n星球: %d
+Efectos	影响
+Música	音乐
+Con un amigo	我和一个朋友在一起
+Visitar su casita	拜访他们的家
+Carrera en un nivel	在一个水平上竞赛
+Cancelar	取消

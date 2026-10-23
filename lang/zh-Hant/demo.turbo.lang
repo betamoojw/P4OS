@@ -1,0 +1,72 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Esperando a	在等待
+El tramo lo elige el reloj anfitrión.	主持人看著舞臺.
+El enlace no arrancó	連線沒有開始
+El otro reloj tiene otra versión de Turbo.	其他手錶有另一個版本的Turbo.
+Actualizá los dos para correr juntos.	更新兩者一起競賽.
+%s salió de la carrera	%s 離開了比賽
+Sin señal de %s	沒有訊號 %s
+TIEMPO	時間
+km/h	公里/h
+¡TIEMPO EXTRA!	長時間!
+¡YA!	走吧!
+¡LLEGADA!	結束!
+SIN TIEMPO	時間上升
+¡APURATE!	趕緊!
+Cargando	裝載
+Tiempo	時間
+Recorrido	覆蓋
+Récord	錄製
+  ¡nuevo!	 新的!
+Punta	頂部
+choques	發生事故
+Gira	旅遊
+¡Gira completa!	巡迴演出完成!
+todavía corre...	我還在比賽中...
+¡Ganaste!	你贏了!
+Ganó el otro reloj	另一個小時贏了.
+monedas	貨幣
+Siguiente	下一步
+Menú	選單
+Contra	反對
+carreras contra el reloj	與時鐘相對的比賽
+Gira completa	全場遊覽
+Contrarreloj	時間測試
+Garage	車庫
+Ajustes	設定
+Se abre con una gira	開幕:遊覽
+Terminá	完成
+Elegí el tramo	選擇舞臺
+récord	記錄
+Comprar	購買
+Tu auto	你的車
+Elegir	選擇
+No alcanzan las monedas	不夠的硬幣
+Velocidad	速度
+Aceleración	加速
+Agarre	抓住
+Todo terreno	無線車
+Fácil	簡單的
+Normal	正常
+Difícil	很難
+Dificultad	困難
+Volante	車輪
+Flechas	箭頭
+Dirección	方向性
+Suave	溫柔的
+Medio	平均值
+Rápido	快速
+Sensibilidad	敏感性
+Acelerar solo	自動節流
+Sonido	聲音
+Volante: arrastrá el pulgar izquierdo de costado. Pedales a la derecha: freno y acelerador.	方向盤: 左拇指側拖動。 右側有踩踏板: 剎車和剎車。
+Otra vez	再一次
+Pausa	暫停
+Seguir	繼續
+Reiniciar	重啟
+Salir al menú	返回選單
+Contra el otro reloj	與其他時鐘相反
+Cancelar	取消
+Cargando...	裝載...
+No hay memoria para el tramo	沒有足夠的記憶,

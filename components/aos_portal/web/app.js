@@ -11,15 +11,17 @@ const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(k 
 /* ---- languages (docs/PORTAL-PAGES.md, "Languages") ----
  * The portal is written in Spanish and its texts are the keys, as on the
  * board: tr('...') looks one up in the catalogs of the board's language and
- * gives the Spanish back when there is none. They come from the card, in the
+ * gives the Spanish back when there is none. Built-in catalogs work without
+ * a card; card catalogs override individual translations, in the
  * packs' format: /lang/<code>/_portal.lang for this file and
  * web.<page>.lang for each app's page (tools/gen_lang.py writes them). %s
  * and %d take the arguments in order. N_() only marks a text that a tr()
  * translates later (a table). tr and not t: t is a local all over the file. */
 let LANG = 'es', LOCALE = 'es-AR';
-const TR = new Map();
+const validLanguage = code => /^(?:[a-z]{2,8}|zh-Hans|zh-Hant)$/.test(code || '');
+const TR = new Map(), PAGE_TR = new Map(), LEGACY_TR = new Map();
 function tr(s, ...a) {
-  const r = TR.has(s) ? TR.get(s) : s;
+  const r = TR.has(s) ? TR.get(s) : LEGACY_TR.has(s) ? LEGACY_TR.get(s) : s;
   if (!a.length) return r;
   let i = 0;
   return r.replace(/%[sd%]/g, m => m === '%%' ? '%' : String(a[i++]));
@@ -30,26 +32,51 @@ const num = (v, d) => v == null || Number.isNaN(v) ? '--' : v.toLocaleString(LOC
 const unesc = s => s.replace(/\\(.)/g, (_, c) => c === 'n' ? '\n' : c === 't' ? '\t' : c);
 async function loadCatalog(file) {
   if (LANG === 'es') return;
-  try {
-    const r = await fetch(`/lang/${LANG}/${file}`, { cache: 'no-store' });
-    if (!r.ok) return;
-    for (const line of (await r.text()).split('\n')) {
-      if (!line || line[0] === '#') continue;
-      const tab = line.indexOf('\t');
-      if (tab > 0 && tab < line.length - 1) TR.set(unesc(line.slice(0, tab)), unesc(line.slice(tab + 1).replace(/\r$/, '')));
-    }
-  } catch {}
+  const code = LANG;
+  const catalog = file === '_portal.lang' ? TR : new Map();
+  if (file !== '_portal.lang') PAGE_TR.set(file, catalog);
+  for (const base of ['/builtin-lang', '/lang']) {
+    try {
+      const r = await fetch(`${base}/${code}/${file}`, { cache: 'no-store' });
+      if (!r.ok) continue;
+      const text = await r.text();
+      if (LANG !== code) return;
+      for (const raw of text.split('\n')) {
+        const line = raw.replace(/\r$/, '');
+        if (!line || line[0] === '#') continue;
+        const tab = line.indexOf('\t');
+        if (tab > 0 && tab < line.length - 1) catalog.set(unesc(line.slice(0, tab)), unesc(line.slice(tab + 1)));
+      }
+    } catch {}
+  }
+  // Older SD pages still use P4OS.tr; portal keys retain priority.
+  if (file !== '_portal.lang' && LANG === code) for (const [key, value] of catalog) LEGACY_TR.set(key, value);
 }
 /* the menu that index.html brings, translated where it stands */
 const NAV_NAMES = [N_('Pantalla'), N_('Inicio'), N_('Wi-Fi'), N_('Red'), N_('Terminal'), N_('Programador'), N_('Banco'),
   N_('Macro pad'), N_('Expansión'), N_('Archivos'), N_('Ajustes'), N_('Firmware'), N_('Registro')];
 async function setLang(code) {
-  LANG = /^[a-z]{2,8}$/.test(code || '') ? code : 'es';
-  LOCALE = { es: 'es-AR', en: 'en-US', de: 'de-DE' }[LANG] || LANG;
+  TR.clear(); PAGE_TR.clear(); LEGACY_TR.clear();
+  LANG = validLanguage(code) ? code : 'es';
+  LOCALE = { es: 'es-AR', en: 'en-US', de: 'de-DE', 'zh-Hans': 'zh-CN', 'zh-Hant': 'zh-TW' }[LANG] || LANG;
   document.documentElement.lang = LANG;
   await loadCatalog('_portal.lang');
-  if (TR.size) for (const sp of document.querySelectorAll('#nav a > span:last-child'))
-    if (NAV_NAMES.includes(sp.textContent)) sp.textContent = tr(sp.textContent);
+  for (const sp of document.querySelectorAll('#nav a > span:last-child')) {
+    if (!sp.dataset.source && NAV_NAMES.includes(sp.textContent)) sp.dataset.source = sp.textContent;
+    if (sp.dataset.source) sp.textContent = tr(sp.dataset.source);
+  }
+}
+
+/* App translations are scoped: importing one app must not overwrite the
+ * portal or another app's words with the same Spanish key. */
+function pageTranslator(id) {
+  return (s, ...a) => {
+    const catalog = PAGE_TR.get('web.' + id + '.lang');
+    const r = catalog && catalog.has(s) ? catalog.get(s) : TR.has(s) ? TR.get(s) : s;
+    if (!a.length) return r;
+    let i = 0;
+    return r.replace(/%[sd%]/g, m => m === '%%' ? '%' : String(a[i++]));
+  };
 }
 
 function h(tag, attrs, ...kids) {
@@ -93,9 +120,24 @@ const row = (label, value, cls) => h('div', { class: 'row' }, h('div', { class: 
 
 /* ---- header ---- */
 let info = {};
+let languageReloadPending = false, portalEdited = false, languageNotice = '';
+document.addEventListener('input', () => { portalEdited = true; }, true);
+document.addEventListener('change', () => { portalEdited = true; }, true);
+function syncDeviceLanguage(code) {
+  if (!validLanguage(code) || code === LANG || languageReloadPending) return;
+  // Preserve form edits and uploads; an explicit refresh applies the language.
+  if (portalEdited) {
+    if (languageNotice !== code) toast(tr('El idioma de la placa cambió. Recargá la página después de guardar los cambios.'));
+    languageNotice = code;
+    return;
+  }
+  languageReloadPending = true;
+  location.reload();
+}
 async function refreshInfo() {
   try {
     info = await api('info');
+    syncDeviceLanguage(info.lang);
     $('#devname').textContent = info.name;
     $('#devsub').textContent = (info.ip || tr('sin red')) + ' · ' + info.firmware;
     $('#dot').className = 'dot on';
@@ -108,6 +150,16 @@ async function refreshInfo() {
 
 /* ---- Pantalla ---- */
 let live = false, liveT, shotBusy = false;
+
+function screenPoint(img, e) {
+  const r = img.getBoundingClientRect();
+  if (!img.naturalWidth || !img.naturalHeight || !r.width || !r.height) return null;
+  return {
+    x: Math.max(0, Math.min(img.naturalWidth - 1, Math.floor((e.clientX - r.left) * img.naturalWidth / r.width))),
+    y: Math.max(0, Math.min(img.naturalHeight - 1, Math.floor((e.clientY - r.top) * img.naturalHeight / r.height))),
+    t: Date.now()
+  };
+}
 
 function pagePantalla() {
   const img = h('img', { alt: tr('pantalla'), draggable: 'false' });
@@ -130,15 +182,14 @@ function pagePantalla() {
   const after = () => { setTimeout(shot, 350); setTimeout(shot, 1100); };
   /* mouse to screen: a click is a tap, a drag is a drag */
   let down = null;
-  const pos = e => {
-    const r = img.getBoundingClientRect();
-    return { x: Math.round((e.clientX - r.left) * img.naturalWidth / r.width),
-             y: Math.round((e.clientY - r.top) * img.naturalHeight / r.height), t: Date.now() };
-  };
-  img.addEventListener('pointerdown', e => { down = pos(e); img.setPointerCapture(e.pointerId); });
+  const pos = e => screenPoint(img, e);
+  img.addEventListener('pointerdown', e => { down = pos(e); if (down) img.setPointerCapture(e.pointerId); });
+  img.addEventListener('pointercancel', () => { down = null; });
   img.addEventListener('pointerup', async e => {
     if (!down) return;
-    const up = pos(e), d = Math.hypot(up.x - down.x, up.y - down.y), ms = Math.min(1500, Math.max(80, up.t - down.t));
+    const up = pos(e);
+    if (!up) { down = null; return; }
+    const d = Math.hypot(up.x - down.x, up.y - down.y), ms = Math.min(1500, Math.max(80, up.t - down.t));
     const q = d < 12 ? `x=${down.x}&y=${down.y}&ms=${ms}` : `x=${down.x}&y=${down.y}&x2=${up.x}&y2=${up.y}&ms=${Math.max(150, ms)}`;
     down = null;
     try { await api('touch?' + q, { method: 'POST' }); } catch (err) { toast(err.message, true); }
@@ -313,15 +364,30 @@ async function openEditor(path) {
 
 function upload(files, bar) {
   const list = [...files];
+  if (!list.length) return Promise.resolve();
+  portalEdited = true;
+  const folder = cwd;
+  let failed = false;
   return list.reduce((p, f) => p.then(() => new Promise(res => {
     const x = new XMLHttpRequest();
-    const dest = (cwd.endsWith('/') ? cwd : cwd + '/') + f.name;
+    const dest = (folder.endsWith('/') ? folder : folder + '/') + f.name;
     x.open('PUT', '/api/fs/put?path=' + encodeURIComponent(dest));
     x.upload.onprogress = e => { bar.firstChild.style.width = (e.loaded / e.total * 100) + '%'; bar.dataset.name = f.name; };
-    x.onload = () => { if (x.status !== 200) toast(f.name + ': ' + (JSON.parse(x.responseText).error || x.status), true); res(); };
-    x.onerror = () => { toast(f.name + ': ' + tr('se cortó'), true); res(); };
+    x.onload = () => {
+      if (x.status < 200 || x.status >= 300) {
+        let message = x.statusText || String(x.status);
+        try { message = JSON.parse(x.responseText).error || message; } catch {}
+        failed = true;
+        toast(f.name + ': ' + message, true);
+      }
+      res();
+    };
+    x.onerror = x.onabort = x.ontimeout = () => { failed = true; toast(f.name + ': ' + tr('se cortó'), true); res(); };
     x.send(f);
-  })), Promise.resolve()).then(() => { toast(list.length === 1 ? tr('Subido %s', list[0].name) : tr('Subidos %s archivos', list.length)); pageArchivos(); });
+  })), Promise.resolve()).then(() => {
+    if (!failed) toast(list.length === 1 ? tr('Subido %s', list[0].name) : tr('Subidos %s archivos', list.length));
+    pageArchivos();
+  });
 }
 
 async function pageArchivos() {
@@ -588,8 +654,21 @@ async function pageProgramador() {
 }
 
 /* ---- Ajustes ---- */
-const TZS = [['Buenos Aires (UTC−3)', '<-03>3'], ['Santiago (UTC−4/−3)', '<-04>4<-03>,M9.1.6/24,M4.1.6/24'], [N_('Ciudad de México (UTC−6)'), 'CST6'],
+const TZS = [[N_('Shanghái (UTC+8)'), 'CST-8'], [N_('Taipéi (UTC+8)'), 'CST-8'], [N_('Hong Kong (UTC+8)'), 'HKT-8'], ['Buenos Aires (UTC−3)', '<-03>3'], ['Santiago (UTC−4/−3)', '<-04>4<-03>,M9.1.6/24,M4.1.6/24'], [N_('Ciudad de México (UTC−6)'), 'CST6'],
   [N_('Nueva York (UTC−5/−4)'), 'EST5EDT,M3.2.0,M11.1.0'], ['Madrid (UTC+1/+2)', 'CET-1CEST,M3.5.0,M10.5.0/3'], [N_('Londres (UTC+0/+1)'), 'GMT0BST,M3.5.0/1,M10.5.0/2'], ['UTC', 'UTC0']];
+
+/* The UI applies this request asynchronously after closing running apps.
+ * Wait for the actual device language instead of reloading on a fixed delay. */
+async function changeLanguage(code) {
+  if (!validLanguage(code)) throw new Error(tr('Idioma no disponible.'));
+  await post('settings', { lang: code });
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const state = await api('info');
+    if (state.lang === code) return;
+    await new Promise(resolve => setTimeout(resolve, 250));
+  }
+  throw new Error(tr('No se pudo cambiar el idioma. Comprobá que el paquete de fuentes esté instalado.'));
+}
 
 async function pageAjustes() {
   const s = await api('settings');
@@ -597,7 +676,7 @@ async function pageAjustes() {
   const name = h('input', { type: 'text', value: s.name });
   const tz = h('select', { onchange: e => set({ tz: e.target.value }, tr('Zona horaria cambiada')) },
     TZS.map(([n, v]) => h('option', { value: v, selected: v === s.tz }, tr(n))), TZS.some(t => t[1] === s.tz) ? null : h('option', { value: s.tz, selected: true }, s.tz));
-  const lang = h('select', { onchange: async e => { await set({ lang: e.target.value }); setTimeout(() => location.reload(), 600); } },
+  const lang = h('select', { onchange: async e => { const el = e.target; el.disabled = true; try { await changeLanguage(el.value); location.reload(); } catch (err) { el.value = s.lang; el.disabled = false; toast(err.message, true); } } },
     (s.langs.length ? s.langs : [{ code: 'es', name: 'Español' }]).map(l => h('option', { value: l.code, selected: l.code === s.lang }, l.name)));
   const sw = h('div', { class: 'swatches' }, s.wallpapers.map((c, i) => {
     const [a, b] = c.split(',');
@@ -2961,6 +3040,7 @@ function navEntry(id, name, icon, bad) {
 
 window.P4OS = Object.freeze({
   version: 1,
+  forPage(id) { return Object.freeze({ ...window.P4OS, tr: pageTranslator(id) }); },
   main, h, put, $, api, post, toast, row, fmtBytes, fmtDate,
   /* languages: tr('...', ...) with the page's catalog (web.<page>.lang)
    * already loaded, num(v, decimals) for the eye, lang() the board's code */

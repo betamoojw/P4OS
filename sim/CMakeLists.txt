@@ -6,6 +6,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(PkgConfig REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(Threads REQUIRED)
 pkg_check_modules(SDL2 REQUIRED sdl2)
 # The camera viewer's decoders (branch rtsp): H.264 and JPEG through
 # libavcodec, behind the same interfaces the board has (sim/sim_codec.c).
@@ -168,9 +170,12 @@ set(AOS_WEB_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/web/index
                   ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/web/app.css
                   ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_web/glifos.js)
 set(AOS_WEB_C ${CMAKE_CURRENT_BINARY_DIR}/aos_portal_assets.c)
+file(GLOB AOS_WEB_LANG CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/../lang/*/_portal.lang"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../lang/*/web.*.lang")
 add_custom_command(OUTPUT ${AOS_WEB_C}
     COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/../tools/gen_web_assets.py ${AOS_WEB_C} ${AOS_WEB_FILES}
-    DEPENDS ${AOS_WEB_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/../tools/gen_web_assets.py)
+    DEPENDS ${AOS_WEB_FILES} ${AOS_WEB_LANG} ${CMAKE_CURRENT_SOURCE_DIR}/../tools/gen_web_assets.py)
 
 # the sensor service's drivers (components/aos_io/sensors)
 file(GLOB AOS_SENSORS_SRC CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/sensors/*.c)
@@ -264,8 +269,9 @@ if(EXISTS ${AOS_ESP_JPEG_INC}/esp_jpeg_dec.h)
 endif()
 
 target_compile_options(p4os_sim PRIVATE -Wall -Wextra -Wno-unused-parameter)
-target_compile_definitions(p4os_sim PRIVATE AOS_SIM_BUILTIN AOS_SIM)
-target_link_libraries(p4os_sim PRIVATE lvgl ${SDL2_LIBRARIES} m aos_cjson
+target_compile_definitions(p4os_sim PRIVATE AOS_SIM_BUILTIN AOS_SIM
+    AOS_CJK_DEFAULT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../assets/cjk/cjk.bin")
+target_link_libraries(p4os_sim PRIVATE lvgl ${SDL2_LIBRARIES} m aos_cjson ZLIB::ZLIB Threads::Threads
     $<$<BOOL:${AOS_LUA_SRC}>:aos_lua>
     $<$<BOOL:${AOS_UPY_SRC}>:aos_upy>
     $<$<BOOL:${AOS_DOOM_SRC}>:aos_doom>

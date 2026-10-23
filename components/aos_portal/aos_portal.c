@@ -194,6 +194,7 @@ static void api_info(aos_httpd_req_t *r)
     cJSON_AddStringToObject(o, "board", aos_hal_board_name());
     cJSON_AddStringToObject(o, "firmware", aos_hal_firmware_version());
     cJSON_AddNumberToObject(o, "uptime_s", (double)(aos_hal_uptime_ms() / 1000));
+    cJSON_AddStringToObject(o, "lang", aos_i18n_current());
     uint32_t fi = 0, fp = 0;
     aos_hal_heap_info(&fi, &fp);
     cJSON_AddNumberToObject(o, "heap_internal", fi);
@@ -1385,7 +1386,14 @@ static void api_settings(aos_httpd_req_t *r)
         const cJSON *n;
         if ((v = jstr(b, "name")) && !aos_hal_device_name_set(v)) err = _("el nombre va con a-z, 0-9 y guiones");
         if ((v = jstr(b, "tz"))) aos_hal_timezone_set(v);
-        if ((v = jstr(b, "lang"))) aos_ui_request_language(v);
+        if ((v = jstr(b, "lang"))) {
+            aos_lang_t choices[AOS_LANG_MAX];
+            int count = aos_i18n_scan(choices, AOS_LANG_MAX);
+            bool available = false;
+            for (int i = 0; i < count; i++) if (!strcmp(choices[i].code, v)) available = true;
+            if (available) aos_ui_request_language(v);
+            else err = _("idioma no disponible");
+        }
         if (cJSON_IsNumber(n = cJSON_GetObjectItemCaseSensitive(b, "wallpaper")))
             aos_ui_request_call(set_wallpaper, (void *)(intptr_t)n->valueint);
         if (cJSON_IsNumber(n = cJSON_GetObjectItemCaseSensitive(b, "brightness"))) aos_hal_brightness_set(n->valueint);
@@ -1510,7 +1518,10 @@ static void serve_card_lang(aos_httpd_req_t *r, const char *rest)
     size_t n = slash ? (size_t)(slash - rest) : 0;
     if (n < 2 || n > 8) { aos_httpd_send_text(r, 404, "no existe"); return; }
     for (size_t i = 0; i < n; i++)
-        if (rest[i] < 'a' || rest[i] > 'z') { aos_httpd_send_text(r, 404, "no existe"); return; }
+        if ((rest[i] < 'a' || rest[i] > 'z') &&
+            !(n == 7 && (!strncmp(rest, "zh-Hans/", 8) || !strncmp(rest, "zh-Hant/", 8)))) {
+            aos_httpd_send_text(r, 404, "no existe"); return;
+        }
     char dir[16];
     snprintf(dir, sizeof dir, "lang/%.*s", (int)n, rest);
     serve_card_file(r, dir, slash + 1);

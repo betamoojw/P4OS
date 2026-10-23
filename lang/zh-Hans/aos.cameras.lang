@@ -1,0 +1,71 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+No se encuentra Frigate	Frigate 没有找到
+Frigate pide usuario y contraseña	Frigate 要求用户名和密码
+Frigate no responde	Frigate 没有回应
+Frigate contestó %d	Frigate 答案 %d
+Sin memoria	没有记忆
+No se encuentra el servidor	服务器未找到
+Sin conexiones libres	没有免费连接
+El servidor no responde	服务器没有响应
+El servidor cortó la conexión	服务器关闭了连接
+El servidor no contestó	服务器没有回答
+Usuario o contraseña incorrectos	错误的用户或密码
+El servidor pide usuario y contraseña	服务器需要一个用户和密码
+El servidor contestó %d	服务器回答了 %d
+El servidor dejó de mandar video	服务器停止发送视频
+No se encuentra la cámara	没有找到相机
+La cámara no responde	摄像头没有响应
+La cámara pide usuario y contraseña	摄像机需要一个用户和密码
+La cámara no contestó	摄像头没有回答
+La cámara contestó %d	摄像机回答了 %d
+La placa no decodifica H.265.\nSólo H.264 Baseline y MJPEG.	机板不能解码H.265.\n只有H.264基线和MJPEG
+El video no es H.264 ni MJPEG	这段视频既不是H.264也不是MJPEG
+La cámara rechazó el pedido (SETUP %d)	摄像机拒绝了请求 (SETUP) %d)
+La cámara no abrió la sesión	摄像机没有打开会议
+La cámara rechazó el pedido (PLAY %d)	摄像头拒绝了请求 (播放) %d)
+La cámara cortó la conexión	摄像机关闭了连接
+La cámara dejó de mandar video	摄像机停止发送视频
+H.264 %s: la placa sólo\ndecodifica el perfil Baseline.	H.264 %s: 只有板块\n解码基线配置文件.
+Esta placa todavía no\ndecodifica H.264	这个板不能解码.\n目前还没有H.264
+%dx%d no entra en\nla memoria de la placa.	%dx%d 不适合.\n记忆板.
+El decodificador JPEG no abrió	JPEG解码器没有打开
+La dirección no es\nrtsp:// ni http://	地址是没有\n没有 http://
+No hay lugar para otra tarea	没有其他任务的空间
+Conectando…	正在连接…
+Abriendo el video…	打开视频...
+Esperando la imagen…	等待拍照...
+Este video no se puede ver en la placa.\nPasá la cámara a H.264 Baseline\no a MJPEG.	这段视频不能在板上播放.\n转换摄像头到H.264基线\n或是MJPEG.
+Reintentando…	再试一次.
+sin imagen	没有图像
+conectando	连接
+en vivo	现场
+foto cada %s s	每一个快照 %s s
+Todavía no hay cámaras	没有相机.
+Agregalas en %s, un bloque por cámara con su url rtsp:// o http://. Desde la compu: el portal, http://%s, Archivos > Editar cameras.txt.	加入它们 %s,每相机一个块,其rtsp://或http://URL. http://%s, 文件 > 编辑 cameras.txt.
+Actualizando…	更新了...
+Persona	个人
+Auto	汽车
+Perro	狗
+Gato	猫
+Bicicleta	自行车
+Moto	摩托车
+Pájaro	鸟类
+Paquete	包装
+Camión	卡车
+ayer %02d:%02d	昨天 %02d:%02d
+Sin eventos recientes.	没有最近的事件.
+Frigate no tiene cámaras.	Frigate 没有相机.
+Cargando…	正在加载…
+Eventos	日程
+Cámaras	摄像头
+Sin tarjeta: no hay dónde guardar la foto	没有卡:没有保存照片的地方
+Foto guardada en Fotos > camaras	保存到照片>相机
+No se pudo guardar la foto	没能保存照片
+Foto JPEG	JPEG图片
+  ·  audio sin reproducir	 ·未播放的音频
+La cámara USB no está conectada	其他 USB 摄像头没有连接
+La cámara USB no arrancó	其他 USB 摄像头没有启动
+Sin memoria para la cámara	没有存储器.
+Se desenchufó la cámara USB	其他 USB 摄像头没有插
+La cámara USB no manda imagen	其他 USB 摄像头没有发送照片

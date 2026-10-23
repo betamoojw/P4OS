@@ -10,7 +10,7 @@
  * "graph". With the app closed it reads the same files the app keeps in
  * /data. The texts are in Spanish, the keys of the page's catalog
  * (web.cas.lang), as in the rest of the portal. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('cas') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const APP = 'aos.cas';

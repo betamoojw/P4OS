@@ -1,0 +1,22 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+FUEGO	燃燒
+USAR	使用
+SALTAR	跳躍
+AGACHAR	科魯奇
+MENÚ	選單
+MAPA	地圖
+ÍTEM	專案
+OTRO	下一個
+ARMA	槍支
+LATERAL	斯特拉費
+No está DUKE3D.GRP	DUKE3D沒有GRP.
+Copiá DUKE3D.GRP (shareware o el juego completo) a la carpeta	複製 DUKE3D.GRP (shareware or the full game) to the folder
+Tocá para salir	接下去離開
+Duke Nukem 3D se detuvo	杜克核3D停止
+Duke Nukem 3D se juega con la pantalla horizontal	杜克核3D在景觀中使用螢幕播放
+Girá la pantalla para seguir	開啟螢幕繼續
+Duke Nukem 3D corre en la placa, no en el simulador	杜克核 3D 在板上執行,而不是在模擬器
+Cargando...	裝載...
+Duke Nukem 3D no pudo arrancar	杜克核3D無法啟動
+Falta memoria	沒有足夠的記憶

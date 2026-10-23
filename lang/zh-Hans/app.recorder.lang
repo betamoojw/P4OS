@@ -1,0 +1,30 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Grabación	录制
+sin fecha	没有日期
+hoy %02d:%02d	今天 %02d:%02d
+ayer %02d:%02d	昨天 %02d:%02d
+Borrar	删除
+en pausa: el archivo sigue abierto	暂停:文件保持开放
+grabando	记录
+PAUSA	暂停
+tocá el botón rojo para grabar	点击红色按钮记录
+LISTO	准备
+quedan %u h	%u h 左
+quedan %u min	%u 分钟左
+sin tarjeta	未检测到存储卡
+estéreo	立体音频
+mono	单声道
+No hay tarjeta	未插入存储卡
+No se pudo grabar	无法录制
+Guardado	保存
+No se pudo reproducir	我不能玩.
+Primero pará la grabación	首先停止录音.
+Tocá de nuevo para borrar	再击删除
+No se pudo borrar	无法删除
+Borrada	删除
+Se cortó la grabación	录音中断
+Grabaciones	录音
+Todavía no grabaste nada.\nLo que grabes aparece acá.	没有录制.\n你的录音显示在这里.
+tocá la onda para saltar	按波形跳跃
+Esa grabación ya no está	这段录音已经消失了.

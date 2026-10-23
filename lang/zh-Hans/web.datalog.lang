@@ -1,0 +1,42 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+1 h	1 h
+6 h	6 h
+24 h	24 h
+7 días	7天
+30 días	30天
+Todo	全部
+No hay lecturas en este rango.	在这个范围内没有读数.
+Datalog	数据表
+La app no está abierta en la placa	应用程序在板上没有打开
+Los archivos se ven igual; los valores en vivo, cuando la abras.	文件显示,一旦你打开它,就会有现实值.
+Abrir en la placa	在板上开放
+Registrando	伐木
+En pausa	暂停
+%s lecturas configuradas	%s 设置的读数
+La placa todavía no tiene hora de la red: anota el tiempo desde el arranque.	电脑板还没有时间从网络中:它记录了启动后的时间.
+CSV con coma	有逗号的CSV
+CSV con punto y coma	有半柱的CSV
+Pausar	暂停
+Registrar	日志
+No hay lecturas: se agregan en la placa, con el + de la app.	没有读数:将它们添加到板上,应用程序的+.
+Lectura	阅读
+Valor	数值
+Cuándo	当
+Alarmas y errores	警报和错误
+baja < %s	低 %s
+alta > %s	高 > %s
+Archivos en %s	在文件中 %s
+Bajar	下载
+Borrar	删除
+Todavía no hay archivos.	没有文件.
+¿Borrar %s con todas sus lecturas? La lectura sigue y empieza un archivo nuevo.	删除 %s 阅读继续,开始一个新的文件.
+Borrado	删除
+Cargando…	正在加载…
+Elegí una lectura para ver su gráfico.	选择一个读数来看它的图表.
+mín	最小值
+máx	最大值
+promedio	平均值
+lecturas	读数
+Archivo grande: se leyeron los últimos 8 MB.	文件较大，仅读取最后 8 MB。
+Notas	备忘录

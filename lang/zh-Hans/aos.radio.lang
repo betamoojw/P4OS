@@ -1,0 +1,46 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+La tecla %d está libre: mantenela apretada para guardar la radio que suena	关键 %d 是免费的:保持它以拯救正在播放的电台
+La tecla %d está libre: elegí una radio en %s.local/radio	关键 %d 是免费的:选择一个电台 %s在本地/radio
+Elegí tus radios en %s.local/radio	选择您的电台在 %s在本地/radio
+Sin WiFi	没有Wi-Fi
+Sintonizá una radio y mantené apretada la tecla para guardarla	调节一个站点,并持有钥匙保存它
+%s quedó en la tecla %d	%s 保存到关键 %d
+Formato no soportado: sólo MP3 y AAC	不支持格式: MP3 只有AAC
+La radio no está en esa dirección	无线电不在那个地址.
+Falta la hora para https	目前没有HTTPS的时间
+No se encontró el servidor	服务器未找到
+No se pudo conectar	无法连接
+Sin memoria	没有记忆
+No se pudo sintonizar	无法调整
+No suena ninguna radio.	没有无线电播放.
+Tema	音乐
+Álbum	专辑
+La emisora dice	站说
+Formato	格式化
+estéreo	立体音频
+mono	单声道
+Servidor	服务器
+Web	网络
+Buffer	缓冲器
+Reconexiones	重新连接
+Escuchando	倾听
+Recibido	收到
+Tapa	覆盖
+Motivo	原因
+Radio	无线电
+Tocá una radio de la lista	输入列表中的站点
+tus teclas se eligen en %s.local/radio	你的钥匙设置在 %s在本地/radio
+Tocá una tecla o una radio	按键或站点
+Sintonizando...	调整了...
+Cargando...	装载...
+Conectando con %.60s	连接到 %.60s
+Llenando el buffer	填充缓冲
+Reconectando (%u)	连接 (%u)
+En pausa	暂停
+En vivo  -  buffer %u s	现场缓冲器 %u s
+Suena la música de la tarjeta	存储卡的音乐正在播放
+Todas las radios	所有站点
+  ·  tecla %d	 ·关键 %d
+%d  ·  editalas en /radio	%d · 编辑在 /radio
+Tocá para volver	打回来

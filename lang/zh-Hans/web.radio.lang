@@ -1,0 +1,59 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+conectando	连接
+cargando	缓冲
+en vivo	现场
+reconectando	重新连接
+falló	失败
+detenida	已停止
+Reproducir o pausar	播放或暂停
+suena la música de la tarjeta	存储卡的音乐正在播放
+no suena nada	没有什么正在玩
+en pausa	暂停
+búfer %s s	缓冲器 %s s
+falló: %s	失败: %s
+libre	可用
+▶ Poner	▶ 玩
+Vaciar	清除
+%s quedó en la tecla %d	%s 保存到关键 %d
+no se pudo hablar con la placa	不能到达板
+no se pudo guardar la lista: %s	无法保存列表: %s
+no suena en la placa	没有在板上玩
+Escuchar acá	听我说.
+Probar en la placa	在板上试看
+La lista está vacía: buscá radios abajo.	列表是空的:下面搜索站点.
+Tecla…	钥匙.
+¿Quitar esta radio de tu lista?	从你的列表中删除这个站吗?
+Quitar	移除
+Arrastrala a una tecla	把它拉到钥匙上.
+Todos	全部
+buscando…	正在搜索…
+radio-browser.info no contestó	无线电浏览器.info没有回答
+✓ en tu lista	✓ 在您的列表中
++ Agregar	+ 加入
+No se encontró nada.	没有找到任何东西.
+Nombre	名称
+Dirección del stream	流程地址
+Agregar	添加
+la dirección tiene que empezar con http:// o https://	地址必须以http://或 https://开始
+País	国家
+Género	类型
+Buscar	搜索
+Sólo las que suenan en la placa (MP3, AAC, HLS)	只有那些在板上玩的人 (MP3,AAC,HLS)
+Radio	无线电
+Abrir la Radio en la placa	在板上开放无线电
+En la placa ahora	在开发板上.
+Anterior	上一步
+Siguiente	下一步
+Detener	停止
+Volumen	音量
+Las teclas	钥匙
+Arrastrá una radio de tu lista a una tecla, o una tecla sobre otra para cambiarlas de lugar.	拖动一个站从你的列表到一个钥匙,或者把一个钥匙到另一个来交换.
+Mi lista	我的名单
+Buscar radios	搜索站
+En el directorio abierto de radio-browser.info, con más de 50.000 estaciones de todo el mundo.	使用 radio-browser.info 的开放电台目录，收录全球超过 50,000 个电台。
+Agregar a mano	手动添加
+Ajustes	设置
+Tapas de los discos	专辑封面
+Busca en iTunes la tapa del tema que suena. Lo único que sale de la placa es "artista tema".	在iTunes上查看播放歌曲的封面.唯一离开板是"艺术家歌曲".
+Suenan MP3 y AAC (también HE-AAC) por http:// o https://, con redirecciones y listas .pls o .m3u, y HLS (.m3u8) con segmentos TS o AAC. Ogg, Opus, FLAC, HLS en fMP4 y HLS cifrado no: el buscador los marca. La radio sigue sonando con la app cerrada.	MP3 和AAC (HE-AAC也是) 通过 http://或 https://, 转向和 .pls或.m3u播放列表,以及TS或AAC段的HLS (.m3u8).Ogg,Opus,FLAC,fMP4 HLS和加密HLS都没有:搜索标记它们.无线电继续播放应用程序关闭.

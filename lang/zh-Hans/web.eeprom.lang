@@ -1,0 +1,55 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+lectura	阅读
+antes de escribir	在写作之前
+escrita	书写
+del portal	从门户
+guardada	已保存
+EEPROM	EEPROM
+La app todavía no escribió su chip.json: abrila en la placa.	应用程序没有写出 chip.json 但:打开它在板上.
+trabajando	工作
+abierta	开放
+%d bytes sin escribir en la placa	%d 目前尚未写在板上的字节
+Leer el chip	阅读芯片
+Leer el chip ahora	现在阅读芯片.
+Abierta en la placa	在板上开放
+Abrir la app	打开应用程序
+Chip en la placa:	板上的芯片:
+Cambiar el chip	换芯片
+¿Escribir %s en el %s? Antes la placa guarda una copia de lo que tiene, y después lo verifica.	写入 %s 在 %s开发板首先保存其所持的副本,然后验证.
+%s: esperando a la app…	%s在等待应用程序...
+La app no contestó. ¿Está la placa encendida?	应用程序没有回答.
+Listo.	完成了.
+Falló.	失败了.
+Elegí un chip.	选择一个芯片.
+archivo	文件
+Comparar desde esta	与这一个相比
+Ver esta	看看这个
+Ver	查看
+Bajar	下载
+Nota	备注
+Escribir %s	写入 %s
+En la placa está elegido otro chip	在板上选择了另一个芯片
+Escribir en el chip	写到芯片上
+Borrar	删除
+Versiones	版本
+%d en %s	%d 在 %s
+Subir un .bin	装载一个 .bin
+Todavía no hay versiones de este chip. Cada lectura en la placa guarda una.	没有这个芯片的版本,每一次读到板上都会保存一个.
+Nota de %s	关于 %s
+¿Borrar %s de la tarjeta? No se puede deshacer.	删除 %s 卡上没有什么可取消.
+%s tiene %s y el %s %s: no se va a poder escribir. ¿Subirlo igual?	%s 是 %s 在 %s 是 %s没有什么可写的.
+subido: %s	上传: %s
+Subiendo %s	装载 %s
+✓ Subido como %s	✓ 上传为 %s
+Tocá Ver en una versión para verla en hexa; con A y B, las diferencias.	在版本上点击查看以六形;A和B,不同.
+Cargando…	正在加载…
+dirección (hexa)	地址 (六)
+texto o DE AD BE EF	文本或 DE AD BE EF
+No está	没有找到
+comparada con %s:	与 %s:
+%d bytes distintos en %d tramos	%d 字节不同 %d 范围
+iguales	同样的
+Buscar	搜索
+y %d tramos más	和 %d 更多范围
+Las versiones están en la tarjeta, en /eeprom/<chip>. Cada lectura en la placa guarda una; antes de cada escritura se guarda lo que había.	在卡上写的版本, /eeprom/<chip>每次阅读都会保存一个; 在每次写之前,

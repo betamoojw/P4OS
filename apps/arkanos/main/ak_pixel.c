@@ -592,10 +592,13 @@ static const uint8_t ak_font5x7[AK_FONT_LAST - AK_FONT_FIRST + 1][AK_CH_W] = {
     { 0x40, 0x40, 0x40, 0x40, 0x40 },   /* '_' */
 };
 
+#define AOS_PIXEL_BUF ak_buf_t
+#define AOS_PIXEL_PX ak_px
+#include "aos_pixel_text.h"
+
 int ak_text_w(const char *s)
 {
-    int n = (int)strlen(s);
-    return n > 0 ? n * AK_CH_ADV - 1 : 0;
+    return pixel_text_width(s, AK_CH_ADV);
 }
 
 int ak_text_wk(const char *s, int k)
@@ -605,8 +608,11 @@ int ak_text_wk(const char *s, int k)
 
 void ak_text_k(ak_buf_t *b, int x, int y, const char *s, uint16_t c, int k)
 {
-    for (; *s; s++, x += AK_CH_ADV * k) {
-        uint8_t ch = (uint8_t)*s;
+    for (int advance = 0; *s; x += advance) {
+        uint32_t cp = pixel_codepoint(&s);
+        advance = (cp >= 0x2e80 ? AOS_PIXEL_CJK_ADV : AK_CH_ADV) * k;
+        if (cp >= 128) { pixel_unicode(b, x, y, cp, c, k); continue; }
+        uint8_t ch = (uint8_t)cp;
         if (ch >= 'a' && ch <= 'z') {
             ch = (uint8_t)(ch - 32);        /* the font is upper case only */
         }

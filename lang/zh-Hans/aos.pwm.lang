@@ -1,0 +1,128 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+%s V a la salida del filtro	%s 从过滤器中抽出 V
+pulsos a 1 MHz	在1 MHz的脉冲
+siempre abajo	总是低
+siempre arriba	总是高
+alto %s (%s %%)	高度 %s (%s %%)
+invertida	逆转
+señal	信号
+fuente	供应
+5 V aparte	单独的5V
+servo	服务器
+LED IR	红光 LED
+salida	输出
+GPIO%d (pata %d)	GPIO%d (笔) %d)
+El pin lo tiene %s	%s 有那个针头
+No se pudo abrir el nivel analógico	无法打开模拟水平
+Los siete canales del LEDC están ocupados	所有七个LEDC频道都在使用中
+Ya hay tres frecuencias distintas: el LEDC no da más	目前已经有三个不同的频率:LEDC没有更多
+No se pudo abrir el PWM (mirá el registro)	不能打开 PWM (参见日志)
+Elegí un pin para este canal	选择此频道的针
+%s no entra: el LEDC da tres frecuencias a la vez como máximo	%s 不适合:LEDC可同时发出最多3个频率
+%s · %d bits	%s · %d 零件
+ciclo %s %%	关税 %s %%
+%d de 255	%d 在255中
+PWM	PWM
+Servo	服务器
+LED	灯光
+Nivel	关卡
+Fijo	稳定
+Respirar	呼吸
+Barrido	扫除
+Estrobo	纹身
+Rampa	车轮
+Seno	犯罪
+Pasos	步骤
+Con un patrón andando, la perilla gira la velocidad	模式运行时, 键转动速度
+fino ×0,1	罚款 ×0.1
+real %s · %d bits	实际的 %s · %d 零件
+al encender	当开启时
+FRECUENCIA	频率
+PERÍODO	时间
+CICLO	职责
+ÁNGULO	角度
+BRILLO	亮度
+NIVEL	级别
+EN VIVO	实时
+Listo	完成
+Ese pin lo usa el canal %d	频道 %d 使用那个针头
+Pin del canal	频道针
+Los pines libres del header. Andan a 3,3 V: nunca 5 V en una pata. La pata es el número en el conector de 40.	扩展接口上的可用引脚均使用 3.3 V，切勿输入 5 V。这里的引脚编号指 40 针连接器上的物理编号。
+pata %d	引脚 %d
+este canal	此频道
+canal %d	频道 %d
+VO4: medí antes	VO4:第一步采取措施
+strapping	连接
+libre	可用
+Tocá otra vez para borrarlo	再击,删除
+Canal %d	频道 %d
+Invertir la salida	转换输出
+Para un LED entre 3V3 y la pata: prende cuando la pata va a 0.	3V3和针头之间的LED:当针头到0时它会点亮。
+Pulso mínimo	最低脉冲
+Pulso máximo	极速脉冲
+Recorrido	旅行
+La mayoría de los servos van de 500 a 2500 µs en 180°. Si el servo zumba o golpea en un extremo, acercá los topes.	多数观测站在180度以上从500微米到2500微米不等。如果观测站按铃或按到终点,请靠近站点。
+Gamma	甘玛
+El ojo ve la luz en escala logarítmica: con gamma 2,2, el brillo al 50 % es un ciclo del 22 %.	The eye sees light on a logarithmic scale: with gamma 2.2, 50 % brightness is a 22 % duty.
+El nivel analógico no tiene ajustes: 256 pasos de 0 a 3,3 V, con el filtro RC del cableado.	模拟电平无需额外设置：通过接线中的 RC 滤波器，以 256 级调节输出，范围为 0 至 3.3 V。
+Borrar el canal	删除频道
+%d pasos	%d 步骤
+Cada paso dura lo mismo: el período dividido por la cantidad de pasos.	每一步的持续时间是一样的:时间由步骤数分.
+No se pudo leer el preset	不能读取预设
+Cargado: %s	装载: %s
+¿Borrar?	删除?
+Todavía no hay presets guardados.	没有预设存储.
+No hay tarjeta.	没有卡.
+Borrar	删除
+No hay tarjeta	未插入存储卡
+Guardado: %s	保存: %s
+No se pudo guardar	不能挽救
+Presets	预设
+Todos los canales con sus pines, modos y patrones, en /sdcard/pwm. Al cargar uno, los canales encendidos se encienden.	All the channels with their pins, modes and patterns, in /sdcard/pwm. Loading one turns on the channels that were on.
+nombre del preset	预设名称
+Guardar	保存
+La pata da 3,3 V y pocos mA: el LED con su resistencia (220 a 470 Ω) a GND. En modo LED, el brillo va con la curva de gamma.	引脚输出为 3.3 V，电流仅有数 mA。LED 需串联 220 至 470 Ω 电阻后接到 GND。LED 模式的亮度按伽马曲线调整。
+El LED prende cuando la pata va a 0: activá Invertir en los ajustes del canal.	针向0时LED灯: 在频道设置中打开反向灯。
+El servo se alimenta aparte, con 5 V externos y no de la placa: GND en común con el header y sólo la señal a la pata. Modo Servo: 50 Hz y un pulso de 500 a 2500 µs.	舵机需使用独立的外部 5 V 电源，不能由开发板供电。电源与扩展接口共地，仅将信号线接到控制引脚。舵机模式使用 50 Hz 频率，脉宽范围为 500 至 2500 µs。
+Un LED infrarrojo pide más corriente que la pata: un transistor NPN con 1 kΩ en la base. Para la portadora de un control remoto, PWM a 38 kHz con ciclo del 33 %.	红外 LED 所需电流超过引脚能力，请使用 NPN 三极管驱动，基极串联 1 kΩ 电阻。遥控载波使用 38 kHz PWM，占空比为 33 %。
+El nivel analógico es un tren de pulsos a 1 MHz: 1 kΩ en serie y 1 µF a GND lo vuelven una tensión de 0 a 3,3 V, con pocos mV de ripple y ~5 ms para asentarse. Sin carga pesada a la salida.	模拟电平使用 1 MHz 脉冲，通过串联 1 kΩ 电阻和接到 GND 的 1 µF 电容，得到 0 至 3.3 V 输出。纹波约数 mV，稳定时间约 5 ms。输出端不可连接大负载。
+Cableado	电缆
+LED a 3V3	带 LED到3V3
+Filtro RC	RC 过滤器
+Señal: pata %d (GPIO%d).	信号:针 %d (GPIO%d).
+GND: patas %s. 3V3: patas %s. 5V: patas %s (sólo para alimentar algo chico; un servo, mejor aparte).	GND: pins %s. 3V3: 针 %s. 5V: 针 %s (仅供小型的电源;一个伺服器,更好单独).
+Ya están los siete canales	所有七个通道都在那里.
+Salidas apagadas y pines sueltos	产出关闭, 插针发布
+Con un patrón andando, el valor lo mueve el patrón	随着一个模式运行,该模式移动了值
+Valor	数值
+Frecuencia	频率
+Velocidad	速度
+sin pin	没有针
+Canales	频道
+Apagar todo	一切都消失了
++ Canal	+ 频道
+Patrón	模式
+Editar los pasos	编辑步骤
+Ningún PWM encendido	否 PWM 在
+(%d de 3 frecuencias)	(%d 频率3个)
+Elegí\nun pin	选择\n插针
+GPIO%d\npata %d	GPIO%d\n引脚 %d
+período %s	时间 %s
+Entre %s y %s	两者之间 %s 和 %s
+Un patrón mueve el valor solo, y sigue con la app en segundo plano. Al cerrar la app, todo se apaga.	一个模式本身就会移动值,并且在背景下继续使用应用程序.关闭应用程序将一切关闭.
+Con fades del LEDC: el hardware va de un punto al siguiente.	随着LEDC的消耗:硬件从一个点到另一个.
+La app escribe el valor cada 20 ms.	应用程序每20秒就会写出值.
+PCA9685 %s, salida %d	PCA9685 %s产量 %d
+Un servo tiene este PCA9685 a 50 Hz: sus 16 salidas comparten la frecuencia	此 PCA9685 已由舵机设为 50 Hz，全部 16 路输出共用该频率。
+El PCA9685 no tomó la frecuencia	其他 PCA9685 没有使用频率
+Un PCA9685 va de 24 Hz a 1526 Hz	A PCA9685 从24 Hz到1526 Hz
+Un PCA9685 no da un nivel analógico: PWM, servo o LED	A PCA9685 没有类似水平: PWM,伺服器或LED
+No contesta el PCA9685 %s	其他 PCA9685 %s 没有回答
+Esa salida la usa el canal %d	频道 %d 使用该输出
+Las 16 salidas de un PCA9685 comparten una frecuencia, de 24 Hz a 1526 Hz: un servo lo deja en 50 Hz. Los servos se alimentan por V+ del módulo, no por la placa.	PCA9685 的 16 路输出共用一个频率，可设范围为 24 至 1526 Hz；使用舵机时需设为 50 Hz。舵机由模块的 V+ 端供电，不能由开发板供电。
+Con un PCA9685 declarado en Módulos (module servos i2c.ext chip=pca9685 addr=0x40) aparecen acá sus 16 salidas.	通过一个 PCA9685 在模块 (module servos i2c.ext chip=pca9685 addr=0x40) 中声明的16个输出显示在这里.
+Señal: salida %d del PCA9685 %s (sus pines PWM de esa columna).	信号:输出 %d 在 PCA9685 %s (该委员会) PWM pins of that column).
+%sPCA9685 a %s	%s在PCA9685 %s
+%s%d PCA9685	%s%d PCA9685
+%.12s\nsalida %d	%.12s\n输出 %d

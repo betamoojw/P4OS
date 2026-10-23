@@ -1,0 +1,45 @@
+# Localized interface; canonical rules and protocol names are retained.
+NOS	WIR
+ELLOS	GEGNER
+MANO	VORHAND
+PIE	NACHHAND
+REAL ENVIDO	REAL ENVIDO
+FALTA ENVIDO	FALTA ENVIDO
+VALE CUATRO	VALE CUATRO
+ME VOY AL MAZO	ICH PASSE
+ENVIDO	ENVIDO
+REAL	REAL
+FALTA	FALTA
+TRUCO	TRUCO
+RE TRUCO	RE TRUCO
+VALE 4	VALE 4
+QUIERO	ANNEHMEN
+NO QUIERO	ABLEHNEN
+AL MAZO	PASSEN
+VOS	DU
+ESPERANDO A %s	WARTE AUF %s
+tengo %d	Ich habe %d
+ENVIDO NO QUERIDO: %d PARA %s	ENVIDO ABGELEHNT: %d FUER %s
+%d A %d: %d PARA %s	%d ZU %d: %d FUER %s
+LA MANO ES DE %s  (+%d)	%s GEWINNT DIE RUNDE  (+%d)
+%s LA PARTIDA  %d-%d	%s  %d-%d
+GANASTE	GEWONNEN
+PERDISTE	VERLOREN
+SE DESINCRONIZO	NICHT SYNCHRON
+SE PERDIO EL ENLACE	VERBINDUNG VERLOREN
+SE FUE %s	%s HAT VERLASSEN
+NOS %d  -  ELLOS %d\nGANADAS %ld  -  PERDIDAS %ld	WIR %d  -  GEGNER %d\nSIEGE %ld  -  NIEDERLAGEN %ld
+CONTRA LA MAQUINA	GEGEN DEN COMPUTER
+A DOS: CONTRA %s	ZU ZWEIT: GEGEN %s
+A DOS JUGADORES	ZWEI SPIELER
+Para jugar de a dos, emparejá los dos equipos en Enlace.	Um zu zweit zu spielen, kopple beide Geräte unter Verbindung.
+Este equipo todavía no tiene el enlace por radio: por ahora se juega contra la máquina.	Dieses Gerät hat noch keine Funkverbindung; spiele vorerst gegen den Computer.
+SEGUIR	WEITER
+PARTIDA NUEVA	NEUES SPIEL
+SALIR	BEENDEN
+LA MAQUINA	DER COMPUTER
+Sin memoria	Nicht genug Speicher
+CONTRA QUIEN?	GEGNER WAEHLEN
+Sin enlace: jugás contra la máquina	Keine Verbindung: Spiel gegen den Computer
+BUSCANDO A %s	SUCHE NACH %s
+LA PAREJA	PARTNER

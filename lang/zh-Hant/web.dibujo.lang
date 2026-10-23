@@ -1,0 +1,36 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Dibujo %s	繪畫 %s
+Cargando…	正在載入…
+no se lee	無法讀取
+%d × %d · %d capa	%d × %d · %d 層
+%d × %d · %d capas	%d × %d · %d 層
+Armando el dibujo…	我把圖畫放在一起.
+%s no se lee	%s 是不可讀的
+Capa	層
+oculta en la placa	隱藏在板上
+%d × %d px · fondo %s	%d × %d 背景 %s
+%d × %d px · fondo transparente	%d × %d 透明背景
+Bajar PNG	下載 PNG
+Bajar .dib	下載 .dib
+Abrir la app	開啟應用程式
+Capas (destildá una para sacarla del PNG; el archivo no cambia)	層 (不輸入一個,以將其留在 PNG 中;檔案不會改變)
+¿Borrar %s de la tarjeta? No se puede deshacer.	刪除 %s 卡上沒有什麼可取消.
+Borrado	刪除
+Borrar de la tarjeta	從卡刪除
+Bajar	下載
+¿Borrar %s?	要刪除 %s 嗎？
+Borrar	刪除
+Todavía no hay dibujos. Se hacen en la placa, con la app Dibujo.	目前還沒有圖紙,它們是在板上製作的.
+Ninguno todavía: en la app, Menú → Exportar PNG.	目前還沒有:在應用程式中,選單 →出口 PNG.
+No hay imágenes subidas.	沒有上傳的照片.
+Preparando %s…	準備 %s…
+Subiendo %s: %d	裝載 %s: %d
+%s (%d × %d) subida	%s (%d × %d) 上傳
+Dibujo	繪畫
+Dibujos	繪畫
+Exportados	出口
+Imágenes para importar	進口的圖片
+En la app: Menú → Importar una imagen. Van a una capa nueva, abajo de todo, para calcar o pintar encima.	在應用程式中:選單 →進口圖片.它們進入一個新的層,在底部,追蹤或塗上.
+Subir imágenes	上傳圖片
+Los dibujos están en /dibujo de la tarjeta, con sus capas (.dib). El PNG que se baja acá lo arma el navegador, igual al que exporta la app.	這些圖紙在 /dibujo 在卡上,它們的層 (.dib). 下載的 PNG 由瀏覽器組合在一起,

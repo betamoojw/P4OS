@@ -1,0 +1,123 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Copiado	复制
+La capa está oculta	层面是隐藏的
+Tamaño	大小
+Opacidad	宽度
+Borde	概况
+Tolerancia	误差
+Tocá para agregar puntos; el primero lo cierra	击点添加;第一个关闭它
+Editar texto	编辑文本
+Arrastrá, las esquinas escalan, el círculo gira	拉它;角落的尺度,圆旋转
+Relleno sí	填充
+Relleno no	填充
+Tocá el lienzo donde va el texto	按图纸上写的文字
+Mira: todo	查看:所有
+Mira: la capa	看着:层
+Tocá un color del dibujo	在图中点击一个颜色
+Arrastrá para elegir una zona	拖动选择一个区域
+Todo	全部
+Pegar	粘贴
+Duplicar	创建副本
+Copiar	复制
+Borrar	删除
+Ajustar	适合的
+Guardado	保存
+Sin memoria: se borró historia o no entra más	没有记忆:历史被切断了,或者什么都不适合.
+Suavizado del trazo	发作缓滑
+Pinceles	布鲁希斯
+Lápiz	笔
+Pincel suave	软刷
+Aerógrafo	气刷
+Marcador	标记符
+Simetría	象征性
+Ninguna	无
+Lado a lado	一边一边
+Arriba y abajo	顶部和底部
+Las dos	两者
+Esquinas redondeadas	圆角
+Formas	形状
+Línea	线条
+Rectángulo	矩形
+Elipse	椭圆
+Polígono	多角形
+Flecha	箭头
+Con borde	附有大纲
+Sin borde	无大纲
+El borde va con el color de trazo y el relleno con el de relleno (los dos cuadrados de arriba).	大纲采用中风颜色,填充填充颜色(顶部为两个方形)。
+Quitado de la paleta	从板块中移除
+La paleta está llena	调色板满了
+Color	颜色
+Relleno	填充
+Trazo	发作中风
+Recientes	最近
+Mantené apretado un color para sacarlo de la paleta	保持一种颜色,以将其从调色板中移除
+Ya hay 8 capas	已经有8层了.
+Capa	层
+No se pudo	我无法做到.
+Opacidad de la capa	层不透明
+Capas	图层
+Nueva	新的
+Subir	升起
+Bajar	下面
+Unir	合并
+¿Seguro?	确定吗?
+Blanco	白色
+Negro	黑色
+Transparente	透明
+De color	颜色
+Fondo	背景
+Menú	菜单
+ninguna	无
+lado a lado	一边一边
+arriba y abajo	顶部和底部
+las dos	两者
+Guardar	保存
+Exportar PNG	输出 PNG
+Importar una imagen	进口图片
+Grilla	电网
+sí	在
+no	关闭
+Paso de la grilla	电网步骤
+Reglas y guías	统治者和指导者
+Imán	吸附
+Ajustar a la pantalla	适合屏幕
+Volver a la galería	回到画廊
+capa	层
+capas	层
+Va a una capa nueva, abajo de todo; después se mueve y se escala. Las de la carpeta dibujo/importar se suben desde el portal.	在底部,它被新层上加起来,然后移动和扩展./importar 在门户上传.
+No hay imágenes (JPG, PNG o BMP) en dibujo/importar ni en fotos.	在 dibujo中没有图像 (JPG, PNG或 BMP)/importar 或在照片中.
+Escribí el texto	输入文本
+Cancelar	取消
+Listo	完成
+Tamaño del dibujo	绘图尺寸
+Pantalla	屏幕
+Pantalla acostada	屏幕,景观
+A4	A4
+A4 acostada	A4 景观
+Cuadrado	方形
+Básica	基本
+Pastel	粘贴
+Tierra	地球
+Mía	我的人
+No se pudo guardar	不能挽救
+Dibujo	绘画
+No se pudo abrir	不能打开
+No hay memoria para un dibujo de ese tamaño	没有足够的内存来绘制这幅图
+Duplicado	复制
+No se pudo duplicar	无法复制
+¿Seguro? Tocá de nuevo	确实吗?
+Todavía no hay dibujos. Tocá «Nuevo» para empezar uno.	没有图片,请点击"新"开始.
+Nuevo	新的
+Ocupado, probá de nuevo	忙碌,再试一次
+Exportando…	我们出口了...
+Exportado:	出口:
+No se pudo exportar	无法出口
+No se pudo leer la imagen	我看不到图片.
+No hay memoria para la imagen	没有足够的记忆力.
+Imagen	图片
+Leyendo la imagen…	阅读图片...
+Cielo	天空
+Paisaje	横向
+Texto	文本
+¡Hola, Dibujo!	你好,绘画!

@@ -14,3 +14,8 @@ idf_component_register(
     REQUIRES aos_hal aos_fonts lvgl
     PRIV_REQUIRES mbedtls aos_io
 )
+
+# Explicit on-target diagnostic build; never enabled by default.
+if(NOT CMAKE_BUILD_EARLY_EXPANSION AND AOS_I18N_SELFTEST)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE AOS_I18N_SELFTEST=1)
+endif()

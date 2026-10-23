@@ -1,0 +1,35 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Opcional: disksys.rom para el Famicom Disk System.	可選:Famicom磁碟系統的 disksys.rom.
+Opcional: gba_bios.bin (la BIOS original mejora la compatibilidad; sin ella se usa una libre que trae el emulador).	選擇性: gba_bios.bin (原始的BIOS提高了相容性;沒有它,使用了模擬器的免費版本).
+Necesaria: coleco.rom (o colecovision.rom), 8 KB.	需要: coleco.rom (或 colecovision.rom), 8 KB
+Necesaria: neogeo.zip de MAME (sp-s2.sp1, sfix.sfix...). Los juegos van como zip de MAME, con su nombre corto.	Required: MAME's neogeo.zip 遊戲以"MAME Zips"的簡稱命名.
+menos de 1 min	不到1分鐘
+%d min	%d 最小值
+%d h %d min	%d h %d 最小值
+Emulador	模擬器
+Abrir en la placa	在板上開放
+Los juegos van en la tarjeta, una carpeta por consola (%s). También pueden ir en subcarpetas.	遊戲在儲存卡上進行,每個控制檯有一個資料夾( W)%s子資料夾也起作用。
+%s no es un juego de %s (%s)	%s 是不是一個 %s 遊戲 (%s)
+%d archivos subidos	%d 上傳的檔案
+Leyendo la tarjeta...	讀到儲存卡...
+Buscar	搜尋
+<b>Soltá acá juegos de %s</b> o tocá para elegirlos<br><span class="small">%s</span>	<b>放下 %s 遊戲在這裡</b> 或點選選擇它們<br><span class="small">%s</span>
+1 juego	1 個遊戲
+%d juegos	%d 遊戲
+BIOS y archivos de sistema	BIOS 和系統檔案
+Los archivos de sistema que pida la consola (el emulador avisa cuáles).	系統檔案是控制檯要求的 (模擬器表示哪個).
+¿Borrar %s?	要刪除 %s 嗎？
+Borrar	刪除
+Soltá acá los archivos de sistema	把系統檔案放在這裡
+jugado %s	播放 %s
+%d estados	%d 國家
+Partida guardada subida	儲存上傳
+Bajar partida	下載儲存
+Abriendo %s en la placa	開放 %s 在板上
+Jugar en la placa	在板上玩
+Subir partida	上傳儲存
+¿Borrar los %d estados de %s?	刪除 %d 美國 %s?
+Borrar estados	刪除狀態
+¿Borrar %s de la tarjeta? Las partidas guardadas quedan.	刪除 %s 它的儲存留下來.
+Todavía no hay juegos de %s.	否 %s 遊戲還沒有.

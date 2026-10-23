@@ -1,3 +1,4 @@
+#include "aos_i18n.h"
 /*
  * TRUCO - drawing of the cards and of the matchstick scoreboard. See
  * tr_cards.h.
@@ -696,8 +697,8 @@ void tr_score_render(lv_obj_t *canvas, float k, int nos, int ellos, int mano_yo,
     /* the captions in the strip above the matches, clear of their heads */
     const lv_font_t *cap = font_fit(SK(18));
     int cap_h = lv_font_get_line_height(cap);
-    text(&l, lx0, SK(1), lx1, SK(1) + cap_h, "NOS", cap, 0xE9E4D2, LV_TEXT_ALIGN_CENTER);
-    text(&l, rx0, SK(1), rx1, SK(1) + cap_h, "ELLOS", cap, 0xE9E4D2, LV_TEXT_ALIGN_CENTER);
+    text(&l, lx0, SK(1), lx1, SK(1) + cap_h, _("NOS"), cap, 0xE9E4D2, LV_TEXT_ALIGN_CENTER);
+    text(&l, rx0, SK(1), rx1, SK(1) + cap_h, _("ELLOS"), cap, 0xE9E4D2, LV_TEXT_ALIGN_CENTER);
 
     /* The block of six squares is 2*M_STEP + M_LEN wide; centring it on the
      * card by hand stops the scoreboard drifting when sizes change. */
@@ -720,7 +721,7 @@ void tr_score_render(lv_obj_t *canvas, float k, int nos, int ellos, int mano_yo,
     ring(&l, cx, cy, SK(14), SK(2), 0xC9A227);
     text(&l, cx - SK(16), cy - vh / 2, cx + SK(16), cy + vh / 2, VAL[valor > 4 ? 4 : valor], vf,
          0xF2E7C7, LV_TEXT_ALIGN_CENTER);
-    text(&l, cx - SK(30), SK(42), cx + SK(30), SK(42) + cap_h, mano_yo ? "MANO" : "PIE", cap,
+    text(&l, cx - SK(30), SK(42), cx + SK(30), SK(42) + cap_h, mano_yo ? _("MANO") : _("PIE"), cap,
          0xBFD8C4, LV_TEXT_ALIGN_CENTER);
 
     lv_canvas_finish_layer(canvas, &l);

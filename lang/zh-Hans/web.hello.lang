@@ -1,0 +1,13 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Hola	您好.
+Guardado en %s	保存到 %s
+No se pudo guardar: %s	无法保存: %s
+Esta página la trae la app hello_app en su carpeta web/, y el portal la carga de la tarjeta: se actualiza sin tocar el firmware.	此页面与 hello_ app 应用程序一起在其网页/ 文件夹中出现, 门户网站从存储卡上加载它: 它更新时不会触动固件 。
+Encendida hace	运行时长
+Un archivo de la tarjeta: %s	卡上的文件: %s
+Guardar	保存
+Abierta en la placa	在板上打开
+Abrir la app en la placa	在板上打开应用程序
+¡Hola desde la tarjeta!	卡上的你好!
+%s min	%s 最小值

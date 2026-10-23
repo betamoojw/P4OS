@@ -1,0 +1,18 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Nivel %d	关卡 %d
+%d movimiento	%d 移动
+%d movimientos	%d 动作
+%d de %d completados	%d 的 %d 完成
+Jugar de nuevo	再一次玩.
+Jugar nivel %d	游戏水平 %d
+Estacionamiento despejado	停车场开放
+Auto afuera	车已经走了.
+Nivel %d completado en %d movimiento	关卡 %d 完成 %d 移动
+Nivel %d completado en %d movimientos	关卡 %d 完成 %d 动作
+Atasco	交通堵塞
+Sacá el auto rojo	把红色的车带出去.
+Deslizá los autos para sacar al rojo	滑动汽车,释放红色的
+Deshacer	废除
+Menú	菜单
+Siguiente	下一步

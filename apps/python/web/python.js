@@ -9,7 +9,7 @@
  * app (py.<name>) puts what it printed under its own id, its error between
  * the bytes 0x01 and 0x02. Everything else is files on the card. Texts in
  * Spanish through tr() (web.python.lang); the code samples stay as they are. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('python') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const { main, h, put, api, toast, fmtBytes, fmtDate, fsPut, fsList, fsDelete, fsMkdir, fsUrl, fsText, openApp } = P;

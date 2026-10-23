@@ -1,0 +1,47 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+NIVEL 	级别 
+SUPERADO	清晰
+OTRA VEZ	再一次
+ANCHA	宽度
+LENTA	缓慢
+TRIPLE	三次
+DISPARO	射击
+IMAN	磁铁
+VIDA	生命
+PRIMER MURO	第一个墙
+TORRES	塔楼
+PIRAMIDE	金字塔
+PANAL	蜜蜂
+FORTALEZA	堡垒
+REJA	电网
+CALAVERA	斯库尔
+NAVE	船舶
+ESPIRAL	螺旋
+CORAZON	心脏
+CLAUDITO	克劳迪托
+EL JEFE	总裁
+SONIDO SI	响起了
+SONIDO NO	声音关闭
+FPS SI	电气转换
+FPS NO	关闭FPS
+RECORD  %lu	最好的 %lu
+ARKANOS	阿卡诺斯
+DOCE MUROS Y UNA BOLA	十二个墙和一个球
+JUGAR	玩游戏
+arrastra el dedo	拉你的手指
+EL DEDO SOBRE LA CANCHA MUEVE LA PALETA	林格在法院移动平板
+EL DEDO EN LA FRANJA DE ABAJO MUEVE LA PALETA	瓶子上的芬格 移动平板
+SUELTA EL DEDO PARA SACAR	举起你的手指来服务
+CON DISPARO, EL DEDO APOYADO DISPARA	随着激光,剩下的手指火
+EL BOTON II DE LA DERECHA PAUSA	右脚的第二块
+TOCA EL MARCADOR PARA PAUSAR	打点点子,然后停下来.
+RECORD 0	最好的0
+SALIR	退出
+PAUSA	暂停
+SEGUIR	总结
+FIN DEL JUEGO	游戏结束
+MENU	菜单
+TERMINASTE	你已经结束了
+%lu  (RECORD %lu)	%lu (最好的) %lu)
+OTRA VUELTA	再来一杯

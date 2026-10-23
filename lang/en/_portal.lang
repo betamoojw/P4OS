@@ -2053,3 +2053,10 @@ segundo pin GPIO%d	second pin GPIO%d
 No queda ningún pin libre en el conector.	No free pin is left on the header.
 El segundo pin tiene que ser otro.	The second pin must be a different one.
 Puede ser: %s	It may be: %s
+
+El idioma de la placa cambió. Recargá la página después de guardar los cambios.	The device language changed. Reload the page after saving your changes.
+Shanghái (UTC+8)	Shanghai (UTC+8)
+Taipéi (UTC+8)	Taipei (UTC+8)
+Hong Kong (UTC+8)	Hong Kong (UTC+8)
+Idioma no disponible.	Language unavailable.
+No se pudo cambiar el idioma. Comprobá que el paquete de fuentes esté instalado.	Could not change language. Check that the font resource is installed.

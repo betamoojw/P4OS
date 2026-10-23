@@ -8,7 +8,7 @@
  * pause, active, duty, env, minrssi, csv, mqtt, forget, fav, alias. The CSVs
  * of the sensors are plain card files under /ble. Texts in Spanish, like the
  * rest of the portal, through tr() (web.ble.lang). */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('ble') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const num = P.num || ((v, d) => v == null ? '--' : v.toFixed(d).replace('.', ','));

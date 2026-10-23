@@ -1,0 +1,229 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Cancelar	取消
+GPIO%d · pata %d	GPIO%d · 針 %d
+El receptor y el LED van en pines distintos	接收器和LED在不同的針頭上
+Pin del receptor	接收器針
+Pin del LED	LED 針
+ocupado: %s	採用: %s
+en el puerto %s	在港口 %s
+dominio VO4: medir antes	VO4 領域:第一步採取措施
+USB-Serial-JTAG	USB- 連續日報
+se lee al arrancar	在開啟時閱讀
+Cerrar	關閉
+Mandando un NEC y escuchando…	傳送一個NEC框架和聽...
+GPIO%d (pata %d)	GPIO%d (筆) %d)
+GND (pata 19)	GND (第19條)
+3V3 (pata 18)	3V3 (點 18)
+LED IR (cátodo abajo)	紅光 LED (陰極下)
+5V (pata 1)	5V (點1)
+GND (pata 26)	GND (第26節)
+Cableado	電纜
+Pines	引腳
+Receptor	接收器
+LED	燈光
+Cualquier pin libre del conector de atrás. La app los toma mientras los usa y los suelta al cerrarse.	應用程式在使用時會保留它們,
+Prueba de lazo	迴圈測試
+Con el LED apuntando al receptor: manda un código y mira si vuelve.	透過LED向接收器傳送程式碼並檢查是否回來.
+El receptor	接收器
+Un receptor con demodulador de 38 kHz (TSOP38238, VS1838B y parecidos). Alimentarlo con 3,3 V, nunca con 5 V: su salida iría con 5 V al pin, y el conector no los aguanta.	使用帶 38 kHz 解調器的接收頭，例如 TSOP38238、VS1838B 等。必須使用 3.3 V 供電；若使用 5 V，輸出也會達到 5 V，擴充套件介面無法承受。
+Las patas cambian de orden según el modelo: mirar su hoja de datos. Un capacitor de 100 nF entre VS y GND, cerca del receptor, evita lecturas falsas.	不同型號的引腳順序不同，請查閱資料手冊。在 VS 與 GND 之間接入 100 nF 電容，並靠近接收頭，可減少誤讀。
+El LED	燈光
+Nunca el LED directo al pin: un GPIO da unos 20 mA y un LED IR quiere 50 a 100 mA en pulsos. El pin maneja la base de un transistor con 1 kΩ, y el LED va del colector a 5 V con su resistencia.	Never the LED straight on the pin: a GPIO gives about 20 mA and an IR LED wants 50 to 100 mA in pulses. The pin drives a transistor's base through 1 kΩ, and the LED goes from the collector to 5 V with its resistor.
+Con 5 V y 33 Ω pasan unos 100 mA: alcanza para 5 a 8 m apuntando. Con 3,3 V y 22 Ω, unos 70 mA y algo menos de alcance. Dos LED en serie con 15 Ω cubren más ángulo.	5 V 供電串聯 33 Ω 時電流約為 100 mA，定向距離約 5 至 8 m。3.3 V 串聯 22 Ω 時電流約為 70 mA，距離略短。兩個 LED 串聯並使用 15 Ω 電阻可覆蓋更大角度。
+Las patas de 5 V tienen tensión aun con la placa apagada.	即使開發板已關機，5 V 引腳仍可能帶電。
+La base de códigos	程式碼庫
+Los códigos de televisores, aires, ventiladores y luces son de SmartIR (licencia MIT, © 2019 Vassilis Panos, 2024 Li Tin O've Weedle), empaquetados para la tarjeta en infrarrojo_p4.pak.	電視,空調,風扇和燈的程式碼是SmartIR (MIT許可證, © 2019 Vassilis Panos, 2024 Li Tin O've Weedle), infrarrojo_p4.pak.
+Volvió: el LED y el receptor andan.	它回來了:LED和接收器工作.
+No volvió nada. Revisar el cableado, la alimentación del receptor y que el LED apunte a él.	檢查電纜,接收器的功率和LED指向它.
+Controles	遙控器
+Aprender	學習
+Códigos	程式碼
+Teles y audio	電視和音訊
+Aires	空氣控制
+Ventiladores	粉絲
+Luces	燈光
+Frío	很棒.
+Calor	熱量
+Seco	乾燥
+Ventilación	風扇
+Auto	汽車
+Frío/calor	熱量/cool
+Bajo	低水平
+Mínimo	最低
+Medio	平均值
+Medio bajo	中低
+Medio alto	中高
+Alto	高階
+Máximo	最高的
+Silencioso	沉默
+Turbo	渦輪
+Potente	強大的
+Eco	環境
+Noche	睡眠
+Ninguno	無
+Normal	正常
+Sí	是
+No	否
+Oscila	旋轉
+Fijo	固定
+Quieto	現在還在
+Arriba	升起
+Abajo	下面
+Horizontal	水平
+Vertical	垂直
+Los dos	兩者
+Al revés	逆轉
+Apagar	關機
+Encender	開啟
+Encender/apagar	功率
+Volumen +	大量+
+Volumen −	大量 −
+Silencio	無聲
+Canal +	頻道+
+Canal −	頻道
+Fuente	來源
+Reproducir	開始遊戲
+Pausa	暫停
+Detener	停止
+Izquierda	左邊
+Derecha	沒有.
+OK	確定
+Volver	返回
+Inicio	主頁
+Menú	選單
+Info	資訊
+Más luz	更加亮
+Menos luz	點點
+Más fría	較冷
+Más cálida	溫暖
+Luz de noche	夜間燈
+Oscilar	振盪
+No se pudo mandar	不能傳送
+No se pudo escribir en la tarjeta	沒有能寫到卡
+Agregado a Controles	新增到遠端
+Códigos de SmartIR, licencia MIT: © 2019 Vassilis Panos, 2024 Li Tin O've Weedle.	密碼來自SmartIR,MIT許可證: © 2019 瓦西利斯·帕諾斯,2024 李廷·奧威德爾.
+%d modelo	%d 模型
+%d modelos	%d 模型
+código %d de SmartIR	智慧IR程式碼 %d
+modelo sin nombre	無名型號
+No se pudo leer este modelo de la base.	我無法從圖書館閱讀這個模型.
+%s · %s · código %d de SmartIR · %d códigos	%s · %s ·智慧IR程式碼 %d · %d 程式碼
+Modos: %s · de %d a %d °C	模式: %s · %d 在 %d °C
+Probar: prender	試著:
+Probar: apagar	試著:關掉
+Agregar a Controles	新增到遠端
+Prender manda frío a 24 °C (o el primer modo que tenga). Si el aire contesta, es este modelo.	“開機”會傳送 24 °C 製冷命令，或該型號支援的第一個模式。若空調響應，即可確認型號。
+Tocá un comando para probarlo antes de agregarlo.	在新增之前按一個命令來嘗試.
+Buscando en la base…	在圖書館搜尋...
+Listo.	完成了.
+Ningún control de la base manda algo parecido. Puede ser un modelo que SmartIR no tiene.	圖書館裡沒有遙控器能傳送類似的東西.
+Mandan este mismo código:	它們傳送了這個程式碼:
+Los más parecidos, de más a menos:	最接近的人,最好先:
+Falta la base de códigos	程式碼庫缺失了
+Es infrarrojo_p4.pak, en la carpeta apps de la tarjeta. Se arma con apps/infrarrojo/tools/pack_smartir.py a partir de SmartIR, y tools/install_apps.sh la sube.	這就是 infrarrojo_p4.pak, in the card's apps folder. apps/infrarrojo/tools/pack_smartir.py 透過SmartIR構建了它,/install_apps.sh 接下來,我們就把它上傳了.
+Sin ella se aprenden y se mandan códigos igual.	沒有它,程式碼都會被學習和傳送.
+Marcas	品牌
+Resultados	結果
+¿De qué control es?	這是哪個遙控器?
+Ya hay una búsqueda en curso	現在正在進行搜尋.
+Aprendido: %s	我學會了: %s
+Botón	按鈕
+Aparato nuevo	新裝置
+Guardado: %s	儲存: %s
+Guardar el botón	儲存按鈕
+Nombre	名稱
+Función en el control	遙控器的作用
+Aparato	裝置
+Aparato nuevo…	新的裝置...
+Nombre del aparato nuevo	新裝置名稱
+Guardar	儲存
+Crudo (protocolo desconocido)	原材料 (未知協議)
+En pausa.	停下來.
+Escuchando. Apuntá el control al receptor y apretá un botón.	聽著,把遙控器指向接收器,然後按一鍵.
+Escuchar	聽我說
+Pausar	暫停
+Aprendiendo «%s» de %s: apretalo %d veces.	學習%s中文字不須改動。 %s: 按下 %d 幾次.
+Portadora: %u,%u kHz, la del protocolo (el receptor no la mide).	運輸商: %u.%u 基Hz,協議的 (接收器不測量它).
+Portadora: probablemente 38 kHz (el receptor no la mide).	載波可能為 38 kHz，接收頭無法測量載波頻率。
+Confirmado: %d veces igual.	確認:相同 %d 幾次.
+%d de %d: apretá el mismo botón otra vez para confirmar.	%d 的 %d:再次按同一按鈕確認。
+Usar esta	用這個.
+Guardar en un aparato	儲存在裝置中
+Últimas capturas	最後的捕獲
+%d duraciones	%d 持續時間
+Mandar	傳送
+crudo	原材料
+Escuchando	傾聽
+Listo	完成
+No encuentro ese aparato	沒有找到的裝置
+Mandado	傳送
+Protocolo desconocido	不知名協議
+Sin duraciones	沒有持續時間
+Pedido desconocido	不知名的請求
+Pedido ilegible	無法讀取的請求
+%d duraciones, %s ms	%d 持續時間 %s ms
+cabecera %s + %s ms, 	標題 %s + %s 主持人 
+%s%d bits por distancia de pulsos: %s	%s%d 按脈衝距離的位元: %s
+%s%d duraciones, sin un patrón conocido	%s%d 持續時間,沒有已知模式
+ · %d tramas, %s ms	 · %d 框架, %s ms
+%s, repetición	%s,重複
+%s  fab. 0x%04X  dir 0x%0*X  cmd 0x%0*X	%s 供應商 0x%04X 其他%0*X 立方公尺 0x%0*X
+%s  dir 0x%0*X  cmd 0x%0*X	%s 其他%0*X 立方公尺 0x%0*X
+Todavía no hay aparatos.	沒有裝置.
+Creá uno con + y aprendé los botones de su control, o buscá tu tele o tu aire en Códigos.	使用 + 製成並學習其遠端按鈕, 或者在程式碼中檢視您的電視或空調 。
+Nuevo aparato	新裝置
+Buscar en Códigos	搜尋程式碼
+SmartIR %d (falta la base)	智慧 %d (圖書館缺失)
+1 botón	一鍵
+%s · %d botones	%s · %d 按鈕
+Este botón todavía no tiene código: Editar	這個按鈕還沒有程式碼 : 編輯
+Se borra %s y todos sus botones.	%s 將全部刪除 。
+¿Borrar el aparato?	刪除裝置?
+Borrar	刪除
+Otros	其他
++ Botón	+按鈕
+Falta la base de códigos (infrarrojo_p4.pak) o no trae este aire.	程式碼庫 (infrarrojo_p4.pak) 缺失或沒有該單位.
+Modo	模式
+Ventilador	風扇
+Oscilación	旋轉
+Modo especial	預設
+Opción	選擇
+Cada cambio se manda solo, con el estado entero, como el control del aire. Código %d de SmartIR.	每個變更都被單獨傳送,與整個狀態,像單位的遙控器一樣. %d.
+Mandar otra vez	再傳送
+Ese estado no está en la base de este aire	這個狀態不在這個單位的程式碼中
+Editar	編輯
+Sin botones. Tocá Editar y agregá uno, o aprendelo en Aprender.	沒有按鈕。 磁帶編輯並新增一個, 或者在學習中學習它 。
+Nombre y tipo	姓名和型別
+Borrar aparato	刪除裝置
+Archivo: ir/%s (se edita también desde el portal)	檔案:%s (也可以從入口網站上編輯)
+No hay código para mandar	沒有傳送程式碼
+¿Borrar el botón?	刪除按鈕?
+Se borra con su código.	它符合它的程式碼.
+Botón nuevo	新建按鈕
+crudo · %d duraciones · %u kHz	原材料 · %d 持續時間 %u kHz
+sin código todavía	目前沒有程式碼
+Dirección (hexa)	地址 (六)
+Comando (hexa)	命令 (六)
+Probar	試著
+Código a mano	手動編碼
+Falta el nombre	這個名字不見
+Un aire acondicionado se agrega desde Códigos: manda el estado entero y necesita su modelo.	氣冷器是從Codes中新增的:它傳送了整個狀態,需要其模型.
+Crear	建立
+Tele	電視
+Audio	音訊
+Aire	空氣控制
+Luz	淺色
+Otro	其他
+Otro botón	其他按鈕
+Guía	指南
+Reproducir/pausa	開始遊戲/pause
+Retroceder	倒帶
+Adelantar	快速前進
+Anterior	上一步
+Siguiente	下一步
+Grabar	錄製
+Rojo	紅色
+Verde	綠色
+Amarillo	黃色
+Azul	藍色

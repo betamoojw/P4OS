@@ -460,9 +460,13 @@ static void clock_refresh(void)
                                          N_("julio"), N_("agosto"), N_("septiembre"), N_("octubre"), N_("noviembre"),
                                          N_("diciembre") };
     char d[64];
-    if (aos_hal_time_is_valid())
-        snprintf(d, sizeof d, _("%s %d de %s"), aos_tr(DAY[t.tm_wday % 7]), t.tm_mday, aos_tr(MON[t.tm_mon % 12]));
-    else
+    if (aos_hal_time_is_valid()) {
+        if (!strncmp(aos_i18n_current(), "zh-", 3)) {
+            snprintf(d, sizeof d, "%d月%d日 %s", t.tm_mon + 1, t.tm_mday, aos_tr(DAY[t.tm_wday % 7]));
+        } else {
+            snprintf(d, sizeof d, _("%s %d de %s"), aos_tr(DAY[t.tm_wday % 7]), t.tm_mday, aos_tr(MON[t.tm_mon % 12]));
+        }
+    } else
         snprintf(d, sizeof d, "%s", _("sin hora todavía"));
     if (strcmp(lv_label_get_text(L.date), d)) lv_label_set_text(L.date, d);
 }

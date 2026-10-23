@@ -1,0 +1,45 @@
+# Localized interface; canonical rules and protocol names are retained.
+NOS	US
+ELLOS	THEM
+MANO	FIRST
+PIE	LAST
+REAL ENVIDO	REAL ENVIDO
+FALTA ENVIDO	FALTA ENVIDO
+VALE CUATRO	VALE CUATRO
+ME VOY AL MAZO	I FOLD
+ENVIDO	ENVIDO
+REAL	REAL
+FALTA	FALTA
+TRUCO	TRUCO
+RE TRUCO	RE TRUCO
+VALE 4	VALE 4
+QUIERO	ACCEPT
+NO QUIERO	DECLINE
+AL MAZO	FOLD
+VOS	YOU
+ESPERANDO A %s	WAITING FOR %s
+tengo %d	I have %d
+ENVIDO NO QUERIDO: %d PARA %s	ENVIDO DECLINED: %d FOR %s
+%d A %d: %d PARA %s	%d TO %d: %d FOR %s
+LA MANO ES DE %s  (+%d)	%s WINS THE HAND  (+%d)
+%s LA PARTIDA  %d-%d	%s THE GAME  %d-%d
+GANASTE	YOU WON
+PERDISTE	YOU LOST
+SE DESINCRONIZO	OUT OF SYNC
+SE PERDIO EL ENLACE	CONNECTION LOST
+SE FUE %s	%s LEFT
+NOS %d  -  ELLOS %d\nGANADAS %ld  -  PERDIDAS %ld	US %d  -  THEM %d\nWON %ld  -  LOST %ld
+CONTRA LA MAQUINA	AGAINST THE COMPUTER
+A DOS: CONTRA %s	TWO PLAYERS: AGAINST %s
+A DOS JUGADORES	TWO PLAYERS
+Para jugar de a dos, emparejá los dos equipos en Enlace.	To play together, pair both devices in Link.
+Este equipo todavía no tiene el enlace por radio: por ahora se juega contra la máquina.	This device has no radio link yet; play against the computer for now.
+SEGUIR	CONTINUE
+PARTIDA NUEVA	NEW GAME
+SALIR	EXIT
+LA MAQUINA	THE COMPUTER
+Sin memoria	Out of memory
+CONTRA QUIEN?	CHOOSE AN OPPONENT
+Sin enlace: jugás contra la máquina	No connection: playing against the computer
+BUSCANDO A %s	LOOKING FOR %s
+LA PAREJA	PARTNER

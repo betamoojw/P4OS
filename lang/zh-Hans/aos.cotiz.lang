@@ -1,0 +1,29 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+dólar	美元
+moneda	货币
+compra %s	购买 %s
+actualizando…	更新...
+dolarapi.com  ·  al día	$ dolarapi.com · 更新
+la más vieja, %s	最长的, %s
+sin conexión	没有连接
+esperando la hora de la red…	等待网络时间...
+no pude verificar el servidor	无法验证服务器
+no se pudo consultar (%d)	无法查询 (%d)
+tocá para actualizar  ·  elegí cuáles en el portal	在门户中选择哪个
+Cotizaciones	货币
+Oficial	官方
+Blue	蓝色
+Bolsa (MEP)	股票 (MEP)
+Contado c/liqui	卡塔尔/liqui
+Mayorista	市长
+Cripto	密码
+Tarjeta	塔吉塔
+Euro	欧元
+Real	巴西真实
+Peso chileno	智利比索
+Peso uruguayo	乌拉圭比索
+recien	现在
+hace %d min	%d 几分钟前
+hace %d h	%d 在此之前
+hace %d días	%d 几天前

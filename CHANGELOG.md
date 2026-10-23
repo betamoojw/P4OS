@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.21.6 — 2026-10-23
 
 - **Accent colour of one's own** (Settings, Wallpaper): nine of iOS's
   system colours. `AOS_C_ACCENT` is a call now (`aos_theme_accent()`), so

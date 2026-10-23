@@ -13,6 +13,7 @@ Archivos	檔案
 Ajustes	設定
 Firmware	韌體
 Registro	日誌
+El idioma de la placa cambió. Recargá la página después de guardar los cambios.	裝置語言已更改。請儲存當前更改後重新整理網頁。
 sin red	沒有網路
 sin conexión	沒有連線
 pantalla	螢幕
@@ -151,6 +152,7 @@ archivo %s de %s: %s	第 %s 個檔案，共 %s 個：%s
 faltan %s	剩餘 %s
 en %s	用時 %s
 MD5 verificado	MD5 校驗透過
+Grabar firmware	閃電韌體
 La placa a programar	待燒錄開發板
 Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).	連線到標題:TX,RX和 GND 到港口, EN 和 BOOT to the pins modules.txt 名稱 (模組目標... en= boot=).
 Firmware en la tarjeta	儲存卡中的韌體
@@ -158,9 +160,14 @@ Subir carpeta de build…	上傳構建目錄…
 Subir .bin…	上傳 .bin…
 Grabación	燒錄
 Registro del programador	燒錄日誌
+Shanghái (UTC+8)	上海（UTC+8）
+Taipéi (UTC+8)	臺北（UTC+8）
+Hong Kong (UTC+8)	香港（UTC+8）
 Ciudad de México (UTC−6)	墨西哥城 (UTC−6)
 Nueva York (UTC−5/−4)	紐約 (UTC−5/−4)
 Londres (UTC+0/+1)	倫敦 (UTC+0/+1)
+Idioma no disponible.	此語言不可用。
+No se pudo cambiar el idioma. Comprobá que el paquete de fuentes esté instalado.	無法切換語言，請檢查是否已安裝字型檔資源。
 Zona horaria cambiada	時區已更改
 Nombre en la red	網路名稱
 Ahora responde como %s.local	現在可透過 %s.local 訪問
@@ -329,6 +336,7 @@ Uso extra	額外使用
 Pegá acá el código (código#estado)	在此貼上程式碼 (程式碼#狀態)
 2. En la página de Claude iniciá sesión y autorizá. Te va a mostrar un código: copialo y pegalo acá.	2. 在 Claude 頁面登入並授權，複製顯示的程式碼，再貼上到此處。
 Verificando…	檢查了...
+Confirmar	確認
 Iniciar sesión	登入
 La placa tiene su propio inicio de sesión con tu cuenta de Claude: no usa ni toca el de Claude Code en ninguna computadora, y los números son los de la cuenta. Los toma del mismo lugar que el /usage de Claude Code, que no es una API pública de Anthropic: puede cambiar sin aviso.	開發板有自己的登入與您的克勞德賬戶:它不使用或觸控克勞德程式碼在任何計算機上, /usage,這不是公開的人類API:它可以在沒有通知的情況下改變.
 1. Abrí la página de inicio de sesión de Claude.	1.開啟克勞德的登入頁面.
@@ -410,8 +418,14 @@ Se puede guardar, pero:	它可以儲存,但:
 Bien: %s puertos y %s módulos	很好. %s 港口和 %s 模組
 No se guardó	沒有儲存
 Guardado: %s puertos, %s módulos	儲存: %s 港口, %s 模組
+GPIO%d (puerto nuevo)	GPIO%d (新港口)
+segundo pin GPIO%d	second pin GPIO%d
+CS del puerto	港口的 CS
 No hay puertos UART.	否 UART 港口.
+No hay puertos SPI.	沒有. SPI 港口.
+No queda ningún pin libre en el conector.	在頭上沒有任何免費針.
 No hay puertos I2C.	否 I2C 港口.
+El segundo pin tiene que ser otro.	第二個針必須是不同的.
 no es un GPIO	沒有一個 GPIO
 Qué es	這是什麼?
 Lo tiene	用於
@@ -437,6 +451,7 @@ Esperando la primera lectura	等待第一次閱讀
 No hay sensores. Conectá uno a i2c.ext: SDA al GPIO21 (pin 15), SCL al GPIO22 (pin 17), 3V3 (pin 18) y GND (pin 19). Los BME280, SHT3x/4x, AHT20, INA219/226 y ADS1115 se reconocen solos.	沒有感測器,連線一個到i2c.ext: SDA 在 GPIO21 (第15節), SCL 在 GPIO22 (點17),3V3 (點18),以及 GND (第19條) BME280美國/4x, AHT20, INA219/226 和 ADS1115 它們是自行識別的.
 Parece que hay	似乎有.
 ¿Es un %s?	是不是一個 %s?
+Puede ser: %s	可能是: %s
 no dice qué es	沒有說它是什麼
 Agregar	新增
 Estos chips no tienen cómo decir qué son sin que alguien les escriba: agregalos a modules.txt si son lo que parecen.	這些晶片沒有辦法說它們是什麼,除非有東西寫給它們: modules.txt 如果它們是他們看起來像.
@@ -643,18 +658,3 @@ Entrar	登入
 Se pone, se cambia o se quita en la placa: Ajustes, Portal web.	在板上設定,更改或刪除:設定,網頁門戶.
 La autoridad HTTPS de la placa	開發板的 HTTPS 權威
 , para que el navegador confíe en ella.	所以瀏覽器信任它.
-Grabar firmware	閃電韌體
-Confirmar	確認
-CS del puerto	港口的 CS
-No hay puertos SPI.	沒有. SPI 港口.
-GPIO%d (puerto nuevo)	GPIO%d (新港口)
-segundo pin GPIO%d	second pin GPIO%d
-No queda ningún pin libre en el conector.	在頭上沒有任何免費針.
-El segundo pin tiene que ser otro.	第二個針必須是不同的.
-Puede ser: %s	可能是: %s
-El idioma de la placa cambió. Recargá la página después de guardar los cambios.	裝置語言已更改。請儲存當前更改後重新整理網頁。
-Shanghái (UTC+8)	上海（UTC+8）
-Taipéi (UTC+8)	臺北（UTC+8）
-Hong Kong (UTC+8)	香港（UTC+8）
-Idioma no disponible.	此語言不可用。
-No se pudo cambiar el idioma. Comprobá que el paquete de fuentes esté instalado.	無法切換語言，請檢查是否已安裝字型檔資源。

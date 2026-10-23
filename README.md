@@ -14,12 +14,13 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and forty-four more on
+portrait or landscape. There are twenty-three built-in apps and forty-five more on
 the microSD, loaded as shared objects:
 
-- **Games:** twenty-three, among them Mila (a Sokoban with a black cat in
+- **Games:** twenty-four, among them Mila (a Sokoban with a black cat in
   Blender 3D), Monster Hop, a racing game, golf, a robot RPG, a 3D pinball
-  with six tables, Doom at 35 fps and Duke Nukem 3D; and an emulator of
+  with six tables, a pipes game with six liquids, Doom at 35 fps and Duke
+  Nukem 3D; and an emulator of
   fourteen consoles, the Game Boy Advance and the Neo Geo at full speed.
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
@@ -36,10 +37,13 @@ the microSD, loaded as shared objects:
   two ports at once: pendrives, keyboards, mice, gamepads, webcams, sound
   cards, MIDI and serial devices.
 - **A Wi-Fi network of its own,** joined with a QR code.
-- **The workshop:** I2C, SPI, 1-Wire and GPIO on the 40-pin header,
-  addressable LED strips on any free pin (WLED's way), a serial terminal, an
-  ESP32 programmer, Modbus, a bench supply and scope, an EEPROM reader and
-  writer, a PWM and servo generator with an analog level, a learning
+- **The workshop:** I2C, SPI, 1-Wire and GPIO on the 40-pin header, with
+  112 kinds of sensor read by themselves (temperature, pressure, air
+  quality, light, motion, current, distance...), addressable LED strips on
+  any free pin (WLED's way), a serial terminal, an ESP32 programmer,
+  Modbus, a bench supply and scope, an EEPROM reader and writer, a PWM and
+  servo generator with an analog level (and sixteen more servos on a
+  PCA9685), a learning
   infrared remote with SmartIR's codes, and a CAN bus analyser. Each one
   was tried on the bench with real parts, wiring diagrams and photos
   included.
@@ -86,6 +90,22 @@ itself in Modules and by the scan in Bus, and the SPI loopback at 40 MHz
 Bus's example reads it, and Modules logs it every second; the curve is the
 tip heated with a lighter.</em></p>
 
+<p align="center">
+  <img src="docs/img/photo-bus-bme688.jpg" width="300" alt="Bus scanning i2c.ext: one address, 0x76, and the chips that may sit there">
+  <img src="docs/img/photo-modules-bme688.jpg" width="300" alt="Modules reading a Pimoroni BME688: temperature, humidity, pressure and gas resistance, next to the MAX6675 and the DS18B20">
+</p>
+
+<p align="center"><em>A Pimoroni BME688 on i2c.ext: Bus lists what may live at
+0x76, and Modules recognises it by itself as a BME688 (not a BME680), with
+its gas resistance, which fell to half with alcohol near it and came back.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-modules-scd41.jpg" width="300" alt="Modules reading an SCD41 on i2c.ext: 635 ppm of CO2, 21.4 °C and 63 %, with the CO2 chart falling from 1413 ppm">
+</p>
+
+<p align="center"><em>An SCD41 found by itself at 0x62: the chart is the CO2
+of a breath on it, from 3000 ppm back to the room's 600.</em></p>
+
 ---
 
 ## What it does
@@ -101,13 +121,23 @@ The home screen has icon pages, folders, a dock and widgets.
   - into a folder;
   - in or out of the dock, where the icons drag the same way.
 
-  Folders show twelve apps a page. The portal's `#inicio` page does the
-  same from a computer.
+  Folders show twelve apps a page, and a swipe turns one whole page. The
+  portal's `#inicio` page does the same from a computer.
 
 - **Swiping down** from the top opens the control centre (Wi-Fi, Bluetooth,
-  do not disturb, orientation, brightness, volume, the music playing on the
-  board or on the iPhone) and the notifications, with the phone's own
-  actions.
+  do not disturb, the system sounds, orientation, brightness, volume, the
+  music playing on the board or on the iPhone, the screen recording) and the
+  notifications, with the phone's own actions.
+- **System sounds:** a few notes of the speaker's bell when locking and
+  unlocking, for notifications and calls, screenshots and recordings, and an
+  optional keyboard click. The control centre's bell turns them all off.
+- **Recording the screen** (since 0.21.5): the control centre's Grabar
+  button records what the panel shows to an MP4 on the card (`/videos`),
+  games and cameras included, with a red dot in the status bar while it
+  runs. The P4's own engines do the work: the PPA turns each frame into
+  the encoder's YUV, the hardware H.264 encoder compresses it (70 ms a
+  frame between them, 15 fps on a quiet screen and 7-9 while apps move),
+  and the CPU mostly waits. It plays on a Mac or a phone as it is.
 - **The status bar** shows the Wi-Fi or the board's own network, the card
   and the USB.
 - **The orientation** is chosen in Settings or the control centre, because
@@ -120,6 +150,13 @@ The home screen has icon pages, folders, a dock and widgets.
 | Settings in landscape | Macro pad | Photos |
 |---|---|---|
 | <img src="docs/img/sim-settings-landscape.png" width="300"> | <img src="docs/img/land-macropad.png" width="300"> | <img src="docs/img/land-photos.png" width="300"> |
+
+<p align="center">
+  <a href="docs/media/screenrec.mp4"><img src="docs/img/screenrec.gif" width="270" alt="A screen recording made on the board: the home screen over a photo of Mila, the Media folder, and Photos"></a>
+</p>
+
+<p align="center"><em>Recorded by the board itself with its control
+centre's button: the home screen, a folder, Photos.</em></p>
 
 ### The lock screen
 
@@ -143,6 +180,28 @@ anywhere: the screen follows the finger.
 | Locked | The code | Settings, Wi-Fi: its own network |
 |---|---|---|
 | <img src="docs/img/app-lock.png" width="230"> | <img src="docs/img/app-pad.png" width="230"> | <img src="docs/img/app-wifi-ap.png" width="230"> |
+
+### Wallpapers
+
+Eight gradients and a ninth that follows the time of day (night, dawn, day,
+dusk, a little different every minute), and over them a photo from the card for the home screen
+and another for the lock screen, chosen from Photos (the palette at the top
+right of a photo). Each is cropped to the screen, kept in PSRAM (1.8 MB a
+screen, nothing in internal RAM) and darkened as much as its own
+brightness asks, once, while it is decoded, so the white names read on it
+with no translucent layer to blend each frame. Turning the screen crops it
+again; Settings, Wallpaper shows which photo each has and removes it.
+
+| Home, over a photo | Locked, over another |
+|---|---|
+| <img src="docs/img/board-wallpaper-home.jpg" width="300"> | <img src="docs/img/board-wallpaper-lock.jpg" width="300"> |
+
+<p align="center"><em>Both on the board, both of Mila.</em></p>
+
+The same page picks the **accent colour** (switches, selections, the active
+buttons), one of iOS's nine system colours. The lock screen's clock is
+large or medium, at the top or in the middle, and white, the accent, or the
+lock photo's own colour lightened (Settings, Lock screen).
 
 The gesture is a free swipe up, as phones do it today, and not a control
 dragged along a track: Apple's 2005 patent on the latter
@@ -544,6 +603,40 @@ ball waits.
   toys' frames), so the ball goes behind ramps and toys; a new table is a
   module and a pack, no new code. 60-70 fps on the board.
 
+### Caños
+
+Join the plant's tank to its drain before the liquid runs
+([apps/canos/README.md](apps/canos/README.md)). **Turn** fills the board
+with pipes turned any way, and a tap turns one; **Complete** leaves gaps,
+and a tray offers the missing pieces as they come, with a few decoys. In
+Easy you open the valve yourself; in Normal and Hard it opens when the
+countdown ends, and you go on fixing ahead of the liquid. Six plants, ten
+generated levels each: water, fuel, acid, crude oil, lava and liquid
+nitrogen.
+
+| The menu | Water | Acid, in glass | Lava leaking | A leak of water |
+|---|---|---|---|---|
+| <img src="docs/img/app-canos-menu.jpg" width="125"> | <img src="docs/img/app-canos-water.jpg" width="125"> | <img src="docs/img/app-canos-acid.jpg" width="125"> | <img src="docs/img/app-canos-lava.jpg" width="125"> | <img src="docs/img/app-canos-leak.jpg" width="125"> |
+
+<p align="center"><img src="docs/img/land-canos.jpg" width="600" alt="Caños in landscape: fuel running through a refinery, the tray on the right"></p>
+
+- **Each liquid its own:** how fast it runs and how round its front is
+  (crude and lava slow and round, nitrogen quick and flat), and how it
+  looks: water's caustics and foam, fuel's rainbow film, acid glowing and
+  fizzing in glass tubes, lava's drifting crust, nitrogen boiling. Each
+  plant has its own pipes (painted steel, hazard bands, glass, old iron,
+  refractory, frosted chrome) and floor.
+- **Drawn per pixel:** every pipe shape keeps a list of its channel's
+  pixels, so the liquid is a few table reads and adds a pixel; the front is
+  measured along the whole run and leads in the middle of a pipe, streaks
+  of noise ride the flow, bubbles ride in slots along it. A leak throws
+  drops into a height field that spreads as a puddle lit by its own slope,
+  with fumes, sparks or mist.
+- **On the board** 23-30 fps while the liquid runs. A full cell costs 4-8 ms
+  to draw, so the full ones take turns (down to one frame in six) and the
+  front, the turning pipes and the leak are drawn every frame. A gamepad
+  plays it, and the liquid has its own sound.
+
 | Maps | Radio | Video | 3D Viewer | Pixel Art | Tuner |
 |---|---|---|---|---|---|
 | <img src="docs/img/app-mapas.jpg" width="125"> | <img src="docs/img/app-radio.png" width="125"> | <img src="docs/img/app-video.png" width="125"> | <img src="docs/img/app-visor3d.png" width="125"> | <img src="docs/img/app-pixel.png" width="125"> | <img src="docs/img/app-tuner.png" width="125"> |
@@ -561,9 +654,15 @@ ball waits.
   the VNC password, or any VNC server), driven by touch, as a trackpad, or
   with a USB mouse and keyboard; a keyboard bubble that floats over the
   remote screen, and one monitor of several marked with a finger.
-- **Also from the card:** Cameras (RTSP H.264 and MJPEG), Recorder, Weather,
-  Quotes, Lua, where a script on the card is an app, and Python, where a
-  `.py` is.
+- **Cameras:** RTSP H.264 and MJPEG, a mosaic and a full-screen viewer.
+  The viewer opens a camera's second stream (SD) and a button switches to
+  its main one (HD); another turns the picture a quarter, not the screen.
+  H.264 is decoded in software (the P4 has a hardware encoder, not a
+  decoder), and the viewer converts each picture straight into the panel's
+  framebuffer, with no copy through LVGL: a 704x576 doorbell at 7-9 fps,
+  its 1920x1080 stream at about one.
+- **Also from the card:** Recorder, Weather, Quotes, Lua, where a script on
+  the card is an app, and Python, where a `.py` is.
 
 | Drawing | VNC, in landscape |
 |---|---|
@@ -606,7 +705,10 @@ explained), Web portal (trusted networks, the password), Display, Lock screen, S
 Language, Date and time, Update, Diagnostics, About and Developer.
 
 - **Lock screen:** when it locks, the code (none, 4 or 6 digits, changed or
-  removed with the current one), and what it shows.
+  removed with the current one), what it shows, and the clock's size, place
+  and colour.
+- **Sound:** the volume, the system sounds and the keyboard click.
+- **Wallpaper:** the gradients, the photos and the accent colour.
 - **Storage:** what fills the card by kind of file, and eject.
 - **Update:** both slots, and going back.
 - **Diagnostics:** chip temperature, CPU, memory, the reset reason, safe mode,
@@ -631,14 +733,14 @@ Language, Date and time, Update, Diagnostics, About and Developer.
 Google's Noto set, 4012 of them with skin tones, flags and ZWJ sequences,
 from a pack on the card ([docs/EMOJI.md](docs/EMOJI.md)).
 
-**Languages.** The interface is written in Spanish. English and German are
-complete, and travel twice: inside the firmware, so they work with no card,
-and as packs on the card. The two are joined string by string with the
-card's first, so a fix copied to the card wins, and a card older than the
-firmware still gets the new screens translated. A pseudo-locale is used to
-test layouts. The web portal and the apps' pages follow the same language
-(since 0.15.1): their catalogs live only on the card and only the browser
-reads them.
+**Languages.** The interface is written in Spanish and includes English,
+German, Simplified Chinese and Traditional Chinese. System and native-app
+catalogues are compressed in the firmware; SD packs override individual
+strings. The portal and app pages use embedded browser catalogues with the
+same per-key SD overrides and follow the device language. Regional Chinese
+fonts are stored in onboard Flash, without requiring an SD card. See
+[offline Chinese support](docs/I18N.md) for installation and coverage.
+A pseudo-locale is available for testing layouts.
 
 ## What was tested, and what not yet
 
@@ -665,11 +767,22 @@ reads them.
 - The microSD, music and the speaker.
 - The games and most of the tools, in both orientations.
 - The BOOT button and safe mode.
+- Two IP cameras on the network: a doorbell's H.264 (its 704x576 stream
+  straight to the panel at 7-9 fps, its 1920x1080 one at about a frame a
+  second) and an MJPEG one.
+- The screen recording, played back on a Mac.
 - I2C with a real BME280 on the header: found by itself, read once a second
   without errors. SPI with MOSI looped to MISO at 1, 10 and 40 MHz, the port's top speed.
-- A MAX6675 thermocouple on SPI and a DS18B20 on 1-Wire, read every second
-  in Modules, and logged by Datalog in the background through a restart
-  and an update, with five more apps opened over it.
+- Sensors (0.20), each found by itself or declared from the form and read
+  every second in Modules: an AHT10, SGP30, INA219, TSL2561, TCS34725,
+  ADS1115, BME688, MPU-9250 (with its compass) and SCD41 on I2C, a
+  PCF8574A and a PCF8591 declared, a MAX6675
+  thermocouple on SPI and a DS18B20 on 1-Wire. The last two logged by
+  Datalog in the background through restarts, updates and a change of
+  language, with five more apps opened over it.
+- A PCA9685 with five servos on its own 5 V, driven from the PWM app: one
+  by one, then all five in a wave, while the sensor service went on reading
+  the same I2C port.
 - Settings' Storage page and the QR codes.
 - The lock screen with its code, and the languages with no card.
 - The C6 updated from the P4 to esp_hosted 3.0.9, and back to its factory
@@ -714,14 +827,18 @@ reads them.
 
 **Waiting for hardware on the bench:**
 
-- More I2C and SPI chips: the RC522 RFID reader is next (its example is in
-  Bus).
-- A real DS18B20: it runs in the simulator, and the board comes next.
+- More I2C and SPI chips: the RC522 RFID reader (its example is in Bus).
+  The TCS34725's fix for a change of range, again on a tidy bench. The
+  MPU-9250's heading through a whole turn (the bench's wires did not let it
+  turn flat).
+- Sensors on plain pins (DHT22, HC-SR04, HX711) and on a serial port
+  (MH-Z19, PMS5003, PZEM-004T, LD2410): they run against their emulated
+  twins in the simulator.
+- A PCA9685's real oscillator against a scope, for `osc=`.
 - CAN on a real bus, with two SN65HVD230 transceivers and an ESP32-C3 as
   the other node.
 - A 25xx SPI EEPROM in the EEPROM app.
 - The Riden over TTL, the Rigol over the LAN, and the terminal at 460800.
-- The IP cameras.
 - The microphone's gain, and the speaker's latency and heating.
 - The real-time clock with a cell.
 - RF with a 433 MHz weather sensor (its decoders are tested with synthetic
@@ -846,6 +963,7 @@ Where something is a guess, it says so.
 | [MODULES.md](docs/MODULES.md) | the 40-pin header, `modules.txt`, I2C, SPI and GPIO from apps |
 | [apps/emulador/README.md](apps/emulador/README.md) | the emulator: the consoles, the card's folders, the modules, what was measured |
 | [apps/pinball/README.md](apps/pinball/README.md) | the pinball: the tables, the rules, adding a table, rendering and packing, what was measured |
+| [apps/canos/README.md](apps/canos/README.md) | Caños: the modes, the generator, the six liquids and how they are drawn, what was measured |
 | [apps/datalog/README.md](apps/datalog/README.md) | the data logger: a line's choices, the CSV, the alarms, logging in the background |
 | [apps/rf/README.md](apps/rf/README.md) | the software radio: receivers, the signal chain, what was measured, the decoders and their tests |
 | [PORTAL-PAGES.md](docs/PORTAL-PAGES.md) | an app's own page in the web portal, from the card, with no firmware |
@@ -898,9 +1016,9 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 45 de la tarjeta (juegos, un pinball 3D de seis mesas, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
-| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
-| Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, fotos de fondo para el inicio y el bloqueo, grabación de pantalla en MP4, 23 apps propias y 46 de la tarjeta (juegos, un pinball 3D de seis mesas, un juego de caños con seis líquidos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave, dos cámaras IP (un timbre H.264 directo a la pantalla y una MJPEG) y la grabación de pantalla en MP4 por el codificador H.264 del P4 |
+| Qué falta | probar en la placa el RC522, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |
 | Cómo se instala | la primera vez por el CH340; después `tools/ota.sh p4os.local` o el portal |
 

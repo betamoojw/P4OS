@@ -1,0 +1,189 @@
+# amoledos-lang 1   es -> en
+# demo.canos.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/canos/main/canos.c:315
+Girar	Turn
+
+#: apps/canos/main/canos.c:315
+Completar	Complete
+
+#: apps/canos/main/canos.c:320
+Fácil	Easy
+
+#: apps/canos/main/canos.c:320
+Normal	Normal
+
+#: apps/canos/main/canos.c:320
+Difícil	Hard
+
+#: apps/canos/main/canos.c:340
+Sin reloj: abrís la llave cuando el recorrido esté listo.	No clock: you open the valve when the run is ready.
+
+#: apps/canos/main/canos.c:341
+Cuando se acaba el tiempo, la llave se abre sola.	When time runs out, the valve opens by itself.
+
+#: apps/canos/main/canos.c:342
+Menos tiempo, y el líquido corre más rápido.	Less time, and the liquid runs faster.
+
+#: apps/canos/main/canos.c:366
+5 niveles del anterior	5 levels of the previous one
+
+#: apps/canos/main/canos.c:402
+Completá 5 niveles del mundo anterior	Complete 5 levels of the previous world
+
+#: apps/canos/main/canos.c:465
+Caños	Pipes
+
+#: apps/canos/main/canos.c:467
+Armá el recorrido antes de que corra el líquido	Build the run before the liquid flows
+
+#: apps/canos/main/canos.c:475
+Modo	Mode
+
+#: apps/canos/main/canos.c:479
+Tocá los caños para girarlos hasta unir el tanque con el desagüe.	Tap the pipes to turn them until the tank meets the drain.
+
+#: apps/canos/main/canos.c:480
+Faltan caños: poné los que ofrece la bandeja, tal como vienen.	Pipes are missing: lay the ones the tray offers, as they come.
+
+#: apps/canos/main/canos.c:497
+Dificultad	Difficulty
+
+#: apps/canos/main/canos.c:510
+Mundos	Worlds
+
+#: apps/canos/main/canos.c:583
+Primero pasá el nivel anterior	Beat the previous level first
+
+#: apps/canos/main/canos.c:942
+Elegí un caño de la bandeja	Pick a pipe from the tray
+
+#: apps/canos/main/canos.c:1014
+Girá los caños y abrí la llave	Turn the pipes and open the valve
+
+#: apps/canos/main/canos.c:1014
+Poné los caños y abrí la llave	Lay the pipes and open the valve
+
+#: apps/canos/main/canos.c:1016
+Abrir llave	Open valve
+
+#: apps/canos/main/canos.c:1023
+Abriendo la llave...	Opening the valve...
+
+#: apps/canos/main/canos.c:1025
+Corre el líquido: %d caños	The liquid runs: %d pipes
+
+#: apps/canos/main/canos.c:1027
+#: apps/canos/main/canos.c:1300
+¡Llegó al desagüe!	It reached the drain!
+
+#: apps/canos/main/canos.c:1029
+#: apps/canos/main/canos.c:1321
+¡Fuga!	Leak!
+
+#: apps/canos/main/canos.c:1033
+Más despacio	Slower
+
+#: apps/canos/main/canos.c:1033
+Acelerar	Speed up
+
+#: apps/canos/main/canos.c:1292
+Pausa	Paused
+
+#: apps/canos/main/canos.c:1293
+nivel	level
+
+#: apps/canos/main/canos.c:1295
+Seguir	Resume
+
+#: apps/canos/main/canos.c:1296
+#: apps/canos/main/canos.c:1316
+#: apps/canos/main/canos.c:1323
+Otra vez	Again
+
+#: apps/canos/main/canos.c:1297
+#: apps/canos/main/canos.c:1315
+#: apps/canos/main/canos.c:1317
+#: apps/canos/main/canos.c:1324
+Niveles	Levels
+
+#: apps/canos/main/canos.c:1306
+#: apps/canos/main/canos.c:1309
+Puntos	Points
+
+#: apps/canos/main/canos.c:1306
+#: apps/canos/main/canos.c:1309
+Caños llenos	Pipes filled
+
+#: apps/canos/main/canos.c:1307
+Giros	Turns
+
+#: apps/canos/main/canos.c:1310
+Piezas	Pieces
+
+#: apps/canos/main/canos.c:1315
+Siguiente	Next
+
+#: apps/canos/main/canos.c:1411
+No hay memoria para el tablero	Not enough memory for the board
+
+#: apps/canos/main/canos.c:1557
+¡Se abrió la llave!	The valve opened!
+
+#: apps/canos/main/cn_world.c:10
+Agua	Water
+
+#: apps/canos/main/cn_world.c:10
+Planta de agua	Waterworks
+
+#: apps/canos/main/cn_world.c:10
+¡Se inundó la planta!	The plant is flooded!
+
+#: apps/canos/main/cn_world.c:23
+Combustible	Fuel
+
+#: apps/canos/main/cn_world.c:23
+Refinería	Refinery
+
+#: apps/canos/main/cn_world.c:23
+¡Combustible por todos lados!	Fuel everywhere!
+
+#: apps/canos/main/cn_world.c:36
+Ácido	Acid
+
+#: apps/canos/main/cn_world.c:36
+Laboratorio	Laboratory
+
+#: apps/canos/main/cn_world.c:36
+¡El ácido se está comiendo el piso!	The acid is eating the floor!
+
+#: apps/canos/main/cn_world.c:49
+Petróleo	Crude oil
+
+#: apps/canos/main/cn_world.c:49
+Yacimiento	Oil field
+
+#: apps/canos/main/cn_world.c:49
+¡Derrame de petróleo!	Oil spill!
+
+#: apps/canos/main/cn_world.c:62
+Lava	Lava
+
+#: apps/canos/main/cn_world.c:62
+Fundición	Foundry
+
+#: apps/canos/main/cn_world.c:62
+¡La lava se escapó del canal!	The lava got out of the channel!
+
+#: apps/canos/main/cn_world.c:75
+Nitrógeno	Nitrogen
+
+#: apps/canos/main/cn_world.c:75
+Criogenia	Cryogenics
+
+#: apps/canos/main/cn_world.c:75
+¡Una nube de nitrógeno helado!	A cloud of frozen nitrogen!

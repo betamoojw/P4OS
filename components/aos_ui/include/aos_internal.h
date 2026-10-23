@@ -27,6 +27,17 @@ lv_obj_t *aos_ui_app_layer(void);   /* the apps' roots                      */
  * in and out. Set by the home screen before aos_ui_open(). */
 void aos_ui_set_launch_rect(const lv_area_t *icon);
 
+/* ---- the screen recording's controls (aos_screenrec_ui.c) ---- */
+void aos_screenrec_toggle(void);
+bool aos_screenrec_on(void);
+
+/* ---- the wallpaper's photos (aos_wallpaper.c) ---- */
+void aos_wall_photo_init(void);
+void aos_wall_photo_relayout(void);
+const lv_image_dsc_t *aos_wall_photo_dsc(int which);     /* NULL: the gradient */
+void aos_wall_photo_want(int which, bool want);           /* let it go / decode it again */
+uint32_t aos_wall_photo_tint(int which);                  /* 0xRRGGBB, 0 before the first decode */
+
 /* ---- home screen (aos_home.c) ---- */
 void aos_home_create(lv_obj_t *parent);
 void aos_home_rebuild(void);             /* the model or the orientation changed */

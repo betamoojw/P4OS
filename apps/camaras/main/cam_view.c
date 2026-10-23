@@ -101,11 +101,14 @@ void cam_view_codec(cam_view_t *v, cam_codec_t codec)
     v->codec = codec;
 }
 
+static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geom_t *g, bool rot);
+
 /* ---- the three frames ------------------------------------------------------- */
 
 static bool same_target(const cam_target_t *a, const cam_target_t *b)
 {
-    return a->out_w == b->out_w && a->out_h == b->out_h && a->mode == b->mode && a->thumb == b->thumb;
+    return a->out_w == b->out_w && a->out_h == b->out_h && a->mode == b->mode && a->thumb == b->thumb &&
+           a->rot == b->rot;
 }
 
 static cam_target_t target(cam_view_t *v)
@@ -120,10 +123,11 @@ static cam_target_t target(cam_view_t *v)
 static cam_frame_t *back_frame(cam_view_t *v, int w, int h)
 {
     cam_frame_t *f = &v->fr[v->i_back];     /* only this thread moves i_back */
-    size_t need = (size_t)w * h * 2;
+    /* aligned to the cache line, for the PPA to write it (aos_hal_video_i420) */
+    size_t need = ((size_t)w * h * 2 + 127) & ~(size_t)127;
     if (need > f->cap) {
-        free(f->px);
-        f->px = malloc(need);
+        aos_hal_retro_free(f->px);
+        f->px = aos_hal_retro_alloc(need);
         f->cap = f->px ? need : 0;
         if (!f->px) {
             return NULL;
@@ -169,6 +173,16 @@ void cam_view_set_target(cam_view_t *v, int out_w, int out_h, cam_mode_t mode, b
         v->want.out_h = out_h;
         v->want.mode = mode;
         v->want.thumb = thumb;
+        v->want_gen++;
+    }
+    aos_hal_mutex_unlock(v->mx);
+}
+
+void cam_view_set_rotation(cam_view_t *v, bool rot)
+{
+    aos_hal_mutex_lock(v->mx);
+    if (v->want.rot != rot) {
+        v->want.rot = rot;
         v->want_gen++;
     }
     aos_hal_mutex_unlock(v->mx);
@@ -328,13 +342,78 @@ void cam_view_nal(cam_view_t *v, const uint8_t *nal, int len, int64_t pts_ms)
     }
     t0 = aos_hal_uptime_ms();
     cam_geom_t g;
-    cam_geometry(pic.width, pic.height, t.out_w, t.out_h, (cam_mode_t)t.mode, &g);
+    if (t.rot) cam_geometry(pic.height, pic.width, t.out_w, t.out_h, (cam_mode_t)t.mode, &g);
+    else cam_geometry(pic.width, pic.height, t.out_w, t.out_h, (cam_mode_t)t.mode, &g);
+    if (flip_picture(v, &pic, &g, t.rot)) {
+        v->conv_ms += (uint32_t)(aos_hal_uptime_ms() - t0);
+        return;
+    }
     cam_frame_t *f = back_frame(v, g.ow, g.oh);
-    if (f && cam_conv_i420(&v->conv, &pic, &g, f->px)) {
+    /* the PPA converts and scales it if it can (a pixel or two short of
+     * the box, at most), the CPU otherwise */
+    int pw = 0, ph = 0;
+    bool hw = f && !t.rot && aos_hal_video_i420(&pic, g.sx, g.sy, g.sw, g.sh, f->px, f->cap, g.ow, g.oh, &pw, &ph);
+    if (hw) {
+        f->w = pw;
+        f->h = ph;
+    }
+    if (f && (hw || (t.rot ? cam_conv_i420_rot(&v->conv, &pic, &g, f->px, g.ow) : cam_conv_i420(&v->conv, &pic, &g, f->px)))) {
         v->conv_ms += (uint32_t)(aos_hal_uptime_ms() - t0);
         v->cur = t;
         publish(v);
     }
+}
+
+/* ---- straight into the panel ---------------------------------------------------- */
+
+static void black_rows(uint16_t *fb, int x, int y, int w, int h)
+{
+    for (int r = 0; r < h; r++) memset(fb + (size_t)(y + r) * AOS_PANEL_W + x, 0, (size_t)w * 2);
+}
+
+/* The picture converted into the panel's free framebuffer and flipped to:
+ * no frame of our own, no copy to the panel, LVGL not involved. Upright
+ * only (the panel's rows are the screen's); the UI turns flip_on off for
+ * anything else. false: not now, the frame goes the usual way. */
+static bool flip_picture(cam_view_t *v, const aos_h264_pic_t *pic, const cam_geom_t *g, bool rot)
+{
+    if (!v->flip_on || aos_hal_uptime_ms() > v->flip_until) return false;
+    int bx = v->flip_x, by = v->flip_y, bw = v->flip_w, bh = v->flip_h;
+    if (g->ow > bw || g->oh > bh || bx < 0 || by < 0 || bx + bw > AOS_PANEL_W || by + bh > AOS_PANEL_H) return false;
+    uint16_t *fb = aos_hal_display_back();
+    uint32_t age = 0;
+    bool touched = false;
+    if (!fb || !aos_hal_display_back_age(fb, &age, &touched)) return false;
+    int x = bx + (bw - g->ow) / 2, y = by + (bh - g->oh) / 2;
+    int k = 0;
+    while (k < 3 && v->fbr[k].fb && v->fbr[k].fb != fb) k++;
+    if (k == 3) {                       /* the HAL has three; something changed: start over */
+        memset(v->fbr, 0, sizeof v->fbr);
+        k = 0;
+    }
+    /* the margins: black, as the viewer is, when this buffer last held
+     * something else (LVGL's drawing, or the picture elsewhere) */
+    if (v->fbr[k].fb != fb || age == UINT32_MAX || touched || v->fbr[k].x != x || v->fbr[k].y != y ||
+        v->fbr[k].w != g->ow || v->fbr[k].h != g->oh) {
+        black_rows(fb, bx, by, bw, y - by);
+        black_rows(fb, bx, y + g->oh, bw, by + bh - (y + g->oh));
+        black_rows(fb, bx, y, x - bx, g->oh);
+        black_rows(fb, x + g->ow, y, bx + bw - (x + g->ow), g->oh);
+        v->fbr[k].fb = fb;
+        v->fbr[k].x = x;
+        v->fbr[k].y = y;
+        v->fbr[k].w = g->ow;
+        v->fbr[k].h = g->oh;
+    }
+    uint16_t *at = fb + (size_t)y * AOS_PANEL_W + x;
+    if (!(rot ? cam_conv_i420_rot(&v->conv, pic, g, at, AOS_PANEL_W) : cam_conv_i420_to(&v->conv, pic, g, at, AOS_PANEL_W)))
+        return false;
+    if (!aos_hal_display_flip(fb)) {
+        v->fbr[k].fb = NULL;
+        return false;
+    }
+    v->flipped++;
+    return true;
 }
 
 /* ---- JPEG --------------------------------------------------------------------- */
@@ -446,7 +525,7 @@ static void close_decoders(cam_view_t *v)
 static void view_free(cam_view_t *v)
 {
     for (int i = 0; i < 3; i++) {
-        free(v->fr[i].px);
+        aos_hal_retro_free(v->fr[i].px);
     }
     free(v->jpeg_in);
     cam_conv_release(&v->conv);

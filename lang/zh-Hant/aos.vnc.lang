@@ -26,11 +26,15 @@ Trackpad: el dedo mueve el puntero	軌道板:你的手指移動指標
 Toque: el dedo es el mouse	觸控:你的手指是滑鼠
 Ajustar	適合的
 Llenar	填充
+Muy chico: arrastrá un rectángulo más grande	太小:拖著一個更大的矩形
+Arrastrá un rectángulo sobre la parte que querés ver	拉一個矩形過你想看到的部分
 Qué pantalla ver	顯示哪個螢幕
 Todas · %d×%d	所有 · %d×%d
 Monitor %d · %d×%d	監視器 %d · %d×%d
 Zona elegida · %d×%d	選擇的區域 · %d×%d
+Marcar con el dedo	用手指標
 La lista la manda la computadora.	電腦傳送了這個名單.
+Para ver una sola parte (un monitor de varios), marcala con el dedo; acercá antes con dos dedos si querés más precisión.	為了顯示一個部分 (一塊顯示器中的幾個),用手指標記它;先用兩個手指放大,以獲得更精確的準確性.
 Reintentar	重試
 Volver	返回
 No se pudo empezar: la conexión anterior todavía se está cerrando	無法啟動:之前的連線仍在關閉
@@ -70,7 +74,3 @@ No se encontró la computadora (DNS)	計算機未找到 (DNS)
 Sin conexiones libres en la placa	沒有免費連線.
 La computadora no contesta	電腦沒有回答
 No se pudo conectar (¿VNC activado? ¿puerto?)	無法連線 (VNC上線?右埠?)
-Marcar con el dedo	用手指標
-Arrastrá un rectángulo sobre la parte que querés ver	拉一個矩形過你想看到的部分
-Muy chico: arrastrá un rectángulo más grande	太小:拖著一個更大的矩形
-Para ver una sola parte (un monitor de varios), marcala con el dedo; acercá antes con dos dedos si querés más precisión.	為了顯示一個部分 (一塊顯示器中的幾個),用手指標記它;先用兩個手指放大,以獲得更精確的準確性.

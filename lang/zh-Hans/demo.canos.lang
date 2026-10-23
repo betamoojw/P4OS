@@ -1,0 +1,60 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Girar	旋转
+Completar	补全
+Fácil	简单
+Normal	普通
+Difícil	困难
+Sin reloj: abrís la llave cuando el recorrido esté listo.	没有倒计时，连接好管道后再打开阀门。
+Cuando se acaba el tiempo, la llave se abre sola.	倒计时结束后，阀门会自动打开。
+Menos tiempo, y el líquido corre más rápido.	准备时间更短，液体流速更快。
+5 niveles del anterior	完成上一世界的 5 关
+Completá 5 niveles del mundo anterior	完成上一世界的 5 个关卡
+Caños	管道拼图
+Armá el recorrido antes de que corra el líquido	在液体流动前连接好管道
+Modo	模式
+Tocá los caños para girarlos hasta unir el tanque con el desagüe.	点击管道使其旋转，将储液罐与排水口连接起来。
+Faltan caños: poné los que ofrece la bandeja, tal como vienen.	管道有缺口，请按托盘中管段的原有方向放入。
+Dificultad	难度
+Mundos	世界
+Primero pasá el nivel anterior	请先通过上一关
+Elegí un caño de la bandeja	从托盘中选择管段
+Girá los caños y abrí la llave	旋转管道，然后打开阀门
+Poné los caños y abrí la llave	放置管道，然后打开阀门
+Abrir llave	打开阀门
+Abriendo la llave...	正在打开阀门…
+Corre el líquido: %d caños	液体正在流动：%d 段管道
+¡Llegó al desagüe!	已到达排水口！
+¡Fuga!	泄漏了！
+Más despacio	减速
+Acelerar	加速
+Pausa	已暂停
+nivel	关卡
+Seguir	继续
+Otra vez	重试
+Niveles	关卡
+Puntos	得分
+Caños llenos	充满的管道
+Giros	旋转次数
+Piezas	管段
+Siguiente	下一关
+No hay memoria para el tablero	内存不足，无法创建棋盘
+¡Se abrió la llave!	阀门已打开！
+Agua	水
+Planta de agua	水厂
+¡Se inundó la planta!	水厂被淹了！
+Combustible	燃料
+Refinería	炼油厂
+¡Combustible por todos lados!	燃料洒得到处都是！
+Ácido	酸液
+Laboratorio	实验室
+¡El ácido se está comiendo el piso!	酸液正在腐蚀地面！
+Petróleo	原油
+Yacimiento	油田
+¡Derrame de petróleo!	原油泄漏了！
+Lava	熔岩
+Fundición	铸造厂
+¡La lava se escapó del canal!	熔岩溢出了管道！
+Nitrógeno	氮
+Criogenia	低温工厂
+¡Una nube de nitrógeno helado!	一团冰冷的氮气云！

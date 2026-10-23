@@ -35,6 +35,8 @@ Con 1 kΩ en serie y 1 µF a GND: de 0 a 3,3 V.	串聯 1 kΩ 電阻，並透過 
 sin pin	沒有針
 GPIO%d · pata %d (otro canal)	GPIO%d · 針 %d (其他頻道)
 GPIO%d · pata %d	GPIO%d · 針 %d
+salida %d (otro canal)	輸出 %d (另一個頻道)
+salida %d	輸出 %d
 real %s · %d bits	實際的 %s · %d 零件
 apagado	關閉
 entre %s y %s	之間的 %s 和 %s
@@ -60,5 +62,3 @@ Cargado: %s	裝載: %s
 Los canales de la app PWM de la placa, en vivo. Las perillas giran como en la placa (Mayúsculas o la rueda: más fino). Los patrones se ven animados acá con su forma, no con la fase de la placa.	The channels of the board's PWM 圖案在此以其形狀進行動畫,而不是板塊的階段.
 Presets	預設
 En /pwm de la tarjeta, una línea por canal. Al cargar uno, los canales encendidos se encienden en la placa.	在 /pwm 在卡上,每個頻道都有一個線.
-salida %d (otro canal)	輸出 %d (另一個頻道)
-salida %d	輸出 %d

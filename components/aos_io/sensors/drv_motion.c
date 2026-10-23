@@ -246,6 +246,10 @@ static int mpu_init(sens_io_t *io, sens_slot_t *s)
         p->mag = ak8963_start(b, p);
         if (p->mag && (id == 0x70 || id == 0x72)) sens_scpy(s->pub.chip, sizeof s->pub.chip, "MPU-9250");
     }
+    /* The data registers still hold what was sampled at the factory ranges
+     * until a sample passes the new filter: read at once, a board at rest
+     * said 4 g (seen on the board after a reset, 2026-10-21) */
+    aos_hal_sleep_ms(30);
     return R_OK;
 }
 
@@ -263,6 +267,15 @@ static int mpu_read(sens_io_t *io, sens_slot_t *s)
         if (si2c_rreg8(b, a, 0x6B, &pw) && (pw & 0x40)) return lost_config(s);    /* asleep: its reset state */
         return R_NOTREADY;
     }
+    /* A chip that reset by itself (a loose wire on the bench, 2026-10-21)
+     * does not always go to sleep: an MPU-9250 comes back awake, at ±2 g and
+     * ±250 °/s with the bypass shut, and was read as ±8 g with its compass
+     * frozen behind it. The ranges and the bypass are checked every read. */
+    uint8_t gc = 0, ac = 0, ip = 0x02;
+    if (!si2c_rreg8(b, a, 0x1B, &gc) || !si2c_rreg8(b, a, 0x1C, &ac)) return R_NACK;
+    if (p->mag && !si2c_rreg8(b, a, 0x37, &ip)) return R_NACK;
+    if ((gc & 0x18) != (uint8_t)(p->g_ix << 3) || (ac & 0x18) != (uint8_t)(p->a_ix << 3) || !(ip & 0x02))
+        return lost_config(s);
     put_accel(s, 0, be16s(d) * p->a_lsb, be16s(d + 2) * p->a_lsb, be16s(d + 4) * p->a_lsb);
     put_gyro(s, 3, be16s(d + 8) * p->g_lsb, be16s(d + 10) * p->g_lsb, be16s(d + 12) * p->g_lsb);
     sens_setv(s, 6, "temp", AOS_SQ_TEMP, be16s(d + 6) / pt->t_div + pt->t_off);

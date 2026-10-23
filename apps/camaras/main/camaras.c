@@ -85,6 +85,9 @@ static struct {
     int        tab;
     int        mode;                /* the viewer's cam_mode_t */
     int        rot_restore;         /* -1, or the orientation to go back to */
+    bool       feed_rot;            /* the viewer's picture turned a quarter */
+    bool       hd_req;              /* the next viewer opens the camera's main stream */
+    bool       hd_switch;           /* the SD/HD button: reopen on the next tick */
     lv_timer_t *timer;
     uint64_t   stats_t0;
     bool       closing;
@@ -126,6 +129,12 @@ static struct {
         int         log_n;
         bool        snapping;
         char        info_txt[160];
+        bool        direct;         /* frames go straight to the panel (direct_*) */
+        bool        reblit;         /* LVGL drew over the picture: put it back */
+        lv_area_t   frect;          /* where the picture is on the screen */
+        uint32_t    directs;        /* frames that went straight, since the stats */
+        uint32_t    flips0;         /* v->flipped at the last tick */
+        bool        hd;             /* on the camera's main stream (url_full) */
     } vw;
 } A;
 
@@ -232,8 +241,13 @@ static void canvas_show(lv_obj_t *canvas, const cam_frame_t *f, int box_w, int b
 {
     lv_canvas_set_buffer(canvas, f->px, f->w, f->h, LV_COLOR_FORMAT_RGB565);
     int32_t scale = LV_SCALE_NONE;
-    bool fits = fill ? (f->w == box_w && f->h == box_h)
-                     : ((f->w == box_w && f->h <= box_h) || (f->h == box_h && f->w <= box_w));
+    /* the PPA's scaler steps in sixteenths and may leave a frame up to a
+     * few pixels short of the box: centred as it is, not scaled by LVGL,
+     * which would cost the CPU every frame what the PPA saved */
+    const int slack = 4;
+    bool wide = f->w <= box_w && f->w >= box_w - slack, tall = f->h <= box_h && f->h >= box_h - slack;
+    bool fits = fill ? (wide && tall)
+                     : ((wide && f->h <= box_h) || (tall && f->w <= box_w));
     if (!fits) {
         int32_t sx = box_w * 256 / f->w, sy = box_h * 256 / f->h;
         scale = fill ? (sx > sy ? sx : sy) : (sx < sy ? sx : sy);
@@ -833,6 +847,116 @@ static void build_ui(void)
 
 /* ---- the viewer ---------------------------------------------------------------- */
 
+/* ---- straight to the panel ----------------------------------------------------
+ *
+ * Through LVGL a frame is copied twice more: into LVGL's draw buffer and
+ * from there to the panel, both through PSRAM, which is what the decoder
+ * on the other core is short of. With the bars down, nothing of the
+ * system over the app and the screen upright, the frame goes from the
+ * camera's buffer to the panel's framebuffer in one copy by the DMA2D
+ * (aos_hal_display_blit_native) and the canvas is hidden, so LVGL draws
+ * nothing there. LVGL knows nothing of the picture: when something it
+ * redraws touches it, the frame goes back up right after (REFR_READY). */
+
+static bool direct_ok(const cam_frame_t *f)
+{
+    return f && A.vw.on && !A.vw.overlay && !A.closing && aos_hal_display_get_rotation() == 0 &&
+           aos_ui_overlay() == 0 && f->w <= A.W && f->h <= A.H;
+}
+
+static bool direct_blit(const cam_frame_t *f)
+{
+    lv_area_t c;
+    lv_obj_get_coords(A.vw.obj, &c);
+    int x = c.x1 + (A.W - f->w) / 2, y = c.y1 + (A.H - f->h) / 2;
+    if (!aos_hal_display_blit_native(x, y, f->w, f->h, f->px)) return false;
+    A.vw.frect.x1 = x;
+    A.vw.frect.y1 = y;
+    A.vw.frect.x2 = x + f->w - 1;
+    A.vw.frect.y2 = y + f->h - 1;
+    A.vw.directs++;
+    return true;
+}
+
+/* back to LVGL's canvas (the bars came up, a panel came down, it turned) */
+static void direct_leave(void)
+{
+    if (!A.vw.direct) return;
+    A.vw.direct = false;
+    A.vw.reblit = false;
+    if (A.vw.shown && A.vw.canvas) {
+        lv_obj_remove_flag(A.vw.canvas, LV_OBJ_FLAG_HIDDEN);
+        canvas_show(A.vw.canvas, A.vw.shown, A.W & ~1, A.H & ~1, A.mode == CAM_FILL);
+    }
+}
+
+/* A frame to show: straight if it can, through the canvas if not */
+static void viewer_present(const cam_frame_t *f)
+{
+    if (direct_ok(f) && direct_blit(f)) {
+        if (!A.vw.direct) {
+            A.vw.direct = true;
+            lv_obj_add_flag(A.vw.canvas, LV_OBJ_FLAG_HIDDEN);   /* LVGL paints black there: reblit */
+        }
+        return;
+    }
+    direct_leave();
+    lv_obj_remove_flag(A.vw.canvas, LV_OBJ_FLAG_HIDDEN);
+    canvas_show(A.vw.canvas, f, A.W & ~1, A.H & ~1, A.mode == CAM_FILL);
+}
+
+/* Better still: the camera's thread converts each picture straight into the
+ * panel's free framebuffer and flips to it (cam_view.c, flip_picture): no
+ * frame of the app's, no copy. Said to the thread on every tick while it
+ * holds, taken back as soon as anything is over the viewer or another app
+ * is in front - the HAL does not know whose screen it is. */
+static bool flip_ok(void)
+{
+    const char *front = aos_ui_current_app();
+    cam_view_t *v = A.vw.v;
+    return v && A.vw.on && !A.vw.overlay && !A.closing && v->state == CAM_ST_LIVE &&
+           aos_hal_display_get_rotation() == 0 && aos_ui_overlay() == 0 &&
+           front && !strcmp(front, "aos.cameras");
+}
+
+static void flip_update(void)
+{
+    cam_view_t *v = A.vw.v;
+    if (!v) return;
+    if (flip_ok()) {
+        lv_area_t c;
+        lv_obj_get_coords(A.vw.obj, &c);
+        v->flip_x = c.x1;
+        v->flip_y = c.y1;
+        v->flip_w = A.W & ~1;
+        v->flip_h = A.H & ~1;
+        v->flip_until = aos_hal_uptime_ms() + 300;  /* a tick missed (the app hidden): it stops */
+        __sync_synchronize();
+        v->flip_on = true;
+        if (!A.vw.direct) {
+            A.vw.direct = true;
+            lv_obj_add_flag(A.vw.canvas, LV_OBJ_FLAG_HIDDEN);
+        }
+    } else if (v->flip_on) {
+        v->flip_on = false;
+        direct_leave();
+    }
+}
+
+static void disp_ev(lv_event_t *e)
+{
+    if (!A.vw.direct || (A.vw.v && A.vw.v->flip_on)) return;   /* flips need no mending */
+    lv_event_code_t code = lv_event_get_code(e);
+    if (code == LV_EVENT_INVALIDATE_AREA) {
+        const lv_area_t *a = lv_event_get_param(e);
+        const lv_area_t *f = &A.vw.frect;
+        if (a && a->x1 <= f->x2 && a->x2 >= f->x1 && a->y1 <= f->y2 && a->y2 >= f->y1) A.vw.reblit = true;
+    } else if (code == LV_EVENT_REFR_READY && A.vw.reblit) {
+        A.vw.reblit = false;
+        if (!direct_ok(A.vw.shown) || !direct_blit(A.vw.shown)) direct_leave();
+    }
+}
+
 static void overlay_show(bool on)
 {
     A.vw.overlay = on;
@@ -858,6 +982,7 @@ static void view_retarget(void)
 {
     if (A.vw.v) {
         cam_view_set_target(A.vw.v, A.W & ~1, A.H & ~1, (cam_mode_t)A.mode, false);
+        cam_view_set_rotation(A.vw.v, A.feed_rot);
     }
 }
 
@@ -871,12 +996,23 @@ static void fit_cb(lv_event_t *e)
     overlay_show(true);
 }
 
+/* Turns the camera's picture, not the screen: the screen keeps the
+ * orientation the system has (Settings, the control centre), and a
+ * landscape camera fills an upright screen turned (2026-10-22). */
 static void rotate_cb(lv_event_t *e)
 {
     (void)e;
-    if (A.rot_restore < 0) A.rot_restore = aos_ui_landscape();
-    aos_ui_request_landscape(-1);
+    A.feed_rot = !A.feed_rot;
+    if (A.vw.v) cam_view_set_rotation(A.vw.v, A.feed_rot);
     overlay_show(true);
+}
+
+/* SD <-> HD: the viewer opens again on the other stream, on the next tick
+ * (the button's own viewer goes away with it) */
+static void hd_cb(lv_event_t *e)
+{
+    (void)e;
+    A.hd_switch = true;
 }
 
 static void snap_cb(lv_event_t *e)
@@ -993,6 +1129,13 @@ static void build_viewer(void)
         A.vw.fit_g = NULL;
     }
     round_btn(row, A.land ? AOS_SYM_PHONE_ROTATE_PORTRAIT : AOS_SYM_PHONE_ROTATE_LANDSCAPE, rotate_cb, NULL, NULL);
+    if (A.vw.cam.url_full[0] && A.vw.src != SRC_EVENT) {
+        lv_obj_t *hl;
+        round_btn(row, "", hd_cb, NULL, &hl);
+        lv_obj_set_style_text_font(hl, aos_font_body, 0);
+        lv_obj_set_style_text_color(hl, A.vw.hd ? AOS_C_ACCENT : AOS_C_TEXT, 0);
+        lv_label_set_text(hl, A.vw.hd ? "HD" : "SD");
+    }
     round_btn(row, AOS_SYM_GRID_LARGE, view_back_cb, NULL, NULL);
     if (many) round_btn(row, AOS_SYM_CHEVRON_RIGHT, step_cb, (void *)(intptr_t)1, NULL);
 
@@ -1031,7 +1174,12 @@ static void open_viewer(int src, int index)
     A.vw.src = src;
     A.vw.index = index;
     A.vw.cam = cam;
-    if (t && t->v && !cam.url_full[0]) {
+    /* SD, the camera's second stream, unless the HD button asked for its
+     * main one: decoded in software, 1920x1080 runs at about a frame a
+     * second here (2026-10-22) */
+    A.vw.hd = A.hd_req && cam.url_full[0] && src != SRC_EVENT;
+    A.hd_req = false;
+    if (t && t->v && !A.vw.hd) {
         /* the tile's connection, re-targeted: no reconnection */
         A.vw.tile = t;
         A.vw.v = t->v;
@@ -1039,9 +1187,10 @@ static void open_viewer(int src, int index)
         A.vw.own = false;
     } else {
         if (t) tile_stop(t);
-        A.vw.v = cam_view_new(&cam, true);
+        A.vw.v = cam_view_new(&cam, src == SRC_EVENT || A.vw.hd);
         A.vw.own = true;
     }
+    if (A.vw.v) A.vw.flips0 = A.vw.v->flipped;
     /* the other tiles let go: the viewer gets the CPU, the network and the
      * sockets */
     for (int i = 0; i < A.ntiles; i++) if (&A.tiles[i] != A.vw.tile) tile_stop(&A.tiles[i]);
@@ -1063,13 +1212,16 @@ static void open_viewer(int src, int index)
         A.vw.skips0 = A.vw.v->skips;
     }
     aos_hal_net_low_latency(true);
-    aos_hal_log("camaras", "open %s (%s)", cam.name, A.vw.own ? "own connection" : "the tile's connection");
+    aos_hal_log("camaras", "open %s (%s, %s)", cam.name, A.vw.own ? "own connection" : "the tile's connection",
+                A.vw.hd ? "HD" : "SD");
 }
 
 static void close_viewer(void)
 {
     if (!A.vw.on) return;
     tile_t *t = A.vw.tile;
+    A.vw.direct = A.vw.reblit = false;
+    if (A.vw.v) A.vw.v->flip_on = false;        /* before anything else is drawn */
     if (A.vw.obj) lv_obj_delete(A.vw.obj);      /* the canvas goes before its frames */
     if (A.vw.own) {
         cam_view_release(A.vw.v);
@@ -1077,6 +1229,7 @@ static void close_viewer(void)
         /* the tile keeps the connection; back to its size and policy, and
          * to the last frame (it is the UI's until the next take) */
         cam_view_set_target(t->v, t->bw, t->bh, CAM_FILL, true);
+        cam_view_set_rotation(t->v, false);        /* the tiles are never turned */
         t->shown = A.vw.shown;
         if (t->shown && t->canvas) {
             lv_obj_remove_flag(t->canvas, LV_OBJ_FLAG_HIDDEN);
@@ -1096,12 +1249,18 @@ static void viewer_update(uint64_t now, bool stats)
         set_text(A.vw.msg, _("Sin memoria"));
         return;
     }
+    flip_update();
+    uint32_t flips = v->flipped;
+    A.vw.frames += flips - A.vw.flips0;
+    A.vw.directs += flips - A.vw.flips0;
+    A.vw.flips0 = flips;
     const cam_frame_t *f = cam_view_take(v);
     if (f) {
         A.vw.shown = f;
         A.vw.frames++;
-        lv_obj_remove_flag(A.vw.canvas, LV_OBJ_FLAG_HIDDEN);
-        canvas_show(A.vw.canvas, f, A.W & ~1, A.H & ~1, A.mode == CAM_FILL);
+        viewer_present(f);
+    } else if (A.vw.direct && !v->flip_on && !direct_ok(A.vw.shown)) {
+        direct_leave();                 /* the bars, a panel or the turn came first */
     }
     if (v->state != A.vw.last_state || v->detail_gen != A.vw.last_detail) {
         A.vw.last_state = v->state;
@@ -1133,8 +1292,8 @@ static void viewer_update(uint64_t now, bool stats)
     A.vw.err0 = v->errors;
     A.vw.skips0 = v->skips;
     uint32_t tenths = (uint32_t)(A.vw.frames * 10000ull / (dt ? dt : 1));
-    uint32_t shown = A.vw.frames;
-    A.vw.frames = 0;
+    uint32_t shown = A.vw.frames, straight = A.vw.directs;
+    A.vw.frames = A.vw.directs = 0;
     uint32_t kbps = (uint32_t)(bytes * 8ull / (dt ? dt : 1));
     if (v->state == CAM_ST_LIVE) {
         char fps[16];
@@ -1152,9 +1311,9 @@ static void viewer_update(uint64_t now, bool stats)
         set_text(A.vw.info, "");
     }
     if (++A.vw.log_n % LOG_EVERY == 0 && v->state == CAM_ST_LIVE) {
-        aos_hal_log("camaras", "%s: %u shown/s, %u decoded (dec %u ms, scale %u ms avg), -%u dropped "
+        aos_hal_log("camaras", "%s: %u shown/s (%u straight), %u decoded (dec %u ms, scale %u ms avg), -%u dropped "
                     "(%u skips), %u errors, lag %d ms, %u kb/s, %dx%d -> %dx%d %s",
-                    A.vw.cam.name, (unsigned)shown, (unsigned)pics,
+                    A.vw.cam.name, (unsigned)shown, (unsigned)straight, (unsigned)pics,
                     pics ? (unsigned)(dec / pics) : 0, pics ? (unsigned)(conv / pics) : 0,
                     (unsigned)drop, (unsigned)skips, (unsigned)err, (int)v->lag_ms, (unsigned)kbps,
                     v->src_w, v->src_h, A.vw.shown ? A.vw.shown->w : 0, A.vw.shown ? A.vw.shown->h : 0,
@@ -1172,6 +1331,16 @@ static void timer_cb(lv_timer_t *tm)
     bool stats = now - A.stats_t0 >= STATS_MS;
     if (A.vw.leave) {
         close_viewer();
+    }
+    if (A.hd_switch) {
+        A.hd_switch = false;
+        if (A.vw.on) {
+            int src = A.vw.src, index = A.vw.index;
+            bool hd = !A.vw.hd;
+            close_viewer();
+            A.hd_req = hd;
+            open_viewer(src, index);
+        }
     }
     if (A.vw.on) {
         viewer_update(now, stats);
@@ -1253,6 +1422,8 @@ static void *create(aos_app_t *self, lv_obj_t *root)
     build_ui();
     A.stats_t0 = aos_hal_uptime_ms();
     A.timer = lv_timer_create(timer_cb, TIMER_MS, NULL);
+    lv_display_add_event_cb(lv_display_get_default(), disp_ev, LV_EVENT_INVALIDATE_AREA, NULL);
+    lv_display_add_event_cb(lv_display_get_default(), disp_ev, LV_EVENT_REFR_READY, NULL);
 
     /* Development: CAM_OPEN=<n> opens the n-th camera of the tab straight away. */
     const char *open = getenv("CAM_OPEN");
@@ -1269,6 +1440,8 @@ static void destroy(aos_app_t *self, void *inst)
     A.closing = true;
     if (A.timer) {
         lv_timer_delete(A.timer);
+        lv_display_remove_event_cb_with_user_data(lv_display_get_default(), disp_ev, NULL);
+        lv_display_remove_event_cb_with_user_data(lv_display_get_default(), disp_ev, NULL);
         A.timer = NULL;
     }
     lv_obj_clean(A.root);               /* the canvases go before their frames */

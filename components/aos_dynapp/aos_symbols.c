@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3429 simbolos.
+ * Total: 3454 simbolos.
  */
 
 #include <stddef.h>
@@ -260,6 +260,8 @@ extern int aos_hal_display_save;
 extern int aos_hal_display_set_rotation;
 extern int aos_hal_display_set_state;
 extern int aos_hal_display_state;
+extern int aos_hal_draw_hw;
+extern int aos_hal_draw_hw_stats;
 extern int aos_hal_firmware_version;
 extern int aos_hal_ftm_measure;
 extern int aos_hal_ftm_responder;
@@ -531,6 +533,11 @@ extern int aos_hal_screen_idle_tick;
 extern int aos_hal_screen_timeouts_get;
 extern int aos_hal_screen_timeouts_set;
 extern int aos_hal_screen_w;
+extern int aos_hal_screenrec_done_ok;
+extern int aos_hal_screenrec_file;
+extern int aos_hal_screenrec_start;
+extern int aos_hal_screenrec_state;
+extern int aos_hal_screenrec_stop;
 extern int aos_hal_sd_info;
 extern int aos_hal_sd_mark_mounted;
 extern int aos_hal_sd_present;
@@ -645,6 +652,9 @@ extern int aos_hal_uvc_info;
 extern int aos_hal_uvc_start;
 extern int aos_hal_uvc_stop;
 extern int aos_hal_uvc_streaming;
+extern int aos_hal_video_hw;
+extern int aos_hal_video_hw_stats;
+extern int aos_hal_video_i420;
 extern int aos_hal_volume_get;
 extern int aos_hal_volume_set;
 extern int aos_hal_worker_running;
@@ -904,6 +914,7 @@ extern int aos_lock_pin_len;
 extern int aos_lock_pin_set;
 extern int aos_lock_set_cfg;
 extern int aos_lock_tick;
+extern int aos_lock_wall_refresh;
 extern int aos_logring_add;
 extern int aos_lvmem_get_psram;
 extern int aos_lvmem_set_psram;
@@ -1125,7 +1136,12 @@ extern int aos_sym_72;
 extern int aos_tasks_p4_start;
 extern int aos_text_font_has;
 extern int aos_text_safe;
+extern int aos_theme_accent;
+extern int aos_theme_accent_at;
+extern int aos_theme_accent_rgb;
+extern int aos_theme_accents;
 extern int aos_theme_init;
+extern int aos_theme_set_accent;
 extern int aos_tls_close;
 extern int aos_tls_free;
 extern int aos_tls_new;
@@ -1172,6 +1188,8 @@ extern int aos_ui_init;
 extern int aos_ui_inject_drag;
 extern int aos_ui_inject_drag_rest;
 extern int aos_ui_inject_tap;
+extern int aos_ui_keyclick_on;
+extern int aos_ui_keyclick_set;
 extern int aos_ui_landscape;
 extern int aos_ui_open;
 extern int aos_ui_open_app_with;
@@ -1187,7 +1205,9 @@ extern int aos_ui_request_nav;
 extern int aos_ui_request_open;
 extern int aos_ui_request_snapshot;
 extern int aos_ui_request_toast;
+extern int aos_ui_restyle;
 extern int aos_ui_safe_mode;
+extern int aos_ui_screenrec;
 extern int aos_ui_set_badge;
 extern int aos_ui_set_bg_mode;
 extern int aos_ui_set_busy;
@@ -1197,6 +1217,9 @@ extern int aos_ui_set_safe_mode;
 extern int aos_ui_set_wallpaper;
 extern int aos_ui_snapshot_peek;
 extern int aos_ui_snapshot_release;
+extern int aos_ui_sound;
+extern int aos_ui_sounds_on;
+extern int aos_ui_sounds_set;
 extern int aos_ui_start_hidden;
 extern int aos_ui_status_icon_set;
 extern int aos_ui_statusbar_refresh;
@@ -1209,6 +1232,8 @@ extern int aos_ui_toast;
 extern int aos_ui_touch_stats;
 extern int aos_ui_unregister_app;
 extern int aos_ui_wall;
+extern int aos_ui_wall_photo;
+extern int aos_ui_wall_photo_set;
 extern int aos_ui_wallpaper;
 extern int aos_ui_wallpaper_colors;
 extern int aos_ui_widget_find;
@@ -3692,6 +3717,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_display_set_rotation),
     ESP_ELFSYM_EXPORT(aos_hal_display_set_state),
     ESP_ELFSYM_EXPORT(aos_hal_display_state),
+    ESP_ELFSYM_EXPORT(aos_hal_draw_hw),
+    ESP_ELFSYM_EXPORT(aos_hal_draw_hw_stats),
     ESP_ELFSYM_EXPORT(aos_hal_firmware_version),
     ESP_ELFSYM_EXPORT(aos_hal_ftm_measure),
     ESP_ELFSYM_EXPORT(aos_hal_ftm_responder),
@@ -3963,6 +3990,11 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_screen_timeouts_get),
     ESP_ELFSYM_EXPORT(aos_hal_screen_timeouts_set),
     ESP_ELFSYM_EXPORT(aos_hal_screen_w),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_done_ok),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_file),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_start),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_state),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_stop),
     ESP_ELFSYM_EXPORT(aos_hal_sd_info),
     ESP_ELFSYM_EXPORT(aos_hal_sd_mark_mounted),
     ESP_ELFSYM_EXPORT(aos_hal_sd_present),
@@ -4077,6 +4109,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_uvc_start),
     ESP_ELFSYM_EXPORT(aos_hal_uvc_stop),
     ESP_ELFSYM_EXPORT(aos_hal_uvc_streaming),
+    ESP_ELFSYM_EXPORT(aos_hal_video_hw),
+    ESP_ELFSYM_EXPORT(aos_hal_video_hw_stats),
+    ESP_ELFSYM_EXPORT(aos_hal_video_i420),
     ESP_ELFSYM_EXPORT(aos_hal_volume_get),
     ESP_ELFSYM_EXPORT(aos_hal_volume_set),
     ESP_ELFSYM_EXPORT(aos_hal_worker_running),
@@ -4336,6 +4371,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_lock_pin_set),
     ESP_ELFSYM_EXPORT(aos_lock_set_cfg),
     ESP_ELFSYM_EXPORT(aos_lock_tick),
+    ESP_ELFSYM_EXPORT(aos_lock_wall_refresh),
     ESP_ELFSYM_EXPORT(aos_logring_add),
     ESP_ELFSYM_EXPORT(aos_lvmem_get_psram),
     ESP_ELFSYM_EXPORT(aos_lvmem_set_psram),
@@ -4557,7 +4593,12 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_tasks_p4_start),
     ESP_ELFSYM_EXPORT(aos_text_font_has),
     ESP_ELFSYM_EXPORT(aos_text_safe),
+    ESP_ELFSYM_EXPORT(aos_theme_accent),
+    ESP_ELFSYM_EXPORT(aos_theme_accent_at),
+    ESP_ELFSYM_EXPORT(aos_theme_accent_rgb),
+    ESP_ELFSYM_EXPORT(aos_theme_accents),
     ESP_ELFSYM_EXPORT(aos_theme_init),
+    ESP_ELFSYM_EXPORT(aos_theme_set_accent),
     ESP_ELFSYM_EXPORT(aos_tls_close),
     ESP_ELFSYM_EXPORT(aos_tls_free),
     ESP_ELFSYM_EXPORT(aos_tls_new),
@@ -4604,6 +4645,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_inject_drag),
     ESP_ELFSYM_EXPORT(aos_ui_inject_drag_rest),
     ESP_ELFSYM_EXPORT(aos_ui_inject_tap),
+    ESP_ELFSYM_EXPORT(aos_ui_keyclick_on),
+    ESP_ELFSYM_EXPORT(aos_ui_keyclick_set),
     ESP_ELFSYM_EXPORT(aos_ui_landscape),
     ESP_ELFSYM_EXPORT(aos_ui_open),
     ESP_ELFSYM_EXPORT(aos_ui_open_app_with),
@@ -4619,7 +4662,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_request_open),
     ESP_ELFSYM_EXPORT(aos_ui_request_snapshot),
     ESP_ELFSYM_EXPORT(aos_ui_request_toast),
+    ESP_ELFSYM_EXPORT(aos_ui_restyle),
     ESP_ELFSYM_EXPORT(aos_ui_safe_mode),
+    ESP_ELFSYM_EXPORT(aos_ui_screenrec),
     ESP_ELFSYM_EXPORT(aos_ui_set_badge),
     ESP_ELFSYM_EXPORT(aos_ui_set_bg_mode),
     ESP_ELFSYM_EXPORT(aos_ui_set_busy),
@@ -4629,6 +4674,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_set_wallpaper),
     ESP_ELFSYM_EXPORT(aos_ui_snapshot_peek),
     ESP_ELFSYM_EXPORT(aos_ui_snapshot_release),
+    ESP_ELFSYM_EXPORT(aos_ui_sound),
+    ESP_ELFSYM_EXPORT(aos_ui_sounds_on),
+    ESP_ELFSYM_EXPORT(aos_ui_sounds_set),
     ESP_ELFSYM_EXPORT(aos_ui_start_hidden),
     ESP_ELFSYM_EXPORT(aos_ui_status_icon_set),
     ESP_ELFSYM_EXPORT(aos_ui_statusbar_refresh),
@@ -4641,6 +4689,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_touch_stats),
     ESP_ELFSYM_EXPORT(aos_ui_unregister_app),
     ESP_ELFSYM_EXPORT(aos_ui_wall),
+    ESP_ELFSYM_EXPORT(aos_ui_wall_photo),
+    ESP_ELFSYM_EXPORT(aos_ui_wall_photo_set),
     ESP_ELFSYM_EXPORT(aos_ui_wallpaper),
     ESP_ELFSYM_EXPORT(aos_ui_wallpaper_colors),
     ESP_ELFSYM_EXPORT(aos_ui_widget_find),

@@ -57,6 +57,12 @@ __attribute__((weak)) uint32_t aos_hal_display_flips(void)
 __attribute__((weak)) bool aos_hal_display_bench(int frames, aos_display_bench_t *out)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
+__attribute__((weak)) int aos_hal_draw_hw(int on)
+{ int v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) void aos_hal_draw_hw_stats(uint32_t *fills, uint32_t *images, uint32_t *skipped)
+{ }
+
 __attribute__((weak)) bool aos_hal_display_save(char *path_out, size_t n)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
@@ -1248,6 +1254,21 @@ __attribute__((weak)) bool aos_hal_display_blit_into(uint16_t *fb, int x, int y,
 __attribute__((weak)) bool aos_hal_display_blit_into_fit(uint16_t *fb, int x, int y, int dst_w, int dst_h, const void *rgb565, int src_w, int src_h, int stride_px, bool big_endian)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
+__attribute__((weak)) bool aos_hal_screenrec_start(const char *path, int fps)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) void aos_hal_screenrec_stop(void)
+{ }
+
+__attribute__((weak)) bool aos_hal_screenrec_state(uint32_t *ms, uint32_t *frames, uint64_t *bytes)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) const char * aos_hal_screenrec_file(void)
+{ return ""; }
+
+__attribute__((weak)) bool aos_hal_screenrec_done_ok(void)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
 __attribute__((weak)) bool aos_hal_display_fb(const uint16_t **px, int *w, int *h)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
@@ -1312,6 +1333,15 @@ __attribute__((weak)) int aos_hal_h264_decode(aos_h264_t *dec, const uint8_t *na
 { int v; memset(&v, 0, sizeof v); return v; }
 
 __attribute__((weak)) void aos_hal_h264_close(aos_h264_t *dec)
+{ }
+
+__attribute__((weak)) bool aos_hal_video_i420(const aos_h264_pic_t *pic, int sx, int sy, int sw, int sh, uint16_t *out, size_t out_bytes, int max_w, int max_h, int *out_w, int *out_h)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) int aos_hal_video_hw(int on)
+{ int v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) void aos_hal_video_hw_stats(uint32_t *frames, uint32_t *us)
 { }
 
 __attribute__((weak)) aos_jpeg_t * aos_hal_jpeg_open(void)

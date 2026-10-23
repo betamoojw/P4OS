@@ -443,6 +443,27 @@ Que necesitan la mano del usuario o equipos:
       (`keeping aos.datalog ... running: background`); después de una OTA
       arrancó solo (`started hidden`). Dibujo, con el DS18B20 leyéndose,
       ya no queda como "running: pins": se cierra al salir (1674 KB).
+- [x] Fondos, cámaras, grabación de pantalla y sonidos (2026-10-22, 0.21.5 y
+      lo que siguió), en la placa:
+  - Fotos de fondo de Mila en el inicio y el bloqueo: 3,7 MB de PSRAM, nada
+    de RAM interna; redibujar el inicio entero 72,9 -> 101,7 ms con la foto.
+    Desde 0.21.5 se sueltan con una app al frente.
+  - El bloqueo ya no dibuja lo de abajo: con foto, 143 -> 108 ms.
+  - Aceleradores para copiar (PPA escalador, PPA mezclador, AXI-GDMA):
+    todos más lentos que la CPU en el inicio y el bloqueo (133,6 / 113,5 /
+    111,3 contra 102,5 ms). El PPA convirtiendo cámaras: 6,1 fps contra 8,9
+    por CPU. Quedaron apagados (`draw_hw`, `video_hw`): el cuello es la PSRAM.
+  - Cámaras: el timbre en SD directo al framebuffer, 7-9 fps sin descartar;
+    en HD (1920x1080) ~1 cuadro por segundo, sólo los completos (590 ms por
+    cuadro de decodificación). SD/HD y girar sólo la imagen probados por el
+    usuario. "Entrada" manda H.264 Main y se rechaza con un mensaje (sólo
+    Baseline): pendiente que la cámara o go2rtc mande Baseline.
+  - Grabación de pantalla: MP4 de 720x1280 a 14,5 fps en pantalla quieta y
+    7-9 usando apps; PPA + codificador 64-70 ms por cuadro; 60 KB de RAM
+    interna mientras graba (el búfer de desbloqueo del codificador), que
+    vuelven al terminar. ffmpeg lo decodifica entero; se ve en la Mac.
+  - Color de acento, fondo según la hora, reloj del bloqueo y sonidos del
+    sistema: probados por el usuario ("suena bien").
 - [x] Sensores nuevos con los módulos del usuario (2026-10-19, 0.20.0), en
       i2c.ext, uno a la vez, todos reconocidos solos salvo los que se
       declaran:
@@ -465,6 +486,33 @@ Que necesitan la mano del usuario o equipos:
     repetir con el banco ordenado.
   - ADS1115 en 0x49 (ADDR a VCC), junto al PCF8591: 3,277 V en A0 (3V3),
     0 en A1 (GND).
+  - BME688 en 0x76 (2026-10-21): reconocido solo como BME688 (variante
+    del registro 0xF0), 24 °C, 53 %, 1016,9 hPa, gas 170 -> 200 kΩ
+    calentándose. Con un algodón con alcohol cerca el gas bajó a ~112 kΩ
+    y volvió solo (112 -> 174 kΩ en un par de minutos).
+  - MPU-9250 en 0x68 (2026-10-21): reconocido solo (0x71) con su AK8963
+    detrás, 11 valores. Moviéndolo, un falso contacto lo reiniciaba: volvía
+    despierto, a ±2 g / ±250 °/s y con el paso a la brújula cerrado, y se
+    leía 3,3 g en reposo con la brújula congelada. Arreglado (d171eba: cada
+    lectura mira los rangos y el bypass) y visto en la placa: reinicios
+    durante las pruebas, cada uno con una sola lectura vacía y la siguiente
+    bien. La primera lectura después de configurarlo daba ~4 g (muestra
+    vieja en los registros): arreglado (0ffd07b). Inclinado para todos
+    lados: X e Y de -1 a +1 g, |a| en reposo 0,997 g (0,96-1,04 en 136
+    lecturas), los tres ejes del giróscopo respondiendo (hasta 169 °/s), la
+    brújula cambiando con la orientación. No se pudo girar plano una vuelta
+    entera por los cables: el rumbo queda sin probar (y sin calibrar el
+    hierro duro da un arco, no los 360°). Mientras el bus tenía falsos
+    contactos el portal dejó de contestar 1-2 s varias veces (el servicio
+    no tiene el lock durante la lectura): sin explicar todavía.
+  - SCD41 en 0x62 (2026-10-22): reconocido solo como SCD41 (variante del
+    chip), una lectura cada 5 s: 740-767 ppm, 21,7 °C, 60 % en el cuarto.
+    Al moverlo para soplarle se quedó sin medir (un instante sin
+    alimentación lo deja en reposo) y el driver repetía 722 ppm como nuevo
+    con el estado "ok": arreglado (0ec2e67: cuatro períodos sin resultado,
+    se configura de nuevo; lo mismo para el SCD30). Con el arreglo, al
+    soplarle: 519 -> 3067 ppm en 25 s (humedad 63 -> 75 %), y de vuelta a
+    1681 ppm un minuto después.
   - PCA9685 en 0x40: Bus lo nombra, no queda como candidato a sensor.
     El 2026-10-20, con una fuente de 5 V en V+ y cuatro servos en las
     salidas 0-3: la app PWM los movió uno por uno (1000/2000/1500 µs), cada

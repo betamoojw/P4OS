@@ -1411,9 +1411,15 @@ static void ports_status(char *out, size_t n)
         char t[96];
         if (ps[i].state == AOS_SENSOR_BUSY) snprintf(t, sizeof t, _("%s: los pines los tiene %s"), ps[i].port, ps[i].owner);
         else if (ps[i].state == AOS_SENSOR_ERR) snprintf(t, sizeof t, _("%s: no se pudo abrir"), ps[i].port);
-        else if (ps[i].scanned)
-            snprintf(t, sizeof t, _("%s: %d sensores · buscó hace %u s"), ps[i].port, ps[i].found, (unsigned)((now - ps[i].scan_ms) / 1000));
-        else snprintf(t, sizeof t, _("%s: %d sensores"), ps[i].port, ps[i].found);
+        else {
+            /* "1 sensor", "3 sensores" */
+            char cnt[24];
+            if (ps[i].found == 1) scpy(cnt, sizeof cnt, _("1 sensor"));
+            else snprintf(cnt, sizeof cnt, _("%d sensores"), ps[i].found);
+            if (ps[i].scanned)
+                snprintf(t, sizeof t, _("%s: %s · buscó hace %u s"), ps[i].port, cnt, (unsigned)((now - ps[i].scan_ms) / 1000));
+            else snprintf(t, sizeof t, "%.15s: %.23s", ps[i].port, cnt);
+        }
         o += (size_t)snprintf(out + o, n - o, "%s%s", o ? "\n" : "", t);
     }
     if (!np) scpy(out, n, _("Buscando…"));

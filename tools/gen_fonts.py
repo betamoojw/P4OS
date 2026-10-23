@@ -154,6 +154,11 @@ LABEL_FONT = os.path.join(INTER_CACHE, "interzip", "extras", "ttf", "Inter-SemiB
 LABEL_SIZES = [20]
 # Digits only, for clocks, timers and big readings: aos_inter_num_<px>.
 NUM_SIZES = [96, 144]
+# From this size up the bitmaps are RLE-compressed (LV_USE_FONT_COMPRESSED):
+# measured 2026-10-21, 24 px keeps 69 % of its bytes and 64 px 36 %, while
+# 14-20 px, the body text drawn most, would keep 73-82 % for the cost of
+# decompressing every glyph on every draw.
+COMPRESS_FROM = 24
 NUM_RANGE = "0x20,0x25,0x2B-0x3A,0x68,0x6D,0x73,0xB0"   # space % + , - . / 0-9 : h m s °
 SYMBOL_FONT = "FontAwesome5-Solid+Brands+Regular.woff"
 BPP = 4
@@ -218,10 +223,29 @@ def fix_include(path):
         fh.write(src)
 
 
+LOCKED_DECL = ("/* compressed: one glyph at a time (components/aos_fonts/aos_font_lock.c) */\n"
+               "const void *aos_font_bitmap_locked(lv_font_glyph_dsc_t *g, lv_draw_buf_t *buf);\n")
+
+
+def lock_bitmap(path):
+    """Points a compressed font at aos_font_bitmap_locked: LVGL's RLE decoder
+    keeps its state in a global, and the board draws on two cores."""
+    with open(path, encoding="utf-8") as fh:
+        src = fh.read()
+    old = ".get_glyph_bitmap = lv_font_get_bitmap_fmt_txt,"
+    if src.count(old) != 1:
+        die("no get_glyph_bitmap line in %s (lv_font_conv changed?)" % path)
+    src = src.replace(old, ".get_glyph_bitmap = aos_font_bitmap_locked,")
+    src = src.replace('#include "lvgl.h"\n', '#include "lvgl.h"\n\n' + LOCKED_DECL, 1)
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(src)
+
+
 def generate(size, out_path, font=None):
     cmd = [
         "lv_font_conv",
-        "--no-compress", "--no-prefilter",
+    ] + ([] if size >= COMPRESS_FROM else ["--no-compress"]) + [
+        "--no-prefilter",
         "--bpp", str(BPP),
         "--size", str(size),
         "--font", font or TEXT_FONT, "-r", text_range(size),
@@ -232,6 +256,8 @@ def generate(size, out_path, font=None):
     ]
     subprocess.run(cmd, check=True, cwd=FONT_DIR)
     fix_include(out_path)
+    if size >= COMPRESS_FROM:
+        lock_bitmap(out_path)
 
 
 def glyph_count(path):
@@ -328,6 +354,8 @@ def main():
     for size in NUM_SIZES:
         name = "aos_inter_num_%d" % size
         path = os.path.join(out_dir, name + ".c")
+        # uncompressed: the clock's and the lock screen's digits cost 34 % more
+        # to redraw compressed, for 65 KB (measured on the board, 2026-10-21)
         subprocess.run(["lv_font_conv", "--no-compress", "--no-prefilter", "--bpp", str(BPP),
                         "--size", str(size), "--font", TEXT_FONT, "-r", NUM_RANGE, "--format", "lvgl",
                         "-o", path, "--force-fast-kern-format"], check=True)

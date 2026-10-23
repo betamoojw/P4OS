@@ -18,6 +18,8 @@ La RTL-SDR no empezó a mandar muestras	RTL-SDR没有开始发送样本
 Se desconectó la RTL-SDR	电源的RTL-SDR断开
 Reproduciendo una grabación: no se puede sintonizar	播放录音:无法调整
 Buscando una RTL-SDR…	寻找一个RTL-SDR...
+Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.	连接到高速 USB host with wires shorter than 15 cm. Check data and power pins in Settings and this board’s pin map. Full Speed supports 240 thousand samples per second.
+El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí.	其他 USB 主机已关闭:在设置中启用 → USB → USB 接收并将RTL-SDR连接到在那里显示的高速端口.
 señal	信号
 silenciado	无声
 estéreo	立体音频
@@ -37,6 +39,7 @@ Silenciar	无声
 Volumen	音量
 El volumen es el de la placa, el mismo de todo el sistema. Silenciar calla sólo la radio, que sigue sintonizada.	音量是板块的,整个系统都是相同的.
 Corta el audio de AM y FM angosta mientras el canal no supera al ruido por esos dB; entre 6 y 15 suele andar. Todo a la izquierda, siempre abierto. La FM comercial no lo usa.	频道在噪音上不太多的db; 6至15通常工作.左边,始终开放.广播FM不会使用它.
+En USB Full Speed sólo entran 240 mil muestras por segundo	USB 全速只支持每秒240万个样本
 Canal público puesto (AQ==)	公共频道设置 (AQ==)
 Clave quitada	关键清除
 Ajustes de la radio	无线电设置
@@ -113,6 +116,3 @@ No pude arrancar la radio	电台无法启动
 No hay ninguna RTL-SDR en el host USB	没有RTL-SDR USB 接待者
 archivo	文件
 La RTL-SDR no respondió al abrirla	在开放时,RTL-SDR没有回答
-Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.	连接到高速 USB host with wires shorter than 15 cm. Check data and power pins in Settings and this board’s pin map. Full Speed supports 240 thousand samples per second.
-El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí.	其他 USB 主机已关闭:在设置中启用 → USB → USB 接收并将RTL-SDR连接到在那里显示的高速端口.
-En USB Full Speed sólo entran 240 mil muestras por segundo	USB 全速只支持每秒240万个样本

@@ -464,7 +464,8 @@ static char *embedded_dup(const char *code, const char *file)
  * to be file by file):
  *
  *   1. /sdcard/lang/<code>/<file>
- *   2. the catalogue embedded in the binary, for what the card lacks
+ *   2. the catalogue embedded in the binary, for what the card lacks (the
+ *      system and native apps, compressed in Flash)
  *
  * That way a bad translation is fixed by copying a file, without recompiling
  * or reflashing; a card whose packs are older than the firmware does not

@@ -57,6 +57,10 @@ Todos los días a esas horas. Necesita la hora de la red: sin ella no lee.	每�
 Buscar de nuevo	再一次搜尋
 Abrir Módulos	開放模組
 No hay ningún ADS1115. Conectalo a i2c.ext (SDA GPIO21 pin 15, SCL GPIO22 pin 17, 3V3 y GND): se reconoce solo en unos segundos.	沒有. ADS1115連線到i2c.ext (SDA GPIO21 pin 15, SCL GPIO22 17,3V3和 GND):它在幾秒鐘內自行識別.
+No hay sensores I2C. Los conocidos se reconocen solos en i2c.ext (SDA GPIO21, SCL GPIO22); los pocos que no se pueden reconocer sin riesgo (PCF8591, PCF8574, LM75…) se declaran en Módulos.	否 I2C 已知感測器自行識別在 i2c.ext (SDA GPIO21, SCL GPIO22);少數不能安全地識別 (PCF8591, PCF8574, LM75) 在模組中宣告.
+No hay sensores SPI. Una termocupla (MAX6675, MAX31855), una PT100 (MAX31865) o un MCP3008 se declaran en Módulos (Puertos, Agregar): el puerto spi.a y su CS.	否 SPI 感測器.一個熱偶 (MAX6675, MAX31855), a PT100 (MAX31865) 或一個 MCP3008 在模組 (港口,新增) 中宣告: CS.
+No hay sensores de pines. Un DHT22, un HC-SR04, una balanza HX711, un caudalímetro o un PIR se declaran en Módulos (Puertos, Agregar): se eligen sus pines.	沒有針頭感測器. DHT22一個HC-SR04一個 HX711 scale, a flow meter or a PIR is declared in Modules (Ports, Add): you choose its pins.
+No hay sensores por puerto serie. Un MH-Z19, un PMS5003, un PZEM-004T o un radar LD2410 se declaran en Módulos (Puertos, Agregar), en uart.a.	暫無串列埠感測器。MH-Z19、PMS5003、PZEM-004T 或 LD2410 雷達需在“模組 > 埠 > 新增”中配置到 uart.a。
 No hay sensores 1-Wire. Un bus de DS18B20 se declara en Módulos (Puertos, Agregar, DS18B20): se elige el pin.	無1線感測器. DS18B20s的巴士在模組 (埠,新增, DS18B20): you pick the pin.
 BUS 1-WIRE	1-Wire 匯流排
 BUS	公共汽車
@@ -148,6 +152,8 @@ Cada lectura es un valor que se anota en un CSV con la fecha y la hora: un senso
 Agregar una lectura	新增一個讀數
 ALTA	高度
 BAJA	低水平
+Pines	引腳
+Serie	系列
 Otros	其他
 Señal Wi-Fi	Wi-Fi 訊號
 PSRAM libre	免費 PSRAM
@@ -163,14 +169,24 @@ Potencia	功率
 En el shunt	橫穿支流
 No contesta: MISO quedó en 1. ¿Alimentación, CS, cables?	裝置未響應，MISO 保持為 1。請檢查供電、片選和接線。
 No contesta en el bus 1-Wire. ¿Alimentación, la resistencia de 4,7 kΩ, cables?	1-Wire 匯流排上的裝置未響應，請檢查供電、4.7 kΩ 上拉電阻和接線。
+No contesta en el pin. ¿Alimentación, cables, el modelo?	電源,電纜,模型?
+No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?	連續埠沒有答案.
 No contesta en esa dirección	在這個地址沒有答案
+No se entiende lo que manda: ¿otra velocidad u otro sensor?	不能理解它傳送什麼:另一個速度或另一個感測器?
 Llegó una lectura con el CRC mal	一個讀物出現了壞的CRC
 En esa dirección hay otro chip (dice %s)	另一個晶片在這個地址 (它說 %s)
 Todavía no midió	它還沒有測量
 Los pines los tiene %s	%s 有針頭
 No se pudo abrir el puerto	無法開啟埠
 Ahí está el %s de la placa	開發板的 %s 有沒有?
+La RTD está abierta o le falta un cable	研發系統開放,或者有線電失蹤
+La termocupla está en corto a GND	熱偶的縮短為 GND
+La termocupla está en corto a VCC	熱偶的縮短為 VCC
+Una punta de la termocupla toca VCC o GND	A thermocouple lead touches VCC 或 GND
 La termocupla está abierta (o no está conectada)	熱電偶開放 (或沒有連線)
+La RTD está en corto	研發專案縮短
+Fuera de rango	超出範圍
+Falta %s= en la línea del módulo	缺少模組線 %s=
 No se pudo leer el pin	我讀不懂筆
 Sin Wi-Fi	否 Wi-Fi
 El sensor no está: ¿se desconectó o se borró de modules.txt?	感測器不存在:斷開,或從 modules.txt?
@@ -208,19 +224,3 @@ todavía no existe	目前還不存在
 Se baja desde el portal (Datalog) o se abre en Archivos, que también lo grafica.	在網頁上下載 (資料庫) 或在檔案中開啟,
 Borrar los datos	刪除資料
 Cargando…	正在載入…
-No hay sensores I2C. Los conocidos se reconocen solos en i2c.ext (SDA GPIO21, SCL GPIO22); los pocos que no se pueden reconocer sin riesgo (PCF8591, PCF8574, LM75…) se declaran en Módulos.	否 I2C 已知感測器自行識別在 i2c.ext (SDA GPIO21, SCL GPIO22);少數不能安全地識別 (PCF8591, PCF8574, LM75) 在模組中宣告.
-No contesta en el pin. ¿Alimentación, cables, el modelo?	電源,電纜,模型?
-No contesta por el puerto serie. ¿TX y RX cruzados, alimentación?	連續埠沒有答案.
-Fuera de rango	超出範圍
-No hay sensores SPI. Una termocupla (MAX6675, MAX31855), una PT100 (MAX31865) o un MCP3008 se declaran en Módulos (Puertos, Agregar): el puerto spi.a y su CS.	否 SPI 感測器.一個熱偶 (MAX6675, MAX31855), a PT100 (MAX31865) 或一個 MCP3008 在模組 (港口,新增) 中宣告: CS.
-No hay sensores de pines. Un DHT22, un HC-SR04, una balanza HX711, un caudalímetro o un PIR se declaran en Módulos (Puertos, Agregar): se eligen sus pines.	沒有針頭感測器. DHT22一個HC-SR04一個 HX711 scale, a flow meter or a PIR is declared in Modules (Ports, Add): you choose its pins.
-No hay sensores por puerto serie. Un MH-Z19, un PMS5003, un PZEM-004T o un radar LD2410 se declaran en Módulos (Puertos, Agregar), en uart.a.	暫無串列埠感測器。MH-Z19、PMS5003、PZEM-004T 或 LD2410 雷達需在“模組 > 埠 > 新增”中配置到 uart.a。
-Pines	引腳
-Serie	系列
-La RTD está abierta o le falta un cable	研發系統開放,或者有線電失蹤
-La termocupla está en corto a GND	熱偶的縮短為 GND
-La termocupla está en corto a VCC	熱偶的縮短為 VCC
-Una punta de la termocupla toca VCC o GND	A thermocouple lead touches VCC 或 GND
-La RTD está en corto	研發專案縮短
-Falta %s= en la línea del módulo	缺少模組線 %s=
-No se entiende lo que manda: ¿otra velocidad u otro sensor?	不能理解它傳送什麼:另一個速度或另一個感測器?

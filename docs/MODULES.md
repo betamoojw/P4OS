@@ -70,7 +70,7 @@ they came in (2026-10-15 to 10-18), with what each driver does.
 | SHT3x (SHT30/31/35) | temperature, humidity | 0x44, 0x45 | status read (0xF32D) with a valid CRC | `module sht31 i2c.ext addr=0x44` |
 | SHT4x (SHT40/41/45) | temperature, humidity | 0x44, 0x45 | serial number read (0x89) with valid CRCs | `module sht4x i2c.ext addr=0x44` |
 | AHT20 (AHT21/25) | temperature, humidity | 0x38 | status byte: calibrated, not busy | `module aht20 i2c.ext` |
-| AHT10 | temperature, humidity | 0x38 | as the AHT20 | `module aht10 i2c.ext` (no CRC byte) |
+| AHT10 | temperature, humidity | 0x38, 0x39 | as the AHT20, but its seventh byte is no CRC | `module aht10 i2c.ext` (found by itself since 0.20) |
 | BH1750 (GY-302) | light, lux | 0x23, 0x5C | cannot be: a candidate | `module bh1750 i2c.ext addr=0x23` |
 | INA219 | bus voltage, shunt voltage, current, power | 0x40 to 0x4F | power-on config 0x399F | `module ina219 i2c.ext addr=0x40 shunt=100` |
 | INA226 | bus voltage, shunt voltage, current, power | 0x40 to 0x4F | manufacturer id 0x5449 ("TI") at 0xFE | `module ina226 i2c.ext addr=0x40 shunt=100` |
@@ -122,7 +122,9 @@ The UIs scale them for a bench: mV, mA and mW below 1. The value keys are:
   - If the calibration bit is off, it sends the init command (0xBE).
   - Each reading is a trigger (0xAC 0x33 0x00), an 80 ms wait, and 7 bytes
     with the CRC checked.
-  - AHT10 has no CRC byte. Declare it as `aht10`.
+  - AHT10 has no CRC byte: the reads tell the two apart (two good CRCs in a
+    row make it an AHT20, three bad an AHT10), so either is found by itself
+    and named right, and one declared as the other finds out.
 - **BH1750:** power on, then continuous high-resolution mode (1 lx, 120 ms).
   lux = raw / 1.2.
 - **INA219 / INA226:**
@@ -643,33 +645,23 @@ CS GPIO46) and a 93xx clocked on GPIOs (`P4_SIM_93C`).
 ## Not done yet
 
 - **Relays** (a Phase 6 extra): not in this round.
-## What only the board can confirm
+## What the board confirmed, and what is left
 
-Everything above has run against the emulation only. When the board comes,
-check these:
+Everything here started against the emulation; on the board since:
 
-- **Opening the port every round.** `i2c_new_master_bus()` and
-  `i2c_del_master_bus()` run once a second on `i2c.ext`. Watch for heap
-  churn and GPIO glitches when the bus is torn down, and check that a
-  claim released between rounds lets the Bus app in.
-- **Eight devices per port.** `aos_io_p4.c` keeps at most 8 devices per
-  open port (`DEVS`). Autodetect adds one for every address that answers
-  an identify read, plus one per sensor read. More than 8 answering
-  devices on one port would make the last ones fail.
-- **Pull-ups only.** A bus with nothing on it and only the internal
-  pull-ups: probes should NACK fast, not wait for the 30 ms timeout on
-  every address.
-- **Real chips.** Check each one against the "Identified by" column: that
-  a real SHT4x NACKs the SHT3x status command, that a real INA219 reads
-  0x399F after power-on, and that an AHT20 fresh from power-up reports
-  itself calibrated.
-- **Accuracy.** Compare the BME280 compensation with a reference
-  thermometer or barometer, and the INA219/226 current with a meter
-  (shunt tolerance).
-- **SPI, none of it run yet.**
-  - The loopback first (jumper 34 to 36) at 1, 10 and 40 MHz.
-  - A transfer over 2 KB: check that CS stays low between the pieces.
-  - `spi_device_get_actual_freq()` against a scope.
-  - That MISO's pull-up gives 0xFF with nothing connected.
-  - The internal heap before, during and after a port is open: 4 KB of
-    bounce buffers plus the driver's own.
+- **Opening a port every round** works: the sensor service opened and
+  closed `i2c.ext` once a second for 17 hours with Datalog logging and no
+  error, and Bus gets in between rounds. Since 0.20 a port is shared: an
+  app can hold it (a PCA9685) while the service reads.
+- **Devices per port:** 48 now (`DEVS` in `aos_io_p4.c`), with the least
+  used ones evicted; the old 8 were too few for autodetect.
+- **Real chips** read right, each recognised as what it is: a BME280,
+  BME688, AHT10 (told from an AHT20 by its CRC byte), SGP30, INA219,
+  TSL2561, TCS34725 and ADS1115, a PCF8574A and a PCF8591 declared, and a
+  PCA9685 named for what it is. The PCF8591 needed 100 kHz: every chip is
+  read at its own speed now.
+
+Left to try on the board: the sensors on plain pins and on serial ports
+(DHT22, HC-SR04, HX711, MH-Z19, PMS5003...), the MPU-9250 with its compass,
+and a bus with nothing on it and only the internal pull-ups (probes should
+NACK fast).

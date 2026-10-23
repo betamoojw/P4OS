@@ -28,6 +28,12 @@ class Chinese(unittest.TestCase):
                     self.assertEqual(FORMAT.findall(english[key]), FORMAT.findall(value), (code, name, key, value))
                     self.assertEqual(english[key].count(r'\n'), value.count(r'\n'), (code, name, key))
 
+    def test_recording_label_does_not_reuse_firmware_write_translation(self):
+        for code, expected in (('zh-Hans', '录屏'), ('zh-Hant', '錄屏')):
+            entries = gen_lang.read_pack(str(ROOT / 'lang' / code / '_sistema.lang'))
+            self.assertEqual(entries[r'grabación de pantalla\x04Grabar'], expected)
+            self.assertNotEqual(entries['Grabar'], expected)
+
     def test_font_integrity_and_all_chinese_characters(self):
         folder = ROOT / 'assets/cjk'
         data = (folder / 'cjk.bin').read_bytes()
@@ -63,6 +69,20 @@ class Chinese(unittest.TestCase):
             raw = zlib.decompress(packed)
             self.assertIn(b'\t', raw, name)
             raw.decode('utf-8')
+        blobs = {name: zlib.decompress(bytes(map(int, re.findall(r'\d+', body))))
+                 for name, body in arrays}
+        for code in ('en', 'de', 'zh-Hans', 'zh-Hant'):
+            ident = code.replace('-', '_')
+            block = re.search(r'static const aos_lang_file_t files_' + ident + r'\[\] = \{(.*?)\n\};', source, re.S)
+            self.assertIsNotNone(block, code)
+            files = dict(re.findall(r'\{ "([^"\n]+)", (\w+),', block[1]))
+            expected = {p.name for p in (ROOT / 'lang' / code).glob('*.lang')
+                        if p.name != '_portal.lang' and not p.name.startswith('web.')}
+            self.assertEqual(set(files), expected, code)
+            for name, symbol in files.items():
+                entries = gen_lang.read_pack(str(ROOT / 'lang' / code / name))
+                raw = ''.join(k + '\t' + v + '\n' for k, v in entries.items()).encode('utf-8')
+                self.assertEqual(blobs[symbol], raw, (code, name))
 
 if __name__ == '__main__':
     unittest.main()

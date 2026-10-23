@@ -147,7 +147,7 @@ static void ring_cb(lv_timer_t *t)
 {
     if (lv_tick_elaps(s_call_t0) > CALL_MAX_MS) { call_close(); return; }
     aos_hal_activity();                     /* the screen stays on while it rings */
-    if (s_call_n.sound) aos_hal_beep(1320, 140);
+    if (s_call_n.sound) aos_ui_sound(AOS_SND_CALL);
 }
 
 static void call_act_cb(lv_event_t *e)
@@ -266,7 +266,7 @@ void aos_banner_tick(void)
         /* locked, the lock screen's list shows it: no banner over it, and
          * none with its text when the content is to stay hidden */
         if (!aos_lock_is_locked()) banner_show(&n);
-        if (n.sound) aos_hal_beep(1760, 60);
+        if (n.sound) aos_ui_sound(AOS_SND_NOTIF);
     }
 }
 

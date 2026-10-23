@@ -26,6 +26,11 @@ La cámara no abrió la sesión	攝像機沒有開啟會議
 La cámara rechazó el pedido (PLAY %d)	攝像頭拒絕了請求 (播放) %d)
 La cámara cortó la conexión	攝像機關閉了連線
 La cámara dejó de mandar video	攝像機停止傳送影片
+La cámara USB no está conectada	其他 USB 攝像頭沒有連線
+La cámara USB no arrancó	其他 USB 攝像頭沒有啟動
+Sin memoria para la cámara	沒有儲存器.
+Se desenchufó la cámara USB	其他 USB 攝像頭沒有插
+La cámara USB no manda imagen	其他 USB 攝像頭沒有傳送照片
 H.264 %s: la placa sólo\ndecodifica el perfil Baseline.	H.264 %s: 只有板塊\n解碼基線配置檔案.
 Esta placa todavía no\ndecodifica H.264	這個板不能解碼.\n目前還沒有H.264
 %dx%d no entra en\nla memoria de la placa.	%dx%d 不適合.\n記憶板.
@@ -64,8 +69,3 @@ Foto guardada en Fotos > camaras	儲存到照片>相機
 No se pudo guardar la foto	沒能儲存照片
 Foto JPEG	JPEG圖片
   ·  audio sin reproducir	 ·未播放的音訊
-La cámara USB no está conectada	其他 USB 攝像頭沒有連線
-La cámara USB no arrancó	其他 USB 攝像頭沒有啟動
-Sin memoria para la cámara	沒有儲存器.
-Se desenchufó la cámara USB	其他 USB 攝像頭沒有插
-La cámara USB no manda imagen	其他 USB 攝像頭沒有傳送照片

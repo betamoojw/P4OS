@@ -1084,10 +1084,24 @@ static void folder_open(int folder, lv_obj_t *from)
     int per = cols * rows;
     int32_t saved_icon = L.icon;
     L.icon = g->landscape ? AOS_UI_ICON_LAND : AOS_UI_ICON;
+    /* One container a page, the panel's only snappable children: with the
+     * cells straight on the panel a swipe snapped to the next column, and
+     * one swipe flew to the far end. A page is as wide as the panel's
+     * inside and they are a padding apart, so page p sits at p * pw and a
+     * last page with one column still snaps whole. */
+    lv_obj_t *page = NULL;
     for (int i = 0; i < n; i++) {
         int pg = i / per, k = i % per;
-        lv_obj_t *c = cell_create(panel, cw, ch, true, aos_tr(apps[i]->desc.name), NULL, apps[i], -1);
-        lv_obj_set_pos(c, pg * (pw - 48 + 48) + (k % cols) * cw, (k / cols) * ch);
+        if (k == 0) {
+            page = lv_obj_create(panel);
+            lv_obj_remove_style_all(page);
+            lv_obj_set_size(page, pw - 48, ph - 48);
+            lv_obj_set_pos(page, pg * pw, 0);
+            lv_obj_remove_flag(page, LV_OBJ_FLAG_SCROLLABLE);
+            lv_obj_add_flag(page, LV_OBJ_FLAG_EVENT_BUBBLE);
+        }
+        lv_obj_t *c = cell_create(page, cw, ch, true, aos_tr(apps[i]->desc.name), NULL, apps[i], -1);
+        lv_obj_set_pos(c, (k % cols) * cw, (k / cols) * ch);
         if (s_folder_editing) folder_remove_badge(c, apps[i]);
     }
     L.icon = saved_icon;

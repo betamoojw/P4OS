@@ -24,6 +24,12 @@ not boot on the other. `esptool.py --chip esp32p4 chip_id` says which one you
 have. Each profile builds in its own directory (`build/rev3_x`,
 `build/rev1_3`) so their `sdkconfig`s never mix.
 
+An `sdkconfig` already in a build directory wins over a new line in
+`sdkconfig.defaults`. Since 0.20.2 the fonts from 24 px up are compressed and
+need `CONFIG_LV_USE_FONT_COMPRESSED=y`: a build directory from before that
+draws big text as noise. Delete the directory's `sdkconfig` (or set the line
+by hand) once.
+
 ## Flashing
 
     tools/build_fw.sh rev1_3 -p /dev/cu.wchusbserial<id> -b 460800 app-flash
@@ -205,3 +211,13 @@ Environment:
 writes a weak "not available" version of every function in `aos_hal.h`, so
 the board's HAL can be written a block at a time. Run it again after
 changing the header.
+
+### Existing build directories after merging compressed fonts
+
+The bundled fonts require `CONFIG_LV_USE_FONT_COMPRESSED=y`. An existing
+`sdkconfig` takes precedence over `sdkconfig.defaults`: enable the option in
+that build directory (for example with `idf.py -B <build-dir> menuconfig`)
+and rebuild. Compilation rejects disabled decoding to prevent unreadable
+large text. Rebuild dynamic apps against the resulting firmware configuration;
+`tools/build_apps.py --all-profiles --all-boards` synchronizes LVGL settings.
+Chinese fallback fonts and compressed native catalogues remain in onboard Flash.

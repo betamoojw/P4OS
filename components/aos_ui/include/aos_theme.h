@@ -22,7 +22,19 @@ extern "C" {
 #define AOS_C_CARD2     lv_color_hex(0x2C2C2E)
 #define AOS_C_TEXT      lv_color_hex(0xFFFFFF)
 #define AOS_C_DIM       lv_color_hex(0x8E8E93)
-#define AOS_C_ACCENT    lv_color_hex(0x0A84FF)
+/* The accent is the person's choice (Settings, Wallpaper; pref "accent",
+ * 0x0A84FF by default): a call, not a constant, so the firmware and every
+ * app built against this header follow it. Apps built before 0.21.6 keep
+ * the blue they were compiled with. */
+#define AOS_C_ACCENT    aos_theme_accent()
+lv_color_t aos_theme_accent(void);
+uint32_t   aos_theme_accent_rgb(void);
+/* Saved; what is already on screen keeps its colour until it is built
+ * again: aos_ui_restyle() rebuilds the shell's own screens. */
+void       aos_theme_set_accent(uint32_t rgb);
+/* The accents Settings offers, iOS's system colours: count, and each */
+int        aos_theme_accents(void);
+uint32_t   aos_theme_accent_at(int i);
 #define AOS_C_GREEN     lv_color_hex(0x30D158)
 #define AOS_C_RED       lv_color_hex(0xFF453A)
 #define AOS_C_ORANGE    lv_color_hex(0xFF9F0A)

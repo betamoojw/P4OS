@@ -58,6 +58,7 @@ typedef struct {
     int out_w, out_h;           /* the box the picture goes in */
     int mode;                   /* cam_mode_t */
     bool thumb;                 /* the mosaic's policy */
+    bool rot;                   /* the picture turned a quarter clockwise (the viewer's button) */
 } cam_target_t;
 
 struct cam_view {
@@ -74,6 +75,18 @@ struct cam_view {
     char              snap_path[200];
     volatile bool     snap_req;
     volatile int      snap_result;  /* 0 none yet, 1 saved, -1 failed */
+
+    /* Straight into the panel: while the UI says so (the viewer full, the
+     * bars down, nothing over it, upright), the thread converts each picture
+     * into the panel's free framebuffer and flips to it, centred in the box
+     * flip_x/y/w/h (screen pixels). fbr is the thread's own: what each of
+     * the panel's buffers last held, to know when its black margins need
+     * painting again. */
+    volatile bool     flip_on;
+    volatile int      flip_x, flip_y, flip_w, flip_h;
+    volatile uint64_t flip_until;   /* the UI renews it every tick */
+    volatile uint32_t flipped;
+    struct { const uint16_t *fb; int x, y, w, h; } fbr[3];
 
     /* the three frames */
     void        *mx;
@@ -137,6 +150,9 @@ int         cam_view_live(void);
 /* ---- the UI's side ---------------------------------------------------------- */
 
 void cam_view_set_target(cam_view_t *v, int out_w, int out_h, cam_mode_t mode, bool thumb);
+/* The picture turned a quarter clockwise, or not: the viewer's button turns
+ * the camera's picture, not the screen. */
+void cam_view_set_rotation(cam_view_t *v, bool rot);
 /* The newest frame, if one came since the last call: the UI's until the
  * next call. NULL if nothing new. */
 const cam_frame_t *cam_view_take(cam_view_t *v);

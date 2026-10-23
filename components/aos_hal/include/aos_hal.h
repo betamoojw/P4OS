@@ -150,6 +150,14 @@ typedef struct {
 } aos_display_bench_t;
 bool aos_hal_display_bench(int frames, aos_display_bench_t *out);
 
+/* P4OS: the draw unit of the P4's DMA engines (aos_draw_accel_p4.c) -
+ * plain fills and photos drawn by the PPA or the AXI-GDMA instead of the
+ * CPU. on: the way (0 off, 1 PPA, 2 PPA's blender, 3 GDMA), -1 only asks;
+ * returns the way in force (0 where there is none). The counts are since
+ * boot: what it drew, and what it handed back to the CPU. */
+int  aos_hal_draw_hw(int on);
+void aos_hal_draw_hw_stats(uint32_t *fills, uint32_t *images, uint32_t *skipped);
+
 /* P4OS: the screen as the person sees it (upright, the apps' own drawing
  * included) to /sdcard/photos/Capturas/P4OS_<date>.bmp, an album of
  * Photos; the path, from the card's
@@ -2474,6 +2482,22 @@ bool aos_hal_display_blit_into(uint16_t *fb, int x, int y, int w, int h, const v
 bool aos_hal_display_blit_into_fit(uint16_t *fb, int x, int y, int dst_w, int dst_h,
                                    const void *rgb565, int src_w, int src_h, int stride_px, bool big_endian);
 
+/* P4OS: the screen recorded to an MP4 (board: aos_screenrec_p4.c): what the
+ * panel shows, fps times a second (1..30, 15 if out of range), converted
+ * by the PPA and encoded by the P4's H.264 engine, in the orientation the
+ * screen has at the start. start: false if already recording or it could
+ * not begin. stop: asks it to end; the file is whole once state() says it
+ * is no longer on. state: whether it records, for how long, frames and
+ * bytes so far. false everywhere in the simulator. */
+bool aos_hal_screenrec_start(const char *path, int fps);
+void aos_hal_screenrec_stop(void);
+bool aos_hal_screenrec_state(uint32_t *ms, uint32_t *frames, uint64_t *bytes);
+/* The file of the last (or current) recording: path NULL in start() names
+ * it in the card's /videos after the date and time. done_ok: the last one
+ * ended with its MP4 whole. */
+const char *aos_hal_screenrec_file(void);
+bool        aos_hal_screenrec_done_ok(void);
+
 /* P4OS: what the panel is showing, read from the framebuffer: the panel's
  * native portrait, AOS_PANEL_W by AOS_PANEL_H, RGB565 little-endian, not
  * turned. Unlike a snapshot of LVGL it includes what apps blitted. For the
@@ -2642,6 +2666,22 @@ typedef struct {
 aos_h264_t *aos_hal_h264_open(void);
 int         aos_hal_h264_decode(aos_h264_t *dec, const uint8_t *nal, int len, aos_h264_pic_t *pic);
 void        aos_hal_h264_close(aos_h264_t *dec);
+
+/* P4OS: a decoded picture to the screen by the PPA (board: aos_video_p4.c).
+ * The block (sx, sy, sw, sh) of 'pic' (I420, BT.601 limited range, as
+ * cameras send) converted to RGB565 and scaled with the PPA's filter to fit
+ * max_w x max_h; the scaler steps in sixteenths, so *out_w x *out_h (what
+ * came out, rows of *out_w pixels) may be a pixel or two short of it. 'out'
+ * from aos_hal_retro_alloc() (aligned to the cache line), out_bytes at
+ * least max_w * max_h * 2. Blocking, from a worker. false: not done (no
+ * PPA, a size it does not take, or pref "video_hw" not 1 - off by default:
+ * slower than the CPU on this board, aos_video_p4.c): convert on the CPU.
+ * video_hw(): 1 on, 0 off, -1 only asks; returns whether it is on. The
+ * stats are since boot: frames done and microseconds spent on them. */
+bool aos_hal_video_i420(const aos_h264_pic_t *pic, int sx, int sy, int sw, int sh,
+                        uint16_t *out, size_t out_bytes, int max_w, int max_h, int *out_w, int *out_h);
+int  aos_hal_video_hw(int on);
+void aos_hal_video_hw_stats(uint32_t *frames, uint32_t *us);
 
 /* --------------------------------------------------------------------------
  * P4OS Cameras: JPEG frames in memory (aos_jpeg_p4.c on the board,

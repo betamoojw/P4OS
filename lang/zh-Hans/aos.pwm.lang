@@ -12,12 +12,19 @@ fuente	供应
 servo	服务器
 LED IR	红光 LED
 salida	输出
+PCA9685 %s, salida %d	PCA9685 %s产量 %d
 GPIO%d (pata %d)	GPIO%d (笔) %d)
+sin pin	没有针
+Un servo tiene este PCA9685 a 50 Hz: sus 16 salidas comparten la frecuencia	此 PCA9685 已由舵机设为 50 Hz，全部 16 路输出共用该频率。
+El PCA9685 no tomó la frecuencia	其他 PCA9685 没有使用频率
+Un PCA9685 va de 24 Hz a 1526 Hz	A PCA9685 从24 Hz到1526 Hz
 El pin lo tiene %s	%s 有那个针头
 No se pudo abrir el nivel analógico	无法打开模拟水平
 Los siete canales del LEDC están ocupados	所有七个LEDC频道都在使用中
 Ya hay tres frecuencias distintas: el LEDC no da más	目前已经有三个不同的频率:LEDC没有更多
 No se pudo abrir el PWM (mirá el registro)	不能打开 PWM (参见日志)
+Un PCA9685 no da un nivel analógico: PWM, servo o LED	A PCA9685 没有类似水平: PWM,伺服器或LED
+No contesta el PCA9685 %s	其他 PCA9685 %s 没有回答
 Elegí un pin para este canal	选择此频道的针
 %s no entra: el LEDC da tres frecuencias a la vez como máximo	%s 不适合:LEDC可同时发出最多3个频率
 %s · %d bits	%s · %d 零件
@@ -47,6 +54,7 @@ NIVEL	级别
 EN VIVO	实时
 Listo	完成
 Ese pin lo usa el canal %d	频道 %d 使用那个针头
+Esa salida la usa el canal %d	频道 %d 使用该输出
 Pin del canal	频道针
 Los pines libres del header. Andan a 3,3 V: nunca 5 V en una pata. La pata es el número en el conector de 40.	扩展接口上的可用引脚均使用 3.3 V，切勿输入 5 V。这里的引脚编号指 40 针连接器上的物理编号。
 pata %d	引脚 %d
@@ -55,6 +63,8 @@ canal %d	频道 %d
 VO4: medí antes	VO4:第一步采取措施
 strapping	连接
 libre	可用
+Las 16 salidas de un PCA9685 comparten una frecuencia, de 24 Hz a 1526 Hz: un servo lo deja en 50 Hz. Los servos se alimentan por V+ del módulo, no por la placa.	PCA9685 的 16 路输出共用一个频率，可设范围为 24 至 1526 Hz；使用舵机时需设为 50 Hz。舵机由模块的 V+ 端供电，不能由开发板供电。
+Con un PCA9685 declarado en Módulos (module servos i2c.ext chip=pca9685 addr=0x40) aparecen acá sus 16 salidas.	通过一个 PCA9685 在模块 (module servos i2c.ext chip=pca9685 addr=0x40) 中声明的16个输出显示在这里.
 Tocá otra vez para borrarlo	再击,删除
 Canal %d	频道 %d
 Invertir la salida	转换输出
@@ -90,6 +100,7 @@ El nivel analógico es un tren de pulsos a 1 MHz: 1 kΩ en serie y 1 µF a GND l
 Cableado	电缆
 LED a 3V3	带 LED到3V3
 Filtro RC	RC 过滤器
+Señal: salida %d del PCA9685 %s (sus pines PWM de esa columna).	信号:输出 %d 在 PCA9685 %s (该委员会) PWM pins of that column).
 Señal: pata %d (GPIO%d).	信号:针 %d (GPIO%d).
 GND: patas %s. 3V3: patas %s. 5V: patas %s (sólo para alimentar algo chico; un servo, mejor aparte).	GND: pins %s. 3V3: 针 %s. 5V: 针 %s (仅供小型的电源;一个伺服器,更好单独).
 Ya están los siete canales	所有七个通道都在那里.
@@ -98,7 +109,6 @@ Con un patrón andando, el valor lo mueve el patrón	随着一个模式运行,�
 Valor	数值
 Frecuencia	频率
 Velocidad	速度
-sin pin	没有针
 Canales	频道
 Apagar todo	一切都消失了
 + Canal	+ 频道
@@ -106,6 +116,9 @@ Patrón	模式
 Editar los pasos	编辑步骤
 Ningún PWM encendido	否 PWM 在
 (%d de 3 frecuencias)	(%d 频率3个)
+%sPCA9685 a %s	%s在PCA9685 %s
+%s%d PCA9685	%s%d PCA9685
+%.12s\nsalida %d	%.12s\n输出 %d
 Elegí\nun pin	选择\n插针
 GPIO%d\npata %d	GPIO%d\n引脚 %d
 período %s	时间 %s
@@ -113,16 +126,3 @@ Entre %s y %s	两者之间 %s 和 %s
 Un patrón mueve el valor solo, y sigue con la app en segundo plano. Al cerrar la app, todo se apaga.	一个模式本身就会移动值,并且在背景下继续使用应用程序.关闭应用程序将一切关闭.
 Con fades del LEDC: el hardware va de un punto al siguiente.	随着LEDC的消耗:硬件从一个点到另一个.
 La app escribe el valor cada 20 ms.	应用程序每20秒就会写出值.
-PCA9685 %s, salida %d	PCA9685 %s产量 %d
-Un servo tiene este PCA9685 a 50 Hz: sus 16 salidas comparten la frecuencia	此 PCA9685 已由舵机设为 50 Hz，全部 16 路输出共用该频率。
-El PCA9685 no tomó la frecuencia	其他 PCA9685 没有使用频率
-Un PCA9685 va de 24 Hz a 1526 Hz	A PCA9685 从24 Hz到1526 Hz
-Un PCA9685 no da un nivel analógico: PWM, servo o LED	A PCA9685 没有类似水平: PWM,伺服器或LED
-No contesta el PCA9685 %s	其他 PCA9685 %s 没有回答
-Esa salida la usa el canal %d	频道 %d 使用该输出
-Las 16 salidas de un PCA9685 comparten una frecuencia, de 24 Hz a 1526 Hz: un servo lo deja en 50 Hz. Los servos se alimentan por V+ del módulo, no por la placa.	PCA9685 的 16 路输出共用一个频率，可设范围为 24 至 1526 Hz；使用舵机时需设为 50 Hz。舵机由模块的 V+ 端供电，不能由开发板供电。
-Con un PCA9685 declarado en Módulos (module servos i2c.ext chip=pca9685 addr=0x40) aparecen acá sus 16 salidas.	通过一个 PCA9685 在模块 (module servos i2c.ext chip=pca9685 addr=0x40) 中声明的16个输出显示在这里.
-Señal: salida %d del PCA9685 %s (sus pines PWM de esa columna).	信号:输出 %d 在 PCA9685 %s (该委员会) PWM pins of that column).
-%sPCA9685 a %s	%s在PCA9685 %s
-%s%d PCA9685	%s%d PCA9685
-%.12s\nsalida %d	%.12s\n输出 %d

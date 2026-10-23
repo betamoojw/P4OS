@@ -794,6 +794,7 @@ static int s_rot;                  /* 0 / 90 / 180 / 270 */
 #define ROT_TMP_BYTES (24 * 1024)
 static uint16_t *s_rot_tmp;
 static size_t s_draw_bytes = DRAW_BYTES;
+void aos_draw_accel_init(void);  /* aos_draw_accel_p4.c */
 static int s_draw_mode;                 /* pref "lvbuf", as it was at boot */
 static int s_draw_bufs;                 /* 1 or 2 */
 
@@ -1677,7 +1678,7 @@ static void hang_start(void)
  * defaults - what the safe boot and the BOOT button's safe mode do. */
 void aos_hal_tune_reset(void)
 {
-    static const char *const TUNE[] = { "lvbuf", "lvrows", "fbs", "blit_hw", "bands_psram" };
+    static const char *const TUNE[] = { "lvbuf", "lvrows", "fbs", "blit_hw", "bands_psram", "draw_hw", "video_hw" };
     for (size_t i = 0; i < sizeof TUNE / sizeof TUNE[0]; i++) aos_hal_pref_erase(TUNE[i]);
 }
 
@@ -1848,6 +1849,7 @@ bool aos_hal_init(void)
              (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL));
     lv_display_set_buffers(s_disp, b1, b2, bytes, LV_DISPLAY_RENDER_MODE_PARTIAL);
     lv_display_set_flush_cb(s_disp, flush_cb);
+    aos_draw_accel_init();              /* the PPA takes plain fills and photos (aos_draw_accel_p4.c) */
 
     aos_hal_boot_stage("touch");
     if (aos_board_touch_new(&s_touch) != ESP_OK) {

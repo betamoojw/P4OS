@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Integrated upstream wallpaper, sound, screen-recording and Pipes features.
+  Compressed Latin fonts retain the Chinese fallback and decoder lock;
+  native app translations remain embedded. Added Chinese for new settings
+  and Pipes.
+
 - Added offline Simplified Chinese (`zh-Hans`) and Traditional Chinese
   (`zh-Hant`) for the system, native apps and portal pages. Regional SC/TC
   glyphs, GB2312/Big5 common characters and punctuation are stored in the
@@ -32,10 +37,87 @@
   ELFs and can validate all four boards with both profiles. Shared-object builds
   track header dependencies and use response files for Windows command limits.
 - Fixed Windows emulator binutils selection and CAS engine source extraction,
-  missing GCC link helper and archive command-length limits. All 50 apps and
+  missing GCC link helper and archive command-length limits. All 51 apps and
   11 emulator modules per silicon profile pass the four-board static checks.
 - Golf buffers and Lua/Python canvas limits follow the host panel size, including
   800 × 1280 displays.
+- **Accent colour of one's own** (Settings, Wallpaper): nine of iOS's
+  system colours. `AOS_C_ACCENT` is a call now (`aos_theme_accent()`), so
+  apps built against the new header follow it.
+- **A wallpaper that follows the time of day**: night, dawn, day, dusk and
+  evening, a little different every minute, on the home and lock screens.
+- **The lock screen's clock**: large or medium, at the top or in the
+  middle, white, the accent, or the lock photo's own colour.
+- **System sounds**: locking, unlocking, notifications, calls,
+  screenshots, recordings and an optional keyboard click
+  (`aos_ui_sound()`). Off with the control centre's bell, which takes the
+  place of its second orientation button, or in Settings, Sound.
+
+## 0.21.5 — 2026-10-22
+
+- **Screen recording.** The control centre's Grabar button records the
+  screen to an MP4 in the card's `/videos`, games and cameras included,
+  with a red dot in the status bar. The PPA turns each frame into YUV and
+  the P4's hardware H.264 encoder compresses it, 70 ms a frame between
+  them: 15 fps on a quiet screen, 7-9 while apps move. `/api/screenrec`.
+  (The control centre's Apagar, which did what Bloquear does, made room.)
+- **Photo wallpapers.** A photo behind the home screen and another behind
+  the lock screen, chosen from Photos' viewer (the palette at the top
+  right), darkened as much as each photo's brightness asks so the names
+  read on it. Kept in PSRAM, and let go while an app is in front.
+- **Cameras.** The viewer converts each picture straight into the panel's
+  framebuffer, with no copy through LVGL; it opens the camera's SD stream
+  and a button switches to HD; the turn button turns the picture, not the
+  whole system; and the colour conversion is a little quicker. A 704x576
+  doorbell runs at 7-9 fps without dropping frames.
+- **Lock screen** no longer draws the home screen hidden under it: with a
+  photo, 143 -> 108 ms a full redraw.
+- **Folders** turn a whole page with each swipe.
+- In English and German, Settings says On and Off instead of "Sí"; sensor
+  states say Active and Inactive.
+- Measured and left off by default: a draw unit that hands fills and photos
+  to the PPA or the AXI-GDMA (`draw_hw`), and the PPA converting camera
+  frames (`video_hw`): on this board both lose to the CPU, because the work
+  is bound by PSRAM. Documented in docs/CAMERAS.md.
+
+## 0.21.0 — 2026-10-22
+
+- **Caños, a pipes game** (`apps/canos`, from the card). Join the tank to
+  the drain before the liquid runs: turn the pipes (Turn) or lay the
+  missing ones from a tray (Complete), in Easy (the valve by hand), Normal
+  and Hard (it opens when the countdown ends). Six plants with their own
+  liquid, ten generated levels each: water, fuel, acid, crude oil, lava and
+  liquid nitrogen, each running and looking its own way, drawn per pixel,
+  with leaks that spread into puddles. Gamepad, its own sound, English and
+  German. Played on the board: 23-30 fps while the liquid runs. No firmware
+  change: the app and its language files are new in `apps.zip` and
+  `lang.zip`.
+
+## 0.20.3 — 2026-10-22
+
+- **An SCD4x that stops measuring is set up again.** A moment without
+  power leaves an SCD41 idle, and its last result was shown as new, "ok",
+  for as long as it stayed so. With nothing new for four periods it starts
+  again; the SCD30 likewise. SCD41 tried on the board.
+
+## 0.20.2 — 2026-10-21
+
+- **A smaller firmware: 7.52 MB down to 6.09 MB,** its slot from 5 % to
+  23 % free. The fonts from 24 px up and the 44 and 72 px icons are
+  compressed (1 MB less). LVGL decompresses with one shared state and the
+  board draws on two cores, so compressed glyphs are taken one at a time:
+  without that, big text came out as noise. The clock's digits stay
+  uncompressed. Redrawing a whole screen costs 6-9 % more, measured on the
+  board.
+- **The apps' translations live only on the card.** The firmware carried
+  every app's English and German as well as `lang.zip` did (438 KB): now
+  it carries the system's only. An app copied without its language files
+  shows in Spanish.
+- **MPU-9250 tried on the board,** and two fixes for the MPU family: a chip
+  that reset on a loose wire came back awake at its factory ranges with
+  the compass shut off (3.3 g at rest, a frozen compass), and is set up
+  again now; and the first reading after setting it up gave about 4 g.
+- Módulos says "1 sensor", not "1 sensors".
 
 ## 0.20.1 — 2026-10-20
 

@@ -1,4 +1,6 @@
 #include "aos_theme.h"
+#include "aos_hal.h"
+#include "aos_ui.h"
 #include "aos_fonts.h"
 #include "aos_i18n.h"
 #include "aos_emoji.h"
@@ -72,8 +74,25 @@ static const lv_font_t *sim_font(int px, const lv_font_t *fallback)
 }
 #endif
 
+static uint32_t s_accent = 0x0A84FF;
+static const uint32_t ACCENTS[] = { 0x0A84FF, 0xBF5AF2, 0xFF375F, 0xFF453A, 0xFF9F0A,
+                                    0xFFD60A, 0x30D158, 0x40C8E0, 0x8E8E93 };
+
+lv_color_t aos_theme_accent(void) { return lv_color_hex(s_accent); }
+uint32_t aos_theme_accent_rgb(void) { return s_accent; }
+int aos_theme_accents(void) { return (int)(sizeof ACCENTS / sizeof ACCENTS[0]); }
+uint32_t aos_theme_accent_at(int i) { return i >= 0 && i < aos_theme_accents() ? ACCENTS[i] : ACCENTS[0]; }
+
+void aos_theme_set_accent(uint32_t rgb)
+{
+    s_accent = rgb & 0xFFFFFF;
+    aos_hal_pref_set_i32("accent", (int32_t)s_accent);
+}
+
 void aos_theme_init(void)
 {
+    int32_t acc = 0;
+    if (aos_hal_pref_get_i32("accent", &acc) && acc > 0) s_accent = (uint32_t)acc & 0xFFFFFF;
     aos_font_huge    = pick(64);
     aos_font_large   = pick(48);
     aos_font_title   = pick(36);
@@ -247,8 +266,12 @@ const char *aos_month_name(int mon)
     return C_("mes", months[((mon % 12) + 12) % 12]);
 }
 
+static void key_cb(lv_event_t *e) { (void)e; aos_ui_sound(AOS_SND_KEY); }
+
 void aos_keyboard_style(lv_obj_t *kb, const lv_font_t *font)
 {
+    /* the click, if it is on (Settings, Sound) */
+    lv_obj_add_event_cb(kb, key_cb, LV_EVENT_VALUE_CHANGED, NULL);
     lv_obj_set_style_text_font(kb, font ? font : aos_font_body, 0);
     lv_obj_set_style_bg_color(kb, lv_color_hex(0x1C1C1E), 0);
     lv_obj_set_style_bg_opa(kb, LV_OPA_COVER, 0);

@@ -731,8 +731,9 @@ def cmd_embed(args):
         for fn in sorted(os.listdir(d)):
             if not fn.endswith(".lang"):
                 continue
-            if fn == PORTAL_CATALOG or fn.startswith("web."):
-                continue        # the browser's, from the card: never in the firmware
+            if fn == '_portal.lang' or fn.startswith('web.'):
+                # Browser catalogues are embedded by gen_web_assets.py.
+                continue
             pairs = [(k, v) for k, v in read_pack(os.path.join(d, fn)).items()]
             if not pairs:
                 continue
@@ -749,11 +750,12 @@ def cmd_embed(args):
     out.append("/*")
     out.append(" * GENERADO por tools/gen_lang.py embed - no editar a mano.")
     out.append(" *")
-    out.append(" * Catalogos que viajan DENTRO del binario. Existen para que el")
+    out.append(" * El catalogo del sistema viaja DENTRO del binario, para que el")
     out.append(" * aparato tenga un segundo idioma aunque no haya tarjeta, y para que")
     out.append(" * catalogo y codigo no puedan desincronizarse: con la clave siendo el")
     out.append(" * texto espanol, un cambio en el fuente huerfana su traduccion en")
-    out.append(" * silencio, y eso solo se evita si los dos se compilan juntos.")
+    out.append(" * silencio, y eso solo se evita si los dos se compilan juntos. Los de")
+    out.append(" * las apps tambien se incluyen comprimidos; la tarjeta puede sobreescribirlos.")
     out.append(" *")
     out.append(" * La tarjeta le GANA a esto (ver catalog_load en aos_i18n.c): asi se")
     out.append(" * corrige una traduccion sin recompilar, y el tercer idioma entra por")

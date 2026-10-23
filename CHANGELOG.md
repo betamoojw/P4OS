@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- **Accent colour of one's own** (Settings, Wallpaper): nine of iOS's
+  system colours. `AOS_C_ACCENT` is a call now (`aos_theme_accent()`), so
+  apps built against the new header follow it.
+- **A wallpaper that follows the time of day**: night, dawn, day, dusk and
+  evening, a little different every minute, on the home and lock screens.
+- **The lock screen's clock**: large or medium, at the top or in the
+  middle, white, the accent, or the lock photo's own colour.
+- **System sounds**: locking, unlocking, notifications, calls,
+  screenshots, recordings and an optional keyboard click
+  (`aos_ui_sound()`). Off with the control centre's bell, which takes the
+  place of its second orientation button, or in Settings, Sound.
+
 ## 0.21.5 — 2026-10-22
 
 - **Screen recording.** The control centre's Grabar button records the

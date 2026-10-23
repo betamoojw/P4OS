@@ -443,6 +443,27 @@ Que necesitan la mano del usuario o equipos:
       (`keeping aos.datalog ... running: background`); después de una OTA
       arrancó solo (`started hidden`). Dibujo, con el DS18B20 leyéndose,
       ya no queda como "running: pins": se cierra al salir (1674 KB).
+- [x] Fondos, cámaras, grabación de pantalla y sonidos (2026-10-22, 0.21.5 y
+      lo que siguió), en la placa:
+  - Fotos de fondo de Mila en el inicio y el bloqueo: 3,7 MB de PSRAM, nada
+    de RAM interna; redibujar el inicio entero 72,9 -> 101,7 ms con la foto.
+    Desde 0.21.5 se sueltan con una app al frente.
+  - El bloqueo ya no dibuja lo de abajo: con foto, 143 -> 108 ms.
+  - Aceleradores para copiar (PPA escalador, PPA mezclador, AXI-GDMA):
+    todos más lentos que la CPU en el inicio y el bloqueo (133,6 / 113,5 /
+    111,3 contra 102,5 ms). El PPA convirtiendo cámaras: 6,1 fps contra 8,9
+    por CPU. Quedaron apagados (`draw_hw`, `video_hw`): el cuello es la PSRAM.
+  - Cámaras: el timbre en SD directo al framebuffer, 7-9 fps sin descartar;
+    en HD (1920x1080) ~1 cuadro por segundo, sólo los completos (590 ms por
+    cuadro de decodificación). SD/HD y girar sólo la imagen probados por el
+    usuario. "Entrada" manda H.264 Main y se rechaza con un mensaje (sólo
+    Baseline): pendiente que la cámara o go2rtc mande Baseline.
+  - Grabación de pantalla: MP4 de 720x1280 a 14,5 fps en pantalla quieta y
+    7-9 usando apps; PPA + codificador 64-70 ms por cuadro; 60 KB de RAM
+    interna mientras graba (el búfer de desbloqueo del codificador), que
+    vuelven al terminar. ffmpeg lo decodifica entero; se ve en la Mac.
+  - Color de acento, fondo según la hora, reloj del bloqueo y sonidos del
+    sistema: probados por el usuario ("suena bien").
 - [x] Sensores nuevos con los módulos del usuario (2026-10-19, 0.20.0), en
       i2c.ext, uno a la vez, todos reconocidos solos salvo los que se
       declaran:

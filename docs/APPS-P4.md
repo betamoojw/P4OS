@@ -277,6 +277,28 @@ that must go on after a power cut or a firmware update.
     ~56 discs a frame, which saved 10 ms.
   - Clip in X as well as Y: narrow bands multiply every per-row cost.
 
+## The system's look and sounds (since 0.21.5)
+
+- **The accent is the person's.** `AOS_C_ACCENT` is a call now,
+  `aos_theme_accent()`, and returns the colour chosen in Settings,
+  Wallpaper. Use it for what is active or selected and the app follows the
+  choice; an app built before keeps the blue it was compiled with.
+  `aos_theme_accent_rgb()` gives it as 0xRRGGBB for code that mixes
+  colours itself.
+- **Sounds:** `aos_ui_sound(AOS_SND_NOTIF)` and the rest of `aos_sound_t`
+  play the system's own (a few notes of the speaker's bell), and respect the
+  person's switch: nothing sounds when the system sounds are off. A game's
+  own effects are the game's (`aos_hal_beep`, `aos_hal_spk_*`).
+- **The screen recording** (`aos_hal_screenrec_*`, the control centre's
+  Grabar) takes the panel's framebuffer as it is, so an app that flips or
+  blits its own frames is recorded like any other.
+- **Copies through PSRAM cost the same whoever makes them.** Handing a plain
+  copy to the PPA or a DMA did not pay on this board (the wallpaper and the
+  camera frames were measured slower than the CPU, docs/CAMERAS.md). What
+  pays is copying less: converting straight into the panel's free buffer
+  (`aos_hal_display_back` / `flip`) instead of into a frame of the app's
+  that LVGL then copies again. Cameras' viewer does that.
+
 ## A page of your own in the portal
 
 An app can bring a page to the board's web portal with no firmware: a

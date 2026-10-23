@@ -119,9 +119,12 @@ The home screen has icon pages, folders, a dock and widgets.
   portal's `#inicio` page does the same from a computer.
 
 - **Swiping down** from the top opens the control centre (Wi-Fi, Bluetooth,
-  do not disturb, orientation, brightness, volume, the music playing on the
-  board or on the iPhone, the screen recording) and the notifications, with
-  the phone's own actions.
+  do not disturb, the system sounds, orientation, brightness, volume, the
+  music playing on the board or on the iPhone, the screen recording) and the
+  notifications, with the phone's own actions.
+- **System sounds:** a few notes of the speaker's bell when locking and
+  unlocking, for notifications and calls, screenshots and recordings, and an
+  optional keyboard click. The control centre's bell turns them all off.
 - **Recording the screen** (since 0.21.5): the control centre's Grabar
   button records what the panel shows to an MP4 on the card (`/videos`),
   games and cameras included, with a red dot in the status bar while it
@@ -174,7 +177,8 @@ anywhere: the screen follows the finger.
 
 ### Wallpapers
 
-Eight gradients, and over them a photo from the card for the home screen
+Eight gradients and a ninth that follows the time of day (night, dawn, day,
+dusk, a little different every minute), and over them a photo from the card for the home screen
 and another for the lock screen, chosen from Photos (the palette at the top
 right of a photo). Each is cropped to the screen, kept in PSRAM (1.8 MB a
 screen, nothing in internal RAM) and darkened as much as its own
@@ -187,6 +191,11 @@ again; Settings, Wallpaper shows which photo each has and removes it.
 | <img src="docs/img/board-wallpaper-home.jpg" width="300"> | <img src="docs/img/board-wallpaper-lock.jpg" width="300"> |
 
 <p align="center"><em>Both on the board, both of Mila.</em></p>
+
+The same page picks the **accent colour** (switches, selections, the active
+buttons), one of iOS's nine system colours. The lock screen's clock is
+large or medium, at the top or in the middle, and white, the accent, or the
+lock photo's own colour lightened (Settings, Lock screen).
 
 The gesture is a free swipe up, as phones do it today, and not a control
 dragged along a track: Apple's 2005 patent on the latter
@@ -690,7 +699,10 @@ explained), Web portal (trusted networks, the password), Display, Lock screen, S
 Language, Date and time, Update, Diagnostics, About and Developer.
 
 - **Lock screen:** when it locks, the code (none, 4 or 6 digits, changed or
-  removed with the current one), and what it shows.
+  removed with the current one), what it shows, and the clock's size, place
+  and colour.
+- **Sound:** the volume, the system sounds and the keyboard click.
+- **Wallpaper:** the gradients, the photos and the accent colour.
 - **Storage:** what fills the card by kind of file, and eject.
 - **Update:** both slots, and going back.
 - **Diagnostics:** chip temperature, CPU, memory, the reset reason, safe mode,

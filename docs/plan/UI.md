@@ -91,8 +91,10 @@ Vertical 720×1280                         Horizontal 1280×720
   orden alfabético, incluidas las ocultas.
 - **Búsqueda** (deslizar hacia abajo en el medio del inicio): apps, ajustes,
   **entidades de HA**, archivos de la SD.
-- **Fondo de pantalla**: degradado o imagen JPEG de la SD (decodificado por
-  hardware), elegido en Ajustes. Mila de fondo por defecto (gatito negro sobre fondo claro).
+- **Fondo de pantalla** (hecho, 2026-10-22): ocho degradados y uno que sigue
+  la hora del día, y encima una foto para el inicio y otra para el bloqueo,
+  elegidas desde Fotos. El color de acento y el reloj del bloqueo se eligen
+  en Ajustes. Lo pendiente de personalización está en `MEJORAS-OS.md`.
 
 ### Gestos del sistema
 
@@ -115,8 +117,9 @@ actúa (como iOS con los juegos a pantalla completa).
 
 Grilla de módulos, igual en espíritu al de iOS:
 - Brillo y volumen (deslizadores grandes)
-- WiFi, BLE, No molestar, **Orientación (vertical/horizontal)**, Protector de
-  pantalla ya, Captura de pantalla
+- WiFi, BLE, No molestar, los sonidos del sistema (la campana),
+  **Orientación (vertical/horizontal)**, Ajustes, **Grabar la pantalla**,
+  Editar inicio, Bloquear (como quedó el 2026-10-22)
 - Música en curso (título, controles, tapa)
 - Escenas de HA fijadas por el usuario (4-8 botones)
 - Estado de módulos (RS485 activo, captura serie grabando) con acceso directo

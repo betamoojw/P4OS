@@ -143,10 +143,74 @@
     "Tomado de la foto": "从照片取色",
     "El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.": "使用锁屏照片中提取并调亮的颜色；未设置照片时，时钟显示为白色。",
     "Caños": "管道拼图",
-    "grabación de pantalla\\x04Grabar": "录屏"
+    "grabación de pantalla\\x04Grabar": "录屏",
+    "Volumen": "音量",
+    "Portal web": "网页管理",
+    "Red": "网络",
+    "La placa no tiene acelerómetro: la orientación se elige acá o en el Centro de control. Las apps que sólo tienen sentido de una forma giran la pantalla mientras están abiertas.": "开发板没有加速度计，请在此处或控制中心选择屏幕方向。仅支持特定方向的应用会在运行时自动旋转屏幕。",
+    "VOLUMEN": "音量",
+    "Bus": "总线",
+    "Ranura": "固件分区",
+    "Volcado": "崩溃转储",
+    "Claude": "Claude",
+    "Electrónica": "电子工具",
+    "Tocá otra vez para reiniciar con esa": "再次点击，重启并运行该版本",
+    "La otra ranura no tiene una imagen entera": "另一固件分区没有完整的固件镜像",
+    "Reiniciando con la versión anterior…": "正在重启并恢复上一版本…",
+    "anduvo: se puede volver": "已验证，可回退",
+    "a prueba": "试运行中",
+    "marcada como mala": "已标记为无效",
+    "a medio instalar": "安装未完成",
+    "mandando… %u %%": "正在发送… %u %%",
+    "listo: reiniciando": "已完成，正在重启",
+    "Tocá otra vez: sin Wi-Fi un minuto y reinicia": "再次点击开始；Wi-Fi 将断开约一分钟，然后设备重启",
+    "LA RADIO (ESP32-C6)": "无线模块（ESP32-C6）",
+    "En el C6": "C6 当前版本",
+    "todavía no arrancó": "尚未启动",
+    "de fábrica (sin versión)": "出厂固件（未提供版本）",
+    "En la tarjeta": "存储卡中的版本",
+    "Una versión nueva del firmware del C6 se copia a /firmware/c6.bin de la tarjeta (portal o tools/install_c6.sh) y se instala desde acá.": "通过网页管理或 tools/install_c6.sh 将 C6 新固件复制到存储卡的 /firmware/c6.bin，再从此处安装。",
+    "Instalar en el C6": "安装 C6 固件",
+    "El C6 la escribe en su otra ranura y la revisa antes de cambiar. Mientras tanto no hay Wi-Fi, y al terminar la placa se reinicia.": "C6 会将固件写入备用分区，校验后再切换。安装期间 Wi-Fi 暂不可用，完成后设备会重启。",
+    "LA QUE CORRE": "当前固件",
+    "Compilada": "编译时间",
+    "confirmada": "已确认",
+    "LA ANTERIOR": "上一版本",
+    "No se pudo leer la otra ranura": "无法读取另一固件分区",
+    "Volver a esta versión": "回退到此版本",
+    "Las versiones nuevas llegan por el portal (Firmware) o con tools/ota.sh, y se escriben en la otra ranura. Arrancan a prueba: si la placa se reinicia antes de confirmarla, a los 30 s, vuelve sola a la anterior.": "通过网页管理的“固件”页面或 tools/ota.sh 更新，固件会写入备用分区。重启后先试运行，稳定运行 30 秒后确认；若确认前重启，设备会自动回退。",
+    "al encender": "上电启动",
+    "por software": "软件重启",
+    "por un error (pánico)": "系统异常（panic）",
+    "watchdog de interrupciones": "中断看门狗",
+    "watchdog de tareas": "任务看门狗",
+    "watchdog": "看门狗",
+    "caída de tensión": "供电电压过低",
+    "al salir del sueño profundo": "从深度睡眠唤醒",
+    "botón de reset": "复位按钮",
+    "por el USB": "USB 复位",
+    "por JTAG": "JTAG 复位",
+    "CPU trabada": "CPU 无响应",
+    "%u KB (mínimo %u)": "%u KB（最低 %u）",
+    "Volcado borrado": "崩溃转储已删除",
+    "Interna libre": "可用内部内存",
+    "ESTE ARRANQUE": "本次启动",
+    "Motivo del reinicio": "重启原因",
+    "sí: sin las apps de la tarjeta": "是，未加载存储卡应用",
+    "Reinicios por cuelgue": "异常重启次数",
+    "Se arrancó con BOOT apretado: sin las apps de la tarjeta y con los ajustes de pantalla de fábrica. Reiniciá para volver a la normalidad.": "启动时按住了 BOOT：已停用存储卡应用，并使用默认显示设置。重启即可恢复正常模式。",
+    "RADIO (ESP32-C6)": "无线模块（ESP32-C6）",
+    "no la informa (firmware viejo)": "旧固件未提供版本信息",
+    "El Wi-Fi lo hace el ESP32-C6 de la placa; el P4 le habla por SDIO. Esta es la versión del firmware que corre en el C6.": "Wi-Fi 由板载 ESP32-C6 提供，P4 通过 SDIO 与其通信。此处显示 C6 当前运行的固件版本。",
+    "ÚLTIMO CUELGUE": "最近一次崩溃",
+    "Firmware (ELF)": "固件（ELF）",
+    "Borrar el volcado": "删除崩溃转储",
+    "El volcado se baja desde el portal (Firmware, Último cuelgue) o con tools/coredump.sh, y se lee con la ELF de esa compilación.": "从网页管理的“固件 → 最近一次崩溃”或通过 tools/coredump.sh 下载转储，使用与该固件匹配的 ELF 文件解码。",
+    "Abrir el Monitor": "打开系统监视器"
   },
   "aos.ble.lang": {
-    "%s · %d dBm · 2 h": "%s · %d dBm · 2 小时"
+    "%s · %d dBm · 2 h": "%s · %d dBm · 2 小时",
+    "Red": "网络"
   },
   "aos.can.lang": {
     "Pasa la trama cuyo id coincide con el del filtro en los bits de la máscara: 7FF deja un id solo, 700 los de 0x100 en 0x100. Lo que no pasa no llega ni a la grabación.": "仅当帧 ID 在掩码指定位上与过滤器一致时才会通过：7FF 仅允许一个 ID，700 允许以 0x100 为步长的 ID。未通过的帧也不会被记录。",
@@ -181,7 +245,8 @@
     "Sumas: CRC32, MD5, SHA-256": "校验和：CRC32、MD5、SHA-256",
     "Todo a 3V3: el header no aguanta 5 V. Si el chip está en una placa a 5 V, no lo conectes así.": "所有信号均为 3.3 V，扩展接口无法承受 5 V。芯片若安装在 5 V 电路板上，请勿直接连接。",
     "Un capacitor de 100 nF entre VCC y GND, pegado al chip.": "在 VCC 与 GND 之间接入 100 nF 电容，并尽量靠近芯片。",
-    "SDA y SCL necesitan pull-ups de 4,7 kΩ a 3V3, si el módulo no los trae.": "若模块没有自带上拉电阻，SDA、SCL 需分别通过 4.7 kΩ 电阻上拉至 3.3 V。"
+    "SDA y SCL necesitan pull-ups de 4,7 kΩ a 3V3, si el módulo no los trae.": "若模块没有自带上拉电阻，SDA、SCL 需分别通过 4.7 kΩ 电阻上拉至 3.3 V。",
+    "sin leer": "未读"
   },
   "aos.infrarrojo.lang": {
     "Un receptor con demodulador de 38 kHz (TSOP38238, VS1838B y parecidos). Alimentarlo con 3,3 V, nunca con 5 V: su salida iría con 5 V al pin, y el conector no los aguanta.": "使用带 38 kHz 解调器的接收头，例如 TSOP38238、VS1838B 等。必须使用 3.3 V 供电；若使用 5 V，输出也会达到 5 V，扩展接口无法承受。",
@@ -203,7 +268,8 @@
   },
   "aos.rf.lang": {
     "Radio comercial, de 88 a 108 MHz": "调频广播，88 至 108 MHz",
-    "La señal ocupa %u MB por minuto a la tasa de ahora; la tarjeta escribe unos 3 MB/s.": "当前采样率下，每分钟信号约占 %u MB；存储卡写入速度约为 3 MB/s。"
+    "La señal ocupa %u MB por minuto a la tasa de ahora; la tarjeta escribe unos 3 MB/s.": "当前采样率下，每分钟信号约占 %u MB；存储卡写入速度约为 3 MB/s。",
+    "Volumen": "音量"
   },
   "demo.chatarra.lang": {
     "UN CUADRO DE UN LAGO.\\nLA FIRMA DICE: TUERCA,\\nANO 9.": "一幅湖泊画作。\\n署名：齿轮，9 年。"
@@ -231,11 +297,13 @@
     "Con 1 kΩ en serie y 1 µF a GND: de 0 a 3,3 V.": "串联 1 kΩ 电阻，并通过 1 µF 电容接到 GND，输出范围为 0 至 3.3 V。"
   },
   "web.radio.lang": {
-    "En el directorio abierto de radio-browser.info, con más de 50.000 estaciones de todo el mundo.": "使用 radio-browser.info 的开放电台目录，收录全球超过 50,000 个电台。"
+    "En el directorio abierto de radio-browser.info, con más de 50.000 estaciones de todo el mundo.": "使用 radio-browser.info 的开放电台目录，收录全球超过 50,000 个电台。",
+    "Volumen": "音量"
   },
   "web.rf.lang": {
     "PSK en base64 (p. ej. AQ==)": "base64 格式的 PSK，例如 AQ==",
-    "La señal ocupa %s MB por minuto a esta tasa; la tarjeta escribe unos 3 MB/s.": "当前采样率下，每分钟信号约占 %s MB；存储卡写入速度约为 3 MB/s。"
+    "La señal ocupa %s MB por minuto a esta tasa; la tarjeta escribe unos 3 MB/s.": "当前采样率下，每分钟信号约占 %s MB；存储卡写入速度约为 3 MB/s。",
+    "Volumen": "音量"
   },
   "web.visor3d.lang": {
     "El visor dibuja hasta 150 000; más que eso lo reduciría él mismo al abrirlo. Menos triángulos es más fluido al girar.": "最多绘制 150,000 个三角形。超过上限时，打开模型会自动简化。三角形越少，旋转越流畅。"
@@ -246,7 +314,45 @@
     "El UNI-T UTG932E habla USBTMC por USB y espera un hub USB con alimentación: el puerto OTG de la placa no da 5 V.": "UNI-T UTG932E 通过 USB 使用 USBTMC 通信，需要外部供电的 USB 集线器；开发板的 OTG 端口不提供 5 V。",
     "QoS 1 espera la confirmación del broker. Un mensaje vacío y retenido borra el retenido del tópico.": "QoS 1 会等待消息代理确认。发送空的保留消息可清除该主题已保留的消息。",
     "2. En la página de Claude iniciá sesión y autorizá. Te va a mostrar un código: copialo y pegalo acá.": "2. 在 Claude 页面登录并授权，复制显示的代码，再粘贴到此处。",
-    "Hasta 63 bytes. La mayoría de los widgets no lo usan.": "最多 63 字节。大多数小组件不使用此项。"
+    "Hasta 63 bytes. La mayoría de los widgets no lo usan.": "最多 63 字节。大多数小组件不使用此项。",
+    "Red": "网络",
+    "Letras minúsculas, números y guiones. Es lo que responde como <nombre>.local.": "仅使用小写字母、数字和连字符。设置后可通过 <名称>.local 访问设备。",
+    "Volumen": "音量",
+    "La contraseña, las redes de confianza y HTTPS se cambian sólo en la placa: Ajustes, Portal web.": "密码、受信任网络和 HTTPS 只能在设备本机的“设置 → 网页管理”中修改。",
+    "Bajar la autoridad HTTPS de la placa": "下载设备 HTTPS 根证书",
+    "Instalada una vez como confiable en la Mac (Acceso a Llaveros, \"Confiar siempre\") o en el iPhone (Ajustes, General, Información, Confianza de certificados), el navegador deja de avisar por https://%s.local. Sólo sirve para nombres .local y direcciones de la red de casa.": "将证书设为受信任后，可访问 https://%s.local。Mac：钥匙串访问 → 始终信任；iPhone：设置 → 通用 → 关于本机 → 证书信任设置。证书仅用于 .local 名称和家庭局域网地址。",
+    "Tiene que ser el .bin del firmware (%s)": "请选择固件 .bin 文件（%s）。",
+    "La placa no contestó en un minuto y medio: mirala.": "设备在 90 秒内未响应，请检查开发板。",
+    "Compilado": "编译时间",
+    "Ranura": "固件分区",
+    "Actualizar por Wi-Fi": "通过 Wi-Fi 更新",
+    "Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.": "请选择 %s。上传时写入备用分区；重启后试运行，若未能稳定运行 30 秒，设备将自动回退到当前固件。命令行可使用 tools/ota.sh。",
+    "Volver a la otra ranura": "切换到另一固件分区",
+    "Último cuelgue": "最近一次崩溃",
+    "Volcado": "崩溃转储",
+    "el de ahora": "当前固件",
+    "el de la otra ranura": "另一分区的固件",
+    "ninguna de las dos ranuras: uno viejo": "旧固件，不在当前两个分区中",
+    "Visto": "记录时间",
+    "sin leer": "未读",
+    "Para ver funciones y líneas: tools/coredump.sh en la Mac. Decodifica sólo con la ELF de ese firmware (build/elf/<sha>.elf, que tools/ota.sh guarda en cada instalación); descargarlo entero cuenta como leído.": "可用 tools/coredump.sh 查看函数和行号。解码需要与崩溃固件匹配的 ELF 文件（build/elf/<sha>.elf，由 tools/ota.sh 在安装时保存）。完整下载后会标记为已读。",
+    "Descargar el volcado": "下载崩溃转储",
+    "Marcar como leído": "标记为已读",
+    "¿Borrar el volcado?": "删除崩溃转储？",
+    "No hay: la placa no se colgó desde que se borró el último.": "暂无记录：自上次清除记录后，设备未发生崩溃。",
+    "No se pudo leer: %s": "读取失败：%s",
+    "Reiniciar con el firmware nuevo": "重启并运行新固件",
+    "Subiendo %s de %s…": "正在上传 %s，共 %s…",
+    "Listo: %s escritos en %s s. Arranca a prueba al reiniciar.": "已完成：写入 %s，用时 %s 秒。重启后将试运行新固件。",
+    "Se cortó la conexión": "连接已断开",
+    "Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranque anterior.": "已回退到上一版本：新固件未能启动。请查看上次启动日志。",
+    "Corriendo %s a prueba: se confirma a los 30 s…": "正在试运行 %s，稳定运行 30 秒后确认…",
+    "Confirmado: %s es el firmware ahora.": "已确认：当前运行固件为 %s。",
+    "a prueba": "试运行中",
+    "La otra ranura": "另一固件分区",
+    "Elegir el .bin…": "选择 .bin 文件…",
+    "¿Arrancar %s (%s) en el próximo reinicio?": "下次重启时启动 %s（%s）？",
+    "Arranca %s al reiniciar": "下次重启将启动 %s"
   },
   "aos.video.lang": {
     "1 video en %s": "1 个视频，位于 %s"

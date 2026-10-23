@@ -224,7 +224,20 @@ bool aos_io_be_i2c_dev_cfg(aos_io_i2c_t *b, uint8_t addr, uint32_t hz, uint32_t 
 
 bool aos_io_be_i2c_probe(aos_io_i2c_t *b, uint8_t addr)
 {
-    return i2c_master_probe(((i2c_be_t *)b->be)->bus, addr, 30) == ESP_OK;
+    i2c_be_t *s = b->be;
+    esp_err_t err = i2c_master_probe(s->bus, addr, 30);
+    if (err == ESP_ERR_TIMEOUT) {
+        /* IDF resets its own transaction FSM on a bus timeout. Do not reset
+         * the shared touch/codec bus here. Retry once, and identify the port
+         * and lines so a physical fault is not mistaken for an absent chip. */
+        int sda = gpio_get_level(b->port->pins[0]);
+        int scl = gpio_get_level(b->port->pins[1]);
+        vTaskDelay(pdMS_TO_TICKS(2) ? pdMS_TO_TICKS(2) : 1);
+        err = i2c_master_probe(s->bus, addr, 30);
+        aos_hal_log("io", "I2C probe timeout: port=%s addr=0x%02x SDA=%d SCL=%d; retry=%s",
+                    b->port->name, addr, sda, scl, esp_err_to_name(err));
+    }
+    return err == ESP_OK;
 }
 
 bool aos_io_be_i2c_xfer(aos_io_i2c_t *b, uint8_t addr, const void *w, size_t wn, void *r, size_t rn, int timeout_ms)

@@ -1,0 +1,21 @@
+{
+  "_portal.lang": {
+    "Ranura": "韌體分割區",
+    "La otra ranura": "另一韌體分割區",
+    "Volver a la otra ranura": "切換到另一韌體分割區",
+    "Último cuelgue": "最近一次當機",
+    "Volcado": "當機傾印",
+    "Descargar el volcado": "下載當機傾印",
+    "¿Borrar el volcado?": "刪除當機傾印？"
+  },
+  "_sistema.lang": {
+    "La otra ranura no tiene una imagen entera": "另一韌體分割區沒有完整的韌體映象",
+    "Ranura": "韌體分割區",
+    "No se pudo leer la otra ranura": "無法讀取另一韌體分割區",
+    "Volcado borrado": "當機傾印已刪除",
+    "ÚLTIMO CUELGUE": "最近一次當機",
+    "Volcado": "當機傾印",
+    "Borrar el volcado": "刪除當機傾印",
+    "El volcado se baja desde el portal (Firmware, Último cuelgue) o con tools/coredump.sh, y se lee con la ELF de esa compilación.": "從網頁管理的“韌體 → 最近一次當機”或透過 tools/coredump.sh 下載傾印，使用與該韌體匹配的 ELF 檔案解碼。"
+  }
+}

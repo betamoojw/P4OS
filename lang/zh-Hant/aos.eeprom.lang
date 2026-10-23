@@ -111,7 +111,7 @@ Sin WPEN, la pata /WP no traba el registro de estado.	沒有WPEN, /WP 指令碼�
 Quitar protección	刪除保護
 Pone en 0 el registro de estado de la flash: se puede escribir toda.	設定快閃記憶體狀態登錄檔為0:所有內容都可寫.
 Quitar	移除
-sin leer	沒有閱讀
+sin leer	未讀
  (protegida)	 (受保護)
 MEMORIA	記憶
 %s. Páginas de 256 B, se borra por sectores de 4 KB.	%s. 256 億頁,在 4 KB 的部門中被刪除.

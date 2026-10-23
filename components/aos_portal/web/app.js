@@ -5,6 +5,16 @@
 
 const $ = (s, el = document) => el.querySelector(s);
 const main = $('#main');
+let routeEpoch = 0;
+// A request may finish after navigating away and back to the same page.
+function pageCurrent(page) {
+  const epoch = routeEpoch;
+  return () => routeEpoch === epoch && location.hash === '#' + page;
+}
+function firmwarePath(state) {
+  return /^build\/lcd(?:5|7|8|10_1)\/rev(?:1_3|3_x)\/p4os\.bin$/.test(state.firmware_path || '')
+    ? state.firmware_path : 'p4os.bin';
+}
 /* replaceChildren without the null/false holes a conditional leaves */
 const put = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(k => k != null && k !== false));
 
@@ -226,7 +236,7 @@ function pagePantalla() {
   put(main, h('h1', {}, tr('Pantalla')), h('div', { class: 'screen-wrap' }, h('div', { class: 'screen' }, img, busy), side));
   const card = $('#infocard');
   const fill = () => put(card, 
-    row(tr('Nombre'), info.name + '.local'), row(tr('Placa'), info.board), row('Firmware', info.firmware),
+    row(tr('Nombre'), info.name + '.local'), row(tr('Placa'), info.board), row(tr('Firmware'), info.firmware),
     row(tr('Dirección'), info.ip || tr('sin red')), row(tr('Red'), info.ssid ? `${info.ssid} (${info.rssi} dBm)` : '—'),
     row(tr('Encendida hace'), fmtUptime(info.uptime_s || 0)),
     row(tr('Memoria libre'), tr('%s KB internos · %s PSRAM', Math.round((info.heap_internal || 0) / 1024), fmtBytes(info.heap_psram || 0))),
@@ -671,7 +681,10 @@ async function changeLanguage(code) {
 }
 
 async function pageAjustes() {
+  const current = pageCurrent('ajustes');
+  if (!current()) return;
   const s = await api('settings');
+  if (!current()) return;
   const set = async (o, msg) => { try { await post('settings', o); if (msg) toast(msg); } catch (e) { toast(e.message, true); } };
   const name = h('input', { type: 'text', value: s.name });
   const tz = h('select', { onchange: e => set({ tz: e.target.value }, tr('Zona horaria cambiada')) },
@@ -693,8 +706,8 @@ async function pageAjustes() {
       h('label', { class: 'f' }, tr('Zona horaria')), tz, h('label', { class: 'f' }, tr('Idioma')), lang),
     h('div', { class: 'card pad' },
       h('label', { class: 'f', style: 'margin-top:0' }, tr('Orientación')),
-      h('div', { class: 'btns' }, h('button', { class: 'btn' + (s.landscape ? '' : ' pri'), onclick: () => { set({ landscape: false }); setTimeout(pageAjustes, 600); } }, tr('Vertical')),
-        h('button', { class: 'btn' + (s.landscape ? ' pri' : ''), onclick: () => { set({ landscape: true }); setTimeout(pageAjustes, 600); } }, tr('Horizontal'))),
+      h('div', { class: 'btns' }, h('button', { class: 'btn' + (s.landscape ? '' : ' pri'), onclick: async () => { await set({ landscape: false }); setTimeout(() => { if (current()) pageAjustes(); }, 600); } }, tr('Vertical')),
+        h('button', { class: 'btn' + (s.landscape ? ' pri' : ''), onclick: async () => { await set({ landscape: true }); setTimeout(() => { if (current()) pageAjustes(); }, 600); } }, tr('Horizontal'))),
       h('label', { class: 'f' }, tr('Brillo')), slider('brightness', s.brightness),
       h('label', { class: 'f' }, tr('Volumen')), slider('volume', s.volume))),
     h('h2', {}, tr('Fondo de pantalla')), h('div', { class: 'card pad' }, sw),
@@ -805,16 +818,19 @@ function pageRegistro() {
  * previous one comes back by itself. The last panic's dump, for
  * tools/coredump.sh. */
 async function pageFirmware() {
+  const current = pageCurrent('firmware');
+  if (!current()) return;
   let st, cd;
   try { [st, cd] = await Promise.all([api('ota'), api('coredump')]); }
-  catch (e) { put(main, h('h1', {}, 'Firmware'), h('div', { class: 'card pad' }, tr('No se pudo leer: %s', e.message))); return; }
+  catch (e) { if (current()) put(main, h('h1', {}, tr('Firmware')), h('div', { class: 'card pad' }, tr('No se pudo leer: %s', e.message))); return; }
+  if (!current()) return;
   const bar = h('div', { class: 'prog', style: 'margin:12px 0 6px' }, h('div'));
   const msg = h('div', { class: 'note' });
   const file = h('input', { type: 'file', accept: '.bin', style: 'display:none', onchange: e => upload(e.target.files[0]) });
   const restartBtn = h('button', { class: 'btn pri', style: 'display:none', onclick: () => restartInto() }, tr('Reiniciar con el firmware nuevo'));
   function upload(f) {
     if (!f) return;
-    if (!/\.bin$/i.test(f.name)) { toast(tr('Tiene que ser el .bin del firmware (build/rev1_3/p4os.bin)'), true); return; }
+    if (!/\.bin$/i.test(f.name)) { toast(tr('Tiene que ser el .bin del firmware (%s)', firmwarePath(st)), true); return; }
     const x = new XMLHttpRequest();
     x.open('PUT', '/api/ota');
     x.upload.onprogress = e => { if (e.lengthComputable) { bar.firstChild.style.width = (e.loaded * 100 / e.total).toFixed(1) + '%'; msg.textContent = tr('Subiendo %s de %s…', fmtBytes(e.loaded), fmtBytes(e.total)); } };
@@ -838,20 +854,20 @@ async function pageFirmware() {
         const s2 = await api('ota');
         if (s2.running === before) { msg.textContent = tr('Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranque anterior.'); restartBtn.disabled = false; return; }
         msg.textContent = s2.trial ? tr('Corriendo %s a prueba: se confirma a los 30 s…', s2.running) : tr('Confirmado: %s es el firmware ahora.', s2.running);
-        if (!s2.trial) { setTimeout(pageFirmware, 1500); return; }
+        if (!s2.trial) { setTimeout(() => { if (current()) pageFirmware(); }, 1500); return; }
       } catch {}
     }
     msg.textContent = tr('La placa no contestó en un minuto y medio: mirala.');
   }
   const o = st.other || {};
-  put(main, h('h1', {}, 'Firmware'),
+  put(main, h('h1', {}, tr('Firmware')),
     h('div', { class: 'card pad' },
       row(tr('Versión'), st.version), row(tr('Compilado'), (st.built || '') + ' ' + (st.time || '')), row('IDF', st.idf || ''), st.elf ? row('ELF', st.elf) : null,
       row(tr('Ranura'), st.running + (st.trial ? ' (' + tr('a prueba') + ')' : ''), st.trial ? 'warn' : ''),
       row(tr('La otra ranura'), o.slot ? o.slot + (o.version ? ' — ' + o.version + ', ' + (o.built || '') + (o.elf ? ', ELF ' + o.elf : '') + (o.state ? ' (' + o.state + ')' : '') : ' — ' + tr('vacía')) : '—')),
     h('h2', {}, tr('Actualizar por Wi-Fi')),
     h('div', { class: 'card pad' },
-      h('div', { class: 'note' }, tr('Elegí build/rev1_3/p4os.bin. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.')),
+      h('div', { class: 'note' }, tr('Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.', firmwarePath(st))),
       h('div', { class: 'btns', style: 'margin-top:10px' }, h('button', { class: 'btn', onclick: () => file.click() }, tr('Elegir el .bin…')), restartBtn,
         o.version ? h('button', { class: 'btn', onclick: async () => { if (!confirm(tr('¿Arrancar %s (%s) en el próximo reinicio?', o.slot, o.version))) return; try { await post('ota/other'); toast(tr('Arranca %s al reiniciar', o.slot)); } catch (e) { toast(e.message, true); } } }, tr('Volver a la otra ranura')) : null),
       file, bar, msg),
@@ -860,7 +876,7 @@ async function pageFirmware() {
       cd.present ? [
         row(tr('Volcado'), fmtBytes(cd.size) + (cd.valid ? '' : ' (' + tr('dañado') + ')')),
         cd.task ? row(tr('Tarea'), cd.task) : null, cd.pc && cd.pc !== '0x00000000' ? row('PC / RA', cd.pc + ' / ' + cd.ra) : null,
-        row('Firmware', cd.elf_sha ? 'ELF ' + cd.elf_sha + ' — ' + (cd.slot === 'running' ? tr('el de ahora') : cd.slot === 'other' ? tr('el de la otra ranura') : tr('ninguna de las dos ranuras: uno viejo')) + (cd.version ? ' (' + cd.version + ')' : '') : tr('no se sabe'), cd.slot ? '' : 'warn'),
+        row(tr('Firmware'), cd.elf_sha ? 'ELF ' + cd.elf_sha + ' — ' + (cd.slot === 'running' ? tr('el de ahora') : cd.slot === 'other' ? tr('el de la otra ranura') : tr('ninguna de las dos ranuras: uno viejo')) + (cd.version ? ' (' + cd.version + ')' : '') : tr('no se sabe'), cd.slot ? '' : 'warn'),
         cd.seen ? row(tr('Visto'), new Date(cd.seen * 1000).toLocaleString(LOCALE)) : null,
         cd.unread ? row(tr('Estado'), tr('sin leer'), 'warn') : null,
         h('div', { class: 'note' }, tr('Para ver funciones y líneas: tools/coredump.sh en la Mac. Decodifica sólo con la ELF de ese firmware (build/elf/<sha>.elf, que tools/ota.sh guarda en cada instalación); descargarlo entero cuenta como leído.')),
@@ -3089,6 +3105,7 @@ async function loadCardPages() {
 }
 
 function route() {
+  routeEpoch++;
   const p = (location.hash || '#pantalla').slice(1);
   if (leave) { try { leave(); } catch {} leave = null; }
   document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('on', a.dataset.p === p));

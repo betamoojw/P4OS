@@ -172,7 +172,7 @@ Zona horaria cambiada	时区已更改
 Nombre en la red	网络名称
 Ahora responde como %s.local	现在可通过 %s.local 访问
 Cambiar	更改
-Letras minúsculas, números y guiones. Es lo que responde como <nombre>.local.	微字母,数字和字符串. <name>在本地.
+Letras minúsculas, números y guiones. Es lo que responde como <nombre>.local.	仅使用小写字母、数字和连字符。设置后可通过 <名称>.local 访问设备。
 Zona horaria	时区
 Idioma	语言
 Orientación	方向
@@ -182,9 +182,9 @@ Brillo	亮度
 Volumen	音量
 Fondo de pantalla	壁纸
 Seguridad	安全
-La contraseña, las redes de confianza y HTTPS se cambian sólo en la placa: Ajustes, Portal web.	密码,可信网络和 HTTPS 只有在板上进行更改:设置,网页门户.
-Bajar la autoridad HTTPS de la placa	下载板的 HTTPS 权威
-Instalada una vez como confiable en la Mac (Acceso a Llaveros, "Confiar siempre") o en el iPhone (Ajustes, General, Información, Confianza de certificados), el navegador deja de avisar por https://%s.local. Sólo sirve para nombres .local y direcciones de la red de casa.	一旦安装在Mac上 (Keychain Access, "Always Trust") 或iPhone上 (设置,一般,关于,证书信任设置),浏览器停止警告 https://%s.local. 它只涵盖家庭网络上的本地名称和地址.
+La contraseña, las redes de confianza y HTTPS se cambian sólo en la placa: Ajustes, Portal web.	密码、受信任网络和 HTTPS 只能在设备本机的“设置 → 网页管理”中修改。
+Bajar la autoridad HTTPS de la placa	下载设备 HTTPS 根证书
+Instalada una vez como confiable en la Mac (Acceso a Llaveros, "Confiar siempre") o en el iPhone (Ajustes, General, Información, Confianza de certificados), el navegador deja de avisar por https://%s.local. Sólo sirve para nombres .local y direcciones de la red de casa.	将证书设为受信任后，可访问 https://%s.local。Mac：钥匙串访问 → 始终信任；iPhone：设置 → 通用 → 关于本机 → 证书信任设置。证书仅用于 .local 名称和家庭局域网地址。
 Sistema	系统
 ¿Reiniciar la placa?	确定重启设备吗？
 Reiniciando…	正在重启…
@@ -203,45 +203,45 @@ Verlo en Firmware	在Firmware中查看
 Lo último que escribió el arranque anterior (se conserva al reiniciar, no al desenchufar).	之前的开启写的最后一行 (通过重新启动,而不是切断).
 En vivo. El anillo guarda los últimos 256 KB.	实时显示，环形缓冲区保留最近 256 KB 数据。
 No hay registro del arranque anterior: la placa se desenchufó, o arrancó un firmware distinto (el anillo cambia de lugar con cada compilación).	之前的启动没有日志:板块被断开,或者另一个固件启动 (环随着每个构建移动).
-No se pudo leer: %s	我读不懂: %s
-Reiniciar con el firmware nuevo	在新的固件中重新启动
-Tiene que ser el .bin del firmware (build/rev1_3/p4os.bin)	它必须是固件的 .bin (构建)/rev1_3/p4os.bin)
-Subiendo %s de %s…	装载 %s 的 %s…
-Listo: %s escritos en %s s. Arranca a prueba al reiniciar.	完成: %s 写在 %s 在下一次重新启动时,它会开始审判.
+No se pudo leer: %s	读取失败：%s
+Reiniciar con el firmware nuevo	重启并运行新固件
+Tiene que ser el .bin del firmware (%s)	请选择固件 .bin 文件（%s）。
+Subiendo %s de %s…	正在上传 %s，共 %s…
+Listo: %s escritos en %s s. Arranca a prueba al reiniciar.	已完成：写入 %s，用时 %s 秒。重启后将试运行新固件。
 Falló: %s	失败: %s
-Se cortó la conexión	连接下来.
-Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranque anterior.	在之前的固件上,新的固件没有启动.
-Corriendo %s a prueba: se confirma a los 30 s…	运行 %s 在审判中:确认30秒后...
-Confirmado: %s es el firmware ahora.	确认: %s 是现在的固件.
-La placa no contestó en un minuto y medio: mirala.	开发板已经没有回答了半分钟.
+Se cortó la conexión	连接已断开
+Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranque anterior.	已回退到上一版本：新固件未能启动。请查看上次启动日志。
+Corriendo %s a prueba: se confirma a los 30 s…	正在试运行 %s，稳定运行 30 秒后确认…
+Confirmado: %s es el firmware ahora.	已确认：当前运行固件为 %s。
+La placa no contestó en un minuto y medio: mirala.	设备在 90 秒内未响应，请检查开发板。
 Versión	版本
-Compilado	建成
-Ranura	机场
-a prueba	在审判中
-La otra ranura	另一个插槽
+Compilado	编译时间
+Ranura	固件分区
+a prueba	试运行中
+La otra ranura	另一固件分区
 vacía	空
-Actualizar por Wi-Fi	更新 Wi-Fi
-Elegí build/rev1_3/p4os.bin. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.	选择构建/rev1_3/p4os.bin. 在重新启动时,它开始试用,如果它没有达到30秒,板本身就会回到当前的固件./ota.sh.
-Elegir el .bin…	选择一个.bin...
-¿Arrancar %s (%s) en el próximo reinicio?	靴子 %s (%s) 在下一次重启时?
-Arranca %s al reiniciar	%s 下一次重启时的靴子
-Volver a la otra ranura	返回另一个插槽
-Último cuelgue	最后一次撞车
-Volcado	垃圾
+Actualizar por Wi-Fi	通过 Wi-Fi 更新
+Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.	请选择 %s。上传时写入备用分区；重启后试运行，若未能稳定运行 30 秒，设备将自动回退到当前固件。命令行可使用 tools/ota.sh。
+Elegir el .bin…	选择 .bin 文件…
+¿Arrancar %s (%s) en el próximo reinicio?	下次重启时启动 %s（%s）？
+Arranca %s al reiniciar	下次重启将启动 %s
+Volver a la otra ranura	切换到另一固件分区
+Último cuelgue	最近一次崩溃
+Volcado	崩溃转储
 dañado	损坏
 Tarea	任务
-el de ahora	目前的
-el de la otra ranura	在另一个插槽里
-ninguna de las dos ranuras: uno viejo	没有插槽:一个旧的
+el de ahora	当前固件
+el de la otra ranura	另一分区的固件
+ninguna de las dos ranuras: uno viejo	旧固件，不在当前两个分区中
 no se sabe	未知
-Visto	看到的
-sin leer	没有阅读
-Para ver funciones y líneas: tools/coredump.sh en la Mac. Decodifica sólo con la ELF de ese firmware (build/elf/<sha>.elf, que tools/ota.sh guarda en cada instalación); descargarlo entero cuenta como leído.	用于函数和线:工具/coredump.sh 在Mac上.它只使用该固件的ELF (构建) 来解码/elf/<sha>.elf,哪些工具/ota.sh 在每次安装过程中都会进行下载.
-Descargar el volcado	下载垃圾桶
-Marcar como leído	标记阅读
-¿Borrar el volcado?	删除垃圾?
+Visto	记录时间
+sin leer	未读
+Para ver funciones y líneas: tools/coredump.sh en la Mac. Decodifica sólo con la ELF de ese firmware (build/elf/<sha>.elf, que tools/ota.sh guarda en cada instalación); descargarlo entero cuenta como leído.	可用 tools/coredump.sh 查看函数和行号。解码需要与崩溃固件匹配的 ELF 文件（build/elf/<sha>.elf，由 tools/ota.sh 在安装时保存）。完整下载后会标记为已读。
+Descargar el volcado	下载崩溃转储
+Marcar como leído	标记为已读
+¿Borrar el volcado?	删除崩溃转储？
 Ver el registro	显示日志
-No hay: la placa no se colgó desde que se borró el último.	没有: 开发板自从上一个被删除后就没有坠毁过。
+No hay: la placa no se colgó desde que se borró el último.	暂无记录：自上次清除记录后，设备未发生崩溃。
 Salida	输出
 Dirección del osciloscopio (192.168.1.50)	示波器地址（192.168.1.50）
 Pidiendo la captura…	要求截图...

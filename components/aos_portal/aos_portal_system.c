@@ -4,7 +4,7 @@
  *
  *   GET  /api/ota                 the running slot, whether it is on trial, the
  *                                 version, and the other slot's image, if any
- *   PUT  /api/ota                 the body is a firmware .bin (build/<profile>/
+ *   PUT  /api/ota                 the body is a firmware .bin (build/<board>/<profile>/
  *                                 p4os.bin): written into the idle slot as it
  *                                 arrives, checked, made the boot one
  *   POST /api/ota/restart         restarts into it (it boots on trial: main.c
@@ -42,6 +42,7 @@
 #include "aos_portal_system.h"
 #include "aos_i18n.h"
 #include "aos_hal.h"
+#include "aos_board.h"
 #include "aos_ui.h"
 #include "cJSON.h"
 
@@ -83,6 +84,13 @@ static void api_ota_status(aos_httpd_req_t *r)
     cJSON_AddStringToObject(o, "running", aos_hal_ota_running_slot());
     cJSON_AddBoolToObject(o, "trial", aos_hal_ota_pending_verify());
     cJSON_AddStringToObject(o, "version", aos_hal_firmware_version());
+#if defined(CONFIG_IDF_TARGET_ESP32P4)
+#if CONFIG_ESP32P4_REV_MIN_FULL >= 300
+    cJSON_AddStringToObject(o, "firmware_path", "build/" AOS_BOARD_BUILD "/rev3_x/p4os.bin");
+#else
+    cJSON_AddStringToObject(o, "firmware_path", "build/" AOS_BOARD_BUILD "/rev1_3/p4os.bin");
+#endif
+#endif
 #ifdef ESP_PLATFORM
     const esp_app_desc_t *d = esp_app_get_description();
     cJSON_AddStringToObject(o, "built", d->date);

@@ -48,9 +48,9 @@ Modo seguro: deslizá hacia arriba, sin código	安全模式：向上滑動，�
 Deslizá hacia arriba para desbloquear	向上滑動解鎖
 ¿El teléfono muestra este número?	電話顯示這個號碼嗎?
 Coincide	它匹配.
+grabación de pantalla\x04Grabar	錄屏
 Ajustes	設定
 Detener	停止
-Grabar	寫入
 Inicio	主頁
 Bloquear	鎖定
 Home Assistant	Home Assistant
@@ -331,6 +331,7 @@ Pará el registro para cambiar las columnas.	請先停止記錄，再更改列�
 Pará el registro para cambiar el intervalo.	請先停止記錄，再更改取樣間隔。
 sin grabar	未在記錄
 Cada toma, una fila de un CSV en la carpeta logs de la tarjeta.	每次取樣在儲存卡 logs 目錄的 CSV 檔案中寫入一行。
+Grabar	寫入
 mín	最小值
 máx	最大值
 QUÉ SE ANOTA	記錄內容
@@ -1633,7 +1634,7 @@ Almacenamiento	儲存空間
 Actualización	更新
 Diagnóstico	診斷
 Desarrollador	開發人員
-Portal web	網站門戶
+Portal web	網頁管理
 Tocá otra vez para olvidarlo	再點選,忘記
 No	否
 Sí	Sí
@@ -1734,7 +1735,7 @@ Red	網路
 Olvidar esta red	忘記此網路
 La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.	P4 透過板載 ESP32-C6 連線網路，僅支援 2.4 GHz。
 ORIENTACIÓN	方向
-La placa no tiene acelerómetro: la orientación se elige acá o en el Centro de control. Las apps que sólo tienen sentido de una forma giran la pantalla mientras están abiertas.	電腦板上沒有加速儀:選擇在這裡或控制中心的方向.只有一個道理的應用程式在開放時旋轉螢幕.
+La placa no tiene acelerómetro: la orientación se elige acá o en el Centro de control. Las apps que sólo tienen sentido de una forma giran la pantalla mientras están abiertas.	開發板沒有加速度計，請在此處或控制中心選擇螢幕方向。僅支援特定方向的應用會在執行時自動旋轉螢幕。
 BRILLO	亮度
 APAGAR LA PANTALLA	螢幕關閉
 Nunca	從不
@@ -1744,7 +1745,7 @@ Nunca	從不
 10 minutos	10分鐘
 30 minutos	30分鐘
 Sin tocarla, la pantalla se atenúa diez segundos antes y después se apaga; un toque la despierta. Los juegos, el video y las apps que lo piden la mantienen encendida mientras están al frente.	當未觸動的螢幕在10秒前就暗淡了,然後就關了;觸控會喚醒它。遊戲、影片和應用程式在前面要求它保持它。
-VOLUMEN	卷
+VOLUMEN	音量
 Probar el parlante	測試揚聲器
 SONIDOS DEL SISTEMA	系統音效
 Sonidos del sistema	系統音效
@@ -1785,79 +1786,79 @@ LA TARJETA	儲存卡
 Modelo	模型
 Capacidad	產能
 %u MHz, %d bits	%u 頻率為 MHz, %d 零件
-Bus	公共汽車
+Bus	匯流排
 Fabricada	製造
 Expulsar la tarjeta	丟擲儲存卡
 Expulsala antes de sacarla: se cierran las otras apps, y las de la tarjeta no abren hasta que se monte de nuevo. Para copiar archivos desde la computadora, el modo Disco del USB.	在刪除之前將卡丟棄:其他應用程式關閉,卡的應用程式直到重新安裝才不會開啟. USB 磁碟模式.
-Tocá otra vez para reiniciar con esa	再鍵來重新啟動
-La otra ranura no tiene una imagen entera	另一個插槽沒有完整的影象
-Reiniciando con la versión anterior…	重新開始之前的版本...
-anduvo: se puede volver	工作了:你可以回去.
+Tocá otra vez para reiniciar con esa	再次點選，重啟並執行該版本
+La otra ranura no tiene una imagen entera	另一韌體分割區沒有完整的韌體映象
+Reiniciando con la versión anterior…	正在重啟並恢復上一版本…
+anduvo: se puede volver	已驗證，可回退
 sin probar	未經測試
-a prueba	在審判中
-marcada como mala	標記為壞
-a medio instalar	半安裝
-mandando… %u %%	傳送... %u %%
-listo: reiniciando	完成:重新啟動
-Tocá otra vez: sin Wi-Fi un minuto y reinicia	再擊:沒有 Wi-Fi 一分鐘,然後重新啟動
-LA RADIO (ESP32-C6)	無線電 (ESP32-C6)
-En el C6	在C6上
-todavía no arrancó	沒有起床
-de fábrica (sin versión)	工廠 (沒有版本)
-En la tarjeta	在卡上
-Una versión nueva del firmware del C6 se copia a /firmware/c6.bin de la tarjeta (portal o tools/install_c6.sh) y se instala desde acá.	新的C6韌體進入儲存卡 /firmware/c6.bin (門戶或工具)/install_c6.sh) 並從這裡安裝.
-Instalar en el C6	在C6上安裝
-El C6 la escribe en su otra ranura y la revisa antes de cambiar. Mientras tanto no hay Wi-Fi, y al terminar la placa se reinicia.	在C6中寫入其他的插槽,然後在切換之前檢查它. Wi-Fi 與此同時,開發板在最後重新開始.
-LA QUE CORRE	跑步
+a prueba	試執行中
+marcada como mala	已標記為無效
+a medio instalar	安裝未完成
+mandando… %u %%	正在傳送… %u %%
+listo: reiniciando	已完成，正在重啟
+Tocá otra vez: sin Wi-Fi un minuto y reinicia	再次點選開始；Wi-Fi 將斷開約一分鐘，然後裝置重啟
+LA RADIO (ESP32-C6)	無線模組（ESP32-C6）
+En el C6	C6 當前版本
+todavía no arrancó	尚未啟動
+de fábrica (sin versión)	出廠韌體（未提供版本）
+En la tarjeta	儲存卡中的版本
+Una versión nueva del firmware del C6 se copia a /firmware/c6.bin de la tarjeta (portal o tools/install_c6.sh) y se instala desde acá.	透過網頁管理或 tools/install_c6.sh 將 C6 新韌體複製到儲存卡的 /firmware/c6.bin，再從此處安裝。
+Instalar en el C6	安裝 C6 韌體
+El C6 la escribe en su otra ranura y la revisa antes de cambiar. Mientras tanto no hay Wi-Fi, y al terminar la placa se reinicia.	C6 會將韌體寫入備用分割槽，校驗後再切換。安裝期間 Wi-Fi 暫不可用，完成後裝置會重啟。
+LA QUE CORRE	當前韌體
 Versión	版本
-Compilada	建成
-Ranura	機場
-confirmada	確認
-LA ANTERIOR	最古老的
-No se pudo leer la otra ranura	我讀不到另一個插槽.
-Volver a esta versión	返回這個版本
-Las versiones nuevas llegan por el portal (Firmware) o con tools/ota.sh, y se escriben en la otra ranura. Arrancan a prueba: si la placa se reinicia antes de confirmarla, a los 30 s, vuelve sola a la anterior.	新版本透過門戶 (Firmware) 或工具到達/ota.sh試機開始:如果板在確認一個之前重新啟動,30秒後,它會自行返回前一個.
-al encender	在電源上
-por software	透過軟體
-por un error (pánico)	由於錯誤 (恐慌)
-watchdog de interrupciones	打斷監護犬
-watchdog de tareas	任務監督犬
-watchdog	監護犬
-caída de tensión	棕色外觀
-al salir del sueño profundo	從深夜的睡眠中醒來.
-botón de reset	重置按鈕
-por el USB	過去了 USB
-por JTAG	在JTAG上
+Compilada	編譯時間
+Ranura	韌體分割區
+confirmada	已確認
+LA ANTERIOR	上一版本
+No se pudo leer la otra ranura	無法讀取另一韌體分割區
+Volver a esta versión	回退到此版本
+Las versiones nuevas llegan por el portal (Firmware) o con tools/ota.sh, y se escriben en la otra ranura. Arrancan a prueba: si la placa se reinicia antes de confirmarla, a los 30 s, vuelve sola a la anterior.	透過網頁管理的“韌體”頁面或 tools/ota.sh 更新，韌體會寫入備用分割槽。重啟後先試執行，穩定執行 30 秒後確認；若確認前重啟，裝置會自動回退。
+al encender	上電啟動
+por software	軟體重啟
+por un error (pánico)	系統異常（panic）
+watchdog de interrupciones	中斷看門狗
+watchdog de tareas	任務看門狗
+watchdog	看門狗
+caída de tensión	供電電壓過低
+al salir del sueño profundo	從深度睡眠喚醒
+botón de reset	復位按鈕
+por el USB	USB 復位
+por JTAG	JTAG 復位
 error de eFuse	eFuse 錯誤
 pico en la alimentación	電源故障
-CPU trabada	處理器鎖定
-%u KB (mínimo %u)	%u KB (最低) %u)
-Volcado borrado	垃圾被刪除
+CPU trabada	CPU 無響應
+%u KB (mínimo %u)	%u KB（最低 %u）
+Volcado borrado	當機傾印已刪除
 No se pudo borrar	無法刪除
 Temperatura del chip	晶片溫度
 CPU (núcleos 0 · 1)	處理器 (核心0 · 1)
-Interna libre	內部自由
+Interna libre	可用內部記憶體
 PSRAM libre	PSRAM 可用
 Encendida hace	執行時長
-ESTE ARRANQUE	這 BOOT
-Motivo del reinicio	重新設定原因
+ESTE ARRANQUE	本次啟動
+Motivo del reinicio	重啟原因
 Modo seguro	安全模式
-sí: sin las apps de la tarjeta	是的:沒有卡的應用程式
+sí: sin las apps de la tarjeta	是，未載入儲存卡應用
 no	沒有
-Reinicios por cuelgue	絞刑後休息
-Se arrancó con BOOT apretado: sin las apps de la tarjeta y con los ajustes de pantalla de fábrica. Reiniciá para volver a la normalidad.	它啟動了 BOOT 沒有卡的應用程式,並且有工廠顯示器調整. 重啟恢復正常.
-RADIO (ESP32-C6)	廣播電 (ESP32-C6)
+Reinicios por cuelgue	異常重啟次數
+Se arrancó con BOOT apretado: sin las apps de la tarjeta y con los ajustes de pantalla de fábrica. Reiniciá para volver a la normalidad.	啟動時按住了 BOOT：已停用儲存卡應用，並使用預設顯示設定。重啟即可恢復正常模式。
+RADIO (ESP32-C6)	無線模組（ESP32-C6）
 Firmware del C6	C6 韌體
-no la informa (firmware viejo)	它沒有報告 (舊的韌體)
-El Wi-Fi lo hace el ESP32-C6 de la placa; el P4 le habla por SDIO. Esta es la versión del firmware que corre en el C6.	開發板的 ESP32-C6 是否 Wi-Fi這就是C6執行的韌體版本.
-ÚLTIMO CUELGUE	最後一次破碎
-Volcado	垃圾
+no la informa (firmware viejo)	舊韌體未提供版本資訊
+El Wi-Fi lo hace el ESP32-C6 de la placa; el P4 le habla por SDIO. Esta es la versión del firmware que corre en el C6.	Wi-Fi 由板載 ESP32-C6 提供，P4 透過 SDIO 與其通訊。此處顯示 C6 當前執行的韌體版本。
+ÚLTIMO CUELGUE	最近一次當機
+Volcado	當機傾印
 dañado	損壞
 Tarea	任務
-Firmware (ELF)	軟體 (ELF)
-Borrar el volcado	抹去垃圾桶
-El volcado se baja desde el portal (Firmware, Último cuelgue) o con tools/coredump.sh, y se lee con la ELF de esa compilación.	The dump downloads from the portal (Firmware, Last crash) or with tools/coredump.sh並且可以用該構建的ELF來讀取.
-Abrir el Monitor	開放監視器
+Firmware (ELF)	韌體（ELF）
+Borrar el volcado	刪除當機傾印
+El volcado se baja desde el portal (Firmware, Último cuelgue) o con tools/coredump.sh, y se lee con la ELF de esa compilación.	從網頁管理的“韌體 → 最近一次當機”或透過 tools/coredump.sh 下載傾印，使用與該韌體匹配的 ELF 檔案解碼。
+Abrir el Monitor	開啟系統監視器
 No coinciden: empezá de nuevo	他們不匹配:重新開始
 Código guardado	儲存的程式碼
 Repetí el código nuevo	重複新的程式碼
@@ -2648,9 +2649,9 @@ no se pudo borrar	無法刪除
 Banco	測試臺
 Calculadora	計算器
 Calendario	日曆
-Claude	克勞德
+Claude	Claude
 Conversor	轉換器
-Electrónica	電子
+Electrónica	電子工具
 Tiras LED	燈光帶
 Macro pad	宏鍵盤
 Modbus	Modbus
@@ -2707,4 +2708,3 @@ Turbo	渦輪
 Video	影片
 Visor 3D	3D 顯示器
 VNC	其他
-grabación de pantalla\x04Grabar	錄屏

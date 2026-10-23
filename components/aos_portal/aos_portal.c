@@ -361,7 +361,7 @@ static void api_apps(aos_httpd_req_t *r)
         if (!app || !app->desc.id || !app->create) continue;
         cJSON *o = cJSON_CreateObject();
         cJSON_AddStringToObject(o, "id", app->desc.id);
-        cJSON_AddStringToObject(o, "name", app->desc.name ? app->desc.name : app->desc.id);
+        cJSON_AddStringToObject(o, "name", app->desc.name ? aos_tr(app->desc.name) : app->desc.id);
         /* enough for a page to draw the icon (#inicio): its gradient, whether
          * there is an AIC blob at /api/apps/icon, and a plain-text icon */
         char hex[8];

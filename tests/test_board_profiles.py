@@ -39,6 +39,20 @@ static unsigned short framebuffer[AOS_PANEL_W * AOS_PANEL_H];
         self.compile('#include "aos_board.h"\n_Static_assert(AOS_BOARD_ID == 5, "default");')
         self.compile('#include "aos_board.h"', "-DAOS_BOARD_ID=9", succeeds=False)
 
+    def test_firmware_advice_matches_every_build_profile(self):
+        source = (ROOT / 'components/aos_portal/aos_portal_system.c').read_text(encoding='utf-8')
+        advice = source.split('#if defined(CONFIG_IDF_TARGET_ESP32P4)', 1)[1].split('#ifdef ESP_PLATFORM', 1)[0]
+        for board, folder in ((5, 'lcd5'), (7, 'lcd7'), (8, 'lcd8'), (101, 'lcd10_1')):
+            for rev, profile in ((100, 'rev1_3'), (300, 'rev3_x')):
+                code = '#include "aos_board.h"\n#if defined(CONFIG_IDF_TARGET_ESP32P4)' + advice
+                result = subprocess.run([CC, '-E', '-P', '-x', 'c', '-',
+                    '-I' + str(ROOT / 'components/aos_hal/include'), '-DCONFIG_IDF_TARGET_ESP32P4=1',
+                    f'-DAOS_BOARD_ID={board}', f'-DCONFIG_ESP32P4_REV_MIN_FULL={rev}'],
+                    input=code, text=True, capture_output=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                literals = re.findall(r'"([^"]*)"', result.stdout)
+                self.assertEqual(''.join(literals[1:]), f'build/{folder}/{profile}/p4os.bin')
+
     def test_dynamic_apps_use_host_stride_in_every_rotation(self):
         # Deliberately compile without a board override: an app built on LCD-5
         # must obtain 800 from an LCD-8 host, including when it is landscape.

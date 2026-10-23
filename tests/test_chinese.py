@@ -34,6 +34,17 @@ class Chinese(unittest.TestCase):
             self.assertEqual(entries[r'grabación de pantalla\x04Grabar'], expected)
             self.assertNotEqual(entries['Grabar'], expected)
 
+    def test_reviewed_traditional_terms_survive_regeneration(self):
+        overrides = json.loads((ROOT / 'lang/zh-Hant-key-overrides.json').read_text(encoding='utf-8'))
+        for name, reviewed in overrides.items():
+            entries = gen_lang.read_pack(str(ROOT / 'lang/zh-Hant' / name))
+            for key, value in reviewed.items():
+                self.assertEqual(entries[key], value, (name, key))
+        for code in ('zh-Hans', 'zh-Hant'):
+            entries = gen_lang.read_pack(str(ROOT / 'lang' / code / '_sistema.lang'))
+            self.assertEqual(entries['VOLUMEN'], '音量')
+            self.assertEqual(entries['Bus'], '总线' if code == 'zh-Hans' else '匯流排')
+
     def test_font_integrity_and_all_chinese_characters(self):
         folder = ROOT / 'assets/cjk'
         data = (folder / 'cjk.bin').read_bytes()

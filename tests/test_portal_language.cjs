@@ -76,6 +76,18 @@ test('device language changes reload untouched pages once and preserve edits', a
   assert.equal(reloads, 1);
 });
 const languageChange = source.slice(source.indexOf('async function changeLanguage('), source.indexOf('async function pageAjustes('));
+
+test('firmware diagnostics use reviewed Simplified and Traditional terminology', async () => {
+  for (const [code, slot, dump] of [['zh-Hans', '固件分区', '崩溃转储'], ['zh-Hant', '韌體分割區', '當機傾印']]) {
+    const { ctx } = fixture(); await ctx.setLang(code);
+    assert.equal(ctx.tr('Ranura'), slot);
+    assert.equal(ctx.tr('Volcado'), dump);
+    assert.equal(ctx.tr('Compilado'), code === 'zh-Hans' ? '编译时间' : '編譯時間');
+    const advice = ctx.tr('Tiene que ser el .bin del firmware (%s)', 'build/lcd10_1/rev3_x/p4os.bin');
+    assert.ok(advice.includes('build/lcd10_1/rev3_x/p4os.bin'));
+    assert.ok(!ctx.tr('a prueba').includes('审判'));
+  }
+});
 test('language selection waits for the device to finish applying the change', async () => {
   const { ctx } = fixture();
   let polls = 0, waits = 0, posted;

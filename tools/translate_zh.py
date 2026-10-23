@@ -70,6 +70,7 @@ def main():
     review = {}
     simplified = OpenCC('t2s')
     traditional = OpenCC('s2twp')
+    traditional_keyed = json.loads((ROOT / 'lang/zh-Hant-key-overrides.json').read_text(encoding='utf-8'))
     def translate(value):
         if value in overrides:
             return overrides[value]
@@ -108,7 +109,10 @@ def main():
                         translated = translated.replace('名片', '存储卡').replace('卡片', '存储卡')
                     if re.search(r'\bdock\b', value, re.I):
                         translated = translated.replace('码头', '程序坞').replace('船坞', '程序坞')
-                translated = convert(translated).replace('\t', ' ').replace('\r', '').replace('\n', '\\n')
+                translated = convert(translated)
+                if code == 'zh-Hant':
+                    translated = traditional_keyed.get(filename, {}).get(key, translated)
+                translated = translated.replace('\t', ' ').replace('\r', '').replace('\n', '\\n')
                 lines.append(key + '\t' + translated)
             (folder / filename).write_text('\n'.join(lines) + '\n', encoding='utf-8')
         print(code, len(packs), 'catalogues written', flush=True)

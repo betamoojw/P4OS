@@ -671,7 +671,7 @@ No se pudo leer: %s	Couldn't read: %s
 Reiniciar con el firmware nuevo	Restart into the new firmware
 
 #: components/aos_portal/web/app.js:738
-Tiene que ser el .bin del firmware (build/rev1_3/p4os.bin)	It has to be the firmware's .bin (build/rev1_3/p4os.bin)
+Tiene que ser el .bin del firmware (%s)	Choose the firmware .bin file (%s)
 
 #: components/aos_portal/web/app.js:741
 Subiendo %s de %s…	Uploading %s of %s…
@@ -719,7 +719,7 @@ vacía	empty
 Actualizar por Wi-Fi	Update over Wi-Fi
 
 #: components/aos_portal/web/app.js:775
-Elegí build/rev1_3/p4os.bin. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.	Pick build/rev1_3/p4os.bin. It is written to the other slot as it uploads; on restart it boots on trial and, if it doesn't make it to 30 s, the board goes back to the current firmware by itself. From the terminal: tools/ota.sh.
+Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.	Choose %s. Upload writes the other slot; after restarting, the new firmware runs on trial. If it cannot run for 30 seconds, the board rolls back. From a terminal: tools/ota.sh.
 
 #: components/aos_portal/web/app.js:776
 Elegir el .bin…	Choose the .bin…

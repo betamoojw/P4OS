@@ -7,17 +7,21 @@
 
 #if AOS_BOARD_ID == 5
 #define AOS_BOARD_NAME "Waveshare ESP32-P4-WIFI6-Touch-LCD-5"
+#define AOS_BOARD_BUILD "lcd5"
 #define AOS_NATIVE_W 720
 #define AOS_DSI_MBPS 700
 #elif AOS_BOARD_ID == 7
 #define AOS_BOARD_NAME "Waveshare ESP32-P4-WIFI6-Touch-LCD-7"
+#define AOS_BOARD_BUILD "lcd7"
 #define AOS_NATIVE_W 720
 #define AOS_DSI_MBPS 1000
 #elif AOS_BOARD_ID == 8 || AOS_BOARD_ID == 101
 #if AOS_BOARD_ID == 8
 #define AOS_BOARD_NAME "Waveshare ESP32-P4-WIFI6-Touch-LCD-8"
+#define AOS_BOARD_BUILD "lcd8"
 #else
 #define AOS_BOARD_NAME "Waveshare ESP32-P4-WIFI6-Touch-LCD-10.1"
+#define AOS_BOARD_BUILD "lcd10_1"
 #endif
 #define AOS_NATIVE_W 800
 #define AOS_DSI_MBPS 1500

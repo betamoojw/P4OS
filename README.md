@@ -115,13 +115,20 @@ The home screen has icon pages, folders, a dock and widgets.
   - into a folder;
   - in or out of the dock, where the icons drag the same way.
 
-  Folders show twelve apps a page. The portal's `#inicio` page does the
-  same from a computer.
+  Folders show twelve apps a page, and a swipe turns one whole page. The
+  portal's `#inicio` page does the same from a computer.
 
 - **Swiping down** from the top opens the control centre (Wi-Fi, Bluetooth,
   do not disturb, orientation, brightness, volume, the music playing on the
-  board or on the iPhone) and the notifications, with the phone's own
-  actions.
+  board or on the iPhone, the screen recording) and the notifications, with
+  the phone's own actions.
+- **Recording the screen** (since 0.21.5): the control centre's Grabar
+  button records what the panel shows to an MP4 on the card (`/videos`),
+  games and cameras included, with a red dot in the status bar while it
+  runs. The P4's own engines do the work: the PPA turns each frame into
+  the encoder's YUV, the hardware H.264 encoder compresses it (70 ms a
+  frame between them, 15 fps on a quiet screen and 7-9 while apps move),
+  and the CPU mostly waits. It plays on a Mac or a phone as it is.
 - **The status bar** shows the Wi-Fi or the board's own network, the card
   and the USB.
 - **The orientation** is chosen in Settings or the control centre, because
@@ -134,6 +141,13 @@ The home screen has icon pages, folders, a dock and widgets.
 | Settings in landscape | Macro pad | Photos |
 |---|---|---|
 | <img src="docs/img/sim-settings-landscape.png" width="300"> | <img src="docs/img/land-macropad.png" width="300"> | <img src="docs/img/land-photos.png" width="300"> |
+
+<p align="center">
+  <a href="docs/media/screenrec.mp4"><img src="docs/img/screenrec.gif" width="270" alt="A screen recording made on the board: the home screen over a photo of Mila, the Media folder, and Photos"></a>
+</p>
+
+<p align="center"><em>Recorded by the board itself with its control
+centre's button: the home screen, a folder, Photos.</em></p>
 
 ### The lock screen
 
@@ -625,9 +639,15 @@ nitrogen.
   the VNC password, or any VNC server), driven by touch, as a trackpad, or
   with a USB mouse and keyboard; a keyboard bubble that floats over the
   remote screen, and one monitor of several marked with a finger.
-- **Also from the card:** Cameras (RTSP H.264 and MJPEG), Recorder, Weather,
-  Quotes, Lua, where a script on the card is an app, and Python, where a
-  `.py` is.
+- **Cameras:** RTSP H.264 and MJPEG, a mosaic and a full-screen viewer.
+  The viewer opens a camera's second stream (SD) and a button switches to
+  its main one (HD); another turns the picture a quarter, not the screen.
+  H.264 is decoded in software (the P4 has a hardware encoder, not a
+  decoder), and the viewer converts each picture straight into the panel's
+  framebuffer, with no copy through LVGL: a 704x576 doorbell at 7-9 fps,
+  its 1920x1080 stream at about one.
+- **Also from the card:** Recorder, Weather, Quotes, Lua, where a script on
+  the card is an app, and Python, where a `.py` is.
 
 | Drawing | VNC, in landscape |
 |---|---|
@@ -731,6 +751,10 @@ reads them.
 - The microSD, music and the speaker.
 - The games and most of the tools, in both orientations.
 - The BOOT button and safe mode.
+- Two IP cameras on the network: a doorbell's H.264 (its 704x576 stream
+  straight to the panel at 7-9 fps, its 1920x1080 one at about a frame a
+  second) and an MJPEG one.
+- The screen recording, played back on a Mac.
 - I2C with a real BME280 on the header: found by itself, read once a second
   without errors. SPI with MOSI looped to MISO at 1, 10 and 40 MHz, the port's top speed.
 - Sensors (0.20), each found by itself or declared from the form and read
@@ -799,7 +823,6 @@ reads them.
   the other node.
 - A 25xx SPI EEPROM in the EEPROM app.
 - The Riden over TTL, the Rigol over the LAN, and the terminal at 460800.
-- The IP cameras.
 - The microphone's gain, and the speaker's latency and heating.
 - The real-time clock with a cell.
 - RF with a 433 MHz weather sensor (its decoders are tested with synthetic
@@ -977,8 +1000,8 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, 23 apps propias y 46 de la tarjeta (juegos, un pinball 3D de seis mesas, un juego de caños con seis líquidos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
-| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), y BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave |
-| Qué falta | probar en la placa el DS18B20 y el RC522, las cámaras, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, fotos de fondo para el inicio y el bloqueo, grabación de pantalla en MP4, 23 apps propias y 46 de la tarjeta (juegos, un pinball 3D de seis mesas, un juego de caños con seis líquidos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
+| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave, dos cámaras IP (un timbre H.264 directo a la pantalla y una MJPEG) y la grabación de pantalla en MP4 por el codificador H.264 del P4 |
+| Qué falta | probar en la placa el RC522, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |
 | Cómo se instala | la primera vez por el CH340; después `tools/ota.sh p4os.local` o el portal |

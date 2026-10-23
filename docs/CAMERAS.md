@@ -7,9 +7,46 @@ a 5" screen: the RTSP client, the RTP depacketisers and the lag policy are
 the watch's; the mosaic, the threads, the frame hand-over, the snapshots and
 the Frigate tab are new.
 
-Everything below was built and measured in the simulator against local fake
-cameras. **The board has not run it yet**: the last section says what only
-the board can answer.
+What follows was built and measured in the simulator against local fake
+cameras; the board's numbers are in **On the board** below.
+
+## On the board (2026-10-22, 0.21.5)
+
+A doorbell (H.264 Baseline, a 704×576 sub stream and a 1920×1080 main one)
+and an MJPEG camera, on the house's Wi-Fi through the C6.
+
+| | Decode | Convert | On screen |
+|---|---|---|---|
+| Doorbell, SD, upright, through LVGL | 45-54 ms | 53-61 ms | up to 8.9 fps |
+| Doorbell, SD, straight into the framebuffer | 32-47 ms | 89-102 ms turned | 7-8 fps, nothing dropped |
+| Doorbell, HD (1920×1080) | ~590 ms | 48-200 ms | about 1 fps: only keyframes keep up |
+
+- **Straight into the panel.** In the viewer, upright, with its bars down
+  and nothing of the system over it, the camera's thread converts each
+  picture into the panel's free framebuffer and flips to it
+  (`aos_hal_display_back` / `flip`): no frame of the app's, no copy through
+  LVGL's draw buffer, which on this board means two full passes through
+  PSRAM less per frame. The UI renews the permission every tick (it lapses
+  in 300 ms) and takes it back as soon as a panel, a banner or another app
+  is in front; otherwise frames go by the DMA2D (`blit_native`) or through
+  the canvas as before.
+- **SD and HD.** The viewer opens the sub stream; its button reopens the
+  main one. The decoder is software (the P4 has a hardware H.264 encoder,
+  not a decoder): 1920×1080 decodes at ~590 ms a frame, so it falls behind
+  and shows keyframes only.
+- **Turning the picture**, not the screen: the conversion writes the
+  picture turned a quarter, in bands of 16 rows so the reads stay in a few
+  cache lines.
+- **The PPA does not pay here.** It converts I420 only from Espressif's
+  packed layout, so the CPU has to interleave the planes first; that pass
+  and the PPA's own move about twice the bytes of the CPU's table
+  conversion through PSRAM, against a decoder on the other core: 6.1 fps
+  against 8.9. `aos_hal_video_i420` stays in the firmware, off by default
+  (pref `video_hw`, `/api/video?hw=`).
+- **Memory**: a 1920×1080 stream did not fit next to the two wallpaper
+  photos (3.7 MB); since 0.21.5 they are let go while an app is in front.
+- Profile **Main** (CABAC) is refused with a message: tinyh264 decodes
+  Baseline only.
 
 ## cameras.txt
 
@@ -38,7 +75,7 @@ url = http://192.168.0.20:5000
 | Key | Meaning |
 |---|---|
 | `url` | What the mosaic keeps open. `rtsp://` (H.264 Baseline, or MJPEG over RTP), `http://` MJPEG (go2rtc, Frigate, a camera's own), or an `http://` URL that answers one JPEG and closes (a snapshot). |
-| `full` | Optional: what the full screen opens instead (a camera's main stream while the mosaic uses its sub stream). Without it the full screen keeps the tile's connection. |
+| `full` | Optional: the camera's main stream, for the viewer's HD button (since 0.21.5 the viewer opens the sub stream, SD, on the tile's own connection, and HD is asked for). Without it there is no button. |
 | `user`, `pass` | RTSP Digest or Basic, HTTP Basic. They may also come inside the URL (`rtsp://user:pass@host/…`); they are taken out before anything shows the URL. |
 | `refresh` | Seconds between requests to a snapshot URL (default 1). |
 | `[Frigate]` | A block with that name is not a camera: it turns on the Frigate tab. |

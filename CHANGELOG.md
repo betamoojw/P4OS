@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.21.5 — 2026-10-22
+
+- **Screen recording.** The control centre's Grabar button records the
+  screen to an MP4 in the card's `/videos`, games and cameras included,
+  with a red dot in the status bar. The PPA turns each frame into YUV and
+  the P4's hardware H.264 encoder compresses it, 70 ms a frame between
+  them: 15 fps on a quiet screen, 7-9 while apps move. `/api/screenrec`.
+  (The control centre's Apagar, which did what Bloquear does, made room.)
+- **Photo wallpapers.** A photo behind the home screen and another behind
+  the lock screen, chosen from Photos' viewer (the palette at the top
+  right), darkened as much as each photo's brightness asks so the names
+  read on it. Kept in PSRAM, and let go while an app is in front.
+- **Cameras.** The viewer converts each picture straight into the panel's
+  framebuffer, with no copy through LVGL; it opens the camera's SD stream
+  and a button switches to HD; the turn button turns the picture, not the
+  whole system; and the colour conversion is a little quicker. A 704x576
+  doorbell runs at 7-9 fps without dropping frames.
+- **Lock screen** no longer draws the home screen hidden under it: with a
+  photo, 143 -> 108 ms a full redraw.
+- **Folders** turn a whole page with each swipe.
+- In English and German, Settings says On and Off instead of "Sí"; sensor
+  states say Active and Inactive.
+- Measured and left off by default: a draw unit that hands fills and photos
+  to the PPA or the AXI-GDMA (`draw_hw`), and the PPA converting camera
+  frames (`video_hw`): on this board both lose to the CPU, because the work
+  is bound by PSRAM. Documented in docs/CAMERAS.md.
+
 ## 0.21.0 — 2026-10-22
 
 - **Caños, a pipes game** (`apps/canos`, from the card). Join the tank to

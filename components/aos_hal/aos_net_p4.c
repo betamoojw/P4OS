@@ -49,6 +49,7 @@
 #include "mdns.h"
 
 static const char *TAG = "net";
+ESP_EVENT_DEFINE_BASE(AOS_NET_TIME_EVENT);
 
 #define EV_INITED   BIT0
 #define EV_GOT_IP   BIT1
@@ -213,15 +214,42 @@ void aos_hal_mdns_remove_netif(void *esp_netif)
     mdns_unregister_netif((esp_netif_t *)esp_netif);
 }
 
+static void time_synced(struct timeval *tv)
+{
+    /* This is the lwIP callback: log the actual network result, not merely
+     * a successful start. Never wait for LVGL or write preferences here. */
+    ESP_LOGI(TAG, "SNTP synchronized: epoch=%lld", (long long)tv->tv_sec);
+}
+
+static bool start_sntp(void)
+{
+    esp_err_t e;
+    if (!s_sntp) {
+#if CONFIG_LWIP_SNTP_MAX_SERVERS < 3
+#error "P4OS time fallback needs CONFIG_LWIP_SNTP_MAX_SERVERS=3 (see sdkconfig.defaults)"
+#endif
+        esp_sntp_config_t cfg = ESP_NETIF_SNTP_DEFAULT_CONFIG_MULTIPLE(3,
+            ESP_SNTP_SERVER_LIST("pool.ntp.org", "ntp.aliyun.com", "time.cloudflare.com"));
+        cfg.sync_cb = time_synced;
+        cfg.wait_for_sync = false;    /* never block the event loop or the UI */
+        e = esp_netif_sntp_init(&cfg);
+        s_sntp = e == ESP_OK;
+    } else {
+        e = esp_netif_sntp_start();
+    }
+    if (e != ESP_OK) ESP_LOGW(TAG, "SNTP start failed: %s", esp_err_to_name(e));
+    else ESP_LOGI(TAG, "SNTP requested (pool.ntp.org, ntp.aliyun.com, time.cloudflare.com); waiting for reply");
+    return e == ESP_OK;
+}
+
+static void time_request(void *arg, esp_event_base_t base, int32_t id, void *data)
+{
+    if (s_state == AOS_NET_CONNECTED) start_sntp();
+}
+
 static void start_services(void)
 {
-    if (!s_sntp) {
-        esp_sntp_config_t cfg = ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
-        cfg.start = true;
-        s_sntp = esp_netif_sntp_init(&cfg) == ESP_OK;
-    } else {
-        esp_netif_sntp_start();
-    }
+    start_sntp();
     mdns_up();
 }
 
@@ -305,6 +333,7 @@ static void net_task(void *arg)
     }
     esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, on_event, NULL);
     esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, on_event, NULL);
+    ESP_ERROR_CHECK(esp_event_handler_register(AOS_NET_TIME_EVENT, 0, time_request, NULL));
     esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_AP_STACONNECTED, on_event, NULL);
     esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_AP_STADISCONNECTED, on_event, NULL);
     esp_event_handler_register(IP_EVENT, IP_EVENT_AP_STAIPASSIGNED, on_event, NULL);
@@ -587,8 +616,9 @@ void aos_hal_net_retry_info(uint32_t *failures, bool *parked, uint32_t *next_s, 
 bool aos_hal_net_sync_time(void)
 {
     if (s_state != AOS_NET_CONNECTED) return false;
-    start_services();
-    return true;
+    /* Serialize with GOT_IP on the event task: concurrent callers must not
+     * initialize SNTP twice. True means queued, not that a reply arrived. */
+    return esp_event_post(AOS_NET_TIME_EVENT, 0, NULL, 0, 0) == ESP_OK;
 }
 
 void aos_hal_net_low_latency(bool on)

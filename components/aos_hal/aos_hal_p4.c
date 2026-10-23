@@ -1438,6 +1438,10 @@ static esp_lcd_touch_handle_t s_touch;
  * applies (rotate_area) undone. */
 static void touch_rotate(int px, int py, int16_t *x, int16_t *y)
 {
+    /* Goodix reports panel pixels. Bound before rotation so all fingers,
+     * including the gesture ring's samples, stay inside the active display. */
+    px = LV_CLAMP(0, px, AOS_PANEL_W - 1);
+    py = LV_CLAMP(0, py, AOS_PANEL_H - 1);
     switch (s_rot) {
     case 90:  *x = py;                   *y = AOS_PANEL_W - 1 - px; break;
     case 180: *x = AOS_PANEL_W - 1 - px; *y = AOS_PANEL_H - 1 - py; break;

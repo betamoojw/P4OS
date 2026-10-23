@@ -91,6 +91,7 @@ static volatile bool s_req_open_pending, s_req_lang_pending, s_req_toast_pending
 static void relayout_all(void);
 static void wall_dyn_tick(void);
 static void leave_current(bool destroy_now);
+static void input_rotation_reset(void);
 
 /* -------------------------------------------------------------------------- */
 /* Geometry                                                                    */
@@ -319,6 +320,7 @@ static bool apply_rotation(const aos_app_t *app)
 {
     int want = wanted_rotation(app);
     if (aos_hal_display_get_rotation() == want) return false;
+    input_rotation_reset();
     aos_hal_display_set_rotation(want);
     s_forced_rot = (want != (s_landscape ? 90 : 0)) ? want : -1;
     relayout_all();
@@ -902,6 +904,28 @@ static struct {
     bool started;       /* the first read reports the start point exactly */
 } s_inj;
 
+static bool s_rotation_release;
+
+static void input_rotation_reset(void)
+{
+    /* A contact belongs to the layout where it started. Do not turn its
+     * release into a click/swipe on the new layout, including remote drags. */
+    s_inj.active = false;
+    memset(&g, 0, sizeof g);
+    s_last_swipe = LV_DIR_NONE;
+    s_rotation_release = true;
+    if (s_indev) lv_indev_reset(s_indev, NULL);
+}
+
+static void input_bound(lv_indev_data_t *d)
+{
+    /* LVGL seeds even RELEASED samples with last_raw_point. The HAL leaves
+     * it alone without a finger, so a landscape x=803 used to survive a
+     * switch to an 800-pixel portrait display indefinitely. */
+    d->point.x = LV_CLAMP(0, d->point.x, LV_MAX(aos_hal_screen_w() - 1, 0));
+    d->point.y = LV_CLAMP(0, d->point.y, LV_MAX(aos_hal_screen_h() - 1, 0));
+}
+
 #define EDGE_BOTTOM 36
 #define EDGE_LEFT   28
 #define CAPTURE_PX  18
@@ -1057,6 +1081,15 @@ static void read_wrap(lv_indev_t *indev, lv_indev_data_t *d)
 {
     s_orig_read(indev, d);
 
+    if (s_rotation_release) {
+        if (d->state == LV_INDEV_STATE_RELEASED) s_rotation_release = false;
+        else {
+            d->state = LV_INDEV_STATE_RELEASED;
+            input_bound(d);
+            return;     /* wait for the physical finger to lift */
+        }
+    }
+
     if (s_inj.active) {
         if (!s_inj.started) { s_inj.started = true; s_inj.start = lv_tick_get(); }
         uint32_t el = lv_tick_elaps(s_inj.start);
@@ -1078,6 +1111,7 @@ static void read_wrap(lv_indev_t *indev, lv_indev_data_t *d)
         }
     }
 
+    input_bound(d);
     s_reads++;
     bool pressed = d->state == LV_INDEV_STATE_PRESSED;
     /* A touch on a dark screen only wakes it: that finger does
@@ -1101,6 +1135,8 @@ static void read_wrap(lv_indev_t *indev, lv_indev_data_t *d)
     } else if (g.down) {
         gesture_end();
     }
+    /* gesture_end() can return from an app that forces another orientation. */
+    input_bound(d);
 }
 
 void aos_ui_block_gestures(bool block) { s_block_gestures = block; }

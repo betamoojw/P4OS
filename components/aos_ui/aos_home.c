@@ -562,7 +562,9 @@ static void clock_refresh(lv_obj_t *card)
     aos_hal_time_now(&t);
     if (aos_hal_time_is_valid()) lv_label_set_text_fmt(w->time, "%d:%02d", t.tm_hour, t.tm_min);
     else lv_label_set_text(w->time, "--:--");
-    lv_label_set_text_fmt(w->date, "%s %d %s", aos_day_name(t.tm_wday), t.tm_mday, aos_month_name(t.tm_mon));
+    if (aos_hal_time_is_valid())
+        lv_label_set_text_fmt(w->date, "%s %d %s", aos_day_name(t.tm_wday), t.tm_mday, aos_month_name(t.tm_mon));
+    else lv_label_set_text(w->date, "--");
 }
 
 static void widget_deleted(lv_event_t *e) { free(lv_obj_get_user_data(lv_event_get_current_target(e))); }

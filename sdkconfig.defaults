@@ -202,6 +202,10 @@ CONFIG_LWIP_TCPIP_RECVMBOX_SIZE=64
 # 10 were shared by all of them. 32 leaves 32 descriptors for files.
 CONFIG_LWIP_MAX_SOCKETS=32
 
+# A single unreachable pool address must not leave the clock unset. lwIP
+# tries the next server after its receive/DNS timeout, with bounded backoff.
+CONFIG_LWIP_SNTP_MAX_SERVERS=3
+
 # Apps on the card (.so), through components/elf_loader and aos_dynapp.
 # On the P4 data and instructions see PSRAM at the same addresses, so the
 # loader runs the code where it puts it (LOAD_PSRAM); the chip has no

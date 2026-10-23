@@ -1311,6 +1311,17 @@ static void apply_language(const char *code)
     aos_panels_layout();
 }
 
+/* The accent changed: the shell's own screens are built again with it
+ * (home, status bar, control centre, the lock screen if it is up). Apps
+ * take it the next time they build. */
+void aos_ui_restyle(void)
+{
+    aos_home_rebuild();
+    aos_statusbar_layout();
+    aos_panels_layout();
+    aos_lock_layout();
+}
+
 static void requests_tick(void)
 {
     if (s_req_menu) { s_req_menu = false; aos_menu_load(); aos_home_rebuild(); }

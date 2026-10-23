@@ -7702,3 +7702,6 @@ La grabación no se pudo terminar bien	Die Aufnahme konnte nicht sauber beendet 
 
 #: components/aos_ui/aos_screenrec_ui.c:37
 No se pudo empezar a grabar (¿hay tarjeta?)	Aufnahme konnte nicht starten (ist eine Karte drin?)
+
+#: components/aos_apps/aos_app_settings.c:1062
+COLOR DE ACENTO	AKZENTFARBE

@@ -1004,6 +1004,12 @@ static void build_sound(lv_obj_t *p)
 
 static void wall_cb(lv_event_t *e) { aos_ui_set_wallpaper((int)(intptr_t)lv_event_get_user_data(e)); show(PG_WALL); }
 static void wall_photo_off_cb(lv_event_t *e) { aos_ui_wall_photo_set((int)(intptr_t)lv_event_get_user_data(e), NULL); show(PG_WALL); }
+static void accent_cb(lv_event_t *e)
+{
+    aos_theme_set_accent(aos_theme_accent_at((int)(intptr_t)lv_event_get_user_data(e)));
+    aos_ui_restyle();
+    show(PG_WALL);
+}
 
 static void build_wall(lv_obj_t *p)
 {
@@ -1046,6 +1052,33 @@ static void build_wall(lv_obj_t *p)
         if (has) row(g, AOS_SYM_CLOSE, 0xFF3B30, _("Quitar la foto"), NULL, false, wall_photo_off_cb, (void *)(intptr_t)i);
     }
     note(p, _("Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha."));
+
+    /* the accent: switches, selections, the active buttons */
+    lv_obj_t *ag = group(p, _("COLOR DE ACENTO"));
+    lv_obj_t *sw = lv_obj_create(ag);
+    lv_obj_remove_style_all(sw);
+    lv_obj_set_size(sw, lv_pct(100), LV_SIZE_CONTENT);
+    lv_obj_set_style_pad_all(sw, 18, 0);
+    lv_obj_set_flex_flow(sw, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_flex_align(sw, LV_FLEX_ALIGN_SPACE_EVENLY, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_gap(sw, 12, 0);         /* the nine in one row upright */
+    for (int i = 0; i < aos_theme_accents(); i++) {
+        uint32_t c = aos_theme_accent_at(i);
+        lv_obj_t *d = lv_obj_create(sw);
+        lv_obj_remove_style_all(d);
+        lv_obj_set_size(d, 52, 52);
+        lv_obj_set_style_radius(d, LV_RADIUS_CIRCLE, 0);
+        lv_obj_set_style_bg_opa(d, LV_OPA_COVER, 0);
+        lv_obj_set_style_bg_color(d, lv_color_hex(c), 0);
+        bool on = c == aos_theme_accent_rgb();
+        lv_obj_set_style_border_color(d, lv_color_white(), 0);
+        lv_obj_set_style_border_width(d, on ? 5 : 0, 0);
+        lv_obj_set_style_outline_color(d, lv_color_hex(c), 0);
+        lv_obj_set_style_outline_width(d, on ? 3 : 0, 0);
+        lv_obj_add_flag(d, LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_set_ext_click_area(d, 8);
+        lv_obj_add_event_cb(d, accent_cb, LV_EVENT_CLICKED, (void *)(intptr_t)i);
+    }
 }
 
 /* ---- Expansion ---- */

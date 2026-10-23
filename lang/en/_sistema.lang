@@ -7702,3 +7702,6 @@ La grabación no se pudo terminar bien	The recording could not be finished prope
 
 #: components/aos_ui/aos_screenrec_ui.c:37
 No se pudo empezar a grabar (¿hay tarjeta?)	Could not start recording (is there a card?)
+
+#: components/aos_apps/aos_app_settings.c:1062
+COLOR DE ACENTO	ACCENT COLOUR

@@ -218,6 +218,10 @@ bool aos_ui_wall_photo(int which, char *out, size_t len);   /* false: none */
  * held. */
 void aos_ui_screenrec(bool on);
 
+/* The shell's screens built again (after aos_theme_set_accent). LVGL's
+ * lock held. */
+void aos_ui_restyle(void);
+
 /* ---- status bar ---- */
 typedef enum {
     AOS_BAR_LIGHT = 0,      /* white glyphs, for dark content (the default) */

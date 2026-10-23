@@ -2714,6 +2714,7 @@ static const char blob_en__sistema_lang[] =
     "Grabación guardada en la carpeta videos de la tarjeta\tRecording saved in the card's videos folder\n"
     "La grabación no se pudo terminar bien\tThe recording could not be finished properly\n"
     "No se pudo empezar a grabar (¿hay tarjeta?)\tCould not start recording (is there a card?)\n"
+    "COLOR DE ACENTO\tACCENT COLOUR\n"
     ;
 
 static const aos_lang_file_t files_en[] = {
@@ -5420,6 +5421,7 @@ static const char blob_de__sistema_lang[] =
     "Grabación guardada en la carpeta videos de la tarjeta\tAufnahme im Ordner videos der Karte gespeichert\n"
     "La grabación no se pudo terminar bien\tDie Aufnahme konnte nicht sauber beendet werden\n"
     "No se pudo empezar a grabar (¿hay tarjeta?)\tAufnahme konnte nicht starten (ist eine Karte drin?)\n"
+    "COLOR DE ACENTO\tAKZENTFARBE\n"
     ;
 
 static const aos_lang_file_t files_de[] = {
@@ -5427,7 +5429,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2699, 0, files_en, 1 },
-    { "de", "Deutsch", 2699, 0, files_de, 1 },
+    { "en", "English", 2700, 0, files_en, 1 },
+    { "de", "Deutsch", 2700, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

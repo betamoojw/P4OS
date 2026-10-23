@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3442 simbolos.
+ * Total: 3448 simbolos.
  */
 
 #include <stddef.h>
@@ -1135,7 +1135,12 @@ extern int aos_sym_72;
 extern int aos_tasks_p4_start;
 extern int aos_text_font_has;
 extern int aos_text_safe;
+extern int aos_theme_accent;
+extern int aos_theme_accent_at;
+extern int aos_theme_accent_rgb;
+extern int aos_theme_accents;
 extern int aos_theme_init;
+extern int aos_theme_set_accent;
 extern int aos_tls_close;
 extern int aos_tls_free;
 extern int aos_tls_new;
@@ -1197,6 +1202,7 @@ extern int aos_ui_request_nav;
 extern int aos_ui_request_open;
 extern int aos_ui_request_snapshot;
 extern int aos_ui_request_toast;
+extern int aos_ui_restyle;
 extern int aos_ui_safe_mode;
 extern int aos_ui_screenrec;
 extern int aos_ui_set_badge;
@@ -4580,7 +4586,12 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_tasks_p4_start),
     ESP_ELFSYM_EXPORT(aos_text_font_has),
     ESP_ELFSYM_EXPORT(aos_text_safe),
+    ESP_ELFSYM_EXPORT(aos_theme_accent),
+    ESP_ELFSYM_EXPORT(aos_theme_accent_at),
+    ESP_ELFSYM_EXPORT(aos_theme_accent_rgb),
+    ESP_ELFSYM_EXPORT(aos_theme_accents),
     ESP_ELFSYM_EXPORT(aos_theme_init),
+    ESP_ELFSYM_EXPORT(aos_theme_set_accent),
     ESP_ELFSYM_EXPORT(aos_tls_close),
     ESP_ELFSYM_EXPORT(aos_tls_free),
     ESP_ELFSYM_EXPORT(aos_tls_new),
@@ -4642,6 +4653,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_request_open),
     ESP_ELFSYM_EXPORT(aos_ui_request_snapshot),
     ESP_ELFSYM_EXPORT(aos_ui_request_toast),
+    ESP_ELFSYM_EXPORT(aos_ui_restyle),
     ESP_ELFSYM_EXPORT(aos_ui_safe_mode),
     ESP_ELFSYM_EXPORT(aos_ui_screenrec),
     ESP_ELFSYM_EXPORT(aos_ui_set_badge),

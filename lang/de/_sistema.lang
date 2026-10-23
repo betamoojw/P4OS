@@ -7693,3 +7693,12 @@ Puede ser: %s	Es kann sein: %s
 1 sensor	1 Sensor
 %d sensores	%d Sensoren
 %s: %s · buscó hace %u s	%s: %s · vor %u s gesucht
+
+#: components/aos_ui/aos_screenrec_ui.c:28
+Grabación guardada en la carpeta videos de la tarjeta	Aufnahme im Ordner videos der Karte gespeichert
+
+#: components/aos_ui/aos_screenrec_ui.c:29
+La grabación no se pudo terminar bien	Die Aufnahme konnte nicht sauber beendet werden
+
+#: components/aos_ui/aos_screenrec_ui.c:37
+No se pudo empezar a grabar (¿hay tarjeta?)	Aufnahme konnte nicht starten (ist eine Karte drin?)

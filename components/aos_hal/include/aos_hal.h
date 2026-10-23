@@ -2476,6 +2476,22 @@ bool aos_hal_display_blit_into(uint16_t *fb, int x, int y, int w, int h, const v
 bool aos_hal_display_blit_into_fit(uint16_t *fb, int x, int y, int dst_w, int dst_h,
                                    const void *rgb565, int src_w, int src_h, int stride_px, bool big_endian);
 
+/* P4OS: the screen recorded to an MP4 (board: aos_screenrec_p4.c): what the
+ * panel shows, fps times a second (1..30, 15 if out of range), converted
+ * by the PPA and encoded by the P4's H.264 engine, in the orientation the
+ * screen has at the start. start: false if already recording or it could
+ * not begin. stop: asks it to end; the file is whole once state() says it
+ * is no longer on. state: whether it records, for how long, frames and
+ * bytes so far. false everywhere in the simulator. */
+bool aos_hal_screenrec_start(const char *path, int fps);
+void aos_hal_screenrec_stop(void);
+bool aos_hal_screenrec_state(uint32_t *ms, uint32_t *frames, uint64_t *bytes);
+/* The file of the last (or current) recording: path NULL in start() names
+ * it in the card's /videos after the date and time. done_ok: the last one
+ * ended with its MP4 whole. */
+const char *aos_hal_screenrec_file(void);
+bool        aos_hal_screenrec_done_ok(void);
+
 /* P4OS: what the panel is showing, read from the framebuffer: the panel's
  * native portrait, AOS_PANEL_W by AOS_PANEL_H, RGB565 little-endian, not
  * turned. Unlike a snapshot of LVGL it includes what apps blitted. For the

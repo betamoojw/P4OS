@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3436 simbolos.
+ * Total: 3442 simbolos.
  */
 
 #include <stddef.h>
@@ -533,6 +533,11 @@ extern int aos_hal_screen_idle_tick;
 extern int aos_hal_screen_timeouts_get;
 extern int aos_hal_screen_timeouts_set;
 extern int aos_hal_screen_w;
+extern int aos_hal_screenrec_done_ok;
+extern int aos_hal_screenrec_file;
+extern int aos_hal_screenrec_start;
+extern int aos_hal_screenrec_state;
+extern int aos_hal_screenrec_stop;
 extern int aos_hal_sd_info;
 extern int aos_hal_sd_mark_mounted;
 extern int aos_hal_sd_present;
@@ -1193,6 +1198,7 @@ extern int aos_ui_request_open;
 extern int aos_ui_request_snapshot;
 extern int aos_ui_request_toast;
 extern int aos_ui_safe_mode;
+extern int aos_ui_screenrec;
 extern int aos_ui_set_badge;
 extern int aos_ui_set_bg_mode;
 extern int aos_ui_set_busy;
@@ -3972,6 +3978,11 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_screen_timeouts_get),
     ESP_ELFSYM_EXPORT(aos_hal_screen_timeouts_set),
     ESP_ELFSYM_EXPORT(aos_hal_screen_w),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_done_ok),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_file),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_start),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_state),
+    ESP_ELFSYM_EXPORT(aos_hal_screenrec_stop),
     ESP_ELFSYM_EXPORT(aos_hal_sd_info),
     ESP_ELFSYM_EXPORT(aos_hal_sd_mark_mounted),
     ESP_ELFSYM_EXPORT(aos_hal_sd_present),
@@ -4632,6 +4643,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_request_snapshot),
     ESP_ELFSYM_EXPORT(aos_ui_request_toast),
     ESP_ELFSYM_EXPORT(aos_ui_safe_mode),
+    ESP_ELFSYM_EXPORT(aos_ui_screenrec),
     ESP_ELFSYM_EXPORT(aos_ui_set_badge),
     ESP_ELFSYM_EXPORT(aos_ui_set_bg_mode),
     ESP_ELFSYM_EXPORT(aos_ui_set_busy),

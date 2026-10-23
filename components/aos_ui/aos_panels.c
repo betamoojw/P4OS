@@ -213,6 +213,8 @@ static void bright_cb(lv_event_t *e) { aos_hal_brightness_set(lv_slider_get_valu
 static void vol_cb(lv_event_t *e) { aos_hal_volume_set(lv_slider_get_value(lv_event_get_target(e))); }
 static void settings_cb(lv_event_t *e) { aos_panel_close(); aos_ui_open("aos.settings"); }
 static void screen_off_cb(lv_event_t *e) { aos_panel_close(); aos_hal_display_on(false); }
+static void rec_cb(lv_event_t *e) { aos_panel_close(); aos_screenrec_toggle(); }
+static lv_obj_t *s_rec_tile;
 static void edit_cb(lv_event_t *e) { aos_panel_close(); aos_ui_edit_home(); }
 /* the board's player or the iPhone's, whichever the tile shows (aos_nowplaying.c) */
 static void media_play_cb(lv_event_t *e) { aos_np_command(AOS_MEDIA_PLAY_PAUSE); aos_panels_tick(); }
@@ -342,7 +344,9 @@ static void cc_build(void)
     if (g->landscape) lv_obj_move_to_index(orient, -1);   /* after the sliders: row one is 8 wide */
 
     shortcut(grid, AOS_SYM_COG, _("Ajustes"), settings_cb);
-    shortcut(grid, AOS_SYM_MONITOR, _("Apagar"), screen_off_cb);
+    /* "Apagar" did what "Bloquear" does (the screen off, which locks it):
+     * its place is the screen recording's since 2026-10-22 */
+    s_rec_tile = shortcut(grid, AOS_SYM_RECORD_REC, aos_screenrec_on() ? _("Detener") : _("Grabar"), rec_cb);
     shortcut(grid, AOS_SYM_VIEW_GRID_OUTLINE, _("Inicio"), edit_cb);
     shortcut(grid, AOS_SYM_LOCK, _("Bloquear"), screen_off_cb);
 
@@ -530,6 +534,11 @@ void aos_panels_tick(void)
         lv_obj_set_state(s_btn_wifi, LV_STATE_CHECKED, aos_hal_net_enabled());
         lv_obj_set_state(s_btn_bt, LV_STATE_CHECKED, aos_hal_bt_enabled());
         lv_obj_set_state(s_btn_dnd, LV_STATE_CHECKED, !aos_hal_notif_enabled());
+        if (s_rec_tile && lv_obj_get_child_count(s_rec_tile) > 1) {
+            bool rec = aos_screenrec_on();
+            lv_obj_set_style_text_color(lv_obj_get_child(s_rec_tile, 0), rec ? lv_color_hex(0xFF3B30) : lv_color_white(), 0);
+            lv_label_set_text(lv_obj_get_child(s_rec_tile, 1), rec ? _("Detener") : _("Grabar"));
+        }
         bool land = aos_ui_landscape();
         lv_obj_set_state(s_btn_rot, LV_STATE_CHECKED, land);
         lv_label_set_text(s_orient_glyph, land ? AOS_SYM_PHONE_ROTATE_LANDSCAPE : AOS_SYM_PHONE_ROTATE_PORTRAIT);

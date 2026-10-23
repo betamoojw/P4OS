@@ -7693,3 +7693,12 @@ Puede ser: %s	It may be: %s
 1 sensor	1 sensor
 %d sensores	%d sensors
 %s: %s · buscó hace %u s	%s: %s · scanned %u s ago
+
+#: components/aos_ui/aos_screenrec_ui.c:28
+Grabación guardada en la carpeta videos de la tarjeta	Recording saved in the card's videos folder
+
+#: components/aos_ui/aos_screenrec_ui.c:29
+La grabación no se pudo terminar bien	The recording could not be finished properly
+
+#: components/aos_ui/aos_screenrec_ui.c:37
+No se pudo empezar a grabar (¿hay tarjeta?)	Could not start recording (is there a card?)

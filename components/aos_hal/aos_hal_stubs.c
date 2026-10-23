@@ -1254,6 +1254,21 @@ __attribute__((weak)) bool aos_hal_display_blit_into(uint16_t *fb, int x, int y,
 __attribute__((weak)) bool aos_hal_display_blit_into_fit(uint16_t *fb, int x, int y, int dst_w, int dst_h, const void *rgb565, int src_w, int src_h, int stride_px, bool big_endian)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
+__attribute__((weak)) bool aos_hal_screenrec_start(const char *path, int fps)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) void aos_hal_screenrec_stop(void)
+{ }
+
+__attribute__((weak)) bool aos_hal_screenrec_state(uint32_t *ms, uint32_t *frames, uint64_t *bytes)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) const char * aos_hal_screenrec_file(void)
+{ return ""; }
+
+__attribute__((weak)) bool aos_hal_screenrec_done_ok(void)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
 __attribute__((weak)) bool aos_hal_display_fb(const uint16_t **px, int *w, int *h)
 { bool v; memset(&v, 0, sizeof v); return v; }
 

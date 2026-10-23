@@ -212,6 +212,12 @@ enum { AOS_WALL_HOME = 0, AOS_WALL_LOCK = 1 };
 void aos_ui_wall_photo_set(int which, const char *path);
 bool aos_ui_wall_photo(int which, char *out, size_t len);   /* false: none */
 
+/* Records the screen to an MP4 in the card's /videos (the PPA and the
+ * H.264 engine, aos_hal_screenrec_*), or stops it, with the control centre's
+ * button, the status bar's red dot and the toast at the end. LVGL's lock
+ * held. */
+void aos_ui_screenrec(bool on);
+
 /* ---- status bar ---- */
 typedef enum {
     AOS_BAR_LIGHT = 0,      /* white glyphs, for dark content (the default) */

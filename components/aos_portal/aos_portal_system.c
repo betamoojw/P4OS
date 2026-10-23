@@ -23,6 +23,8 @@
  *   GET  /api/display/bench?frames=&hw=   LVGL redrawing the whole screen, ms a
  *                                 frame; hw=0..3 picks the draw unit's way
  *                                 first (aos_draw_accel_p4.c; it stays so)
+ *   GET  /api/screenrec?on=1|0    records the screen to an MP4 in /videos, or
+ *                                 stops; recording, ms, frames, bytes, file
  *   GET  /api/video?hw=0|1        video frames converted by the PPA: on/off
  *                                 (until the next boot), frames done, ms each
  *   GET  /api/tune   POST /api/tune?key=&value=   the tuning preferences read
@@ -40,6 +42,7 @@
 #include "aos_portal_system.h"
 #include "aos_i18n.h"
 #include "aos_hal.h"
+#include "aos_ui.h"
 #include "cJSON.h"
 
 #include <stdio.h>
@@ -335,6 +338,28 @@ static void api_heap(aos_httpd_req_t *r)
 }
 #endif
 
+/* GET /api/screenrec?on=1|0: records the screen to an MP4 (aos_ui_screenrec),
+ * or stops; and how it goes */
+static void api_screenrec(aos_httpd_req_t *r)
+{
+    int on = (int)aos_httpd_query_int(r, "on", -1);
+    if (on >= 0 && aos_hal_lock(500)) {
+        aos_ui_screenrec(on != 0);
+        aos_hal_unlock();
+    }
+    uint32_t ms = 0, frames = 0;
+    uint64_t bytes = 0;
+    bool rec = aos_hal_screenrec_state(&ms, &frames, &bytes);
+    cJSON *o = cJSON_CreateObject();
+    cJSON_AddBoolToObject(o, "recording", rec);
+    cJSON_AddNumberToObject(o, "ms", ms);
+    cJSON_AddNumberToObject(o, "frames", frames);
+    cJSON_AddNumberToObject(o, "bytes", (double)bytes);
+    cJSON_AddStringToObject(o, "file", aos_hal_screenrec_file());
+    cJSON_AddBoolToObject(o, "last_ok", aos_hal_screenrec_done_ok());
+    send_cjson(r, 200, o);
+}
+
 /* GET /api/video?hw=: the PPA converting video frames (aos_video_p4.c),
  * turned on or off first if asked, with what it did since boot. */
 static void api_video(aos_httpd_req_t *r)
@@ -414,6 +439,7 @@ bool aos_portal_system(aos_httpd_req_t *r, const char *m, const char *p)
     else if (get && !strcmp(p, "coredump/elf")) api_coredump_elf(r);
     else if (get && !strcmp(p, "display/bench")) api_display_bench(r);
     else if (get && !strcmp(p, "video")) api_video(r);
+    else if (get && !strcmp(p, "screenrec")) api_screenrec(r);
     else if ((get || post) && !strcmp(p, "tune")) api_tune(r, post);
 #ifdef ESP_PLATFORM
     else if (get && !strcmp(p, "heap")) api_heap(r);

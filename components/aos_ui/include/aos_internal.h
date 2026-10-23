@@ -27,6 +27,10 @@ lv_obj_t *aos_ui_app_layer(void);   /* the apps' roots                      */
  * in and out. Set by the home screen before aos_ui_open(). */
 void aos_ui_set_launch_rect(const lv_area_t *icon);
 
+/* ---- the screen recording's controls (aos_screenrec_ui.c) ---- */
+void aos_screenrec_toggle(void);
+bool aos_screenrec_on(void);
+
 /* ---- the wallpaper's photos (aos_wallpaper.c) ---- */
 void aos_wall_photo_init(void);
 void aos_wall_photo_relayout(void);

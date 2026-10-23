@@ -1,5 +1,6 @@
 #include "aos_theme.h"
 #include "aos_hal.h"
+#include "aos_ui.h"
 #include "aos_fonts.h"
 #include "aos_i18n.h"
 #include "aos_emoji.h"
@@ -265,8 +266,12 @@ const char *aos_month_name(int mon)
     return C_("mes", months[((mon % 12) + 12) % 12]);
 }
 
+static void key_cb(lv_event_t *e) { (void)e; aos_ui_sound(AOS_SND_KEY); }
+
 void aos_keyboard_style(lv_obj_t *kb, const lv_font_t *font)
 {
+    /* the click, if it is on (Settings, Sound) */
+    lv_obj_add_event_cb(kb, key_cb, LV_EVENT_VALUE_CHANGED, NULL);
     lv_obj_set_style_text_font(kb, font ? font : aos_font_body, 0);
     lv_obj_set_style_bg_color(kb, lv_color_hex(0x1C1C1E), 0);
     lv_obj_set_style_bg_opa(kb, LV_OPA_COVER, 0);

@@ -26,6 +26,9 @@ typedef struct {
     bool     show_notifs;       /* the messages */
     bool     show_music;        /* what plays, with its buttons */
     bool     hide_content;      /* with a code: only the app and how many, not the text */
+    uint8_t  clock_size;        /* 0 large, 1 medium (since 0.21.6) */
+    uint8_t  clock_pos;         /* 0 at the top, 1 in the middle */
+    uint8_t  clock_color;       /* 0 white, 1 the accent, 2 the lock screen photo's own */
 } aos_lock_cfg_t;
 
 void aos_lock_init(void);       /* aos_ui_init, after the layers */
@@ -34,6 +37,7 @@ void aos_lock_layout(void);     /* the orientation changed */
 bool aos_lock_is_locked(void);
 bool aos_lock_covers(void);     /* locked, or its layer still sliding away */
 void aos_lock_now(void);
+void aos_lock_wall_refresh(void); /* the gradient changed (the time of day's) */
 
 void aos_lock_get_cfg(aos_lock_cfg_t *out);
 void aos_lock_set_cfg(const aos_lock_cfg_t *cfg);

@@ -88,6 +88,7 @@ static char s_req_open[48], s_req_lang[8], s_req_toast[96];
 static volatile bool s_req_open_pending, s_req_lang_pending, s_req_toast_pending;
 
 static void relayout_all(void);
+static void wall_dyn_tick(void);
 static void leave_current(bool destroy_now);
 
 /* -------------------------------------------------------------------------- */
@@ -1347,6 +1348,7 @@ static void requests_tick(void)
 
 void aos_ui_tick(void)
 {
+    wall_dyn_tick();
     static uint32_t n;
     n++;
     requests_tick();
@@ -1391,11 +1393,49 @@ static const uint32_t WALL[AOS_UI_WALLPAPERS][2] = {
     { 0x000000, 0x000000 },     /* black */
 };
 
+/* The time of day's gradient: key moments, and a straight line in RGB
+ * between one and the next, by the minute. Dark enough everywhere for the
+ * white names (2026-10-22). */
+static const struct { int min; uint32_t top, bottom; } DYN[] = {
+    { 0,       0x0B1026, 0x1B1035 },    /* midnight */
+    { 5 * 60,  0x1B2A4A, 0x3A1C4A },    /* before dawn */
+    { 7 * 60,  0x3B2A5C, 0x8A4A48 },    /* dawn */
+    { 10 * 60, 0x1E4A7A, 0x2E6E96 },    /* morning */
+    { 15 * 60, 0x24548A, 0x3C6A98 },    /* afternoon */
+    { 19 * 60, 0x4A2A5A, 0x9A5036 },    /* dusk */
+    { 21 * 60, 0x1B2A4A, 0x3A1C4A },    /* evening */
+    { 24 * 60, 0x0B1026, 0x1B1035 },    /* midnight again */
+};
+
+static uint32_t mix(uint32_t a, uint32_t b, int num, int den)
+{
+    uint32_t out = 0;
+    for (int sh = 0; sh <= 16; sh += 8) {
+        int ca = (int)(a >> sh & 0xFF), cb = (int)(b >> sh & 0xFF);
+        out |= (uint32_t)(ca + (cb - ca) * num / den) << sh;
+    }
+    return out;
+}
+
+static void dyn_colors(uint32_t *top, uint32_t *bottom)
+{
+    struct tm t;
+    aos_hal_time_now(&t);
+    int m = aos_hal_time_is_valid() ? t.tm_hour * 60 + t.tm_min : 22 * 60;
+    int k = 0;
+    while (k + 2 < (int)(sizeof DYN / sizeof DYN[0]) && m >= DYN[k + 1].min) k++;
+    int span = DYN[k + 1].min - DYN[k].min, at = m - DYN[k].min;
+    *top = mix(DYN[k].top, DYN[k + 1].top, at, span);
+    *bottom = mix(DYN[k].bottom, DYN[k + 1].bottom, at, span);
+}
+
 void aos_ui_wallpaper_colors(int index, uint32_t *top, uint32_t *bottom)
 {
     if (index < 0 || index >= AOS_UI_WALLPAPERS) index = 0;
-    if (top) *top = WALL[index][0];
-    if (bottom) *bottom = WALL[index][1];
+    uint32_t a = WALL[index][0], b = WALL[index][1];
+    if (index == AOS_UI_WALL_DYNAMIC) dyn_colors(&a, &b);
+    if (top) *top = a;
+    if (bottom) *bottom = b;
 }
 
 static int s_wallpaper;
@@ -1406,8 +1446,29 @@ void aos_ui_set_wallpaper(int index)
     s_wallpaper = index;
     aos_hal_pref_set_i32("wall", index);
     if (!s_wall) return;
-    lv_obj_set_style_bg_color(s_wall, lv_color_hex(WALL[index][0]), 0);
-    lv_obj_set_style_bg_grad_color(s_wall, lv_color_hex(WALL[index][1]), 0);
+    uint32_t a, b;
+    aos_ui_wallpaper_colors(index, &a, &b);
+    lv_obj_set_style_bg_color(s_wall, lv_color_hex(a), 0);
+    lv_obj_set_style_bg_grad_color(s_wall, lv_color_hex(b), 0);
+}
+
+/* The time of day's wallpaper, once a minute: the home screen's gradient
+ * and the lock screen's when it changed */
+static void wall_dyn_tick(void)
+{
+    static uint64_t next;
+    static uint32_t last_a, last_b;
+    uint64_t now = aos_hal_uptime_ms();
+    if (s_wallpaper != AOS_UI_WALL_DYNAMIC || now < next || !s_wall) return;
+    next = now + 30000;
+    uint32_t a, b;
+    aos_ui_wallpaper_colors(AOS_UI_WALL_DYNAMIC, &a, &b);
+    if (a == last_a && b == last_b) return;
+    last_a = a;
+    last_b = b;
+    lv_obj_set_style_bg_color(s_wall, lv_color_hex(a), 0);
+    lv_obj_set_style_bg_grad_color(s_wall, lv_color_hex(b), 0);
+    aos_lock_wall_refresh();
 }
 
 int aos_ui_wallpaper(void) { return s_wallpaper; }
@@ -1452,7 +1513,10 @@ static void ui_button_cb(aos_button_t button, aos_button_action_t action)
     }
     if (!used && action == AOS_BUTTON_LONG) {
         char path[60], msg[90];             /* a toast holds 96 */
-        if (aos_hal_display_save(path, sizeof path)) snprintf(msg, sizeof msg, "%s %s", _("Captura guardada en"), path);
+        if (aos_hal_display_save(path, sizeof path)) {
+            aos_ui_sound(AOS_SND_SHOT);
+            snprintf(msg, sizeof msg, "%s %s", _("Captura guardada en"), path);
+        }
         else snprintf(msg, sizeof msg, "%s", _("No se pudo guardar la captura (¿hay tarjeta?)"));
         aos_ui_request_toast(msg);
     }

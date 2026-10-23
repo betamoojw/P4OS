@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3448 simbolos.
+ * Total: 3454 simbolos.
  */
 
 #include <stddef.h>
@@ -914,6 +914,7 @@ extern int aos_lock_pin_len;
 extern int aos_lock_pin_set;
 extern int aos_lock_set_cfg;
 extern int aos_lock_tick;
+extern int aos_lock_wall_refresh;
 extern int aos_logring_add;
 extern int aos_lvmem_get_psram;
 extern int aos_lvmem_set_psram;
@@ -1187,6 +1188,8 @@ extern int aos_ui_init;
 extern int aos_ui_inject_drag;
 extern int aos_ui_inject_drag_rest;
 extern int aos_ui_inject_tap;
+extern int aos_ui_keyclick_on;
+extern int aos_ui_keyclick_set;
 extern int aos_ui_landscape;
 extern int aos_ui_open;
 extern int aos_ui_open_app_with;
@@ -1214,6 +1217,9 @@ extern int aos_ui_set_safe_mode;
 extern int aos_ui_set_wallpaper;
 extern int aos_ui_snapshot_peek;
 extern int aos_ui_snapshot_release;
+extern int aos_ui_sound;
+extern int aos_ui_sounds_on;
+extern int aos_ui_sounds_set;
 extern int aos_ui_start_hidden;
 extern int aos_ui_status_icon_set;
 extern int aos_ui_statusbar_refresh;
@@ -4365,6 +4371,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_lock_pin_set),
     ESP_ELFSYM_EXPORT(aos_lock_set_cfg),
     ESP_ELFSYM_EXPORT(aos_lock_tick),
+    ESP_ELFSYM_EXPORT(aos_lock_wall_refresh),
     ESP_ELFSYM_EXPORT(aos_logring_add),
     ESP_ELFSYM_EXPORT(aos_lvmem_get_psram),
     ESP_ELFSYM_EXPORT(aos_lvmem_set_psram),
@@ -4638,6 +4645,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_inject_drag),
     ESP_ELFSYM_EXPORT(aos_ui_inject_drag_rest),
     ESP_ELFSYM_EXPORT(aos_ui_inject_tap),
+    ESP_ELFSYM_EXPORT(aos_ui_keyclick_on),
+    ESP_ELFSYM_EXPORT(aos_ui_keyclick_set),
     ESP_ELFSYM_EXPORT(aos_ui_landscape),
     ESP_ELFSYM_EXPORT(aos_ui_open),
     ESP_ELFSYM_EXPORT(aos_ui_open_app_with),
@@ -4665,6 +4674,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_set_wallpaper),
     ESP_ELFSYM_EXPORT(aos_ui_snapshot_peek),
     ESP_ELFSYM_EXPORT(aos_ui_snapshot_release),
+    ESP_ELFSYM_EXPORT(aos_ui_sound),
+    ESP_ELFSYM_EXPORT(aos_ui_sounds_on),
+    ESP_ELFSYM_EXPORT(aos_ui_sounds_set),
     ESP_ELFSYM_EXPORT(aos_ui_start_hidden),
     ESP_ELFSYM_EXPORT(aos_ui_status_icon_set),
     ESP_ELFSYM_EXPORT(aos_ui_statusbar_refresh),

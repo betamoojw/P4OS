@@ -213,6 +213,10 @@ static void bright_cb(lv_event_t *e) { aos_hal_brightness_set(lv_slider_get_valu
 static void vol_cb(lv_event_t *e) { aos_hal_volume_set(lv_slider_get_value(lv_event_get_target(e))); }
 static void settings_cb(lv_event_t *e) { aos_panel_close(); aos_ui_open("aos.settings"); }
 static void screen_off_cb(lv_event_t *e) { aos_panel_close(); aos_hal_display_on(false); }
+static void lock_cb(lv_event_t *e) { aos_panel_close(); aos_ui_sound(AOS_SND_LOCK); aos_hal_display_on(false); }
+/* the system's sounds on and off: in the place of a second orientation
+ * button (the tile beside does that), since 2026-10-22 */
+static void snd_cb(lv_event_t *e) { aos_ui_sounds_set(!aos_ui_sounds_on()); aos_panels_tick(); }
 static void rec_cb(lv_event_t *e) { aos_panel_close(); aos_screenrec_toggle(); }
 static lv_obj_t *s_rec_tile;
 static void edit_cb(lv_event_t *e) { aos_panel_close(); aos_ui_edit_home(); }
@@ -299,7 +303,7 @@ static void cc_build(void)
     s_btn_wifi = round_btn(conn, AOS_SYM_WIFI, wifi_cb, rb);
     s_btn_bt = round_btn(conn, AOS_SYM_BLUETOOTH, bt_cb, rb);
     s_btn_dnd = round_btn(conn, AOS_SYM_MOON_WANING_CRESCENT, dnd_cb, rb);
-    s_btn_rot = round_btn(conn, AOS_SYM_SCREEN_ROTATION, rot_cb, rb);
+    s_btn_rot = round_btn(conn, aos_ui_sounds_on() ? AOS_SYM_BELL : AOS_SYM_BELL_OFF, snd_cb, rb);
 
     /* now playing: 2x2 */
     lv_obj_t *media = tile(grid, 2, 2);
@@ -348,7 +352,7 @@ static void cc_build(void)
      * its place is the screen recording's since 2026-10-22 */
     s_rec_tile = shortcut(grid, AOS_SYM_RECORD_REC, aos_screenrec_on() ? _("Detener") : _("Grabar"), rec_cb);
     shortcut(grid, AOS_SYM_VIEW_GRID_OUTLINE, _("Inicio"), edit_cb);
-    shortcut(grid, AOS_SYM_LOCK, _("Bloquear"), screen_off_cb);
+    shortcut(grid, AOS_SYM_LOCK, _("Bloquear"), lock_cb);
 
     /* Home Assistant's scenes, when the HA service registered its tile */
     int ha_cols = g->landscape ? 4 : cols;
@@ -540,7 +544,9 @@ void aos_panels_tick(void)
             lv_label_set_text(lv_obj_get_child(s_rec_tile, 1), rec ? _("Detener") : _("Grabar"));
         }
         bool land = aos_ui_landscape();
-        lv_obj_set_state(s_btn_rot, LV_STATE_CHECKED, land);
+        bool snd = aos_ui_sounds_on();
+        lv_obj_set_state(s_btn_rot, LV_STATE_CHECKED, snd);
+        lv_label_set_text(lv_obj_get_child(s_btn_rot, 0), snd ? AOS_SYM_BELL : AOS_SYM_BELL_OFF);
         lv_label_set_text(s_orient_glyph, land ? AOS_SYM_PHONE_ROTATE_LANDSCAPE : AOS_SYM_PHONE_ROTATE_PORTRAIT);
         lv_label_set_text(s_orient_lbl, land ? _("Horizontal") : _("Vertical"));
         aos_np_t np;

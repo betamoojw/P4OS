@@ -994,12 +994,28 @@ static void build_display(lv_obj_t *p)
     note(p, _("Sin tocarla, la pantalla se atenúa diez segundos antes y después se apaga; un toque la despierta. Los juegos, el video y las apps que lo piden la mantienen encendida mientras están al frente."));
 }
 
+static void sys_snd_cb(lv_event_t *e)
+{
+    aos_ui_sounds_set(lv_obj_has_state(lv_event_get_target(e), LV_STATE_CHECKED));
+    if (aos_ui_sounds_on()) aos_ui_sound(AOS_SND_NOTIF);
+}
+
+static void key_snd_cb(lv_event_t *e)
+{
+    aos_ui_keyclick_set(lv_obj_has_state(lv_event_get_target(e), LV_STATE_CHECKED));
+    aos_ui_sound(AOS_SND_KEY);
+}
+
 static void build_sound(lv_obj_t *p)
 {
     lv_obj_t *g = group(p, _("VOLUMEN"));
     row_slider(g, AOS_SYM_VOLUME_HIGH, aos_hal_volume_get(), vol_cb);
     g = group(p, NULL);
     row(g, AOS_SYM_MUSIC, 0xFF375F, _("Probar el parlante"), NULL, false, beep_cb, NULL);
+    g = group(p, _("SONIDOS DEL SISTEMA"));
+    row_switch(g, AOS_SYM_BELL, 0xFF9F0A, _("Sonidos del sistema"), aos_ui_sounds_on(), sys_snd_cb);
+    row_switch(g, AOS_SYM_KEYBOARD, 0x8E8E93, _("Clic del teclado"), aos_ui_keyclick_on(), key_snd_cb);
+    note(p, _("Al bloquear y desbloquear, las notificaciones, las capturas y la grabación de pantalla. Se apagan también con la campana del Centro de control."));
 }
 
 static void wall_cb(lv_event_t *e) { aos_ui_set_wallpaper((int)(intptr_t)lv_event_get_user_data(e)); show(PG_WALL); }
@@ -1036,8 +1052,15 @@ static void build_wall(lv_obj_t *p)
         lv_obj_set_style_border_opa(t, i == aos_ui_wallpaper() ? LV_OPA_COVER : LV_OPA_20, 0);
         lv_obj_add_flag(t, LV_OBJ_FLAG_CLICKABLE);
         lv_obj_add_event_cb(t, wall_cb, LV_EVENT_CLICKED, (void *)(intptr_t)i);
+        if (i == AOS_UI_WALL_DYNAMIC) {         /* the time of day's: its colours now, and a clock */
+            lv_obj_t *cl = lv_label_create(t);
+            lv_obj_set_style_text_font(cl, &aos_sym_44, 0);
+            lv_obj_set_style_text_color(cl, lv_color_white(), 0);
+            lv_label_set_text(cl, AOS_SYM_CLOCK_OUTLINE);
+            lv_obj_center(cl);
+        }
     }
-    note(p, _("El degradado queda debajo de la foto, si elegís una."));
+    note(p, _("El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El degradado queda debajo de la foto, si elegís una."));
 
     /* a photo over the gradient, chosen from Fotos */
     lv_obj_t *g = group(p, _("FOTO"));
@@ -1857,6 +1880,19 @@ static void lock_after_cb(lv_event_t *e)
     show(PG_LOCK);
 }
 
+/* the clock: user data is the field (high byte) and its value */
+static void lock_clock_cb(lv_event_t *e)
+{
+    int v = (int)(intptr_t)lv_event_get_user_data(e);
+    aos_lock_cfg_t c;
+    aos_lock_get_cfg(&c);
+    if (v >> 8 == 0) c.clock_size = (uint8_t)(v & 0xFF);
+    else if (v >> 8 == 1) c.clock_pos = (uint8_t)(v & 0xFF);
+    else c.clock_color = (uint8_t)(v & 0xFF);
+    aos_lock_set_cfg(&c);
+    show(PG_LOCK);
+}
+
 static void lock_notifs_cb(lv_event_t *e)
 {
     aos_lock_cfg_t c;
@@ -1909,6 +1945,20 @@ static void build_lock(lv_obj_t *p)
     if (len) action_row(g, _("Cambiar el código"), AOS_C_ACCENT, lock_change_cb);
     note(p, aos_ui_safe_mode() ? _("Modo seguro: el código no se pide, así que podés quitarlo o cambiarlo sin saberlo.")
                                : _("¿Te olvidaste el código? Reiniciá con BOOT apretado (modo seguro): ahí no se pide, y lo quitás desde acá. Después de 5 intentos mal, espera 30 s, y más cada vez."));
+
+    g = group(p, _("RELOJ"));
+    static const char *const SZ[] = { N_("Grande"), N_("Mediano") };
+    static const char *const POS[] = { N_("Arriba"), N_("Al medio") };
+    static const char *const COL[] = { N_("Blanco"), N_("Color de acento"), N_("Tomado de la foto") };
+    for (int i = 0; i < 2; i++)
+        row(g, NULL, 0, _(SZ[i]), c.clock_size == i ? AOS_SYM_CHECK : NULL, false, lock_clock_cb, (void *)(intptr_t)(0 << 8 | i));
+    g = group(p, NULL);
+    for (int i = 0; i < 2; i++)
+        row(g, NULL, 0, _(POS[i]), c.clock_pos == i ? AOS_SYM_CHECK : NULL, false, lock_clock_cb, (void *)(intptr_t)(1 << 8 | i));
+    g = group(p, NULL);
+    for (int i = 0; i < 3; i++)
+        row(g, NULL, 0, _(COL[i]), c.clock_color == i ? AOS_SYM_CHECK : NULL, false, lock_clock_cb, (void *)(intptr_t)(2 << 8 | i));
+    note(p, _("El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco."));
 
     g = group(p, _("QUÉ SE MUESTRA"));
     row_switch(g, AOS_SYM_BELL, 0xFF453A, _("Mensajes"), c.show_notifs, lock_notifs_cb);

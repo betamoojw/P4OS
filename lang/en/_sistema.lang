@@ -4911,9 +4911,6 @@ VOLUMEN	VOLUME
 Probar el parlante	Test the speaker
 
 #: components/aos_apps/aos_app_settings.c
-El degradado queda debajo de la foto, si elegís una.	The gradient stays under the photo, if you choose one.
-
-#: components/aos_apps/aos_app_settings.c
 FOTO	PHOTO
 
 #: components/aos_apps/aos_app_settings.c
@@ -7705,3 +7702,39 @@ No se pudo empezar a grabar (¿hay tarjeta?)	Could not start recording (is there
 
 #: components/aos_apps/aos_app_settings.c:1062
 COLOR DE ACENTO	ACCENT COLOUR
+
+#: components/aos_apps/aos_app_settings.c
+SONIDOS DEL SISTEMA	SYSTEM SOUNDS
+
+#: components/aos_apps/aos_app_settings.c
+Sonidos del sistema	System sounds
+
+#: components/aos_apps/aos_app_settings.c
+Clic del teclado	Keyboard click
+
+#: components/aos_apps/aos_app_settings.c
+Al bloquear y desbloquear, las notificaciones, las capturas y la grabación de pantalla. Se apagan también con la campana del Centro de control.	When locking and unlocking, notifications, screenshots and screen recording. The Control Centre's bell turns them off too.
+
+#: components/aos_apps/aos_app_settings.c
+El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El degradado queda debajo de la foto, si elegís una.	The one with the clock changes with the time of day: night, dawn, day and dusk. The gradient stays under the photo, if you choose one.
+
+#: components/aos_apps/aos_app_settings.c
+Grande	Large
+
+#: components/aos_apps/aos_app_settings.c
+Mediano	Medium
+
+#: components/aos_apps/aos_app_settings.c
+Arriba	At the top
+
+#: components/aos_apps/aos_app_settings.c
+Al medio	In the middle
+
+#: components/aos_apps/aos_app_settings.c
+Color de acento	Accent colour
+
+#: components/aos_apps/aos_app_settings.c
+Tomado de la foto	From the photo
+
+#: components/aos_apps/aos_app_settings.c
+El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.	The photo's colour is the lock screen photo's own, lightened; without a photo the clock stays white.

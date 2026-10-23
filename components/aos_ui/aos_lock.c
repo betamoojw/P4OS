@@ -77,6 +77,9 @@ static void cfg_load(void)
     if (aos_hal_pref_get_i32("lock_notifs", &v)) s_cfg.show_notifs = v != 0;
     if (aos_hal_pref_get_i32("lock_music", &v)) s_cfg.show_music = v != 0;
     if (aos_hal_pref_get_i32("lock_hide", &v)) s_cfg.hide_content = v != 0;
+    if (aos_hal_pref_get_i32("lock_clk_sz", &v)) s_cfg.clock_size = v == 1;
+    if (aos_hal_pref_get_i32("lock_clk_pos", &v)) s_cfg.clock_pos = v == 1;
+    if (aos_hal_pref_get_i32("lock_clk_col", &v) && v >= 0 && v <= 2) s_cfg.clock_color = (uint8_t)v;
     if (aos_hal_pref_get_i32("lock_fails", &v) && v >= 0) s_fails = (int)v;
 }
 
@@ -90,6 +93,9 @@ void aos_lock_set_cfg(const aos_lock_cfg_t *c)
     aos_hal_pref_set_i32("lock_notifs", c->show_notifs);
     aos_hal_pref_set_i32("lock_music", c->show_music);
     aos_hal_pref_set_i32("lock_hide", c->hide_content);
+    aos_hal_pref_set_i32("lock_clk_sz", c->clock_size);
+    aos_hal_pref_set_i32("lock_clk_pos", c->clock_pos);
+    aos_hal_pref_set_i32("lock_clk_col", c->clock_color);
 }
 
 static void hash_hex(const uint8_t salt[8], const char *pin, char out[65])
@@ -382,6 +388,7 @@ static void slide_done(lv_anim_t *a)
 static void unlock(void)
 {
     s_locked = false;
+    aos_ui_sound(AOS_SND_UNLOCK);
     below(false);
     aos_lock_pad_close();
     if (!L.layer) return;
@@ -598,14 +605,23 @@ static void build(void)
      * messages on the right */
     int32_t colw = g->landscape ? g->w / 2 - 60 : g->w - 2 * AOS_UI_PAD;
     int32_t cx = g->landscape ? 40 : AOS_UI_PAD;
-    L.time = aos_label(L.layer, "", g->landscape ? &aos_inter_num_96 : &aos_inter_num_144, lv_color_white());
+    /* the clock as chosen (Settings, Lock screen): size, place and colour.
+     * Lying down there is room for the medium one only. */
+    bool medium = g->landscape || s_cfg.clock_size == 1;
+    uint32_t tint = 0xFFFFFF;
+    if (s_cfg.clock_color == 1) tint = aos_theme_accent_rgb();
+    else if (s_cfg.clock_color == 2 && aos_wall_photo_tint(AOS_WALL_LOCK)) tint = aos_wall_photo_tint(AOS_WALL_LOCK);
+    int32_t ty = g->landscape ? g->h / 2 - 130
+               : s_cfg.clock_pos == 1 ? g->h / 2 - (medium ? 230 : 300) : g->bar_h + 70;
+    int32_t dy = ty + (medium ? 120 : 170);
+    L.time = aos_label(L.layer, "", medium ? &aos_inter_num_96 : &aos_inter_num_144, lv_color_hex(tint));
     lv_obj_set_width(L.time, colw);
     lv_obj_set_style_text_align(L.time, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_set_pos(L.time, cx, g->landscape ? g->h / 2 - 130 : g->bar_h + 70);
+    lv_obj_set_pos(L.time, cx, ty);
     L.date = aos_label(L.layer, "", aos_font_title, lv_color_hex(0xE8EAF0));
     lv_obj_set_width(L.date, colw);
     lv_obj_set_style_text_align(L.date, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_set_pos(L.date, cx, g->landscape ? g->h / 2 - 10 : g->bar_h + 70 + 170);
+    lv_obj_set_pos(L.date, cx, g->landscape ? g->h / 2 - 10 : dy);
     clock_refresh();
 
     int32_t mx = g->landscape ? g->w / 2 + 20 : AOS_UI_PAD;
@@ -617,7 +633,7 @@ static void build(void)
     lv_obj_set_style_pad_row(col, 16, 0);
     lv_obj_remove_flag(col, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_remove_flag(col, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_pos(col, mx, g->landscape ? g->bar_h + 30 : g->bar_h + 330);
+    lv_obj_set_pos(col, mx, g->landscape ? g->bar_h + 30 : dy + 90);
     /* the space for the messages: notifications today, Bluetooth and Home
      * Assistant's when they come, through the same store */
     if (s_cfg.show_notifs) {
@@ -675,6 +691,15 @@ void aos_lock_now(void)
 }
 
 bool aos_lock_is_locked(void) { return s_locked; }
+
+void aos_lock_wall_refresh(void)
+{
+    if (!L.layer) return;
+    uint32_t top, bottom;
+    aos_ui_wallpaper_colors(aos_ui_wallpaper(), &top, &bottom);
+    lv_obj_set_style_bg_color(L.layer, lv_color_hex(top), 0);
+    lv_obj_set_style_bg_grad_color(L.layer, lv_color_hex(bottom), 0);
+}
 bool aos_lock_covers(void) { return s_locked || L.layer; }
 
 void aos_lock_layout(void)

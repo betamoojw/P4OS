@@ -199,8 +199,11 @@ void aos_ui_set_badge(const char *id, int count);
 void aos_ui_edit_home(void);
 
 /* ---- wallpaper ---- */
-/* One of the built-in gradients (0..AOS_UI_WALLPAPERS-1), saved. */
-#define AOS_UI_WALLPAPERS 8
+/* One of the built-in gradients (0..AOS_UI_WALLPAPERS-1), saved. The last,
+ * AOS_UI_WALL_DYNAMIC, follows the time of day (night, dawn, day, dusk),
+ * worked out again every minute. */
+#define AOS_UI_WALLPAPERS 9
+#define AOS_UI_WALL_DYNAMIC 8
 void aos_ui_set_wallpaper(int index);
 int  aos_ui_wallpaper(void);
 void aos_ui_wallpaper_colors(int index, uint32_t *top, uint32_t *bottom);
@@ -221,6 +224,19 @@ void aos_ui_screenrec(bool on);
 /* The shell's screens built again (after aos_theme_set_accent). LVGL's
  * lock held. */
 void aos_ui_restyle(void);
+
+/* The system's sounds (aos_sounds.c): a few notes of the speaker's bell,
+ * unless they are off (the control centre's bell, Settings, Sound). The
+ * keyboard's click has a switch of its own, off by default. */
+typedef enum {
+    AOS_SND_LOCK, AOS_SND_UNLOCK, AOS_SND_NOTIF, AOS_SND_SHOT,
+    AOS_SND_REC_ON, AOS_SND_REC_OFF, AOS_SND_CALL, AOS_SND_KEY,
+} aos_sound_t;
+void aos_ui_sound(aos_sound_t s);
+bool aos_ui_sounds_on(void);
+void aos_ui_sounds_set(bool on);
+bool aos_ui_keyclick_on(void);
+void aos_ui_keyclick_set(bool on);
 
 /* ---- status bar ---- */
 typedef enum {

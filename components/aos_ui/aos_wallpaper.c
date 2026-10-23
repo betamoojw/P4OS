@@ -52,6 +52,7 @@ typedef struct {
     int            new_w, new_h;
     uint32_t       new_gen;
     bool           new_thread;          /* from a decode (else from request(), with none) */
+    uint32_t       tint, new_tint;      /* the photo's colour, lightened: the lock clock's */
 } wall_t;
 
 AOS_BSS_PSRAM static wall_t W[2];
@@ -86,12 +87,30 @@ static void dim(uint16_t *px, size_t n, unsigned target)
     }
 }
 
+/* The photo's mean colour, then three fifths of the way to white: a colour
+ * of its own that a big clock can be drawn in and still read on it */
+static uint32_t tint_of(const uint16_t *px, size_t n)
+{
+    uint32_t r = 0, g = 0, b = 0, m = 0;
+    for (size_t i = 0; i < n; i += 37, m++) {
+        uint16_t p = px[i];
+        r += (p >> 11) << 3;
+        g += ((p >> 5) & 0x3F) << 2;
+        b += (p & 0x1F) << 3;
+    }
+    if (!m) return 0;
+    r /= m; g /= m; b /= m;
+    r += (255 - r) * 3 / 5; g += (255 - g) * 3 / 5; b += (255 - b) * 3 / 5;
+    return r << 16 | g << 8 | b;
+}
+
 static void worker(void *arg)
 {
     job_t *j = arg;
     int w = 0, h = 0;
     uint16_t *px = aos_hal_image_decode(j->path, 0, 0, j->w, j->h, true, &w, &h, NULL, NULL);
     if (px && (w != j->w || h != j->h)) { aos_hal_image_free(px); px = NULL; }
+    uint32_t tint = px ? tint_of(px, (size_t)w * h) : 0;
     if (px) dim(px, (size_t)w * h, j->which == AOS_WALL_HOME ? LUMA_HOME : LUMA_LOCK);
     else aos_hal_log("ui", "wallpaper: %s could not be read", j->path);
     wall_t *v = &W[j->which];
@@ -101,6 +120,7 @@ static void worker(void *arg)
     v->new_w = w;
     v->new_h = h;
     v->new_gen = j->gen;
+    v->new_tint = tint;
     v->new_thread = true;
     v->ready = true;
     aos_hal_mutex_unlock(s_mx);
@@ -164,6 +184,7 @@ static void poll_cb(lv_timer_t *t)
         int w = v->new_w, h = v->new_h;
         uint32_t gen = v->new_gen;
         bool from_thread = v->new_thread;
+        uint32_t tint = v->new_tint;
         v->ready = false;
         v->new_px = NULL;
         aos_hal_mutex_unlock(s_mx);
@@ -176,6 +197,7 @@ static void poll_cb(lv_timer_t *t)
         v->px = px;
         v->w = w;
         v->h = h;
+        if (px) v->tint = tint;
         memset(&v->dsc, 0, sizeof v->dsc);
         if (px) {
             v->dsc.header.magic = LV_IMAGE_HEADER_MAGIC;
@@ -216,6 +238,11 @@ void aos_wall_photo_want(int which, bool want)
         v->w = v->h = 0;
         memset(&v->dsc, 0, sizeof v->dsc);
     }
+}
+
+uint32_t aos_wall_photo_tint(int which)
+{
+    return which >= 0 && which <= 1 && W[which].path[0] ? W[which].tint : 0;
 }
 
 const lv_image_dsc_t *aos_wall_photo_dsc(int which)

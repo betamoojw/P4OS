@@ -1503,7 +1503,6 @@ static const char blob_en__sistema_lang[] =
     "Sin tocarla, la pantalla se atenúa diez segundos antes y después se apaga; un toque la despierta. Los juegos, el video y las apps que lo piden la mantienen encendida mientras están al frente.\tWhen left untouched, the screen dims ten seconds before and then turns off; a touch wakes it. Games, video and apps that ask for it keep it on while they are in front.\n"
     "VOLUMEN\tVOLUME\n"
     "Probar el parlante\tTest the speaker\n"
-    "El degradado queda debajo de la foto, si elegís una.\tThe gradient stays under the photo, if you choose one.\n"
     "FOTO\tPHOTO\n"
     "Sin foto\tNo photo\n"
     "Quitar la foto\tRemove the photo\n"
@@ -2715,6 +2714,18 @@ static const char blob_en__sistema_lang[] =
     "La grabación no se pudo terminar bien\tThe recording could not be finished properly\n"
     "No se pudo empezar a grabar (¿hay tarjeta?)\tCould not start recording (is there a card?)\n"
     "COLOR DE ACENTO\tACCENT COLOUR\n"
+    "SONIDOS DEL SISTEMA\tSYSTEM SOUNDS\n"
+    "Sonidos del sistema\tSystem sounds\n"
+    "Clic del teclado\tKeyboard click\n"
+    "Al bloquear y desbloquear, las notificaciones, las capturas y la grabación de pantalla. Se apagan también con la campana del Centro de control.\tWhen locking and unlocking, notifications, screenshots and screen recording. The Control Centre's bell turns them off too.\n"
+    "El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El degradado queda debajo de la foto, si elegís una.\tThe one with the clock changes with the time of day: night, dawn, day and dusk. The gradient stays under the photo, if you choose one.\n"
+    "Grande\tLarge\n"
+    "Mediano\tMedium\n"
+    "Arriba\tAt the top\n"
+    "Al medio\tIn the middle\n"
+    "Color de acento\tAccent colour\n"
+    "Tomado de la foto\tFrom the photo\n"
+    "El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.\tThe photo's colour is the lock screen photo's own, lightened; without a photo the clock stays white.\n"
     ;
 
 static const aos_lang_file_t files_en[] = {
@@ -4210,7 +4221,6 @@ static const char blob_de__sistema_lang[] =
     "Sin tocarla, la pantalla se atenúa diez segundos antes y después se apaga; un toque la despierta. Los juegos, el video y las apps que lo piden la mantienen encendida mientras están al frente.\tOhne Berührung wird der Bildschirm zehn Sekunden vorher gedimmt und dann ausgeschaltet; eine Berührung weckt ihn. Spiele, Video und Apps, die es verlangen, halten ihn an, solange sie im Vordergrund sind.\n"
     "VOLUMEN\tLAUTSTÄRKE\n"
     "Probar el parlante\tLautsprecher testen\n"
-    "El degradado queda debajo de la foto, si elegís una.\tDer Verlauf bleibt unter dem Foto, wenn du eines wählst.\n"
     "FOTO\tFOTO\n"
     "Sin foto\tKein Foto\n"
     "Quitar la foto\tFoto entfernen\n"
@@ -5422,6 +5432,18 @@ static const char blob_de__sistema_lang[] =
     "La grabación no se pudo terminar bien\tDie Aufnahme konnte nicht sauber beendet werden\n"
     "No se pudo empezar a grabar (¿hay tarjeta?)\tAufnahme konnte nicht starten (ist eine Karte drin?)\n"
     "COLOR DE ACENTO\tAKZENTFARBE\n"
+    "SONIDOS DEL SISTEMA\tSYSTEMTÖNE\n"
+    "Sonidos del sistema\tSystemtöne\n"
+    "Clic del teclado\tTastaturklick\n"
+    "Al bloquear y desbloquear, las notificaciones, las capturas y la grabación de pantalla. Se apagan también con la campana del Centro de control.\tBeim Sperren und Entsperren, bei Mitteilungen, Bildschirmfotos und Bildschirmaufnahmen. Die Glocke im Kontrollzentrum schaltet sie ebenfalls aus.\n"
+    "El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El degradado queda debajo de la foto, si elegís una.\tDer mit der Uhr ändert sich mit der Tageszeit: Nacht, Morgen, Tag und Abend. Der Verlauf bleibt unter dem Foto, wenn du eines wählst.\n"
+    "Grande\tGroß\n"
+    "Mediano\tMittel\n"
+    "Arriba\tOben\n"
+    "Al medio\tIn der Mitte\n"
+    "Color de acento\tAkzentfarbe\n"
+    "Tomado de la foto\tAus dem Foto\n"
+    "El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.\tDie Farbe des Fotos ist die des Sperrbildschirmfotos, aufgehellt; ohne Foto bleibt die Uhr weiß.\n"
     ;
 
 static const aos_lang_file_t files_de[] = {
@@ -5429,7 +5451,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2700, 0, files_en, 1 },
-    { "de", "Deutsch", 2700, 0, files_de, 1 },
+    { "en", "English", 2711, 0, files_en, 1 },
+    { "de", "Deutsch", 2711, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

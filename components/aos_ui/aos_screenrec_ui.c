@@ -24,6 +24,7 @@ static void poll_cb(lv_timer_t *t)
     lv_timer_delete(t);
     s_poll = NULL;
     s_on = false;
+    aos_ui_sound(AOS_SND_REC_OFF);
     aos_ui_status_icon_set("sys.screenrec", NULL, 0);
     aos_ui_toast(aos_hal_screenrec_done_ok() ? _("Grabación guardada en la carpeta videos de la tarjeta")
                                              : _("La grabación no se pudo terminar bien"), 3000);
@@ -38,6 +39,7 @@ static void start_cb(lv_timer_t *t)
         return;
     }
     s_on = true;
+    aos_ui_sound(AOS_SND_REC_ON);
     aos_ui_status_icon_set("sys.screenrec", AOS_SYM_RECORD_REC, 0xFF3B30);
     if (!s_poll) s_poll = lv_timer_create(poll_cb, POLL_MS, NULL);
 }

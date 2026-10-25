@@ -83,7 +83,9 @@ Vertical 720×1280                         Horizontal 1280×720
 - **Modo edición** (mantener apretado en un ícono o en un hueco): los íconos
   tiemblan, se arrastran entre páginas y al dock, soltar un ícono sobre otro
   crea una carpeta, la ✕ quita del inicio (y ofrece borrar la `.so` si es
-  dinámica), "+" arriba para agregar widgets.
+  dinámica), "+" arriba para agregar widgets (hecho después de 0.21.6:
+  "+ Widget", y tocar un widget abre su hoja con el tamaño, qué muestra y
+  quitarlo; `aos_widget_edit.c`).
 - **Menú contextual** (mantener apretado corto): Abrir, Info de la app
   (versión, tamaño, permisos de módulos), Editar inicio, acciones rápidas que
   declare la app ("Nueva captura", "Última placa").

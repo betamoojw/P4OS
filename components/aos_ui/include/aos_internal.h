@@ -111,6 +111,15 @@ lv_obj_t  *aos_ui_app_root(aos_app_t *app);
  * Control Centre asks for "cc.ha" (Home Assistant's scenes). */
 aos_widget_create_t aos_ui_widget_find(const char *type);
 
+/* aos_widget_edit.c: the edit mode's sheets for widgets. add() lists the
+ * described types and hands the one tapped to picked(); config() shows one
+ * widget's size and what it shows, and done() gets what to do with it. */
+typedef enum { AOS_WEDIT_APPLY, AOS_WEDIT_REMOVE } aos_wedit_action_t;
+typedef void (*aos_wedit_done_t)(aos_wedit_action_t action, int w, int h, const char *arg);
+void        aos_wedit_add(void (*picked)(const char *type));
+void        aos_wedit_config(const char *type, int w, int h, const char *arg, aos_wedit_done_t done);
+bool        aos_wedit_close(void);                  /* true if a sheet was open */
+
 #ifdef __cplusplus
 }
 #endif

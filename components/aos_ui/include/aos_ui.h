@@ -260,6 +260,24 @@ void aos_ui_toast(const char *text, uint32_t ms);
 typedef void (*aos_widget_create_t)(lv_obj_t *card, int32_t w, int32_t h, const char *arg);
 void aos_ui_register_widget(const char *type, aos_widget_create_t create);
 
+/* What the home screen's edit mode needs to offer a registered type: its
+ * name and a line about it (Spanish literals, translated where they are
+ * shown: N_() them), its glyph (aos_sym_44), and, if the widget can be told
+ * what to show, the choices.
+ * choices() fills up to 'max' and returns how many; the ones picked go into
+ * the arg as their values joined by commas, at most 'max_pick' of them (none
+ * picked: the widget chooses on its own, with an empty arg). A type without
+ * a description still works from menu.txt and the portal, but is not offered
+ * on the board. Register it with the type, before aos_ui_init(). */
+typedef struct {
+    char value[64];                     /* "scd4x:co2", "light.living" */
+    char label[64];                     /* "CO₂ · scd4x", "Luz del living" */
+    char detail[32];                    /* "678 ppm", "Encendida"; may be empty */
+} aos_widget_choice_t;
+typedef int (*aos_widget_choices_t)(aos_widget_choice_t *out, int max);
+void aos_ui_describe_widget(const char *type, const char *name, const char *about, const char *glyph,
+                            int max_pick, aos_widget_choices_t choices);
+
 /* ---- gestures ---- */
 /* An app that needs whole drags (a drawing canvas, a game) switches the
  * system's edge gestures off while it has them. */

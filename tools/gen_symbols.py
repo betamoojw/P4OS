@@ -187,10 +187,13 @@ EXTRA_SYMBOLS = [
 # service's drivers and their helpers (components/aos_io/sensors): an app
 # reads sensors through aos_sensors.h, and the driver table is two hundred
 # names that would only grow the table. aos_wall_photo_ is the shell's side
-# of the wallpaper's photos (an app uses aos_ui_wall_photo_set), and the
-# compressed fonts' bitmap hook is reached through the fonts themselves.
+# of the wallpaper's photos (an app uses aos_ui_wall_photo_set), aos_wedit_
+# the home's widget sheets (an app describes its widget with
+# aos_ui_describe_widget), and the compressed fonts' bitmap hook is reached
+# through the fonts themselves.
 EXCLUDE_PREFIXES = ("_", ".", "$", "__", "aos_p4_", "aos_access_", "aos_hwkbd_", "aos_hwmouse_",
-                    "DRV_", "SENS_", "sens_", "si2c_", "aos_wall_photo_", "aos_screenrec_")
+                    "DRV_", "SENS_", "sens_", "si2c_", "aos_wall_photo_", "aos_screenrec_",
+                    "aos_wedit_")
 EXCLUDE_EXACT = {"elf_find_sym", "elf_find_sym_default", "elf_set_symbol_resolver",
                  "aos_font_bitmap_locked", "aos_draw_accel_init"}
 

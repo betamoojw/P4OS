@@ -1742,8 +1742,17 @@ static bool back(aos_app_t *self, void *inst)
     return false;
 }
 
+void aos_widget_sensors_register(void);    /* aos_widget_sensors.c */
+
 void aos_app_modules_get(aos_app_t *app)
 {
+    /* the home screen's sensor widget registers with the app that reads
+     * them, once, before aos_ui_init() as the registry requires */
+    static bool widget;
+    if (!widget) {
+        widget = true;
+        aos_widget_sensors_register();
+    }
     *app = (aos_app_t){
         .desc = {
             .id = "aos.modules", .name = "Módulos", .icon = AOS_SYM_EXPANSION_CARD,

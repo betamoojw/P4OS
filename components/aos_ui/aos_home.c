@@ -92,7 +92,7 @@ static lv_obj_t *s_dock_badges[AOS_MENU_DOCK_MAX];
 static int s_ndock;
 static int s_npages;
 
-static lv_obj_t *s_root, *s_pages, *s_dots, *s_dock_panel, *s_done_btn;
+static lv_obj_t *s_root, *s_pages, *s_dots, *s_dock_panel, *s_done_btn, *s_add_btn;
 static lv_obj_t *s_page_obj[MAX_PAGES];
 static int s_page;                  /* page shown */
 
@@ -589,9 +589,18 @@ aos_widget_create_t aos_ui_widget_find(const char *type)
     return NULL;
 }
 
+/* held, a widget starts the edit mode as an icon does */
+static void widget_long_pressed(lv_event_t *e)
+{
+    (void)e;
+    if (!s_editing) aos_home_edit(true);
+}
+
 static lv_obj_t *widget_create(lv_obj_t *parent, const aos_menu_item_t *it, int32_t w, int32_t h)
 {
     lv_obj_t *c = widget_card(parent, w, h);
+    lv_obj_add_flag(c, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(c, widget_long_pressed, LV_EVENT_LONG_PRESSED, NULL);
     for (int i = 0; i < EXT_WIDGETS && s_ext[i].create; i++)
         if (!strcmp(s_ext[i].type, it->widget)) {
             s_ext[i].create(c, w, h, it->arg);
@@ -748,6 +757,100 @@ static void long_press_empty(lv_event_t *e)
 
 static void done_clicked(lv_event_t *e) { aos_home_edit(false); }
 
+/* -------------------------------------------------------------------------- */
+/* Widgets in edit mode                                                        */
+/* -------------------------------------------------------------------------- */
+
+/* The item the widget sheet is about: its index in s_items, and the type it
+ * had, to check it is still that one when the sheet answers. */
+static int  s_wedit_idx = -1;
+static char s_wedit_type[AOS_MENU_WIDGET_TYPE_MAX];
+
+static void widget_remove_at(int i)
+{
+    if (i < 0 || i >= s_nitems || s_items[i].it.kind != AOS_MENU_ITEM_WIDGET) return;
+    memmove(&s_items[i], &s_items[i + 1], sizeof s_items[0] * (size_t)(s_nitems - i - 1));
+    s_nitems--;
+    save_model();
+}
+
+static void wedit_done(aos_wedit_action_t action, int w, int h, const char *arg)
+{
+    int i = s_wedit_idx;
+    s_wedit_idx = -1;
+    if (i < 0 || i >= s_nitems || s_items[i].it.kind != AOS_MENU_ITEM_WIDGET || strcmp(s_items[i].it.widget, s_wedit_type))
+        return;
+    if (action == AOS_WEDIT_REMOVE) { widget_remove_at(i); return; }
+    aos_menu_item_t *it = &s_items[i].it;
+    if (it->w == w && it->h == h && !strcmp(it->arg, arg)) return;
+    it->w = (uint8_t)w;
+    it->h = (uint8_t)h;
+    snprintf(it->arg, sizeof it->arg, "%s", arg);
+    save_model();
+}
+
+static void wedit_open(int i)
+{
+    if (i < 0 || i >= s_nitems || s_items[i].it.kind != AOS_MENU_ITEM_WIDGET) return;
+    const aos_menu_item_t *it = &s_items[i].it;
+    s_wedit_idx = i;
+    snprintf(s_wedit_type, sizeof s_wedit_type, "%s", it->widget);
+    aos_wedit_config(it->widget, it->w, it->h, it->arg, wedit_done);
+}
+
+static void shield_event(lv_event_t *e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    if (code == LV_EVENT_PRESSED) { lv_indev_get_point(lv_indev_active(), &s_press_pt); return; }
+    if (code != LV_EVENT_SHORT_CLICKED) return;
+    lv_point_t now;
+    lv_indev_get_point(lv_indev_active(), &now);
+    if (LV_ABS(now.x - s_press_pt.x) > 24 || LV_ABS(now.y - s_press_pt.y) > 24) return;   /* a swipe */
+    wedit_open((int)(intptr_t)lv_event_get_user_data(e));
+}
+
+/* In edit mode a widget is not used, it is edited: a clear layer over it
+ * takes the taps (its tiles would act on them) and opens its sheet, which
+ * also takes it off. No round "-" on its corner as the icons have: on the
+ * first row it would sit under "+ Widget". */
+static void widget_shield(lv_obj_t *page, lv_obj_t *card, int i)
+{
+    lv_obj_t *s = lv_obj_create(page);
+    lv_obj_remove_style_all(s);
+    lv_obj_set_size(s, lv_obj_get_style_width(card, 0), lv_obj_get_style_height(card, 0));
+    lv_obj_set_pos(s, lv_obj_get_style_x(card, 0), lv_obj_get_style_y(card, 0));
+    lv_obj_remove_flag(s, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_remove_flag(s, LV_OBJ_FLAG_PRESS_LOCK);
+    lv_obj_add_flag(s, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_flag(s, LV_OBJ_FLAG_EVENT_BUBBLE);      /* page swipes still scroll */
+    lv_obj_add_event_cb(s, shield_event, LV_EVENT_ALL, (void *)(intptr_t)i);
+    wiggle(s, true, i);
+}
+
+/* A new widget goes to the top of the page on show, and its sheet opens */
+static void add_picked(const char *type)
+{
+    if (s_nitems >= MAX_ITEMS) return;
+    int at = s_nitems;
+    for (int i = 0; i < s_nitems; i++)
+        if (s_items[i].it.kind != AOS_MENU_ITEM_PAGE && s_items[i].page >= s_page) { at = i; break; }
+    memmove(&s_items[at + 1], &s_items[at], sizeof s_items[0] * (size_t)(s_nitems - at));
+    s_nitems++;
+    placed_t *p = &s_items[at];
+    memset(p, 0, sizeof *p);
+    p->it.kind = AOS_MENU_ITEM_WIDGET;
+    p->it.folder = -1;
+    p->it.w = 4;
+    p->it.h = 2;
+    snprintf(p->it.widget, sizeof p->it.widget, "%s", type);
+    p->page = s_page;
+    save_model();
+    /* the model read again keeps the file's order: the new one is there */
+    if (at < s_nitems && s_items[at].it.kind == AOS_MENU_ITEM_WIDGET && !strcmp(s_items[at].it.widget, type)) wedit_open(at);
+}
+
+static void add_clicked(lv_event_t *e) { (void)e; aos_wedit_add(add_picked); }
+
 static void build(void)
 {
     const aos_geo_t *g = aos_ui_geo();
@@ -791,6 +894,10 @@ static void build(void)
             lv_obj_t *w = widget_create(pg, &p->it, p->w * L.cell_w - 20, p->h * L.cell_h - 20);
             lv_obj_set_pos(w, x + 10, y + 10);
             p->cell = w;
+            if (s_editing) {
+                widget_shield(pg, w, i);
+                wiggle(w, true, i);
+            }
             continue;
         }
         const char *name;
@@ -871,6 +978,21 @@ static void build(void)
     lv_obj_align(s_done_btn, LV_ALIGN_TOP_RIGHT, -L.side, g->bar_h + 2);
     lv_obj_add_event_cb(s_done_btn, done_clicked, LV_EVENT_CLICKED, NULL);
     lv_obj_set_flag(s_done_btn, LV_OBJ_FLAG_HIDDEN, !s_editing);
+
+    /* and "+ Widget" across from it */
+    s_add_btn = lv_button_create(s_root);
+    lv_obj_set_style_radius(s_add_btn, 30, 0);
+    lv_obj_set_style_bg_color(s_add_btn, lv_color_white(), 0);
+    lv_obj_set_style_bg_opa(s_add_btn, LV_OPA_30, 0);
+    lv_obj_set_style_shadow_width(s_add_btn, 0, 0);
+    lv_obj_set_style_pad_hor(s_add_btn, 28, 0);
+    lv_obj_set_style_pad_ver(s_add_btn, 12, 0);
+    lv_obj_t *al = lv_label_create(s_add_btn);
+    lv_obj_set_style_text_font(al, aos_font_small, 0);
+    lv_label_set_text(al, _("+ Widget"));
+    lv_obj_align(s_add_btn, LV_ALIGN_TOP_LEFT, L.side, g->bar_h + 2);
+    lv_obj_add_event_cb(s_add_btn, add_clicked, LV_EVENT_CLICKED, NULL);
+    lv_obj_set_flag(s_add_btn, LV_OBJ_FLAG_HIDDEN, !s_editing);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1253,6 +1375,7 @@ void aos_home_edit(bool on)
 
 bool aos_home_back(void)
 {
+    if (aos_wedit_close()) return true;
     if (s_folder_ov) { folder_close(true); return true; }
     if (s_editing) { aos_home_edit(false); return true; }
     if (s_page != 0) { lv_obj_scroll_to_x(s_pages, 0, LV_ANIM_ON); return true; }

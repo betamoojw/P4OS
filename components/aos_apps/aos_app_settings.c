@@ -695,6 +695,7 @@ static void build_root(lv_obj_t *p)
     row(g, AOS_SYM_VOLUME_HIGH, 0xFF375F, _("Sonido"), NULL, true, open_cb, (void *)PG_SOUND);
     row(g, AOS_SYM_PALETTE, 0x30B0C7, _("Fondo de pantalla"), NULL, true, open_cb, (void *)PG_WALL);
     row(g, AOS_SYM_VIEW_GRID_OUTLINE, 0xFF9F0A, _("Editar inicio"), NULL, true, edit_home_cb, NULL);
+    note(p, _("En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo."));
 
     g = group(p, NULL);
     row(g, AOS_SYM_EXPANSION_CARD, 0x8E8E93, _("Expansión"), NULL, true, open_cb, (void *)PG_EXP);

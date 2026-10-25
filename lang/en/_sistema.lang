@@ -7738,3 +7738,22 @@ Tomado de la foto	From the photo
 
 #: components/aos_apps/aos_app_settings.c
 El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.	The photo's colour is the lock screen photo's own, lightened; without a photo the clock stays white.
+La hora y la fecha, grandes.	The time and the date, large.
+Chico	Small
+Agregar widget	Add widget
+Después de agregarlo, tocalo para elegir el tamaño y qué muestra. Se mueven desde el portal, en Inicio.	Once added, tap it to choose its size and what it shows. They are moved from the portal, under Home.
+Hasta %d	Up to %d
+no está ahora	not there now
+Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.	What it shows: up to %d, in the order you tap them. Those that do not fit in the size are left out.
+Automático	Automatic
+El widget elige lo que conviene mostrar	The widget picks what is worth showing
+Todavía no hay nada para elegir: mientras tanto, el widget elige solo.	Nothing to choose from yet: meanwhile, the widget picks on its own.
+Quitar widget	Remove widget
++ Widget	+ Widget
+Todavía no hay sensores. Conectá uno al header o agregalo en Módulos.	No sensors yet. Connect one to the header or add it in Modules.
+Lo que miden los sensores conectados: CO₂, temperatura, humedad…	What the connected sensors measure: CO₂, temperature, humidity…
+Las entidades del widget no están en Home Assistant	The widget's entities are not in Home Assistant
+Luces, enchufes y sensores de la casa, a un toque.	The house's lights, plugs and sensors, a tap away.
+La memoria, el procesador y la red de la placa.	The board's memory, processor and network.
+Cuánto queda del uso de Claude.	How much of your Claude usage is left.
+En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	In edit mode, “+ Widget” adds the clock, the sensors, Home Assistant and more to the home screen; tap a widget to choose its size and what it shows, or to remove it.

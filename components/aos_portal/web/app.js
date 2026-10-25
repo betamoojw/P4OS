@@ -1658,10 +1658,10 @@ async function pageExpansion() {
  * Guardar writes it back whole; the board reloads its home screen by itself.
  * Lines kept as they are: the comments (they travel with the line under
  * them) and apps that are named but not installed. */
-const IN = { cols: 4, rows: 6, dock: 4, pages: 16, folders: 32, name: 39, fid: 15, id: 39, glyph: 31, wtype: 15, warg: 63,
+const IN = { cols: 4, rows: 6, dock: 4, pages: 16, folders: 32, name: 39, fid: 15, id: 39, glyph: 31, wtype: 15, warg: 255,
   line: 191, lines: 256 * 2 + 32, file: 24 * 1024 };
 const IN_DEF_DOCK = ['aos.settings', 'aos.files', 'aos.music', 'aos.calc', 'aos.clock', 'aos.photos'];
-const IN_WIDGETS = { clock: N_('Reloj'), ha: 'Home Assistant', sysmon: N_('Monitor'), claude: 'Claude', weather: N_('Clima') };
+const IN_WIDGETS = { clock: N_('Reloj'), sensors: N_('Sensores'), ha: 'Home Assistant', sysmon: N_('Monitor'), claude: 'Claude', weather: N_('Clima') };
 const IN_SIZES = ['2x2', '4x2', '4x4'];
 const IN_PALETTES = [['5E6B80', '3A4150'], ['7B2FF7', 'F107A3'], ['0A84FF', '003C8A'], ['30D158', '0B6E2E'], ['FF9F0A', 'FF375F'],
   ['64D2FF', '5E5CE6'], ['FFD60A', 'FF9F0A'], ['3A3A3C', '1C1C1E'], ['FF453A', '8A0F0A']];
@@ -1893,7 +1893,7 @@ function inCheck(m, apps, text) {
   for (const w of m.pages.flat().filter(it => it.t === 'widget')) {
     if (!/^[^ \t]+$/.test(w.type) || inBytes(w.type) > IN.wtype) err.push(tr('El widget «%s»: el tipo va sin espacios y con hasta 15 caracteres.', w.type));
     if (!(w.w >= 1 && w.w <= 8 && w.h >= 1 && w.h <= 8)) err.push(tr('El widget «%s»: el tamaño va de 1x1 a 8x8.', w.type));
-    if (inBytes(w.arg || '') > IN.warg) err.push(tr('El widget «%s»: el dato pasa de 63 bytes.', w.type));
+    if (inBytes(w.arg || '') > IN.warg) err.push(tr('El widget «%s»: el dato pasa de 255 bytes.', w.type));
   }
   const used = m.pages.filter(pg => pg.some(it => !inGhost(it, apps))).length;
   if (used > IN.pages) err.push(tr('Hay %s páginas: la placa muestra 16 como mucho.', used));
@@ -2402,7 +2402,10 @@ async function pageInicio() {
       put(editor, h('h2', { style: 'margin-top:0' }, 'Widget'),
         field(tr('Tipo'), h('select', { onchange: e => { it.type = e.target.value; changed(); } }, known.map(k => h('option', { value: k, selected: k === it.type }, IN_WIDGETS[k] ? `${tr(IN_WIDGETS[k])} (${k})` : k)))),
         field(tr('Tamaño'), h('select', { onchange: e => { [it.w, it.h] = e.target.value.split('x').map(Number); changed(); } }, sizes.map(s => h('option', { value: s, selected: s === `${it.w}x${it.h}` }, tr('%s celdas', s.replace('x', ' × ')))))),
-        field(tr('Dato (opcional)'), h('input', { type: 'text', value: it.arg || '', placeholder: tr('lo que el widget lea'), onchange: e => { it.arg = inCut(e.target.value.replace(/[\r\n]/g, ' ').trim(), IN.warg); changed(); } }), tr('Hasta 63 bytes. La mayoría de los widgets no lo usan.')),
+        field(tr('Dato (opcional)'), h('input', { type: 'text', value: it.arg || '', placeholder: it.type === 'sensors' ? 'max6675:temp,scd41:co2' : it.type === 'ha' ? 'light.living,sensor.patio_temperature' : tr('lo que el widget lea'), onchange: e => { it.arg = inCut(e.target.value.replace(/[\r\n]/g, ' ').trim(), IN.warg); changed(); } }),
+          it.type === 'sensors' ? tr('Vacío: el widget elige solo (CO2, temperatura, humedad...). Si no, sensor:valor separados por comas, con el nombre del sensor como lo muestra Módulos. También se eligen en la placa: en el modo edición, tocá el widget.')
+          : it.type === 'ha' ? tr('Vacío: los favoritos de la app (la estrella). Si no, las entidades de Home Assistant separadas por comas: controles que se tocan y sensores con su valor. 4 en un 4×2, 8 en un 4×4. También se eligen en la placa: en el modo edición, tocá el widget.')
+          : tr('Hasta 255 bytes. La mayoría de los widgets no lo usan.')),
         h('div', { class: 'btns', style: 'margin-top:14px' }, steps({ obj: it }), pageSel,
           h('button', { class: 'btn red', onclick: () => { take({ obj: it }); sel = null; changed(); } }, tr('Quitar widget'))));
       return;

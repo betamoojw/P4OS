@@ -75,7 +75,7 @@ typedef struct {
  *     widget <type> <w>x<h> [arg]   a home widget, w x h grid cells
  */
 #define AOS_MENU_WIDGET_TYPE_MAX 16
-#define AOS_MENU_WIDGET_ARG_MAX  64
+#define AOS_MENU_WIDGET_ARG_MAX  256     /* eight Home Assistant entities fit */
 #define AOS_MENU_DOCK_MAX        6
 
 typedef enum {

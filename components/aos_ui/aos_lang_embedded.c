@@ -2726,6 +2726,25 @@ static const char blob_en__sistema_lang[] =
     "Color de acento\tAccent colour\n"
     "Tomado de la foto\tFrom the photo\n"
     "El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.\tThe photo's colour is the lock screen photo's own, lightened; without a photo the clock stays white.\n"
+    "La hora y la fecha, grandes.\tThe time and the date, large.\n"
+    "Chico\tSmall\n"
+    "Agregar widget\tAdd widget\n"
+    "Después de agregarlo, tocalo para elegir el tamaño y qué muestra. Se mueven desde el portal, en Inicio.\tOnce added, tap it to choose its size and what it shows. They are moved from the portal, under Home.\n"
+    "Hasta %d\tUp to %d\n"
+    "no está ahora\tnot there now\n"
+    "Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.\tWhat it shows: up to %d, in the order you tap them. Those that do not fit in the size are left out.\n"
+    "Automático\tAutomatic\n"
+    "El widget elige lo que conviene mostrar\tThe widget picks what is worth showing\n"
+    "Todavía no hay nada para elegir: mientras tanto, el widget elige solo.\tNothing to choose from yet: meanwhile, the widget picks on its own.\n"
+    "Quitar widget\tRemove widget\n"
+    "+ Widget\t+ Widget\n"
+    "Todavía no hay sensores. Conectá uno al header o agregalo en Módulos.\tNo sensors yet. Connect one to the header or add it in Modules.\n"
+    "Lo que miden los sensores conectados: CO₂, temperatura, humedad…\tWhat the connected sensors measure: CO₂, temperature, humidity…\n"
+    "Las entidades del widget no están en Home Assistant\tThe widget's entities are not in Home Assistant\n"
+    "Luces, enchufes y sensores de la casa, a un toque.\tThe house's lights, plugs and sensors, a tap away.\n"
+    "La memoria, el procesador y la red de la placa.\tThe board's memory, processor and network.\n"
+    "Cuánto queda del uso de Claude.\tHow much of your Claude usage is left.\n"
+    "En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.\tIn edit mode, “+ Widget” adds the clock, the sensors, Home Assistant and more to the home screen; tap a widget to choose its size and what it shows, or to remove it.\n"
     ;
 
 static const aos_lang_file_t files_en[] = {
@@ -5444,6 +5463,25 @@ static const char blob_de__sistema_lang[] =
     "Color de acento\tAkzentfarbe\n"
     "Tomado de la foto\tAus dem Foto\n"
     "El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.\tDie Farbe des Fotos ist die des Sperrbildschirmfotos, aufgehellt; ohne Foto bleibt die Uhr weiß.\n"
+    "La hora y la fecha, grandes.\tUhrzeit und Datum, groß.\n"
+    "Chico\tKlein\n"
+    "Agregar widget\tWidget hinzufügen\n"
+    "Después de agregarlo, tocalo para elegir el tamaño y qué muestra. Se mueven desde el portal, en Inicio.\tNach dem Hinzufügen antippen, um Größe und Inhalt zu wählen. Verschoben werden sie im Portal unter Startbildschirm.\n"
+    "Hasta %d\tBis zu %d\n"
+    "no está ahora\tgerade nicht da\n"
+    "Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.\tWas es zeigt: bis zu %d, in der Reihenfolge des Antippens. Was in der Größe keinen Platz hat, fällt weg.\n"
+    "Automático\tAutomatisch\n"
+    "El widget elige lo que conviene mostrar\tDas Widget wählt selbst, was sich lohnt\n"
+    "Todavía no hay nada para elegir: mientras tanto, el widget elige solo.\tNoch nichts zur Auswahl: bis dahin wählt das Widget selbst.\n"
+    "Quitar widget\tWidget entfernen\n"
+    "+ Widget\t+ Widget\n"
+    "Todavía no hay sensores. Conectá uno al header o agregalo en Módulos.\tNoch keine Sensoren. Einen an die Stiftleiste anschließen oder unter Module hinzufügen.\n"
+    "Lo que miden los sensores conectados: CO₂, temperatura, humedad…\tWas die angeschlossenen Sensoren messen: CO₂, Temperatur, Feuchte…\n"
+    "Las entidades del widget no están en Home Assistant\tDie Entitäten des Widgets gibt es in Home Assistant nicht\n"
+    "Luces, enchufes y sensores de la casa, a un toque.\tLichter, Steckdosen und Sensoren im Haus, mit einem Tipp.\n"
+    "La memoria, el procesador y la red de la placa.\tSpeicher, Prozessor und Netzwerk der Platine.\n"
+    "Cuánto queda del uso de Claude.\tWie viel von der Claude-Nutzung übrig ist.\n"
+    "En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.\tIm Bearbeitungsmodus fügt „+ Widget“ die Uhr, die Sensoren, Home Assistant und mehr zum Startbildschirm hinzu; ein Widget antippen, um Größe und Inhalt zu wählen oder es zu entfernen.\n"
     ;
 
 static const aos_lang_file_t files_de[] = {
@@ -5451,7 +5489,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2711, 0, files_en, 1 },
-    { "de", "Deutsch", 2711, 0, files_de, 1 },
+    { "en", "English", 2730, 0, files_en, 1 },
+    { "de", "Deutsch", 2730, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

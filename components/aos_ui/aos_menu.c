@@ -20,7 +20,7 @@
  * line, and as many again for ids that are not installed right now. */
 #define MENU_ENTRIES_MAX    (AOS_MAX_APPS * 2 + AOS_MENU_FOLDERS_MAX)
 #define MENU_ID_MAX         40      /* as the loader's dynapp_t.id */
-#define MENU_LINE_MAX       192
+#define MENU_LINE_MAX       320     /* a widget line with its 255-byte arg */
 
 typedef struct {
     char   id[MENU_ID_MAX];         /* the app's id; empty for a folder line */

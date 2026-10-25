@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3454 simbolos.
+ * Total: 3456 simbolos.
  */
 
 #include <stddef.h>
@@ -1177,6 +1177,7 @@ extern int aos_ui_button;
 extern int aos_ui_close;
 extern int aos_ui_close_others;
 extern int aos_ui_current_app;
+extern int aos_ui_describe_widget;
 extern int aos_ui_edit_home;
 extern int aos_ui_geo;
 extern int aos_ui_hold_home;
@@ -1237,6 +1238,7 @@ extern int aos_ui_wall_photo_set;
 extern int aos_ui_wallpaper;
 extern int aos_ui_wallpaper_colors;
 extern int aos_ui_widget_find;
+extern int aos_widget_sensors_register;
 extern int aos_wifi_qr_text;
 extern int asinf;
 extern int atan2f;
@@ -4634,6 +4636,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_close),
     ESP_ELFSYM_EXPORT(aos_ui_close_others),
     ESP_ELFSYM_EXPORT(aos_ui_current_app),
+    ESP_ELFSYM_EXPORT(aos_ui_describe_widget),
     ESP_ELFSYM_EXPORT(aos_ui_edit_home),
     ESP_ELFSYM_EXPORT(aos_ui_geo),
     ESP_ELFSYM_EXPORT(aos_ui_hold_home),
@@ -4694,6 +4697,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_wallpaper),
     ESP_ELFSYM_EXPORT(aos_ui_wallpaper_colors),
     ESP_ELFSYM_EXPORT(aos_ui_widget_find),
+    ESP_ELFSYM_EXPORT(aos_widget_sensors_register),
     ESP_ELFSYM_EXPORT(aos_wifi_qr_text),
     ESP_ELFSYM_EXPORT(asinf),
     ESP_ELFSYM_EXPORT(atan2f),

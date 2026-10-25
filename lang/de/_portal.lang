@@ -1586,7 +1586,7 @@ El widget «%s»: el tipo va sin espacios y con hasta 15 caracteres.	Das Widget 
 El widget «%s»: el tamaño va de 1x1 a 8x8.	Das Widget „%s“: Die Größe reicht von 1x1 bis 8x8.
 
 #: components/aos_portal/web/app.js:1860
-El widget «%s»: el dato pasa de 63 bytes.	Das Widget „%s“: Die Daten sind länger als 63 Bytes.
+El widget «%s»: el dato pasa de 255 bytes.	Das Widget „%s“: Die Daten sind länger als 255 Bytes.
 
 #: components/aos_portal/web/app.js:1863
 Hay %s páginas: la placa muestra 16 como mucho.	Es gibt %s Seiten: Die Platine zeigt höchstens 16.
@@ -1737,7 +1737,7 @@ Dato (opcional)	Daten (optional)
 lo que el widget lea	was das Widget liest
 
 #: components/aos_portal/web/app.js:2369
-Hasta 63 bytes. La mayoría de los widgets no lo usan.	Bis zu 63 Bytes. Die meisten Widgets nutzen es nicht.
+Hasta 255 bytes. La mayoría de los widgets no lo usan.	Bis zu 255 Bytes. Die meisten Widgets nutzen es nicht.
 
 #: components/aos_portal/web/app.js:2371
 Quitar widget	Widget entfernen
@@ -2053,3 +2053,5 @@ segundo pin GPIO%d	zweiter Pin GPIO%d
 No queda ningún pin libre en el conector.	Am Anschluss ist kein Pin mehr frei.
 El segundo pin tiene que ser otro.	Der zweite Pin muss ein anderer sein.
 Puede ser: %s	Es kann sein: %s
+Vacío: el widget elige solo (CO2, temperatura, humedad...). Si no, sensor:valor separados por comas, con el nombre del sensor como lo muestra Módulos. También se eligen en la placa: en el modo edición, tocá el widget.	Leer: Das Widget wählt selbst (CO2, Temperatur, Feuchte...). Sonst Sensor:Wert durch Kommas getrennt, mit dem Namen des Sensors wie in Module. Auch auf der Platine wählbar: im Bearbeitungsmodus das Widget antippen.
+Vacío: los favoritos de la app (la estrella). Si no, las entidades de Home Assistant separadas por comas: controles que se tocan y sensores con su valor. 4 en un 4×2, 8 en un 4×4. También se eligen en la placa: en el modo edición, tocá el widget.	Leer: die Favoriten der App (der Stern). Sonst Home-Assistant-Entitäten durch Kommas getrennt: Schalter zum Antippen und Sensoren mit ihrem Wert. 4 bei 4×2, 8 bei 4×4. Auch auf der Platine wählbar: im Bearbeitungsmodus das Widget antippen.

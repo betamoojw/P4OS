@@ -30,6 +30,14 @@
  *    BEFORE spending the handshake, and afterwards the BADCERT_FUTURE bit is
  *    translated, which is the only thing distinguishing "the board is in the
  *    past" from "I do not know that CA": both give the same return code.
+ *
+ * aos_tls_open_trust() (2026-10-25, for Impresoras 3D's Bambu Lab printers):
+ * the same connection, verified against an authority and a name the caller
+ * gives instead of the bundle and the host. A Bambu printer signs its
+ * certificate with Bambu's own CA ("BBL CA", public) and issues it to its
+ * serial number, not to its address; the bundle rejects it, and an app has
+ * no mbedtls of its own. Still VERIFY_REQUIRED: a certificate that is not
+ * from that CA, or not for that name, does not connect.
  */
 #include "aos_tls.h"
 #include "aos_hal.h"
@@ -48,6 +56,7 @@
 #include <netinet/tcp.h>
 
 #include "mbedtls/net_sockets.h"
+#include "mbedtls/sha256.h"
 
 #ifndef AOS_SIM
   #include "esp_heap_caps.h"
@@ -186,6 +195,33 @@ static bool trust_attach(aos_tls_t *c, char *why, size_t why_n)
     }
     return true;
 #endif
+}
+
+/* The caller's authority instead of the store: only the certificates in
+ * 'pem'. mbedtls wants a PEM's terminating NUL counted in the length; a
+ * caller that passes strlen() is forgiven with a copy. */
+static bool trust_pem(aos_tls_t *c, const char *pem, size_t len, char *why, size_t why_n)
+{
+    int rc;
+    if (len && pem[len - 1] == '\0') {
+        rc = mbedtls_x509_crt_parse(&c->ca, (const unsigned char *)pem, len);
+    } else {
+        unsigned char *z = malloc(len + 1);
+        if (!z) {
+            WHY("no memory for the authority");
+            return false;
+        }
+        memcpy(z, pem, len);
+        z[len] = 0;
+        rc = mbedtls_x509_crt_parse(&c->ca, z, len + 1);
+        free(z);
+    }
+    if (rc < 0 || c->ca.version == 0) {
+        WHY("the authority given is not a PEM certificate (-0x%04x)", (unsigned)(rc < 0 ? -rc : rc));
+        return false;
+    }
+    mbedtls_ssl_conf_ca_chain(&c->conf, &c->ca, NULL);
+    return true;
 }
 
 /* ==========================================================================
@@ -329,10 +365,29 @@ void aos_tls_close(aos_tls_t *c)
     }
 }
 
-int aos_tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
-                 int timeout_ms, char *why, size_t why_n)
+/* Both calls. With ca_pem, the chain is verified against it alone and the
+ * certificate against 'name' (the host when NULL or empty). The session is
+ * cached under "name@host#" and the authority's fingerprint then: a resumed
+ * session is not verified again, so one verified against another authority
+ * (or the bundle) must never be resumed by it - the first test did exactly
+ * that, and connected with the wrong CA. */
+static int tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
+                    const char *ca_pem, size_t ca_len, const char *name,
+                    int timeout_ms, char *why, size_t why_n)
 {
     bool tls = (flags & AOS_TLS_ENCRYPT) != 0;
+    if (!name || !name[0]) {
+        name = host;
+    }
+    char key[96];
+    if (ca_pem) {
+        unsigned char h[32];
+        mbedtls_sha256((const unsigned char *)ca_pem, ca_len && ca_pem[ca_len - 1] == '\0' ? ca_len - 1 : ca_len, h, 0);
+        snprintf(key, sizeof(key), "%.48s@%.24s#%02x%02x%02x%02x%02x%02x%02x%02x", name, host,
+                 h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7]);
+    } else {
+        snprintf(key, sizeof(key), "%s", host);
+    }
     memset(c, 0, sizeof(*c));
     c->fd = -1;
     mbedtls_x509_crt_init(&c->ca);
@@ -392,7 +447,7 @@ int aos_tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
     mbedtls_ssl_conf_authmode(&c->conf, MBEDTLS_SSL_VERIFY_REQUIRED);
     mbedtls_ssl_conf_rng(&c->conf, mbedtls_ctr_drbg_random, &c->drbg);
 
-    if (!trust_attach(c, why, why_n)) {
+    if (ca_pem ? !trust_pem(c, ca_pem, ca_len, why, why_n) : !trust_attach(c, why, why_n)) {
         aos_tls_close(c);
         return AOS_HTTP_ERR_TLS;
     }
@@ -401,15 +456,15 @@ int aos_tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
      * (without it, a server with several sites answers with the wrong
      * certificate) and it is against this name that the certificate's is
      * compared. An IP address is compared the same way, against the
-     * certificate's names. */
+     * certificate's names. With a name of the caller's, that name. */
     if (mbedtls_ssl_setup(&c->ssl, &c->conf) != 0 ||
-        mbedtls_ssl_set_hostname(&c->ssl, host) != 0) {
+        mbedtls_ssl_set_hostname(&c->ssl, name) != 0) {
         WHY("TLS setup failed");
         aos_tls_close(c);
         return AOS_HTTP_ERR_TLS;
     }
 
-    session_restore(c, host);
+    session_restore(c, key);
     mbedtls_ssl_set_bio(&c->ssl, &c->fd, bio_send, bio_recv, NULL);
 
     uint64_t limite = aos_hal_uptime_ms() + (uint64_t)timeout_ms;
@@ -435,19 +490,38 @@ int aos_tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
         uint32_t vflags = mbedtls_ssl_get_verify_result(&c->ssl);
         aos_tls_close(c);
         if (vflags != (uint32_t)-1 && (vflags & MBEDTLS_X509_BADCERT_FUTURE)) {
-            WHY("the clock is behind the certificate for %s", host);
+            WHY("the clock is behind the certificate for %s", name);
             return AOS_HTTP_ERR_SIN_HORA;
         }
         if (vflags != (uint32_t)-1 && vflags) {
-            why_verify(vflags, host, why, why_n);
+            why_verify(vflags, name, why, why_n);
         } else {
             WHY("TLS handshake with %s failed (-0x%04x)", host, (unsigned)-rc);
         }
         return AOS_HTTP_ERR_TLS;
     }
 
-    session_save(c, host);
+    session_save(c, key);
     return 0;
+}
+
+int aos_tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
+                 int timeout_ms, char *why, size_t why_n)
+{
+    return tls_open(c, host, port, flags, NULL, 0, NULL, timeout_ms, why, why_n);
+}
+
+int aos_tls_open_trust(aos_tls_t *c, const char *host, int port, unsigned flags,
+                       const char *ca_pem, size_t ca_len, const char *name,
+                       int timeout_ms, char *why, size_t why_n)
+{
+    if (!ca_pem || !ca_len) {
+        memset(c, 0, sizeof(*c));
+        c->fd = -1;
+        if (why && why_n) snprintf(why, why_n, "no authority given");
+        return AOS_HTTP_ERR_TLS;
+    }
+    return tls_open(c, host, port, flags | AOS_TLS_ENCRYPT, ca_pem, ca_len, name, timeout_ms, why, why_n);
 }
 
 bool aos_tls_send(aos_tls_t *c, const void *data, int len, int timeout_ms)

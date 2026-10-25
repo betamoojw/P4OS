@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3459 simbolos.
+ * Total: 3460 simbolos.
  */
 
 #include <stddef.h>
@@ -1146,6 +1146,7 @@ extern int aos_tls_close;
 extern int aos_tls_free;
 extern int aos_tls_new;
 extern int aos_tls_open;
+extern int aos_tls_open_trust;
 extern int aos_tls_recv;
 extern int aos_tls_send;
 extern int aos_toast_show;
@@ -4608,6 +4609,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_tls_free),
     ESP_ELFSYM_EXPORT(aos_tls_new),
     ESP_ELFSYM_EXPORT(aos_tls_open),
+    ESP_ELFSYM_EXPORT(aos_tls_open_trust),
     ESP_ELFSYM_EXPORT(aos_tls_recv),
     ESP_ELFSYM_EXPORT(aos_tls_send),
     ESP_ELFSYM_EXPORT(aos_toast_show),

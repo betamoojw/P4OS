@@ -2749,6 +2749,7 @@ static const char blob_en__sistema_lang[] =
     "Bloqueo: toda la carpeta, rotando\tLock screen: the whole folder, rotating\n"
     "%s, rotando\t%s, rotating\n"
     "Dejar la foto de ahora\tKeep the current photo\n"
+    "Impresoras 3D\t3D Printers\n"
     ;
 
 static const aos_lang_file_t files_en[] = {
@@ -5490,6 +5491,7 @@ static const char blob_de__sistema_lang[] =
     "Bloqueo: toda la carpeta, rotando\tSperrbildschirm: der ganze Ordner, wechselnd\n"
     "%s, rotando\t%s, wechselnd\n"
     "Dejar la foto de ahora\tDas aktuelle Foto behalten\n"
+    "Impresoras 3D\t3D-Drucker\n"
     ;
 
 static const aos_lang_file_t files_de[] = {
@@ -5497,7 +5499,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2734, 0, files_en, 1 },
-    { "de", "Deutsch", 2734, 0, files_de, 1 },
+    { "en", "English", 2735, 0, files_en, 1 },
+    { "de", "Deutsch", 2735, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

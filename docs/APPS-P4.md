@@ -299,6 +299,11 @@ that must go on after a power cut or a firmware update.
   the widget as its arg, joined by commas, up to 255 bytes; none picked is
   an empty arg and the widget chooses). The sensors and Home Assistant
   widgets are the examples (`aos_widget_sensors.c`, `aos_app_ha.c`).
+- **TLS to a device that signs its own certificates** (after 0.22.0):
+  `aos_tls_open_trust()` (`components/aos_hal/aos_tls.h`) verifies against
+  the PEM and the name the app gives, not the bundle and the address; an
+  app declares the `aos_tls_*` calls itself instead of including the header
+  (it pulls in mbedtls's), as `apps/impresoras/main/p3d_net.c` does.
 - **The home screen's photo stays in PSRAM** (1.8 MB) while an app is in
   front. An app that needs every megabyte has it let go with
   `aos_ui_wall_photo_spare(true)` and back with `false`; Cameras does it

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- **TLS against a device's own authority**: `aos_tls_open_trust()` verifies
+  the certificate against a PEM and a name the app gives (a Bambu Lab
+  printer: its CA and its serial number) instead of the bundle and the
+  address, still refusing anything else. For Impresoras 3D.
+- Impresoras 3D's name in English and German, and the app in the simulator.
+
 ## 0.22.0 — 2026-10-25
 
 - **Widgets chosen on the board.** The home screen's edit mode has

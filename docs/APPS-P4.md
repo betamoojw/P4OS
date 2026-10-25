@@ -292,6 +292,17 @@ that must go on after a power cut or a firmware update.
 - **The screen recording** (`aos_hal_screenrec_*`, the control centre's
   Grabar) takes the panel's framebuffer as it is, so an app that flips or
   blits its own frames is recorded like any other.
+- **Home screen widgets** (since 0.22.0): a widget type registers with
+  `aos_ui_register_widget()` and, to be offered on the board, describes
+  itself with `aos_ui_describe_widget()`: a name, a line about it, a glyph,
+  and optionally `choices()`, the values the person can pick (they reach
+  the widget as its arg, joined by commas, up to 255 bytes; none picked is
+  an empty arg and the widget chooses). The sensors and Home Assistant
+  widgets are the examples (`aos_widget_sensors.c`, `aos_app_ha.c`).
+- **The home screen's photo stays in PSRAM** (1.8 MB) while an app is in
+  front. An app that needs every megabyte has it let go with
+  `aos_ui_wall_photo_spare(true)` and back with `false`; Cameras does it
+  while it shows a 1920×1080 stream.
 - **Copies through PSRAM cost the same whoever makes them.** Handing a plain
   copy to the PPA or a DMA did not pay on this board (the wallpaper and the
   camera frames were measured slower than the CPU, docs/CAMERAS.md). What

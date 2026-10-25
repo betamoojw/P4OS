@@ -118,6 +118,15 @@ The home screen has icon pages, folders, a dock and widgets.
   Folders show twelve apps a page, and a swipe turns one whole page. The
   portal's `#inicio` page does the same from a computer.
 
+- **Widgets** (on the board since 0.22.0): edit mode's **+ Widget** adds
+  the clock, the sensors, Home Assistant, the system monitor or Claude's
+  usage; a tap on a widget opens its sheet, with its size (2×2, 4×2, 4×4),
+  what it shows and a way to take it off, and one held still for a moment
+  drags like an icon. The **sensors widget** shows up to six of the sensor
+  service's values (on its own CO₂, temperature, humidity, pressure and the
+  like; CO₂ and particles coloured by their level), the **Home Assistant**
+  one up to eight entities, the favourites or the ones picked.
+
 - **Swiping down** from the top opens the control centre (Wi-Fi, Bluetooth,
   do not disturb, the system sounds, orientation, brightness, volume, the
   music playing on the board or on the iPhone, the screen recording) and the
@@ -185,6 +194,10 @@ screen, nothing in internal RAM) and darkened as much as its own
 brightness asks, once, while it is decoded, so the white names read on it
 with no translucent layer to blend each frame. Turning the screen crops it
 again; Settings, Wallpaper shows which photo each has and removes it.
+The lock screen can take a whole folder instead (since 0.22.0): another of
+its photos, at random, every time the board locks. The home screen's photo
+stays in PSRAM with an app in front, so going home shows it at once; the
+lock screen's is let go and decoded again as the screen goes dark.
 
 | Home, over a photo | Locked, over another |
 |---|---|

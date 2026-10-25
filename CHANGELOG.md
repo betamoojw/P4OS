@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.22.0 — 2026-10-25
 
 - **Widgets chosen on the board.** The home screen's edit mode has
   "+ Widget" (clock, sensors, Home Assistant, Monitor, Claude), and a tap

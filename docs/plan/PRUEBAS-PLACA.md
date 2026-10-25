@@ -443,11 +443,23 @@ Que necesitan la mano del usuario o equipos:
       (`keeping aos.datalog ... running: background`); después de una OTA
       arrancó solo (`started hidden`). Dibujo, con el DS18B20 leyéndose,
       ya no queda como "running: pins": se cierra al salir (1674 KB).
+- [x] Widgets y fotos (2026-10-25, 0.22.0), en la placa, probados por el
+      usuario:
+  - "+ Widget", la hoja de cada widget y arrastrarlos en el modo edición.
+  - Widget de sensores en automático con la MAX6675 y el DS18B20 (22,5 y
+    21,8 °C, igual que `/api/sensors`); el SCD41 no estaba conectado.
+  - Home Assistant configurado y probado, con entidades elegidas en la hoja.
+  - Fotos del bloqueo rotando por carpeta.
+  - La foto del inicio queda en PSRAM con una app al frente: vuelve al
+    instante (antes 1,5 s de degradado, visto en video). Con las fotos
+    cargadas: 14,7 MB de PSRAM y 265 KB de RAM interna libres. Cámaras la
+    suelta sólo en HD.
 - [x] Fondos, cámaras, grabación de pantalla y sonidos (2026-10-22, 0.21.5 y
       lo que siguió), en la placa:
   - Fotos de fondo de Mila en el inicio y el bloqueo: 3,7 MB de PSRAM, nada
     de RAM interna; redibujar el inicio entero 72,9 -> 101,7 ms con la foto.
-    Desde 0.21.5 se sueltan con una app al frente.
+    Desde 0.21.5 se sueltan con una app al frente; desde 0.22.0 sólo la del
+    bloqueo (la del inicio tardaba 1,5 s en volver).
   - El bloqueo ya no dibuja lo de abajo: con foto, 143 -> 108 ms.
   - Aceleradores para copiar (PPA escalador, PPA mezclador, AXI-GDMA):
     todos más lentos que la CPU en el inicio y el bloqueo (133,6 / 113,5 /

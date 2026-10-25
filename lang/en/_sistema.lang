@@ -4920,7 +4920,7 @@ Sin foto	No photo
 Quitar la foto	Remove the photo
 
 #: components/aos_apps/aos_app_settings.c
-Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.	Choose the photo in Photos: open it and tap the palette at the top right.
+Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea.	Choose the photo in Photos: open it and tap the palette at the top right. For the lock screen it can be the whole folder: it shows another photo every time it locks.
 
 #: components/aos_apps/aos_app_photos.c
 Es el fondo del inicio y de la pantalla de bloqueo	It's the home and lock screen wallpaper
@@ -7741,7 +7741,7 @@ El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin fo
 La hora y la fecha, grandes.	The time and the date, large.
 Chico	Small
 Agregar widget	Add widget
-Después de agregarlo, tocalo para elegir el tamaño y qué muestra. Se mueven desde el portal, en Inicio.	Once added, tap it to choose its size and what it shows. They are moved from the portal, under Home.
+Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo.	Once added, tap it to choose its size and what it shows; hold it a moment and drag it to move it.
 Hasta %d	Up to %d
 no está ahora	not there now
 Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.	What it shows: up to %d, in the order you tap them. Those that do not fit in the size are left out.
@@ -7757,3 +7757,7 @@ Luces, enchufes y sensores de la casa, a un toque.	The house's lights, plugs and
 La memoria, el procesador y la red de la placa.	The board's memory, processor and network.
 Cuánto queda del uso de Claude.	How much of your Claude usage is left.
 En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	In edit mode, “+ Widget” adds the clock, the sensors, Home Assistant and more to the home screen; tap a widget to choose its size and what it shows, or to remove it.
+La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea	The lock screen shows another photo of this folder every time it locks
+Bloqueo: toda la carpeta, rotando	Lock screen: the whole folder, rotating
+%s, rotando	%s, rotating
+Dejar la foto de ahora	Keep the current photo

@@ -214,6 +214,11 @@ void aos_ui_wallpaper_colors(int index, uint32_t *top, uint32_t *bottom);
 enum { AOS_WALL_HOME = 0, AOS_WALL_LOCK = 1 };
 void aos_ui_wall_photo_set(int which, const char *path);
 bool aos_ui_wall_photo(int which, char *out, size_t len);   /* false: none */
+/* A folder of photos behind the lock screen instead of one: another of
+ * them, at random, every time the board locks. NULL or "" stops it and
+ * keeps the photo on show. Setting one lock photo stops it too. Saved. */
+void aos_ui_lock_album_set(const char *dir);
+bool aos_ui_lock_album(char *out, size_t len);               /* false: none */
 
 /* Records the screen to an MP4 in the card's /videos (the PPA and the
  * H.264 engine, aos_hal_screenrec_*), or stops it, with the control centre's

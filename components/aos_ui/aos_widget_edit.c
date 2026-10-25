@@ -67,6 +67,12 @@ static const desc_t *find(const char *type)
     return NULL;
 }
 
+const char *aos_wedit_glyph(const char *type)
+{
+    const desc_t *d = find(type);
+    return d ? d->glyph : AOS_SYM_VIEW_GRID_OUTLINE;
+}
+
 /* -------------------------------------------------------------------------- */
 /* The sheet                                                                   */
 /* -------------------------------------------------------------------------- */
@@ -268,7 +274,7 @@ void aos_wedit_add(void (*picked)(const char *type))
         lv_obj_t *r = row_create(list, d->glyph, _(d->name), d->about ? _(d->about) : NULL);
         lv_obj_add_event_cb(r, type_clicked, LV_EVENT_CLICKED, (void *)d);
     }
-    caption(p, _("Después de agregarlo, tocalo para elegir el tamaño y qué muestra. Se mueven desde el portal, en Inicio."));
+    caption(p, _("Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo."));
 }
 
 /* -------------------------------------------------------------------------- */

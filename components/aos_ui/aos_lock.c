@@ -682,7 +682,9 @@ static void build(void)
 
 void aos_lock_now(void)
 {
-    aos_wall_photo_want(AOS_WALL_LOCK, true);      /* let go while an app was in front */
+    /* a lock screen with an album shows another of its photos; else the
+     * one photo, let go while an app was in front, comes back */
+    if (!s_cfg.enabled || !aos_wall_photo_next()) aos_wall_photo_want(AOS_WALL_LOCK, true);
     if (!s_cfg.enabled) return;
     s_locked = true;
     aos_switcher_close();

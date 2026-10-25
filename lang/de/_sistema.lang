@@ -4920,7 +4920,7 @@ Sin foto	Kein Foto
 Quitar la foto	Foto entfernen
 
 #: components/aos_apps/aos_app_settings.c
-Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.	Wähle das Foto in Fotos: Öffne es und tippe oben rechts auf die Palette.
+Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea.	Das Foto in Fotos wählen: öffnen und oben rechts auf die Palette tippen. Für den Sperrbildschirm kann es der ganze Ordner sein: Bei jedem Sperren erscheint ein anderes Foto.
 
 #: components/aos_apps/aos_app_photos.c
 Es el fondo del inicio y de la pantalla de bloqueo	Es ist das Hintergrundbild für Home- und Sperrbildschirm
@@ -7741,7 +7741,7 @@ El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin fo
 La hora y la fecha, grandes.	Uhrzeit und Datum, groß.
 Chico	Klein
 Agregar widget	Widget hinzufügen
-Después de agregarlo, tocalo para elegir el tamaño y qué muestra. Se mueven desde el portal, en Inicio.	Nach dem Hinzufügen antippen, um Größe und Inhalt zu wählen. Verschoben werden sie im Portal unter Startbildschirm.
+Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo.	Nach dem Hinzufügen antippen, um Größe und Inhalt zu wählen; einen Moment halten und ziehen, um es zu verschieben.
 Hasta %d	Bis zu %d
 no está ahora	gerade nicht da
 Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.	Was es zeigt: bis zu %d, in der Reihenfolge des Antippens. Was in der Größe keinen Platz hat, fällt weg.
@@ -7757,3 +7757,7 @@ Luces, enchufes y sensores de la casa, a un toque.	Lichter, Steckdosen und Senso
 La memoria, el procesador y la red de la placa.	Speicher, Prozessor und Netzwerk der Platine.
 Cuánto queda del uso de Claude.	Wie viel von der Claude-Nutzung übrig ist.
 En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	Im Bearbeitungsmodus fügt „+ Widget“ die Uhr, die Sensoren, Home Assistant und mehr zum Startbildschirm hinzu; ein Widget antippen, um Größe und Inhalt zu wählen oder es zu entfernen.
+La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea	Der Sperrbildschirm zeigt bei jedem Sperren ein anderes Foto dieses Ordners
+Bloqueo: toda la carpeta, rotando	Sperrbildschirm: der ganze Ordner, wechselnd
+%s, rotando	%s, wechselnd
+Dejar la foto de ahora	Das aktuelle Foto behalten

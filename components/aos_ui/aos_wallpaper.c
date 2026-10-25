@@ -18,16 +18,24 @@
  * let go (3.7 MB back, which was what the doorbell's 1920x1080 stream was
  * short of, 2026-10-22), and decoded again - under half a second - on the
  * way home, or for the lock screen as the screen goes dark and locks.
+ *
+ * Or a folder behind the lock screen, a different photo of it every time
+ * the board locks (2026-10-25): pref "lock_album". The worker picks one at
+ * random among the folder's photos, never the one just shown, so the
+ * listing is not done on LVGL's task; nothing is written at each lock, and
+ * a restart starts from another photo of the same folder.
  */
 #include "aos_internal.h"
 #include "aos_lock.h"
 #include "lvgl_private.h"           /* lv_image_cache_drop */
 
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
-#define PATH_MAX_   192
+#define PATH_MAX_   256
 /* The photo is darkened so its mean brightness is at most this (of 255):
  * a dark photo is left nearly as it is, a bright one comes down until the
  * white names on it read. Never below DIM_MIN of 256. */
@@ -53,10 +61,12 @@ typedef struct {
     uint32_t       new_gen;
     bool           new_thread;          /* from a decode (else from request(), with none) */
     uint32_t       tint, new_tint;      /* the photo's colour, lightened: the lock clock's */
+    char           new_path[PATH_MAX_]; /* the album's photo the worker picked */
 } wall_t;
 
 AOS_BSS_PSRAM static wall_t W[2];
 static void       *s_mx;
+AOS_BSS_PSRAM static char s_album[PATH_MAX_];  /* the lock screen's folder; "" none */
 static lv_timer_t *s_poll;
 static lv_obj_t   *s_home_img;
 
@@ -64,8 +74,43 @@ typedef struct {
     int      which;
     uint32_t gen;
     int      w, h;
-    char     path[PATH_MAX_];
+    char     path[PATH_MAX_];       /* the photo; with an album, the one shown now (not again) */
+    char     album[PATH_MAX_];      /* "" or the folder to pick from */
 } job_t;
+
+static bool is_photo(const char *n)
+{
+    const char *dot = strrchr(n, '.');
+    return n[0] != '.' && dot && (!strcasecmp(dot, ".jpg") || !strcasecmp(dot, ".jpeg") ||
+                                  !strcasecmp(dot, ".png") || !strcasecmp(dot, ".bmp"));
+}
+
+/* One of the folder's photos at random, not 'skip' if there are others:
+ * reservoir sampling, one pass and no list */
+static bool album_pick(const char *dir, const char *skip, char *out, size_t len)
+{
+    DIR *d = opendir(dir);
+    if (!d) return false;
+    const char *skip_name = strrchr(skip, '/');
+    skip_name = skip_name ? skip_name + 1 : skip;
+    char other[PATH_MAX_] = "";
+    uint32_t seen = 0;
+    bool got = false;
+    struct dirent *e;
+    while ((e = readdir(d))) {
+        if (!is_photo(e->d_name)) continue;
+        if (!strcmp(e->d_name, skip_name)) {    /* kept only for a folder of one */
+            if (snprintf(other, sizeof other, "%s/%s", dir, e->d_name) >= (int)sizeof other) other[0] = 0;
+            continue;
+        }
+        uint32_t r;
+        aos_hal_random(&r, sizeof r);
+        if (r % ++seen == 0 && snprintf(out, len, "%s/%s", dir, e->d_name) < (int)len) got = true;
+    }
+    closedir(d);
+    if (!got && other[0]) { snprintf(out, len, "%s", other); got = true; }
+    return got;
+}
 
 static void dim(uint16_t *px, size_t n, unsigned target)
 {
@@ -108,6 +153,11 @@ static void worker(void *arg)
 {
     job_t *j = arg;
     int w = 0, h = 0;
+    if (j->album[0]) {
+        char pick[PATH_MAX_];
+        if (album_pick(j->album, j->path, pick, sizeof pick)) memcpy(j->path, pick, sizeof pick);
+        else aos_hal_log("ui", "wallpaper: no photos in %s", j->album);
+    }
     uint16_t *px = aos_hal_image_decode(j->path, 0, 0, j->w, j->h, true, &w, &h, NULL, NULL);
     if (px && (w != j->w || h != j->h)) { aos_hal_image_free(px); px = NULL; }
     uint32_t tint = px ? tint_of(px, (size_t)w * h) : 0;
@@ -121,6 +171,7 @@ static void worker(void *arg)
     v->new_h = h;
     v->new_gen = j->gen;
     v->new_tint = tint;
+    snprintf(v->new_path, sizeof v->new_path, "%s", j->path);
     v->new_thread = true;
     v->ready = true;
     aos_hal_mutex_unlock(s_mx);
@@ -130,9 +181,10 @@ static void worker(void *arg)
 static void request(int which)
 {
     wall_t *v = &W[which];
+    bool album = which == AOS_WALL_LOCK && s_album[0];
     v->gen++;
     v->want = true;
-    if (!v->path[0]) {                  /* none: back to the gradient at once */
+    if (!v->path[0] && !album) {                  /* none: back to the gradient at once */
         aos_hal_mutex_lock(s_mx);
         if (v->ready && v->new_px) aos_hal_image_free(v->new_px);
         v->new_px = NULL;
@@ -150,6 +202,7 @@ static void request(int which)
         j->w = g->w;
         j->h = g->h;
         snprintf(j->path, sizeof j->path, "%s", v->path);
+        snprintf(j->album, sizeof j->album, "%s", album ? s_album : "");
         if (!aos_hal_thread_start("wallpaper", worker, j, 8192, 3)) { free(j); v->want = false; return; }
         v->inflight++;
     }
@@ -185,6 +238,8 @@ static void poll_cb(lv_timer_t *t)
         uint32_t gen = v->new_gen;
         bool from_thread = v->new_thread;
         uint32_t tint = v->new_tint;
+        char path[PATH_MAX_];
+        snprintf(path, sizeof path, "%s", v->new_path);
         v->ready = false;
         v->new_px = NULL;
         aos_hal_mutex_unlock(s_mx);
@@ -198,6 +253,7 @@ static void poll_cb(lv_timer_t *t)
         v->w = w;
         v->h = h;
         if (px) v->tint = tint;
+        if (px && from_thread && i == AOS_WALL_LOCK && s_album[0]) snprintf(v->path, sizeof v->path, "%s", path);
         memset(&v->dsc, 0, sizeof v->dsc);
         if (px) {
             v->dsc.header.magic = LV_IMAGE_HEADER_MAGIC;
@@ -220,7 +276,7 @@ void aos_wall_photo_want(int which, bool want)
 {
     if (which < 0 || which > 1 || !s_mx) return;
     wall_t *v = &W[which];
-    if (!v->path[0]) return;
+    if (!v->path[0] && !(which == AOS_WALL_LOCK && s_album[0])) return;
     if (want) {
         if (!v->px && !v->want) request(which);
         return;
@@ -254,6 +310,10 @@ const lv_image_dsc_t *aos_wall_photo_dsc(int which)
 void aos_ui_wall_photo_set(int which, const char *path)
 {
     if (which < 0 || which > 1 || !s_mx) return;
+    if (which == AOS_WALL_LOCK && s_album[0]) {       /* one photo, or none: no album any more */
+        s_album[0] = 0;
+        aos_hal_pref_set_str("lock_album", "");
+    }
     snprintf(W[which].path, sizeof W[which].path, "%s", path ? path : "");
     aos_hal_pref_set_str(PREF[which], W[which].path);
     request(which);
@@ -266,15 +326,45 @@ bool aos_ui_wall_photo(int which, char *out, size_t len)
     return true;
 }
 
+void aos_ui_lock_album_set(const char *dir)
+{
+    if (!s_mx) return;
+    snprintf(s_album, sizeof s_album, "%s", dir ? dir : "");
+    aos_hal_pref_set_str("lock_album", s_album);
+    if (!s_album[0]) {
+        /* the photo on show stays, as the one photo */
+        aos_hal_pref_set_str(PREF[AOS_WALL_LOCK], W[AOS_WALL_LOCK].path);
+        return;
+    }
+    request(AOS_WALL_LOCK);
+}
+
+bool aos_ui_lock_album(char *out, size_t len)
+{
+    if (!s_album[0]) return false;
+    if (out && len) snprintf(out, len, "%s", s_album);
+    return true;
+}
+
+/* The board locks: with an album, another of its photos (true); without,
+ * nothing to do here (false) */
+bool aos_wall_photo_next(void)
+{
+    if (!s_mx || !s_album[0]) return false;
+    request(AOS_WALL_LOCK);
+    return true;
+}
+
 void aos_wall_photo_init(void)
 {
     if (s_mx) return;
     s_mx = aos_hal_mutex_create();
     s_poll = lv_timer_create(poll_cb, 100, NULL);
     lv_timer_pause(s_poll);
+    if (!aos_hal_pref_get_str("lock_album", s_album, sizeof s_album)) s_album[0] = 0;
     for (int i = 0; i < 2; i++) {
         if (!aos_hal_pref_get_str(PREF[i], W[i].path, sizeof W[i].path)) W[i].path[0] = 0;
-        if (W[i].path[0]) request(i);
+        if (W[i].path[0] || (i == AOS_WALL_LOCK && s_album[0])) request(i);
     }
 }
 

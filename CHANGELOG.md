@@ -7,7 +7,8 @@
   on a widget opens its sheet: its size (2×2, 4×2, 4×4), what it shows,
   and a way to take it off. Until now widgets came only from the portal.
   Settings, Edit home screen, says where. A widget long pressed starts the
-  edit mode, as an icon does. Apps describe their widget with
+  edit mode, as an icon does, and in it a widget held a moment drags to
+  another place or page. Apps describe their widget with
   `aos_ui_describe_widget()`.
 - **A sensor widget** (`widget sensors`): up to six of the sensor service's
   values, CO₂ and particles coloured by their level; on its own it picks
@@ -15,6 +16,11 @@
 - **The Home Assistant widget shows chosen entities**, up to eight in a
   4×4, instead of the favourites.
 - A widget's data in `menu.txt` grows from 63 to 255 bytes.
+- **A folder of photos behind the lock screen**: another of them, at
+  random, every time the board locks. Photos' palette, "Lock screen: the
+  whole folder, rotating"; Settings, Wallpaper, keeps the current one or
+  takes it off. Picked on a thread of its own, nothing written at each lock
+  (`aos_ui_lock_album_set()`).
 
 ## 0.21.6 — 2026-10-23
 

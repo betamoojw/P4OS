@@ -37,6 +37,7 @@ void aos_wall_photo_relayout(void);
 const lv_image_dsc_t *aos_wall_photo_dsc(int which);     /* NULL: the gradient */
 void aos_wall_photo_want(int which, bool want);           /* let it go / decode it again */
 uint32_t aos_wall_photo_tint(int which);                  /* 0xRRGGBB, 0 before the first decode */
+bool aos_wall_photo_next(void);                           /* locking: the album's next photo */
 
 /* ---- home screen (aos_home.c) ---- */
 void aos_home_create(lv_obj_t *parent);
@@ -119,6 +120,7 @@ typedef void (*aos_wedit_done_t)(aos_wedit_action_t action, int w, int h, const 
 void        aos_wedit_add(void (*picked)(const char *type));
 void        aos_wedit_config(const char *type, int w, int h, const char *arg, aos_wedit_done_t done);
 bool        aos_wedit_close(void);                  /* true if a sheet was open */
+const char *aos_wedit_glyph(const char *type);      /* the described glyph, or a generic one */
 
 #ifdef __cplusplus
 }

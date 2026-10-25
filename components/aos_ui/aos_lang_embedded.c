@@ -1506,7 +1506,7 @@ static const char blob_en__sistema_lang[] =
     "FOTO\tPHOTO\n"
     "Sin foto\tNo photo\n"
     "Quitar la foto\tRemove the photo\n"
-    "Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.\tChoose the photo in Photos: open it and tap the palette at the top right.\n"
+    "Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea.\tChoose the photo in Photos: open it and tap the palette at the top right. For the lock screen it can be the whole folder: it shows another photo every time it locks.\n"
     "Es el fondo del inicio y de la pantalla de bloqueo\tIt's the home and lock screen wallpaper\n"
     "Es el fondo del inicio\tIt's the home screen wallpaper\n"
     "Es el fondo de la pantalla de bloqueo\tIt's the lock screen wallpaper\n"
@@ -2729,7 +2729,7 @@ static const char blob_en__sistema_lang[] =
     "La hora y la fecha, grandes.\tThe time and the date, large.\n"
     "Chico\tSmall\n"
     "Agregar widget\tAdd widget\n"
-    "Después de agregarlo, tocalo para elegir el tamaño y qué muestra. Se mueven desde el portal, en Inicio.\tOnce added, tap it to choose its size and what it shows. They are moved from the portal, under Home.\n"
+    "Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo.\tOnce added, tap it to choose its size and what it shows; hold it a moment and drag it to move it.\n"
     "Hasta %d\tUp to %d\n"
     "no está ahora\tnot there now\n"
     "Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.\tWhat it shows: up to %d, in the order you tap them. Those that do not fit in the size are left out.\n"
@@ -2745,6 +2745,10 @@ static const char blob_en__sistema_lang[] =
     "La memoria, el procesador y la red de la placa.\tThe board's memory, processor and network.\n"
     "Cuánto queda del uso de Claude.\tHow much of your Claude usage is left.\n"
     "En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.\tIn edit mode, “+ Widget” adds the clock, the sensors, Home Assistant and more to the home screen; tap a widget to choose its size and what it shows, or to remove it.\n"
+    "La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea\tThe lock screen shows another photo of this folder every time it locks\n"
+    "Bloqueo: toda la carpeta, rotando\tLock screen: the whole folder, rotating\n"
+    "%s, rotando\t%s, rotating\n"
+    "Dejar la foto de ahora\tKeep the current photo\n"
     ;
 
 static const aos_lang_file_t files_en[] = {
@@ -4243,7 +4247,7 @@ static const char blob_de__sistema_lang[] =
     "FOTO\tFOTO\n"
     "Sin foto\tKein Foto\n"
     "Quitar la foto\tFoto entfernen\n"
-    "Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.\tWähle das Foto in Fotos: Öffne es und tippe oben rechts auf die Palette.\n"
+    "Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea.\tDas Foto in Fotos wählen: öffnen und oben rechts auf die Palette tippen. Für den Sperrbildschirm kann es der ganze Ordner sein: Bei jedem Sperren erscheint ein anderes Foto.\n"
     "Es el fondo del inicio y de la pantalla de bloqueo\tEs ist das Hintergrundbild für Home- und Sperrbildschirm\n"
     "Es el fondo del inicio\tEs ist das Hintergrundbild des Home-Bildschirms\n"
     "Es el fondo de la pantalla de bloqueo\tEs ist das Hintergrundbild des Sperrbildschirms\n"
@@ -5466,7 +5470,7 @@ static const char blob_de__sistema_lang[] =
     "La hora y la fecha, grandes.\tUhrzeit und Datum, groß.\n"
     "Chico\tKlein\n"
     "Agregar widget\tWidget hinzufügen\n"
-    "Después de agregarlo, tocalo para elegir el tamaño y qué muestra. Se mueven desde el portal, en Inicio.\tNach dem Hinzufügen antippen, um Größe und Inhalt zu wählen. Verschoben werden sie im Portal unter Startbildschirm.\n"
+    "Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo.\tNach dem Hinzufügen antippen, um Größe und Inhalt zu wählen; einen Moment halten und ziehen, um es zu verschieben.\n"
     "Hasta %d\tBis zu %d\n"
     "no está ahora\tgerade nicht da\n"
     "Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.\tWas es zeigt: bis zu %d, in der Reihenfolge des Antippens. Was in der Größe keinen Platz hat, fällt weg.\n"
@@ -5482,6 +5486,10 @@ static const char blob_de__sistema_lang[] =
     "La memoria, el procesador y la red de la placa.\tSpeicher, Prozessor und Netzwerk der Platine.\n"
     "Cuánto queda del uso de Claude.\tWie viel von der Claude-Nutzung übrig ist.\n"
     "En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.\tIm Bearbeitungsmodus fügt „+ Widget“ die Uhr, die Sensoren, Home Assistant und mehr zum Startbildschirm hinzu; ein Widget antippen, um Größe und Inhalt zu wählen oder es zu entfernen.\n"
+    "La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea\tDer Sperrbildschirm zeigt bei jedem Sperren ein anderes Foto dieses Ordners\n"
+    "Bloqueo: toda la carpeta, rotando\tSperrbildschirm: der ganze Ordner, wechselnd\n"
+    "%s, rotando\t%s, wechselnd\n"
+    "Dejar la foto de ahora\tDas aktuelle Foto behalten\n"
     ;
 
 static const aos_lang_file_t files_de[] = {
@@ -5489,7 +5497,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2730, 0, files_en, 1 },
-    { "de", "Deutsch", 2730, 0, files_de, 1 },
+    { "en", "English", 2734, 0, files_en, 1 },
+    { "de", "Deutsch", 2734, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

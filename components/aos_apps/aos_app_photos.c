@@ -1088,11 +1088,14 @@ static void wall_sheet_close(void)
     s_wall_sheet = NULL;
 }
 
-/* 1 home, 2 lock, 3 both, 0 cancel */
+/* 1 home, 2 lock, 3 both, 4 the folder behind the lock screen, 0 cancel */
 static void wall_pick_cb(lv_event_t *e)
 {
     int k = (int)(intptr_t)lv_event_get_user_data(e);
-    if (k && P.viewing) {
+    if (k == 4 && P.viewing) {
+        aos_ui_lock_album_set(P.dir);
+        aos_ui_toast(_("La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea"), 2500);
+    } else if (k && P.viewing) {
         char path[300];
         photo_path(P.cur, path, sizeof path);
         if (k & 1) aos_ui_wall_photo_set(AOS_WALL_HOME, path);
@@ -1118,9 +1121,10 @@ static void wall_cb(lv_event_t *e)
     lv_obj_set_flex_flow(col, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_pad_row(col, 12, 0);
     lv_obj_align(col, LV_ALIGN_BOTTOM_MID, 0, -40);
-    static const char *const OPT[] = { N_("Fondo del inicio"), N_("Pantalla de bloqueo"), N_("Los dos"), N_("Cancelar") };
-    static const int K[] = { 1, 2, 3, 0 };
-    for (int i = 0; i < 4; i++) {
+    static const char *const OPT[] = { N_("Fondo del inicio"), N_("Pantalla de bloqueo"), N_("Los dos"),
+                                       N_("Bloqueo: toda la carpeta, rotando"), N_("Cancelar") };
+    static const int K[] = { 1, 2, 3, 4, 0 };
+    for (int i = 0; i < 5; i++) {
         lv_obj_t *b = lv_button_create(col);
         lv_obj_set_size(b, lv_pct(100), 96);
         lv_obj_set_style_radius(b, 24, 0);

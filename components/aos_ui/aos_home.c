@@ -126,6 +126,7 @@ static struct {
     bool claimed;                   /* the icon has the finger: the pages do not scroll under it */
     uint32_t t0;
     lv_point_t start;
+    lv_point_t off;                 /* a widget: where the finger took it, from its corner */
 } s_drag;
 
 static void build(void);
@@ -450,14 +451,34 @@ static void cell_event(lv_event_t *e)
             lv_obj_set_style_opa(cell, LV_OPA_TRANSP, 0);
             s_drag.ghost = lv_obj_create(lv_layer_top());
             lv_obj_remove_style_all(s_drag.ghost);
-            lv_obj_set_size(s_drag.ghost, L.icon, L.icon);
             lv_obj_remove_flag(s_drag.ghost, LV_OBJ_FLAG_CLICKABLE);
-            if (p->it.kind == AOS_MENU_ITEM_FOLDER) folder_icon(s_drag.ghost, p->it.folder, L.icon);
-            else if (p->it.app) aos_home_app_icon(s_drag.ghost, p->it.app, L.icon);
-            lv_obj_set_style_opa(s_drag.ghost, LV_OPA_80, 0);
+            if (p->it.kind == AOS_MENU_ITEM_WIDGET) {
+                /* a widget goes as a frosted card of its size, the glyph of
+                 * its type on it; 'cell' is the clear layer over the card */
+                lv_area_t a;
+                lv_obj_get_coords(cell, &a);
+                s_drag.off.x = s_drag.start.x - a.x1;
+                s_drag.off.y = s_drag.start.y - a.y1;
+                if (p->cell) lv_obj_set_style_opa(p->cell, LV_OPA_TRANSP, 0);
+                lv_obj_set_size(s_drag.ghost, lv_area_get_width(&a), lv_area_get_height(&a));
+                lv_obj_set_style_radius(s_drag.ghost, AOS_UI_RADIUS + 6, 0);
+                lv_obj_set_style_bg_color(s_drag.ghost, lv_color_white(), 0);
+                lv_obj_set_style_bg_opa(s_drag.ghost, LV_OPA_30, 0);
+                lv_obj_t *gl = lv_label_create(s_drag.ghost);
+                lv_obj_set_style_text_font(gl, &aos_sym_72, 0);
+                lv_obj_set_style_text_color(gl, lv_color_white(), 0);
+                lv_label_set_text(gl, aos_wedit_glyph(p->it.widget));
+                lv_obj_center(gl);
+            } else {
+                lv_obj_set_size(s_drag.ghost, L.icon, L.icon);
+                if (p->it.kind == AOS_MENU_ITEM_FOLDER) folder_icon(s_drag.ghost, p->it.folder, L.icon);
+                else if (p->it.app) aos_home_app_icon(s_drag.ghost, p->it.app, L.icon);
+                lv_obj_set_style_opa(s_drag.ghost, LV_OPA_80, 0);
+            }
         }
         if (s_drag.moving) {
-            lv_obj_set_pos(s_drag.ghost, pt.x - L.icon / 2, pt.y - L.icon / 2);
+            if (p->it.kind == AOS_MENU_ITEM_WIDGET) lv_obj_set_pos(s_drag.ghost, pt.x - s_drag.off.x, pt.y - s_drag.off.y);
+            else lv_obj_set_pos(s_drag.ghost, pt.x - L.icon / 2, pt.y - L.icon / 2);
             /* held against a side edge: the next page slides in */
             static uint32_t edge_since;
             const aos_geo_t *g = aos_ui_geo();
@@ -482,6 +503,11 @@ static void cell_event(lv_event_t *e)
             lv_indev_get_point(lv_indev_active(), &pt);
             lv_obj_delete(s_drag.ghost);
             s_drag.ghost = NULL;
+            if (p->it.kind == AOS_MENU_ITEM_WIDGET) {
+                /* a widget lands where its corner is, not under the finger */
+                pt.x += L.cell_w / 2 - s_drag.off.x;
+                pt.y += L.cell_h / 2 - s_drag.off.y;
+            }
             drag_release();
             drag_drop(p, pt);       /* rebuilds the page */
             return;
@@ -811,7 +837,7 @@ static void shield_event(lv_event_t *e)
 
 /* In edit mode a widget is not used, it is edited: a clear layer over it
  * takes the taps (its tiles would act on them) and opens its sheet, which
- * also takes it off. No round "-" on its corner as the icons have: on the
+ * also takes it off; held still a moment, it drags as an icon does. No round "-" on its corner as the icons have: on the
  * first row it would sit under "+ Widget". */
 static void widget_shield(lv_obj_t *page, lv_obj_t *card, int i)
 {
@@ -820,9 +846,10 @@ static void widget_shield(lv_obj_t *page, lv_obj_t *card, int i)
     lv_obj_set_size(s, lv_obj_get_style_width(card, 0), lv_obj_get_style_height(card, 0));
     lv_obj_set_pos(s, lv_obj_get_style_x(card, 0), lv_obj_get_style_y(card, 0));
     lv_obj_remove_flag(s, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_remove_flag(s, LV_OBJ_FLAG_PRESS_LOCK);
     lv_obj_add_flag(s, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_flag(s, LV_OBJ_FLAG_EVENT_BUBBLE);      /* page swipes still scroll */
+    lv_obj_add_flag(s, LV_OBJ_FLAG_PRESS_LOCK);        /* it stays with the finger that drags it */
+    lv_obj_add_event_cb(s, cell_event, LV_EVENT_ALL, &s_items[i]);     /* held still a moment, it drags */
     lv_obj_add_event_cb(s, shield_event, LV_EVENT_ALL, (void *)(intptr_t)i);
     wiggle(s, true, i);
 }

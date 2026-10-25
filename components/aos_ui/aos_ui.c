@@ -420,8 +420,11 @@ static void home_hide_done(lv_anim_t *a)
 {
     if (!s_cur) return;
     lv_obj_add_flag(s_home, LV_OBJ_FLAG_HIDDEN);
-    /* nobody sees the wallpapers behind an app: 3.7 MB of PSRAM back to it */
-    aos_wall_photo_want(AOS_WALL_HOME, false);
+    /* nobody sees the lock screen's photo behind an app: 1.8 MB of PSRAM
+     * back to it, decoded again as the screen goes dark and locks. The
+     * home screen's stays: decoded again on the way home it showed the
+     * gradient for a second and a half (2026-10-25); an app that needs it
+     * all says so (aos_ui_wall_photo_spare) */
     if (!aos_lock_is_locked()) aos_wall_photo_want(AOS_WALL_LOCK, false);
     lv_obj_set_style_bg_color(s_appl, lv_obj_get_style_bg_color(s_cur->root, 0), 0);
     lv_obj_set_style_bg_opa(s_appl, LV_OPA_COVER, 0);

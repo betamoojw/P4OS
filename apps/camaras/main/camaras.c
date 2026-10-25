@@ -1179,6 +1179,7 @@ static void open_viewer(int src, int index)
      * second here (2026-10-22) */
     A.vw.hd = A.hd_req && cam.url_full[0] && src != SRC_EVENT;
     A.hd_req = false;
+    if (A.vw.hd) aos_ui_wall_photo_spare(true);     /* 1920x1080 wants the home photo's 1.8 MB */
     if (t && t->v && !A.vw.hd) {
         /* the tile's connection, re-targeted: no reconnection */
         A.vw.tile = t;
@@ -1219,6 +1220,7 @@ static void open_viewer(int src, int index)
 static void close_viewer(void)
 {
     if (!A.vw.on) return;
+    if (A.vw.hd) aos_ui_wall_photo_spare(false);
     tile_t *t = A.vw.tile;
     A.vw.direct = A.vw.reblit = false;
     if (A.vw.v) A.vw.v->flip_on = false;        /* before anything else is drawn */

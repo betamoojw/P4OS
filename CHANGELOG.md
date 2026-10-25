@@ -21,6 +21,9 @@
   whole folder, rotating"; Settings, Wallpaper, keeps the current one or
   takes it off. Picked on a thread of its own, nothing written at each lock
   (`aos_ui_lock_album_set()`).
+- **The home screen's photo stays in memory** with an app in front: going
+  home showed the gradient for a second and a half while it was decoded
+  again. Cameras lets it go while it shows HD (`aos_ui_wall_photo_spare()`).
 
 ## 0.21.6 — 2026-10-23
 

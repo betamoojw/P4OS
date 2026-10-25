@@ -14,10 +14,13 @@
  * readable, it shows as before. The paths are prefs ("wall_img",
  * "lock_img"); turning the screen decodes again at the new size.
  *
- * Only while they can be seen: with an app over the home screen both are
- * let go (3.7 MB back, which was what the doorbell's 1920x1080 stream was
- * short of, 2026-10-22), and decoded again - under half a second - on the
- * way home, or for the lock screen as the screen goes dark and locks.
+ * The lock screen's only while it can be seen: with an app over the home
+ * screen it is let go (1.8 MB back) and decoded again as the screen goes
+ * dark and locks. The home screen's stays in PSRAM: let go too until
+ * 2026-10-25, it took a second and a half to come back on the way home,
+ * the gradient on show meanwhile. An app that needs every megabyte (the
+ * doorbell's 1920x1080 stream was short of both photos, 2026-10-22) has it
+ * let go while it is in front with aos_ui_wall_photo_spare().
  *
  * Or a folder behind the lock screen, a different photo of it every time
  * the board locks (2026-10-25): pref "lock_album". The worker picks one at
@@ -294,6 +297,12 @@ void aos_wall_photo_want(int which, bool want)
         v->w = v->h = 0;
         memset(&v->dsc, 0, sizeof v->dsc);
     }
+}
+
+void aos_ui_wall_photo_spare(bool spare)
+{
+    if (!spare) aos_wall_photo_want(AOS_WALL_HOME, true);      /* back, before the way home */
+    else if (aos_ui_current_app()) aos_wall_photo_want(AOS_WALL_HOME, false);
 }
 
 uint32_t aos_wall_photo_tint(int which)

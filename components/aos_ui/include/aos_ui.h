@@ -218,6 +218,11 @@ bool aos_ui_wall_photo(int which, char *out, size_t len);   /* false: none */
  * them, at random, every time the board locks. NULL or "" stops it and
  * keeps the photo on show. Setting one lock photo stops it too. Saved. */
 void aos_ui_lock_album_set(const char *dir);
+/* The home screen's photo stays in PSRAM (1.8 MB) while an app is in front,
+ * so the way home shows it at once. An app that needs every megabyte (a
+ * 1920x1080 stream) has it let go with true, and back with false; going
+ * home brings it back anyway, a moment later. */
+void aos_ui_wall_photo_spare(bool spare);
 bool aos_ui_lock_album(char *out, size_t len);               /* false: none */
 
 /* Records the screen to an MP4 in the card's /videos (the PPA and the

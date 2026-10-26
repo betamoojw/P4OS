@@ -44,6 +44,12 @@ struct p3d_cam {
     char          status[96];
     uint32_t      frames;
     uint64_t      t0;
+    /* the last few seconds, for the screen and a line in the log: what
+     * arrives (bytes, whole frames) against what is shown, and the decode */
+    const char   *mode;
+    uint64_t      win_t0;
+    uint32_t      win_bytes, win_whole, win_shown, win_dec_us;
+    float         fps_now;
 };
 
 static volatile int s_threads;
@@ -68,10 +74,33 @@ static void set_status(p3d_cam_t *c, const char *s)
 }
 
 /* decodes one JPEG and puts it, scaled, where the UI takes it */
+#define STATS_MS 5000
+
+static void stats(p3d_cam_t *c, uint32_t bytes)
+{
+    c->win_bytes += bytes;
+    uint64_t now = aos_hal_uptime_ms();
+    if (!c->win_t0) c->win_t0 = now;
+    uint32_t dt = (uint32_t)(now - c->win_t0);
+    if (dt < STATS_MS) return;
+    float fps = c->win_shown * 1000.0f / (float)dt;
+    aos_hal_log(P3D_TAG, "camera (%s): %.1f fps shown, %u whole frames came, %u KB/s, decode %u ms, %dx%d",
+                c->mode, (double)fps, (unsigned)c->win_whole, (unsigned)(c->win_bytes / dt),
+                (unsigned)(c->win_shown ? c->win_dec_us / c->win_shown / 1000 : 0), c->w, c->h);
+    p3d_lock();
+    c->fps_now = fps;
+    p3d_unlock();
+    c->win_t0 = now;
+    c->win_bytes = c->win_whole = c->win_shown = c->win_dec_us = 0;
+}
+
 static void show(p3d_cam_t *c, aos_jpeg_t *dec, const uint8_t *jpg, int len)
 {
     int w, h, stride;
+    uint64_t t0 = aos_hal_uptime_us();
     const uint16_t *px = aos_hal_jpeg_decode(dec, jpg, (size_t)len, &w, &h, &stride);
+    c->win_dec_us += (uint32_t)(aos_hal_uptime_us() - t0);
+    c->win_shown++;
     if (!px || w <= 0 || h <= 0) return;
     int k = 1;
     while ((w / k > c->max_w || h / k > c->max_h) && k < 8) k++;
@@ -102,7 +131,10 @@ static void newest(p3d_cam_t *c, aos_jpeg_t *dec, uint8_t *buf, int *len)
     for (int i = 0; i + 1 < *len; i++) {
         if (buf[i] != 0xFF) continue;
         if (buf[i + 1] == 0xD8) last_soi = i;
-        else if (buf[i + 1] == 0xD9 && last_soi >= 0) last_eoi = i + 2;
+        else if (buf[i + 1] == 0xD9 && last_soi >= 0) {
+            last_eoi = i + 2;
+            c->win_whole++;
+        }
     }
     if (last_eoi > 0) {
         /* the last frame that both starts and ends in the buffer */
@@ -198,10 +230,12 @@ static void http_loop(p3d_cam_t *c, aos_jpeg_t *dec, uint8_t *buf)
         }
         fails = 0;
         bool stream = strstr(ctype, "multipart") != NULL;
+        c->mode = stream ? "MJPEG" : "snapshots";
         uint64_t last = aos_hal_uptime_ms();
         while (!c->stop) {
             int k = p3d_sock_recv(s, buf + len, BUF_CAP - len, 200);
             if (k < 0) break;
+            stats(c, k > 0 ? (uint32_t)k : 0);
             if (k > 0) {
                 len += k;
                 last = aos_hal_uptime_ms();
@@ -217,6 +251,7 @@ static void http_loop(p3d_cam_t *c, aos_jpeg_t *dec, uint8_t *buf)
         }
         p3d_sock_close(s);
         if (!stream && len > 0) {
+            c->win_whole++;
             show(c, dec, buf, len);
             for (int i = 0; i < SNAP_GAP_MS / 50 && !c->stop; i++) aos_hal_sleep_ms(50);
         }
@@ -239,6 +274,7 @@ static void bambu_loop(p3d_cam_t *c, aos_jpeg_t *dec, uint8_t *buf)
             for (int i = 0; i < 30 * (fails > 3 ? 3 : fails) && !c->stop; i++) aos_hal_sleep_ms(100);
             continue;
         }
+        c->mode = "Bambu";
         uint8_t auth[80] = { 0x40, 0, 0, 0, 0, 0x30, 0, 0 };
         memcpy(auth + 16, "bblp", 4);
         size_t cl = strlen(c->code);
@@ -253,6 +289,7 @@ static void bambu_loop(p3d_cam_t *c, aos_jpeg_t *dec, uint8_t *buf)
         while (!c->stop) {
             int k = p3d_sock_recv(s, buf + len, BUF_CAP - len, 200);
             if (k < 0) break;
+            stats(c, k > 0 ? (uint32_t)k : 0);
             if (k == 0) {
                 if (aos_hal_uptime_ms() - last > SILENCE_MS) break;
                 continue;
@@ -271,6 +308,7 @@ static void bambu_loop(p3d_cam_t *c, aos_jpeg_t *dec, uint8_t *buf)
                 if (len - at < 16 + (int)size) break;
                 show_at = at + 16;
                 show_len = (int)size;
+                c->win_whole++;
                 at += 16 + (int)size;
             }
             if (show_at >= 0) show(c, dec, buf + show_at, show_len);
@@ -328,6 +366,7 @@ p3d_cam_t *p3d_cam_start(const char *url, const p3d_cfg_t *cfg, int max_w, int m
     c->max_w = max_w;
     c->max_h = max_h;
     c->t0 = aos_hal_uptime_ms();
+    c->mode = "?";
     p3d_copy(c->status, sizeof c->status, _("Conectando con la cámara..."));
     __sync_fetch_and_add(&s_threads, 1);
     if (!aos_hal_thread_start("p3dcam", cam_thread, c, STACK, 3)) {
@@ -384,7 +423,8 @@ void p3d_cam_status(p3d_cam_t *c, char *out, size_t n, float *fps)
     }
     p3d_lock();
     p3d_copy(out, n, c->status);
+    /* the last window's; until the first one closes, the average so far */
     uint64_t dt = aos_hal_uptime_ms() - c->t0;
-    if (fps) *fps = dt > 1000 ? c->frames * 1000.0f / (float)(uint32_t)dt : 0;
+    if (fps) *fps = c->fps_now > 0 ? c->fps_now : dt > 1000 ? c->frames * 1000.0f / (float)(uint32_t)dt : 0;
     p3d_unlock();
 }

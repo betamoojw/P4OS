@@ -102,6 +102,7 @@ static struct {
     uint32_t      cam_gen;
     lv_obj_t     *cam_box, *cam_img, *cam_msg;
     int32_t       cam_max_h;
+    lv_timer_t   *cam_timer;    /* 25 a second: the app's timer is four */
 
     /* Consola */
     lv_obj_t     *con, *con_scroll, *con_in, *kb;
@@ -1076,8 +1077,18 @@ static void build_files(lv_obj_t *body)
 
 /* ---- Cámara ---------------------------------------------------------------------------------------- */
 
+static void cam_update(void);
+
+static void cam_timer_cb(lv_timer_t *t)
+{
+    (void)t;
+    cam_update();
+}
+
 static void cam_stop(void)
 {
+    if (D.cam_timer) lv_timer_delete(D.cam_timer);
+    D.cam_timer = NULL;
     if (D.cam_img) lv_obj_add_flag(D.cam_img, LV_OBJ_FLAG_HIDDEN);
     if (D.cam) p3d_cam_stop(D.cam);
     D.cam = NULL;
@@ -1136,6 +1147,7 @@ static void build_camera(lv_obj_t *body)
         return;
     }
     D.cam = p3d_cam_start(D.cam_url, &A.cfg.m[A.detail], w, h);
+    if (D.cam) D.cam_timer = lv_timer_create(cam_timer_cb, 40, NULL);
 }
 
 /* ---- Consola ---------------------------------------------------------------------------------------- */
@@ -1458,7 +1470,7 @@ void p3d_detail_tick(void)
         chart_update();
     }
     if (D.tab == TAB_FILES) files_update();
-    if (D.tab == TAB_CAMERA) cam_update();
+    if (D.tab == TAB_CAMERA && !D.cam_timer) cam_update();
     if (D.tab == TAB_CONSOLE) con_update();
 }
 

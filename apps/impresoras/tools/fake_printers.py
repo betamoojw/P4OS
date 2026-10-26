@@ -56,6 +56,7 @@ except ImportError:                         # the camera then sends a fixed grey
     Image = None
 
 SPEED = 20.0
+CAM_FPS = 10.0
 LOCK = threading.Lock()
 
 
@@ -304,7 +305,7 @@ class Handler(BaseHTTPRequestHandler):
                 jpg = picture(self.printer)
                 self.wfile.write(b"--frame\r\nContent-Type: image/jpeg\r\nContent-Length: %d\r\n\r\n" % len(jpg))
                 self.wfile.write(jpg + b"\r\n")
-                time.sleep(0.2)
+                time.sleep(1.0 / CAM_FPS)
         except (BrokenPipeError, ConnectionResetError):
             pass
         self.close_connection = True
@@ -1265,14 +1266,16 @@ BASE = 8300
 
 
 def main():
-    global SPEED, BASE
+    global SPEED, BASE, CAM_FPS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--base", type=int, default=8300)
     ap.add_argument("--speed", type=float, default=20.0, help="how much faster than real the jobs go")
     ap.add_argument("--certs", help="folder for the throwaway CA and certificate (Bambu)")
     ap.add_argument("--config", help="write an impresoras.txt with the eight")
+    ap.add_argument("--fps", type=float, default=10.0, help="the cameras' MJPEG rate")
     a = ap.parse_args()
     SPEED = a.speed
+    CAM_FPS = a.fps
     BASE = b = a.base
     printers = {
         "octoprint": Printer("MK3S", total=72000, start=0.004, file="Domestika Lamp - Lamp Shade - PETG 0.2mm.gcode"),

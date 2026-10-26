@@ -38,6 +38,32 @@
  * serial number, not to its address; the bundle rejects it, and an app has
  * no mbedtls of its own. Still VERIFY_REQUIRED: a certificate that is not
  * from that CA, or not for that name, does not connect.
+ *
+ * A session ticket too big for the board's ClientHello (2026-10-26, seen
+ * with Cartero against a test server): the server handed out a 5.5 KB
+ * ticket, session_save() kept it, and the next ClientHello carrying it did
+ * not fit the board's 4 KB output buffer (CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN
+ * = 4096): -0x6a00, MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL, from writing the
+ * ticket extension. A failed handshake never replaced the session, so every
+ * connection to that host failed until a restart. Two things now:
+ *
+ *  - A session whose ticket would not fit is not kept: the limit is the
+ *    output buffer less TLS_HELLO_RESERVE for the rest of the ClientHello.
+ *    Measured without a ticket (tools/fake_tls_tickets.c logs it): 329 bytes
+ *    from the simulator's mbedtls with its default suites; the board's
+ *    differs only in its suite list and the SNI (a host is 255 bytes at
+ *    most), and a resumed one adds a 32-byte session id. 1 KB covers that
+ *    with room to spare: on the board, tickets up to 3 KB are kept, a 5.5 KB
+ *    one costs a full handshake each time instead of every connection.
+ *    Making the buffer bigger instead would cost its size on every
+ *    connection, for a server that rarely does this.
+ *  - A handshake that fails after resuming a stored session, whatever the
+ *    reason (a ticket the server no longer takes, one that did not fit),
+ *    forgets the session and tries once more without it, with the whole
+ *    timeout again: the first try may have used it up (a server that drops
+ *    the connection only at its own timeout), and a full handshake takes
+ *    1.6-1.8 s on the board. It happens once per broken session, since the
+ *    session is gone afterwards.
  */
 #include "aos_tls.h"
 #include "aos_hal.h"
@@ -75,6 +101,10 @@
  * the expiry fell right on a split record, and then it gives up. (A read
  * reports AOS_TLS_TIMEOUT instead and the caller decides.) */
 #define TLS_REINTENTOS  1
+
+/* What the ClientHello needs besides the ticket: the measured 329 bytes,
+ * the longest SNI, the session id, and room to spare (header). */
+#define TLS_HELLO_RESERVE  1024
 
 #define WHY(...) do { if (why && why_n) snprintf(why, why_n, __VA_ARGS__); } while (0)
 
@@ -114,17 +144,49 @@ static void *cache_lock(void)
     return m;
 }
 
-/* Copies the host's stored session into the context, if there is one. */
-static void session_restore(aos_tls_t *c, const char *host)
+/* Copies the host's stored session into the context, if there is one:
+ * true if the handshake will try to resume it. */
+static bool session_restore(aos_tls_t *c, const char *host)
 {
+    bool resumed = false;
     void *m = cache_lock();
     for (int i = 0; i < TLS_SESSIONS; i++) {
         if (s_sess[i].valid && strcmp(s_sess[i].host, host) == 0) {
-            mbedtls_ssl_set_session(&c->ssl, &s_sess[i].sess);
+            resumed = mbedtls_ssl_set_session(&c->ssl, &s_sess[i].sess) == 0;
             break;
         }
     }
     aos_hal_mutex_unlock(m);
+    return resumed;
+}
+
+/* A stored session the server would not resume: gone, so the next
+ * connection makes a fresh one (and stores that). */
+static void session_forget(const char *host)
+{
+    void *m = cache_lock();
+    for (int i = 0; i < TLS_SESSIONS; i++) {
+        if (s_sess[i].valid && strcmp(s_sess[i].host, host) == 0) {
+            mbedtls_ssl_session_free(&s_sess[i].sess);
+            s_sess[i].valid = false;
+        }
+    }
+    aos_hal_mutex_unlock(m);
+}
+
+/* The biggest ticket a ClientHello can carry here (header). The simulator's
+ * mbedtls has 16 KB; P4_SIM_TLS_OUT=4096 makes it count with the board's,
+ * to test this. */
+static size_t ticket_max(void)
+{
+    size_t out = MBEDTLS_SSL_OUT_CONTENT_LEN;
+#ifdef AOS_SIM
+    const char *e = getenv("P4_SIM_TLS_OUT");
+    if (e && atoi(e) > 0) {
+        out = (size_t)atoi(e);
+    }
+#endif
+    return out > TLS_HELLO_RESERVE ? out - TLS_HELLO_RESERVE : 0;
 }
 
 /* Stores the freshly negotiated session. If there is no free slot it
@@ -136,6 +198,16 @@ static void session_save(aos_tls_t *c, const char *host)
     mbedtls_ssl_session_init(&tmp);
     if (mbedtls_ssl_get_session(&c->ssl, &tmp) != 0) {
         mbedtls_ssl_session_free(&tmp);
+        return;
+    }
+    /* A ticket the next ClientHello could not carry: not kept (header). The
+     * session id alone would not resume it either - the server handed out a
+     * ticket, so it keeps no state - so nothing is lost. */
+    if (tmp.MBEDTLS_PRIVATE(ticket_len) > ticket_max()) {
+        aos_hal_log("tls", "%s: a %u-byte session ticket does not fit a ClientHello here; not kept", host,
+                    (unsigned)tmp.MBEDTLS_PRIVATE(ticket_len));
+        mbedtls_ssl_session_free(&tmp);
+        session_forget(host);
         return;
     }
 
@@ -371,23 +443,13 @@ void aos_tls_close(aos_tls_t *c)
  * session is not verified again, so one verified against another authority
  * (or the bundle) must never be resumed by it - the first test did exactly
  * that, and connected with the wrong CA. */
-static int tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
-                    const char *ca_pem, size_t ca_len, const char *name,
-                    int timeout_ms, char *why, size_t why_n)
+/* One try: the connection, and its handshake with the stored session if
+ * 'resume' (*resumed says whether there was one to resume). */
+static int tls_attempt(aos_tls_t *c, const char *host, int port, unsigned flags,
+                       const char *ca_pem, size_t ca_len, const char *name, const char *key,
+                       bool resume, bool *resumed, int timeout_ms, char *why, size_t why_n)
 {
     bool tls = (flags & AOS_TLS_ENCRYPT) != 0;
-    if (!name || !name[0]) {
-        name = host;
-    }
-    char key[96];
-    if (ca_pem) {
-        unsigned char h[32];
-        mbedtls_sha256((const unsigned char *)ca_pem, ca_len && ca_pem[ca_len - 1] == '\0' ? ca_len - 1 : ca_len, h, 0);
-        snprintf(key, sizeof(key), "%.48s@%.24s#%02x%02x%02x%02x%02x%02x%02x%02x", name, host,
-                 h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7]);
-    } else {
-        snprintf(key, sizeof(key), "%s", host);
-    }
     memset(c, 0, sizeof(*c));
     c->fd = -1;
     mbedtls_x509_crt_init(&c->ca);
@@ -464,7 +526,9 @@ static int tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
         return AOS_HTTP_ERR_TLS;
     }
 
-    session_restore(c, key);
+    if (resume && session_restore(c, key) && resumed) {
+        *resumed = true;
+    }
     mbedtls_ssl_set_bio(&c->ssl, &c->fd, bio_send, bio_recv, NULL);
 
     uint64_t limite = aos_hal_uptime_ms() + (uint64_t)timeout_ms;
@@ -503,6 +567,35 @@ static int tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
 
     session_save(c, key);
     return 0;
+}
+
+static int tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
+                    const char *ca_pem, size_t ca_len, const char *name,
+                    int timeout_ms, char *why, size_t why_n)
+{
+    if (!name || !name[0]) {
+        name = host;
+    }
+    char key[96];
+    if (ca_pem) {
+        unsigned char h[32];
+        mbedtls_sha256((const unsigned char *)ca_pem, ca_len && ca_pem[ca_len - 1] == '\0' ? ca_len - 1 : ca_len, h, 0);
+        snprintf(key, sizeof(key), "%.48s@%.24s#%02x%02x%02x%02x%02x%02x%02x%02x", name, host,
+                 h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7]);
+    } else {
+        snprintf(key, sizeof(key), "%s", host);
+    }
+    bool resumed = false;
+    int rc = tls_attempt(c, host, port, flags, ca_pem, ca_len, name, key, true, &resumed, timeout_ms, why, why_n);
+    if (rc == AOS_HTTP_ERR_TLS && resumed) {
+        /* the stored session broke the handshake: forgotten, and once more
+         * without it, with the whole timeout again (header) */
+        aos_hal_log("tls", "%s: resuming the stored session failed (%s); again without it", host,
+                    why && why_n ? why : "");
+        session_forget(key);
+        rc = tls_attempt(c, host, port, flags, ca_pem, ca_len, name, key, false, NULL, timeout_ms, why, why_n);
+    }
+    return rc;
 }
 
 int aos_tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,

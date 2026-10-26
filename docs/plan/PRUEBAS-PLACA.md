@@ -463,6 +463,19 @@ Que necesitan la mano del usuario o equipos:
     fallan hasta reiniciar. Es de firmware y pega a cualquier app.
     Cartero ya no lo llama "certificado" (sólo lo es cuando la razón de la
     HAL habla del certificado).
+  - Arreglado en el firmware el 2026-10-26 (`aos_tls.c`, sin OTA todavía):
+    un ticket que no entra en el ClientHello (más de 3 KB con el búfer de
+    4 KB) no se guarda, y un apretón que falla retomando una sesión guardada
+    la olvida y reintenta una vez sin ella. Reproducido y probado en el
+    simulador con `tools/fake_tls_tickets.c` (ticket de 5520 B, el servidor
+    corta los ClientHello de más de 4096 B): las tres conexiones seguidas
+    de Cartero andan, con el ticket descartado y con el reintento. El
+    ClientHello sin ticket mide 329 B en el simulador. Falta en la placa,
+    después de la OTA: tres pedidos seguidos de Cartero al mismo servidor
+    de prueba (el registro dice "a 5520-byte session ticket does not fit a
+    ClientHello here; not kept"), y que otro servidor HTTPS cualquiera
+    siga retomando su sesión (la segunda conexión más rápida que la
+    primera).
 - [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
       del usuario por OctoPrint:
   - Lista con estado, temperaturas, avance y modelo (del perfil de

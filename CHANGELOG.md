@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- **A big TLS session ticket no longer locks a server out.** A server that
+  handed out a 5.5 KB ticket broke the next connection on the board (its
+  ClientHello did not fit the 4 KB output buffer, -0x6a00), and every one
+  after it until a restart. Tickets that would not fit are not kept (up to
+  3 KB are), and a handshake that fails while resuming a stored session
+  forgets it and tries once more without it. Any app over HTTPS or wss://
+  had it; it was seen with Cartero. `tools/fake_tls_tickets.c` reproduces it.
+- Cartero's name in the language packs, and the app in the simulator.
+
 ## 0.22.1 — 2026-10-25
 
 - **Impresoras 3D**, a new app on the card: every 3D printer in the house.

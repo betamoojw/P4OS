@@ -476,6 +476,9 @@ Que necesitan la mano del usuario o equipos:
     ClientHello here; not kept"), y que otro servidor HTTPS cualquiera
     siga retomando su sesión (la segunda conexión más rápida que la
     primera).
+  - Probado en la placa el 2026-10-26 (OTA `v0.22.1-3-g32888d4`): el
+    usuario mandó pedidos seguidos con Cartero a su servidor de prueba y
+    andan, sin el -0x6a00.
   - 2026-10-26, en la placa con el arreglo instalado: el usuario hizo
     desde Cartero un POST al mismo servidor de prueba que devuelve un
     token, y anduvo. Falta ver que otro servidor HTTPS siga retomando su

@@ -50,30 +50,33 @@ La respuesta no es HTTP	Antwort ist kein HTTP
 #: apps/cartero/main/ct_ui.c:265
 La placa todavía no tiene hora: no puede verificar el certificado	Das Board hat noch keine Uhrzeit: Zertifikat nicht prüfbar
 
-#: apps/cartero/main/ct_ui.c:266
+#: apps/cartero/main/ct_ui.c:267
 El certificado del servidor no se pudo verificar	Serverzertifikat konnte nicht geprüft werden
 
-#: apps/cartero/main/ct_ui.c:267
-La dirección no es http:// ni https://	Die URL ist weder http:// noch https://
-
 #: apps/cartero/main/ct_ui.c:268
-Se acabó el tiempo de espera	Zeitlimit überschritten
+No se pudo establecer la conexión segura (TLS)	Sichere Verbindung (TLS) konnte nicht aufgebaut werden
 
 #: apps/cartero/main/ct_ui.c:269
-Cancelado	Abgebrochen
+La dirección no es http:// ni https://	Die URL ist weder http:// noch https://
 
 #: apps/cartero/main/ct_ui.c:270
-Demasiadas redirecciones	Zu viele Weiterleitungen
+Se acabó el tiempo de espera	Zeitlimit überschritten
 
 #: apps/cartero/main/ct_ui.c:271
+Cancelado	Abgebrochen
+
+#: apps/cartero/main/ct_ui.c:272
+Demasiadas redirecciones	Zu viele Weiterleitungen
+
+#: apps/cartero/main/ct_ui.c:273
 Falló el pedido	Anfrage fehlgeschlagen
 
-#: apps/cartero/main/ct_ui.c:563
-#: apps/cartero/main/ct_ui.c:595
+#: apps/cartero/main/ct_ui.c:565
+#: apps/cartero/main/ct_ui.c:597
 #: apps/cartero/main/ct_ui_resp.c:651
 Cancelar	Abbrechen
 
-#: apps/cartero/main/ct_ui.c:564
+#: apps/cartero/main/ct_ui.c:566
 Listo	Fertig
 
 #: apps/cartero/main/ct_ui_env.c:42

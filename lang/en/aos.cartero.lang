@@ -50,30 +50,33 @@ La respuesta no es HTTP	The response is not HTTP
 #: apps/cartero/main/ct_ui.c:265
 La placa todavía no tiene hora: no puede verificar el certificado	The board has no time yet: it can't verify the certificate
 
-#: apps/cartero/main/ct_ui.c:266
+#: apps/cartero/main/ct_ui.c:267
 El certificado del servidor no se pudo verificar	The server's certificate could not be verified
 
-#: apps/cartero/main/ct_ui.c:267
-La dirección no es http:// ni https://	The address is neither http:// nor https://
-
 #: apps/cartero/main/ct_ui.c:268
-Se acabó el tiempo de espera	Timed out
+No se pudo establecer la conexión segura (TLS)	Could not establish a secure connection (TLS)
 
 #: apps/cartero/main/ct_ui.c:269
-Cancelado	Cancelled
+La dirección no es http:// ni https://	The address is neither http:// nor https://
 
 #: apps/cartero/main/ct_ui.c:270
-Demasiadas redirecciones	Too many redirects
+Se acabó el tiempo de espera	Timed out
 
 #: apps/cartero/main/ct_ui.c:271
+Cancelado	Cancelled
+
+#: apps/cartero/main/ct_ui.c:272
+Demasiadas redirecciones	Too many redirects
+
+#: apps/cartero/main/ct_ui.c:273
 Falló el pedido	The request failed
 
-#: apps/cartero/main/ct_ui.c:563
-#: apps/cartero/main/ct_ui.c:595
+#: apps/cartero/main/ct_ui.c:565
+#: apps/cartero/main/ct_ui.c:597
 #: apps/cartero/main/ct_ui_resp.c:651
 Cancelar	Cancel
 
-#: apps/cartero/main/ct_ui.c:564
+#: apps/cartero/main/ct_ui.c:566
 Listo	Done
 
 #: apps/cartero/main/ct_ui_env.c:42

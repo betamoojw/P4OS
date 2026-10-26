@@ -162,6 +162,16 @@ const char *ct_resp_header(const ct_resp_t *rs, const char *name)
     return NULL;
 }
 
+/* A TLS failure is about the certificate only when the system's reason says
+ * so ("certificate for x is not signed...", "the certificate is not for x",
+ * "...has expired"). Everything else -a handshake the board's mbedtls could
+ * not finish, like the -0x6a00 of a session ticket too big for its ClientHello
+ * buffer- says nothing about the certificate and must not be shown as one. */
+bool ct_err_is_cert(const ct_resp_t *rs)
+{
+    return rs && rs->code == AOS_HTTP_ERR_TLS && (strstr(rs->err, "certificate") || strstr(rs->err, "authority"));
+}
+
 /* text if the type says so, or, without a type, if the bytes look like it */
 bool ct_body_is_text(const ct_resp_t *rs)
 {

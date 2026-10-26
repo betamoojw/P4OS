@@ -591,9 +591,9 @@ ct_job_t *ct_job_web(const char *text, size_t len, char *err, size_t en)
     return j;
 }
 
-static const char *web_err(int code)
+static const char *web_err(const ct_resp_t *r)
 {
-    switch (code) {
+    switch (r->code) {
     case AOS_HTTP_ERR_DNS: return "no se encontró el servidor (DNS)";
     case AOS_HTTP_ERR_CONNECT: return "no se pudo conectar";
     case AOS_HTTP_ERR_SEND: return "no se pudo enviar el pedido";
@@ -601,7 +601,9 @@ static const char *web_err(int code)
     case AOS_HTTP_ERR_PROTO: return "la respuesta no es HTTP";
     case AOS_HTTP_ERR_MEM: return "no hay memoria";
     case AOS_HTTP_ERR_SIN_HORA: return "la placa todavía no tiene hora (para verificar el certificado)";
-    case AOS_HTTP_ERR_TLS: return "el certificado del servidor no se pudo verificar";
+    case AOS_HTTP_ERR_TLS:
+        return ct_err_is_cert(r) ? "el certificado del servidor no se pudo verificar"
+                                 : "no se pudo establecer la conexión segura (TLS)";
     case CT_ERR_URL: return "la dirección no es http:// ni https://";
     case CT_ERR_TIMEOUT: return "se acabó el tiempo de espera";
     case CT_ERR_STOPPED: return "cancelado";
@@ -665,8 +667,8 @@ static void do_web(ct_job_t *j)
     ct_sb_adds(&b, ",\"file\":\"/data/cartero/web/respuesta.bin\",\"error\":");
     char why[260] = "";
     if (!r->ok) {
-        if (r->err[0] && r->code != CT_ERR_URL) snprintf(why, sizeof why, "%s: %.190s", web_err(r->code), r->err);
-        else ct_copy(why, sizeof why, web_err(r->code));
+        if (r->err[0] && r->code != CT_ERR_URL) snprintf(why, sizeof why, "%s: %.190s", web_err(r), r->err);
+        else ct_copy(why, sizeof why, web_err(r));
     }
     ct_json_str(&b, why, strlen(why));
     ct_sb_adds(&b, "}");
@@ -737,7 +739,7 @@ void ct_job_results(const ct_job_t *j, ct_sb_t *b, const char *coll_name, const 
                    e->resp.ok ? e->resp.status : 0, e->resp.t_total, e->resp.len);
         char err[300] = "";
         if (e->pre_err[0]) ct_copy(err, sizeof err, e->pre_err);
-        else if (e->sent && !e->resp.ok) snprintf(err, sizeof err, "%s %.200s", web_err(e->resp.code), e->resp.err);
+        else if (e->sent && !e->resp.ok) snprintf(err, sizeof err, "%s %.200s", web_err(&e->resp), e->resp.err);
         else if (e->test_err[0]) ct_copy(err, sizeof err, e->test_err);
         else if (e->skipped) ct_copy(err, sizeof err, "skipped");
         jstr(b, err);

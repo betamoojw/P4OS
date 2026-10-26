@@ -263,7 +263,9 @@ const char *ct_err_text(const ct_resp_t *r)
     case AOS_HTTP_ERR_PROTO: return _("La respuesta no es HTTP");
     case AOS_HTTP_ERR_MEM: return _("No hay memoria");
     case AOS_HTTP_ERR_SIN_HORA: return _("La placa todavía no tiene hora: no puede verificar el certificado");
-    case AOS_HTTP_ERR_TLS: return _("El certificado del servidor no se pudo verificar");
+    case AOS_HTTP_ERR_TLS:
+        return ct_err_is_cert(r) ? _("El certificado del servidor no se pudo verificar")
+                                 : _("No se pudo establecer la conexión segura (TLS)");
     case CT_ERR_URL: return _("La dirección no es http:// ni https://");
     case CT_ERR_TIMEOUT: return _("Se acabó el tiempo de espera");
     case CT_ERR_STOPPED: return _("Cancelado");

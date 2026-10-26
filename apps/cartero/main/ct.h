@@ -230,6 +230,7 @@ void        ct_http_close(ct_conn_t *cc);
 void        ct_resp_free(ct_resp_t *rs);
 const char *ct_resp_header(const ct_resp_t *rs, const char *name);
 bool        ct_body_is_text(const ct_resp_t *rs);
+bool        ct_err_is_cert(const ct_resp_t *rs);
 const char *ct_reason_text(int status);
 
 /* the pieces of a URL; false if it is not http(s)://host... */

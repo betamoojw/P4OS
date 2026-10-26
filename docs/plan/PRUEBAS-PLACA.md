@@ -452,6 +452,17 @@ Que necesitan la mano del usuario o equipos:
       intérprete con doble precisión por software), la página del portal
       vía la placa con otra app adelante, y la RAM interna libre antes y
       después (todo va a PSRAM: arenas, la pila de 96 KB del hilo).
+  - 2026-10-26, primera prueba del usuario contra un servidor HTTPS de
+    prueba (TLS 1.2, certificado válido: `openssl` verifica bien):
+    `TLS handshake ... failed (-0x6a00)`, que es
+    `MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL`. El servidor da un ticket de sesión
+    de ~5,5 KB; la HAL (`aos_tls.c`, `session_save`) lo guarda y en la
+    conexión siguiente lo pone en el ClientHello, que no entra en
+    `CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN=4096`. Como el apretón falla, la
+    sesión rota nunca se reemplaza: todas las conexiones a ese servidor
+    fallan hasta reiniciar. Es de firmware y pega a cualquier app.
+    Cartero ya no lo llama "certificado" (sólo lo es cuando la razón de la
+    HAL habla del certificado).
 - [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
       del usuario por OctoPrint:
   - Lista con estado, temperaturas, avance y modelo (del perfil de

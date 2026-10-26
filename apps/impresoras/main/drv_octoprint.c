@@ -80,6 +80,18 @@ static void cam_fix(const p3d_machine_t *m, const char *url, char *out, size_t n
     p3d_copy(out, n, url);
 }
 
+/* the profile that is current: its model, else its name */
+static bool profile_cb(const char *k, int kl, const char *v, void *ctx)
+{
+    (void)k;
+    (void)kl;
+    bool cur = false;
+    if (!pj_bool(v, "current", &cur) || !cur) return true;
+    char *out = ctx;
+    if (!pj_str(v, "model", out, 48) || !out[0]) pj_str(v, "name", out, 48);
+    return false;
+}
+
 static void read_settings(p3d_machine_t *m, octo_t *o)
 {
     p3d_resp_t r;
@@ -87,8 +99,11 @@ static void read_settings(p3d_machine_t *m, octo_t *o)
         char url[192] = "", fixed[192];
         bool enabled = true;
         pj_bool(r.body, "webcam.webcamEnabled", &enabled);
-        if (!pj_str(r.body, "webcam.snapshotUrl", url, sizeof url) || !url[0]) {
-            pj_str(r.body, "webcam.streamUrl", url, sizeof url);
+        /* the MJPEG stream first: the board decodes it as it comes (a
+         * snapshot each time was 0.9 fps on a MK3S's Pi); the snapshot when
+         * there is no stream */
+        if (!pj_str(r.body, "webcam.streamUrl", url, sizeof url) || !url[0]) {
+            pj_str(r.body, "webcam.snapshotUrl", url, sizeof url);
         }
         cam_fix(m, url, fixed, sizeof fixed);
         p3d_lock();
@@ -97,6 +112,15 @@ static void read_settings(p3d_machine_t *m, octo_t *o)
         o->have_settings = true;
     } else if (r.status == 403) {
         o->have_settings = true;        /* a key without the settings permission */
+    }
+    p3d_resp_free(&r);
+    /* the printer profile in use says which machine it is ("Original Prusa i3 MK3S") */
+    if (get(o, "/api/printerprofiles", &r, 32 * 1024) == 200) {
+        char model[48] = "";
+        pj_each(pj_get(r.body, "profiles"), profile_cb, model);
+        p3d_lock();
+        if (model[0]) p3d_copy(m->st.model, sizeof m->st.model, model);
+        p3d_unlock();
     }
     p3d_resp_free(&r);
     if (get(o, "/api/version", &r, 4096) == 200) {
@@ -126,14 +150,20 @@ static void temp_of(const char *js, const char *name, p3d_temp_t *t)
 static void thumb_fetch(p3d_machine_t *m, octo_t *o, const char *origin, const char *path)
 {
     p3d_copy(o->thumb_of, sizeof o->thumb_of, path);
-    char enc[300], url[360], th[256] = "";
+    char enc[300], url[400], th[256] = "";
     p3d_url_enc(enc, sizeof enc, path);
     snprintf(url, sizeof url, "/api/files/%s/%s", origin[0] ? origin : "local", enc);
     p3d_resp_t r;
     if (get(o, url, &r, 64 * 1024) == 200) pj_str(r.body, "thumbnail", th, sizeof th);
     p3d_resp_free(&r);
     if (th[0]) {
-        snprintf(url, sizeof url, "%s%.250s", th[0] == '/' ? "" : "/", th);
+        /* the plugin writes the file's name as it is ("Lamp Shade.png"): spaces
+         * and the like escaped, its query kept */
+        char *q = strchr(th, '?');
+        if (q) *q = '\0';
+        char ep[300];
+        p3d_url_enc(ep, sizeof ep, th);
+        snprintf(url, sizeof url, "%s%.300s%s%.40s", th[0] == '/' ? "" : "/", ep, q ? "?" : "", q ? q + 1 : "");
         if (get(o, url, &r, THUMB_MAX) == 200 && r.len > 0 && !r.cut) p3d_thumb_store(m, r.body, r.len);
         else p3d_thumb_store(m, NULL, 0);
         p3d_resp_free(&r);
@@ -226,6 +256,16 @@ static int poll(p3d_machine_t *m, octo_t *o)
         s->progress = pj_num(jr.body, "progress.completion", &v) ? v : -1;
         s->elapsed_s = pj_num(jr.body, "progress.printTime", &v) ? (int32_t)v : -1;
         s->remaining_s = pj_num(jr.body, "progress.printTimeLeft", &v) ? (int32_t)v : -1;
+        /* OctoPrint has no estimate of its own for the first minutes (null):
+         * the slicer's minus what has printed, else what the progress projects */
+        float est;
+        if (s->remaining_s < 0 && s->elapsed_s >= 0 && (s->state == P3D_ST_PRINTING || s->state == P3D_ST_PAUSED)) {
+            if (pj_num(jr.body, "job.estimatedPrintTime", &est) && est > s->elapsed_s) {
+                s->remaining_s = (int32_t)(est - (float)s->elapsed_s);
+            } else if (s->progress >= 0.5f) {
+                s->remaining_s = (int32_t)((float)s->elapsed_s * (100 - s->progress) / s->progress);
+            }
+        }
         /* a finished job keeps 100 % until the next one: OctoPrint is "Operational" again */
         if (s->state == P3D_ST_IDLE && s->progress >= 99.9f && file[0]) {
             s->state = P3D_ST_DONE;

@@ -101,6 +101,7 @@ static struct {
     int           cam_w, cam_h;
     uint32_t      cam_gen;
     lv_obj_t     *cam_box, *cam_img, *cam_msg;
+    int32_t       cam_max_h;
 
     /* Consola */
     lv_obj_t     *con, *con_scroll, *con_in, *kb;
@@ -405,7 +406,7 @@ static void thumb_update(void)
     lv_canvas_set_buffer(D.thumb, D.thumb_px, D.thumb_w, D.thumb_h, LV_COLOR_FORMAT_RGB565);
     lv_image_set_pivot(D.thumb, D.thumb_w / 2, D.thumb_h / 2);
     int big = D.thumb_w > D.thumb_h ? D.thumb_w : D.thumb_h;
-    lv_image_set_scale(D.thumb, (uint32_t)(256 * 120 / (big > 0 ? big : 1)));
+    lv_image_set_scale(D.thumb, (uint32_t)(256 * 104 / (big > 0 ? big : 1)));
     lv_obj_remove_flag(lv_obj_get_parent(D.thumb), LV_OBJ_FLAG_HIDDEN);
     lv_obj_center(D.thumb);
 }
@@ -419,8 +420,7 @@ static void status_update(void)
     if (D.arc) {
         lv_arc_set_value(D.arc, job && s->progress >= 0 ? (int32_t)(s->progress * 10) : 0);
         lv_obj_set_style_arc_color(D.arc, col, LV_PART_INDICATOR);
-        if (job && s->progress >= 0) snprintf(b, sizeof b, "%d%%", (int)s->progress);
-        else p3d_copy(b, sizeof b, "--");
+        p3d_fmt_pct(b, sizeof b, job ? s->progress : -1);
         p3d_set_text(D.pct, b);
         if (s->layers > 0 && job) snprintf(b, sizeof b, _("capa %d/%d"), s->layer, s->layers);
         else b[0] = '\0';
@@ -528,7 +528,7 @@ static void build_status(lv_obj_t *body)
 {
     int32_t w = D.cw;
     /* the job */
-    lv_obj_t *job = p3d_card(body, w, 320);
+    lv_obj_t *job = p3d_card(body, w, 340);
     int32_t ad = 250;
     D.arc = lv_arc_create(job);
     lv_obj_set_size(D.arc, ad, ad);
@@ -550,19 +550,20 @@ static void build_status(lv_obj_t *body)
     lv_obj_align(D.state_l, LV_ALIGN_BOTTOM_MID, 0, -6);
 
     int32_t tx = 24 + ad + 24, tw = w - tx - 20;
-    lv_obj_t *col = p3d_box(job, tw, 290);
+    lv_obj_t *col = p3d_box(job, tw, 316);
     lv_obj_align(col, LV_ALIGN_LEFT_MID, tx, 0);
     lv_obj_set_flex_flow(col, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(col, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START);
     lv_obj_set_style_pad_row(col, 6, 0);
-    lv_obj_t *tb = p3d_box(col, 120, 120);
+    lv_obj_t *tb = p3d_box(col, 104, 104);
     D.thumb = lv_canvas_create(tb);
     lv_obj_center(D.thumb);
     lv_obj_add_flag(tb, LV_OBJ_FLAG_HIDDEN);
     D.thumb_gen = 0;
     D.file = aos_label(col, "", aos_font_body, AOS_C_TEXT);
     lv_label_set_long_mode(D.file, LV_LABEL_LONG_MODE_DOTS);
-    lv_obj_set_size(D.file, tw, lv_font_get_line_height(aos_font_body));
+    /* two lines: a slicer's names are long ("Domestika Lamp - Lamp Shade - ...") */
+    lv_obj_set_size(D.file, tw, 2 * lv_font_get_line_height(aos_font_body));
     D.t_el = aos_label(col, "", aos_font_small, AOS_C_DIM);
     D.t_rem = aos_label(col, "", aos_font_small, AOS_C_TEXT);
     D.t_eta = aos_label(col, "", aos_font_small, AOS_C_DIM);
@@ -1093,6 +1094,15 @@ static void cam_update(void)
         lv_canvas_set_buffer(D.cam_img, D.cam_px, D.cam_w, D.cam_h, LV_COLOR_FORMAT_RGB565);
         lv_image_set_pivot(D.cam_img, D.cam_w / 2, D.cam_h / 2);
         int32_t bw = lv_obj_get_width(D.cam_box), bh = lv_obj_get_height(D.cam_box);
+        /* the box takes the frame's shape (a 16:9 camera in a 4:3 box had bars),
+         * within the room there is */
+        int32_t want = bw * D.cam_h / D.cam_w;
+        if (want > D.cam_max_h) want = D.cam_max_h;
+        if (want != bh && want > 0) {
+            lv_obj_set_height(D.cam_box, want);
+            lv_obj_center(D.cam_img);
+            bh = want;
+        }
         uint32_t sx = (uint32_t)(256 * bw / D.cam_w), sy = (uint32_t)(256 * bh / D.cam_h);
         lv_image_set_scale(D.cam_img, sx < sy ? sx : sy);
         lv_obj_invalidate(D.cam_img);
@@ -1109,6 +1119,7 @@ static void build_camera(lv_obj_t *body)
     p3d_cam_url(&A.cfg.m[A.detail], &D.st, D.cam_url, sizeof D.cam_url);
     int32_t w = A.land ? A.W - 2 * AOS_UI_PAD : D.cw;
     int32_t h = A.land ? A.H - 230 : w * 3 / 4;
+    D.cam_max_h = A.land ? A.H - 230 : A.H - 330;
     D.cam_box = p3d_box(body, w, h);
     lv_obj_set_style_bg_color(D.cam_box, lv_color_hex(0x0A0A0A), 0);
     lv_obj_set_style_bg_opa(D.cam_box, LV_OPA_COVER, 0);

@@ -438,4 +438,5 @@ lv_color_t  p3d_state_color(int st);
 void        p3d_fmt_dur(char *out, size_t n, int32_t s);           /* "1 h 05 min" */
 void        p3d_fmt_eta(char *out, size_t n, int32_t remaining_s); /* "18:40", "" without a clock */
 void        p3d_fmt_temp(char *out, size_t n, const p3d_temp_t *t);
+void        p3d_fmt_pct(char *out, size_t n, float progress);      /* "0,4%" under 10, "37%" above */
 bool        p3d_active(int st);                                   /* printing or paused or busy */

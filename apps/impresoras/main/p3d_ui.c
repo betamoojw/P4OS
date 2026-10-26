@@ -151,6 +151,22 @@ void p3d_fmt_eta(char *out, size_t n, int32_t remaining_s)
     else snprintf(out, n, "%s %02d:%02d", aos_day_name(lt.tm_wday), lt.tm_hour, lt.tm_min);
 }
 
+void p3d_fmt_pct(char *out, size_t n, float progress)
+{
+    /* a long print spends an hour under 1 %: a tenth shows that it moves.
+     * Cut, never rounded up: 99.96 is not 100 yet. */
+    if (progress < 0) {
+        p3d_copy(out, n, "--");
+    } else if (progress < 10) {
+        int t = (int)(progress * 10);
+        const char *lang = aos_i18n_current();
+        char dot = lang && !strncmp(lang, "en", 2) ? '.' : ',';
+        snprintf(out, n, "%d%c%d%%", t / 10, dot, t % 10);
+    } else {
+        snprintf(out, n, "%d%%", (int)progress);
+    }
+}
+
 void p3d_fmt_temp(char *out, size_t n, const p3d_temp_t *t)
 {
     if (!t->on) {

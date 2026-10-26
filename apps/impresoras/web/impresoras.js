@@ -145,6 +145,13 @@ function eta(s) {
   return d.toLocaleTimeString(P.lang ? P.lang() : 'es', { hour: '2-digit', minute: '2-digit' });
 }
 
+/* a long print spends an hour under 1 %: a tenth below 10, cut and not rounded up */
+function pct(p) {
+  if (p >= 10) return Math.floor(p) + ' %';
+  const v = Math.floor(p * 10) / 10;
+  return (P.num ? P.num(v, 1) : v.toFixed(1)) + ' %';
+}
+
 function temp(t) {
   if (!t || !t[2]) return '--';
   return t[1] > 0.5 ? `${Math.round(t[0])} / ${Math.round(t[1])}°` : `${Math.round(t[0])}°`;
@@ -230,7 +237,7 @@ function fill(el, m) {
   const r = el._r, st = m.state;
   const active = st === 3 || st === 4 || st === 5;
   const k = KIND[m.type] || { label: m.type };
-  r.state.textContent = tr(STATES[st] || STATES[0]) + (st === 4 && m.progress >= 0 ? ` ${Math.floor(m.progress)} %` : '');
+  r.state.textContent = tr(STATES[st] || STATES[0]) + (st === 4 && m.progress >= 0 ? ' ' + pct(m.progress) : '');
   r.state.style.color = STATE_COLOR[st] || 'var(--dim)';
   r.sub.textContent = (st === 0 || st === 8) && m.msg ? m.msg : [k.label, m.model].filter(Boolean).join(' · ');
   r.sub.style.color = st === 8 ? 'var(--red)' : st === 0 && m.msg ? 'var(--orange)' : '';

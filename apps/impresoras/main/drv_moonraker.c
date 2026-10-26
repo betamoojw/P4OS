@@ -140,9 +140,10 @@ static void info_read(p3d_machine_t *m, moon_t *k)
             snprintf(p, sizeof p, "result.webcams.%d.enabled", i);
             en = true;
             pj_bool(r.body, p, &en);
-            snprintf(p, sizeof p, "result.webcams.%d.snapshot_url", i);
-            if (!pj_str(r.body, p, url, sizeof url)) {
-                snprintf(p, sizeof p, "result.webcams.%d.stream_url", i);
+            /* the stream first, as with OctoPrint */
+            snprintf(p, sizeof p, "result.webcams.%d.stream_url", i);
+            if (!pj_str(r.body, p, url, sizeof url) || !url[0]) {
+                snprintf(p, sizeof p, "result.webcams.%d.snapshot_url", i);
                 if (!pj_str(r.body, p, url, sizeof url)) break;
             }
             if (!en || !url[0]) continue;

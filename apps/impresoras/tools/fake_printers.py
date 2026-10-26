@@ -225,7 +225,8 @@ class Printer:
 
 # --------------------------------------------------------------------------- pictures
 
-def picture(p, w=640, h=480):
+def picture(p, w=None, h=None):
+    w, h = (w, h) if w else getattr(p, "cam", (640, 480))
     if Image is None:
         return bytes.fromhex("ffd8ffe000104a46494600010100000100010000ffdb004300") + b"\x08" * 64 + b"\xff\xd9"
     img = Image.new("RGB", (w, h), (34, 36, 40))
@@ -342,6 +343,10 @@ class Handler(BaseHTTPRequestHandler):
         texts = {"printing": "Printing", "paused": "Paused", "error": "Error"}
         if path == "/api/version":
             return self.reply(200, {"api": "0.1", "server": "1.10.3", "text": "OctoPrint 1.10.3"})
+        if path == "/api/printerprofiles":
+            return self.reply(200, {"profiles": {"_default": {"id": "_default", "name": "Default", "current": False},
+                                                 "prusa_mk3s": {"id": "prusa_mk3s", "name": "Prusa MK3S",
+                                                                "model": "Original Prusa i3 MK3S", "current": True}}})
         if path == "/api/settings":
             return self.reply(200, {"webcam": {"webcamEnabled": True,
                                                "snapshotUrl": "http://127.0.0.1:%d/webcam/?action=snapshot" % self.server.server_port,
@@ -351,12 +356,14 @@ class Handler(BaseHTTPRequestHandler):
                                                     "bed": {"actual": p.bed[0], "target": p.bed[1]}},
                                     "state": {"text": texts.get(p.state, "Operational"), "flags": flags}})
         if path == "/api/job" and m == "GET":
-            job = {"file": {"name": p.file, "display": p.file, "origin": "local", "path": p.file}} if p.file else {"file": {}}
+            job = {"file": {"name": p.file, "display": p.file, "origin": "local", "path": p.file},
+                   "estimatedPrintTime": p.total / SPEED} if p.file else {"file": {}}
             st = {"printing": "Printing", "paused": "Paused", "cancelled": "Cancelled"}.get(p.state, "Operational")
             return self.reply(200, {"job": job, "state": st,
                                     "progress": {"completion": p.progress() * 100 if p.file else None,
                                                  "printTime": int(p.elapsed / SPEED),
-                                                 "printTimeLeft": p.remaining() if p.active() else None}})
+                                                 # like OctoPrint, no estimate of its own early in a print
+                                                 "printTimeLeft": p.remaining() if p.active() and p.progress() > 0.02 else None}})
         if path == "/api/job":
             b = self.jbody()
             c = b.get("command")
@@ -1268,7 +1275,7 @@ def main():
     SPEED = a.speed
     BASE = b = a.base
     printers = {
-        "octoprint": Printer("MK3S", total=5400, start=0.42),
+        "octoprint": Printer("MK3S", total=72000, start=0.004, file="Domestika Lamp - Lamp Shade - PETG 0.2mm.gcode"),
         "prusalink": Printer("CORE One", total=3000, start=0.81, file="whistle.gcode"),
         "moonraker": Printer("Voron", total=7200, start=0.12, file="voron_cube_ABS.gcode"),
         "duet": Printer("Duet", total=2000, start=0.0),
@@ -1277,6 +1284,7 @@ def main():
         "creality": Printer("K1C", total=2600, start=0.5, file="hook.gcode"),
         "bambu": Printer("P1S", total=6000, start=0.3, file="plate_1.gcode"),
     }
+    printers["octoprint"].cam = (640, 360)          # a 16:9 webcam, as the MK3S's Pi has
     printers["duet"].state = "idle"
     printers["duet"].tool[1] = 0
     printers["duet"].bed[1] = 0

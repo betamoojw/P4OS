@@ -115,8 +115,12 @@ static void row_update(int i, const p3d_status_t *s)
     lv_obj_set_style_bg_color(r->dot, col, 0);
     lv_obj_set_style_text_color(r->state, col, 0);
     char b[160], t1[48], t2[48];
-    if (s->state == P3D_ST_PRINTING && s->progress >= 0) snprintf(b, sizeof b, "%s %d%%", p3d_state_name(s->state), (int)s->progress);
-    else p3d_copy(b, sizeof b, p3d_state_name(s->state));
+    if (s->state == P3D_ST_PRINTING && s->progress >= 0) {
+        p3d_fmt_pct(t1, sizeof t1, s->progress);
+        snprintf(b, sizeof b, "%s %s", p3d_state_name(s->state), t1);
+    } else {
+        p3d_copy(b, sizeof b, p3d_state_name(s->state));
+    }
     p3d_set_text(r->state, b);
     if ((s->state == P3D_ST_OFFLINE || s->state == P3D_ST_ERROR) && s->msg[0]) {
         aos_text_safe(b, sizeof b, s->msg);
@@ -135,7 +139,7 @@ static void row_update(int i, const p3d_status_t *s)
         lv_obj_remove_flag(r->bar, LV_OBJ_FLAG_HIDDEN);
         lv_bar_set_value(r->bar, (int32_t)(s->progress * 10), LV_ANIM_OFF);
         lv_obj_set_style_bg_color(r->bar, col, LV_PART_INDICATOR);
-        snprintf(b, sizeof b, "%d%%", (int)s->progress);
+        p3d_fmt_pct(b, sizeof b, s->progress);
         p3d_set_text(r->pct, b);
     } else {
         lv_obj_add_flag(r->bar, LV_OBJ_FLAG_HIDDEN);

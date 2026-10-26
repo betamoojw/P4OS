@@ -476,6 +476,10 @@ Que necesitan la mano del usuario o equipos:
     ClientHello here; not kept"), y que otro servidor HTTPS cualquiera
     siga retomando su sesión (la segunda conexión más rápida que la
     primera).
+  - 2026-10-26, en la placa con el arreglo instalado: el usuario hizo
+    desde Cartero un POST al mismo servidor de prueba que devuelve un
+    token, y anduvo. Falta ver que otro servidor HTTPS siga retomando su
+    sesión.
 - [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
       del usuario por OctoPrint:
   - Lista con estado, temperaturas, avance y modelo (del perfil de

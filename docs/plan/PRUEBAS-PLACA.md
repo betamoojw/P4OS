@@ -481,8 +481,18 @@ Que necesitan la mano del usuario o equipos:
     andan, sin el -0x6a00.
   - 2026-10-26, en la placa con el arreglo instalado: el usuario hizo
     desde Cartero un POST al mismo servidor de prueba que devuelve un
-    token, y anduvo. Falta ver que otro servidor HTTPS siga retomando su
-    sesión.
+    token, y anduvo. Cada conexión a ese servidor es un apretón completo
+    con "not kept" en el registro, como se esperaba.
+  - Los demás servidores siguen retomando (el registro de la placa, donde
+    `esp-x509-crt-bundle: Certificate validated` marca cada apretón
+    completo): Cotizaciones contra dolarapi, el primer pedido valida el
+    certificado y tarda 1116 ms con la respuesta; el segundo, enseguida,
+    no valida nada y tarda 603 ms; otro 2,5 min después, 431 ms sin
+    validar. Con Cartero contra open-meteo, en cambio, cada conexión
+    (separadas 20-30 s) validó el certificado y tardó ~1,7 s: es del
+    servidor, que desde una Mac (`openssl s_client -tls1_2 -reconnect`)
+    tampoco retomó la primera sesión (salió otra, con otro certificado,
+    RSA y después ECDSA) y sí las siguientes.
 - [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
       del usuario por OctoPrint:
   - Lista con estado, temperaturas, avance y modelo (del perfil de

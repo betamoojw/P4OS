@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.22.2 — 2026-10-26
 
 - **Cartero**, a new app on the card: an API client in the manner of
   Postman, on the board and in the portal. Requests by hand (GET, POST,

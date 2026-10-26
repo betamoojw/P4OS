@@ -683,7 +683,7 @@ print ends, fails or pauses on its own.
 ### Cartero
 
 An API client in the manner of Postman, on the board and in the portal
-(new after 0.22.1, [apps/cartero/README.md](apps/cartero/README.md)).
+(since 0.22.2, [apps/cartero/README.md](apps/cartero/README.md)).
 Requests by hand with params, headers, body and auth; the response
 looked at in detail (status, the four times, headers, the body as a JSON
 tree); tests written in JavaScript with Postman's `pm`; collections and

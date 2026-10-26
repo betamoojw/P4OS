@@ -443,6 +443,15 @@ Que necesitan la mano del usuario o equipos:
       (`keeping aos.datalog ... running: background`); después de una OTA
       arrancó solo (`started hidden`). Dibujo, con el DS18B20 leyéndose,
       ya no queda como "running: pins": se cierra al salir (1674 KB).
+- [ ] **Cartero** (`apps/cartero`, 2026-10-26): hecha y probada en el
+      simulador contra `apps/cartero/tools/fake_api.py` (la colección demo:
+      18 pedidos, 36 tests, en la pantalla y en el Runner del portal vía la
+      placa). Falta en la placa: un pedido por HTTPS a un servicio público
+      (el certificado, el primer apretón TLS), una respuesta grande (4 MB)
+      y cuánto tarda en el árbol JSON, el tiempo de una corrida (el
+      intérprete con doble precisión por software), la página del portal
+      vía la placa con otra app adelante, y la RAM interna libre antes y
+      después (todo va a PSRAM: arenas, la pila de 96 KB del hilo).
 - [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
       del usuario por OctoPrint:
   - Lista con estado, temperaturas, avance y modelo (del perfil de

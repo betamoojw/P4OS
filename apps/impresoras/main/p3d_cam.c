@@ -50,6 +50,8 @@ struct p3d_cam {
     uint64_t      win_t0;
     uint32_t      win_bytes, win_whole, win_shown, win_dec_us;
     float         fps_now;
+    uint32_t      kbps_now;
+    int           src_w, src_h;     /* what the camera sends, before scaling */
 };
 
 static volatile int s_threads;
@@ -84,11 +86,12 @@ static void stats(p3d_cam_t *c, uint32_t bytes)
     uint32_t dt = (uint32_t)(now - c->win_t0);
     if (dt < STATS_MS) return;
     float fps = c->win_shown * 1000.0f / (float)dt;
-    aos_hal_log(P3D_TAG, "camera (%s): %.1f fps shown, %u whole frames came, %u KB/s, decode %u ms, %dx%d",
+    aos_hal_log(P3D_TAG, "camera (%s): %.1f fps shown, %u whole frames came, %u KB/s, decode %u ms, %dx%d shown as %dx%d",
                 c->mode, (double)fps, (unsigned)c->win_whole, (unsigned)(c->win_bytes / dt),
-                (unsigned)(c->win_shown ? c->win_dec_us / c->win_shown / 1000 : 0), c->w, c->h);
+                (unsigned)(c->win_shown ? c->win_dec_us / c->win_shown / 1000 : 0), c->src_w, c->src_h, c->w, c->h);
     p3d_lock();
     c->fps_now = fps;
+    c->kbps_now = c->win_bytes / dt;
     p3d_unlock();
     c->win_t0 = now;
     c->win_bytes = c->win_whole = c->win_shown = c->win_dec_us = 0;
@@ -114,6 +117,8 @@ static void show(p3d_cam_t *c, aos_jpeg_t *dec, const uint8_t *jpg, int len)
         else for (int x = 0; x < ow; x++) dst[x] = src[x * k];
     }
     p3d_lock();
+    c->src_w = w;
+    c->src_h = h;
     free(c->px);
     c->px = out;
     c->w = ow;
@@ -413,6 +418,15 @@ bool p3d_cam_take(p3d_cam_t *c, uint16_t **px, int *w, int *h, uint32_t *gen)
     }
     p3d_unlock();
     return got;
+}
+
+void p3d_cam_info(p3d_cam_t *c, int *src_w, int *src_h, uint32_t *kbps)
+{
+    p3d_lock();
+    *src_w = c ? c->src_w : 0;
+    *src_h = c ? c->src_h : 0;
+    *kbps = c ? c->kbps_now : 0;
+    p3d_unlock();
 }
 
 void p3d_cam_status(p3d_cam_t *c, char *out, size_t n, float *fps)

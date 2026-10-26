@@ -420,6 +420,8 @@ void       p3d_cam_stop(p3d_cam_t *c);              /* waits for the thread, up 
  * than *gen: true then */
 bool       p3d_cam_take(p3d_cam_t *c, uint16_t **px, int *w, int *h, uint32_t *gen);
 void       p3d_cam_status(p3d_cam_t *c, char *out, size_t n, float *fps);
+/* the camera's own size and what it sends a second (the last window) */
+void       p3d_cam_info(p3d_cam_t *c, int *src_w, int *src_h, uint32_t *kbps);
 /* the URL a machine's camera is at, "" none */
 void       p3d_cam_url(const p3d_cfg_t *cfg, const p3d_status_t *st, char *out, size_t n);
 int        p3d_cam_threads(void);                   /* still running */

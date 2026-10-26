@@ -1118,10 +1118,21 @@ static void cam_update(void)
         lv_image_set_scale(D.cam_img, sx < sy ? sx : sy);
         lv_obj_invalidate(D.cam_img);
     }
-    char st[96];
+    char st[240];
     float fps;
-    p3d_cam_status(D.cam, st, sizeof st, &fps);
-    if (!st[0] && D.cam_px) snprintf(st, sizeof st, "%dx%d  ·  %.1f fps", D.cam_w, D.cam_h, (double)fps);
+    p3d_cam_status(D.cam, st, 96, &fps);
+    if (!st[0] && D.cam_px) {
+        int sw, sh;
+        uint32_t kbps;
+        p3d_cam_info(D.cam, &sw, &sh, &kbps);
+        if (kbps) snprintf(st, sizeof st, "%dx%d  ·  %.1f fps  ·  %u KB/s", sw, sh, (double)fps, (unsigned)kbps);
+        else snprintf(st, sizeof st, "%dx%d  ·  %.1f fps", sw, sh, (double)fps);
+        /* a big picture over Wi-Fi is what keeps the rate down: say so */
+        if (fps > 0 && fps < 4 && sw * sh > 1280 * 720) {
+            size_t k = strlen(st);
+            snprintf(st + k, sizeof st - k, "\n%s", _("La cámara manda imágenes grandes: con 640x480 en su configuración va más rápido."));
+        }
+    }
     p3d_set_text(D.cam_msg, st);
 }
 

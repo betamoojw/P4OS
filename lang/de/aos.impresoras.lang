@@ -71,8 +71,8 @@ La Duet no acepta más sesiones	Die Duet nimmt keine weiteren Sitzungen an
 
 #: apps/impresoras/main/drv_duet.c:325
 #: apps/impresoras/main/drv_flashforge.c:254
-#: apps/impresoras/main/drv_moonraker.c:295
-#: apps/impresoras/main/drv_octoprint.c:298
+#: apps/impresoras/main/drv_moonraker.c:296
+#: apps/impresoras/main/drv_octoprint.c:338
 No se pudo leer la lista	Konnte die Liste nicht lesen
 
 #: apps/impresoras/main/drv_duet.c:416
@@ -114,41 +114,41 @@ Código de verificación (check code)	Prüfcode (check code)
 #: apps/impresoras/main/drv_flashforge.c:402
 En la impresora: Ajustes, Red, Sólo LAN. Vacío: las viejas, por el puerto 8899	Am Drucker: Einstellungen, Netzwerk, Nur LAN. Leer: die älteren, über Port 8899
 
-#: apps/impresoras/main/drv_moonraker.c:203
+#: apps/impresoras/main/drv_moonraker.c:204
 Moonraker pide una clave	Moonraker verlangt einen Schlüssel
 
-#: apps/impresoras/main/drv_moonraker.c:204
-#: apps/impresoras/main/drv_octoprint.c:184
-#: apps/impresoras/main/drv_octoprint.c:405
+#: apps/impresoras/main/drv_moonraker.c:205
+#: apps/impresoras/main/drv_octoprint.c:214
+#: apps/impresoras/main/drv_octoprint.c:445
 Contestó %d	Antwort %d
 
-#: apps/impresoras/main/drv_moonraker.c:360
-#: apps/impresoras/main/drv_octoprint.c:401
+#: apps/impresoras/main/drv_moonraker.c:361
+#: apps/impresoras/main/drv_octoprint.c:441
 #: apps/impresoras/main/drv_prusalink.c:278
 La impresora no está lista para eso	Der Drucker ist dafür nicht bereit
 
-#: apps/impresoras/main/drv_moonraker.c:396
+#: apps/impresoras/main/drv_moonraker.c:397
 Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig y toda impresora con Klipper, Mainsail o Fluidd	Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig und jeder Drucker mit Klipper, Mainsail oder Fluidd
 
-#: apps/impresoras/main/drv_moonraker.c:397
+#: apps/impresoras/main/drv_moonraker.c:398
 Clave de la API (opcional)	API-Schlüssel (optional)
 
-#: apps/impresoras/main/drv_moonraker.c:398
+#: apps/impresoras/main/drv_moonraker.c:399
 Sólo si Moonraker tiene [authorization]: la clave de /access/api_key	Nur wenn Moonraker [authorization] hat: der Schlüssel aus /access/api_key
 
-#: apps/impresoras/main/drv_octoprint.c:155
+#: apps/impresoras/main/drv_octoprint.c:185
 Clave de la API incorrecta	Falscher API-Schlüssel
 
-#: apps/impresoras/main/drv_octoprint.c:176
+#: apps/impresoras/main/drv_octoprint.c:206
 OctoPrint no está conectado a la impresora	OctoPrint ist nicht mit dem Drucker verbunden
 
-#: apps/impresoras/main/drv_octoprint.c:445
+#: apps/impresoras/main/drv_octoprint.c:485
 Cualquier impresora con OctoPrint (Prusa, Ender, Anet...)	Jeder Drucker mit OctoPrint (Prusa, Ender, Anet...)
 
-#: apps/impresoras/main/drv_octoprint.c:446
+#: apps/impresoras/main/drv_octoprint.c:486
 Clave de la API	API-Schlüssel
 
-#: apps/impresoras/main/drv_octoprint.c:447
+#: apps/impresoras/main/drv_octoprint.c:487
 En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario)	In OctoPrint: Einstellungen, API (oder ein Anwendungsschlüssel des Benutzers)
 
 #: apps/impresoras/main/drv_prusalink.c:95
@@ -172,91 +172,91 @@ En la impresora: Ajustes, Red, PrusaLink (usuario maker)	Am Drucker: Einstellung
 #: apps/impresoras/main/impresoras.c:94
 No entran más impresoras	Kein Platz für weitere Drucker
 
-#: apps/impresoras/main/impresoras.c:148
-#: apps/impresoras/main/p3d_detail.c:431
+#: apps/impresoras/main/impresoras.c:152
+#: apps/impresoras/main/p3d_detail.c:432
 Sin trabajo	Kein Auftrag
 
-#: apps/impresoras/main/impresoras.c:154
+#: apps/impresoras/main/impresoras.c:158
 faltan %s · %s	noch %s · %s
 
-#: apps/impresoras/main/impresoras.c:155
+#: apps/impresoras/main/impresoras.c:159
 faltan %s	noch %s
 
-#: apps/impresoras/main/impresoras.c:157
+#: apps/impresoras/main/impresoras.c:161
 capa %d de %d	Schicht %d von %d
 
-#: apps/impresoras/main/impresoras.c:175
-#: apps/impresoras/main/impresoras.c:175
+#: apps/impresoras/main/impresoras.c:179
+#: apps/impresoras/main/impresoras.c:179
 imprimiendo	druckt
 
-#: apps/impresoras/main/impresoras.c:176
-#: apps/impresoras/main/impresoras.c:176
+#: apps/impresoras/main/impresoras.c:180
+#: apps/impresoras/main/impresoras.c:180
 en pausa	pausiert
 
-#: apps/impresoras/main/impresoras.c:177
-#: apps/impresoras/main/impresoras.c:177
+#: apps/impresoras/main/impresoras.c:181
+#: apps/impresoras/main/impresoras.c:181
 preparando	bereitet vor
 
-#: apps/impresoras/main/impresoras.c:178
+#: apps/impresoras/main/impresoras.c:182
 terminada	fertig
 
-#: apps/impresoras/main/impresoras.c:178
+#: apps/impresoras/main/impresoras.c:182
 terminadas	fertig
 
-#: apps/impresoras/main/impresoras.c:179
-#: apps/impresoras/main/impresoras.c:179
+#: apps/impresoras/main/impresoras.c:183
+#: apps/impresoras/main/impresoras.c:183
 con error	mit Fehler
 
-#: apps/impresoras/main/impresoras.c:180
+#: apps/impresoras/main/impresoras.c:184
 lista	bereit
 
-#: apps/impresoras/main/impresoras.c:180
+#: apps/impresoras/main/impresoras.c:184
 listas	bereit
 
-#: apps/impresoras/main/impresoras.c:181
-#: apps/impresoras/main/impresoras.c:181
+#: apps/impresoras/main/impresoras.c:185
+#: apps/impresoras/main/impresoras.c:185
 sin conexión	offline
 
-#: apps/impresoras/main/impresoras.c:201
+#: apps/impresoras/main/impresoras.c:205
 Impresoras 3D	3D-Drucker
 
-#: apps/impresoras/main/impresoras.c:295
+#: apps/impresoras/main/impresoras.c:299
 Ninguna impresora todavía.\n\nAgregala con + o desde la página Impresoras 3D del portal. Andan OctoPrint, PrusaLink (Prusa), Bambu Lab, Klipper, Duet, Elegoo, FlashForge y Creality.	Noch kein Drucker.\n\nMit + hinzufügen oder auf der Portalseite 3D-Drucker. Es gehen OctoPrint, PrusaLink (Prusa), Bambu Lab, Klipper, Duet, Elegoo, FlashForge und Creality.
 
-#: apps/impresoras/main/impresoras.c:300
+#: apps/impresoras/main/impresoras.c:304
 Agregar una impresora	Drucker hinzufügen
 
-#: apps/impresoras/main/impresoras.c:397
+#: apps/impresoras/main/impresoras.c:401
 terminó de imprimir	ist fertig mit dem Druck
 
-#: apps/impresoras/main/impresoras.c:398
+#: apps/impresoras/main/impresoras.c:402
 tiene un error	hat einen Fehler
 
-#: apps/impresoras/main/impresoras.c:401
+#: apps/impresoras/main/impresoras.c:405
 se pausó	wurde pausiert
 
-#: apps/impresoras/main/impresoras.c:403
+#: apps/impresoras/main/impresoras.c:407
 canceló la impresión	hat den Druck abgebrochen
 
-#: apps/impresoras/main/p3d_cam.c:191
+#: apps/impresoras/main/p3d_cam.c:228
 La dirección de la cámara no sirve	Die Adresse der Kamera taugt nicht
 
-#: apps/impresoras/main/p3d_cam.c:192
+#: apps/impresoras/main/p3d_cam.c:229
 La cámara pide usuario y contraseña	Die Kamera verlangt Benutzer und Passwort
 
-#: apps/impresoras/main/p3d_cam.c:193
+#: apps/impresoras/main/p3d_cam.c:230
 La cámara no responde	Die Kamera antwortet nicht
 
-#: apps/impresoras/main/p3d_cam.c:194
+#: apps/impresoras/main/p3d_cam.c:231
 La cámara contestó %d	Die Kamera antwortete %d
 
-#: apps/impresoras/main/p3d_cam.c:237
+#: apps/impresoras/main/p3d_cam.c:277
 La cámara no tiene un certificado de Bambu para este número de serie	Die Kamera hat kein Bambu-Zertifikat für diese Seriennummer
 
-#: apps/impresoras/main/p3d_cam.c:238
+#: apps/impresoras/main/p3d_cam.c:278
 La cámara no responde (las X1 usan RTSP, que no se puede ver acá)	Die Kamera antwortet nicht (die X1 nutzen RTSP, das hier nicht angezeigt werden kann)
 
-#: apps/impresoras/main/p3d_cam.c:331
+#: apps/impresoras/main/p3d_cam.c:375
 Conectando con la cámara...	Verbinde mit der Kamera...
 
 #: apps/impresoras/main/p3d_detail.c:38
@@ -274,223 +274,226 @@ Cámara	Kamera
 #: apps/impresoras/main/p3d_detail.c:38
 Consola	Konsole
 
-#: apps/impresoras/main/p3d_detail.c:131
+#: apps/impresoras/main/p3d_detail.c:133
 Boquilla	Düse
 
-#: apps/impresoras/main/p3d_detail.c:131
+#: apps/impresoras/main/p3d_detail.c:133
 Boquilla 2	Düse 2
 
-#: apps/impresoras/main/p3d_detail.c:131
+#: apps/impresoras/main/p3d_detail.c:133
 Cama	Bett
 
-#: apps/impresoras/main/p3d_detail.c:131
+#: apps/impresoras/main/p3d_detail.c:133
 Recinto	Bauraum
 
-#: apps/impresoras/main/p3d_detail.c:177
+#: apps/impresoras/main/p3d_detail.c:179
 Apagada	Aus
 
-#: apps/impresoras/main/p3d_detail.c:232
+#: apps/impresoras/main/p3d_detail.c:234
 Ahora: %s	Jetzt: %s
 
-#: apps/impresoras/main/p3d_detail.c:252
+#: apps/impresoras/main/p3d_detail.c:254
 Apagar	Aus
 
-#: apps/impresoras/main/p3d_detail.c:258
+#: apps/impresoras/main/p3d_detail.c:260
 Aplicar	Übernehmen
 
-#: apps/impresoras/main/p3d_detail.c:267
+#: apps/impresoras/main/p3d_detail.c:269
 Reanudando...	Wird fortgesetzt...
 
-#: apps/impresoras/main/p3d_detail.c:267
+#: apps/impresoras/main/p3d_detail.c:269
 Pausando...	Wird pausiert...
 
-#: apps/impresoras/main/p3d_detail.c:277
+#: apps/impresoras/main/p3d_detail.c:279
 ¿Cancelar? Tocá otra vez	Abbrechen? Nochmal tippen
 
-#: apps/impresoras/main/p3d_detail.c:282
+#: apps/impresoras/main/p3d_detail.c:284
 Cancelando la impresión	Druck wird abgebrochen
 
-#: apps/impresoras/main/p3d_detail.c:300
+#: apps/impresoras/main/p3d_detail.c:302
 Enfriando	Kühlt ab
 
-#: apps/impresoras/main/p3d_detail.c:306
+#: apps/impresoras/main/p3d_detail.c:308
 Precalentando para %s	Vorheizen für %s
 
-#: apps/impresoras/main/p3d_detail.c:327
+#: apps/impresoras/main/p3d_detail.c:329
 Reanudar	Fortsetzen
 
-#: apps/impresoras/main/p3d_detail.c:327
+#: apps/impresoras/main/p3d_detail.c:329
 Pausar	Pause
 
-#: apps/impresoras/main/p3d_detail.c:331
+#: apps/impresoras/main/p3d_detail.c:333
 Cancelar	Abbrechen
 
-#: apps/impresoras/main/p3d_detail.c:334
+#: apps/impresoras/main/p3d_detail.c:336
 Imprimir un archivo	Datei drucken
 
-#: apps/impresoras/main/p3d_detail.c:425
+#: apps/impresoras/main/p3d_detail.c:426
 capa %d/%d	Schicht %d/%d
 
-#: apps/impresoras/main/p3d_detail.c:435
+#: apps/impresoras/main/p3d_detail.c:436
 Lleva %s	Seit %s
 
-#: apps/impresoras/main/p3d_detail.c:438
+#: apps/impresoras/main/p3d_detail.c:439
 Faltan %s	Noch %s
 
-#: apps/impresoras/main/p3d_detail.c:441
+#: apps/impresoras/main/p3d_detail.c:442
 Termina %s	Fertig %s
 
-#: apps/impresoras/main/p3d_detail.c:467
+#: apps/impresoras/main/p3d_detail.c:468
 objetivo %d°	Ziel %d°
 
-#: apps/impresoras/main/p3d_detail.c:468
+#: apps/impresoras/main/p3d_detail.c:469
 sensor	Sensor
 
-#: apps/impresoras/main/p3d_detail.c:469
+#: apps/impresoras/main/p3d_detail.c:470
 apagado	aus
 
-#: apps/impresoras/main/p3d_detail.c:475
+#: apps/impresoras/main/p3d_detail.c:476
 Velocidad %d%%	Geschwindigkeit %d%%
 
-#: apps/impresoras/main/p3d_detail.c:477
+#: apps/impresoras/main/p3d_detail.c:478
 silencioso	leise
 
-#: apps/impresoras/main/p3d_detail.c:477
+#: apps/impresoras/main/p3d_detail.c:478
 estándar	Standard
 
-#: apps/impresoras/main/p3d_detail.c:477
+#: apps/impresoras/main/p3d_detail.c:478
 deportivo	Sport
 
-#: apps/impresoras/main/p3d_detail.c:477
+#: apps/impresoras/main/p3d_detail.c:478
 a fondo	Wahnsinn
 
-#: apps/impresoras/main/p3d_detail.c:480
-#: apps/impresoras/main/p3d_detail.c:700
+#: apps/impresoras/main/p3d_detail.c:481
+#: apps/impresoras/main/p3d_detail.c:702
 Flujo	Fluss
 
-#: apps/impresoras/main/p3d_detail.c:481
-#: apps/impresoras/main/p3d_detail.c:692
+#: apps/impresoras/main/p3d_detail.c:482
+#: apps/impresoras/main/p3d_detail.c:694
 Ventilador	Lüfter
 
-#: apps/impresoras/main/p3d_detail.c:585
+#: apps/impresoras/main/p3d_detail.c:587
 Temperaturas (tocá para cambiar)	Temperaturen (zum Ändern tippen)
 
-#: apps/impresoras/main/p3d_detail.c:585
+#: apps/impresoras/main/p3d_detail.c:587
 Temperaturas	Temperaturen
 
-#: apps/impresoras/main/p3d_detail.c:593
+#: apps/impresoras/main/p3d_detail.c:595
 Enfriar	Abkühlen
 
-#: apps/impresoras/main/p3d_detail.c:598
+#: apps/impresoras/main/p3d_detail.c:600
 Últimos 20 minutos	Letzte 20 Minuten
 
-#: apps/impresoras/main/p3d_detail.c:653
+#: apps/impresoras/main/p3d_detail.c:655
 Mientras imprime no se mueve a mano	Während des Drucks wird nicht von Hand bewegt
 
-#: apps/impresoras/main/p3d_detail.c:673
+#: apps/impresoras/main/p3d_detail.c:675
 Haciendo home	Referenzfahrt
 
-#: apps/impresoras/main/p3d_detail.c:680
+#: apps/impresoras/main/p3d_detail.c:682
 La boquilla está fría: calentala antes de extruir	Die Düse ist kalt: vor dem Extrudieren aufheizen
 
-#: apps/impresoras/main/p3d_detail.c:696
-#: apps/impresoras/main/p3d_detail.c:877
+#: apps/impresoras/main/p3d_detail.c:698
+#: apps/impresoras/main/p3d_detail.c:879
 Velocidad	Geschwindigkeit
 
-#: apps/impresoras/main/p3d_detail.c:733
+#: apps/impresoras/main/p3d_detail.c:735
 Enviado	Gesendet
 
-#: apps/impresoras/main/p3d_detail.c:740
+#: apps/impresoras/main/p3d_detail.c:742
 Conectando OctoPrint con la impresora	OctoPrint wird mit dem Drucker verbunden
 
-#: apps/impresoras/main/p3d_detail.c:740
+#: apps/impresoras/main/p3d_detail.c:742
 Desconectando	Trenne
 
-#: apps/impresoras/main/p3d_detail.c:750
+#: apps/impresoras/main/p3d_detail.c:752
 ¿Parar todo? Tocá otra vez	Alles stoppen? Nochmal tippen
 
-#: apps/impresoras/main/p3d_detail.c:755
-#: apps/impresoras/main/p3d_detail.c:902
+#: apps/impresoras/main/p3d_detail.c:757
+#: apps/impresoras/main/p3d_detail.c:904
 Parada de emergencia	Not-Aus
 
-#: apps/impresoras/main/p3d_detail.c:781
+#: apps/impresoras/main/p3d_detail.c:783
 Silencioso	Leise
 
-#: apps/impresoras/main/p3d_detail.c:781
+#: apps/impresoras/main/p3d_detail.c:783
 Estándar	Standard
 
-#: apps/impresoras/main/p3d_detail.c:781
+#: apps/impresoras/main/p3d_detail.c:783
 Deportivo	Sport
 
-#: apps/impresoras/main/p3d_detail.c:781
+#: apps/impresoras/main/p3d_detail.c:783
 A fondo	Wahnsinn
 
-#: apps/impresoras/main/p3d_detail.c:821
+#: apps/impresoras/main/p3d_detail.c:823
 Mover el cabezal	Kopf bewegen
 
-#: apps/impresoras/main/p3d_detail.c:854
+#: apps/impresoras/main/p3d_detail.c:856
 Home	Referenzfahrt
 
-#: apps/impresoras/main/p3d_detail.c:856
+#: apps/impresoras/main/p3d_detail.c:858
 Todos	Alle
 
-#: apps/impresoras/main/p3d_detail.c:861
+#: apps/impresoras/main/p3d_detail.c:863
 Mientras imprime, sólo velocidad, flujo, ventilador y luz.	Während des Drucks nur Geschwindigkeit, Fluss, Lüfter und Licht.
 
-#: apps/impresoras/main/p3d_detail.c:865
+#: apps/impresoras/main/p3d_detail.c:867
 Extrusor	Extruder
 
-#: apps/impresoras/main/p3d_detail.c:868
+#: apps/impresoras/main/p3d_detail.c:870
 Extruir	Extrudieren
 
-#: apps/impresoras/main/p3d_detail.c:869
+#: apps/impresoras/main/p3d_detail.c:871
 Retraer	Zurückziehen
 
-#: apps/impresoras/main/p3d_detail.c:886
+#: apps/impresoras/main/p3d_detail.c:888
 Luz	Licht
 
-#: apps/impresoras/main/p3d_detail.c:896
+#: apps/impresoras/main/p3d_detail.c:898
 Soltar motores	Motoren aus
 
-#: apps/impresoras/main/p3d_detail.c:899
+#: apps/impresoras/main/p3d_detail.c:901
 Desconectar	Trennen
 
-#: apps/impresoras/main/p3d_detail.c:899
+#: apps/impresoras/main/p3d_detail.c:901
 Conectar	Verbinden
 
-#: apps/impresoras/main/p3d_detail.c:943
+#: apps/impresoras/main/p3d_detail.c:945
 Ya está imprimiendo	Druckt bereits
 
-#: apps/impresoras/main/p3d_detail.c:949
+#: apps/impresoras/main/p3d_detail.c:951
 Empezando a imprimir	Druck startet
 
-#: apps/impresoras/main/p3d_detail.c:964
+#: apps/impresoras/main/p3d_detail.c:966
 #: apps/impresoras/main/p3d_edit.c:317
 Tocá otra vez para borrar	Zum Löschen nochmal tippen
 
-#: apps/impresoras/main/p3d_detail.c:996
+#: apps/impresoras/main/p3d_detail.c:998
 Leyendo los archivos...	Dateien werden gelesen...
 
-#: apps/impresoras/main/p3d_detail.c:1004
+#: apps/impresoras/main/p3d_detail.c:1006
 No hay archivos	Keine Dateien
 
-#: apps/impresoras/main/p3d_detail.c:1036
+#: apps/impresoras/main/p3d_detail.c:1038
 Imprimir	Drucken
 
-#: apps/impresoras/main/p3d_detail.c:1037
+#: apps/impresoras/main/p3d_detail.c:1039
 #: apps/impresoras/main/p3d_edit.c:429
 Borrar	Löschen
 
-#: apps/impresoras/main/p3d_detail.c:1061
+#: apps/impresoras/main/p3d_detail.c:1063
 Tocá un archivo para imprimirlo	Zum Drucken eine Datei antippen
 
-#: apps/impresoras/main/p3d_detail.c:1124
+#: apps/impresoras/main/p3d_detail.c:1133
+La cámara manda imágenes grandes: con 640x480 en su configuración va más rápido.	Die Kamera schickt große Bilder: mit 640x480 in ihrer Einstellung geht es schneller.
+
+#: apps/impresoras/main/p3d_detail.c:1157
 Esta impresora no tiene cámara conocida. Se puede poner su dirección en el editor (Cámara).	Dieser Drucker hat keine bekannte Kamera. Ihre Adresse lässt sich im Editor eintragen (Kamera).
 
-#: apps/impresoras/main/p3d_detail.c:1195
+#: apps/impresoras/main/p3d_detail.c:1229
 Lo que mandes aparece acá.	Was du sendest, erscheint hier.
 
-#: apps/impresoras/main/p3d_detail.c:1205
+#: apps/impresoras/main/p3d_detail.c:1239
 Esta impresora no devuelve las respuestas: sólo se ve lo que se manda.	Dieser Drucker schickt keine Antworten zurück: man sieht nur, was gesendet wird.
 
 #: apps/impresoras/main/p3d_edit.c:124

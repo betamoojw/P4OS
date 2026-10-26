@@ -1273,6 +1273,7 @@ def main():
     ap.add_argument("--certs", help="folder for the throwaway CA and certificate (Bambu)")
     ap.add_argument("--config", help="write an impresoras.txt with the eight")
     ap.add_argument("--fps", type=float, default=10.0, help="the cameras' MJPEG rate")
+    ap.add_argument("--octo-cam", default="640x360", help="the OctoPrint camera's size (a Pi's is often 1920x1080)")
     a = ap.parse_args()
     SPEED = a.speed
     CAM_FPS = a.fps
@@ -1287,7 +1288,7 @@ def main():
         "creality": Printer("K1C", total=2600, start=0.5, file="hook.gcode"),
         "bambu": Printer("P1S", total=6000, start=0.3, file="plate_1.gcode"),
     }
-    printers["octoprint"].cam = (640, 360)          # a 16:9 webcam, as the MK3S's Pi has
+    printers["octoprint"].cam = tuple(int(v) for v in a.octo_cam.split("x"))   # 16:9, as the MK3S's Pi has
     printers["duet"].state = "idle"
     printers["duet"].tool[1] = 0
     printers["duet"].bed[1] = 0

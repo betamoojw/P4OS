@@ -64,6 +64,21 @@ against the fake so far.
 Not here: AnkerMake and Anycubic's own (closed clouds), Snapmaker, Repetier
 Server and Ultimaker, which could be a driver each.
 
+## Measured on the board
+
+2026-10-25, three MK3S on OctoPrint over Wi-Fi:
+
+| Camera | Arrives | Shown | Decode |
+|---|---|---|---|
+| a USB webcam, MJPEG 640x480 | 450-490 KB/s, 15 whole frames a second | 14.6-16.5 fps | 6 ms |
+| a Raspberry Pi camera, MJPEG 1920x1080 | 510-560 KB/s, 1 whole frame a second | 1.0-1.4 fps | 17 ms |
+
+The board shows every frame that arrives whole. With the 1080p camera what
+limits the rate is the network: half a megabyte a frame. Whether the Pi's
+Wi-Fi or the board's sets the ~500 KB/s is not known yet: both cameras
+landed near it. The camera tab shows the camera's own size and its KB/s,
+and suggests 640x480 when a big picture goes under 4 fps.
+
 ## Files
 
 - `/data/impresoras.txt`: the machines (`main/p3d_cfg.c` has the format),

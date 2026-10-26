@@ -5,6 +5,10 @@ shows each machine at a glance (state, nozzle and bed, progress, time left
 and the clock time it ends); a machine opens into its detail, with the tabs
 its protocol allows:
 
+| The list (three MK3S on OctoPrint) | A printer | Its camera | Eight protocols, in the simulator |
+|---|---|---|---|
+| <img src="../../docs/img/app-impresoras-list.png" width="190"> | <img src="../../docs/img/app-impresoras-job.png" width="190"> | <img src="../../docs/img/app-impresoras-camera.jpg" width="190"> | <img src="../../docs/img/app-impresoras-brands.png" width="190"> |
+
 | Tab | What it has |
 |---|---|
 | Estado | a ring with the progress and the layer, the job's picture, time so far, left and the end; pause, resume, cancel (two taps); every heater, tap one to set it (presets and ±5°); preheat by material (PLA, PETG, ABS, ASA, TPU) and cool down; the last twenty minutes of nozzle and bed; a Bambu's AMS (colour, material, what is left, the one in use); speed, flow, fan, position, firmware |

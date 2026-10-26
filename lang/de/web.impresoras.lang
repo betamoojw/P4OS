@@ -107,135 +107,135 @@ el número de serie	die Seriennummer
 #: apps/impresoras/web/impresoras.js:139
 %d s	%d s
 
-#: apps/impresoras/web/impresoras.js:155
+#: apps/impresoras/web/impresoras.js:162
 La placa no tomó la orden (%d)	Das Board hat den Befehl nicht angenommen (%d)
 
-#: apps/impresoras/web/impresoras.js:175
+#: apps/impresoras/web/impresoras.js:182
 Reanudando	Wird fortgesetzt
 
-#: apps/impresoras/web/impresoras.js:175
+#: apps/impresoras/web/impresoras.js:182
 Reanudar	Fortsetzen
 
-#: apps/impresoras/web/impresoras.js:176
+#: apps/impresoras/web/impresoras.js:183
 Pausando	Pausiert
 
-#: apps/impresoras/web/impresoras.js:176
+#: apps/impresoras/web/impresoras.js:183
 Pausar	Pause
 
-#: apps/impresoras/web/impresoras.js:180
+#: apps/impresoras/web/impresoras.js:187
 ¿Cancelar la impresión de %s?	Den Druck auf %s abbrechen?
 
-#: apps/impresoras/web/impresoras.js:180
+#: apps/impresoras/web/impresoras.js:187
 Cancelando	Wird abgebrochen
 
-#: apps/impresoras/web/impresoras.js:181
+#: apps/impresoras/web/impresoras.js:188
 Cancelar	Abbrechen
 
-#: apps/impresoras/web/impresoras.js:185
+#: apps/impresoras/web/impresoras.js:192
 Precalentando para %s	Vorheizen für %s
 
-#: apps/impresoras/web/impresoras.js:187
+#: apps/impresoras/web/impresoras.js:194
 Enfriando	Kühlt ab
 
-#: apps/impresoras/web/impresoras.js:187
+#: apps/impresoras/web/impresoras.js:194
 Enfriar	Abkühlen
 
-#: apps/impresoras/web/impresoras.js:190
+#: apps/impresoras/web/impresoras.js:197
 Apagar la luz	Licht aus
 
-#: apps/impresoras/web/impresoras.js:190
+#: apps/impresoras/web/impresoras.js:197
 Prender la luz	Licht an
 
-#: apps/impresoras/web/impresoras.js:192
+#: apps/impresoras/web/impresoras.js:199
 Ocultar cámara	Kamera ausblenden
 
-#: apps/impresoras/web/impresoras.js:192
+#: apps/impresoras/web/impresoras.js:199
 Ver cámara	Kamera zeigen
 
-#: apps/impresoras/web/impresoras.js:194
+#: apps/impresoras/web/impresoras.js:201
 Enviado: %s	Gesendet: %s
 
-#: apps/impresoras/web/impresoras.js:221
+#: apps/impresoras/web/impresoras.js:228
 Enviar	Senden
 
-#: apps/impresoras/web/impresoras.js:247
+#: apps/impresoras/web/impresoras.js:254
 faltan %s · %s	noch %s · %s
 
-#: apps/impresoras/web/impresoras.js:247
+#: apps/impresoras/web/impresoras.js:254
 faltan %s	noch %s
 
-#: apps/impresoras/web/impresoras.js:248
+#: apps/impresoras/web/impresoras.js:255
 capa %d de %d	Schicht %d von %d
 
-#: apps/impresoras/web/impresoras.js:264
+#: apps/impresoras/web/impresoras.js:271
 Sin nombre	Ohne Namen
 
-#: apps/impresoras/web/impresoras.js:265
+#: apps/impresoras/web/impresoras.js:272
 ¿Sacar %s de la lista?	%s aus der Liste nehmen?
 
-#: apps/impresoras/web/impresoras.js:265
+#: apps/impresoras/web/impresoras.js:272
 esta impresora	diesen Drucker
 
-#: apps/impresoras/web/impresoras.js:265
+#: apps/impresoras/web/impresoras.js:272
 Borrar	Löschen
 
-#: apps/impresoras/web/impresoras.js:268
+#: apps/impresoras/web/impresoras.js:275
 Qué es	Was es ist
 
-#: apps/impresoras/web/impresoras.js:269
+#: apps/impresoras/web/impresoras.js:276
 Nombre	Name
 
-#: apps/impresoras/web/impresoras.js:270
+#: apps/impresoras/web/impresoras.js:277
 Dirección (IP o nombre)	Adresse (IP oder Name)
 
-#: apps/impresoras/web/impresoras.js:271
+#: apps/impresoras/web/impresoras.js:278
 Puerto (vacío: el de siempre)	Port (leer: der übliche)
 
-#: apps/impresoras/web/impresoras.js:272
+#: apps/impresoras/web/impresoras.js:279
 Usuario	Benutzer
 
-#: apps/impresoras/web/impresoras.js:274
+#: apps/impresoras/web/impresoras.js:281
 Número de serie	Seriennummer
 
-#: apps/impresoras/web/impresoras.js:275
+#: apps/impresoras/web/impresoras.js:282
 Cámara (vacío: la que diga la impresora; off: ninguna)	Kamera (leer: die des Druckers; off: keine)
 
-#: apps/impresoras/web/impresoras.js:277
+#: apps/impresoras/web/impresoras.js:284
 HTTPS (con certificado válido)	HTTPS (mit gültigem Zertifikat)
 
-#: apps/impresoras/web/impresoras.js:288
-#: apps/impresoras/web/impresoras.js:368
+#: apps/impresoras/web/impresoras.js:295
+#: apps/impresoras/web/impresoras.js:375
 Impresoras 3D	3D-Drucker
 
-#: apps/impresoras/web/impresoras.js:298
+#: apps/impresoras/web/impresoras.js:305
 Leyendo...	Wird gelesen...
 
-#: apps/impresoras/web/impresoras.js:299
+#: apps/impresoras/web/impresoras.js:306
 Guardar en la tarjeta	Auf der Karte speichern
 
-#: apps/impresoras/web/impresoras.js:330
+#: apps/impresoras/web/impresoras.js:337
 La app Impresoras 3D no está abierta en la placa. 	Die App 3D-Drucker ist auf dem Board nicht geöffnet. 
 
-#: apps/impresoras/web/impresoras.js:331
+#: apps/impresoras/web/impresoras.js:338
 Abrirla	Öffnen
 
-#: apps/impresoras/web/impresoras.js:337
+#: apps/impresoras/web/impresoras.js:344
 Ninguna impresora todavía: agregalas abajo.	Noch kein Drucker: unten hinzufügen.
 
-#: apps/impresoras/web/impresoras.js:341
+#: apps/impresoras/web/impresoras.js:348
 No se puede leer el estado: %s	Status nicht lesbar: %s
 
-#: apps/impresoras/web/impresoras.js:355
+#: apps/impresoras/web/impresoras.js:362
 Guardado: la placa se reconecta sola	Gespeichert: das Board verbindet sich von selbst neu
 
-#: apps/impresoras/web/impresoras.js:357
+#: apps/impresoras/web/impresoras.js:364
 No se pudo guardar: %s	Konnte nicht speichern: %s
 
-#: apps/impresoras/web/impresoras.js:365
+#: apps/impresoras/web/impresoras.js:372
 + Agregar una impresora	+ Drucker hinzufügen
 
-#: apps/impresoras/web/impresoras.js:370
+#: apps/impresoras/web/impresoras.js:377
 Las impresoras	Die Drucker
 
-#: apps/impresoras/web/impresoras.js:371
+#: apps/impresoras/web/impresoras.js:378
 OctoPrint, PrusaLink (las de Prusa Connect), Bambu Lab en modo LAN, Klipper, Duet, Elegoo, FlashForge y Creality. Las claves quedan guardadas en la tarjeta (%s) y se pueden leer.	OctoPrint, PrusaLink (die von Prusa Connect), Bambu Lab im LAN-Modus, Klipper, Duet, Elegoo, FlashForge und Creality. Die Schlüssel bleiben auf der Karte (%s) und sind lesbar.

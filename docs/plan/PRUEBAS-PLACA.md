@@ -443,6 +443,16 @@ Que necesitan la mano del usuario o equipos:
       (`keeping aos.datalog ... running: background`); después de una OTA
       arrancó solo (`started hidden`). Dibujo, con el DS18B20 leyéndose,
       ya no queda como "running: pins": se cierra al salir (1674 KB).
+- [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
+      del usuario por OctoPrint:
+  - Lista con estado, temperaturas, avance y modelo (del perfil de
+    OctoPrint); detalle de la que imprimía, pausar y cancelar a mano.
+  - Cámaras por MJPEG: una webcam USB a 640x480, 14,6-16,5 fps con
+    ~460 KB/s y 6 ms de decodificación; una raspicam a 1920x1080, ~1 fps
+    con ~540 KB/s (la red, no la placa: cada cuadro que llega se muestra).
+  - Falta: PrusaLink, Bambu, Klipper, Duet, Elegoo, FlashForge y Creality
+    con máquinas reales (sólo contra `fake_printers.py`), y el tiempo
+    restante de un trabajo que OctoPrint todavía no estima.
 - [x] Widgets y fotos (2026-10-25, 0.22.0), en la placa, probados por el
       usuario:
   - "+ Widget", la hoja de cada widget y arrastrarlos en el modo edición.

@@ -1,7 +1,18 @@
 # Changelog
 
-## Unreleased
+## 0.22.1 — 2026-10-25
 
+- **Impresoras 3D**, a new app on the card: every 3D printer in the house.
+  A list with each one's state, heaters, progress, time left and the hour
+  it ends; a printer's status (progress ring, the job's picture, pause and
+  cancel, heaters, preheat by material, a temperature chart, a Bambu's AMS),
+  controls (jog, home, extrude, fan, speed, flow, light, motors off,
+  emergency stop), files, camera and G-code console. Notices when a print
+  ends, fails or pauses, from the background. Eight protocols: OctoPrint,
+  PrusaLink, Bambu Lab (LAN mode), Klipper/Moonraker, Duet RRF, Elegoo
+  SDCP, FlashForge and Creality. A portal page, `#impresoras`, with the
+  printers live and the list to edit. Tried on the board with three MK3S
+  on OctoPrint; the others against `apps/impresoras/tools/fake_printers.py`.
 - **TLS against a device's own authority**: `aos_tls_open_trust()` verifies
   the certificate against a PEM and a name the app gives (a Bambu Lab
   printer: its CA and its serial number) instead of the bundle and the

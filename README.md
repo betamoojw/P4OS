@@ -8,7 +8,7 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and forty-five more on
+portrait or landscape. There are twenty-three built-in apps and forty-six more on
 the microSD, loaded as shared objects:
 
 - **Games:** twenty-four, among them Mila (a Sokoban with a black cat in
@@ -18,7 +18,9 @@ the microSD, loaded as shared objects:
   fourteen consoles, the Game Boy Advance and the Neo Geo at full speed.
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
-  a VNC viewer for a computer's screen, a computer algebra system with
+  a VNC viewer for a computer's screen, every 3D printer in the house
+  (OctoPrint, PrusaLink, Bambu Lab, Klipper, Duet, Elegoo, FlashForge,
+  Creality) with its camera, a computer algebra system with
   graphs, geometry and statistics, a data logger for the header's sensors,
   Lua, and Python (MicroPython).
 - **A web portal** for files, updates, the log and the network sweeps, and a
@@ -644,6 +646,40 @@ nitrogen.
   front, the turning pipes and the leak are drawn every frame. A gamepad
   plays it, and the liquid has its own sound.
 
+### Impresoras 3D
+
+Every 3D printer in the house, followed and driven from the board
+(since 0.22.1, [apps/impresoras/README.md](apps/impresoras/README.md)).
+The list shows each one's state, nozzle and bed, progress, time left and
+the hour it ends; a printer opens into its status (the job's picture,
+pause and cancel, heaters set with a tap, preheat by material, twenty
+minutes of temperature, a Bambu's AMS), its controls (jog, home, extrude,
+fan, speed, flow, light, emergency stop), its files, its camera and a
+G-code console. It keeps watching in the background, and says when a
+print ends, fails or pauses on its own.
+
+| Three MK3S on OctoPrint | One printing | Its camera, 15 fps | Eight protocols (the simulator) |
+|---|---|---|---|
+| <img src="docs/img/app-impresoras-list.png" width="170"> | <img src="docs/img/app-impresoras-job.png" width="170"> | <img src="docs/img/app-impresoras-camera.jpg" width="170"> | <img src="docs/img/app-impresoras-brands.png" width="170"> |
+
+- **Eight protocols, all on the LAN:** OctoPrint; PrusaLink (MK4, MK3.9,
+  MINI, XL, CORE One: the printers of Prusa Connect, whose own API is not
+  published); Bambu Lab in LAN mode (MQTT over TLS, verified against
+  Bambu's own authority and the printer's serial number); Klipper through
+  Moonraker; Duet (RepRapFirmware 3); Elegoo's SDCP; FlashForge (the
+  Adventurer 5M's API and the older ones' G-code port); and Creality's
+  WebSocket (K1, K2, Ender-3 V3).
+- **Cameras:** MJPEG streams, snapshots and the P1/A1's own stream, decoded
+  by the JPEG block. A MK3S's USB webcam at 640x480 runs at 15 fps; the
+  tab says a camera's size and what it sends, and suggests 640x480 when a
+  big picture over Wi-Fi keeps the rate down.
+- **Its page in the portal** (`#impresoras`): every printer live, with
+  pause, cancel, preheat, the light, G-code and the camera, and the list
+  of printers edited by fields.
+- One thread per printer, so one that does not answer only slows itself;
+  `apps/impresoras/tools/fake_printers.py` serves a fake printer of each
+  kind to try it without any.
+
 | Maps | Radio | Video | 3D Viewer | Pixel Art | Tuner |
 |---|---|---|---|---|---|
 | <img src="docs/img/app-mapas.jpg" width="125"> | <img src="docs/img/app-radio.png" width="125"> | <img src="docs/img/app-video.png" width="125"> | <img src="docs/img/app-visor3d.png" width="125"> | <img src="docs/img/app-pixel.png" width="125"> | <img src="docs/img/app-tuner.png" width="125"> |
@@ -697,7 +733,7 @@ an app.
 
 | | |
 |---|---|
-| **Web portal** | at `p4os.local`: a file explorer, the firmware (updates, both slots, the last crash dump), the log (including the tail of the previous boot), and the network sweeps (each device with its MAC and maker, what changed since the last one, the Wi-Fi channels). The apps bring their own pages from the card, with no firmware: Notes, Radio, RF, Cameras, Recorder, Weather, Quotes, Maps, Lua, Python, CAS, Pixel Art and the 3D viewer have one, and an app can stream live data to its page ([docs/PORTAL-PAGES.md](docs/PORTAL-PAGES.md)) |
+| **Web portal** | at `p4os.local`: a file explorer, the firmware (updates, both slots, the last crash dump), the log (including the tail of the previous boot), and the network sweeps (each device with its MAC and maker, what changed since the last one, the Wi-Fi channels). The apps bring their own pages from the card, with no firmware: Notes, Radio, RF, Cameras, Recorder, Weather, Quotes, Maps, Lua, Python, CAS, Pixel Art, the 3D viewer and 3D Printers have one, and an app can stream live data to its page ([docs/PORTAL-PAGES.md](docs/PORTAL-PAGES.md)) |
 | **Updates over the air** | two slots: an update is written into the idle one and boots on trial. If the board restarts in the first 30 s, the bootloader goes back by itself. Settings, Update can go back on purpose |
 | **USB** | the OTG port is high speed (480 Mbit/s). **Keyboard and mouse:** keyboard, media keys, mouse, a gamepad, a MIDI keyboard, and a network over the cable (the portal at `192.168.7.1`, 6.7 MB/s). **Disk:** the microSD as a USB drive. The mode is kept across restarts. **Host:** devices on the 40-pin header (5 V from pin 1, data on pins 21/23, 25/27 or both at once, through P4OS's own copy of ESP-IDF's host library): pendrives at `/usb` (7.4 MB/s), keyboards that type into any text field, a mouse pointer, gamepads that play every game ([docs/GAMEPAD.md](docs/GAMEPAD.md)), webcams in Cameras, sound cards for all the board's sound and recording, USB serial ports in the Terminal (CH340, CP210x, FTDI, CDC-ACM), MIDI, and raw devices for apps that bring their own driver (an RTL-SDR in RF); a Raspberry Pi Pico is programmed by copying its `.uf2` ([docs/USB.md](docs/USB.md)) |
 | **Its own Wi-Fi** | an access point, `P4OS-XXXX`, next to the home network or alone. Two QR codes: one joins the phone, the other opens the portal at `192.168.4.1`. A phone downloaded from it at ~3 MB/s |

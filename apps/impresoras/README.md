@@ -40,13 +40,22 @@ itself talks to.
 
 **Bambu Lab:** since the firmware of early 2025 a printer only takes
 commands on the LAN in Developer mode (it reports without it). Its
-certificate is signed by Bambu's own authority and names the serial, not
-the address, so the HAL's TLS refuses it: until the firmware can be told
-which authority and name to expect (a request in
-`docs/internal/HANDOFF-NUEVAS-APPS.md`), the machine shows why on screen.
-It works in the simulator against the fake, whose certificate is trusted
-with `P4_SIM_EXTRA_CA`. The X1's camera is RTSP with H.264 at a profile the
-board does not decode.
+certificate is signed by Bambu's own authority and issued to its serial
+number, not its address, so MQTT and the camera go through
+`aos_tls_open_trust()` (firmware after 0.22.0): the chain is verified
+against Bambu's public authorities only (`main/p3d_trust.c`: BBL CA, the
+BBL CA2 ones, the H2C/P2S/X2C device authorities, as Bambu Studio and
+ha-bambulab trust them) and the name against the serial typed in the
+editor. Anything else is refused and the screen says which (another
+serial, not Bambu's). An authority Bambu adds later goes in the card's
+`/data/impresoras_ca.pem` without a new app. ha-bambulab notes that the
+P2S on firmware 01.02.00.00 does not answer a TLS 1.3 hello; if one hangs,
+that is the first suspect. The X1's camera is RTSP with H.264 at a profile
+the board does not decode.
+
+**The firmware:** the app calls `aos_tls_open_trust()`, which the board has
+after 0.22.0. On 0.22.0 or older the `.so` does not load at all (a symbol
+the table lacks): the board needs the firmware of 2026-10-25 first.
 
 **Elegoo's 401-403 and Creality's WebSocket** follow what Creality Print,
 OpenCentauri and the community integrations send; both are tried only
@@ -89,12 +98,16 @@ second while the page looks and takes lines like `pause 0`, `temp 0 2 60`,
 
 ```
 apps/impresoras/tools/fake_printers.py --certs <scratch>/certs --config sim/sim_fs/data/impresoras.txt
+cp <scratch>/certs/ca.pem sim/sim_fs/data/impresoras_ca.pem     # the fake Bambu's authority
 cd sim && cmake -B build-impresoras -DP4OS_SIM_APPS="hello_app;impresoras" && cmake --build build-impresoras -j8
-P4_SIM_EXTRA_CA=<scratch>/certs/ca.pem P4_SIM_PORTAL_PORT=80xx P4_SIM_PREFS=<scratch>/prefs.txt ./build-impresoras/p4os_sim
+P4_SIM_PORTAL_PORT=80xx P4_SIM_PREFS=<scratch>/prefs.txt ./build-impresoras/p4os_sim
 ```
 
 The fake has one printer of each type on 127.0.0.1 (`--base`, 8301-8308,
 plus FlashForge's 8899 and Bambu's camera on 6000), printing faster than
-real (`--speed`), with cameras and job pictures. `P3D_CONFIG=<file>` points
+real (`--speed`), with cameras and job pictures. Its Bambu has a
+certificate issued to its serial by a CA of its own, as a real one: with
+another serial in the editor, or without `impresoras_ca.pem`, it is
+refused. `P3D_CONFIG=<file>` points
 the app at another list; `P3D_OPEN=<n>` opens the n-th machine and
 `P3D_TAB=<0-4>` a tab, for screenshots.

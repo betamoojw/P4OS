@@ -34,6 +34,7 @@ struct p3d_cam {
     char          url[200];
     char          user[32], pass[64];
     char          code[64];         /* Bambu's access code */
+    char          serial[48];       /* and its serial: the certificate's name */
     char          host[96];
     int           max_w, max_h;
     volatile bool stop, done;
@@ -227,11 +228,13 @@ static void bambu_loop(p3d_cam_t *c, aos_jpeg_t *dec, uint8_t *buf)
     int fails = 0;
     while (!c->stop) {
         char why[128] = "";
-        void *s = p3d_sock_open(c->host, 6000, true, 6000, why, sizeof why);
+        p3d_trust_t trust;
+        void *s = p3d_bambu_trust(c->serial, &trust) ? p3d_sock_open_trust(c->host, 6000, &trust, 6000, why, sizeof why)
+                                                     : NULL;
         if (!s) {
             fails++;
             set_status(c, strstr(why, "certif") || strstr(why, "authority")
-                              ? _("El sistema todavía no acepta el certificado propio de Bambu")
+                              ? _("La cámara no tiene un certificado de Bambu para este número de serie")
                               : _("La cámara no responde (las X1 usan RTSP, que no se puede ver acá)"));
             for (int i = 0; i < 30 * (fails > 3 ? 3 : fails) && !c->stop; i++) aos_hal_sleep_ms(100);
             continue;
@@ -303,6 +306,7 @@ p3d_cam_t *p3d_cam_start(const char *url, const p3d_cfg_t *cfg, int max_w, int m
     p3d_copy(c->url, sizeof c->url, url);
     p3d_copy(c->host, sizeof c->host, cfg->host);
     p3d_copy(c->code, sizeof c->code, cfg->key);
+    p3d_copy(c->serial, sizeof c->serial, cfg->serial);
     /* user:pass@ in the URL */
     const char *p = strstr(url, "://");
     if (p) {

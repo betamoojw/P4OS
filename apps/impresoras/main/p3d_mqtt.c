@@ -132,8 +132,8 @@ static bool fill(p3d_mqtt_t *q, int timeout_ms)
     return true;
 }
 
-p3d_mqtt_t *p3d_mqtt_open(const char *host, int port, bool tls, const char *client, const char *user,
-                          const char *pass, int timeout_ms, char *why, size_t n)
+p3d_mqtt_t *p3d_mqtt_open(const char *host, int port, bool tls, const p3d_trust_t *trust, const char *client,
+                          const char *user, const char *pass, int timeout_ms, char *why, size_t n)
 {
     p3d_mqtt_t *q = p3d_psram(sizeof *q);
     if (!q) return NULL;
@@ -144,7 +144,8 @@ p3d_mqtt_t *p3d_mqtt_open(const char *host, int port, bool tls, const char *clie
         free(q);
         return NULL;
     }
-    q->s = p3d_sock_open(host, port, tls, timeout_ms, why, n);
+    q->s = trust ? p3d_sock_open_trust(host, port, trust, timeout_ms, why, n)
+                 : p3d_sock_open(host, port, tls, timeout_ms, why, n);
     if (!q->s) {
         p3d_mqtt_close(q);
         return NULL;

@@ -19,10 +19,8 @@
  * when "Developer mode" is on; without it, it still reports.
  *
  * Its certificate is signed by Bambu's own authority and names the serial,
- * not the address, so the HAL's TLS (which only trusts the public bundle and
- * checks the name) refuses it. The app does not get around that: what it
- * needs is in "Pedidos al firmware" (docs/internal/HANDOFF-NUEVAS-APPS.md),
- * and meanwhile the machine says why on screen.
+ * not the address: the connection is aos_tls_open_trust() against Bambu's
+ * authorities (p3d_trust.c) and the serial, still refusing anything else.
  */
 #include "p3d.h"
 
@@ -242,12 +240,19 @@ static void run(p3d_machine_t *m)
             continue;
         }
         char why[128] = "";
-        b->q = p3d_mqtt_open(m->cfg.host, p3d_cfg_port(&m->cfg), true, client, "bblp", m->cfg.key, CONNECT_MS, why,
-                             sizeof why);
+        p3d_trust_t trust;
+        b->q = p3d_bambu_trust(m->cfg.serial, &trust)
+                   ? p3d_mqtt_open(m->cfg.host, p3d_cfg_port(&m->cfg), true, &trust, client, "bblp", m->cfg.key,
+                                   CONNECT_MS, why, sizeof why)
+                   : NULL;
         if (!b->q) {
             fails++;
-            if (strstr(why, "certif") || strstr(why, "authority") || strstr(why, "name")) {
-                p3d_offline(m, _("El sistema todavía no acepta el certificado propio de Bambu (falta una actualización del firmware)"));
+            if (strstr(why, "is not for")) {
+                p3d_offline(m, _("El certificado de la impresora no es de ese número de serie"));
+            } else if (strstr(why, "authority")) {
+                p3d_offline(m, _("La impresora no tiene un certificado de Bambu"));
+            } else if (strstr(why, "no valid time")) {
+                p3d_offline(m, _("Esperando la hora de la red para verificar el certificado"));
             } else if (strstr(why, "authorized")) {
                 p3d_offline(m, _("Código de acceso incorrecto"));
             } else {

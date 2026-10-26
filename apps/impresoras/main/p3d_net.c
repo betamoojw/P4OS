@@ -39,6 +39,8 @@ p3d_tls_t *aos_tls_new(void);
 void aos_tls_free(p3d_tls_t *c);
 int  aos_tls_open(p3d_tls_t *c, const char *host, int port, unsigned flags, int timeout_ms, char *why,
                   size_t why_n);
+int  aos_tls_open_trust(p3d_tls_t *c, const char *host, int port, unsigned flags, const char *ca_pem,
+                        size_t ca_len, const char *name, int timeout_ms, char *why, size_t why_n);
 bool aos_tls_send(p3d_tls_t *c, const void *buf, int len, int timeout_ms);
 int  aos_tls_recv(p3d_tls_t *c, void *buf, int max, int timeout_ms);
 #define TLS_ENCRYPT  0x01u
@@ -70,6 +72,27 @@ void *p3d_sock_open(const char *host, int port, bool tls, int timeout_ms, char *
     }
     char w[128] = "";
     int rc = aos_tls_open(c, host, port, (tls ? TLS_ENCRYPT : 0) | TLS_NODELAY, timeout_ms, w, sizeof w);
+    if (rc != 0) {
+        aos_tls_free(c);
+        if (why) {
+            if (w[0]) p3d_copy(why, n, w);
+            else snprintf(why, n, "error %d", rc);
+        }
+        return NULL;
+    }
+    return c;
+}
+
+void *p3d_sock_open_trust(const char *host, int port, const p3d_trust_t *trust, int timeout_ms, char *why, size_t n)
+{
+    p3d_tls_t *c = aos_tls_new();
+    if (!c) {
+        if (why) p3d_copy(why, n, "no memory");
+        return NULL;
+    }
+    char w[128] = "";
+    int rc = aos_tls_open_trust(c, host, port, TLS_ENCRYPT | TLS_NODELAY, trust->pem, trust->len, trust->name,
+                                timeout_ms, w, sizeof w);
     if (rc != 0) {
         aos_tls_free(c);
         if (why) {

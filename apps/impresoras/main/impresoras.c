@@ -640,6 +640,7 @@ static void destroy(aos_app_t *self, void *inst)
     /* the loader unloads the .so on the next tick: no thread may be left in it */
     p3d_core_stop_all(STOP_WAIT_MS);
     for (int i = 0; i < 200 && (p3d_cam_threads() > 0 || p3d_edit_threads() > 0); i++) aos_hal_sleep_ms(20);
+    p3d_trust_free();
     aos_hal_live_clear(P3D_APP_ID);
     if (L.icon_on) aos_ui_status_icon_set(P3D_APP_ID, NULL, 0);
 }

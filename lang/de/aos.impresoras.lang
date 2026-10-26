@@ -5,39 +5,45 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/impresoras/main/drv_bambu.c:98
+#: apps/impresoras/main/drv_bambu.c:96
 Error %04X-%04X	Fehler %04X-%04X
 
-#: apps/impresoras/main/drv_bambu.c:222
+#: apps/impresoras/main/drv_bambu.c:220
 Bambu no acepta eso por la red	Bambu nimmt das nicht über das Netzwerk an
 
-#: apps/impresoras/main/drv_bambu.c:240
+#: apps/impresoras/main/drv_bambu.c:238
 Faltan el número de serie y el código de acceso	Seriennummer und Zugangscode fehlen
 
-#: apps/impresoras/main/drv_bambu.c:250
-El sistema todavía no acepta el certificado propio de Bambu (falta una actualización del firmware)	Das System akzeptiert Bambus eigenes Zertifikat noch nicht (ein Firmware-Update fehlt)
+#: apps/impresoras/main/drv_bambu.c:251
+El certificado de la impresora no es de ese número de serie	Das Zertifikat des Druckers gehört nicht zu dieser Seriennummer
 
-#: apps/impresoras/main/drv_bambu.c:252
+#: apps/impresoras/main/drv_bambu.c:253
+La impresora no tiene un certificado de Bambu	Der Drucker hat kein Bambu-Zertifikat
+
+#: apps/impresoras/main/drv_bambu.c:255
+Esperando la hora de la red para verificar el certificado	Warte auf die Netzwerkzeit, um das Zertifikat zu prüfen
+
+#: apps/impresoras/main/drv_bambu.c:257
 Código de acceso incorrecto	Falscher Zugangscode
 
-#: apps/impresoras/main/drv_bambu.c:254
+#: apps/impresoras/main/drv_bambu.c:259
 #: apps/impresoras/main/drv_creality.c:227
 #: apps/impresoras/main/drv_duet.c:76
 #: apps/impresoras/main/drv_duet.c:161
 No responde	Antwortet nicht
 
-#: apps/impresoras/main/drv_bambu.c:287
+#: apps/impresoras/main/drv_bambu.c:292
 #: apps/impresoras/main/drv_creality.c:257
 #: apps/impresoras/main/drv_elegoo.c:319
 Se cortó la conexión	Die Verbindung ist abgebrochen
 
-#: apps/impresoras/main/drv_bambu.c:297
+#: apps/impresoras/main/drv_bambu.c:302
 X1, X1E, P1P, P1S, A1, A1 mini y H2D, en modo LAN (con el modo desarrollador para manejarlas)	X1, X1E, P1P, P1S, A1, A1 mini und H2D, im LAN-Modus (mit Entwicklermodus zum Steuern)
 
-#: apps/impresoras/main/drv_bambu.c:298
+#: apps/impresoras/main/drv_bambu.c:303
 Código de acceso	Zugangscode
 
-#: apps/impresoras/main/drv_bambu.c:299
+#: apps/impresoras/main/drv_bambu.c:304
 En la impresora: Ajustes, Red (WLAN): el código de acceso de 8 caracteres	Am Drucker: Einstellungen, Netzwerk (WLAN): der 8-stellige Zugangscode
 
 #: apps/impresoras/main/drv_creality.c:158
@@ -232,25 +238,25 @@ se pausó	wurde pausiert
 #: apps/impresoras/main/impresoras.c:403
 canceló la impresión	hat den Druck abgebrochen
 
-#: apps/impresoras/main/p3d_cam.c:190
+#: apps/impresoras/main/p3d_cam.c:191
 La dirección de la cámara no sirve	Die Adresse der Kamera taugt nicht
 
-#: apps/impresoras/main/p3d_cam.c:191
+#: apps/impresoras/main/p3d_cam.c:192
 La cámara pide usuario y contraseña	Die Kamera verlangt Benutzer und Passwort
 
-#: apps/impresoras/main/p3d_cam.c:192
+#: apps/impresoras/main/p3d_cam.c:193
 La cámara no responde	Die Kamera antwortet nicht
 
-#: apps/impresoras/main/p3d_cam.c:193
+#: apps/impresoras/main/p3d_cam.c:194
 La cámara contestó %d	Die Kamera antwortete %d
 
-#: apps/impresoras/main/p3d_cam.c:234
-El sistema todavía no acepta el certificado propio de Bambu	Das System akzeptiert Bambus eigenes Zertifikat noch nicht
+#: apps/impresoras/main/p3d_cam.c:237
+La cámara no tiene un certificado de Bambu para este número de serie	Die Kamera hat kein Bambu-Zertifikat für diese Seriennummer
 
-#: apps/impresoras/main/p3d_cam.c:235
+#: apps/impresoras/main/p3d_cam.c:238
 La cámara no responde (las X1 usan RTSP, que no se puede ver acá)	Die Kamera antwortet nicht (die X1 nutzen RTSP, das hier nicht angezeigt werden kann)
 
-#: apps/impresoras/main/p3d_cam.c:327
+#: apps/impresoras/main/p3d_cam.c:331
 Conectando con la cámara...	Verbinde mit der Kamera...
 
 #: apps/impresoras/main/p3d_detail.c:38

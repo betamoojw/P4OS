@@ -355,7 +355,19 @@ void p3d_resp_free(p3d_resp_t *r);
 /* a person's line for a failed request: "no responde", "clave incorrecta"... */
 const char *p3d_http_why(const p3d_resp_t *r);
 
+/* a device that signs its own certificates: the authorities to trust and the
+ * name its certificate carries (aos_tls_open_trust, p3d_trust.c) */
+typedef struct {
+    const char *pem;
+    size_t      len;
+    const char *name;
+} p3d_trust_t;
+bool  p3d_bambu_trust(const char *serial, p3d_trust_t *out);
+void  p3d_trust_free(void);
+
 void *p3d_sock_open(const char *host, int port, bool tls, int timeout_ms, char *why, size_t n);
+/* always TLS, verified against trust's authorities and name only */
+void *p3d_sock_open_trust(const char *host, int port, const p3d_trust_t *trust, int timeout_ms, char *why, size_t n);
 bool  p3d_sock_send(void *s, const void *b, int n, int timeout_ms);
 int   p3d_sock_recv(void *s, void *b, int max, int timeout_ms);  /* > 0, 0 nothing yet, -1 gone */
 void  p3d_sock_close(void *s);
@@ -386,8 +398,9 @@ bool pj_numv(const char *v, float *out);
 /* ---- MQTT (p3d_mqtt.c) ------------------------------------------------- */
 
 typedef struct p3d_mqtt p3d_mqtt_t;
-p3d_mqtt_t *p3d_mqtt_open(const char *host, int port, bool tls, const char *client, const char *user,
-                          const char *pass, int timeout_ms, char *why, size_t n);
+/* trust NULL: plain TCP, or the HAL's store with tls */
+p3d_mqtt_t *p3d_mqtt_open(const char *host, int port, bool tls, const p3d_trust_t *trust, const char *client,
+                          const char *user, const char *pass, int timeout_ms, char *why, size_t n);
 bool p3d_mqtt_sub(p3d_mqtt_t *q, const char *topic);
 bool p3d_mqtt_pub(p3d_mqtt_t *q, const char *topic, const char *payload, int len);
 /* the next PUBLISH: its length (> 0) with *topic and *payload pointing at

@@ -23,9 +23,11 @@ commands (pause, resume, cancel, temperatures, moves, G-code, files):
     base+8  Bambu Lab      MQTT over TLS, serial "01P00A000000001", access
             code "12345678"; and its camera on port 6000 (TLS, fixed)
 
-TLS needs a certificate the simulator trusts: --certs DIR makes a throwaway
-CA and a certificate for 127.0.0.1 there (openssl), and says what to put in
-P4_SIM_EXTRA_CA. --config FILE writes an impresoras.txt with the eight.
+Bambu's TLS needs --certs DIR: a throwaway CA there and the printer's
+certificate issued to its serial number, like a real one (openssl). The app
+trusts it once the CA is copied to sim/sim_fs/data/impresoras_ca.pem (the
+card's /data/impresoras_ca.pem, where more authorities can be added).
+--config FILE writes an impresoras.txt with the eight.
 
 The standard library, Pillow for the camera's pictures and openssl for the
 certificate.
@@ -1178,20 +1180,22 @@ def serve_bambu_cam(printer, code, ctx, port=6000):
     threading.Thread(target=loop, daemon=True).start()
 
 
-def make_certs(d):
+def make_certs(d, serial):
+    """a throwaway CA, and the printer's certificate issued to its serial
+    number as Bambu's are (not to its address): the app checks the name
+    against the serial (aos_tls_open_trust)"""
     os.makedirs(d, exist_ok=True)
     ca, cak = os.path.join(d, "ca.pem"), os.path.join(d, "ca.key")
-    crt, key = os.path.join(d, "printer.pem"), os.path.join(d, "printer.key")
+    crt, key = os.path.join(d, "printer-%s.pem" % serial), os.path.join(d, "printer.key")
     if not os.path.exists(crt):
         def run(*a):
             subprocess.run(a, check=True, capture_output=True)
         run("openssl", "req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "30", "-keyout", cak, "-out", ca,
             "-subj", "/CN=P4OS fake printers CA")
         csr = os.path.join(d, "printer.csr")
-        run("openssl", "req", "-newkey", "rsa:2048", "-nodes", "-keyout", key, "-out", csr, "-subj", "/CN=127.0.0.1")
+        run("openssl", "req", "-newkey", "rsa:2048", "-nodes", "-keyout", key, "-out", csr, "-subj", "/CN=" + serial)
         ext = os.path.join(d, "ext.cnf")
-        # 127.0.0.1 twice, as an IP and as a name: mbedtls compares the name
-        open(ext, "w").write("subjectAltName=IP:127.0.0.1,DNS:127.0.0.1,DNS:localhost\nbasicConstraints=CA:FALSE\n")
+        open(ext, "w").write("subjectAltName=DNS:%s\nbasicConstraints=CA:FALSE\n" % serial)
         run("openssl", "x509", "-req", "-in", csr, "-CA", ca, "-CAkey", cak, "-CAcreateserial", "-out", crt,
             "-days", "30", "-extfile", ext)
     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
@@ -1287,10 +1291,10 @@ def main():
     serve_ws(b + 6, "elegoo", printers["elegoo"], elegoo_handler(printers["elegoo"], "e1e2e3e4e5e6"))
     serve_ws(b + 7, "creality", printers["creality"], creality_handler(printers["creality"]))
     if a.certs:
-        ctx, ca = make_certs(a.certs)
+        ctx, ca = make_certs(a.certs, "01P00A000000001")
         serve_bambu(b + 8, printers["bambu"], "01P00A000000001", "12345678", ctx)
         serve_bambu_cam(printers["bambu"], "12345678", ctx)
-        log("for the simulator: P4_SIM_EXTRA_CA=%s" % ca)
+        log("for the simulator: copy %s to sim/sim_fs/data/impresoras_ca.pem" % ca)
     else:
         log("bambu: off (needs --certs DIR)")
     if a.config:

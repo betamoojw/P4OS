@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- **Cartero**, a new app on the card: an API client in the manner of
+  Postman, on the board and in the portal. Requests by hand (GET, POST,
+  PUT, PATCH, DELETE, HEAD, OPTIONS) with params, headers, a body (JSON
+  with a validity mark and Formatear, text, XML, form, GraphQL) and auth
+  (Bearer, Basic, API key, inherited); the response with its status, the
+  four times as a bar, headers, and the body as a JSON tree whose values go
+  into variables with a tap. Tests in JavaScript with Postman's `pm` (and
+  the old globals), run by the app's own interpreter on the board and by
+  the browser in the portal; collections with folders that run in sequence
+  (iterations, a pause, `setNextRequest`, stop at the first failure);
+  environments and globals whose `{{variables}}` change the server without
+  rewriting a request. The files are Postman's own (Collection v2.1,
+  environments), so collections go both ways. A portal page, `#cartero`,
+  with the same editor, runner and environments, that sends straight from
+  the browser or through the board (no CORS, the board's network).
+  `apps/cartero/tools/fake_api.py` is an API to try it against. Tried on
+  the board against an HTTPS test server.
+- Cartero tells a certificate it cannot verify ("El certificado del
+  servidor no se pudo verificar") from a TLS handshake that did not finish
+  ("No se pudo establecer la conexión segura"); they were one message, and
+  it sent the first test on the board looking at the wrong thing.
 - **A big TLS session ticket no longer locks a server out.** A server that
   handed out a 5.5 KB ticket broke the next connection on the board (its
   ClientHello did not fit the 4 KB output buffer, -0x6a00), and every one

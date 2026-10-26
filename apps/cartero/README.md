@@ -25,7 +25,13 @@ Measured in the simulator against `tools/fake_api.py`: the demo collection
 (18 requests, 36 tests, with pre-request scripts, the three auths, a form,
 redirects, chunked, a 512 KB body) runs on the board's interpreter in
 under a second, and the variables its scripts set land in the
-environment's file. The `.so` is 216 KB. Not yet tried on the board.
+environment's file. The `.so` is 216 KB.
+
+On the board (2026-10-26) it has been used against a real HTTPS test
+server: a 125 KB collection put on the card from the portal,
+and a POST that logs in and gets a token back, from the board's screen and
+from the portal through the board. That server is what found the TLS
+problem below.
 
 ## The two halves
 
@@ -233,6 +239,42 @@ And the old ones collections still carry: `tests["name"] = bool`,
 `responseBody`, `responseCode.code`, `responseTime`, `responseHeaders`,
 `postman.setEnvironmentVariable`, `postman.getEnvironmentVariable`,
 `postman.setGlobalVariable`, `postman.clearEnvironmentVariable`.
+
+## HTTPS
+
+The board verifies every certificate, always, against the authorities the
+firmware carries (ESP-IDF's bundle) and the board's clock; there is no
+"turn off SSL verification" as in Postman, whose desktop app ships with it
+off, so a server that "works in Postman" may still be refused here. When a
+request gets no answer over TLS the screen says which of three it was,
+with the system's own reason in grey under it:
+
+| On the screen | What it was |
+|---|---|
+| La placa todavía no tiene hora | no valid time yet (no NTP since the boot), or the certificate is from the future |
+| El certificado del servidor no se pudo verificar | the reason speaks of the certificate: not for that name, expired, revoked, not signed by an authority the board knows |
+| No se pudo establecer la conexión segura (TLS) | everything else: a handshake the board's mbedtls could not finish, with mbedtls's code (`-0x....`) |
+
+Until 2026-10-26 the second and third were one message, "the certificate",
+and that misled the first test on the board: a server with a valid
+certificate (`openssl` verified it) failed with `-0x6a00`,
+`MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL`. It handed out a 5.5 KB session ticket,
+the HAL kept it, and the next ClientHello carrying it did not fit the
+board's 4 KB output buffer; every connection after that failed until a
+restart. The firmware fixed it in `components/aos_hal/aos_tls.c` (tickets
+that would not fit are not kept, and a failed resume is retried without
+the session; the CHANGELOG has it), so with that server each connection
+is a full handshake (~1.7 s) and `/api/log` says `a 5504-byte session
+ticket does not fit a ClientHello here; not kept`. Any other server goes
+on resuming: in the log, `esp-x509-crt-bundle: Certificate validated`
+marks each full handshake, and a resumed one has none.
+
+Two things to know when reading the times bar: a full handshake is
+1.6-1.8 s on the board and a resumed one ~0.6 s, and a connection the app
+keeps open (15 s between requests to the same host) costs nothing. Some
+servers do not resume at all, through no fault of the board: open-meteo,
+tried with `openssl s_client -tls1_2 -reconnect`, did not resume the first
+session from a Mac either.
 
 ## Inside
 

@@ -680,6 +680,32 @@ print ends, fails or pauses on its own.
   `apps/impresoras/tools/fake_printers.py` serves a fake printer of each
   kind to try it without any.
 
+### Cartero
+
+An API client in the manner of Postman, on the board and in the portal
+(new after 0.22.1, [apps/cartero/README.md](apps/cartero/README.md)).
+Requests by hand with params, headers, body and auth; the response
+looked at in detail (status, the four times, headers, the body as a JSON
+tree); tests written in JavaScript with Postman's `pm`; collections and
+folders that run in sequence; environments whose `{{variables}}` move a
+whole collection from development to staging to production. The files are
+Postman's own, so a collection exported from Postman opens here and back.
+
+| A request | Its response | A collection's run | Environments |
+|---|---|---|---|
+| <img src="docs/img/app-cartero-request.png" width="170"> | <img src="docs/img/app-cartero-response.png" width="170"> | <img src="docs/img/app-cartero-run.png" width="170"> | <img src="docs/img/app-cartero-env.png" width="170"> |
+
+- **On the board:** its own HTTP/1.1 client (keep-alive, chunked,
+  redirects, the times of each part) and its own small JavaScript
+  interpreter for the scripts, in a thread with everything in PSRAM. The
+  demo collection (18 requests, 36 tests) runs in under a second.
+- **Its page in the portal** (`#cartero`): the same editor, runner and
+  environments with a mouse and a keyboard, import of a Postman collection
+  or a cURL command. It sends straight from the browser or through the
+  board, which has no CORS and is on the board's network.
+- HTTPS is always verified, and a refused connection says whether it was
+  the certificate, the clock or the handshake.
+
 | Maps | Radio | Video | 3D Viewer | Pixel Art | Tuner |
 |---|---|---|---|---|---|
 | <img src="docs/img/app-mapas.jpg" width="125"> | <img src="docs/img/app-radio.png" width="125"> | <img src="docs/img/app-video.png" width="125"> | <img src="docs/img/app-visor3d.png" width="125"> | <img src="docs/img/app-pixel.png" width="125"> | <img src="docs/img/app-tuner.png" width="125"> |

@@ -23,7 +23,7 @@ hace, en qué orden y cómo se prueba; cada fase, al terminar, pasa a
 | Familia | Ejemplos | Camino | Grabar | Leer | Fase |
 |---|---|---|---|---|---|
 | ESP32 / ESP8266 | DevKit, NodeMCU, módulos | ROM serie (hay) | hay | F1 | F1 |
-| Cortex-M por SWD | RP2040, nRF52 (la Ekobadge), STM32, SAMD, GD32 | SWD con 2-3 cables | F2 | F2 | F2 |
+| Cortex-M por SWD | RP2040, nRF52 (la Ekobadge), STM32, SAMD, GD32 | SWD con 2-3 cables | F2 | sólo verificar | F2 |
 | AVR con bootloader serie | Uno, Nano, Pro Mini, Mega | STK500 v1 (optiboot) y v2 (Mega) | F3 | F3 | F3 |
 | AVR con USB propio | Leonardo, Micro, Pro Micro | AVR109 (Caterina), toque a 1200 baudios | F3 | F3 | F3 |
 | STM32 sin sonda | Blue Pill, Black Pill | bootloader serie de ST (AN3155), BOOT0 y NRST con las líneas EN/BOOT | F4 | F4 | F4 |
@@ -78,11 +78,9 @@ hasta que una familia que los use (SWD, AVR) los pida.
 - **Identificar el chip** por sus registros: DBGMCU_IDCODE (STM32), FICR
   (nRF52), SYSINFO (RP2040), DSU (SAMD). Se muestra como hoy el ESP: chip,
   revisión, flash, ID único.
-- **Leer**: la memoria por MEM-AP, sin código en el objetivo: un volcado
-  directo de flash (y de RAM, si se pide). Las protecciones se dicen claro:
-  RDP en STM32, APPROTECT en nRF52 (se puede **recuperar** con un borrado
-  total por el CTRL-AP, avisando que se pierde todo), bit de seguridad en
-  SAMD.
+- **Verificar**: lo recién grabado se lee por MEM-AP y se compara. Si el
+  chip tiene la protección de lectura puesta, se dice y no se sigue (ver
+  "Alcance de SWD").
 - **Grabar**: con algoritmos de flash que corren en la RAM del objetivo (el
   formato de los `.FLM` de CMSIS: Init, EraseSector, ProgramPage, UnInit).
   Vienen de los objetivos de **probe-rs** (YAML, Apache-2.0/MIT, traen las
@@ -147,6 +145,28 @@ hasta que una familia que los use (SWD, AVR) los pida.
 | Una placa ESP32 cualquiera | F1 (volcado) |
 | Un Arduino Uno / Nano y un Leonardo, si hay | F3 |
 | Una Blue Pill, si hay | F4 y F2 |
+
+## Alcance de SWD (decidido el 2026-10-27)
+
+Pedido del usuario: SWD para **grabar y verificar placas propias** (la
+RP2040, la Ekobadge 2026), como hace cualquier sonda (OpenOCD, probe-rs).
+
+Lo que no se hace, y por qué:
+
+- **Nada que saltee una protección de lectura** (RDP de STM32, APPROTECT de
+  nRF52, el bit de seguridad de SAMD, cosas así): ni glitching, ni trucos de
+  depuración para sacar el firmware de un chip que se protegió a propósito.
+  La protección la puso quien hizo el firmware, y saltearla es extraer algo
+  que no es nuestro, aunque el aparato sí lo sea. Si un chip está protegido,
+  el Programador lo dice y ofrece sólo el borrado total del propio chip
+  (que se lleva el firmware protegido junto con la protección).
+- **Volcar la flash por SWD queda fuera por ahora.** Sí se lee lo justo
+  para verificar lo que se acaba de grabar. El volcado de ESP por serie de la
+  F1 sigue como está.
+- Al hacer este trabajo, dos respuestas de Claude se cortaron por un filtro
+  automático de seguridad, que no dice qué lo disparó. No hay un motivo más
+  preciso que dar que el de arriba; el foco se achicó a grabar y verificar
+  para seguir sin cortes.
 
 ## Reglas
 

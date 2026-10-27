@@ -39,6 +39,7 @@ function tr(s, ...a) {
 const N_ = s => s;
 /* a number for the eye: the decimal comma in Spanish and German, the point in English */
 const num = (v, d) => v == null || Number.isNaN(v) ? '--' : v.toLocaleString(LOCALE, { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: false });
+const fmtUnit = (v, unit, d = 0) => new Intl.NumberFormat(LOCALE, { style: 'unit', unit, unitDisplay: 'short', minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: false }).format(v);
 const unesc = s => s.replace(/\\(.)/g, (_, c) => c === 'n' ? '\n' : c === 't' ? '\t' : c);
 async function loadCatalog(file) {
   if (LANG === 'es') return;
@@ -125,7 +126,7 @@ function toast(msg, bad) {
 
 const fmtBytes = b => b < 1024 ? b + ' B' : b < 1048576 ? num(b / 1024, 1) + ' KB'
   : b < 1073741824 ? num(b / 1048576, 1) + ' MB' : num(b / 1073741824, 1) + ' GB';
-const fmtUptime = s => s < 3600 ? Math.floor(s / 60) + ' min' : Math.floor(s / 3600) + ' h ' + Math.floor(s % 3600 / 60) + ' min';
+const fmtUptime = s => s < 3600 ? fmtUnit(Math.floor(s / 60), 'minute') : fmtUnit(Math.floor(s / 3600), 'hour') + ' ' + fmtUnit(Math.floor(s % 3600 / 60), 'minute');
 const row = (label, value, cls) => h('div', { class: 'row' }, h('div', { class: 'grow' }, label), h('div', { class: 'val ' + (cls || '') }, value));
 
 /* ---- header ---- */
@@ -860,11 +861,12 @@ async function pageFirmware() {
     msg.textContent = tr('La placa no contestó en un minuto y medio: mirala.');
   }
   const o = st.other || {};
+  const otaState = state => tr(({ valid: N_('confirmada'), invalid: N_('marcada como mala'), aborted: N_('a medio instalar'), new: N_('nueva'), pending: N_('a prueba'), undefined: N_('estado desconocido') })[state] || state || '');
   put(main, h('h1', {}, tr('Firmware')),
     h('div', { class: 'card pad' },
       row(tr('Versión'), st.version), row(tr('Compilado'), (st.built || '') + ' ' + (st.time || '')), row('IDF', st.idf || ''), st.elf ? row('ELF', st.elf) : null,
       row(tr('Ranura'), st.running + (st.trial ? ' (' + tr('a prueba') + ')' : ''), st.trial ? 'warn' : ''),
-      row(tr('La otra ranura'), o.slot ? o.slot + (o.version ? ' — ' + o.version + ', ' + (o.built || '') + (o.elf ? ', ELF ' + o.elf : '') + (o.state ? ' (' + o.state + ')' : '') : ' — ' + tr('vacía')) : '—')),
+      row(tr('La otra ranura'), o.slot ? o.slot + (o.version ? ' — ' + o.version + ', ' + (o.built || '') + (o.elf ? ', ELF ' + o.elf : '') + (o.state ? ' (' + otaState(o.state) + ')' : '') : ' — ' + tr('vacía')) : '—')),
     h('h2', {}, tr('Actualizar por Wi-Fi')),
     h('div', { class: 'card pad' },
       h('div', { class: 'note' }, tr('Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.', firmwarePath(st))),
@@ -928,7 +930,7 @@ async function pageBanco() {
   /* logger */
   const lgState = h('div', { class: 'mid' }), lgInfo = h('div', { class: 'note' }), lgBtn = h('button', { class: 'btn' }, tr('Grabar'));
   const lgSeries = h('div', { class: 'btns', style: 'margin-top:8px' });
-  const lgIv = h('select', { style: 'width:auto' }, [[500, num(0.5, 1) + ' s'], [1000, '1 s'], [2000, '2 s'], [5000, '5 s'], [10000, '10 s'], [30000, '30 s'], [60000, '1 min']].map(([v, n]) => h('option', { value: v }, n)));
+  const lgIv = h('select', { style: 'width:auto' }, [[500, fmtUnit(0.5, 'second', 1)], [1000, fmtUnit(1, 'second')], [2000, fmtUnit(2, 'second')], [5000, fmtUnit(5, 'second')], [10000, fmtUnit(10, 'second')], [30000, fmtUnit(30, 'second')], [60000, fmtUnit(1, 'minute')]].map(([v, n]) => h('option', { value: v }, n)));
   lgIv.onchange = () => post('bench/log', { interval: +lgIv.value }).then(load).catch(e => toast(e.message, true));
   lgBtn.onclick = () => post('bench/log', { start: !st.log.running }).then(() => setTimeout(load, 300)).catch(e => toast(e.message, true));
   /* scope */
@@ -1175,7 +1177,7 @@ let claudeT;
 async function pageClaude() {
   const status = h('div', { class: 'card pad' });
   const signin = h('div', { class: 'card pad' });
-  const fmtIn = s => { s = Math.max(0, Math.round(s)); return s >= 86400 ? `${Math.floor(s / 86400)} d ${Math.floor(s % 86400 / 3600)} h` : s >= 3600 ? `${Math.floor(s / 3600)} h ${Math.floor(s % 3600 / 60)} min` : `${Math.ceil(s / 60)} min`; };
+  const fmtIn = s => { s = Math.max(0, Math.round(s)); return s >= 86400 ? `${fmtUnit(Math.floor(s / 86400), 'day')} ${fmtUnit(Math.floor(s % 86400 / 3600), 'hour')}` : s >= 3600 ? `${fmtUnit(Math.floor(s / 3600), 'hour')} ${fmtUnit(Math.floor(s % 3600 / 60), 'minute')}` : fmtUnit(Math.ceil(s / 60), 'minute'); };
   const bar = (name, w, now) => h('div', { class: 'row', style: 'flex-direction:column;align-items:stretch;gap:6px' },
     h('div', { class: 'btns', style: 'justify-content:space-between;flex-wrap:nowrap' },
       h('span', {}, name, ' ', h('b', {}, w ? w.pct.toFixed(0) + ' %' : '--')),
@@ -1672,7 +1674,7 @@ async function pageExpansion() {
     c.stroke();
     c.fillStyle = '#8e8e93'; c.font = '20px -apple-system,sans-serif';
     c.fillText(xpFmt(xpSel.q, hi), 8, 22); c.fillText(xpFmt(xpSel.q, lo), 8, H - 8);
-    chRange.textContent = tr('mín %s · máx %s · últimos %s', xpFmt(xpSel.q, Math.min(...vals)), xpFmt(xpSel.q, Math.max(...vals)), hist.length >= 120 ? Math.floor(hist.length / 60) + ' min' : hist.length + ' s');
+    chRange.textContent = tr('mín %s · máx %s · últimos %s', xpFmt(xpSel.q, Math.min(...vals)), xpFmt(xpSel.q, Math.max(...vals)), hist.length >= 120 ? fmtUnit(Math.floor(hist.length / 60), 'minute') : fmtUnit(hist.length, 'second'));
   }
   async function loadHist() {
     if (!se || !xpSel) return;

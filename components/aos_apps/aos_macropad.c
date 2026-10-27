@@ -146,47 +146,50 @@ static cJSON *default_doc(void)
     cJSON_AddNumberToObject(d, "version", 1);
     cJSON *pages = cJSON_AddArrayToObject(d, "pages");
 
-    cJSON *mac = cJSON_GetObjectItem(page_new(pages, "Mac"), "buttons");
+    cJSON *mac = cJSON_GetObjectItem(page_new(pages, _("Mac")), "buttons");
     const uint32_t BLUE = 0x0A84FF, GRAY = 0x3A3A3C, INDIGO = 0x5E5CE6, PINK = 0xFF375F, TEAL = 0x0E7490;
-    cJSON_AddItemToArray(mac, key_btn("Copiar", "CONTENT_COPY", BLUE, "cmd+c"));
-    cJSON_AddItemToArray(mac, key_btn("Pegar", "CONTENT_PASTE", BLUE, "cmd+v"));
-    cJSON_AddItemToArray(mac, key_btn("Cortar", "CONTENT_CUT", BLUE, "cmd+x"));
-    cJSON_AddItemToArray(mac, key_btn("Deshacer", "RESTART", GRAY, "cmd+z"));
-    cJSON_AddItemToArray(mac, key_btn("Captura", "MONITOR_SCREENSHOT", INDIGO, "cmd+shift+4"));
-    cJSON_AddItemToArray(mac, key_btn("Pantalla", "FULLSCREEN", INDIGO, "cmd+shift+3"));
-    cJSON_AddItemToArray(mac, key_btn("Spotlight", "MAGNIFY", GRAY, "cmd+space"));
-    cJSON_AddItemToArray(mac, key_btn("Cambiar app", "SWAP_HORIZONTAL", GRAY, "cmd+tab"));
-    cJSON_AddItemToArray(mac, key_btn("Bloquear", "LOCK", 0xFF453A, "ctrl+cmd+q"));
-    cJSON_AddItemToArray(mac, key_btn("Silencio", "VOLUME_OFF", TEAL, "mute"));
-    cJSON_AddItemToArray(mac, key_btn("Anterior", "SKIP_PREVIOUS", PINK, "prev"));
-    cJSON_AddItemToArray(mac, key_btn("Play", "PLAY_PAUSE", PINK, "play"));
-    cJSON_AddItemToArray(mac, key_btn("Siguiente", "SKIP_NEXT", PINK, "next"));
-    cJSON_AddItemToArray(mac, key_btn("Volumen -", "VOLUME_LOW", TEAL, "voldown"));
-    cJSON_AddItemToArray(mac, key_btn("Volumen +", "VOLUME_HIGH", TEAL, "volup"));
+    cJSON_AddItemToArray(mac, key_btn(_("Copiar"), "CONTENT_COPY", BLUE, "cmd+c"));
+    cJSON_AddItemToArray(mac, key_btn(_("Pegar"), "CONTENT_PASTE", BLUE, "cmd+v"));
+    cJSON_AddItemToArray(mac, key_btn(_("Cortar"), "CONTENT_CUT", BLUE, "cmd+x"));
+    cJSON_AddItemToArray(mac, key_btn(_("Deshacer"), "RESTART", GRAY, "cmd+z"));
+    cJSON_AddItemToArray(mac, key_btn(_("Captura"), "MONITOR_SCREENSHOT", INDIGO, "cmd+shift+4"));
+    cJSON_AddItemToArray(mac, key_btn(_("Pantalla"), "FULLSCREEN", INDIGO, "cmd+shift+3"));
+    cJSON_AddItemToArray(mac, key_btn(_("Spotlight"), "MAGNIFY", GRAY, "cmd+space"));
+    cJSON_AddItemToArray(mac, key_btn(_("Cambiar app"), "SWAP_HORIZONTAL", GRAY, "cmd+tab"));
+    cJSON_AddItemToArray(mac, key_btn(_("Bloquear"), "LOCK", 0xFF453A, "ctrl+cmd+q"));
+    cJSON_AddItemToArray(mac, key_btn(_("Silencio"), "VOLUME_OFF", TEAL, "mute"));
+    cJSON_AddItemToArray(mac, key_btn(_("Anterior"), "SKIP_PREVIOUS", PINK, "prev"));
+    cJSON_AddItemToArray(mac, key_btn(_("Play"), "PLAY_PAUSE", PINK, "play"));
+    cJSON_AddItemToArray(mac, key_btn(_("Siguiente"), "SKIP_NEXT", PINK, "next"));
+    cJSON_AddItemToArray(mac, key_btn(_("Volumen -"), "VOLUME_LOW", TEAL, "voldown"));
+    cJSON_AddItemToArray(mac, key_btn(_("Volumen +"), "VOLUME_HIGH", TEAL, "volup"));
 
-    cJSON *casa = page_new(pages, "Casa");
+    cJSON *casa = page_new(pages, _("Casa"));
     cJSON_AddStringToObject(casa, "auto", "ha");
 
-    cJSON *t = cJSON_GetObjectItem(page_new(pages, "Taller"), "buttons");
+    cJSON *t = cJSON_GetObjectItem(page_new(pages, _("Taller")), "buttons");
     const uint32_t AMBER = 0xF59E0B, GREEN = 0x10B981, VIOLET = 0x8B5CF6;
-    cJSON_AddItemToArray(t, app_btn("Banco", "SINE_WAVE", 0xFF9F0A, "aos.bench"));
-    cJSON_AddItemToArray(t, app_btn("Terminal", "SERIAL_PORT", GRAY, "aos.serial"));
-    cJSON_AddItemToArray(t, app_btn("Programador", "CHIP", VIOLET, "aos.flasher"));
-    cJSON_AddItemToArray(t, app_btn("Modbus", "LAN", GREEN, "aos.modbus"));
-    cJSON_AddItemToArray(t, app_btn("Bus", "DEVELOPER_BOARD", AMBER, "aos.bus"));
-    cJSON_AddItemToArray(t, app_btn("MQTT", "ACCESS_POINT", 0x0891B2, "aos.mqtt"));
+    cJSON_AddItemToArray(t, app_btn(_("Banco"), "SINE_WAVE", 0xFF9F0A, "aos.bench"));
+    cJSON_AddItemToArray(t, app_btn(_("Terminal"), "SERIAL_PORT", GRAY, "aos.serial"));
+    cJSON_AddItemToArray(t, app_btn(_("Programador"), "CHIP", VIOLET, "aos.flasher"));
+    cJSON_AddItemToArray(t, app_btn(_("Modbus"), "LAN", GREEN, "aos.modbus"));
+    cJSON_AddItemToArray(t, app_btn(_("Bus"), "DEVELOPER_BOARD", AMBER, "aos.bus"));
+    cJSON_AddItemToArray(t, app_btn(_("MQTT"), "ACCESS_POINT", 0x0891B2, "aos.mqtt"));
     /* a Tasmota plug for the soldering station and the fume extractor:
      * TOGGLE on cmnd/, the state comes back on stat/ */
-    cJSON_AddItemToArray(t, mqtt_btn("Soldador", "FIRE", 0xFF453A, "cmnd/soldador/POWER", "TOGGLE", "stat/soldador/POWER"));
-    cJSON_AddItemToArray(t, mqtt_btn("Extractor", "FAN", 0x30D158, "cmnd/extractor/POWER", "TOGGLE", "stat/extractor/POWER"));
-    cJSON_AddItemToArray(t, mqtt_btn("Luz banco", "LED_ON", 0xFFD60A, "cmnd/luzbanco/POWER", "TOGGLE", "stat/luzbanco/POWER"));
+    cJSON_AddItemToArray(t, mqtt_btn(_("Soldador"), "FIRE", 0xFF453A, "cmnd/soldador/POWER", "TOGGLE", "stat/soldador/POWER"));
+    cJSON_AddItemToArray(t, mqtt_btn(_("Extractor"), "FAN", 0x30D158, "cmnd/extractor/POWER", "TOGGLE", "stat/extractor/POWER"));
+    cJSON_AddItemToArray(t, mqtt_btn(_("Luz banco"), "LED_ON", 0xFFD60A, "cmnd/luzbanco/POWER", "TOGGLE", "stat/luzbanco/POWER"));
     /* a trigger for HA automations: publishes and forgets */
-    cJSON_AddItemToArray(t, mqtt_btn("Aviso", "BELL_RING", PINK, "p4os/macropad/aviso", "press", NULL));
+    cJSON_AddItemToArray(t, mqtt_btn(_("Aviso"), "BELL_RING", PINK, "p4os/macropad/aviso", "press", NULL));
     cJSON *s = btn("idf build", "ROCKET_LAUNCH", INDIGO, "seq");
-    cJSON_AddStringToObject(s, "seq", "# Terminal en la Mac y a compilar\nKEY cmd+space\nDELAY 300\nSTRING terminal\nKEY enter\nDELAY 900\nSTRING idf.py build\nKEY enter");
+    char seq[240];
+    snprintf(seq, sizeof seq, "# %s\nKEY cmd+space\nDELAY 300\nSTRING terminal\nKEY enter\nDELAY 900\nSTRING idf.py build\nKEY enter",
+             _("Abrir Terminal en la Mac y compilar"));
+    cJSON_AddStringToObject(s, "seq", seq);
     cJSON_AddItemToArray(t, s);
     /* what leaves idf.py monitor */
-    cJSON_AddItemToArray(t, key_btn("Salir monitor", "CLOSE", GRAY, "ctrl+]"));
+    cJSON_AddItemToArray(t, key_btn(_("Salir monitor"), "CLOSE", GRAY, "ctrl+]"));
     return d;
 }
 

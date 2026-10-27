@@ -7,7 +7,7 @@ El motor no aceptó el cálculo	發動機沒有做出計算
 Memoria del motor: %u KB	發動機記憶體: %u KB
 Parar el cálculo	停止計算
 Borrar el historial	清除歷史
-Banco de pruebas	標準標誌
+Banco de pruebas	效能測試
 Cálculo	計算
 Gráfico	圖表
 Geometría	幾何
@@ -17,7 +17,7 @@ Ciencias	科學
 No se pudo arrancar el motor. Cerrá la app y volvé a abrirla.	發動機無法啟動,關閉應用程式並再次開啟.
 hasta %d genes	到 %d 基因
 sólo letras: AaBb	只有字母: AaBb
-cada gen son dos letras: AaBb	每個基因都是兩個字母:AABb
+cada gen son dos letras: AaBb	每個基因由兩個字母表示：AaBb
 %c y %c no son el mismo gen	%c 和 %c 不是相同的基因
 los dos padres necesitan los mismos genes	兩個父母都需要相同的基因.
 los dos padres necesitan los mismos genes, en el mismo orden	兩個父母都需要相同的基因,
@@ -27,39 +27,39 @@ demasiados elementos	太多的元素
 falta cerrar un paréntesis	一個支架沒有關閉
 paréntesis mal cerrado	不匹配的支架
 no hay elemento %s	沒有元素 %s
-un subíndice no puede ser 0	一個字母不能為 0
-no se entiende: %s	沒有理解: %s
-falta la fórmula	公式沒有
-la carga va así: ^2+ o ^-	這樣寫電荷: ^2+ 或 ^-
+un subíndice no puede ser 0	下標不能為 0
+no se entiende: %s	無法解析：%s
+falta la fórmula	缺少化學式
+la carga va así: ^2+ o ^-	電荷應這樣寫：^2+ 或 ^-
 falta una sustancia	一種物質缺失
 demasiadas sustancias	太多的物質
-separá los lados con = o ->	用=或 -> 分開側面
+separá los lados con = o ->	請用 = 或 -> 分隔兩邊
 falta un lado	一個側面缺失了
 no se puede balancear: revisá las fórmulas	無法平衡:檢查公式
 tiene más de una forma de balancearse: son varias reacciones juntas	它以多種方式平衡:
 Hidrógeno	氫
-Helio	Helium
+Helio	氦
 Litio	鋰
-Berilio	Beryllium
-Boro	Boron
+Berilio	鈹
+Boro	硼
 Carbono	碳
-Nitrógeno	氮學
-Oxígeno	氧氣
+Nitrógeno	氮
+Oxígeno	氧
 Flúor	氟
-Neón	霓虹
+Neón	氖
 Sodio	鈉
-Magnesio	Magnesium
+Magnesio	鎂
 Aluminio	鋁
 Silicio	矽
 Fósforo	磷
 Azufre	硫
 Cloro	氯
-Argón	條形
+Argón	氬
 Potasio	鉀
 Calcio	鈣
-Escandio	Scandium
-Titanio	Titanium
-Vanadio	Vanadium
+Escandio	鈧
+Titanio	鈦
+Vanadio	釩
 Cromo	鉻
 Manganeso	錳
 Hierro	鐵
@@ -67,100 +67,100 @@ Cobalto	鈷
 Níquel	鎳
 Cobre	銅
 Zinc	鋅
-Galio	Gallium
-Germanio	德國
+Galio	鎵
+Germanio	鍺
 Arsénico	砷
-Selenio	Selenium
-Bromo	溴問題
-Kriptón	克里普頓
-Rubidio	Rubidium
-Estroncio	Strontium
-Itrio	圓形
-Circonio	Zirconium
-Niobio	Niobium
-Molibdeno	圓柱
-Tecnecio	Technetium
-Rutenio	Ruthenium
-Rodio	Rhodium
-Paladio	Palladium
-Plata	銀子
-Cadmio	Cadmium
-Indio	Indium
+Selenio	硒
+Bromo	溴
+Kriptón	氪
+Rubidio	銣
+Estroncio	鍶
+Itrio	釔
+Circonio	鋯
+Niobio	鈮
+Molibdeno	鉬
+Tecnecio	鎝
+Rutenio	釕
+Rodio	銠
+Paladio	鈀
+Plata	銀
+Cadmio	鎘
+Indio	銦
 Estaño	錫
-Antimonio	抗藥物
-Telurio	Tellurium
-Yodo	碘類
-Xenón	賢
-Cesio	Caesium
-Bario	Barium
-Lantano	蘭塔努姆
-Cerio	Cerium
-Praseodimio	Praseodymium
-Neodimio	Neodymium
-Prometio	Promethium
-Samario	薩馬裡姆
-Europio	歐洲
-Gadolinio	Gadolinium
-Terbio	Terbium
-Disprosio	溶解劑
-Holmio	荷爾米
-Erbio	Erbium
-Tulio	Thulium
-Iterbio	Ytterbium
-Lutecio	Lutetium
-Hafnio	氫
+Antimonio	銻
+Telurio	碲
+Yodo	碘
+Xenón	氙
+Cesio	銫
+Bario	鋇
+Lantano	鑭
+Cerio	鈰
+Praseodimio	鐠
+Neodimio	釹
+Prometio	Pm
+Samario	釤
+Europio	銪
+Gadolinio	釓
+Terbio	鋱
+Disprosio	鏑
+Holmio	鈥
+Erbio	鉺
+Tulio	銩
+Iterbio	鐿
+Lutecio	鎦
+Hafnio	鉿
 Tantalio	鉭
-Wolframio	東斯滕
-Renio	Rhenium
-Osmio	Osmium
-Iridio	Iridium
-Platino	白金
+Wolframio	鎢
+Renio	錸
+Osmio	鋨
+Iridio	銥
+Platino	鉑
 Oro	金
-Mercurio	汞問題
-Talio	Thallium
+Mercurio	汞
+Talio	鉈
 Plomo	鉛
-Bismuto	布斯穆特
-Polonio	Polonium
-Astato	亞斯塔丁
-Radón	弧度
-Francio	Francium
-Radio	半徑
-Actinio	Actinium
-Torio	Thorium
-Protactinio	Protactinium
+Bismuto	鉍
+Polonio	釙
+Astato	At
+Radón	氡
+Francio	Fr
+Radio	鐳
+Actinio	錒
+Torio	釷
+Protactinio	鏷
 Uranio	鈾
-Neptunio	Neptunium
+Neptunio	錼
 Plutonio	鈽
-Americio	Americium
-Curio	Curium
-Berkelio	Berkelium
-Californio	加州
-Einstenio	Einsteinium
-Fermio	Fermium
-Mendelevio	Mendelevium
-Nobelio	Nobelium
-Lawrencio	勞倫西亞
-Rutherfordio	Rutherfordium
-Dubnio	Dubnium
-Seaborgio	海洋園區
-Bohrio	Bohrium
-Hasio	Hassium
-Meitnerio	Meitnerium
-Darmstatio	達姆施塔迪姆
-Roentgenio	Roentgenium
-Copernicio	科珀尼奇
-Nihonio	Nihonium
-Flerovio	氟化物
-Moscovio	莫斯科維
-Livermorio	Livermorium
-Teneso	泰納西
-Oganesón	歐根森
+Americio	鋂
+Curio	鋦
+Berkelio	Bk
+Californio	鉲
+Einstenio	鑀
+Fermio	鐨
+Mendelevio	鍆
+Nobelio	No
+Lawrencio	鐒
+Rutherfordio	Rf
+Dubnio	Db
+Seaborgio	Sg
+Bohrio	Bh
+Hasio	Hs
+Meitnerio	Mt
+Darmstatio	Ds
+Roentgenio	Rg
+Copernicio	Cn
+Nihonio	Nh
+Flerovio	Fl
+Moscovio	Mc
+Livermorio	Lv
+Teneso	Ts
+Oganesón	Og
 No tiene solución con esos valores	沒有這些值的解決方案
-N (períodos)	N (週期)
+N (períodos)	N（期數）
 I% anual	每年1%
-VA (valor actual)	PV (當前價值)
-PAGO (por período)	PMT (每期)
-VF (valor final)	未來價值
+VA (valor actual)	PV（現值）
+PAGO (por período)	PMT（每期付款）
+VF (valor final)	FV（終值）
 pagos por año	每年支付
 capitalizaciones por año	每年複合量
 Pago al final	結期付款
@@ -173,7 +173,7 @@ Interés	利息
 Saldo	均衡
 Francés	法語
 Alemán	德語
-Americano	彈子
+Americano	到期一次還本付息
 Monto	額度
 TNA %	額定利率 %
 Plazo (meses)	期限 (幾個月)
@@ -185,7 +185,7 @@ La tasa del período es la TNA dividida por 12. Sin IVA ni gastos: el costo fina
 Tasa %	利率 %
 capitaliza cada (días)	每天的化合物
 Equivalentes	同等產品
-TNA (cada %.0f días)	名稱 (每一個) %.0f 日)
+TNA (cada %.0f días)	名目年利率（每 %.0f 天）
 TEM (30 días)	每月有效期 (30天)
 Diaria efectiva	每日有效
 Plazo fijo	固定期存款
@@ -198,8 +198,8 @@ Tasa real mensual	實際月率
 no hay	無
 nunca	永遠不會
 Tasa de descuento %	折扣利率 %
-VAN	產品總值
-TIR	紅色電池
+VAN	淨現值
+TIR	內部報酬率
 Recupero (períodos)	退款 (期)
 Flujos	現金流
 período %d	時間 %d
@@ -208,20 +208,20 @@ inversión (0)	投資 (0)
 Quitar el último	刪除最後一個
 Préstamo	貸款
 Tasas	利率
-VAN / TIR	總值 (NPV)
+VAN / TIR	淨現值 / 內部報酬率
 Eso no es un número	這不是一個數字.
 Mover	移動
-Punto	問題
+Punto	點
 Punto medio	中點
 Intersección	交叉路口
-Segmento	部分
-Recta	線條
-Semirrecta	雷
+Segmento	線段
+Recta	直線
+Semirrecta	射線
 Perpendicular	垂直
 Paralela	同步
-Mediatriz	犯罪者:雙向
-Bisectriz	角分隔器
-Circunferencia	圓圈
+Mediatriz	垂直平分線
+Bisectriz	角平分線
+Circunferencia	圓
 Circ. por 3 puntos	圓 3 分
 Polígono	多角形
 Longitud	長度
@@ -259,8 +259,8 @@ Puntos	問題
 Líneas	線條
 Figuras	形狀
 Medir y editar	測量和編輯
-Cuadrícula	電網
-Ajustar a la grilla	連線到電網
+Cuadrícula	方格
+Ajustar a la grilla	貼齊格線
 Borrar todo	全部清除
 Las medidas aparecen acá: elegí Longitud, Ángulo, Área o Ecuación.	在這裡顯示了測量:選擇長度,角度,面積或方程.
 Sin memoria para la figura	沒有記憶.
@@ -272,8 +272,8 @@ no se entiende	沒有理解
 tocá para escribir	打到鍵
 Listo	完成
 Sin memoria para el gráfico	沒有記憶圖表
-mcd	其他型別
-mcm	lcm
+mcd	最大公因數
+mcm	最小公倍數
 primos	總數
 media	平均值
 desv	工作人員
@@ -291,8 +291,8 @@ constante del resorte	春季常數
 estiramiento	擴充套件
 densidad	密度
 volumen	大量
-Cinemática	動力學
-Movimiento uniforme	統一動議
+Cinemática	運動學
+Movimiento uniforme	等速直線運動
 posición	位置
 posición inicial	起始位置
 Velocidad (MRUV)	速度 (常數a)
@@ -308,9 +308,9 @@ fuerza de rozamiento	摩擦力
 coeficiente de rozamiento	摩擦係數
 fuerza normal	常態力
 Ley de Hooke	胡克的定律
-Cantidad de movimiento	動力
+Cantidad de movimiento	動量
 cantidad de movimiento	動力
-Impulso	衝動
+Impulso	衝量
 impulso	衝動
 Energía	能量
 Energía cinética	動力能量
@@ -355,10 +355,10 @@ longitud de onda	波長
 frecuencia	頻率
 Frecuencia y período	頻率和時間
 Electricidad	電力
-Ley de Ohm	吳門的律法
+Ley de Ohm	歐姆定律
 tensión	電壓
 corriente	電流
-resistencia	阻力
+resistencia	電阻
 Potencia eléctrica	電力
 Ley de Coulomb	庫倫布的定律
 constante de Coulomb	庫倫姆常數
@@ -411,16 +411,16 @@ masa del electrón	電子質量
 masa del protón	質子質量
 masa del neutrón	中子質量
 unidad de masa atómica	原子質量單位
-permitividad del vacío	吸塵容量
-permeabilidad del vacío	吸塵透性
+permitividad del vacío	真空介電常數
+permeabilidad del vacío	真空磁導率
 constante de Stefan-Boltzmann	斯蒂芬-博爾茨曼常數
 radio de Bohr	波爾半徑
 volumen molar (0 °C, 1 atm)	摩拉體積 (0 °C,1 atm)
 atmósfera estándar	標準氣氛
-electronvoltio	電壓
+electronvoltio	電子伏特
 masa de la Tierra	地球的質量
 radio medio de la Tierra	地球的平均半徑
-Molaridad	偶數
+Molaridad	莫耳濃度
 concentración	濃度
 masa de soluto	溶化物質量
 masa molar	摩拉質量
@@ -454,13 +454,13 @@ Electronegatividad	電子負面性
 Fusión · ebullición	熔化 沸騰
 Estados de oxidación	氧化狀態
 Sumar %s a la fórmula	新增 %s 在公式中
-Fórmula (Ca(OH)2, CuSO4.5H2O, SO4^2-)	公式 (Ca(OH) 2,CuSO4.5H2O, SO4^2-)
-Gramos y moles	Grams 和 moles( 鼠類和鼠類)
+Fórmula (Ca(OH)2, CuSO4.5H2O, SO4^2-)	化學式（Ca(OH)2、CuSO4.5H2O、SO4^2-）
+Gramos y moles	克與莫耳
 masa (g)	質量 (g)
 cantidad (mol)	數量 (mol)
 partículas	顆粒
 Sustancia	質量
-Coef.	庫夫。
+Coef.	係數
 Gramos de %s	克數 %s
 Ecuación (Fe + O2 = Fe2O3; iones: Fe^3+)	方程 (Fe + O2 = Fe2O3;離子:Fe^3+)
 Estequiometría: tocá una sustancia para escribir cuántos gramos hay; el resto sale de ahí.	靜脈測量:打一個物質,輸入有多少克;剩下的則是這樣.
@@ -469,7 +469,7 @@ Llená cuatro y tocá =? en el que falta. La temperatura va en kelvin: 0 °C son
 Base fuerte	強大的基礎
 Ácido débil	軟酸
 Base débil	弱的基礎
-concentración (mol/L)	concentration (mol/L)
+concentración (mol/L)	濃度（mol/L）
 A 25 °C (Kw = 10⁻¹⁴).	在25°C (Kw=10−14).
 ionizado	離子化
 Fórmulas	公式
@@ -480,16 +480,16 @@ Alcance	範圍
 Altura máxima	最長高度
 Velocidad al caer	降落速度
 Ángulo al caer	登陸的角度
-v₀ velocidad inicial (m/s)	v0初始速度 (m)/s)
-θ ángulo (°)	θ角 (°)
-h₀ altura inicial (m)	h0初始高度 (m)
-g gravedad (m/s²)	g 重力 (m)/s²)
+v₀ velocidad inicial (m/s)	v₀ 初速（m/s）
+θ ángulo (°)	θ 角度（°）
+h₀ altura inicial (m)	h₀ 初始高度（m）
+g gravedad (m/s²)	g 重力加速度（m/s²）
 CODATA 2018. Desde 2019 c, h, e, Nₐ y kB son exactas por definición.	2018年CODATA.自2019年以來,c,h,e,Na和kB按定義是準確的.
 Padre 1	父母1
 Padre 2	父母2
 Fenotipos	型別
 Genotipos	基因型
-Mayúscula: el alelo dominante. A_ quiere decir AA o Aa.	資本:佔支配地位的Alele。A_是指AA或AA。
+Mayúscula: el alelo dominante. A_ quiere decir AA o Aa.	大寫表示顯性等位基因。A_ 表示 AA 或 Aa。
 Con los genotipos contados	從基因型計數
 Con la frecuencia del fenotipo recesivo	從衰退性現象型別的頻率
 Esperados (AA, Aa, aa)	預期 (AA, Aa, aa)
@@ -497,7 +497,7 @@ valor p	p值
 No está en equilibrio (p < 0,05)	沒有平衡 (p < 0.05)
 Compatible con el equilibrio (p ≥ 0,05)	與平衡相一致 (p ≥ 0.05)
 AA (p²)	AA (p2)
-portadores Aa (2pq)	運輸商 Aa (2pq)
+portadores Aa (2pq)	Aa 帶因者（2pq）
 Secuencia (ADN o ARN)	序列 (DNA或RNA)
 Se dejaron afuera %d letras que no son bases.	%d 其他字母都被排除在外.
 Largo	長度
@@ -549,7 +549,7 @@ Sin datos: tocá una celda para escribir	沒有資料:鍵入一個單元
 Resumen de L%d	L 的總結%d
 Ordenar	一種型別
 Borrar	清除
-L%d: %d clases de ancho %.4g	L%d: %d 寬度類 %.4g
+L%d: %d clases de ancho %.4g	L%d：%d 組，組距 %.4g
 Dispersión: hacen falta datos en L1 (x) y L2 (y)	分散:需要在L1 (x) 和L2 (y) 中的資料
 Sin datos en esta lista	在本列表中沒有資料
 Histograma	歷史圖
@@ -557,14 +557,14 @@ Cajas	盒子地塊
 Dispersión	散佈
 Hacen falta al menos dos pares en L1 (x) y L2 (y)	在L1 (x) 和L2 (y) 中至少需要兩對
 Este modelo no se ajusta a estos datos (¿valores negativos o cero?)	這種模型不符合這些資料 (負值或零值?)
-Va al gráfico como f%d(x)	在圖表中傳送為f%d(x)
+Va al gráfico como f%d(x)	以 f%d(x) 傳送到圖表
 El gráfico ya tiene seis funciones	圖表已經有6個函式
 Lineal	線性
 Cuadr.	四分之一.
 Cúbica	立方體
 Pot.	功率
 x en L1, y en L2	在L1中x,在L2中y
-Al gráfico como f(x)	按圖為 f ((x)
+Al gráfico como f(x)	以 f(x) 傳送到圖表
 Ver los puntos	顯示點
 Binomial	雙字母
 grados de libertad	自由度
@@ -578,7 +578,7 @@ t dos medias	兩種方式
 media ₁	平均值1
 media ₂	平均值2
 nivel de confianza	信心水平
-Tomar media, s y n de L%d	從L中取平均,s和n%d
+Tomar media, s y n de L%d	從 L%d 取得平均值、s 與 n
 Tomar de L1 y L2	從L1和L2中取
 gl	其他
 intervalo	間隔

@@ -6,1059 +6,1059 @@
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
 #: apps\cartero\web\cartero.js:272
-recién	recién
+recién	刚刚
 
 #: apps\cartero\web\cartero.js:273
-hace %d min	hace %d min
+hace %d min	%d 分钟前
 
 #: apps\cartero\web\cartero.js:274
-hace %d h	hace %d h
+hace %d h	%d 小时前
 
 #: apps\cartero\web\cartero.js:280
-Copiado	Copiado
+Copiado	已复制
 
 #: apps\cartero\web\cartero.js:294
-El navegador no dejó copiar	El navegador no dejó copiar
+El navegador no dejó copiar	浏览器不允许复制
 
 #: apps\cartero\web\cartero.js:352
-La placa no tomó el mensaje (%d)	La placa no tomó el mensaje (%d)
+La placa no tomó el mensaje (%d)	开发板未接受消息（%d）
 
 #: apps\cartero\web\cartero.js:1138
-No hay entorno activo: «%s» no se guarda	No hay entorno activo: «%s» no se guarda
+No hay entorno activo: «%s» no se guarda	没有当前环境，无法保存“%s”
 
 #: apps\cartero\web\cartero.js:1233
-require('%s'): Cartero no trae librerías	require('%s'): Cartero no trae librerías
+require('%s'): Cartero no trae librerías	require('%s')：Cartero 不提供库
 
 #: apps\cartero\web\cartero.js:1250
-tests["%s"] dio %s	tests["%s"] dio %s
+tests["%s"] dio %s	测试[“%s”]给出了%s
 
 #: apps\cartero\web\cartero.js:1267
 #: apps\cartero\web\cartero.js:1491
-sin respuesta	sin respuesta
+sin respuesta	无响应
 
 #: apps\cartero\web\cartero.js:1318
-auth de «%s»	auth de «%s»
+auth de «%s»	“%s”的授权
 
 #: apps\cartero\web\cartero.js:1318
-auth	auth
+auth	认证
 
 #: apps\cartero\web\cartero.js:1328
-auth, en la URL	auth, en la URL
+auth, en la URL	认证信息位于 URL 中
 
 #: apps\cartero\web\cartero.js:1332
-La auth «%s» no está en Cartero: va sin ella	La auth «%s» no está en Cartero: va sin ella
+La auth «%s» no está en Cartero: va sin ella	Cartero 不支持认证类型“%s”，将不使用认证。
 
 #: apps\cartero\web\cartero.js:1352
-«%s»: los archivos de form-data no van, sólo los textos	«%s»: los archivos de form-data no van, sólo los textos
+«%s»: los archivos de form-data no van, sólo los textos	“%s”：form-data 中的文件不会发送，只会发送文本字段。
 
 #: apps\cartero\web\cartero.js:1364
-Las variables de GraphQL no son JSON: %s	Las variables de GraphQL no son JSON: %s
+Las variables de GraphQL no son JSON: %s	GraphQL 变量不是有效的 JSON：%s
 
 #: apps\cartero\web\cartero.js:1370
-Un archivo como cuerpo no está en Cartero: va sin cuerpo	Un archivo como cuerpo no está en Cartero: va sin cuerpo
+Un archivo como cuerpo no está en Cartero: va sin cuerpo	Cartero 不支持以文件作为正文，将不发送正文。
 
 #: apps\cartero\web\cartero.js:1373
-por el cuerpo	por el cuerpo
+por el cuerpo	由正文决定
 
 #: apps\cartero\web\cartero.js:1374
-de siempre	de siempre
+de siempre	默认方式
 
 #: apps\cartero\web\cartero.js:1385
-El navegador no deja pedir HTTP desde una página HTTPS. Mandalo vía la placa.	El navegador no deja pedir HTTP desde una página HTTPS. Mandalo vía la placa.
+El navegador no deja pedir HTTP desde una página HTTPS. Mandalo vía la placa.	浏览器不允许从 HTTPS 页面请求 HTTP。请通过开发板发送。
 
 #: apps\cartero\web\cartero.js:1386
-El navegador no pudo hacer el pedido: el servidor no lo permite desde otra página (CORS), no contesta, o su certificado no es válido. Vía la placa no hay CORS.	El navegador no pudo hacer el pedido: el servidor no lo permite desde otra página (CORS), no contesta, o su certificado no es válido. Vía la placa no hay CORS.
+El navegador no pudo hacer el pedido: el servidor no lo permite desde otra página (CORS), no contesta, o su certificado no es válido. Vía la placa no hay CORS.	浏览器无法发出请求：服务器不允许跨域请求（CORS）、未响应，或其证书无效。通过开发板发送不会受 CORS 限制。
 
 #: apps\cartero\web\cartero.js:1418
-Se pasó el tiempo de espera (%s)	Se pasó el tiempo de espera (%s)
+Se pasó el tiempo de espera (%s)	请求超时（%s）
 
 #: apps\cartero\web\cartero.js:1419
 #: apps\cartero\web\cartero.js:1485
-Cancelado	Cancelado
+Cancelado	取消
 
 #: apps\cartero\web\cartero.js:1420
-Se cortó la respuesta: %s	Se cortó la respuesta: %s
+Se cortó la respuesta: %s	响应中断：%s
 
 #: apps\cartero\web\cartero.js:1425
-El servidor redirige y el navegador no deja ver adónde: activá «Seguir redirecciones» o mandalo vía la placa	El servidor redirige y el navegador no deja ver adónde: activá «Seguir redirecciones» o mandalo vía la placa
+El servidor redirige y el navegador no deja ver adónde: activá «Seguir redirecciones» o mandalo vía la placa	服务器进行了重定向，但浏览器不允许查看目标地址。请启用“跟随重定向”，或通过开发板发送。
 
 #: apps\cartero\web\cartero.js:1448
-La placa no contesta (%d)	La placa no contesta (%d)
+La placa no contesta (%d)	开发板无响应（%d）
 
 #: apps\cartero\web\cartero.js:1453
-Cartero no está abierta en la placa	Cartero no está abierta en la placa
+Cartero no está abierta en la placa	开发板上未打开 Cartero
 
 #: apps\cartero\web\cartero.js:1476
-La app Cartero se cerró en la placa	La app Cartero se cerró en la placa
+La app Cartero se cerró en la placa	开发板上的 Cartero 应用已关闭
 
 #: apps\cartero\web\cartero.js:1486
-La placa no contestó a tiempo	La placa no contestó a tiempo
+La placa no contestó a tiempo	开发板响应超时
 
 #: apps\cartero\web\cartero.js:1518
-colección «%s»	colección «%s»
+colección «%s»	集合“%s”
 
 #: apps\cartero\web\cartero.js:1518
-carpeta «%s»	carpeta «%s»
+carpeta «%s»	文件夹“%s”
 
 #: apps\cartero\web\cartero.js:1530
 #: apps\cartero\web\cartero.js:1541
-el pedido	el pedido
+el pedido	该请求
 
 #: apps\cartero\web\cartero.js:1535
-El navegador no manda cuerpo en un %s: va sin él	El navegador no manda cuerpo en un %s: va sin él
+El navegador no manda cuerpo en un %s: va sin él	浏览器不会在 %s 请求中发送正文，将不发送正文。
 
 #: apps\cartero\web\cartero.js:1536
-Falta la URL	Falta la URL
+Falta la URL	缺少 URL
 
 #: apps\cartero\web\cartero.js:1578
-No se pudieron guardar las variables: %s	No se pudieron guardar las variables: %s
+No se pudieron guardar las variables: %s	无法保存变量：%s
 
 #: apps\cartero\web\cartero.js:1665
-No empieza con curl	No empieza con curl
+No empieza con curl	命令不是以 curl 开头
 
 #: apps\cartero\web\cartero.js:1706
-El comando no tiene URL	El comando no tiene URL
+El comando no tiene URL	命令中缺少 URL
 
 #: apps\cartero\web\cartero.js:1902
-dinámica	dinámica
+dinámica	动态
 
 #: apps\cartero\web\cartero.js:1906
 #: apps\cartero\web\cartero.js:3576
-entorno «%s»	entorno «%s»
+entorno «%s»	环境“%s”
 
 #: apps\cartero\web\cartero.js:1910
-colección	colección
+colección	集合
 
 #: apps\cartero\web\cartero.js:1912
-globales	globales
+globales	全局变量
 
 #: apps\cartero\web\cartero.js:1921
-Error	Error
+Error	错误
 
 #: apps\cartero\web\cartero.js:1950
-Clave	Clave
+Clave	键
 
 #: apps\cartero\web\cartero.js:1950
 #: apps\cartero\web\cartero.js:1982
 #: apps\cartero\web\cartero.js:2856
-Valor	Valor
+Valor	值
 
 #: apps\cartero\web\cartero.js:1951
 #: apps\cartero\web\cartero.js:1983
 #: apps\cartero\web\cartero.js:2903
-Descripción	Descripción
+Descripción	说明
 
 #: apps\cartero\web\cartero.js:1957
-Activado	Activado
+Activado	已启用
 
 #: apps\cartero\web\cartero.js:1960
-archivo: %s	archivo: %s
+archivo: %s	文件：%s
 
 #: apps\cartero\web\cartero.js:1960
-Los archivos de form-data no se mandan desde Cartero	Los archivos de form-data no se mandan desde Cartero
+Los archivos de form-data no se mandan desde Cartero	Cartero 不支持发送 form-data 文件。
 
 #: apps\cartero\web\cartero.js:1966
-Secreto: se ve como puntos	Secreto: se ve como puntos
+Secreto: se ve como puntos	密钥：以圆点隐藏
 
 #: apps\cartero\web\cartero.js:1968
 #: apps\cartero\web\cartero.js:2847
-Mostrar u ocultar	Mostrar u ocultar
+Mostrar u ocultar	显示或隐藏
 
 #: apps\cartero\web\cartero.js:1969
-Sacar	Sacar
+Sacar	删除
 
 #: apps\cartero\web\cartero.js:1981
-Clave nueva	Clave nueva
+Clave nueva	新建键
 
 #: apps\cartero\web\cartero.js:2049
-https://api.ejemplo.com/recurso, o {{base}}/recurso	https://api.ejemplo.com/recurso, o {{base}}/recurso
+https://api.ejemplo.com/recurso, o {{base}}/recurso	https://api.ejemplo.com/recurso，或 {{base}}/recurso
 
 #: apps\cartero\web\cartero.js:2049
 URL	URL
 
 #: apps\cartero\web\cartero.js:2074
-Variable desconocida: no está en el entorno, la colección ni las globales	Variable desconocida: no está en el entorno, la colección ni las globales
+Variable desconocida: no está en el entorno, la colección ni las globales	未知变量：它不在环境、集合或全局变量中
 
 #: apps\cartero\web\cartero.js:2132
 #: apps\cartero\web\cartero.js:3121
 #: apps\cartero\web\cartero.js:3205
-Cancelar	Cancelar
+Cancelar	取消
 
 #: apps\cartero\web\cartero.js:2144
-Colecciones	Colecciones
+Colecciones	集合
 
 #: apps\cartero\web\cartero.js:2144
-Historial	Historial
+Historial	历史
 
 #: apps\cartero\web\cartero.js:2144
-Entornos	Entornos
+Entornos	环境
 
 #: apps\cartero\web\cartero.js:2144
-Corridas	Corridas
+Corridas	运行记录
 
 #: apps\cartero\web\cartero.js:2156
-Mostrar	Mostrar
+Mostrar	显示
 
 #: apps\cartero\web\cartero.js:2156
-Ocultar	Ocultar
+Ocultar	隐藏
 
 #: apps\cartero\web\cartero.js:2164
-Buscar	Buscar
+Buscar	搜索
 
 #: apps\cartero\web\cartero.js:2166
 #: apps\cartero\web\cartero.js:2270
 #: apps\cartero\web\cartero.js:3862
-Colección nueva	Colección nueva
+Colección nueva	新建集合
 
 #: apps\cartero\web\cartero.js:2166
-Colección	Colección
+Colección	集合
 
 #: apps\cartero\web\cartero.js:2167
-Un pedido suelto, sin colección	Un pedido suelto, sin colección
+Un pedido suelto, sin colección	松散的请求，没有集合
 
 #: apps\cartero\web\cartero.js:2167
 #: apps\cartero\web\cartero.js:2235
 #: apps\cartero\web\cartero.js:2289
 #: apps\cartero\web\cartero.js:2994
-Pedido nuevo	Pedido nuevo
+Pedido nuevo	新请求
 
 #: apps\cartero\web\cartero.js:2167
 #: apps\cartero\web\cartero.js:3587
-Pedido	Pedido
+Pedido	请求
 
 #: apps\cartero\web\cartero.js:2169
-Los últimos %d	Los últimos %d
+Los últimos %d	最后的%d
 
 #: apps\cartero\web\cartero.js:2170
-Borrar el historial	Borrar el historial
+Borrar el historial	删除历史记录
 
 #: apps\cartero\web\cartero.js:2172
 #: apps\cartero\web\cartero.js:3048
-Entorno	Entorno
+Entorno	环境
 
 #: apps\cartero\web\cartero.js:2174
-Correr una colección	Correr una colección
+Correr una colección	运行集合
 
 #: apps\cartero\web\cartero.js:2180
 #: apps\cartero\web\cartero.js:3841
-Leyendo la tarjeta...	Leyendo la tarjeta...
+Leyendo la tarjeta...	读卡...
 
 #: apps\cartero\web\cartero.js:2188
-Ninguna colección todavía. Creá una o importá una de Postman.	Ninguna colección todavía. Creá una o importá una de Postman.
+Ninguna colección todavía. Creá una o importá una de Postman.	尚无集合。请新建集合，或从 Postman 导入。
 
 #: apps\cartero\web\cartero.js:2195
-no se pudo leer	no se pudo leer
+no se pudo leer	无法阅读
 
 #: apps\cartero\web\cartero.js:2204
 #: apps\cartero\web\cartero.js:2204
 #: apps\cartero\web\cartero.js:2414
 #: apps\cartero\web\cartero.js:2645
-Más	Más
+Más	更多
 
 #: apps\cartero\web\cartero.js:2211
-(sin nombre)	(sin nombre)
+(sin nombre)	（无名）
 
 #: apps\cartero\web\cartero.js:2216
-vacía	vacía
+vacía	空的
 
 #: apps\cartero\web\cartero.js:2221
-Nada con «%s».	Nada con «%s».
+Nada con «%s».	“%s”没有任何内容。
 
 #: apps\cartero\web\cartero.js:2236
 #: apps\cartero\web\cartero.js:2289
-Carpeta nueva	Carpeta nueva
+Carpeta nueva	新建文件夹
 
 #: apps\cartero\web\cartero.js:2237
-Auth, scripts y variables	Auth, scripts y variables
+Auth, scripts y variables	身份验证、脚本和变量
 
 #: apps\cartero\web\cartero.js:2237
-Auth y scripts	Auth y scripts
+Auth y scripts	授权和脚本
 
 #: apps\cartero\web\cartero.js:2238
-Correr…	Correr…
+Correr…	运行...
 
 #: apps\cartero\web\cartero.js:2240
 #: apps\cartero\web\cartero.js:2246
 #: apps\cartero\web\cartero.js:2429
-Renombrar	Renombrar
+Renombrar	重命名
 
 #: apps\cartero\web\cartero.js:2241
 #: apps\cartero\web\cartero.js:2247
 #: apps\cartero\web\cartero.js:2430
 #: apps\cartero\web\cartero.js:2648
-Duplicar	Duplicar
+Duplicar	重复
 
 #: apps\cartero\web\cartero.js:2242
 #: apps\cartero\web\cartero.js:2431
 #: apps\cartero\web\cartero.js:3052
-Exportar	Exportar
+Exportar	出口
 
 #: apps\cartero\web\cartero.js:2243
 #: apps\cartero\web\cartero.js:2249
 #: apps\cartero\web\cartero.js:2433
 #: apps\cartero\web\cartero.js:2525
-Borrar	Borrar
+Borrar	删除
 
 #: apps\cartero\web\cartero.js:2245
-Abrir	Abrir
+Abrir	打开
 
 #: apps\cartero\web\cartero.js:2258
-La colección ya no está en la tarjeta	La colección ya no está en la tarjeta
+La colección ya no está en la tarjeta	存储卡中已没有此集合。
 
 #: apps\cartero\web\cartero.js:2267
-No encuentro «%s» en la tarjeta: se cambió en otro lado. Volvé a la página para leerla de nuevo.	No encuentro «%s» en la tarjeta: se cambió en otro lado. Volvé a la página para leerla de nuevo.
+No encuentro «%s» en la tarjeta: se cambió en otro lado. Volvé a la página para leerla de nuevo.	在存储卡中找不到“%s”：该内容已在其他位置更改。请返回此页面重新加载。
 
 #: apps\cartero\web\cartero.js:2270
 #: apps\cartero\web\cartero.js:3006
-Nombre de la colección	Nombre de la colección
+Nombre de la colección	集合名称
 
 #: apps\cartero\web\cartero.js:2289
-Nombre de la carpeta	Nombre de la carpeta
+Nombre de la carpeta	文件夹名称
 
 #: apps\cartero\web\cartero.js:2289
-Nombre del pedido	Nombre del pedido
+Nombre del pedido	请求名称
 
 #: apps\cartero\web\cartero.js:2309
 #: apps\cartero\web\cartero.js:2487
-Nombre nuevo	Nombre nuevo
+Nombre nuevo	新名称
 
 #: apps\cartero\web\cartero.js:2333
 #: apps\cartero\web\cartero.js:2346
 #: apps\cartero\web\cartero.js:2500
-(copia)	(copia)
+(copia)	（副本）
 
 #: apps\cartero\web\cartero.js:2358
-¿Borrar la colección «%s» con todo lo que tiene?	¿Borrar la colección «%s» con todo lo que tiene?
+¿Borrar la colección «%s» con todo lo que tiene?	删除集合“%s”及其中的所有内容？
 
 #: apps\cartero\web\cartero.js:2368
-¿Borrar la carpeta «%s» con todo lo que tiene?	¿Borrar la carpeta «%s» con todo lo que tiene?
+¿Borrar la carpeta «%s» con todo lo que tiene?	删除文件夹“%s”及其中的所有内容？
 
 #: apps\cartero\web\cartero.js:2368
-¿Borrar el pedido «%s»?	¿Borrar el pedido «%s»?
+¿Borrar el pedido «%s»?	删除请求“%s”？
 
 #: apps\cartero\web\cartero.js:2386
-Todavía no se mandó nada.	Todavía no se mandó nada.
+Todavía no se mandó nada.	尚未发送任何内容。
 
 #: apps\cartero\web\cartero.js:2392
-error	error
+error	错误
 
 #: apps\cartero\web\cartero.js:2396
-¿Borrar el historial?	¿Borrar el historial?
+¿Borrar el historial?	删除历史记录？
 
 #: apps\cartero\web\cartero.js:2412
-El activo	El activo
+El activo	活跃的那个
 
 #: apps\cartero\web\cartero.js:2416
-1 variable	1 variable
+1 variable	1 个变量
 
 #: apps\cartero\web\cartero.js:2416
-%d variables	%d variables
+%d variables	%d 个变量
 
 #: apps\cartero\web\cartero.js:2418
 #: apps\cartero\web\cartero.js:3044
-Globales	Globales
+Globales	全局变量
 
 #: apps\cartero\web\cartero.js:2421
-Ningún entorno todavía.	Ningún entorno todavía.
+Ningún entorno todavía.	还没有环境。
 
 #: apps\cartero\web\cartero.js:2427
-Desactivar	Desactivar
+Desactivar	停用
 
 #: apps\cartero\web\cartero.js:2427
 #: apps\cartero\web\cartero.js:3050
-Activar	Activar
+Activar	激活
 
 #: apps\cartero\web\cartero.js:2428
-Editar	Editar
+Editar	编辑
 
 #: apps\cartero\web\cartero.js:2453
-Nombre del entorno	Nombre del entorno
+Nombre del entorno	环境名称
 
 #: apps\cartero\web\cartero.js:2453
-Entorno nuevo	Entorno nuevo
+Entorno nuevo	新环境
 
 #: apps\cartero\web\cartero.js:2476
-El entorno ya no está en la tarjeta	El entorno ya no está en la tarjeta
+El entorno ya no está en la tarjeta	存储卡中已没有此环境。
 
 #: apps\cartero\web\cartero.js:2506
-¿Borrar el entorno «%s»?	¿Borrar el entorno «%s»?
+¿Borrar el entorno «%s»?	删除环境“%s”？
 
 #: apps\cartero\web\cartero.js:2517
-Ninguna corrida guardada.	Ninguna corrida guardada.
+Ninguna corrida guardada.	没有保存的运行。
 
 #: apps\cartero\web\cartero.js:2527
-¿Borrar esta corrida?	¿Borrar esta corrida?
+¿Borrar esta corrida?	删除此运行吗？
 
 #: apps\cartero\web\cartero.js:2542
-Heredar del padre	Heredar del padre
-
-#: apps\cartero\web\cartero.js:2542
-#: apps\cartero\web\cartero.js:2544
-Sin auth	Sin auth
+Heredar del padre	继承父级设置
 
 #: apps\cartero\web\cartero.js:2542
 #: apps\cartero\web\cartero.js:2544
-Bearer token	Bearer token
+Sin auth	无认证
+
+#: apps\cartero\web\cartero.js:2542
+#: apps\cartero\web\cartero.js:2544
+Bearer token	Bearer 令牌
 
 #: apps\cartero\web\cartero.js:2543
-Basic (usuario y contraseña)	Basic (usuario y contraseña)
+Basic (usuario y contraseña)	Basic（用户名和密码）
 
 #: apps\cartero\web\cartero.js:2543
 #: apps\cartero\web\cartero.js:2544
-API key	API key
+API key	API 密钥
 
 #: apps\cartero\web\cartero.js:2544
 Basic	Basic
 
 #: apps\cartero\web\cartero.js:2545
 #: apps\cartero\web\cartero.js:3534
-ninguno	ninguno
+ninguno	无
 
 #: apps\cartero\web\cartero.js:2546
-Texto	Texto
+Texto	文字
 
 #: apps\cartero\web\cartero.js:2550
-Guardar variable de entorno	Guardar variable de entorno
+Guardar variable de entorno	保存环境变量
 
 #: apps\cartero\web\cartero.js:2551
-Variable de esta corrida	Variable de esta corrida
+Variable de esta corrida	本次运行的变量
 
 #: apps\cartero\web\cartero.js:2552
-Leer una variable	Leer una variable
+Leer una variable	读取一个变量
 
 #: apps\cartero\web\cartero.js:2553
-Agregar encabezado	Agregar encabezado
+Agregar encabezado	添加标头
 
 #: apps\cartero\web\cartero.js:2554
-Saltear el pedido	Saltear el pedido
+Saltear el pedido	跳过请求
 
 #: apps\cartero\web\cartero.js:2557
-Status 200	Status 200
+Status 200	状态码 200
 
 #: apps\cartero\web\cartero.js:2558
-Tiempo < 500 ms	Tiempo < 500 ms
+Tiempo < 500 ms	时间 < 500 毫秒
 
 #: apps\cartero\web\cartero.js:2559
-Guardar variable de la respuesta	Guardar variable de la respuesta
+Guardar variable de la respuesta	保存响应中的变量
 
 #: apps\cartero\web\cartero.js:2560
-JSON tiene propiedad	JSON tiene propiedad
+JSON tiene propiedad	JSON 包含属性
 
 #: apps\cartero\web\cartero.js:2561
-Cuerpo contiene texto	Cuerpo contiene texto
+Cuerpo contiene texto	正文包含文本
 
 #: apps\cartero\web\cartero.js:2562
-Es JSON	Es JSON
+Es JSON	是 JSON
 
 #: apps\cartero\web\cartero.js:2563
-Siguiente pedido	Siguiente pedido
+Siguiente pedido	下一个请求
 
 #: apps\cartero\web\cartero.js:2574
-«%s» tiene cambios sin guardar. ¿Descartarlos?	«%s» tiene cambios sin guardar. ¿Descartarlos?
+«%s» tiene cambios sin guardar. ¿Descartarlos?	“%s”有未保存的更改。丢弃它们？
 
 #: apps\cartero\web\cartero.js:2574
-El pedido	El pedido
+El pedido	请求
 
 #: apps\cartero\web\cartero.js:2623
-Sin colección	Sin colección
+Sin colección	没有收藏
 
 #: apps\cartero\web\cartero.js:2630
 #: apps\cartero\web\cartero.js:3042
-Cambios sin guardar	Cambios sin guardar
+Cambios sin guardar	未保存的更改
 
 #: apps\cartero\web\cartero.js:2631
 #: apps\cartero\web\cartero.js:2631
 #: apps\cartero\web\cartero.js:2856
 #: apps\cartero\web\cartero.js:3008
-Nombre	Nombre
+Nombre	名称
 
 #: apps\cartero\web\cartero.js:2635
 #: apps\cartero\web\cartero.js:3051
-Guardar (Ctrl+S)	Guardar (Ctrl+S)
+Guardar (Ctrl+S)	保存（Ctrl+S）
 
 #: apps\cartero\web\cartero.js:2635
 #: apps\cartero\web\cartero.js:3008
 #: apps\cartero\web\cartero.js:3051
-Guardar	Guardar
+Guardar	保存
 
 #: apps\cartero\web\cartero.js:2646
-Guardar como…	Guardar como…
+Guardar como…	另存为...
 
 #: apps\cartero\web\cartero.js:2647
 #: apps\cartero\web\cartero.js:3255
 #: apps\cartero\web\cartero.js:3285
-Copiar como cURL	Copiar como cURL
+Copiar como cURL	复制为 cURL
 
 #: apps\cartero\web\cartero.js:2647
 #: apps\cartero\web\cartero.js:3255
 #: apps\cartero\web\cartero.js:3285
-Comando copiado	Comando copiado
+Comando copiado	命令已复制
 
 #: apps\cartero\web\cartero.js:2650
-Método	Método
+Método	方法
 
 #: apps\cartero\web\cartero.js:2663
-Mandar (Ctrl+Enter)	Mandar (Ctrl+Enter)
+Mandar (Ctrl+Enter)	发送（Ctrl+Enter）
 
 #: apps\cartero\web\cartero.js:2696
-Params	Params
+Params	参数
 
 #: apps\cartero\web\cartero.js:2697
 #: apps\cartero\web\cartero.js:2900
-Auth	Auth
+Auth	认证
 
 #: apps\cartero\web\cartero.js:2698
 #: apps\cartero\web\cartero.js:3247
-Encabezados	Encabezados
+Encabezados	标头
 
 #: apps\cartero\web\cartero.js:2699
 #: apps\cartero\web\cartero.js:3246
-Cuerpo	Cuerpo
+Cuerpo	正文
 
 #: apps\cartero\web\cartero.js:2700
 #: apps\cartero\web\cartero.js:2901
-Scripts	Scripts
+Scripts	脚本
 
 #: apps\cartero\web\cartero.js:2712
-Parámetro	Parámetro
+Parámetro	参数
 
 #: apps\cartero\web\cartero.js:2713
-Variables de la ruta	Variables de la ruta
+Variables de la ruta	路径变量
 
 #: apps\cartero\web\cartero.js:2715
-La tabla y la URL van juntas: lo que se cambia en una se ve en la otra. Los desactivados quedan guardados y no van.	La tabla y la URL van juntas: lo que se cambia en una se ve en la otra. Los desactivados quedan guardados y no van.
+La tabla y la URL van juntas: lo que se cambia en una se ve en la otra. Los desactivados quedan guardados y no van.	表格与 URL 会同步；在任一处修改都会反映到另一处。已禁用的参数会保留，但不会发送。
 
 #: apps\cartero\web\cartero.js:2717
 #: apps\cartero\web\cartero.js:2855
-Encabezado	Encabezado
+Encabezado	标头
 
 #: apps\cartero\web\cartero.js:2726
-Corren después de los de la colección y sus carpetas, en ese orden.	Corren después de los de la colección y sus carpetas, en ese orden.
+Corren después de los de la colección y sus carpetas, en ese orden.	它们按照集合及其文件夹的顺序运行。
 
 #: apps\cartero\web\cartero.js:2744
-Host, Content-Length, Connection y User-Agent los pone la placa.	Host, Content-Length, Connection y User-Agent los pone la placa.
+Host, Content-Length, Connection y User-Agent los pone la placa.	Host、Content-Length、Connection 和 User-Agent 由开发板设置。
 
 #: apps\cartero\web\cartero.js:2744
-Host, Content-Length, User-Agent, Origin y los demás los pone el navegador.	Host, Content-Length, User-Agent, Origin y los demás los pone el navegador.
+Host, Content-Length, User-Agent, Origin y los demás los pone el navegador.	Host、Content-Length、User-Agent、Origin 等由浏览器设置。
 
 #: apps\cartero\web\cartero.js:2745
-Se agregan solos	Se agregan solos
+Se agregan solos	自动添加
 
 #: apps\cartero\web\cartero.js:2771
 #: apps\cartero\web\cartero.js:2803
-JSON con errores	JSON con errores
+JSON con errores	JSON 格式错误
 
 #: apps\cartero\web\cartero.js:2771
-JSON válido	JSON válido
+JSON válido	有效 JSON
 
 #: apps\cartero\web\cartero.js:2791
-No se puede formatear: %s	No se puede formatear: %s
+No se puede formatear: %s	无法格式化：%s
 
 #: apps\cartero\web\cartero.js:2792
-Formatear JSON	Formatear JSON
+Formatear JSON	格式化 JSON
 
 #: apps\cartero\web\cartero.js:2799
-Sólo campos de texto: van como multipart/form-data.	Sólo campos de texto: van como multipart/form-data.
+Sólo campos de texto: van como multipart/form-data.	仅文本字段：它们作为 multipart/form-data.
 
 #: apps\cartero\web\cartero.js:2805
-Consulta	Consulta
+Consulta	查询
 
 #: apps\cartero\web\cartero.js:2807
-Variables (JSON)	Variables (JSON)
+Variables (JSON)	变量（JSON）
 
 #: apps\cartero\web\cartero.js:2809
-Va como JSON: {"query": ..., "variables": ...}.	Va como JSON: {"query": ..., "variables": ...}.
+Va como JSON: {"query": ..., "variables": ...}.	将按 JSON 发送：{"query": ..., "variables": ...}。
 
 #: apps\cartero\web\cartero.js:2812
-Este cuerpo («%s») no está en Cartero: se guarda como está y no se manda.	Este cuerpo («%s») no está en Cartero: se guarda como está y no se manda.
+Este cuerpo («%s») no está en Cartero: se guarda como está y no se manda.	Cartero 不支持此正文类型（“%s”）：会原样保存，但不会发送。
 
 #: apps\cartero\web\cartero.js:2814
 #: apps\cartero\web\cartero.js:3321
-Sin cuerpo.	Sin cuerpo.
+Sin cuerpo.	无正文。
 
 #: apps\cartero\web\cartero.js:2851
-Token	Token
+Token	令牌
 
 #: apps\cartero\web\cartero.js:2852
-Usuario	Usuario
+Usuario	用户名
 
 #: apps\cartero\web\cartero.js:2852
-Contraseña	Contraseña
+Contraseña	密码
 
 #: apps\cartero\web\cartero.js:2855
-Parámetro de la URL	Parámetro de la URL
+Parámetro de la URL	URL 参数
 
 #: apps\cartero\web\cartero.js:2856
-Va en	Va en
+Va en	进去
 
 #: apps\cartero\web\cartero.js:2860
-Hereda «%s» de «%s».	Hereda «%s» de «%s».
+Hereda «%s» de «%s».	从“%s”继承“%s”。
 
 #: apps\cartero\web\cartero.js:2861
-Nadie más arriba tiene auth: va sin.	Nadie más arriba tiene auth: va sin.
+Nadie más arriba tiene auth: va sin.	上面没有人有身份验证：它没有。
 
 #: apps\cartero\web\cartero.js:2861
-Sin colección no hay de quién heredar: va sin.	Sin colección no hay de quién heredar: va sin.
+Sin colección no hay de quién heredar: va sin.	没有集合就没有任何东西可以继承：它就没有了。
 
 #: apps\cartero\web\cartero.js:2863
-Va sin auth, aunque la carpeta o la colección tengan.	Va sin auth, aunque la carpeta o la colección tengan.
+Va sin auth, aunque la carpeta o la colección tengan.	不使用认证，即使文件夹或集合已设置认证。
 
 #: apps\cartero\web\cartero.js:2865
-Esta auth («%s») no está en Cartero: se guarda como está y no se manda.	Esta auth («%s») no está en Cartero: se guarda como está y no se manda.
+Esta auth («%s») no está en Cartero: se guarda como está y no se manda.	Cartero 不支持此认证类型（“%s”）：会原样保存，但不会发送。
 
 #: apps\cartero\web\cartero.js:2867
-Tipo	Tipo
+Tipo	类型
 
 #: apps\cartero\web\cartero.js:2868
-Los valores pueden llevar {{variables}}.	Los valores pueden llevar {{variables}}.
+Los valores pueden llevar {{variables}}.	值可以使用{{variables}}。
 
 #: apps\cartero\web\cartero.js:2881
-Pre-request	Pre-request
+Pre-request	请求前脚本
 
 #: apps\cartero\web\cartero.js:2881
 #: apps\cartero\web\cartero.js:3248
 #: apps\cartero\web\cartero.js:3587
-Tests	Tests
+Tests	测试
 
 #: apps\cartero\web\cartero.js:2885
-El JavaScript del navegador, con pm como en Postman; la placa corre un subconjunto (sin expresiones regulares, clases ni async).	El JavaScript del navegador, con pm como en Postman; la placa corre un subconjunto (sin expresiones regulares, clases ni async).
+El JavaScript del navegador, con pm como en Postman; la placa corre un subconjunto (sin expresiones regulares, clases ni async).	浏览器端 JavaScript 使用与 Postman 相同的 pm；开发板仅支持子集，不支持正则表达式、类和 async。
 
 #: apps\cartero\web\cartero.js:2902
-Variables	Variables
+Variables	变量
 
 #: apps\cartero\web\cartero.js:2908
-Corren antes que los de cada carpeta y pedido de la colección.	Corren antes que los de cada carpeta y pedido de la colección.
+Corren antes que los de cada carpeta y pedido de la colección.	它们在集合中的每个文件夹和请求之前运行。
 
 #: apps\cartero\web\cartero.js:2908
-Corren después de los de la colección y antes que los de cada pedido de la carpeta.	Corren después de los de la colección y antes que los de cada pedido de la carpeta.
+Corren después de los de la colección y antes que los de cada pedido de la carpeta.	它们在集合的请求之后和文件夹中的每个请求的请求之前运行。
 
 #: apps\cartero\web\cartero.js:2909
-Las variables de la colección: las usa cualquier pedido de ella si el entorno activo no tiene una con el mismo nombre.	Las variables de la colección: las usa cualquier pedido de ella si el entorno activo no tiene una con el mismo nombre.
+Las variables de la colección: las usa cualquier pedido de ella si el entorno activo no tiene una con el mismo nombre.	集合的变量：如果活动环境没有同名变量，则集合中的任何请求都会使用它们。
 
 #: apps\cartero\web\cartero.js:2915
-Para qué es, en Markdown	Para qué es, en Markdown
+Para qué es, en Markdown	在 Markdown 中它的用途是什么
 
 #: apps\cartero\web\cartero.js:2919
 #: apps\cartero\web\cartero.js:3527
-Correr	Correr
+Correr	运行
 
 #: apps\cartero\web\cartero.js:2920
-La colección: lo que pongas acá vale para todos sus pedidos.	La colección: lo que pongas acá vale para todos sus pedidos.
+La colección: lo que pongas acá vale para todos sus pedidos.	集合：您放在这里的内容适用于它的所有请求。
 
 #: apps\cartero\web\cartero.js:2920
-La carpeta: lo que pongas acá vale para todos sus pedidos.	La carpeta: lo que pongas acá vale para todos sus pedidos.
+La carpeta: lo que pongas acá vale para todos sus pedidos.	文件夹：您放在这里的内容适用于它的所有请求。
 
 #: apps\cartero\web\cartero.js:2952
-«%s» ya no está en la colección (se cambió en otro lado): usá Guardar como…	«%s» ya no está en la colección (se cambió en otro lado): usá Guardar como…
+«%s» ya no está en la colección (se cambió en otro lado): usá Guardar como…	“%s”不再在集合中（已在其他地方更改）：使用另存为...
 
 #: apps\cartero\web\cartero.js:2960
 #: apps\cartero\web\cartero.js:2987
 #: apps\cartero\web\cartero.js:3094
-Guardado	Guardado
+Guardado	已保存
 
 #: apps\cartero\web\cartero.js:3005
-Colección nueva…	Colección nueva…
+Colección nueva…	新建集合…
 
 #: apps\cartero\web\cartero.js:3008
-Guardar como	Guardar como
+Guardar como	另存为
 
 #: apps\cartero\web\cartero.js:3008
-Dónde	Dónde
+Dónde	哪里
 
 #: apps\cartero\web\cartero.js:3010
-Falta el nombre	Falta el nombre
+Falta el nombre	姓名缺失
 
 #: apps\cartero\web\cartero.js:3014
-Falta el nombre de la colección	Falta el nombre de la colección
+Falta el nombre de la colección	缺少集合名称
 
 #: apps\cartero\web\cartero.js:3032
-Guardado en «%s»	Guardado en «%s»
+Guardado en «%s»	保存在“%s”中
 
 #: apps\cartero\web\cartero.js:3048
-Variables de todas las colecciones	Variables de todas las colecciones
+Variables de todas las colecciones	所有集合的变量
 
 #: apps\cartero\web\cartero.js:3049
-Activo	Activo
+Activo	活跃
 
 #: apps\cartero\web\cartero.js:3054
-Variable nueva	Variable nueva
+Variable nueva	新变量
 
 #: apps\cartero\web\cartero.js:3055
-Las globales valen siempre, después del entorno activo y de la colección.	Las globales valen siempre, después del entorno activo y de la colección.
+Las globales valen siempre, después del entorno activo y de la colección.	全局变量总是在活动环境和集合之后应用。
 
 #: apps\cartero\web\cartero.js:3056
-El entorno activo manda sobre la colección y las globales. Cambiarlo acá también lo cambia en la placa.	El entorno activo manda sobre la colección y las globales. Cambiarlo acá también lo cambia en la placa.
+El entorno activo manda sobre la colección y las globales. Cambiarlo acá también lo cambia en la placa.	当前环境优先于集合变量和全局变量；在此修改也会同步到开发板。
 
 #: apps\cartero\web\cartero.js:3057
-Un secreto se ve como puntos, pero queda en la tarjeta tal cual: cualquiera con la tarjeta lo lee.	Un secreto se ve como puntos, pero queda en la tarjeta tal cual: cualquiera con la tarjeta lo lee.
+Un secreto se ve como puntos, pero queda en la tarjeta tal cual: cualquiera con la tarjeta lo lee.	密钥会以圆点隐藏，但仍以明文保存在存储卡中；任何能访问存储卡的人都可读取。
 
 #: apps\cartero\web\cartero.js:3061
-El entorno tiene cambios sin guardar. ¿Descartarlos?	El entorno tiene cambios sin guardar. ¿Descartarlos?
+El entorno tiene cambios sin guardar. ¿Descartarlos?	环境有未保存的更改。丢弃它们？
 
 #: apps\cartero\web\cartero.js:3121
-Enviar	Enviar
+Enviar	发送
 
 #: apps\cartero\web\cartero.js:3131
-El runner está corriendo	El runner está corriendo
+El runner está corriendo	运行器正在运行
 
 #: apps\cartero\web\cartero.js:3176
-conexión	conexión
+conexión	连接
 
 #: apps\cartero\web\cartero.js:3176
-envío	envío
+envío	发送
 
 #: apps\cartero\web\cartero.js:3176
-espera	espera
+espera	等待
 
 #: apps\cartero\web\cartero.js:3176
-descarga	descarga
+descarga	下载
 
 #: apps\cartero\web\cartero.js:3204
-Mandando vía la placa…	Mandando vía la placa…
+Mandando vía la placa…	正在通过开发板发送…
 
 #: apps\cartero\web\cartero.js:3204
-Mandando desde el navegador…	Mandando desde el navegador…
+Mandando desde el navegador…	从浏览器发送...
 
 #: apps\cartero\web\cartero.js:3210
-La respuesta va a aparecer acá. Ctrl+Enter (⌘+Enter) manda, Ctrl+S guarda.	La respuesta va a aparecer acá. Ctrl+Enter (⌘+Enter) manda, Ctrl+S guarda.
+La respuesta va a aparecer acá. Ctrl+Enter (⌘+Enter) manda, Ctrl+S guarda.	响应将显示在这里。 Ctrl+Enter (⌘+Enter) 发送，Ctrl+S 保存。
 
 #: apps\cartero\web\cartero.js:3213
-Abriendo Cartero en la placa…	Abriendo Cartero en la placa…
+Abriendo Cartero en la placa…	正在开发板上打开 Cartero…
 
 #: apps\cartero\web\cartero.js:3216
-Cartero no terminó de abrir en la placa. Probá de nuevo.	Cartero no terminó de abrir en la placa. Probá de nuevo.
+Cartero no terminó de abrir en la placa. Probá de nuevo.	开发板上的 Cartero 未能打开。请重试。
 
 #: apps\cartero\web\cartero.js:3216
-Cartero no está abierta en la placa, y hace falta para mandar vía la placa.	Cartero no está abierta en la placa, y hace falta para mandar vía la placa.
+Cartero no está abierta en la placa, y hace falta para mandar vía la placa.	开发板上未打开 Cartero；通过开发板发送请求时需要打开它。
 
 #: apps\cartero\web\cartero.js:3217
-Abrir Cartero en la placa	Abrir Cartero en la placa
+Abrir Cartero en la placa	在开发板上打开 Cartero
 
 #: apps\cartero\web\cartero.js:3218
-Mandarlo directo desde el navegador	Mandarlo directo desde el navegador
+Mandarlo directo desde el navegador	直接从浏览器发送
 
 #: apps\cartero\web\cartero.js:3224
-El pre-request salteó el pedido (pm.execution.skipRequest): no se mandó.	El pre-request salteó el pedido (pm.execution.skipRequest): no se mandó.
+El pre-request salteó el pedido (pm.execution.skipRequest): no se mandó.	预请求跳过了请求（pm.execution.skipRequest）：未发送。
 
 #: apps\cartero\web\cartero.js:3231
-Tiempo	Tiempo
+Tiempo	时间
 
 #: apps\cartero\web\cartero.js:3232
-Tamaño	Tamaño
+Tamaño	尺寸
 
 #: apps\cartero\web\cartero.js:3234
-%d redirecciones	%d redirecciones
+%d redirecciones	%d 重定向
 
 #: apps\cartero\web\cartero.js:3234
-redirigido	redirigido
+redirigido	重定向
 
 #: apps\cartero\web\cartero.js:3235
 #: apps\cartero\web\cartero.js:3534
-vía la placa	vía la placa
+vía la placa	通过开发板
 
 #: apps\cartero\web\cartero.js:3235
 #: apps\cartero\web\cartero.js:3534
-desde el navegador	desde el navegador
+desde el navegador	从浏览器
 
 #: apps\cartero\web\cartero.js:3239
-Mandarlo vía la placa	Mandarlo vía la placa
+Mandarlo vía la placa	通过留言板发送
 
 #: apps\cartero\web\cartero.js:3241
-La placa guardó sólo una parte del cuerpo (%s): lo que sigue no está.	La placa guardó sólo una parte del cuerpo (%s): lo que sigue no está.
+La placa guardó sólo una parte del cuerpo (%s): lo que sigue no está.	开发板只保存了部分正文（%s）；其余内容未保存。
 
 #: apps\cartero\web\cartero.js:3242
-No se pudo leer el cuerpo de la tarjeta: %s	No se pudo leer el cuerpo de la tarjeta: %s
+No se pudo leer el cuerpo de la tarjeta: %s	无法从存储卡读取正文：%s
 
 #: apps\cartero\web\cartero.js:3248
-Tests %d/%d	Tests %d/%d
+Tests %d/%d	测试 %d/%d
 
 #: apps\cartero\web\cartero.js:3275
-Cuerpo copiado	Cuerpo copiado
+Cuerpo copiado	已复制正文
 
 #: apps\cartero\web\cartero.js:3275
-Copiar	Copiar
+Copiar	复制
 
 #: apps\cartero\web\cartero.js:3276
 #: apps\cartero\web\cartero.js:3852
-Descargar	Descargar
+Descargar	下载
 
 #: apps\cartero\web\cartero.js:3278
-Nombre del archivo en %s	Nombre del archivo en %s
+Nombre del archivo en %s	%s 中的文件名
 
 #: apps\cartero\web\cartero.js:3283
-Guardado en %s	Guardado en %s
+Guardado en %s	保存到 %s
 
 #: apps\cartero\web\cartero.js:3284
-Guardar en la tarjeta	Guardar en la tarjeta
+Guardar en la tarjeta	保存到存储卡
 
 #: apps\cartero\web\cartero.js:3291
-Sin encabezados.	Sin encabezados.
+Sin encabezados.	没有标题。
 
 #: apps\cartero\web\cartero.js:3292
-Desde el navegador se ven sólo los encabezados que el servidor deja ver (CORS, Access-Control-Expose-Headers). Vía la placa se ven todos.	Desde el navegador se ven sólo los encabezados que el servidor deja ver (CORS, Access-Control-Expose-Headers). Vía la placa se ven todos.
+Desde el navegador se ven sólo los encabezados que el servidor deja ver (CORS, Access-Control-Expose-Headers). Vía la placa se ven todos.	从浏览器中，您只能看到服务器允许您看到的标头（CORS、Access-Control-Expose-Headers）。通过看板，您可以看到所有这些。
 
 #: apps\cartero\web\cartero.js:3301
-%d pasaron	%d pasaron
+%d pasaron	%d 通过
 
 #: apps\cartero\web\cartero.js:3301
-%d fallaron	%d fallaron
+%d fallaron	%d 失败
 
 #: apps\cartero\web\cartero.js:3302
-%d salteados	%d salteados
+%d salteados	%d 已跳过
 
 #: apps\cartero\web\cartero.js:3307
-Sin respuesta: los tests no corrieron.	Sin respuesta: los tests no corrieron.
+Sin respuesta: los tests no corrieron.	无响应：测试未运行。
 
 #: apps\cartero\web\cartero.js:3309
-Este pedido no tiene tests. Se escriben en Scripts, Tests.	Este pedido no tiene tests. Se escriben en Scripts, Tests.
+Este pedido no tiene tests. Se escriben en Scripts, Tests.	此请求没有测试。它们是用脚本、测试编写的。
 
 #: apps\cartero\web\cartero.js:3311
 #: apps\cartero\web\cartero.js:3653
-Error en el script (%s, %s): %s	Error en el script (%s, %s): %s
+Error en el script (%s, %s): %s	脚本错误（%s、%s）：%s
 
 #: apps\cartero\web\cartero.js:3311
 #: apps\cartero\web\cartero.js:3581
 #: apps\cartero\web\cartero.js:3653
-tests	tests
+tests	测试
 
 #: apps\cartero\web\cartero.js:3311
 #: apps\cartero\web\cartero.js:3653
-pre-request	pre-request
+pre-request	请求前脚本
 
 #: apps\cartero\web\cartero.js:3322
-Lindo	Lindo
+Lindo	格式化
 
 #: apps\cartero\web\cartero.js:3322
-Crudo	Crudo
+Crudo	原始
 
 #: apps\cartero\web\cartero.js:3322
 #: apps\cartero\web\cartero.js:3338
-Vista	Vista
+Vista	预览
 
 #: apps\cartero\web\cartero.js:3327
-Se muestran los primeros 2 MB: el resto está en Descargar.	Se muestran los primeros 2 MB: el resto está en Descargar.
+Se muestran los primeros 2 MB: el resto está en Descargar.	显示前 2 MB：其余部分在下载中。
 
 #: apps\cartero\web\cartero.js:3334
-Una imagen de %s (%s).	Una imagen de %s (%s).
+Una imagen de %s (%s).	%s (%s) 的图像。
 
 #: apps\cartero\web\cartero.js:3335
-Binario, %s (%s): se puede descargar o guardar en la tarjeta.	Binario, %s (%s): se puede descargar o guardar en la tarjeta.
+Binario, %s (%s): se puede descargar o guardar en la tarjeta.	二进制内容，%s（%s）：可下载或保存到存储卡。
 
 #: apps\cartero\web\cartero.js:3345
-Dice ser JSON pero no lo es: %s	Dice ser JSON pero no lo es: %s
+Dice ser JSON pero no lo es: %s	声称是 JSON，但不是：%s
 
 #: apps\cartero\web\cartero.js:3412
 #: apps\cartero\web\cartero.js:3440
-Copiado: %s	Copiado: %s
+Copiado: %s	复制：%s
 
 #: apps\cartero\web\cartero.js:3418
-%d elementos	%d elementos
+%d elementos	%d 项目
 
 #: apps\cartero\web\cartero.js:3418
-%d claves	%d claves
+%d claves	%d 密钥
 
 #: apps\cartero\web\cartero.js:3433
-… %d más	… %d más
+… %d más	… %d 更多
 
 #: apps\cartero\web\cartero.js:3440
-Clic: copia %s	Clic: copia %s
+Clic: copia %s	点击：复制%s
 
 #: apps\cartero\web\cartero.js:3441
-Guardar este valor en una variable del entorno activo	Guardar este valor en una variable del entorno activo
+Guardar este valor en una variable del entorno activo	将此值保存到活动环境的变量中
 
 #: apps\cartero\web\cartero.js:3441
-variable	variable
+variable	变量
 
 #: apps\cartero\web\cartero.js:3445
-Filtrar claves y valores	Filtrar claves y valores
+Filtrar claves y valores	过滤键和值
 
 #: apps\cartero\web\cartero.js:3450
-Cerrar todo	Cerrar todo
+Cerrar todo	全部折叠
 
 #: apps\cartero\web\cartero.js:3451
-Abrir todo	Abrir todo
+Abrir todo	全部展开
 
 #: apps\cartero\web\cartero.js:3460
-Nombre de la variable en «%s»	Nombre de la variable en «%s»
+Nombre de la variable en «%s»	“%s”中变量的名称
 
 #: apps\cartero\web\cartero.js:3460
-No hay entorno activo: va a las globales. Nombre de la variable	No hay entorno activo: va a las globales. Nombre de la variable
+No hay entorno activo: va a las globales. Nombre de la variable	没有活跃的环境：它进入全局。变量名
 
 #: apps\cartero\web\cartero.js:3474
 {{%s}} = %s	{{%s}} = %s
 
 #: apps\cartero\web\cartero.js:3525
 #: apps\cartero\web\cartero.js:3941
-Runner	Runner
+Runner	运行器
 
 #: apps\cartero\web\cartero.js:3526
-Detener	Detener
+Detener	停止
 
 #: apps\cartero\web\cartero.js:3529
-Colección o carpeta	Colección o carpeta
+Colección o carpeta	集合或文件夹
 
 #: apps\cartero\web\cartero.js:3530
-Iteraciones	Iteraciones
+Iteraciones	迭代
 
 #: apps\cartero\web\cartero.js:3531
-Demora entre pedidos (ms)	Demora entre pedidos (ms)
+Demora entre pedidos (ms)	请求之间的延迟（毫秒）
 
 #: apps\cartero\web\cartero.js:3532
-Detener al primer fallo	Detener al primer fallo
+Detener al primer fallo	在第一次失败时停止
 
 #: apps\cartero\web\cartero.js:3532
-No hay colecciones para correr.	No hay colecciones para correr.
+No hay colecciones para correr.	没有要运行的集合。
 
 #: apps\cartero\web\cartero.js:3533
-Con el entorno %s, %s. Los cambios de variables de los scripts se guardan; los pedidos no van al historial.	Con el entorno %s, %s. Los cambios de variables de los scripts se guardan; los pedidos no van al historial.
+Con el entorno %s, %s. Los cambios de variables de los scripts se guardan; los pedidos no van al historial.	具有环境%s、%s。保存脚本中的变量更改；这些请求不会进入历史记录。
 
 #: apps\cartero\web\cartero.js:3558
-iteración %d	iteración %d
+iteración %d	迭代 %d
 
 #: apps\cartero\web\cartero.js:3559
-salteado	salteado
+salteado	跳过
 
 #: apps\cartero\web\cartero.js:3577
-guardada en %s	guardada en %s
+guardada en %s	保存在 %s 中
 
 #: apps\cartero\web\cartero.js:3580
-pedidos	pedidos
+pedidos	要求
 
 #: apps\cartero\web\cartero.js:3582
-pasaron	pasaron
+pasaron	通过了
 
 #: apps\cartero\web\cartero.js:3583
-fallaron	fallaron
+fallaron	失败了
 
 #: apps\cartero\web\cartero.js:3584
-en total	en total
+en total	总共
 
 #: apps\cartero\web\cartero.js:3587
-Estado	Estado
+Estado	状态
 
 #: apps\cartero\web\cartero.js:3588
-Empezando…	Empezando…
+Empezando…	开始…
 
 #: apps\cartero\web\cartero.js:3588
-Nada que correr.	Nada que correr.
+Nada que correr.	没什么可跑的。
 
 #: apps\cartero\web\cartero.js:3602
-Detenida a mano.	Detenida a mano.
+Detenida a mano.	已手动停止。
 
 #: apps\cartero\web\cartero.js:3607
-Hay un pedido en camino	Hay un pedido en camino
+Hay un pedido en camino	请求正在处理中
 
 #: apps\cartero\web\cartero.js:3611
-Esa carpeta ya no está	Esa carpeta ya no está
+Esa carpeta ya no está	那个文件夹不见了
 
 #: apps\cartero\web\cartero.js:3628
-Más de 10000 pasos en una iteración: ¿un setNextRequest en ronda?	Más de 10000 pasos en una iteración: ¿un setNextRequest en ronda?
+Más de 10000 pasos en una iteración: ¿un setNextRequest en ronda?	一次迭代超过 10000 个步骤：setNextRequest 一直在循环？
 
 #: apps\cartero\web\cartero.js:3642
-Cartero no está abierta en la placa: la corrida se detuvo.	Cartero no está abierta en la placa: la corrida se detuvo.
+Cartero no está abierta en la placa: la corrida se detuvo.	开发板上未打开 Cartero，运行已停止。
 
 #: apps\cartero\web\cartero.js:3659
-Detenida en el primer fallo.	Detenida en el primer fallo.
+Detenida en el primer fallo.	第一次失败就停止了。
 
 #: apps\cartero\web\cartero.js:3663
-setNextRequest: no hay un pedido «%s»; la iteración terminó.	setNextRequest: no hay un pedido «%s»; la iteración terminó.
+setNextRequest: no hay un pedido «%s»; la iteración terminó.	setNextRequest：没有请求“%s”；迭代结束。
 
 #: apps\cartero\web\cartero.js:3686
-No se pudo guardar la corrida: %s	No se pudo guardar la corrida: %s
+No se pudo guardar la corrida: %s	无法保存运行：%s
 
 #: apps\cartero\web\cartero.js:3689
-La corrida terminó: %d de %d tests pasaron	La corrida terminó: %d de %d tests pasaron
+La corrida terminó: %d de %d tests pasaron	运行完成：%d 的 %d 测试通过
 
 #: apps\cartero\web\cartero.js:3695
-La corrida ya no está	La corrida ya no está
+La corrida ya no está	该运行记录已不存在。
 
 #: apps\cartero\web\cartero.js:3708
-Pegá acá una colección o un entorno de Postman (JSON), o un comando curl	Pegá acá una colección o un entorno de Postman (JSON), o un comando curl
+Pegá acá una colección o un entorno de Postman (JSON), o un comando curl	在此处粘贴 Postman 集合或环境 (JSON) 或curl 命令
 
 #: apps\cartero\web\cartero.js:3718
 #: apps\cartero\web\cartero.js:3722
 #: apps\cartero\web\cartero.js:3940
-Importar	Importar
+Importar	导入
 
 #: apps\cartero\web\cartero.js:3719
-Una colección de Postman (v2.0 o v2.1) queda en la tarjeta como un archivo más; un entorno, también; un comando curl se abre como un pedido nuevo, para guardarlo donde quieras.	Una colección de Postman (v2.0 o v2.1) queda en la tarjeta como un archivo más; un entorno, también; un comando curl se abre como un pedido nuevo, para guardarlo donde quieras.
+Una colección de Postman (v2.0 o v2.1) queda en la tarjeta como un archivo más; un entorno, también; un comando curl se abre como un pedido nuevo, para guardarlo donde quieras.	Postman 集合（v2.0 或 v2.1）和环境会作为文件保存到存储卡；curl 命令则会作为新请求打开，可保存到任意位置。
 
 #: apps\cartero\web\cartero.js:3723
-Elegir un archivo…	Elegir un archivo…
+Elegir un archivo…	选择一个文件...
 
 #: apps\cartero\web\cartero.js:3729
-No hay nada que importar	No hay nada que importar
+No hay nada que importar	没有什么可以导入的
 
 #: apps\cartero\web\cartero.js:3733
-El comando quedó como un pedido nuevo: guardalo con Guardar como…	El comando quedó como un pedido nuevo: guardalo con Guardar como…
+El comando quedó como un pedido nuevo: guardalo con Guardar como…	该命令变成了一个新请求：使用“另存为”将其保存...
 
 #: apps\cartero\web\cartero.js:3737
-No es JSON ni un comando curl: %s	No es JSON ni un comando curl: %s
+No es JSON ni un comando curl: %s	既不是 JSON，也不是 cURL 命令：%s
 
 #: apps\cartero\web\cartero.js:3742
-Es una colección de Postman v1: exportala de nuevo como v2.1.	Es una colección de Postman v1: exportala de nuevo como v2.1.
+Es una colección de Postman v1: exportala de nuevo como v2.1.	这是 Postman v1 集合；请重新导出为 v2.1 格式。
 
 #: apps\cartero\web\cartero.js:3746
-Importada	Importada
+Importada	已导入
 
 #: apps\cartero\web\cartero.js:3755
-Colección «%s» importada: %d pedidos, en %s.	Colección «%s» importada: %d pedidos, en %s.
+Colección «%s» importada: %d pedidos, en %s.	导入集合“%s”：%d 请求，位于 %s 中。
 
 #: apps\cartero\web\cartero.js:3760
-Son globales: ¿agregarlas a las de la tarjeta? Las que tengan el mismo nombre se reemplazan.	Son globales: ¿agregarlas a las de la tarjeta? Las que tengan el mismo nombre se reemplazan.
+Son globales: ¿agregarlas a las de la tarjeta? Las que tengan el mismo nombre se reemplazan.	这是全局变量。要合并到存储卡中的全局变量吗？同名变量将被覆盖。
 
 #: apps\cartero\web\cartero.js:3770
-%d globales importadas.	%d globales importadas.
+%d globales importadas.	导入 %d 全局变量。
 
 #: apps\cartero\web\cartero.js:3773
-Importado	Importado
+Importado	已导入
 
 #: apps\cartero\web\cartero.js:3780
-Entorno «%s» importado: %d variables.	Entorno «%s» importado: %d variables.
+Entorno «%s» importado: %d variables.	导入环境“%s”：%d 变量。
 
 #: apps\cartero\web\cartero.js:3781
-Abrirlo	Abrirlo
+Abrirlo	打开它
 
 #: apps\cartero\web\cartero.js:3784
-No reconozco ese JSON: ni una colección ni un entorno de Postman.	No reconozco ese JSON: ni una colección ni un entorno de Postman.
+No reconozco ese JSON: ni una colección ni un entorno de Postman.	我不认识 JSON：既不是 Postman 集合也不是环境。
 
 #: apps\cartero\web\cartero.js:3811
-Sin entorno	Sin entorno
+Sin entorno	没有环境
 
 #: apps\cartero\web\cartero.js:3815
-La placa hace el pedido: sin CORS, desde su red	La placa hace el pedido: sin CORS, desde su red
+La placa hace el pedido: sin CORS, desde su red	开发板通过其网络发出请求，不受 CORS 限制。
 
 #: apps\cartero\web\cartero.js:3815
-Vía la placa	Vía la placa
+Vía la placa	通过开发板
 
 #: apps\cartero\web\cartero.js:3816
-El navegador hace el pedido: hace falta que el servidor permita CORS	El navegador hace el pedido: hace falta que el servidor permita CORS
+El navegador hace el pedido: hace falta que el servidor permita CORS	浏览器发出请求：服务器必须允许 CORS
 
 #: apps\cartero\web\cartero.js:3816
-Directo desde el navegador	Directo desde el navegador
+Directo desde el navegador	直接从浏览器
 
 #: apps\cartero\web\cartero.js:3822
 #: apps\cartero\web\cartero.js:3942
 #: apps\cartero\web\cartero.js:3942
-Ajustes de los pedidos	Ajustes de los pedidos
+Ajustes de los pedidos	请求设置
 
 #: apps\cartero\web\cartero.js:3823
-Tiempo de espera (ms)	Tiempo de espera (ms)
+Tiempo de espera (ms)	超时（毫秒）
 
 #: apps\cartero\web\cartero.js:3824
-Seguir redirecciones	Seguir redirecciones
+Seguir redirecciones	遵循重定向
 
 #: apps\cartero\web\cartero.js:3825
-Se guardan en este navegador.	Se guardan en este navegador.
+Se guardan en este navegador.	它们保存在该浏览器中。
 
 #: apps\cartero\web\cartero.js:3825
-Listo	Listo
+Listo	完成
 
 #: apps\cartero\web\cartero.js:3827
-El tiempo va de 500 a 300000 ms	El tiempo va de 500 a 300000 ms
+El tiempo va de 500 a 300000 ms	超时从 500 毫秒到 300000 毫秒
 
 #: apps\cartero\web\cartero.js:3851
-Correr de nuevo	Correr de nuevo
+Correr de nuevo	再次运行
 
 #: apps\cartero\web\cartero.js:3857
 #: apps\cartero\web\cartero.js:3914
@@ -1066,16 +1066,16 @@ Correr de nuevo	Correr de nuevo
 Cartero	Cartero
 
 #: apps\cartero\web\cartero.js:3858
-Un cliente de APIs como Postman: los pedidos en colecciones y carpetas, entornos con sus variables, tests en JavaScript y un runner. Todo queda en la tarjeta, en el formato de Postman, y la app de la placa lo usa igual.	Un cliente de APIs como Postman: los pedidos en colecciones y carpetas, entornos con sus variables, tests en JavaScript y un runner. Todo queda en la tarjeta, en el formato de Postman, y la app de la placa lo usa igual.
+Un cliente de APIs como Postman: los pedidos en colecciones y carpetas, entornos con sus variables, tests en JavaScript y un runner. Todo queda en la tarjeta, en el formato de Postman, y la app de la placa lo usa igual.	类似 Postman 的 API 客户端：请求按集合和文件夹整理，环境保存变量，并支持 JavaScript 测试与批量运行。所有内容均以 Postman 格式保存在存储卡中，开发板上的应用也使用同一格式。
 
 #: apps\cartero\web\cartero.js:3859
-Elegí un pedido de la izquierda, o:	Elegí un pedido de la izquierda, o:
+Elegí un pedido de la izquierda, o:	选择左侧的请求，或者：
 
 #: apps\cartero\web\cartero.js:3863
-Importar de Postman o cURL	Importar de Postman o cURL
+Importar de Postman o cURL	从 Postman 或 cURL 导入
 
 #: apps\cartero\web\cartero.js:3929
-El entorno activo (también en la placa)	El entorno activo (también en la placa)
+El entorno activo (también en la placa)	当前环境（也用于开发板）
 
 #: apps\cartero\web\cartero.js:3940
-Importar una colección, un entorno o un comando curl	Importar una colección, un entorno o un comando curl
+Importar una colección, un entorno o un comando curl	导入集合、环境或curl命令

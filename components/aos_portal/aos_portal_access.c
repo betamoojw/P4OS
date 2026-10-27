@@ -204,12 +204,16 @@ static void api_logout(aos_httpd_req_t *r)
     send_cjson_access(r, 200, o, "Set-Cookie: p4s=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict\r\n");
 }
 
-static const char CLOSED_PAGE[] =
-    "<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width'>"
-    "<title>P4OS</title><body style='font:17px -apple-system,system-ui,sans-serif;max-width:560px;margin:60px auto;padding:0 20px'>"
-    "<h1>Portal cerrado en esta red</h1><p>Esta red no está marcada como de confianza en la placa. "
-    "Se entra igual por la red propia de la placa o por el cable USB, o se abre con contraseña desde "
-    "<b>Ajustes, Portal web</b>, en la placa.</p>";
+static void send_closed_page(aos_httpd_req_t *r)
+{
+    char page[768];
+    int written = snprintf(page, sizeof page, "%s\n\n%s\n%s",
+                           _("Portal cerrado en esta red"),
+                           _("Esta red no está marcada como de confianza en la placa."),
+                           _("Entrá por la red propia de la placa o por el cable USB, o habilitá el acceso con contraseña en Ajustes, Portal web."));
+    size_t len = written < 0 ? 0 : written < (int)sizeof page ? (size_t)written : sizeof page - 1;
+    aos_httpd_send(r, 403, "text/plain; charset=utf-8", page, len);
+}
 
 bool aos_portal_access(aos_httpd_req_t *r)
 {
@@ -263,7 +267,7 @@ bool aos_portal_rules(aos_httpd_req_t *r)
     if (api && !strcmp(p, "/api/auth")) { api_auth(r, zone, need); return false; }
     if (need == AOS_ACCESS_CLOSED) {
         if (api) deny(r, 403, _("el portal está cerrado en esta red"));
-        else aos_httpd_send(r, 403, "text/html; charset=utf-8", CLOSED_PAGE, sizeof CLOSED_PAGE - 1);
+        else send_closed_page(r);
         return false;
     }
     /* the board's HTTPS authority, to trust it: public, so no login asked

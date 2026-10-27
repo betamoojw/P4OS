@@ -61,12 +61,12 @@ recién	現在
 hace %s	%s 之前
 ⚠ Mientras escaneaba se desconectó %s (%s). El Bluetooth y el Wi-Fi de la placa comparten una sola radio: escuchar menos tiempo o pausar el escaneo les deja más aire.	在掃描過程中, %s 斷開連線 (%s電路板的藍芽和 Wi-Fi 分享一臺無線電:不少時間收聽或暫停掃描,讓他們有更多的播放時間.
 Entendido	得到了.
-paquetes/s (máx. %s)	包裝/s (最大. %s)
+paquetes/s (máx. %s)	封包/秒（最多 %s）
 equipos/s (máx. %s)	裝置/s (最大. %s)
 Bluetooth apagado en la placa (se prende en Ajustes o desde la app).	在板上Bluetooth是關閉的 (在設定中或從應用程式中啟動).
 %s cerca	%s 在附近
 %s vistos	%s 看到的
-%s paquetes/s	%s 包裝/s
+%s paquetes/s	%s 個封包/秒
 %s en total	%s 總計
 %s perdidos	%s 失去了
 en pausa	暫停
@@ -79,7 +79,7 @@ Dirección	地址
 Señal	訊號
 Distancia	距離
 Intervalo	間隔
-Paquetes	包裝
+Paquetes	封包
 Oído	我聽說過
 Datos	資料
 Nadie con este filtro.	沒有符合此過濾器 。
@@ -97,7 +97,7 @@ escribe	寫作
 escribe sin respuesta	寫在/o 響應
 notifica	通知
 indica	表示
-Activar este sensor Xiaomi: le da una clave nueva y la guarda en la placa. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva. ¿Seguir?	感測器忘記了它所擁有的:Mi Home和使用舊鍵閱讀者 (Home Assistant需要一個新的.繼續?
+Activar este sensor Xiaomi: le da una clave nueva y la guarda en la placa. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva. ¿Seguir?	啟用此小米感測器會產生新金鑰並儲存到開發板。感測器會遺忘舊金鑰，Mi Home 和使用舊金鑰的 Home Assistant 等服務需改用新金鑰。是否繼續？
 Escribir: texto, o bytes con 0x (por ejemplo 0x01 A0)	寫:文字,或位元組有0x (例如0x01 A0)
 Conectarse para ver sus servicios y características, leerlas, escribirlas y escuchar sus notificaciones. Mientras tanto la placa deja de escanear un momento; muchos equipos aceptan una sola conexión a la vez.	連線以檢視其服務和特性,閱讀它們,寫下它們並傾聽他們的通知.
 Conectar por GATT	透過GATT進行連線
@@ -112,7 +112,7 @@ Notificaciones	通知
 Indicaciones	指標
 Activando: %s...	啟用: %s...
 Sensor activado.	感測器啟動.
-Clave nueva (bindkey), ya guardada en la placa para leerlo:	新鍵 (bindkey),已經儲存在板上以讀取:
+Clave nueva (bindkey), ya guardada en la placa para leerlo:	新金鑰（bindkey），已儲存到開發板供讀取：
 No se activó: %s	沒有啟用: %s
 Leer todo	閱讀所有
 Probar de nuevo la activación	再試啟用
@@ -120,18 +120,18 @@ Activar (Xiaomi)	啟用 (Xiaomi)
 Desconectar	斷開連線
 Conectar de nuevo	再連線
 Lo último	最新的
-32 cifras hexadecimales (la bindkey)	32個六位數 (關鍵)
+32 cifras hexadecimales (la bindkey)	32 位十六進位數字（bindkey）
 Sin clave: sus lecturas van cifradas.	沒有鑰匙:它的讀數是加密的.
 Clave correcta: las lecturas se descifran.	關鍵是正確的:讀數已解密.
 La clave no coincide con lo que anuncia.	鑰匙不符合它宣傳的內容.
 Usa un cifrado viejo (MiBeacon v2/v3) que la app no descifra.	它使用了舊的加密 (MiBeacon v2/v3) 應用程式不會解密.
 Clave cargada: esperando un paquete cifrado para probarla.	鑰匙裝載:等待加密包來試用.
-Clave	關鍵
+Clave	金鑰
 Tienen que ser 32 cifras hexadecimales	這必須是32個六位數.
 Clave enviada: la app la guarda y la prueba con el próximo paquete	關鍵傳送:應用程式儲存它,並試用下一個包
 Guardar la clave	儲存鑰匙
 Borrar la clave	刪除鑰匙
-La bindkey de un sensor Xiaomi sale de su cuenta de Mi Home (por ejemplo con "Xiaomi Cloud Tokens Extractor"), o de Home Assistant si ya lo lee. BTHome cifrado usa la clave que le pusiste al configurarlo.	一個Xiaomi感測器的繫結鍵來自其Mi Home帳戶 (例如"Xiaomi Cloud Tokens Extractor") 或從 Home Assistant 如果它已經閱讀了,BTHome使用你在設定時給出的鑰匙.
+La bindkey de un sensor Xiaomi sale de su cuenta de Mi Home (por ejemplo con "Xiaomi Cloud Tokens Extractor"), o de Home Assistant si ya lo lee. BTHome cifrado usa la clave que le pusiste al configurarlo.	小米感測器的 bindkey 可從 Mi Home 帳號取得（例如使用 Xiaomi Cloud Tokens Extractor），也可從已連接該感測器的 Home Assistant 取得。加密的 BTHome 使用設定時指定的金鑰。
 Un nombre propio	你自己的名字
 ★ Favorito	★ 最喜歡的
 ☆ Marcar	☆ 馬克
@@ -150,7 +150,7 @@ Mayor / menor	大/小
 Potencia de referencia	參考功率
 Anuncio · %s bytes	廣告 %s 位元組
 Respuesta al escaneo · %s bytes	掃描響應 · %s 位元組
-Pidiendo los paquetes a la placa...	問開發板包裹...
+Pidiendo los paquetes a la placa...	正在向開發板要求封包...
 Lecturas guardadas (CSV)	儲存的讀數 (CSV)
 Todavía no hay. Se prende con "CSV de los sensores", arriba o en los ajustes de la app.	在"感測器CSV"上或在應用程式的設定中啟動.
 Bajar	下載

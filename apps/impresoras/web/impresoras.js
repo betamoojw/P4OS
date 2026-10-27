@@ -13,7 +13,7 @@
  *     change within two seconds and reconnects what changed.
  * The keys typed here are kept on the card in the clear, as the board says
  * too. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('impresoras') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const { h, put, toast, fsText, fsPut, fsMkdir, openApp } = P;

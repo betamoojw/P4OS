@@ -708,6 +708,11 @@ Ranura	Slot
 
 #: components/aos_portal/web/app.js:771
 a prueba	on trial
+confirmada	confirmed
+marcada como mala	marked as bad
+a medio instalar	half installed
+nueva	new
+estado desconocido	unknown state
 
 #: components/aos_portal/web/app.js:772
 La otra ranura	The other slot

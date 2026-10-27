@@ -6,599 +6,599 @@
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
 #: apps\cartero\main\cartero.c:133
-Ese pedido ya no está en la colección	Ese pedido ya no está en la colección
+Ese pedido ya no está en la colección	该请求已不在集合中
 
 #: apps\cartero\main\cartero.c:155
 #: apps\cartero\main\cartero.c:158
 #: apps\cartero\main\ct_ui_home.c:177
 #: apps\cartero\main\ct_ui_home.c:470
-Pedido nuevo	Pedido nuevo
+Pedido nuevo	新建请求
 
 #: apps\cartero\main\cartero.c:212
 #: apps\cartero\main\cartero.c:248
-Ya hay un pedido en curso	Ya hay un pedido en curso
+Ya hay un pedido en curso	已有请求正在执行
 
 #: apps\cartero\main\cartero.c:216
 #: apps\cartero\main\cartero.c:252
-No hay red	No hay red
+No hay red	无网络连接
 
 #: apps\cartero\main\cartero.c:222
 #: apps\cartero\main\ct_ui.c:264
-No hay memoria	No hay memoria
+No hay memoria	内存不足
 
 #: apps\cartero\main\cartero.c:237
-No se pudo empezar el pedido	No se pudo empezar el pedido
+No se pudo empezar el pedido	无法启动请求
 
 #: apps\cartero\main\cartero.c:287
-Los scripts cambiaron variables del entorno, pero no hay ninguno activo	Los scripts cambiaron variables del entorno, pero no hay ninguno activo
+Los scripts cambiaron variables del entorno, pero no hay ninguno activo	脚本更改了环境变量，但当前没有活动脚本
 
 #: apps\cartero\main\ct_ui.c:259
-No se encontró el servidor (DNS)	No se encontró el servidor (DNS)
+No se encontró el servidor (DNS)	找不到服务器（DNS）
 
 #: apps\cartero\main\ct_ui.c:260
-No se pudo conectar	No se pudo conectar
+No se pudo conectar	无法连接
 
 #: apps\cartero\main\ct_ui.c:261
-No se pudo enviar el pedido	No se pudo enviar el pedido
+No se pudo enviar el pedido	无法发送请求
 
 #: apps\cartero\main\ct_ui.c:262
-La respuesta se cortó	La respuesta se cortó
+La respuesta se cortó	响应中断
 
 #: apps\cartero\main\ct_ui.c:263
-La respuesta no es HTTP	La respuesta no es HTTP
+La respuesta no es HTTP	响应不是 HTTP
 
 #: apps\cartero\main\ct_ui.c:265
-La placa todavía no tiene hora: no puede verificar el certificado	La placa todavía no tiene hora: no puede verificar el certificado
+La placa todavía no tiene hora: no puede verificar el certificado	开发板尚未同步时间，无法验证证书
 
 #: apps\cartero\main\ct_ui.c:267
-El certificado del servidor no se pudo verificar	El certificado del servidor no se pudo verificar
+El certificado del servidor no se pudo verificar	无法验证服务器证书
 
 #: apps\cartero\main\ct_ui.c:268
-No se pudo establecer la conexión segura (TLS)	No se pudo establecer la conexión segura (TLS)
+No se pudo establecer la conexión segura (TLS)	无法建立安全连接（TLS）
 
 #: apps\cartero\main\ct_ui.c:269
-La dirección no es http:// ni https://	La dirección no es http:// ni https://
+La dirección no es http:// ni https://	地址不是 http:// 或 https://
 
 #: apps\cartero\main\ct_ui.c:270
-Se acabó el tiempo de espera	Se acabó el tiempo de espera
+Se acabó el tiempo de espera	请求超时
 
 #: apps\cartero\main\ct_ui.c:271
-Cancelado	Cancelado
+Cancelado	已取消
 
 #: apps\cartero\main\ct_ui.c:272
-Demasiadas redirecciones	Demasiadas redirecciones
+Demasiadas redirecciones	重定向次数过多
 
 #: apps\cartero\main\ct_ui.c:273
-Falló el pedido	Falló el pedido
+Falló el pedido	请求失败
 
 #: apps\cartero\main\ct_ui.c:565
 #: apps\cartero\main\ct_ui.c:597
 #: apps\cartero\main\ct_ui_resp.c:651
-Cancelar	Cancelar
+Cancelar	取消
 
 #: apps\cartero\main\ct_ui.c:566
-Listo	Listo
+Listo	完成
 
 #: apps\cartero\main\ct_ui_env.c:42
 #: apps\cartero\main\ct_ui_home.c:146
-No se pudo borrar	No se pudo borrar
+No se pudo borrar	无法删除
 
 #: apps\cartero\main\ct_ui_env.c:50
-¿Borrar el entorno «%.100s»?	¿Borrar el entorno «%.100s»?
+¿Borrar el entorno «%.100s»?	要删除环境“%.100s”吗？
 
 #: apps\cartero\main\ct_ui_env.c:51
 #: apps\cartero\main\ct_ui_home.c:186
 #: apps\cartero\main\ct_ui_home.c:211
 #: apps\cartero\main\ct_ui_home.c:487
-Borrar	Borrar
+Borrar	删除
 
 #: apps\cartero\main\ct_ui_env.c:60
-No se pudo crear el entorno	No se pudo crear el entorno
+No se pudo crear el entorno	无法创建环境
 
 #: apps\cartero\main\ct_ui_env.c:70
-Nombre del entorno	Nombre del entorno
+Nombre del entorno	环境名称
 
 #: apps\cartero\main\ct_ui_env.c:133
-Entornos	Entornos
+Entornos	环境
 
 #: apps\cartero\main\ct_ui_env.c:138
-El entorno en uso cambia los {{valores}} de los pedidos: el mismo pedido va a desarrollo o a producción sin tocarlo. Tocá el círculo para usarlo.	El entorno en uso cambia los {{valores}} de los pedidos: el mismo pedido va a desarrollo o a producción sin tocarlo. Tocá el círculo para usarlo.
+El entorno en uso cambia los {{valores}} de los pedidos: el mismo pedido va a desarrollo o a producción sin tocarlo. Tocá el círculo para usarlo.	当前环境会替换请求中的 {{valores}}；同一请求无需修改即可用于开发或生产环境。点击圆圈即可启用。
 
 #: apps\cartero\main\ct_ui_env.c:143
 #: apps\cartero\main\ct_ui_home.c:428
-No se pudo leer: %.60s	No se pudo leer: %.60s
+No se pudo leer: %.60s	无法读取：%.60s
 
 #: apps\cartero\main\ct_ui_env.c:146
-%d variable	%d variable
+%d variable	%d 个变量
 
 #: apps\cartero\main\ct_ui_env.c:146
-%d variables	%d variables
+%d variables	%d 个变量
 
 #: apps\cartero\main\ct_ui_env.c:152
-Valen en todos los entornos: %d	Valen en todos los entornos: %d
+Valen en todos los entornos: %d	应用于所有环境：%d
 
 #: apps\cartero\main\ct_ui_env.c:153
 #: apps\cartero\main\ct_ui_env.c:286
-Globales	Globales
+Globales	全局变量
 
 #: apps\cartero\main\ct_ui_env.c:157
-Ajustes	Ajustes
+Ajustes	设置
 
 #: apps\cartero\main\ct_ui_env.c:158
-Tiempo máximo de un pedido	Tiempo máximo de un pedido
+Tiempo máximo de un pedido	请求超时时间
 
 #: apps\cartero\main\ct_ui_env.c:162
-Cuerpo más grande que se guarda	Cuerpo más grande que se guarda
+Cuerpo más grande que se guarda	保存的最大正文大小
 
 #: apps\cartero\main\ct_ui_env.c:169
-Seguir las redirecciones	Seguir las redirecciones
+Seguir las redirecciones	跟随重定向
 
 #: apps\cartero\main\ct_ui_env.c:228
 #: apps\cartero\main\ct_ui_home.c:111
 #: apps\cartero\main\ct_ui_home.c:127
 #: apps\cartero\main\ct_ui_home.c:163
-No se pudo guardar	No se pudo guardar
+No se pudo guardar	无法保存
 
 #: apps\cartero\main\ct_ui_env.c:236
 #: apps\cartero\main\ct_ui_req.c:412
-Guardado	Guardado
+Guardado	已保存
 
 #: apps\cartero\main\ct_ui_env.c:312
-nombre	nombre
+nombre	名称
 
 #: apps\cartero\main\ct_ui_env.c:319
 #: apps\cartero\main\ct_ui_req.c:642
 #: apps\cartero\main\ct_ui_req.c:659
 #: apps\cartero\main\ct_ui_req.c:790
-valor	valor
+valor	值
 
 #: apps\cartero\main\ct_ui_env.c:327
-Sin variables. Agregá una con +, o dejá que un test la cree con pm.environment.set(...).	Sin variables. Agregá una con +, o dejá que un test la cree con pm.environment.set(...).
+Sin variables. Agregá una con +, o dejá que un test la cree con pm.environment.set(...).	暂无变量。可用 + 添加，或由测试通过 pm.environment.set(...) 创建。
 
 #: apps\cartero\main\ct_ui_env.c:329
-Se guardan en la tarjeta tal cual, también los secretos (sólo se tapan en la pantalla).	Se guardan en la tarjeta tal cual, también los secretos (sólo se tapan en la pantalla).
+Se guardan en la tarjeta tal cual, también los secretos (sólo se tapan en la pantalla).	变量会原样保存到存储卡，包括密钥；密钥仅在屏幕上隐藏。
 
 #: apps\cartero\main\ct_ui_home.c:96
 #: apps\cartero\main\ct_ui_home.c:397
-Sin entorno	Sin entorno
+Sin entorno	无环境
 
 #: apps\cartero\main\ct_ui_home.c:98
-Editar los entornos…	Editar los entornos…
+Editar los entornos…	编辑环境…
 
 #: apps\cartero\main\ct_ui_home.c:99
-Entorno	Entorno
+Entorno	环境
 
 #: apps\cartero\main\ct_ui_home.c:158
-%s (copia)	%s (copia)
+%s (copia)	%s（副本）
 
 #: apps\cartero\main\ct_ui_home.c:177
 #: apps\cartero\main\ct_ui_req.c:472
 #: apps\cartero\main\ct_ui_req.c:976
-Nombre del pedido	Nombre del pedido
+Nombre del pedido	请求名称
 
 #: apps\cartero\main\ct_ui_home.c:178
-Nombre de la carpeta	Nombre de la carpeta
+Nombre de la carpeta	文件夹名称
 
 #: apps\cartero\main\ct_ui_home.c:185
-¿Borrar «%.120s»? No se puede deshacer.	¿Borrar «%.120s»? No se puede deshacer.
+¿Borrar «%.120s»? No se puede deshacer.	要删除“%.120s”吗？此操作无法撤销。
 
 #: apps\cartero\main\ct_ui_home.c:199
-Correr la carpeta	Correr la carpeta
+Correr la carpeta	运行文件夹
 
 #: apps\cartero\main\ct_ui_home.c:199
-Correr la colección	Correr la colección
+Correr la colección	运行集合
 
 #: apps\cartero\main\ct_ui_home.c:201
-Pedido nuevo acá	Pedido nuevo acá
+Pedido nuevo acá	在此新建请求
 
 #: apps\cartero\main\ct_ui_home.c:203
-Carpeta nueva acá	Carpeta nueva acá
+Carpeta nueva acá	在此新建文件夹
 
 #: apps\cartero\main\ct_ui_home.c:206
-Abrir	Abrir
+Abrir	打开
 
 #: apps\cartero\main\ct_ui_home.c:208
-Duplicar	Duplicar
+Duplicar	复制
 
 #: apps\cartero\main\ct_ui_home.c:332
-No se pudo crear la colección	No se pudo crear la colección
+No se pudo crear la colección	无法创建集合
 
 #: apps\cartero\main\ct_ui_home.c:345
-Nombre de la colección	Nombre de la colección
+Nombre de la colección	集合名称
 
 #: apps\cartero\main\ct_ui_home.c:352
-Pedido nuevo (suelto)	Pedido nuevo (suelto)
+Pedido nuevo (suelto)	新建独立请求
 
 #: apps\cartero\main\ct_ui_home.c:352
-Colección nueva	Colección nueva
+Colección nueva	新建集合
 
 #: apps\cartero\main\ct_ui_home.c:352
-Entornos y variables	Entornos y variables
+Entornos y variables	环境和变量
 
 #: apps\cartero\main\ct_ui_home.c:382
 Cartero	Cartero
 
 #: apps\cartero\main\ct_ui_home.c:402
-Última corrida	Última corrida
+Última corrida	上次运行记录
 
 #: apps\cartero\main\ct_ui_home.c:402
-Última respuesta	Última respuesta
+Última respuesta	上次响应
 
 #: apps\cartero\main\ct_ui_home.c:431
-%d pedido	%d pedido
+%d pedido	%d 个请求
 
 #: apps\cartero\main\ct_ui_home.c:431
-%d pedidos	%d pedidos
+%d pedidos	%d 个请求
 
 #: apps\cartero\main\ct_ui_home.c:441
-Vacía. Agregá un pedido desde el menú ⋯ de la colección.	Vacía. Agregá un pedido desde el menú ⋯ de la colección.
+Vacía. Agregá un pedido desde el menú ⋯ de la colección.	集合为空。请从集合的 ⋯ 菜单添加请求。
 
 #: apps\cartero\main\ct_ui_home.c:448
-Todavía no hay colecciones.\n\nCreá un pedido suelto o una colección con +, o importá una colección de Postman desde la página Cartero del portal (los archivos son los de Postman).	Todavía no hay colecciones.\n\nCreá un pedido suelto o una colección con +, o importá una colección de Postman desde la página Cartero del portal (los archivos son los de Postman).
+Todavía no hay colecciones.\n\nCreá un pedido suelto o una colección con +, o importá una colección de Postman desde la página Cartero del portal (los archivos son los de Postman).	尚无集合。\n\n请用 + 新建独立请求或集合，也可在管理网页的 Cartero 页面导入 Postman 集合（使用 Postman 原始文件）。
 
 #: apps\cartero\main\ct_ui_home.c:455
-Crear	Crear
+Crear	创建
 
 #: apps\cartero\main\ct_ui_home.c:487
-¿Borrar todo el historial?	¿Borrar todo el historial?
+¿Borrar todo el historial?	删除所有历史记录？
 
 #: apps\cartero\main\ct_ui_home.c:497
-recién	recién
+recién	刚才
 
 #: apps\cartero\main\ct_ui_home.c:498
-hace %ld min	hace %ld min
+hace %ld min	%ld 分钟前
 
 #: apps\cartero\main\ct_ui_home.c:499
-hace %ld h	hace %ld h
+hace %ld h	%ld 小时前
 
 #: apps\cartero\main\ct_ui_home.c:500
-hace %ld d	hace %ld d
+hace %ld d	%ld 天前
 
 #: apps\cartero\main\ct_ui_home.c:506
-Historial	Historial
+Historial	历史
 
 #: apps\cartero\main\ct_ui_home.c:537
-sin respuesta	sin respuesta
+sin respuesta	没有回应
 
 #: apps\cartero\main\ct_ui_home.c:544
-Los pedidos que mandes van a aparecer acá, del más nuevo al más viejo (los últimos 50).	Los pedidos que mandes van a aparecer acá, del más nuevo al más viejo (los últimos 50).
+Los pedidos que mandes van a aparecer acá, del más nuevo al más viejo (los últimos 50).	您发送的请求将显示在此处，最新的在前（最后 50 个）。
 
 #: apps\cartero\main\ct_ui_req.c:140
-Sin definir:	Sin definir:
+Sin definir:	未定义：
 
 #: apps\cartero\main\ct_ui_req.c:367
-Método	Método
+Método	方法
 
 #: apps\cartero\main\ct_ui_req.c:444
-Primero creá una colección (+ en el inicio)	Primero creá una colección (+ en el inicio)
+Primero creá una colección (+ en el inicio)	首先创建一个集合（+在主屏幕上）
 
 #: apps\cartero\main\ct_ui_req.c:447
-Guardar en	Guardar en
+Guardar en	保存在
 
 #: apps\cartero\main\ct_ui_req.c:484
-Cambiar el nombre	Cambiar el nombre
+Cambiar el nombre	重命名
 
 #: apps\cartero\main\ct_ui_req.c:484
-Guardar como…	Guardar como…
+Guardar como…	另存为...
 
 #: apps\cartero\main\ct_ui_req.c:484
-Ver la última respuesta	Ver la última respuesta
+Ver la última respuesta	查看最后回复
 
 #: apps\cartero\main\ct_ui_req.c:628
-Agregar	Agregar
+Agregar	添加
 
 #: apps\cartero\main\ct_ui_req.c:640
-Los parámetros de la dirección (?clave=valor) se editan acá o en la dirección misma.	Los parámetros de la dirección (?clave=valor) se editan acá o en la dirección misma.
+Los parámetros de la dirección (?clave=valor) se editan acá o en la dirección misma.	URL 的参数 (?key=value) 在此处或 URL 本身中编辑。
 
 #: apps\cartero\main\ct_ui_req.c:642
-clave	clave
+clave	键
 
 #: apps\cartero\main\ct_ui_req.c:659
-encabezado	encabezado
+encabezado	标头
 
 #: apps\cartero\main\ct_ui_req.c:660
-Rápidos:	Rápidos:
+Rápidos:	快：
 
 #: apps\cartero\main\ct_ui_req.c:666
-La placa agrega Host, User-Agent, Accept, Accept-Encoding: identity, Connection y Content-Length si no están.	La placa agrega Host, User-Agent, Accept, Accept-Encoding: identity, Connection y Content-Length si no están.
+La placa agrega Host, User-Agent, Accept, Accept-Encoding: identity, Connection y Content-Length si no están.	若未指定，开发板会自动添加 Host、User-Agent、Accept、Accept-Encoding: identity、Connection 和 Content-Length。
 
 #: apps\cartero\main\ct_ui_req.c:670
-Ninguno	Ninguno
+Ninguno	无
 
 #: apps\cartero\main\ct_ui_req.c:670
-Texto	Texto
+Texto	文字
 
 #: apps\cartero\main\ct_ui_req.c:670
-Formulario	Formulario
+Formulario	形式
 
 #: apps\cartero\main\ct_ui_req.c:719
-Con variables: se resuelven al enviar	Con variables: se resuelven al enviar
+Con variables: se resuelven al enviar	带变量：发送时解析
 
 #: apps\cartero\main\ct_ui_req.c:730
-JSON válido	JSON válido
+JSON válido	有效 JSON
 
 #: apps\cartero\main\ct_ui_req.c:753
-No es JSON (o tiene variables sin comillas)	No es JSON (o tiene variables sin comillas)
+No es JSON (o tiene variables sin comillas)	不是 JSON（或含有未加引号的变量）
 
 #: apps\cartero\main\ct_ui_req.c:784
-Formatear	Formatear
+Formatear	格式
 
 #: apps\cartero\main\ct_ui_req.c:790
-campo	campo
+campo	字段
 
 #: apps\cartero\main\ct_ui_req.c:798
-El pedido va sin cuerpo.	El pedido va sin cuerpo.
+El pedido va sin cuerpo.	该请求不发送正文。
 
 #: apps\cartero\main\ct_ui_req.c:803
-Heredada	Heredada
+Heredada	继承
 
 #: apps\cartero\main\ct_ui_req.c:803
-Ninguna	Ninguna
+Ninguna	无
 
 #: apps\cartero\main\ct_ui_req.c:870
-Usa la de «%.80s»: %s	Usa la de «%.80s»: %s
+Usa la de «%.80s»: %s	使用“%.80s”中的一个：%s
 
 #: apps\cartero\main\ct_ui_req.c:875
-Suelto, no hereda nada: va sin auth.	Suelto, no hereda nada: va sin auth.
+Suelto, no hereda nada: va sin auth.	独立请求不继承任何设置，也不使用认证。
 
 #: apps\cartero\main\ct_ui_req.c:875
-Ni la carpeta ni la colección tienen: va sin auth.	Ni la carpeta ni la colección tienen: va sin auth.
+Ni la carpeta ni la colección tienen: va sin auth.	文件夹和集合均未设置认证，因此请求不使用认证。
 
 #: apps\cartero\main\ct_ui_req.c:890
-Va sin auth, aunque la carpeta o la colección tengan.	Va sin auth, aunque la carpeta o la colección tengan.
+Va sin auth, aunque la carpeta o la colección tengan.	不使用认证，即使文件夹或集合已设置认证。
 
 #: apps\cartero\main\ct_ui_req.c:891
-Token	Token
+Token	令牌
 
 #: apps\cartero\main\ct_ui_req.c:893
-Usuario	Usuario
+Usuario	用户名
 
 #: apps\cartero\main\ct_ui_req.c:894
-Contraseña	Contraseña
+Contraseña	密码
 
 #: apps\cartero\main\ct_ui_req.c:897
-Nombre (encabezado o parámetro)	Nombre (encabezado o parámetro)
+Nombre (encabezado o parámetro)	名称（标头或参数）
 
 #: apps\cartero\main\ct_ui_req.c:898
-Valor	Valor
+Valor	值
 
 #: apps\cartero\main\ct_ui_req.c:899
-En un encabezado	En un encabezado
+En un encabezado	在标头中
 
 #: apps\cartero\main\ct_ui_req.c:899
-En la dirección	En la dirección
+En la dirección	在URL中
 
 #: apps\cartero\main\ct_ui_req.c:906
-Se puede usar {{variables}}. Queda guardado en la colección, en la tarjeta, tal cual: mejor una variable del entorno.	Se puede usar {{variables}}. Queda guardado en la colección, en la tarjeta, tal cual: mejor una variable del entorno.
+Se puede usar {{variables}}. Queda guardado en la colección, en la tarjeta, tal cual: mejor una variable del entorno.	可使用 {{variables}}。该值会原样保存在存储卡上的集合中；更建议改用环境变量。
 
 #: apps\cartero\main\ct_ui_req.c:921
-Estado 200	Estado 200
+Estado 200	状态码 200
 
 #: apps\cartero\main\ct_ui_req.c:922
-Tiempo < 500 ms	Tiempo < 500 ms
+Tiempo < 500 ms	时间 < 500 毫秒
 
 #: apps\cartero\main\ct_ui_req.c:923
-Es JSON	Es JSON
+Es JSON	是 JSON
 
 #: apps\cartero\main\ct_ui_req.c:924
-Tiene una propiedad	Tiene una propiedad
+Tiene una propiedad	包含属性
 
 #: apps\cartero\main\ct_ui_req.c:925
-Guardar en el entorno	Guardar en el entorno
+Guardar en el entorno	保存到环境
 
 #: apps\cartero\main\ct_ui_req.c:926
-Encabezado	Encabezado
+Encabezado	标头
 
 #: apps\cartero\main\ct_ui_req.c:930
-Variable con la hora	Variable con la hora
+Variable con la hora	随时间变化
 
 #: apps\cartero\main\ct_ui_req.c:931
-Agregar encabezado	Agregar encabezado
+Agregar encabezado	添加标头
 
 #: apps\cartero\main\ct_ui_req.c:932
-Registrar la URL	Registrar la URL
+Registrar la URL	记录 URL
 
 #: apps\cartero\main\ct_ui_req.c:933
-Saltear si no hay token	Saltear si no hay token
+Saltear si no hay token	如果没有令牌则跳过
 
 #: apps\cartero\main\ct_ui_req.c:953
-Antes (pre-request)	Antes (pre-request)
+Antes (pre-request)	请求前脚本
 
 #: apps\cartero\main\ct_ui_req.c:953
 #: apps\cartero\main\ct_ui_resp.c:657
-Tests	Tests
+Tests	测试
 
 #: apps\cartero\main\ct_ui_req.c:966
-JavaScript con pm, como en Postman. La placa corre lo común (sin expresiones regulares ni clases); el portal, todo.	JavaScript con pm, como en Postman. La placa corre lo común (sin expresiones regulares ni clases); el portal, todo.
+JavaScript con pm, como en Postman. La placa corre lo común (sin expresiones regulares ni clases); el portal, todo.	使用与 Postman 相同的 pm JavaScript。开发板支持常用子集，不支持正则表达式和类；管理网页支持完整功能。
 
 #: apps\cartero\main\ct_ui_req.c:1006
-Suelto: sin guardar en una colección	Suelto: sin guardar en una colección
+Suelto: sin guardar en una colección	松散：未保存在集合中
 
 #: apps\cartero\main\ct_ui_req.c:1037
-Enviar	Enviar
+Enviar	发送
 
 #: apps\cartero\main\ct_ui_req.c:1045
-Parámetros	Parámetros
-
-#: apps\cartero\main\ct_ui_req.c:1045
-#: apps\cartero\main\ct_ui_resp.c:657
-Encabezados	Encabezados
+Parámetros	参数
 
 #: apps\cartero\main\ct_ui_req.c:1045
 #: apps\cartero\main\ct_ui_resp.c:657
-Cuerpo	Cuerpo
+Encabezados	标头
 
 #: apps\cartero\main\ct_ui_req.c:1045
-Auth	Auth
+#: apps\cartero\main\ct_ui_resp.c:657
+Cuerpo	正文
 
 #: apps\cartero\main\ct_ui_req.c:1045
-Scripts	Scripts
+Auth	认证
+
+#: apps\cartero\main\ct_ui_req.c:1045
+Scripts	脚本
 
 #: apps\cartero\main\ct_ui_req.c:1095
-Guardar	Guardar
+Guardar	保存
 
 #: apps\cartero\main\ct_ui_req.c:1095
-Descartar los cambios	Descartar los cambios
+Descartar los cambios	放弃更改
 
 #: apps\cartero\main\ct_ui_req.c:1095
-Seguir editando	Seguir editando
+Seguir editando	继续编辑
 
 #: apps\cartero\main\ct_ui_req.c:1096
-El pedido suelto no está guardado	El pedido suelto no está guardado
+El pedido suelto no está guardado	不保存松散请求
 
 #: apps\cartero\main\ct_ui_req.c:1096
-El pedido tiene cambios sin guardar	El pedido tiene cambios sin guardar
+El pedido tiene cambios sin guardar	请求有未保存的更改
 
 #: apps\cartero\main\ct_ui_resp.c:114
-Conexión	Conexión
+Conexión	连接
 
 #: apps\cartero\main\ct_ui_resp.c:114
-Envío	Envío
+Envío	发送
 
 #: apps\cartero\main\ct_ui_resp.c:114
-Espera	Espera
+Espera	等等
 
 #: apps\cartero\main\ct_ui_resp.c:114
-Descarga	Descarga
+Descarga	下载
 
 #: apps\cartero\main\ct_ui_resp.c:147
-El script de antes salteó el pedido (skipRequest).	El script de antes salteó el pedido (skipRequest).
+El script de antes salteó el pedido (skipRequest).	预请求脚本跳过了请求 (skipRequest)。
 
 #: apps\cartero\main\ct_ui_resp.c:151
-No se envió: falló el script de antes.	No se envió: falló el script de antes.
+No se envió: falló el script de antes.	未发送：预请求脚本失败。
 
 #: apps\cartero\main\ct_ui_resp.c:164
-después de %s	después de %s
+después de %s	%s 之后
 
 #: apps\cartero\main\ct_ui_resp.c:179
- (cortado)	 (cortado)
+ (cortado)	（切断）
 
 #: apps\cartero\main\ct_ui_resp.c:185
-%d redirección, terminó en:	%d redirección, terminó en:
+%d redirección, terminó en:	%d 重定向，结束于：
 
 #: apps\cartero\main\ct_ui_resp.c:185
-%d redirecciones, terminó en:	%d redirecciones, terminó en:
+%d redirecciones, terminó en:	%d 重定向，结束于：
 
 #: apps\cartero\main\ct_ui_resp.c:207
-No hay un entorno activo: elegilo en el inicio	No hay un entorno activo: elegilo en el inicio
+No hay un entorno activo: elegilo en el inicio	没有活动环境：在主屏幕上选择一个
 
 #: apps\cartero\main\ct_ui_resp.c:227
-Guardado en las globales: %.80s	Guardado en las globales: %.80s
+Guardado en las globales: %.80s	保存到全局变量：%.80s
 
 #: apps\cartero\main\ct_ui_resp.c:227
-Guardado en el entorno: %.80s	Guardado en el entorno: %.80s
+Guardado en el entorno: %.80s	保存到环境：%.80s
 
 #: apps\cartero\main\ct_ui_resp.c:235
-Nombre de la variable del entorno	Nombre de la variable del entorno
+Nombre de la variable del entorno	环境变量名称
 
 #: apps\cartero\main\ct_ui_resp.c:236
-Nombre de la variable global	Nombre de la variable global
+Nombre de la variable global	全局变量名
 
 #: apps\cartero\main\ct_ui_resp.c:252
-Guardar en una variable del entorno	Guardar en una variable del entorno
+Guardar en una variable del entorno	保存到环境变量
 
 #: apps\cartero\main\ct_ui_resp.c:252
-Guardar en una variable global	Guardar en una variable global
+Guardar en una variable global	保存到全局变量
 
 #: apps\cartero\main\ct_ui_resp.c:347
-… y %u más (el resto, en Crudo o en el portal)	… y %u más (el resto, en Crudo o en el portal)
+… y %u más (el resto, en Crudo o en el portal)	…以及 %u 更多（其余的，在 Raw 中或在门户中）
 
 #: apps\cartero\main\ct_ui_resp.c:387
-Se muestran %s de %s: el resto, guardándolo o en el portal.	Se muestran %s de %s: el resto, guardándolo o en el portal.
+Se muestran %s de %s: el resto, guardándolo o en el portal.	显示 %s 的 %s：其余部分，通过保存或在门户中进行。
 
 #: apps\cartero\main\ct_ui_resp.c:407
-La respuesta no trae cuerpo.	La respuesta no trae cuerpo.
+La respuesta no trae cuerpo.	响应没有正文。
 
 #: apps\cartero\main\ct_ui_resp.c:415
-Cuerpo binario (%.60s, %s). Guardalo en la tarjeta (⬇ arriba) para abrirlo, o miralo en el portal.	Cuerpo binario (%.60s, %s). Guardalo en la tarjeta (⬇ arriba) para abrirlo, o miralo en el portal.
+Cuerpo binario (%.60s, %s). Guardalo en la tarjeta (⬇ arriba) para abrirlo, o miralo en el portal.	二进制正文（%.60s，%s）。请保存到存储卡（上方的 ⬇）后打开，或在管理网页中查看。
 
 #: apps\cartero\main\ct_ui_resp.c:422
-Árbol	Árbol
+Árbol	树
 
 #: apps\cartero\main\ct_ui_resp.c:424
-Ordenado	Ordenado
+Ordenado	已排序
 
 #: apps\cartero\main\ct_ui_resp.c:425
-Crudo	Crudo
+Crudo	原始
 
 #: apps\cartero\main\ct_ui_resp.c:452
-Tocá un valor para guardarlo en una variable.	Tocá un valor para guardarlo en una variable.
+Tocá un valor para guardarlo en una variable.	点击一个值将其保存到变量中。
 
 #: apps\cartero\main\ct_ui_resp.c:499
-Script de antes	Script de antes
+Script de antes	预请求脚本
 
 #: apps\cartero\main\ct_ui_resp.c:506
-Script de tests	Script de tests
+Script de tests	测试脚本
 
 #: apps\cartero\main\ct_ui_resp.c:513
-Este pedido no tiene tests. Se escriben en Scripts, Tests: pm.test(\"nombre\", () => ...).	Este pedido no tiene tests. Se escriben en Scripts, Tests: pm.test(\"nombre\", () => ...).
+Este pedido no tiene tests. Se escriben en Scripts, Tests: pm.test(\"nombre\", () => ...).	此请求没有测试。它们是用脚本、测试编写的：pm.test(\"name\", () => ...）。
 
 #: apps\cartero\main\ct_ui_resp.c:517
-%d de %d pasaron	%d de %d pasaron
+%d de %d pasaron	%d 的 %d 通过
 
 #: apps\cartero\main\ct_ui_resp.c:547
-Nada en la consola. Los scripts escriben con console.log(...).	Nada en la consola. Los scripts escriben con console.log(...).
+Nada en la consola. Los scripts escriben con console.log(...).	控制台中什么也没有。脚本使用 console.log(...) 编写。
 
 #: apps\cartero\main\ct_ui_resp.c:581
-Cuerpo enviado	Cuerpo enviado
+Cuerpo enviado	已发送的正文
 
 #: apps\cartero\main\ct_ui_resp.c:603
-Guardado en /data/cartero/%s	Guardado en /data/cartero/%s
+Guardado en /data/cartero/%s	保存到 /data/cartero/%s
 
 #: apps\cartero\main\ct_ui_resp.c:603
-No se pudo guardar %s	No se pudo guardar %s
+No se pudo guardar %s	无法保存 %s
 
 #: apps\cartero\main\ct_ui_resp.c:612
-No hay cuerpo para guardar	No hay cuerpo para guardar
+No hay cuerpo para guardar	没有身体可以拯救
 
 #: apps\cartero\main\ct_ui_resp.c:615
-Nombre del archivo	Nombre del archivo
+Nombre del archivo	文件名
 
 #: apps\cartero\main\ct_ui_resp.c:632
-Respuesta	Respuesta
+Respuesta	回应
 
 #: apps\cartero\main\ct_ui_resp.c:642
-Todavía no se mandó nada.	Todavía no se mandó nada.
+Todavía no se mandó nada.	尚未发送任何内容。
 
 #: apps\cartero\main\ct_ui_resp.c:650
 #: apps\cartero\main\ct_ui_resp.c:701
-Enviando…	Enviando…
+Enviando…	正在发送...
 
 #: apps\cartero\main\ct_ui_resp.c:657
-Consola	Consola
+Consola	控制台
 
 #: apps\cartero\main\ct_ui_resp.c:657
-Enviado	Enviado
+Enviado	已发送
 
 #: apps\cartero\main\ct_ui_run.c:69
-salteado	salteado
+salteado	跳过
 
 #: apps\cartero\main\ct_ui_run.c:70
-error	error
+error	错误
 
 #: apps\cartero\main\ct_ui_run.c:87
-%d pedidos · %d de %d tests pasaron · %d con error · %s	%d pedidos · %d de %d tests pasaron · %d con error · %s
+%d pedidos · %d de %d tests pasaron · %d con error · %s	%d 请求 · %d 测试的 %d 通过 · %d 有错误 · %s
 
 #: apps\cartero\main\ct_ui_run.c:90
-%d de %d pedidos · %d de %d tests pasaron	%d de %d pedidos · %d de %d tests pasaron
+%d de %d pedidos · %d de %d tests pasaron	%d 请求的 %d · %d 测试的 %d 通过
 
 #: apps\cartero\main\ct_ui_run.c:139
-Vueltas	Vueltas
+Vueltas	迭代
 
 #: apps\cartero\main\ct_ui_run.c:145
-Pausa entre pedidos	Pausa entre pedidos
+Pausa entre pedidos	请求之间的延迟
 
 #: apps\cartero\main\ct_ui_run.c:151
-Parar en la primera falla	Parar en la primera falla
+Parar en la primera falla	在第一次失败时停止
 
 #: apps\cartero\main\ct_ui_run.c:157
-Correr otra vez	Correr otra vez
+Correr otra vez	再次运行
 
 #: apps\cartero\main\ct_ui_run.c:168
-Corrida	Corrida
+Corrida	运行记录
 
 #: apps\cartero\main\ct_ui_run.c:177
-No hay ninguna corrida. Se empieza con ▶ en una colección o en el menú de una carpeta.	No hay ninguna corrida. Se empieza con ▶ en una colección o en el menú de una carpeta.
+No hay ninguna corrida. Se empieza con ▶ en una colección o en el menú de una carpeta.	尚无运行记录。请在集合或文件夹菜单中点击 ▶ 开始运行。
 
 #: apps\cartero\main\ct_ui_run.c:183
-Entorno: %.100s	Entorno: %.100s
+Entorno: %.100s	环境：%.100s

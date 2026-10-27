@@ -1,6 +1,6 @@
 # Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
 # Spanish keys and printf/escape tokens are preserved.
-paquetes/s (máx. %d)	包裝/s (最大) %d)
+paquetes/s (máx. %d)	封包/秒（最多 %d）
 equipos/s (máx. %d)	裝置/s (最大) %d)
 Sin datos de fabricante	沒有製造商資料
 Conectable	可連線
@@ -10,9 +10,9 @@ No conectable	無連線
 Responde al escaneo	掃描響應
 La memoria guarda %d equipos: %u se olvidaron para hacer lugar (los que hacía más que no se oían). Los favoritos no se olvidan.	記憶保持 %d 裝置: %u 喜歡的人永遠不會被遺忘.
 cerca ahora	在附近.
-paquetes por segundo	每秒的包裝
+paquetes por segundo	每秒封包數
 vistos desde que abrió	從發射以來
-paquetes perdidos	丟棄的包裹
+paquetes perdidos	遺失的封包
 Los últimos dos minutos	在過去的兩分鐘裡
 Qué son	他們是什麼
 Por lo que anuncian: servicios, apariencia, mensajes de Apple, Microsoft y Google, formatos de sensores.	廣告內容:服務、外觀、蘋果、微軟和谷歌資訊、感測器格式。
@@ -20,11 +20,11 @@ Fabricantes	製造商
 Por el identificador de compañía de sus datos de fabricante.	透過其製造商資料中的公司識別符號.
 Direcciones	地址
 Las privadas resolubles cambian cada pocos minutos: así los teléfonos evitan que los sigan. Las públicas y las estáticas son siempre las mismas.	解決性私人手機每隔幾分鐘都會發生變化:這就是為什麼電話不會被追蹤.
-Tipos de anuncio	廣告型別
+Tipos de anuncio	廣播類型
 Señal (dBm)	訊號 (dBm)
 Pública	公眾
 Aleatoria estática	隨機靜態
-Privada resoluble	可解決的私人
+Privada resoluble	可解析私有位址
 Privada no resoluble	無法解決的私人
 Desconocido	未知
 Sensor BTHome	BTHOMA 感測器
@@ -265,7 +265,7 @@ Respuesta al escaneo	掃描響應
 Todavía no se lo oyó esta vez.	這次還沒有聽到.
 Tienen que ser 32 cifras hexadecimales	這必須是32個六位數.
 La clave del equipo (32 cifras)	裝置的鑰匙 (32位數)
-Cifra sus lecturas. Con su clave (en Xiaomi, la «bindkey»: 32 cifras hexadecimales) la app las descifra.	它加密其讀數. 用其鑰匙 (對於小米來說",繫結鍵":32個六位數) 應用程式解碼它們.
+Cifra sus lecturas. Con su clave (en Xiaomi, la «bindkey»: 32 cifras hexadecimales) la app las descifra.	裝置會加密讀數。應用程式使用金鑰解密；小米裝置的金鑰稱為 bindkey，由 32 位十六進位數字組成。
 Clave correcta: las lecturas se descifran.	關鍵是正確的:讀數已解密.
 La clave no coincide con lo que anuncia.	鑰匙不符合它宣傳的內容.
 Usa un cifrado viejo (MiBeacon v2/v3) que la app no descifra.	它使用了舊的加密 (MiBeacon v2/v3) 應用程式無法解密.
@@ -273,7 +273,7 @@ Clave cargada: esperando un paquete cifrado para probarla.	鑰匙裝載:等待�
 Cambiar la clave	換鑰匙
 Cargar la clave	輸入鑰匙
 Borrar la clave	刪除鑰匙
-La bindkey de un sensor Xiaomi sale de su cuenta de Mi Home (por ejemplo con «Xiaomi Cloud Tokens Extractor»), o de Home Assistant si ya lo lee. También se puede pegar desde la página BLE del portal.	一個Xiaomi感測器的繫結鍵來自其Mi Home帳戶 (例如"Xiaomi Cloud Tokens Extractor") 或從 Home Assistant 如果它已經閱讀了. BLE 網站的頁面.
+La bindkey de un sensor Xiaomi sale de su cuenta de Mi Home (por ejemplo con «Xiaomi Cloud Tokens Extractor»), o de Home Assistant si ya lo lee. También se puede pegar desde la página BLE del portal.	小米感測器的 bindkey 可從 Mi Home 帳號取得（例如使用 Xiaomi Cloud Tokens Extractor），也可從已連接該感測器的 Home Assistant 取得，或在網頁管理的 BLE 頁面貼上。
 descifrado	解密
 cifrados: hace falta la clave del equipo	加密:需要裝置的鑰匙
 Temperatura	溫度
@@ -347,12 +347,12 @@ activado: clave nueva guardada	啟用:新鑰匙儲存
 activado, pero no está en la lista: anotá la clave	啟動,但不在列表中:寫下鍵
 Sensor activado	感測器啟用
 no se activó:	沒有啟用:
-Activar este sensor Xiaomi	啟用這個小米感測器
+Activar este sensor Xiaomi	啟用此小米感測器
 Le da una clave nueva y la guarda en la placa, para leer lo que anuncia cifrado. El sensor olvida la que tenía: Mi Home y quien lo lea con la clave vieja (Home Assistant, por ejemplo) van a necesitar la nueva, o volver a agregarlo en Mi Home.	感測器忘記了它所擁有的:Mi Home和使用舊鍵閱讀者 (Home Assistant需要新的,或者再新增它到Mi Home.
 Activar	啟用
 Cancelar	取消
 Activando	啟用
-Clave nueva (bindkey), ya guardada para leerlo acá:	新鑰匙 (bindkey),已經儲存,可以在這裡閱讀:
+Clave nueva (bindkey), ya guardada para leerlo acá:	新金鑰（bindkey），已儲存供此處讀取：
 No se activó	沒有啟用
 Probar de nuevo	再試一次
 conectando...	連線...
@@ -661,7 +661,7 @@ Pasivo	動態
 Escaneo	掃描
 Activo le pide a cada equipo su respuesta de escaneo, donde muchos dicen su nombre. Pasivo sólo escucha: no se anuncia ante nadie.	動態只傾聽,它從來沒有宣佈自己.
 Tiempo escuchando	聽取時間
-La radio es una sola para Wi-Fi y Bluetooth: escuchar todo el tiempo oye más paquetes y hace más lento el Wi-Fi.	Wi-Fi 和藍芽共享一臺無線電:每次聽到更多的資料包, Wi-Fi 在下面.
+La radio es una sola para Wi-Fi y Bluetooth: escuchar todo el tiempo oye más paquetes y hace más lento el Wi-Fi.	Wi-Fi 與藍牙共用無線模組：持續監聽可接收更多封包，但會降低 Wi-Fi 速度。
 Al aire libre	在戶外
 Casa	主頁
 Oficina	辦公室

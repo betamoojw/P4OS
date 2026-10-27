@@ -140,21 +140,21 @@ EN/BOOT por RTS/DTR	通过 RTS/DTR 控制 EN/BOOT
 con EN/BOOT	使用 EN/BOOT
 sin EN/BOOT	不使用 EN/BOOT
 sin detectar	未检测到
-Flash cifrada o arranque seguro: no se puede grabar desde acá	密码闪存或安全启动:从这里无法闪存
+Flash cifrada o arranque seguro: no se puede grabar desde acá	Flash 已加密或启用了安全启动，无法从此处烧录。
 Detectar	检测
 para %s	适用于 %s
 chip desconocido	未知芯片
 1 archivo	1 个文件
 %s archivos	%s 个文件
-No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.	没有固件 /firmware. Upload an ESP-IDF build folder or a .bin.
+No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.	/firmware 中没有固件。请上传 ESP-IDF 的 build 目录或 .bin 文件。
 archivo %s de %s: %s	第 %s 个文件，共 %s 个：%s
 %s de %s	%s / %s
 faltan %s	剩余 %s
 en %s	用时 %s
 MD5 verificado	MD5 校验通过
-Grabar firmware	闪电固件
+Grabar firmware	烧录固件
 La placa a programar	待烧录开发板
-Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).	连接到标题:TX,RX和 GND 到港口, EN 和 BOOT to the pins modules.txt 名称 (模块目标... en= boot=).
+Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).	连接到扩展排针：TX、RX、GND 接到端口；EN、BOOT 接到 modules.txt 指定的引脚（module target … en= boot=）。
 Firmware en la tarjeta	存储卡中的固件
 Subir carpeta de build…	上传构建目录…
 Subir .bin…	上传 .bin…
@@ -193,16 +193,16 @@ Reiniciar	重启
 (se ven las últimas %s)	（显示最后 %s 行）
 Pausar	暂停
 filtrar (texto o /regex/)	filter (text or /regex/)
-Ver el arranque actual	让我们看看.
-Ver el arranque anterior	显示前一个 boot
+Ver el arranque actual	查看本次启动日志
+Ver el arranque anterior	查看上次启动日志
 Descargar	下载
 un firmware que no se sabe	一个未知的固件
-La placa se cayó: hay un volcado sin leer (%s, visto %s).	开发板崩溃: 有一个未读的倾弃处 (U)%s已见 %s).
-La placa se cayó: hay un volcado sin leer (%s).	开发板崩溃: 有一个未读的倾弃处 (U)%s).
+La placa se cayó: hay un volcado sin leer (%s, visto %s).	设备发生崩溃：有一份未读取的崩溃转储（%s，发现于 %s）。
+La placa se cayó: hay un volcado sin leer (%s).	设备发生崩溃：有一份未读取的崩溃转储（%s）。
 Verlo en Firmware	在Firmware中查看
-Lo último que escribió el arranque anterior (se conserva al reiniciar, no al desenchufar).	之前的开启写的最后一行 (通过重新启动,而不是切断).
+Lo último que escribió el arranque anterior (se conserva al reiniciar, no al desenchufar).	上次启动写入的最后内容（重启后保留，断电后不保留）。
 En vivo. El anillo guarda los últimos 256 KB.	实时显示，环形缓冲区保留最近 256 KB 数据。
-No hay registro del arranque anterior: la placa se desenchufó, o arrancó un firmware distinto (el anillo cambia de lugar con cada compilación).	之前的启动没有日志:板块被断开,或者另一个固件启动 (环随着每个构建移动).
+No hay registro del arranque anterior: la placa se desenchufó, o arrancó un firmware distinto (el anillo cambia de lugar con cada compilación).	没有上次启动日志：设备可能已断电，或启动了不同固件（每次编译环形缓冲区位置都会变化）。
 No se pudo leer: %s	读取失败：%s
 Reiniciar con el firmware nuevo	重启并运行新固件
 Tiene que ser el .bin del firmware (%s)	请选择固件 .bin 文件（%s）。
@@ -218,6 +218,11 @@ Versión	版本
 Compilado	编译时间
 Ranura	固件分区
 a prueba	试运行中
+confirmada	已确认
+marcada como mala	已标记为无效
+a medio instalar	安装未完成
+nueva	新固件
+estado desconocido	未知状态
 La otra ranura	另一固件分区
 vacía	空
 Actualizar por Wi-Fi	通过 Wi-Fi 更新
@@ -655,8 +660,8 @@ registerPage: "%s" es del portal	注册页面: "%s"属于门户
 La página falló: %s	页面失败: %s
 No cargó: %s	没有加载: %s
 /web/%s no cargó: %s	/web/%s 没有加载: %s
-Esta red pide la contraseña del portal.	这个网络要求门户的密码.
+Esta red pide la contraseña del portal.	此网络需要网页管理密码。
 Entrar	登录
 Se pone, se cambia o se quita en la placa: Ajustes, Portal web.	在板上设置,更改或删除:设置,网页门户.
-La autoridad HTTPS de la placa	开发板的 HTTPS 权威
+La autoridad HTTPS de la placa	设备的 HTTPS 证书颁发机构
 , para que el navegador confíe en ella.	所以浏览器信任它.

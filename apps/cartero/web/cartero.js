@@ -22,7 +22,7 @@
  * script runtime, building and sending a request, cURL, JSON and XML, the
  * widgets, the sidebar, the editors, the response, the runner, import and
  * export, the page. */
-const P = window.P4OS;
+const P = window.P4OS.forPage ? window.P4OS.forPage('cartero') : window.P4OS;
 const tr = P.tr || ((s, ...a) => { let i = 0; return s.replace(/%[sd]/g, () => a[i++]); });
 const N_ = s => s;
 const { h, put, toast } = P;

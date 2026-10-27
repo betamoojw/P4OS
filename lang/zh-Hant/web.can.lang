@@ -2,8 +2,8 @@
 # Spanish keys and printf/escape tokens are preserved.
 activo	活躍
 con avisos	警告
-pasivo	動態
-fuera del bus	開車
+pasivo	被動
+fuera del bus	匯流排關閉
 Solo escucha	只是聽著
 Normal	正常
 Autoprueba	自行測試

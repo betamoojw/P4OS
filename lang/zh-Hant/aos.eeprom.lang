@@ -44,7 +44,7 @@ Un %s en x%d (ORG a %s).	A %s 在 x%d (ORG到 %s).
 No es ninguno de la tabla.	這不是桌子上的問題.
 No hace falta: la flash dice su tamaño en el JEDEC id y la 93xx en la dirección. Usá Detectar.	沒有必要:一個快閃記憶體顯示其尺寸在JEDECID和93xx的地址.使用檢測.
 No se pudo leer el byte 0.	無法讀取0位元組.
-No se pudo escribir el byte 0: ¿WP está a 3V3?	不能寫位元組0:WP在3V3?
+No se pudo escribir el byte 0: ¿WP está a 3V3?	無法寫入位元組 0：WP 是否接到了 3.3 V？
 El byte 0 volvió a 0x%02X.	位元組0是返回0x%02X.
 ¡Ojo! El byte 0 no volvió a 0x%02X: escribilo a mano.	注意! 0 位元組沒有返回0x%02X寫字手動.
 desde el portal	從門戶
@@ -68,7 +68,7 @@ La copia de antes está en Versiones (%s).	之前的副本在版本中 (%s).
 Cancelado a mitad: quedó escrito hasta 0x%X. La copia de antes está en Versiones.	半途取消:寫到0x%X之前的副本是版本.
 No se pudo releer 0x%X para verificar.	我讀不懂.%X 我們回來檢查.
 No verificó en 0x%X: el chip tiene 0x%02X y debería 0x%02X.	檢查未能在0x%X: 晶片持有0x%02X 並且應該保持0x%02X.
-¿WP está a 3V3? Para escribir va a GND.	寫作是為3V3 GND.
+¿WP está a 3V3? Para escribir va a GND.	WP 接在 3.3 V 嗎？要寫入時應接 GND。
 El chip ya tenía eso: no hizo falta escribir nada.	晶片已經持有了:沒有什麼需要寫.
 Escrito 1 sector y verificado.	1 部門書寫和驗證.
 Escrita 1 palabra y verificada.	已寫入 1 個字並透過校驗。
@@ -238,8 +238,8 @@ SDA y SCL necesitan pull-ups de 4,7 kΩ a 3V3, si el módulo no los trae.	若�
 A0-A2 eligen la dirección: para 0x%02X van como dice el dibujo (1 = 3V3, 0 = GND).	A0-A2選擇地址:為 0x%02X 按圖的執行緒 (1 = 3V3,0 = GND).
 Este chip no usa A0-A2 (los bits altos de la dirección van ahí): a GND.	這個晶片不使用A0-A2 (高地址位元是這樣的): GND.
 En el 24xx1025, A2 (pata 3) va a 3V3: no es dirección, y sin eso no anda.	在24xx1025上,A2 (pin 3) 進入3V3:它不是一個地址,而且沒有它就不會工作.
-WP (pata 7) a GND para escribir; a 3V3 queda protegida toda.	WP (pin 7) to GND 在3V3時,它全部被保護.
-/WP (3) y /HOLD (7) a 3V3: en bajo, /HOLD congela el bus y /WP traba la protección.	/WP (3) 和 /HOLD (7) 至3V3:低, /HOLD freezes the bus and /WP 鎖定保護.
+WP (pata 7) a GND para escribir; a 3V3 queda protegida toda.	WP（第 7 腳）接 GND 可寫入，接 3.3 V 時全片寫入保護。
+/WP (3) y /HOLD (7) a 3V3: en bajo, /HOLD congela el bus y /WP traba la protección.	/WP（第 3 腳）和 /HOLD（第 7 腳）接 3.3 V；低電位時 /HOLD 暫停匯流排，/WP 鎖定寫入保護。
 El chip select es el GPIO%d, no el cs= del puerto.	選擇晶片是 GPIO%d這不是港口的CS=.
 Una flash soldada en una placa puede estar alimentando al resto: mejor sacarla, o con la placa sin su micro.	板上的閃光焊子最終可能給其餘部分供電: 最好把它脫下來, 或者用板上的微粒除掉。
 ORG (6) elige palabras de 16 bits (a 3V3) o de 8 (a GND): tiene que coincidir con lo elegido en Chip.	ORG (6) 選擇16位字 (在3V3) 或8位字 (在 GND):必須與Chip中所選的內容相匹配.

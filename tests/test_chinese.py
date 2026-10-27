@@ -14,6 +14,18 @@ import gen_lang
 
 FORMAT = re.compile(r'%(?:\d+\$)?[-+ #0]*(?:\*|\d+)?(?:\.(?:\*|\d+))?(?:hh|ll|[hlzjtL])?[diuoxXfFeEgGaAcsp%](?=$|[^a-z]|x%)')
 
+INTENTIONALLY_IDENTICAL = {
+    '%.1f %%/h', '%d/%dE', '%dC', '%dC x%d', '%s  %s +%d%%',
+    '%s%d PCA9685', '%s, EN GPIO%d, BOOT GPIO%d', '%u h', '+%dC',
+    '+10 s', '-10 s', '-12 h', '-24 h', '1 h', '12 V (30 mA)',
+    '2 × %s', '2043', '24 h', '3V3 · p18', '5 h', '555', '6 h',
+    'A-Z', 'A4', 'Basic', 'BLE', 'BTU', 'CAN', 'CAS', 'Cartero', 'Claude',
+    'DE AD BE EF', 'EEPROM', 'EN / RST', 'GND · p19', 'Home Assistant',
+    'Mac', 'Modbus', 'MQTT', 'PSRAM', 'PWM', 'RX GPIO%d · p%u', 'Spotlight',
+    'TX GPIO%d · p%u', 'URL', 'USB', 'USB 3 (850 mA)', 'USB…',
+    'V/div', 'Wi-Fi', 'n', '{{%s}} = %s', '≈ %s m', '≈ %s m · %s',
+}
+
 class Chinese(unittest.TestCase):
     def test_catalogue_coverage_and_format_arguments(self):
         catalogs = gen_lang.collect()
@@ -27,6 +39,16 @@ class Chinese(unittest.TestCase):
                     self.assertEqual(FORMAT.findall(key), FORMAT.findall(value), (code, name, key, value))
                     self.assertEqual(FORMAT.findall(english[key]), FORMAT.findall(value), (code, name, key, value))
                     self.assertEqual(english[key].count(r'\n'), value.count(r'\n'), (code, name, key))
+
+    def test_no_unreviewed_source_language_fallbacks(self):
+        for code in ('zh-Hans', 'zh-Hant'):
+            identical = {
+                key
+                for path in (ROOT / 'lang' / code).glob('*.lang')
+                for key, value in gen_lang.read_pack(str(path)).items()
+                if key == value
+            }
+            self.assertEqual(identical, INTENTIONALLY_IDENTICAL, code)
 
     def test_recording_label_does_not_reuse_firmware_write_translation(self):
         for code, expected in (('zh-Hans', '录屏'), ('zh-Hant', '錄屏')):

@@ -6,592 +6,592 @@
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
 #: apps\impresoras\main\drv_bambu.c:96
-Error %04X-%04X	Error %04X-%04X
+Error %04X-%04X	错误 %04X-%04X
 
 #: apps\impresoras\main\drv_bambu.c:220
-Bambu no acepta eso por la red	Bambu no acepta eso por la red
+Bambu no acepta eso por la red	Bambu 不接受通过网络执行此操作。
 
 #: apps\impresoras\main\drv_bambu.c:238
-Faltan el número de serie y el código de acceso	Faltan el número de serie y el código de acceso
+Faltan el número de serie y el código de acceso	缺少序列号和访问代码
 
 #: apps\impresoras\main\drv_bambu.c:251
-El certificado de la impresora no es de ese número de serie	El certificado de la impresora no es de ese número de serie
+El certificado de la impresora no es de ese número de serie	打印机证书与该序列号不匹配
 
 #: apps\impresoras\main\drv_bambu.c:253
-La impresora no tiene un certificado de Bambu	La impresora no tiene un certificado de Bambu
+La impresora no tiene un certificado de Bambu	打印机没有 Bambu 证书
 
 #: apps\impresoras\main\drv_bambu.c:255
-Esperando la hora de la red para verificar el certificado	Esperando la hora de la red para verificar el certificado
+Esperando la hora de la red para verificar el certificado	正在等待网络时间以验证证书
 
 #: apps\impresoras\main\drv_bambu.c:257
-Código de acceso incorrecto	Código de acceso incorrecto
+Código de acceso incorrecto	访问代码错误
 
 #: apps\impresoras\main\drv_bambu.c:259
 #: apps\impresoras\main\drv_creality.c:227
 #: apps\impresoras\main\drv_duet.c:76
 #: apps\impresoras\main\drv_duet.c:161
-No responde	No responde
+No responde	无响应
 
 #: apps\impresoras\main\drv_bambu.c:292
 #: apps\impresoras\main\drv_creality.c:257
 #: apps\impresoras\main\drv_elegoo.c:319
-Se cortó la conexión	Se cortó la conexión
+Se cortó la conexión	连接已断开
 
 #: apps\impresoras\main\drv_bambu.c:302
-X1, X1E, P1P, P1S, A1, A1 mini y H2D, en modo LAN (con el modo desarrollador para manejarlas)	X1, X1E, P1P, P1S, A1, A1 mini y H2D, en modo LAN (con el modo desarrollador para manejarlas)
+X1, X1E, P1P, P1S, A1, A1 mini y H2D, en modo LAN (con el modo desarrollador para manejarlas)	X1、X1E、P1P、P1S、A1、A1 mini 和 H2D；需使用 LAN 模式并启用开发者模式。
 
 #: apps\impresoras\main\drv_bambu.c:303
-Código de acceso	Código de acceso
+Código de acceso	访问代码
 
 #: apps\impresoras\main\drv_bambu.c:304
-En la impresora: Ajustes, Red (WLAN): el código de acceso de 8 caracteres	En la impresora: Ajustes, Red (WLAN): el código de acceso de 8 caracteres
+En la impresora: Ajustes, Red (WLAN): el código de acceso de 8 caracteres	在打印机上打开“设置 > 网络（WLAN）”，查看 8 位访问代码
 
 #: apps\impresoras\main\drv_creality.c:158
 #: apps\impresoras\main\drv_elegoo.c:119
-Error %d	Error %d
+Error %d	错误 %d
 
 #: apps\impresoras\main\drv_creality.c:266
-K1, K1C, K1 Max, K2 Plus, Ender-3 V3 y Creality Hi (sin root)	K1, K1C, K1 Max, K2 Plus, Ender-3 V3 y Creality Hi (sin root)
+K1, K1C, K1 Max, K2 Plus, Ender-3 V3 y Creality Hi (sin root)	K1、K1C、K1 Max、K2 Plus、Ender-3 V3 和 Creality Hi（未取得 root 权限）
 
 #: apps\impresoras\main\drv_duet.c:72
-No es una Duet	No es una Duet
+No es una Duet	该设备不是 Duet
 
 #: apps\impresoras\main\drv_duet.c:76
 #: apps\impresoras\main\drv_duet.c:161
 #: apps\impresoras\main\drv_duet.c:175
 #: apps\impresoras\main\drv_prusalink.c:95
-Respuesta inesperada	Respuesta inesperada
+Respuesta inesperada	响应异常
 
 #: apps\impresoras\main\drv_duet.c:83
 #: apps\impresoras\main\drv_duet.c:175
-Contraseña incorrecta	Contraseña incorrecta
+Contraseña incorrecta	密码错误
 
 #: apps\impresoras\main\drv_duet.c:88
-La Duet no acepta más sesiones	La Duet no acepta más sesiones
+La Duet no acepta más sesiones	Duet 不接受更多会话连接
 
 #: apps\impresoras\main\drv_duet.c:325
 #: apps\impresoras\main\drv_flashforge.c:254
 #: apps\impresoras\main\drv_moonraker.c:296
 #: apps\impresoras\main\drv_octoprint.c:338
-No se pudo leer la lista	No se pudo leer la lista
+No se pudo leer la lista	无法读取文件列表
 
 #: apps\impresoras\main\drv_duet.c:416
-Placas Duet 2 y 3 con RepRapFirmware 3, solas o con SBC	Placas Duet 2 y 3 con RepRapFirmware 3, solas o con SBC
+Placas Duet 2 y 3 con RepRapFirmware 3, solas o con SBC	运行 RepRapFirmware 3 的 Duet 2 和 Duet 3 控制板，可独立使用或搭配 SBC
 
 #: apps\impresoras\main\drv_duet.c:417
-Contraseña (si tiene)	Contraseña (si tiene)
+Contraseña (si tiene)	密码（如有）
 
 #: apps\impresoras\main\drv_duet.c:418
-La de M551; vacía si la Duet no pide	La de M551; vacía si la Duet no pide
+La de M551; vacía si la Duet no pide	M551 设置的密码；Duet 不要求密码时请留空
 
 #: apps\impresoras\main\drv_elegoo.c:183
-La impresora no aceptó la orden	La impresora no aceptó la orden
+La impresora no aceptó la orden	打印机未接受命令
 
 #: apps\impresoras\main\drv_elegoo.c:241
-Elegoo no acepta G-code por la red	Elegoo no acepta G-code por la red
+Elegoo no acepta G-code por la red	Elegoo 不接受通过网络发送 G-code
 
 #: apps\impresoras\main\drv_elegoo.c:303
-Falta el número de la placa (MainboardID): escribilo en Serie	Falta el número de la placa (MainboardID): escribilo en Serie
+Falta el número de la placa (MainboardID): escribilo en Serie	缺少主板编号（MainboardID）；请填入“序列号”字段
 
 #: apps\impresoras\main\drv_elegoo.c:329
-Centauri Carbon y las de resina Saturn y Mars con Wi-Fi	Centauri Carbon y las de resina Saturn y Mars con Wi-Fi
+Centauri Carbon y las de resina Saturn y Mars con Wi-Fi	Centauri Carbon，以及支持 Wi-Fi 的 Saturn 和 Mars 光固化打印机
 
 #: apps\impresoras\main\drv_flashforge.c:126
-Número de serie o código incorrectos	Número de serie o código incorrectos
+Número de serie o código incorrectos	序列号或验证码错误
 
 #: apps\impresoras\main\drv_flashforge.c:247
-Esta impresora no da la lista de archivos por la red	Esta impresora no da la lista de archivos por la red
+Esta impresora no da la lista de archivos por la red	该打印机不支持通过网络列出文件
 
 #: apps\impresoras\main\drv_flashforge.c:355
-Esta impresora no lo acepta por la red	Esta impresora no lo acepta por la red
+Esta impresora no lo acepta por la red	该打印机不支持通过网络执行此操作
 
 #: apps\impresoras\main\drv_flashforge.c:400
-Adventurer 5M, 5M Pro y AD5X (con código); Adventurer 3 y 4, Creator, Finder (sin código)	Adventurer 5M, 5M Pro y AD5X (con código); Adventurer 3 y 4, Creator, Finder (sin código)
+Adventurer 5M, 5M Pro y AD5X (con código); Adventurer 3 y 4, Creator, Finder (sin código)	Adventurer 5M、5M Pro 和 AD5X（需要验证码）；Adventurer 3、4、Creator、Finder（无需验证码）
 
 #: apps\impresoras\main\drv_flashforge.c:401
-Código de verificación (check code)	Código de verificación (check code)
+Código de verificación (check code)	验证码
 
 #: apps\impresoras\main\drv_flashforge.c:402
-En la impresora: Ajustes, Red, Sólo LAN. Vacío: las viejas, por el puerto 8899	En la impresora: Ajustes, Red, Sólo LAN. Vacío: las viejas, por el puerto 8899
+En la impresora: Ajustes, Red, Sólo LAN. Vacío: las viejas, por el puerto 8899	在打印机上打开“设置 > 网络 > 仅 LAN”。旧型号使用端口 8899，无需填写验证码
 
 #: apps\impresoras\main\drv_moonraker.c:204
-Moonraker pide una clave	Moonraker pide una clave
+Moonraker pide una clave	Moonraker 需要 API 密钥
 
 #: apps\impresoras\main\drv_moonraker.c:205
 #: apps\impresoras\main\drv_octoprint.c:214
 #: apps\impresoras\main\drv_octoprint.c:445
-Contestó %d	Contestó %d
+Contestó %d	返回 %d
 
 #: apps\impresoras\main\drv_moonraker.c:361
 #: apps\impresoras\main\drv_octoprint.c:441
 #: apps\impresoras\main\drv_prusalink.c:278
-La impresora no está lista para eso	La impresora no está lista para eso
+La impresora no está lista para eso	打印机尚未准备好执行此操作
 
 #: apps\impresoras\main\drv_moonraker.c:397
-Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig y toda impresora con Klipper, Mainsail o Fluidd	Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig y toda impresora con Klipper, Mainsail o Fluidd
+Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig y toda impresora con Klipper, Mainsail o Fluidd	搭载 Klipper、Mainsail 或 Fluidd 的 Voron、Sovol、Elegoo Neptune 4、Qidi、RatRig 等打印机
 
 #: apps\impresoras\main\drv_moonraker.c:398
-Clave de la API (opcional)	Clave de la API (opcional)
+Clave de la API (opcional)	API 密钥（可选）
 
 #: apps\impresoras\main\drv_moonraker.c:399
-Sólo si Moonraker tiene [authorization]: la clave de /access/api_key	Sólo si Moonraker tiene [authorization]: la clave de /access/api_key
+Sólo si Moonraker tiene [authorization]: la clave de /access/api_key	仅当 Moonraker 配置了 [authorization] 时填写：使用 /access/api_key 中的密钥
 
 #: apps\impresoras\main\drv_octoprint.c:185
-Clave de la API incorrecta	Clave de la API incorrecta
+Clave de la API incorrecta	API 密钥错误
 
 #: apps\impresoras\main\drv_octoprint.c:206
-OctoPrint no está conectado a la impresora	OctoPrint no está conectado a la impresora
+OctoPrint no está conectado a la impresora	OctoPrint 未连接到打印机
 
 #: apps\impresoras\main\drv_octoprint.c:485
-Cualquier impresora con OctoPrint (Prusa, Ender, Anet...)	Cualquier impresora con OctoPrint (Prusa, Ender, Anet...)
+Cualquier impresora con OctoPrint (Prusa, Ender, Anet...)	任何使用 OctoPrint 的打印机（Prusa、Ender、Anet 等）
 
 #: apps\impresoras\main\drv_octoprint.c:486
-Clave de la API	Clave de la API
+Clave de la API	API 密钥
 
 #: apps\impresoras\main\drv_octoprint.c:487
-En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario)	En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario)
+En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario)	在 OctoPrint 中打开“设置 > API”（也可使用用户应用程序密钥）
 
 #: apps\impresoras\main\drv_prusalink.c:95
-Usuario o contraseña incorrectos	Usuario o contraseña incorrectos
+Usuario o contraseña incorrectos	用户名或密码错误
 
 #: apps\impresoras\main\drv_prusalink.c:274
-PrusaLink no acepta G-code: usá la pantalla de la impresora	PrusaLink no acepta G-code: usá la pantalla de la impresora
+PrusaLink no acepta G-code: usá la pantalla de la impresora	PrusaLink 不接受 G-code；请使用打印机屏幕操作
 
 #: apps\impresoras\main\drv_prusalink.c:279
-No se pudo	No se pudo
+No se pudo	操作失败
 
 #: apps\impresoras\main\drv_prusalink.c:327
-Prusa MK4, MK3.9, MINI, XL, CORE One y MK3S con PrusaLink (las de Prusa Connect)	Prusa MK4, MK3.9, MINI, XL, CORE One y MK3S con PrusaLink (las de Prusa Connect)
+Prusa MK4, MK3.9, MINI, XL, CORE One y MK3S con PrusaLink (las de Prusa Connect)	Prusa MK4、MK3.9、MINI、XL、CORE One 和 MK3S（带 PrusaLink）（Prusa Connect）
 
 #: apps\impresoras\main\drv_prusalink.c:328
-Contraseña de PrusaLink	Contraseña de PrusaLink
+Contraseña de PrusaLink	PrusaLink 密码
 
 #: apps\impresoras\main\drv_prusalink.c:329
-En la impresora: Ajustes, Red, PrusaLink (usuario maker)	En la impresora: Ajustes, Red, PrusaLink (usuario maker)
+En la impresora: Ajustes, Red, PrusaLink (usuario maker)	在打印机上打开“设置 > 网络 > PrusaLink”（用户为 maker）
 
 #: apps\impresoras\main\impresoras.c:94
-No entran más impresoras	No entran más impresoras
+No entran más impresoras	没有空间容纳更多打印机
 
 #: apps\impresoras\main\impresoras.c:152
 #: apps\impresoras\main\p3d_detail.c:432
-Sin trabajo	Sin trabajo
+Sin trabajo	无打印任务
 
 #: apps\impresoras\main\impresoras.c:158
-faltan %s · %s	faltan %s · %s
+faltan %s · %s	剩余 %s · %s
 
 #: apps\impresoras\main\impresoras.c:159
-faltan %s	faltan %s
+faltan %s	剩余 %s
 
 #: apps\impresoras\main\impresoras.c:161
-capa %d de %d	capa %d de %d
+capa %d de %d	第 %d 层，共 %d 层
 
 #: apps\impresoras\main\impresoras.c:179
 #: apps\impresoras\main\impresoras.c:179
-imprimiendo	imprimiendo
+imprimiendo	正在打印
 
 #: apps\impresoras\main\impresoras.c:180
 #: apps\impresoras\main\impresoras.c:180
-en pausa	en pausa
+en pausa	已暂停
 
 #: apps\impresoras\main\impresoras.c:181
 #: apps\impresoras\main\impresoras.c:181
-preparando	preparando
+preparando	正在准备
 
 #: apps\impresoras\main\impresoras.c:182
-terminada	terminada
+terminada	已完成
 
 #: apps\impresoras\main\impresoras.c:182
-terminadas	terminadas
+terminadas	已完成
 
 #: apps\impresoras\main\impresoras.c:183
 #: apps\impresoras\main\impresoras.c:183
-con error	con error
+con error	发生错误
 
 #: apps\impresoras\main\impresoras.c:184
-lista	lista
+lista	就绪
 
 #: apps\impresoras\main\impresoras.c:184
-listas	listas
+listas	就绪
 
 #: apps\impresoras\main\impresoras.c:185
 #: apps\impresoras\main\impresoras.c:185
-sin conexión	sin conexión
+sin conexión	离线
 
 #: apps\impresoras\main\impresoras.c:205
-Impresoras 3D	Impresoras 3D
+Impresoras 3D	3D打印机
 
 #: apps\impresoras\main\impresoras.c:299
-Ninguna impresora todavía.\n\nAgregala con + o desde la página Impresoras 3D del portal. Andan OctoPrint, PrusaLink (Prusa), Bambu Lab, Klipper, Duet, Elegoo, FlashForge y Creality.	Ninguna impresora todavía.\n\nAgregala con + o desde la página Impresoras 3D del portal. Andan OctoPrint, PrusaLink (Prusa), Bambu Lab, Klipper, Duet, Elegoo, FlashForge y Creality.
+Ninguna impresora todavía.\n\nAgregala con + o desde la página Impresoras 3D del portal. Andan OctoPrint, PrusaLink (Prusa), Bambu Lab, Klipper, Duet, Elegoo, FlashForge y Creality.	尚无打印机。\n\n 使用 + 或从门户的 3D 打印机页面添加打印机。 OctoPrint、PrusaLink（普鲁萨）、Bambu Lab、Klipper、Duet、Elegoo、FlashForge 和 Creality 有效。
 
 #: apps\impresoras\main\impresoras.c:304
-Agregar una impresora	Agregar una impresora
+Agregar una impresora	添加打印机
 
 #: apps\impresoras\main\impresoras.c:401
-terminó de imprimir	terminó de imprimir
+terminó de imprimir	已完成打印
 
 #: apps\impresoras\main\impresoras.c:402
-tiene un error	tiene un error
+tiene un error	发生错误
 
 #: apps\impresoras\main\impresoras.c:405
-se pausó	se pausó
+se pausó	已暂停
 
 #: apps\impresoras\main\impresoras.c:407
-canceló la impresión	canceló la impresión
+canceló la impresión	已取消打印
 
 #: apps\impresoras\main\p3d_cam.c:228
-La dirección de la cámara no sirve	La dirección de la cámara no sirve
+La dirección de la cámara no sirve	相机地址不好
 
 #: apps\impresoras\main\p3d_cam.c:229
-La cámara pide usuario y contraseña	La cámara pide usuario y contraseña
+La cámara pide usuario y contraseña	相机要求输入用户名和密码
 
 #: apps\impresoras\main\p3d_cam.c:230
-La cámara no responde	La cámara no responde
+La cámara no responde	摄像头无响应
 
 #: apps\impresoras\main\p3d_cam.c:231
-La cámara contestó %d	La cámara contestó %d
+La cámara contestó %d	相机回答 %d
 
 #: apps\impresoras\main\p3d_cam.c:277
-La cámara no tiene un certificado de Bambu para este número de serie	La cámara no tiene un certificado de Bambu para este número de serie
+La cámara no tiene un certificado de Bambu para este número de serie	该相机没有该序列号的 Bambu 证书
 
 #: apps\impresoras\main\p3d_cam.c:278
-La cámara no responde (las X1 usan RTSP, que no se puede ver acá)	La cámara no responde (las X1 usan RTSP, que no se puede ver acá)
+La cámara no responde (las X1 usan RTSP, que no se puede ver acá)	摄像头无响应（X1 使用 RTSP，无法在此处显示）
 
 #: apps\impresoras\main\p3d_cam.c:375
-Conectando con la cámara...	Conectando con la cámara...
+Conectando con la cámara...	正在连接相机...
 
 #: apps\impresoras\main\p3d_detail.c:38
-Estado	Estado
+Estado	状态
 
 #: apps\impresoras\main\p3d_detail.c:38
-Control	Control
+Control	控制
 
 #: apps\impresoras\main\p3d_detail.c:38
-Archivos	Archivos
+Archivos	文件
 
 #: apps\impresoras\main\p3d_detail.c:38
-Cámara	Cámara
+Cámara	相机
 
 #: apps\impresoras\main\p3d_detail.c:38
-Consola	Consola
+Consola	控制台
 
 #: apps\impresoras\main\p3d_detail.c:133
-Boquilla	Boquilla
+Boquilla	喷嘴
 
 #: apps\impresoras\main\p3d_detail.c:133
-Boquilla 2	Boquilla 2
+Boquilla 2	喷嘴2
 
 #: apps\impresoras\main\p3d_detail.c:133
-Cama	Cama
+Cama	热床
 
 #: apps\impresoras\main\p3d_detail.c:133
-Recinto	Recinto
+Recinto	腔体
 
 #: apps\impresoras\main\p3d_detail.c:179
-Apagada	Apagada
+Apagada	关闭
 
 #: apps\impresoras\main\p3d_detail.c:234
-Ahora: %s	Ahora: %s
+Ahora: %s	现在：%s
 
 #: apps\impresoras\main\p3d_detail.c:254
-Apagar	Apagar
+Apagar	关闭
 
 #: apps\impresoras\main\p3d_detail.c:260
-Aplicar	Aplicar
+Aplicar	应用
 
 #: apps\impresoras\main\p3d_detail.c:269
-Reanudando...	Reanudando...
+Reanudando...	正在恢复...
 
 #: apps\impresoras\main\p3d_detail.c:269
-Pausando...	Pausando...
+Pausando...	暂停...
 
 #: apps\impresoras\main\p3d_detail.c:279
-¿Cancelar? Tocá otra vez	¿Cancelar? Tocá otra vez
+¿Cancelar? Tocá otra vez	要取消吗？请再次点击确认
 
 #: apps\impresoras\main\p3d_detail.c:284
-Cancelando la impresión	Cancelando la impresión
+Cancelando la impresión	取消打印
 
 #: apps\impresoras\main\p3d_detail.c:302
-Enfriando	Enfriando
+Enfriando	冷却
 
 #: apps\impresoras\main\p3d_detail.c:308
-Precalentando para %s	Precalentando para %s
+Precalentando para %s	%s预热
 
 #: apps\impresoras\main\p3d_detail.c:329
-Reanudar	Reanudar
+Reanudar	恢复打印
 
 #: apps\impresoras\main\p3d_detail.c:329
-Pausar	Pausar
+Pausar	暂停
 
 #: apps\impresoras\main\p3d_detail.c:333
-Cancelar	Cancelar
+Cancelar	取消
 
 #: apps\impresoras\main\p3d_detail.c:336
-Imprimir un archivo	Imprimir un archivo
+Imprimir un archivo	打印文件
 
 #: apps\impresoras\main\p3d_detail.c:426
-capa %d/%d	capa %d/%d
+capa %d/%d	层 %d/%d
 
 #: apps\impresoras\main\p3d_detail.c:436
-Lleva %s	Lleva %s
+Lleva %s	到目前为止 %s
 
 #: apps\impresoras\main\p3d_detail.c:439
-Faltan %s	Faltan %s
+Faltan %s	%s 左
 
 #: apps\impresoras\main\p3d_detail.c:442
-Termina %s	Termina %s
+Termina %s	结束 %s
 
 #: apps\impresoras\main\p3d_detail.c:468
-objetivo %d°	objetivo %d°
+objetivo %d°	目标 %d°
 
 #: apps\impresoras\main\p3d_detail.c:469
-sensor	sensor
+sensor	传感器
 
 #: apps\impresoras\main\p3d_detail.c:470
-apagado	apagado
+apagado	关闭
 
 #: apps\impresoras\main\p3d_detail.c:476
-Velocidad %d%%	Velocidad %d%%
+Velocidad %d%%	速度 %d%%
 
 #: apps\impresoras\main\p3d_detail.c:478
-silencioso	silencioso
+silencioso	沉默的
 
 #: apps\impresoras\main\p3d_detail.c:478
-estándar	estándar
+estándar	标准
 
 #: apps\impresoras\main\p3d_detail.c:478
-deportivo	deportivo
+deportivo	运动
 
 #: apps\impresoras\main\p3d_detail.c:478
-a fondo	a fondo
+a fondo	极速
 
 #: apps\impresoras\main\p3d_detail.c:481
 #: apps\impresoras\main\p3d_detail.c:702
-Flujo	Flujo
+Flujo	流量
 
 #: apps\impresoras\main\p3d_detail.c:482
 #: apps\impresoras\main\p3d_detail.c:694
-Ventilador	Ventilador
+Ventilador	风扇
 
 #: apps\impresoras\main\p3d_detail.c:587
-Temperaturas (tocá para cambiar)	Temperaturas (tocá para cambiar)
+Temperaturas (tocá para cambiar)	温度（点击即可更改）
 
 #: apps\impresoras\main\p3d_detail.c:587
-Temperaturas	Temperaturas
+Temperaturas	温度
 
 #: apps\impresoras\main\p3d_detail.c:595
-Enfriar	Enfriar
+Enfriar	冷却
 
 #: apps\impresoras\main\p3d_detail.c:600
-Últimos 20 minutos	Últimos 20 minutos
+Últimos 20 minutos	最后 20 分钟
 
 #: apps\impresoras\main\p3d_detail.c:655
-Mientras imprime no se mueve a mano	Mientras imprime no se mueve a mano
+Mientras imprime no se mueve a mano	打印过程中无法手动移动
 
 #: apps\impresoras\main\p3d_detail.c:675
-Haciendo home	Haciendo home
+Haciendo home	正在回零
 
 #: apps\impresoras\main\p3d_detail.c:682
-La boquilla está fría: calentala antes de extruir	La boquilla está fría: calentala antes de extruir
+La boquilla está fría: calentala antes de extruir	喷嘴温度过低，请先加热再挤出
 
 #: apps\impresoras\main\p3d_detail.c:698
 #: apps\impresoras\main\p3d_detail.c:879
-Velocidad	Velocidad
+Velocidad	速度
 
 #: apps\impresoras\main\p3d_detail.c:735
-Enviado	Enviado
+Enviado	已发送
 
 #: apps\impresoras\main\p3d_detail.c:742
-Conectando OctoPrint con la impresora	Conectando OctoPrint con la impresora
+Conectando OctoPrint con la impresora	将 OctoPrint 连接到打印机
 
 #: apps\impresoras\main\p3d_detail.c:742
-Desconectando	Desconectando
+Desconectando	断开连接
 
 #: apps\impresoras\main\p3d_detail.c:752
-¿Parar todo? Tocá otra vez	¿Parar todo? Tocá otra vez
+¿Parar todo? Tocá otra vez	要停止全部操作吗？请再次点击确认
 
 #: apps\impresoras\main\p3d_detail.c:757
 #: apps\impresoras\main\p3d_detail.c:904
-Parada de emergencia	Parada de emergencia
+Parada de emergencia	紧急停止
 
 #: apps\impresoras\main\p3d_detail.c:783
-Silencioso	Silencioso
+Silencioso	沉默
 
 #: apps\impresoras\main\p3d_detail.c:783
-Estándar	Estándar
+Estándar	标准型
 
 #: apps\impresoras\main\p3d_detail.c:783
-Deportivo	Deportivo
+Deportivo	运动
 
 #: apps\impresoras\main\p3d_detail.c:783
-A fondo	A fondo
+A fondo	极速
 
 #: apps\impresoras\main\p3d_detail.c:823
-Mover el cabezal	Mover el cabezal
+Mover el cabezal	移动打印头
 
 #: apps\impresoras\main\p3d_detail.c:856
-Home	Home
+Home	回零
 
 #: apps\impresoras\main\p3d_detail.c:858
-Todos	Todos
+Todos	全部
 
 #: apps\impresoras\main\p3d_detail.c:863
-Mientras imprime, sólo velocidad, flujo, ventilador y luz.	Mientras imprime, sólo velocidad, flujo, ventilador y luz.
+Mientras imprime, sólo velocidad, flujo, ventilador y luz.	打印过程中，仅可调节速度、流量、风扇和灯光。
 
 #: apps\impresoras\main\p3d_detail.c:867
-Extrusor	Extrusor
+Extrusor	挤出机
 
 #: apps\impresoras\main\p3d_detail.c:870
-Extruir	Extruir
+Extruir	挤出
 
 #: apps\impresoras\main\p3d_detail.c:871
-Retraer	Retraer
+Retraer	回抽
 
 #: apps\impresoras\main\p3d_detail.c:888
-Luz	Luz
+Luz	光
 
 #: apps\impresoras\main\p3d_detail.c:898
-Soltar motores	Soltar motores
+Soltar motores	释放电机
 
 #: apps\impresoras\main\p3d_detail.c:901
-Desconectar	Desconectar
+Desconectar	断开连接
 
 #: apps\impresoras\main\p3d_detail.c:901
-Conectar	Conectar
+Conectar	连接
 
 #: apps\impresoras\main\p3d_detail.c:945
-Ya está imprimiendo	Ya está imprimiendo
+Ya está imprimiendo	已在打印中
 
 #: apps\impresoras\main\p3d_detail.c:951
-Empezando a imprimir	Empezando a imprimir
+Empezando a imprimir	开始打印
 
 #: apps\impresoras\main\p3d_detail.c:966
 #: apps\impresoras\main\p3d_edit.c:317
-Tocá otra vez para borrar	Tocá otra vez para borrar
+Tocá otra vez para borrar	再次点击即可删除
 
 #: apps\impresoras\main\p3d_detail.c:998
-Leyendo los archivos...	Leyendo los archivos...
+Leyendo los archivos...	正在读取文件...
 
 #: apps\impresoras\main\p3d_detail.c:1006
-No hay archivos	No hay archivos
+No hay archivos	没有文件
 
 #: apps\impresoras\main\p3d_detail.c:1038
-Imprimir	Imprimir
+Imprimir	打印
 
 #: apps\impresoras\main\p3d_detail.c:1039
 #: apps\impresoras\main\p3d_edit.c:429
-Borrar	Borrar
+Borrar	删除
 
 #: apps\impresoras\main\p3d_detail.c:1063
-Tocá un archivo para imprimirlo	Tocá un archivo para imprimirlo
+Tocá un archivo para imprimirlo	点击文件即可打印
 
 #: apps\impresoras\main\p3d_detail.c:1133
-La cámara manda imágenes grandes: con 640x480 en su configuración va más rápido.	La cámara manda imágenes grandes: con 640x480 en su configuración va más rápido.
+La cámara manda imágenes grandes: con 640x480 en su configuración va más rápido.	相机发送大图片：将其设置为 640x480，速度会更快。
 
 #: apps\impresoras\main\p3d_detail.c:1157
-Esta impresora no tiene cámara conocida. Se puede poner su dirección en el editor (Cámara).	Esta impresora no tiene cámara conocida. Se puede poner su dirección en el editor (Cámara).
+Esta impresora no tiene cámara conocida. Se puede poner su dirección en el editor (Cámara).	该打印机没有已知的摄像头。其地址可以在编辑器（Camera）中设置。
 
 #: apps\impresoras\main\p3d_detail.c:1229
-Lo que mandes aparece acá.	Lo que mandes aparece acá.
+Lo que mandes aparece acá.	您发送的内容显示在此处。
 
 #: apps\impresoras\main\p3d_detail.c:1239
-Esta impresora no devuelve las respuestas: sólo se ve lo que se manda.	Esta impresora no devuelve las respuestas: sólo se ve lo que se manda.
+Esta impresora no devuelve las respuestas: sólo se ve lo que se manda.	该打印机不会发回其答案：仅显示发送的内容。
 
 #: apps\impresoras\main\p3d_edit.c:124
-Buscando en la red...	Buscando en la red...
+Buscando en la red...	正在网络搜索...
 
 #: apps\impresoras\main\p3d_edit.c:128
 #: apps\impresoras\main\p3d_edit.c:145
-No hay red	No hay red
+No hay red	无网络
 
 #: apps\impresoras\main\p3d_edit.c:276
-Falta la dirección	Falta la dirección
+Falta la dirección	地址不见了
 
 #: apps\impresoras\main\p3d_edit.c:281
-Falta: %s	Falta: %s
+Falta: %s	缺失：%s
 
 #: apps\impresoras\main\p3d_edit.c:286
-Falta el número de serie	Falta el número de serie
+Falta el número de serie	序列号丢失
 
 #: apps\impresoras\main\p3d_edit.c:302
-No se pudo guardar en la tarjeta	No se pudo guardar en la tarjeta
+No se pudo guardar en la tarjeta	无法保存到卡上
 
 #: apps\impresoras\main\p3d_edit.c:305
-Guardada	Guardada
+Guardada	已保存
 
 #: apps\impresoras\main\p3d_edit.c:357
-Nueva impresora	Nueva impresora
+Nueva impresora	新打印机
 
 #: apps\impresoras\main\p3d_edit.c:357
-Impresora	Impresora
+Impresora	打印机
 
 #: apps\impresoras\main\p3d_edit.c:362
-Qué es	Qué es
+Qué es	它是什么
 
 #: apps\impresoras\main\p3d_edit.c:373
-Buscar en la red	Buscar en la red
+Buscar en la red	搜索网络
 
 #: apps\impresoras\main\p3d_edit.c:381
-Nombre	Nombre
+Nombre	名称
 
 #: apps\impresoras\main\p3d_edit.c:383
-Dirección (IP o nombre)	Dirección (IP o nombre)
+Dirección (IP o nombre)	地址（IP 或名称）
 
 #: apps\impresoras\main\p3d_edit.c:387
-Puerto (vacío: el de siempre)	Puerto (vacío: el de siempre)
+Puerto (vacío: el de siempre)	端口（空：通常的端口）
 
 #: apps\impresoras\main\p3d_edit.c:393
-Usuario	Usuario
+Usuario	用户
 
 #: apps\impresoras\main\p3d_edit.c:401
-Número de la placa (MainboardID, opcional)	Número de la placa (MainboardID, opcional)
+Número de la placa (MainboardID, opcional)	板号（MainboardID，可选）
 
 #: apps\impresoras\main\p3d_edit.c:401
-Número de serie	Número de serie
+Número de serie	序列号
 
 #: apps\impresoras\main\p3d_edit.c:403
-En la impresora: Ajustes, Dispositivo; o en Bambu Studio	En la impresora: Ajustes, Dispositivo; o en Bambu Studio
+En la impresora: Ajustes, Dispositivo; o en Bambu Studio	在打印机上：设置、设备；或在 Bambu Studio 中
 
 #: apps\impresoras\main\p3d_edit.c:404
-En la impresora: Ajustes, Acerca de	En la impresora: Ajustes, Acerca de
+En la impresora: Ajustes, Acerca de	在打印机上：设置、关于
 
 #: apps\impresoras\main\p3d_edit.c:408
-HTTPS (con certificado válido)	HTTPS (con certificado válido)
+HTTPS (con certificado válido)	HTTPS（具有有效证书）
 
 #: apps\impresoras\main\p3d_edit.c:418
-Cámara (vacío: la que diga la impresora; off: ninguna)	Cámara (vacío: la que diga la impresora; off: ninguna)
+Cámara (vacío: la que diga la impresora; off: ninguna)	摄像头（留空：使用打印机提供的地址；off：禁用）
 
 #: apps\impresoras\main\p3d_edit.c:421
-La clave queda guardada en la tarjeta (impresoras.txt) y se puede leer.	La clave queda guardada en la tarjeta (impresoras.txt) y se puede leer.
+La clave queda guardada en la tarjeta (impresoras.txt) y se puede leer.	密钥保存在卡（impresoras.txt）上并且可以读取。
 
 #: apps\impresoras\main\p3d_edit.c:428
-Guardar	Guardar
+Guardar	保存
 
 #: apps\impresoras\main\p3d_edit.c:445
-No se encontró ninguna (Bambu y Elegoo no se anuncian así)	No se encontró ninguna (Bambu y Elegoo no se anuncian así)
+No se encontró ninguna (Bambu y Elegoo no se anuncian así)	未找到（Bambu 和 Elegoo 不会以这种方式声明自己）
 
 #: apps\impresoras\main\p3d_ui.c:92
-Sin conexión	Sin conexión
+Sin conexión	离线
 
 #: apps\impresoras\main\p3d_ui.c:93
-Conectando	Conectando
+Conectando	正在连接
 
 #: apps\impresoras\main\p3d_ui.c:94
-Lista	Lista
+Lista	就绪
 
 #: apps\impresoras\main\p3d_ui.c:95
-Preparando	Preparando
+Preparando	准备中
 
 #: apps\impresoras\main\p3d_ui.c:96
-Imprimiendo	Imprimiendo
+Imprimiendo	正在打印
 
 #: apps\impresoras\main\p3d_ui.c:97
-En pausa	En pausa
+En pausa	已暂停
 
 #: apps\impresoras\main\p3d_ui.c:98
-Terminó	Terminó
+Terminó	完成
 
 #: apps\impresoras\main\p3d_ui.c:99
-Cancelada	Cancelada
+Cancelada	取消
 
 #: apps\impresoras\main\p3d_ui.c:100
-Error	Error
+Error	错误

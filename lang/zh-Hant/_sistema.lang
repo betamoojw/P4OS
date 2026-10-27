@@ -4,8 +4,8 @@ El teléfono no pudo hacerlo	電話不能做.
 El teléfono no está conectado	電話沒有連線.
 Llamada entrante	接收電話
 Número desconocido	不知名號碼
-Rechazar	衰退
-Atender	答案
+Rechazar	拒接
+Atender	接聽
 Home Assistant: configurar en Ajustes	Home Assistant：請在設定中配置
 Clima: próximamente	天氣：即將推出
 Listo	完成
@@ -69,7 +69,7 @@ No se pudo empezar a grabar (¿hay tarjeta?)	無法開始錄屏，請檢查儲�
 Temperatura	溫度
 Humedad	溼度
 Presión	氣壓
-Luz	淺色
+Luz	照度
 Tensión	電壓
 Corriente	電流
 Potencia	功率
@@ -96,24 +96,24 @@ Sin filtro	未過濾
 Temperatura de color	顏色溫度
 Proximidad	接近性
 Distancia	距離
-Aceleración X	加速 X
-Aceleración Y	加速 Y
-Aceleración Z	速度Z
+Aceleración X	X 軸加速度
+Aceleración Y	Y 軸加速度
+Aceleración Z	Z 軸加速度
 Giro X	旋轉 X
 Giro Y	旋轉 Y
 Giro Z	旋轉Z
 Campo X	欄位 X
 Campo Y	欄位 Y
 Campo Z	欄位Z
-Rumbo	標題
-Cabeceo	投籃
-Alabeo	滾動
+Rumbo	航向
+Cabeceo	俯仰
+Alabeo	橫滾
 Ángulo	角度
-Carga	收費
+Carga	電量
 Tensión de la celda	電池電壓
 Peso	重量
-Crudo	其他產品
-Pulsos	豆類
+Crudo	原始值
+Pulsos	脈衝數
 Frecuencia	頻率
 Caudal	流量
 Volumen	音量
@@ -206,7 +206,7 @@ Distancia por LiDAR, hasta 8 m	根據LiDAR的距離,最大8m
 Acelerómetro y giróscopo (y brújula en el MPU-9250)	加速計和陀螺儀(和MPU-9250上的羅盤)
 Acelerómetro, giróscopo y brújula	加速計、陀螺儀和羅盤
 Acelerómetro y giróscopo	加速儀和陀螺鏡
-Acelerómetro	快速儀
+Acelerómetro	加速度計
 Orientación absoluta (fusión de 9 ejes)	絕對方向 (9軸融合)
 Brújula (campo magnético)	指南針(磁場)
 Distancia por láser, hasta 2 m	鐳射距離,最大2米
@@ -260,7 +260,7 @@ Presencia humana por radar	透過雷達測試的人類存在
 Presencia y posición de hasta tres personas por radar	在雷達上,最多3人的存在和位置
 Presión y clima	壓力和天氣
 Luz y color	光和顏色
-Movimiento y brújula	運動和圖針
+Movimiento y brújula	運動與羅盤
 Tensión, corriente y ADC	電壓,電流和 ADC
 Distancia y presencia	距離和存在
 Otros	其他
@@ -622,7 +622,7 @@ caloría	卡路里
 kilocaloría	千卡
 watt-hora	瓦時
 kilowatt-hora	千瓦時
-BTU	工業化技術
+BTU	BTU
 Tiempo	時間
 milisegundo	毫秒
 segundo	秒
@@ -682,7 +682,7 @@ Alimentación	電源
 Tensión del LED	LED 正向壓降
 Código SMD	貼片電阻程式碼
 Escribí dos valores; los otros dos salen solos.	輸入兩個值;其他兩個值已確定.
-Vin (V)	葡萄酒 (V)
+Vin (V)	輸入電壓 Vin（V）
 Potencia R1+R2	R1+R2 功耗
 Vout = Vin · R2 / (R1 + R2)	Vout = Vin R2 /(R1 + R2)
 Alimentación (V)	供電電壓（V）
@@ -951,7 +951,7 @@ Elegí un firmware	選擇一個韌體
 Programador	燒錄工具
 Ese archivo no es un firmware que se pueda grabar	那份檔案不是可以閃現的堅固軟體
 Grabación terminada: %s en %s	閃光完成: %s 在 %s
-No se pudo grabar: %s	無法閃爍 : %s
+No se pudo grabar: %s	無法燒錄：%s
 Frío	很棒.
 Calor	熱量
 Frío/calor	熱量/cool
@@ -1010,7 +1010,7 @@ Sin configurar	未配置
 Esperando el Wi-Fi	正在等待 Wi-Fi
 Conectando…	正在連線…
 Token rechazado	令牌無效
-Cargando la casa…	裝滿了房子.
+Cargando la casa…	正在載入家庭裝置…
 Conectado	已連線
 Sin conexión	未連線
 Dirección	地址
@@ -1020,11 +1020,11 @@ guardado	已儲存
 falta	缺失
 Leer ha.txt de la tarjeta	讀取 ha.txt 從卡
 Reconectar	再連線
-El token se crea en Home Assistant: tu perfil > Seguridad > Tokens de acceso de larga duración. Escribirlo acá es un suplicio, así que va en un archivo ha.txt en la raíz de la tarjeta, con dos renglones: url=http://… (o https://…) y token=…. Al leerlo, P4OS se guarda el token y lo borra del archivo. Un tercer renglón opcional, favs=light.living,switch.cafetera, arma los favoritos.	標誌是在 Home Assistant在此輸入是酷刑,所以它進入一個 ha.txt 在卡的根上,有兩個行: url=http://… (或 https://…) 在閱讀時,P4OS儲存了代幣並從檔案中刪除.一個可選的第三行,favs=light.living,switch.cafetera,設定了最喜歡的.
+El token se crea en Home Assistant: tu perfil > Seguridad > Tokens de acceso de larga duración. Escribirlo acá es un suplicio, así que va en un archivo ha.txt en la raíz de la tarjeta, con dos renglones: url=http://… (o https://…) y token=…. Al leerlo, P4OS se guarda el token y lo borra del archivo. Un tercer renglón opcional, favs=light.living,switch.cafetera, arma los favoritos.	在 Home Assistant 的「個人資料 > 安全性 > 長期存取權杖」中建立權杖。輸入不便時，可在記憶卡根目錄建立 ha.txt，寫入 url=http://…（或 https://…）和 token=…。P4OS 讀取後會儲存權杖並從檔案中刪除；可選的第三行 favs=light.living,switch.cafetera 用於設定收藏。
 Conexión	連線
-El token no sirve	標誌不起作用
+El token no sirve	權杖無效
 Conectá tu Home Assistant	連線你的 Home Assistant
-Home Assistant lo rechazó. Generá uno nuevo y ponelo en ha.txt.	Home Assistant 建立一個新的,然後將它放進 ha.txt.
+Home Assistant lo rechazó. Generá uno nuevo y ponelo en ha.txt.	Home Assistant 拒絕了該權杖。請建立新權杖並寫入 ha.txt。
 Hace falta la dirección y un token de acceso.	需要地址和訪問令牌.
 Sin favoritos todavía	目前還沒有最喜歡的
 Mantené apretado un mosaico en cualquier ambiente y tocá la estrella.	按下,在任何房間都拿一塊瓷磚, 並敲擊恆星。
@@ -1034,7 +1034,7 @@ Tocá para configurar la conexión	擊點設定連線
 Marcá favoritos en la app con la estrella	在應用程式中標記最喜歡的星
 Sin escenas en Home Assistant	沒有場景 Home Assistant
 Efectos	影響
-Tira	條紋
+Tira	燈條
 Consumo	功率
 Sólido	固體
 Parpadeo	閃爍
@@ -1049,15 +1049,15 @@ Fuego	火災
 Meteoro	氣象
 Degradé	漸進式
 Ondas	波浪
-Tiempo prendido	時間到了.
-Arcoíris en la tira	帶上有彩虹
+Tiempo prendido	點亮時間
+Arcoíris en la tira	燈條彩虹
 Ancho	寬度
-Cantidad	伯爵
+Cantidad	數量
 Llamas	火焰
 Cola	尾巴
-Ondas en la tira	波浪線上
-Sin tira: elegí el pin en Tira. Mientras, se ve acá.	沒有條紋:選擇在條紋處的針。同時,它顯示在這裡。
-No se pudo abrir la tira en %s	沒有開啟條 %s
+Ondas en la tira	燈條波浪
+Sin tira: elegí el pin en Tira. Mientras, se ve acá.	尚未設定燈條：請在「燈條」中選擇引腳；設定前可在此預覽。
+No se pudo abrir la tira en %s	無法在 %s 上開啟燈條
 Apagada · GPIO%d · %d LEDs	關閉 · GPIO%d · %d 燈光
 GPIO%d · %s · %d LEDs · %d fps · %u mA%s	GPIO%d · %s · %d 燈光 · %d 時間 %u 其他%s
  (limitada)	 (有限)
@@ -1080,12 +1080,12 @@ Efectos al revés	逆轉效果
 Limitada: pedía %u mA, brillo %d %%	限量:要求 %u mA,亮度 %d %%
 Dentro del límite	在限度範圍內
 Consumo estimado ahora	預計的抽獎現在
-Toda la tira en blanco al máximo: %u mA (%.1f A)	全條全白色: %u 澳大利亞%.1f A)
+Toda la tira en blanco al máximo: %u mA (%.1f A)	整條燈條以最高亮度顯示白色時：%u mA（%.1f A）
 LA FUENTE	供應
 USB 2.0 (450 mA)	USB 2.0（450 mA）
 USB 3 (850 mA)	USB 3 (850 mA)
 Sin límite	沒有限制
-Lo que la fuente le puede dar a la tira. Si un efecto pediría más, se baja el brillo de todo el cuadro para que entre, como el limitador de WLED. Alimentada desde el USB de la placa, dejá USB 2.0.	What the supply can give the strip. If an effect would ask for more, the whole frame is dimmed to fit, like WLED's limiter. Powered from the board's USB離開 USB 2.0.
+Lo que la fuente le puede dar a la tira. Si un efecto pediría más, se baja el brillo de todo el cuadro para que entre, como el limitador de WLED. Alimentada desde el USB de la placa, dejá USB 2.0.	電源可提供給燈條的最大電流。若效果所需電流更高，會降低整幀亮度以限制功耗，方式與 WLED 類似。由開發板 USB 供電時請選擇 USB 2.0。
 CONSUMO DE CADA LED	每個LED的圖
 5 V típica (55 mA)	典型 5 V（55 mA）
 5 V eco (35 mA)	5 V 環保 (35 mA)
@@ -1095,7 +1095,7 @@ RGBW (80 mA)	電動壓力 (80 mA)
 Un LED en blanco al máximo, sus tres colores prendidos: los valores de WLED. Cada canal suma su parte según cuánto brilla.	白色的 LED , 三個顏色 : WLED 的圖形 。 每個頻道都透過它有多亮來增加它的份額 。
 CÓMO CONECTARLA	如何傳輸
 Datos: GPIO%d, pin %d del conector, con una resistencia de 330 Ω en serie.	資料: GPIO%d標題針 %d,以330 Ω連續電阻.
-Datos: el GPIO que elijas en Tira, con una resistencia de 330 Ω en serie.	資料: GPIO 您可以選擇"條紋",連續330 Ω阻力.
+Datos: el GPIO que elijas en Tira, con una resistencia de 330 Ω en serie.	資料線：連接「燈條」中選擇的 GPIO，並串聯 330 Ω 電阻。
 La placa da 3,3 V y muchas tiras de 5 V quieren 3,5 V o más para entender los datos: con un level shifter (74AHCT125 o similar) anda siempre.	開發板輸出為 3.3 V，而許多 5 V 燈帶需要至少 3.5 V 才能可靠識別資料。建議使用 74AHCT125 等電平轉換器。
 Masa común: la de la tira, la de la fuente y un pin GND de la placa.	燈帶、電源與開發板的 GND 引腳必須共地。
 Los 5 V de la tira, de una fuente aparte salvo con pocos LEDs. Consultá el mapa de la placa para ubicar 5 V y GND. Una tira larga lleva alimentación por los dos extremos.	除非 LED 很少，否則燈帶應使用獨立的 5 V 電源。請參照開發板引腳圖連線 5 V 與 GND。較長燈帶需在兩端同時供電。
@@ -1231,8 +1231,8 @@ dimmers	dimmers 點數
 magnéticos	磁性
 Falta la dirección del equipo.	裝置的地址不見.
 unidad	單位
-Unidad (esclavo)	單位 (奴隸)
-Equipo Modbus TCP (dirección:puerto)	Modbus TCP裝置 (地址:埠)
+Unidad (esclavo)	單元識別碼（從站位址）
+Equipo Modbus TCP (dirección:puerto)	Modbus TCP 裝置（位址:連接埠）
 Unidad	單位
 tocá para poner la dirección	點選設定地址
 encender	啟動
@@ -1258,13 +1258,13 @@ Módulo %d	模組 %d
 DIMMERS	鑽石
 SENSORES MAGNÉTICOS	磁感測器
 Puerta %d	門 %d
-Dirección inicial	啟動地址
-Escribir el registro %u	寫註冊 %u
+Dirección inicial	起始位址
+Escribir el registro %u	寫入暫存器 %u
 Tocá Leer.	打點閱讀.
-%u valores desde %u	%u 的值 %u
+%u valores desde %u	從 %u 起的 %u 個值
 PEDIDO	要求
 Desde	透過
-Tocá una coil para invertirla.	貼個圈子來切開它
+Tocá una coil para invertirla.	點選線圈以切換其狀態。
 Tocá un registro para escribirlo (FC 06).	按一個登錄檔來寫 (FC 06).
 RESPUESTA	答案
 Puertos	港口
@@ -1350,7 +1350,7 @@ Agregado a modules.txt	加入 modules.txt
 Agregar módulo	新增模組
 QUÉ MIDE	衡量什麼?
 QUÉ ES	什麼是
-Un transceptor RS485 (MAX485 o uno automático) para Modbus RTU; el DE va en el pin de del puerto.	一個 RS485 接收器 (MAX485 或是自動) Modbus 港口的電源.
+Un transceptor RS485 (MAX485 o uno automático) para Modbus RTU; el DE va en el pin de del puerto.	Modbus RTU 需要 RS-485 收發器（MAX485 或自動方向型）；DE 接所選連接埠的 de 引腳。
 EL BUS (UN PIN)	公共汽車 (一號碼)
 PRIMER PIN	第一號碼
 EL PIN	號碼
@@ -1436,7 +1436,7 @@ En cola: sale cuando haya conexión	排隊:一旦連線,就會關閉
 Cargado en el formulario	在表格中載入
 vacío	空
 Retener	保持
-Retenido: el broker lo guarda y se lo da a cada uno que se suscriba después. Un mensaje vacío retenido lo borra.	儲存:經紀人保留它,並將其交給後續訂閱者.
+Retenido: el broker lo guarda y se lo da a cada uno que se suscriba después. Un mensaje vacío retenido lo borra.	保留訊息：Broker 會保存該訊息，並在之後傳送給每個新訂閱者；傳送空的保留訊息會將其刪除。
 QoS 1 espera la confirmación del broker (PUBACK) y reintenta si no llega.	QoS 1 等待訊息代理返回 PUBACK 確認，未收到時會重試。
 RECIENTES	最近
 Lo que publiques queda acá, para mandarlo de nuevo con un toque.	你釋出的內容留在這裡,以一次擊中再次傳送.
@@ -1473,7 +1473,7 @@ Conexiones	連線
 Sin confirmar	沒有開放
 Leer mqtt.txt de la tarjeta	讀取 mqtt.txt 從卡
 Vaciar la tabla de tópicos	清除主題表
-La contraseña es incómoda de tipear: poné un mqtt.txt en la raíz de la tarjeta con renglones host=, port=, user=, password=, client_id= y sub=. P4OS la guarda y la borra del archivo. Sin TLS: sólo brokers de la red local.	密碼很難輸入: mqtt.txt 在卡的根底裡有 host=, port=, user=, password=, client_id=和 sub=. P4OS 儲存並從檔案中刪除它.沒有 TLS:僅是本地網路經紀人.
+La contraseña es incómoda de tipear: poné un mqtt.txt en la raíz de la tarjeta con renglones host=, port=, user=, password=, client_id= y sub=. P4OS la guarda y la borra del archivo. Sin TLS: sólo brokers de la red local.	密碼不便輸入時，可在記憶卡根目錄建立 mqtt.txt，寫入 host=、port=、user=、password=、client_id= 和 sub=。P4OS 讀取後會儲存密碼並從檔案中刪除。未使用 TLS 時，僅應連線至可信本機網路中的 Broker。
 a %s:%d como %s	在 %s:%d 作為 %s
 No hay memoria para abrir MQTT.	沒有足夠的記憶來開啟 MQTT.
 No se pudo reproducir	我不能玩.
@@ -1637,7 +1637,7 @@ Desarrollador	開發人員
 Portal web	網頁管理
 Tocá otra vez para olvidarlo	再點選,忘記
 No	否
-Sí	Sí
+Sí	是
 Con el Bluetooth prendido, la placa recibe las notificaciones y la música del iPhone, y puede ser el teclado de una computadora.	透過藍芽,板接收到iPhone的通知和音樂,
 TELÉFONO	電話
 conectado	插入
@@ -1659,9 +1659,9 @@ Cambiando de modo…	切換模式...
 La computadora tomó la placa como teclado y mouse. El portal también contesta por el cable: 192.168.7.1	計算機已將開發板識別為鍵盤和滑鼠。也可透過 USB 連線訪問管理網頁：192.168.7.1。
 La computadora tomó la placa como teclado y mouse.	計算機已將開發板識別為鍵盤和滑鼠。
 Esperando a la computadora. Conectá el cable al conector OTG.	正在等待計算機連線。請將資料線接入 OTG 介面。
-La computadora tiene la tarjeta. Cuando termines, expulsala ahí: vuelve sola a la placa.	儲存卡正由計算機使用。操作完成後，請在計算機上安全彈出，裝置將自動重新接管。
+La computadora tiene la tarjeta. Cuando termines, expulsala ahí: vuelve sola a la placa.	電腦正在使用記憶卡。完成後請在電腦上安全退出，裝置會自動重新接管。
 Esperando a la computadora. La tarjeta ya salió de la placa: las apps de la tarjeta no abren.	正在等待計算機連線。裝置已解除安裝儲存卡，暫時無法開啟卡上的應用。
-Lo usa el host USB de alta velocidad.	高速飛行器使用 USB 接待者.
+Lo usa el host USB de alta velocidad.	正在由高速 USB 主機使用。
 El puerto está libre: la placa no aparece en la computadora.	介面處於空閒狀態，計算機不會識別到此裝置。
 teclado	鍵盤
 mouse	滑鼠
@@ -1674,12 +1674,12 @@ puerto serie	序列埠
 cámara	攝像頭
 parlante	揚聲器
 micrófono	麥克風
-Apagado.	走了.
+Apagado.	已關閉。
 Esperando dispositivos en el conector de 40 pines.	正在等待連線到 40 針介面的裝置。
 sin uso todavía	未使用
 sin FAT32 que montar: exFAT y NTFS no se leen	沒有 FAT32 將安裝:exFAT和NTFS不讀取
 El USB está cambiando de modo	USB 是切換模式
-Primero expulsá la tarjeta en la computadora	首先將卡放到電腦上
+Primero expulsá la tarjeta en la computadora	請先在電腦上安全退出記憶卡
 Mejor expulsar la tarjeta en la computadora antes	最好先把卡扔到電腦上.
 AHORA	現在
 QUÉ ES EL PUERTO OTG	什麼是OTG港口
@@ -1687,8 +1687,8 @@ El puerto queda libre y la placa no aparece en la computadora. La consola sigue 
 La placa es un teclado, un mouse, las teclas multimedia, un joystick y un teclado MIDI de la computadora: lo que usa el Macro pad. Además, una red por el cable: el portal contesta en 192.168.7.1 aunque no haya Wi-Fi. La tarjeta sigue en la placa. Abrir el Macro pad lo elige solo.	機板是計算機的鍵盤,滑鼠,媒體鍵盤,遊戲pad和MIDI鍵盤:Macropad所使用的.加上電纜上的網路:門戶端在192.168.7.1號碼上回答即使沒有 Wi-Fi儲存卡留在板上,開啟宏盤就會自行選擇.
 La microSD aparece en la computadora como un pendrive, para copiar apps, música, fotos o mapas a la velocidad del USB. Mientras la tiene la computadora la placa no la toca: al elegirlo se cierran las otras apps, y las de la tarjeta no abren. Expulsala en la computadora y vuelve sola a la placa, con el modo de antes.	微SD顯示在計算機上作為一個 USB 它們可以複製應用,音樂,照片或地圖 USB 在電腦擁有它的時候,板塊不會觸控它:選擇這個方法會關閉其他應用程式,卡的應用程式不會開啟.
 El conector OTG es el USB 2.0 de alta velocidad del P4 (480 Mbit/s). La placa puede alimentarse por él o por el UART, y pasar de uno al otro sin reiniciarse.	OTG 聯結器使用 P4 的高速 USB 2.0（480 Mbit/s）。開發板可由此介面或 UART 介面供電，兩者之間切換時無需重啟。
-PENDRIVES Y TECLADOS	機器和鍵盤
-Host USB	USB 接待者
+PENDRIVES Y TECLADOS	隨身碟與鍵盤
+Host USB	USB 主機
 Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 1 y GND del 5.	可在檔案管理或網頁中透過 /usb 訪問 U 盤。使用集線器最多支援三個 FAT32 裝置，對應 /usb、/usb2、/usb3。開啟螢幕鍵盤時，外接鍵盤可在同一輸入位置鍵入。OTG 不提供 5 V，裝置需連線到 40 針介面，從引腳 1 取 5 V、引腳 5 接 GND。
 Los pendrives se leen en /usb, desde Archivos y el portal; con un hub, hasta tres: /usb, /usb2 y /usb3, en FAT32. Un teclado escribe donde escribiría el de la pantalla cuando está abierto. El conector OTG no da 5 V: todo va al conector de 40 pines, con 5 V del pin 39 y GND del 35.	可在檔案管理或網頁中透過 /usb 訪問 U 盤。使用集線器最多支援三個 FAT32 裝置，對應 /usb、/usb2、/usb3。開啟螢幕鍵盤時，外接鍵盤可在同一輸入位置鍵入。OTG 不提供 5 V，裝置需連線到 40 針介面，從引腳 39 取 5 V、引腳 35 接 GND。
 PINES DE DATOS	資料 PINS
@@ -1719,18 +1719,18 @@ Contraseña de	的密碼
 Unirse	連線
 La búsqueda falló	掃描失敗
 No se encontraron redes	沒有發現網路
-La radio está ocupada: probá de nuevo en un momento	收音機忙了:在一瞬間再試一次
-Tocá otra vez: los conectados se caen	再擊:誰都在滴下
+La radio está ocupada: probá de nuevo en un momento	無線模組正忙，請稍後再試
+Tocá otra vez: los conectados se caen	再次點選會中斷目前已連線的裝置
 RED PROPIA	自己的網路
 Punto de acceso	接入點
 Levantándolo…	提起這個問題...
-La placa arma su propia red Wi-Fi, para conectarte desde el teléfono donde no hay otra. Queda prendida al reiniciar.	開發板做了自己的 Wi-Fi 連線到電話的網上,可以從電話中連線到沒有其他電話.
+La placa arma su propia red Wi-Fi, para conectarte desde el teléfono donde no hay otra. Queda prendida al reiniciar.	裝置會建立自己的 Wi-Fi 熱點，便於在沒有其他網路時用手機連線。重新啟動後仍會保持開啟。
 Portal	入口網站
 Conectados	已連線
 Cambiar la contraseña	改變密碼
 1. Unite a la red de la placa con la cámara del teléfono.	1. 透過電話的相機加入開發板網路.
 2. Después abrí el portal.	2. 然後開啟管理網頁。
-Mientras está prendida, la placa deja de buscar la red de casa (si ya estaba conectada, sigue). El teléfono puede avisar que esta red no tiene internet: es así, quedate conectado igual.	電話可能會警告這個網路沒有網際網路:那就是說,無論如何保持連線.
+Mientras está prendida, la placa deja de buscar la red de casa (si ya estaba conectada, sigue). El teléfono puede avisar que esta red no tiene internet: es así, quedate conectado igual.	熱點開啟時，裝置會停止搜尋家用 Wi-Fi（若已連線則保持連線）。手機可能提示此網路沒有網際網路；這是正常的，請保持連線。
 Red	網路
 Olvidar esta red	忘記此網路
 La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.	P4 透過板載 ESP32-C6 連線網路，僅支援 2.4 GHz。
@@ -1771,11 +1771,11 @@ Esperá a que termine de contar	等到它完成數量
 Tocá otra vez para expulsarla	再點選,將它排出
 Ya podés sacar la tarjeta	你現在可以拿出儲存卡
 No se pudo expulsar la tarjeta	沒有能放出儲存卡
-Tarjeta montada	儲存卡安裝
+Tarjeta montada	記憶卡已掛載
 No hay tarjeta, o no se pudo leer	沒有儲存卡,否則無法閱讀
 en la computadora	在電腦上
 no hay	無
-Montar la tarjeta	放上儲存卡
+Montar la tarjeta	掛載記憶卡
 Con una microSD puesta, montala acá. En modo Disco del USB la tiene la computadora: vuelve sola al expulsarla allá.	如果有微SD,就把它安裝在這裡. USB 電腦的磁碟模式是這樣的:當它被丟擲時,它會自動回來.
 %s usados de %s	%s 用於 %s
 Libre	免費
@@ -1789,7 +1789,7 @@ Capacidad	產能
 Bus	匯流排
 Fabricada	製造
 Expulsar la tarjeta	丟擲儲存卡
-Expulsala antes de sacarla: se cierran las otras apps, y las de la tarjeta no abren hasta que se monte de nuevo. Para copiar archivos desde la computadora, el modo Disco del USB.	在刪除之前將卡丟棄:其他應用程式關閉,卡的應用程式直到重新安裝才不會開啟. USB 磁碟模式.
+Expulsala antes de sacarla: se cierran las otras apps, y las de la tarjeta no abren hasta que se monte de nuevo. Para copiar archivos desde la computadora, el modo Disco del USB.	取出前請先卸載記憶卡；其他應用程式會關閉，卡上的應用程式必須重新掛載後才能開啟。若要從電腦複製檔案，請使用 USB 磁碟模式。
 Tocá otra vez para reiniciar con esa	再次點選，重啟並執行該版本
 La otra ranura no tiene una imagen entera	另一韌體分割區沒有完整的韌體映象
 Reiniciando con la versión anterior…	正在重啟並恢復上一版本…
@@ -1945,7 +1945,7 @@ Se hace uno nuevo al reiniciar	在下一次重新啟動時,會製造一個新的
 ESTA RED	這個網路
 De confianza: en esta red el portal está abierto.	在這個網路上,門戶開放.
 En esta red el portal pide la contraseña.	在這個網路上,入口網站要求密碼.
-En esta red el portal está cerrado y la placa no anuncia su nombre. Se entra por la red propia de la placa o por el cable USB.	在這個網路上,門戶是關閉的,開發板不公佈其名稱. USB 電纜.
+En esta red el portal está cerrado y la placa no anuncia su nombre. Se entra por la red propia de la placa o por el cable USB.	此網路中網頁管理已關閉，裝置也不會公布名稱。請透過裝置熱點或 USB 連接線存取。
 REDES DE CONFIANZA	值得信賴的網路
 Ninguna	無
 quitar	刪除
@@ -1959,16 +1959,16 @@ También en casa y en la red de la placa	在家和開發板的網路上
 EN REDES QUE NO SON DE CONFIANZA	在不可信賴的網路上
 Portal cerrado	門戶關閉
 Abierto con la contraseña	用密碼開啟
-El cable USB entra siempre, sin contraseña: quien tiene el cable tiene la placa. La contraseña y estas reglas se cambian sólo acá, nunca desde el portal.	其他 USB 電纜總是進來,沒有密碼:誰持有電纜,誰持有板.密碼和這些規則只能在這裡改變,從門口上永遠不會.
+El cable USB entra siempre, sin contraseña: quien tiene el cable tiene la placa. La contraseña y estas reglas se cambian sólo acá, nunca desde el portal.	透過 USB 連接線一律可存取，無需密碼：能接觸連接線的人即可控制裝置。密碼及這些規則只能在此修改，不能從網頁管理修改。
 HTTPS (puerto 443)	HTTPS (第443號港口)
 Autoridad nueva	新權威
 Reiniciar para aplicarlo	重新啟動應用
-Con HTTPS, lo que viaja va cifrado, la contraseña incluida, y fuera de casa el portal manda del HTTP al HTTPS. La placa tiene su propia autoridad: se baja desde el portal (Ajustes, Seguridad) y se instala una vez como confiable en la Mac o el iPhone, y el navegador deja de avisar. Lo de arriba es su huella SHA-256, para compararla. Se aplica al reiniciar.	在 HTTPS透過密碼,包括密碼, HTTP 透過 HTTPS機器具有自己的權力:從門戶端 (設定,安全) 下載並安裝它一旦作為可靠的Mac或iPhone,瀏覽器停止警告.上述行是它的SHA-256指紋,比較.
+Con HTTPS, lo que viaja va cifrado, la contraseña incluida, y fuera de casa el portal manda del HTTP al HTTPS. La placa tiene su propia autoridad: se baja desde el portal (Ajustes, Seguridad) y se instala una vez como confiable en la Mac o el iPhone, y el navegador deja de avisar. Lo de arriba es su huella SHA-256, para compararla. Se aplica al reiniciar.	啟用 HTTPS 後，傳輸內容（包括密碼）都會加密；在非家庭網路中會從 HTTP 自動轉向 HTTPS。裝置使用自己的憑證授權單位，可在網頁管理的「設定 > 安全性」中下載並設為受信任。上方為 SHA-256 指紋，重新啟動後生效。
 SESIONES Y SCRIPTS	會議和指令碼
 Navegadores con sesión	登入的瀏覽器
 Cerrar todas las sesiones	關閉每次會議
 Token nuevo para scripts	新的指令碼代幣
-El token reemplaza a la contraseña en los scripts de tools/ (cabecera Authorization: Bearer). Se le pasa así: P4OS_TOKEN=<token> tools/ota.sh p4os.local	符號是工具/指令碼中的密碼 (許可權:載體頭) 中的程式碼.透過這樣:P4OS_TOKEN=<token> 工具/ota.sh 在本地
+El token reemplaza a la contraseña en los scripts de tools/ (cabecera Authorization: Bearer). Se le pasa así: P4OS_TOKEN=<token> tools/ota.sh p4os.local	權杖可代替 tools/ 指令碼中的密碼（Authorization: Bearer 標頭）。使用方式：P4OS_TOKEN=<token> tools/ota.sh p4os.local
 Tocá otra vez para volver a lo de fábrica	再擊,返回工廠設定
 Tocá otra vez para reiniciar	再擊重新啟動
 Tocá otra vez para reiniciar en modo seguro	再擊安全模式重新啟動
@@ -2336,7 +2336,7 @@ dedos %d   %u lect/s   %u Hz   x%d.%02d	手指頭 %d   %u 閱讀/s   %u Hz x%d.%
 Tocá, arrastrá, pellizcá\ncon uno o dos dedos	踢,拖,捏\n一個或兩個手指
 Mantene apretado para reiniciar	等待重新啟動
 teclado y red listos\n192.168.7.1	鍵盤和網路準備\n192.168.7.1
-la computadora tiene la tarjeta	電腦有卡
+la computadora tiene la tarjeta	電腦正在使用記憶卡
 la tarjeta volvio al reloj	卡又在監視中.
 esperando un pendrive	等待一個快閃記憶體驅動器
 consola y grabacion del firmware	控制檯和韌體閃爍
@@ -2449,9 +2449,9 @@ con la pantalla apagada el procesador duerme entre avisos	在螢幕關閉時,處
 Reposo profundo de noche	深夜的睡眠
 en el horario de no molestar se apaga casi del todo; se despierta al tocarla	在不干擾時間內,它幾乎完全關閉;一個觸控會喚醒它
 Calibrar	校準
-Ver crudo	現象
+Ver crudo	檢視原始資料
 Probar gestos	嘗試手勢
-Calibrar pide tocar cinco cruces. \"Ver crudo\" muestra lo que lee el chip tactil, sin correccion.	校準要求你觸控五個十字架. \"現象\" 顯示觸控晶片所讀的內容,未經糾正.
+Calibrar pide tocar cinco cruces. \"Ver crudo\" muestra lo que lee el chip tactil, sin correccion.	校正時需要依序點選五個十字標記。「檢視原始資料」顯示觸控晶片未經校正的讀數。
 %.1f de %.1f GB  ·  %d apps	%.1f 的 %.1f GB · %d 應用程式
 PORTAL	門戶
 Todo esto y mas, desde el navegador	瀏覽器中的所有這些和更多
@@ -2503,7 +2503,7 @@ Ya hay ocho ciudades	已經有八個城市
 AQUI	在這裡
 sin ciudades	沒有城市
 Ciudades	城市
-La computadora tiene la tarjeta.\nExpulsala ahí para volver a usar las apps.	電腦有卡.\n放棄它,以便再次使用應用程式.
+La computadora tiene la tarjeta.\nExpulsala ahí para volver a usar las apps.	電腦正在使用記憶卡。\n請在電腦上安全退出後再使用應用程式。
 Sin memoria.\n%s sigue en segundo plano:\ncerrala para liberar	記憶體不足。\n%s 在後臺:\n關閉它以免費的記憶
 No se pudo cargar la app	無法載入應用程式
 sin ruta	沒有路徑
@@ -2591,7 +2591,7 @@ ya hay 8 avisos	已經有8個警報.
 el nombre va con a-z, 0-9 y guiones	這個名字是 a-z,0-9和字串
 idioma no disponible	此語言不可用
 falta \"on\"	缺失 \"在\"
-la radio está ocupada	電臺忙了.
+la radio está ocupada	無線模組正忙
 no hay enlace que congelar	沒有結冰的聯絡.
 demasiados intentos: esperá un poco	太多的嘗試:等一點
 contraseña incorrecta	錯誤的密碼
@@ -2733,3 +2733,23 @@ Todavía no hay sensores. Conectá uno al header o agregalo en Módulos.	還沒�
 Lo que miden los sensores conectados: CO₂, temperatura, humedad…	已連接感測器的測量值：CO₂、溫度、濕度等。
 Cartero	郵差
 Impresoras 3D	3D 印表機
+Portal cerrado en esta red	此網路上的網頁管理已關閉
+Esta red no está marcada como de confianza en la placa.	此網路未在裝置上標記為受信任網路。
+Entrá por la red propia de la placa o por el cable USB, o habilitá el acceso con contraseña en Ajustes, Portal web.	請透過裝置熱點或 USB 連接線存取，或在「設定 > 網頁管理」中啟用密碼存取。
+Mac	Mac
+Pegar	貼上
+Deshacer	復原
+Spotlight	Spotlight
+Cambiar app	切換應用程式
+Silencio	靜音
+Anterior	上一項
+Play	播放
+Volumen -	音量 -
+Volumen +	音量 +
+Casa	家庭
+Taller	工作間
+Soldador	烙鐵
+Extractor	排煙器
+Luz banco	工作檯照明
+Abrir Terminal en la Mac y compilar	在 Mac 上開啟終端機並編譯
+Salir monitor	結束監視器

@@ -4,7 +4,7 @@ Tramas	框架
 Por id	透過ID
 Enviar	傳送
 Señales	訊號
-Conectá el bus primero	首先連線巴士.
+Conectá el bus primero	請先連接匯流排
 No hay tarjeta	未插入儲存卡
 Grabando en la tarjeta, carpeta can	正在錄入儲存卡, 資料夾可以
 Recuperando: 128 silencios de 11 bits y vuelve	恢復:128個11位的沉默,它回來了
@@ -26,8 +26,8 @@ No hay lugar para otra tarea	沒有其他任務的空間
 desconectado	斷開連線
 activo	活躍
 con avisos	警告
-pasivo	動態
-fuera del bus	開車
+pasivo	被動
+fuera del bus	匯流排關閉
 Normal	正常
 Autoprueba	自行測試
 Solo escucha	只是聽著
@@ -51,7 +51,7 @@ Remota	遠端
 Guardar	儲存
 Entre 25 y 1000 kbit/s	在25到1000kbit之間/s
 Velocidad en kbit/s	在 kbit 中的速度/s
-Normal: la placa confirma tramas y puede mandar. En un auto, no.	常見:開發板承認框架,可以傳送.
+Normal: la placa confirma tramas y puede mandar. En un auto, no.	正常模式：開發板會確認訊框並可傳送。在車輛上請勿使用。
 En hexa, como 0C0	在 hex,像 0C0
 En hexa, como 7FF	在魔術,像7FF
 Id del filtro, en hexa	過濾 ID, 以十六進位制
@@ -81,11 +81,11 @@ RX GPIO%d · p%u	RX GPIO%d · p%u
 3V3 · p18	3V3 · p18
 GND · p19	GND · p19
 bus	公共汽車
-En un auto, sólo escucha. Una trama mandada al bus de un auto puede apagar el motor, el tablero o los frenos asistidos, y un nodo que no confirma bien lo puede trabar entero. La app arranca siempre en Solo escucha.	在汽車上,只聽。一個被髮送到汽車上的框架可以阻止引擎、儀表板或剎車輔助器,而一個承認錯誤的節點可以阻塞所有的。應用程式總是從聽開始。
+En un auto, sólo escucha. Una trama mandada al bus de un auto puede apagar el motor, el tablero o los frenos asistidos, y un nodo que no confirma bien lo puede trabar entero. La app arranca siempre en Solo escucha.	在車輛上僅監聽。向車載匯流排傳送訊框可能影響引擎、儀表或煞車輔助；確認異常的節點也可能讓整條匯流排失效。應用程式一律以「僅監聽」啟動。
 · El transceptor tiene que ser de 3,3 V: SN65HVD230, 231 o 232. Uno de 5 V (MCP2551, TJA1050) le devuelve 5 V al pin RX, y el header no los aguanta.	必須使用 3.3 V 收發器，例如 SN65HVD230、231 或 232。5 V 型號（MCP2551、TJA1050）會向 RX 引腳輸出 5 V，擴充套件介面無法承受此電壓。
-· Una resistencia de 120 Ω en cada punta del bus: con todo apagado se miden 60 Ω entre CANH y CANL. Muchos módulos traen la suya; si la placa no va en una punta, sacala.	· 公共汽車的兩端都有120 Ω阻力:所有東西都關閉,CANH和CANL之間有60 Ω.許多模組都帶來自己的電池板;如果板子沒有在一端,請移除它.
-· GND común con el resto del bus, y la misma velocidad en todos los nodos.	· GND 在每一個節點上都相同的速度.
-· En el conector OBD-II de un auto: CANH en la pata 6, CANL en la 14, masa en la 4 o 5; casi siempre a 500 kbit/s.	· On a car's OBD-II connector: CANH on pin 6, CANL on 14, ground on 4 or 5; nearly always at 500 kbit/s.
+· Una resistencia de 120 Ω en cada punta del bus: con todo apagado se miden 60 Ω entre CANH y CANL. Muchos módulos traen la suya; si la placa no va en una punta, sacala.	· 匯流排兩端各接 120 Ω 終端電阻；斷電時 CANH 與 CANL 之間應測得 60 Ω。許多模組自帶終端電阻；若開發板不在匯流排末端，請將其移除。
+· GND común con el resto del bus, y la misma velocidad en todos los nodos.	· 與匯流排其餘節點共地，並確保所有節點使用相同速率。
+· En el conector OBD-II de un auto: CANH en la pata 6, CANL en la 14, masa en la 4 o 5; casi siempre a 500 kbit/s.	· 車輛 OBD-II 接頭：CANH 為第 6 腳，CANL 為第 14 腳，接地為第 4 或第 5 腳；通常使用 500 kbit/s。
 · Sin transceptor: modo Autoprueba con TX y RX en el mismo pin. La placa se manda y se escucha.	·無接收器:自行測試模式,TX和RX在同一針上.板傳送到自己並聽到自己.
 Para repetir hace falta modo Normal o Autoprueba	複製需要正常或自行測試模式
 Ya hay una repitiéndose	一個已經重演了

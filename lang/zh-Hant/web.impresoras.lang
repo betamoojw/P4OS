@@ -6,236 +6,236 @@
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
 #: apps\impresoras\web\impresoras.js:25
-Clave de la API	Clave de la API
+Clave de la API	API 金鑰
 
 #: apps\impresoras\web\impresoras.js:26
-En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario).	En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario).
+En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario).	在 OctoPrint 中開啟「設定 > API」（也可使用使用者應用程式金鑰）。
 
 #: apps\impresoras\web\impresoras.js:27
-Contraseña de PrusaLink	Contraseña de PrusaLink
+Contraseña de PrusaLink	PrusaLink 密碼
 
 #: apps\impresoras\web\impresoras.js:28
-MK4, MK3.9, MINI, XL, CORE One, MK3S con PrusaLink: las de Prusa Connect, por la red de la casa. En la impresora: Ajustes, Red, PrusaLink (usuario maker).	MK4, MK3.9, MINI, XL, CORE One, MK3S con PrusaLink: las de Prusa Connect, por la red de la casa. En la impresora: Ajustes, Red, PrusaLink (usuario maker).
+MK4, MK3.9, MINI, XL, CORE One, MK3S con PrusaLink: las de Prusa Connect, por la red de la casa. En la impresora: Ajustes, Red, PrusaLink (usuario maker).	適用於透過家用網路使用 PrusaLink 的 MK4、MK3.9、MINI、XL、CORE One 和 MK3S（Prusa Connect 機型）。請在印表機上開啟「設定 > 網路 > PrusaLink」（使用者名稱為 maker）。
 
 #: apps\impresoras\web\impresoras.js:29
-Código de acceso	Código de acceso
+Código de acceso	存取碼
 
 #: apps\impresoras\web\impresoras.js:30
-Modo LAN, y el modo desarrollador para manejarla. El código de acceso está en Ajustes, Red; el número de serie en Ajustes, Dispositivo.	Modo LAN, y el modo desarrollador para manejarla. El código de acceso está en Ajustes, Red; el número de serie en Ajustes, Dispositivo.
+Modo LAN, y el modo desarrollador para manejarla. El código de acceso está en Ajustes, Red; el número de serie en Ajustes, Dispositivo.	使用 LAN 模式，並啟用開發者模式以控制印表機。存取碼位於「設定 > 網路」；序號位於「設定 > 裝置」。
 
 #: apps\impresoras\web\impresoras.js:31
-Clave de la API (opcional)	Clave de la API (opcional)
+Clave de la API (opcional)	API 金鑰（可選）
 
 #: apps\impresoras\web\impresoras.js:32
-Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig: toda la que tenga Mainsail o Fluidd. Puerto 7125, o 80 si va por nginx.	Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig: toda la que tenga Mainsail o Fluidd. Puerto 7125, o 80 si va por nginx.
+Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig: toda la que tenga Mainsail o Fluidd. Puerto 7125, o 80 si va por nginx.	適用於搭載 Mainsail 或 Fluidd 的 Voron、Sovol、Elegoo Neptune 4、Qidi、RatRig 等印表機。預設連接埠為 7125；透過 nginx 時通常為 80。
 
 #: apps\impresoras\web\impresoras.js:33
-Contraseña (si tiene)	Contraseña (si tiene)
+Contraseña (si tiene)	密碼（如果有）
 
 #: apps\impresoras\web\impresoras.js:34
-Duet 2 y 3 con RepRapFirmware 3, sola o con SBC.	Duet 2 y 3 con RepRapFirmware 3, sola o con SBC.
+Duet 2 y 3 con RepRapFirmware 3, sola o con SBC.	適用於執行 RepRapFirmware 3 的 Duet 2 和 Duet 3，可獨立執行或搭配 SBC。
 
 #: apps\impresoras\web\impresoras.js:35
-MainboardID (opcional)	MainboardID (opcional)
+MainboardID (opcional)	MainboardID（可選）
 
 #: apps\impresoras\web\impresoras.js:36
-Centauri Carbon y las de resina con Wi-Fi.	Centauri Carbon y las de resina con Wi-Fi.
+Centauri Carbon y las de resina con Wi-Fi.	Centauri Carbon 和帶有 Wi-Fi 的樹脂印表機。
 
 #: apps\impresoras\web\impresoras.js:37
-Código de verificación (check code)	Código de verificación (check code)
+Código de verificación (check code)	驗證碼
 
 #: apps\impresoras\web\impresoras.js:38
-Adventurer 5M, 5M Pro, AD5X: número de serie y código de Ajustes, Red, Sólo LAN. Sin código: las viejas, por el puerto 8899.	Adventurer 5M, 5M Pro, AD5X: número de serie y código de Ajustes, Red, Sólo LAN. Sin código: las viejas, por el puerto 8899.
+Adventurer 5M, 5M Pro, AD5X: número de serie y código de Ajustes, Red, Sólo LAN. Sin código: las viejas, por el puerto 8899.	Adventurer 5M、5M Pro、AD5X：在「設定 > 網路 > 僅 LAN」中取得序號和驗證碼。舊型號不需驗證碼，使用連接埠 8899。
 
 #: apps\impresoras\web\impresoras.js:40
-K1, K1C, K1 Max, K2 Plus, Ender-3 V3, Hi, sin root. Con Moonraker, mejor como Klipper.	K1, K1C, K1 Max, K2 Plus, Ender-3 V3, Hi, sin root. Con Moonraker, mejor como Klipper.
+K1, K1C, K1 Max, K2 Plus, Ender-3 V3, Hi, sin root. Con Moonraker, mejor como Klipper.	K1、K1C、K1 Max、K2 Plus、Ender-3 V3、Hi，未取得 root 權限。若使用 Moonraker，建議選擇 Klipper。
 
 #: apps\impresoras\web\impresoras.js:44
-Sin conexión	Sin conexión
+Sin conexión	離線
 
 #: apps\impresoras\web\impresoras.js:44
-Conectando	Conectando
+Conectando	正在連接
 
 #: apps\impresoras\web\impresoras.js:44
-Lista	Lista
+Lista	就緒
 
 #: apps\impresoras\web\impresoras.js:44
-Preparando	Preparando
+Preparando	準備中
 
 #: apps\impresoras\web\impresoras.js:44
-Imprimiendo	Imprimiendo
+Imprimiendo	列印中
 
 #: apps\impresoras\web\impresoras.js:44
-En pausa	En pausa
+En pausa	已暫停
 
 #: apps\impresoras\web\impresoras.js:45
-Terminó	Terminó
+Terminó	完成
 
 #: apps\impresoras\web\impresoras.js:45
-Cancelada	Cancelada
+Cancelada	取消
 
 #: apps\impresoras\web\impresoras.js:45
-Error	Error
+Error	錯誤
 
 #: apps\impresoras\web\impresoras.js:120
-impresora %d	impresora %d
+impresora %d	印表機 %d
 
 #: apps\impresoras\web\impresoras.js:121
-%s: el nombre, de 1 a 47 caracteres y sin corchetes	%s: el nombre, de 1 a 47 caracteres y sin corchetes
+%s: el nombre, de 1 a 47 caracteres y sin corchetes	%s：名稱須為 1 至 47 個字元，且不能包含方括號
 
 #: apps\impresoras\web\impresoras.js:122
-%s: hay dos con ese nombre	%s: hay dos con ese nombre
+%s: hay dos con ese nombre	%s：已有同名印表機
 
 #: apps\impresoras\web\impresoras.js:124
-%s: falta la dirección (IP o nombre, sin espacios)	%s: falta la dirección (IP o nombre, sin espacios)
+%s: falta la dirección (IP o nombre, sin espacios)	%s：缺少位址（IP 或主機名稱，不能含空格）
 
 #: apps\impresoras\web\impresoras.js:125
-%s: el puerto va de 1 a 65535	%s: el puerto va de 1 a 65535
+%s: el puerto va de 1 a 65535	%s：連接埠必須介於 1 和 65535 之間
 
 #: apps\impresoras\web\impresoras.js:127
-%s: falta %s	%s: falta %s
+%s: falta %s	%s：缺少%s
 
 #: apps\impresoras\web\impresoras.js:127
-el número de serie	el número de serie
+el número de serie	序號
 
 #: apps\impresoras\web\impresoras.js:137
-%d h %s min	%d h %s min
+%d h %s min	%d 小時 %s 分鐘
 
 #: apps\impresoras\web\impresoras.js:138
-%d min	%d min
+%d min	%d 分鐘
 
 #: apps\impresoras\web\impresoras.js:139
-%d s	%d s
+%d s	%d 秒
 
 #: apps\impresoras\web\impresoras.js:162
-La placa no tomó la orden (%d)	La placa no tomó la orden (%d)
+La placa no tomó la orden (%d)	開發板未接受指令（%d）
 
 #: apps\impresoras\web\impresoras.js:182
-Reanudando	Reanudando
+Reanudando	正在繼續列印
 
 #: apps\impresoras\web\impresoras.js:182
-Reanudar	Reanudar
+Reanudar	繼續列印
 
 #: apps\impresoras\web\impresoras.js:183
-Pausando	Pausando
+Pausando	正在暫停
 
 #: apps\impresoras\web\impresoras.js:183
-Pausar	Pausar
+Pausar	暫停
 
 #: apps\impresoras\web\impresoras.js:187
-¿Cancelar la impresión de %s?	¿Cancelar la impresión de %s?
+¿Cancelar la impresión de %s?	要取消 %s 的列印嗎？
 
 #: apps\impresoras\web\impresoras.js:187
-Cancelando	Cancelando
+Cancelando	正在取消
 
 #: apps\impresoras\web\impresoras.js:188
-Cancelar	Cancelar
+Cancelar	取消
 
 #: apps\impresoras\web\impresoras.js:192
-Precalentando para %s	Precalentando para %s
+Precalentando para %s	正在為 %s 預熱
 
 #: apps\impresoras\web\impresoras.js:194
-Enfriando	Enfriando
+Enfriando	正在冷卻
 
 #: apps\impresoras\web\impresoras.js:194
-Enfriar	Enfriar
+Enfriar	冷卻
 
 #: apps\impresoras\web\impresoras.js:197
-Apagar la luz	Apagar la luz
+Apagar la luz	關燈
 
 #: apps\impresoras\web\impresoras.js:197
-Prender la luz	Prender la luz
+Prender la luz	開燈
 
 #: apps\impresoras\web\impresoras.js:199
-Ocultar cámara	Ocultar cámara
+Ocultar cámara	隱藏相機
 
 #: apps\impresoras\web\impresoras.js:199
-Ver cámara	Ver cámara
+Ver cámara	顯示相機
 
 #: apps\impresoras\web\impresoras.js:201
-Enviado: %s	Enviado: %s
+Enviado: %s	已傳送：%s
 
 #: apps\impresoras\web\impresoras.js:228
-Enviar	Enviar
+Enviar	傳送
 
 #: apps\impresoras\web\impresoras.js:254
-faltan %s · %s	faltan %s · %s
+faltan %s · %s	剩餘 %s · %s
 
 #: apps\impresoras\web\impresoras.js:254
-faltan %s	faltan %s
+faltan %s	剩餘 %s
 
 #: apps\impresoras\web\impresoras.js:255
-capa %d de %d	capa %d de %d
+capa %d de %d	第 %d 層，共 %d 層
 
 #: apps\impresoras\web\impresoras.js:271
-Sin nombre	Sin nombre
+Sin nombre	未命名
 
 #: apps\impresoras\web\impresoras.js:272
-¿Sacar %s de la lista?	¿Sacar %s de la lista?
+¿Sacar %s de la lista?	將 %s 從清單中刪除？
 
 #: apps\impresoras\web\impresoras.js:272
-esta impresora	esta impresora
+esta impresora	這台印表機
 
 #: apps\impresoras\web\impresoras.js:272
-Borrar	Borrar
+Borrar	刪除
 
 #: apps\impresoras\web\impresoras.js:275
-Qué es	Qué es
+Qué es	類型
 
 #: apps\impresoras\web\impresoras.js:276
-Nombre	Nombre
+Nombre	名稱
 
 #: apps\impresoras\web\impresoras.js:277
-Dirección (IP o nombre)	Dirección (IP o nombre)
+Dirección (IP o nombre)	位址（IP 或名稱）
 
 #: apps\impresoras\web\impresoras.js:278
-Puerto (vacío: el de siempre)	Puerto (vacío: el de siempre)
+Puerto (vacío: el de siempre)	連接埠（留空時使用預設連接埠）
 
 #: apps\impresoras\web\impresoras.js:279
-Usuario	Usuario
+Usuario	使用者
 
 #: apps\impresoras\web\impresoras.js:281
-Número de serie	Número de serie
+Número de serie	序號
 
 #: apps\impresoras\web\impresoras.js:282
-Cámara (vacío: la que diga la impresora; off: ninguna)	Cámara (vacío: la que diga la impresora; off: ninguna)
+Cámara (vacío: la que diga la impresora; off: ninguna)	攝影機（留空：使用印表機提供的位址；off：停用）
 
 #: apps\impresoras\web\impresoras.js:284
-HTTPS (con certificado válido)	HTTPS (con certificado válido)
+HTTPS (con certificado válido)	HTTPS（憑證必須有效）
 
 #: apps\impresoras\web\impresoras.js:295
 #: apps\impresoras\web\impresoras.js:375
-Impresoras 3D	Impresoras 3D
+Impresoras 3D	3D 列印機
 
 #: apps\impresoras\web\impresoras.js:305
-Leyendo...	Leyendo...
+Leyendo...	正在讀取...
 
 #: apps\impresoras\web\impresoras.js:306
-Guardar en la tarjeta	Guardar en la tarjeta
+Guardar en la tarjeta	儲存到記憶卡
 
 #: apps\impresoras\web\impresoras.js:337
-La app Impresoras 3D no está abierta en la placa. 	La app Impresoras 3D no está abierta en la placa.
+La app Impresoras 3D no está abierta en la placa. 	開發板上未開啟「3D 列印機」應用程式。
 
 #: apps\impresoras\web\impresoras.js:338
-Abrirla	Abrirla
+Abrirla	開啟
 
 #: apps\impresoras\web\impresoras.js:344
-Ninguna impresora todavía: agregalas abajo.	Ninguna impresora todavía: agregalas abajo.
+Ninguna impresora todavía: agregalas abajo.	尚未新增印表機。請在下方新增。
 
 #: apps\impresoras\web\impresoras.js:348
-No se puede leer el estado: %s	No se puede leer el estado: %s
+No se puede leer el estado: %s	無法讀取狀態：%s
 
 #: apps\impresoras\web\impresoras.js:362
-Guardado: la placa se reconecta sola	Guardado: la placa se reconecta sola
+Guardado: la placa se reconecta sola	已儲存：開發板將自動重新連線
 
 #: apps\impresoras\web\impresoras.js:364
-No se pudo guardar: %s	No se pudo guardar: %s
+No se pudo guardar: %s	無法儲存：%s
 
 #: apps\impresoras\web\impresoras.js:372
-+ Agregar una impresora	+ Agregar una impresora
++ Agregar una impresora	+ 新增印表機
 
 #: apps\impresoras\web\impresoras.js:377
-Las impresoras	Las impresoras
+Las impresoras	印表機
 
 #: apps\impresoras\web\impresoras.js:378
-OctoPrint, PrusaLink (las de Prusa Connect), Bambu Lab en modo LAN, Klipper, Duet, Elegoo, FlashForge y Creality. Las claves quedan guardadas en la tarjeta (%s) y se pueden leer.	OctoPrint, PrusaLink (las de Prusa Connect), Bambu Lab en modo LAN, Klipper, Duet, Elegoo, FlashForge y Creality. Las claves quedan guardadas en la tarjeta (%s) y se pueden leer.
+OctoPrint, PrusaLink (las de Prusa Connect), Bambu Lab en modo LAN, Klipper, Duet, Elegoo, FlashForge y Creality. Las claves quedan guardadas en la tarjeta (%s) y se pueden leer.	支援 OctoPrint、PrusaLink（Prusa Connect）、LAN 模式下的 Bambu Lab、Klipper、Duet、Elegoo、FlashForge 和 Creality。存取憑證會以可讀取形式儲存在記憶卡（%s）中。

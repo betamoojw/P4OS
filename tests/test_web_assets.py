@@ -12,6 +12,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class WebAssets(unittest.TestCase):
+    def test_closed_network_page_uses_localized_plain_text(self):
+        source = (ROOT / 'components/aos_portal/aos_portal_access.c').read_text(encoding='utf-8')
+        for key in (
+            'Portal cerrado en esta red',
+            'Esta red no está marcada como de confianza en la placa.',
+            'Entrá por la red propia de la placa o por el cable USB, o habilitá el acceso con contraseña en Ajustes, Portal web.',
+        ):
+            self.assertIn(f'_("{key}")', source)
+        self.assertIn('"text/plain; charset=utf-8"', source)
+        self.assertNotIn('static const char CLOSED_PAGE', source)
+
     def test_portal_catalogues_cover_all_marked_text(self):
         spec = importlib.util.spec_from_file_location('gen_lang', ROOT / 'tools/gen_lang.py')
         generator = importlib.util.module_from_spec(spec)

@@ -87,9 +87,9 @@ Es el pin %d del header. Sólo 3,3 V: nunca 5 V en un GPIO.	对应扩展接口�
 Los pines que no son de un bus de sensores (i2c.ext, spi.a, un 1-Wire) ni de otra app; los de un puerto serie o un módulo, al final.	不属于传感器巴斯 (i2c.ext, spi.a,1-Wire) 和其他应用程序的针头;连接端口或模块的针头,最后.
 RESISTENCIA	阻力
 Ninguna	无
-Con pull-up un contacto o botón a GND lee 0 cuando se cierra.	With a pull-up, a contact or button to GND 当它关闭时会读到0
-Con pull-down un contacto a 3V3 lee 1 cuando se cierra.	在拉下时, 3V3的接触读为1 当它关闭.
-Sin resistencia: para una salida que siempre maneja el nivel (un módulo con su propio pull-up).	没有阻力:用于总是驱动水平的输出 (一个具有自动拉升的模块).
+Con pull-up un contacto o botón a GND lee 0 cuando se cierra.	使用上拉时，接点或按钮接 GND，闭合时读数为 0。
+Con pull-down un contacto a 3V3 lee 1 cuando se cierra.	使用下拉时，接点接 3V3，闭合时读数为 1。
+Sin resistencia: para una salida que siempre maneja el nivel (un módulo con su propio pull-up).	无电阻：仅用于始终主动驱动电平的输出（例如自带上拉的模块）。
 LÓGICA	逻辑
 Normal: alto es 1	通常:高为1
 Invertida: alto es 0	逆转:高为0
@@ -109,7 +109,7 @@ SALIDA	退出
 NIVEL CON ALARMA	警报的程度
 Alto (3V3)	高 (3V3)
 Bajo (GND)	低 (GND)
-El GPIO%d (pin %d) queda en ese nivel mientras dure la alarma, y en el otro el resto del tiempo y en pausa. Para un módulo de relé, el nivel con el que se activa (muchos, con GND).	GPIO%d (笔) %d) 在警报持续期间保持在这个水平,而在另一个状态下保持其余时间和暂停.GND 对于许多人来说.
+El GPIO%d (pin %d) queda en ese nivel mientras dure la alarma, y en el otro el resto del tiempo y en pausa. Para un módulo de relé, el nivel con el que se activa (muchos, con GND).	警报期间 GPIO%d（引脚 %d）保持该电平；其余时间及暂停时保持另一电平。继电器模块请选择其触发电平，许多模块为低电平（GND）触发。
 Elegí qué lee	选择它所读的
 El pin se lee una vez guardada la lectura	一旦读数被保存后,笔子会被读取.
 Ahora: %s	现在: %s
@@ -191,7 +191,7 @@ No se pudo leer el pin	我读不懂笔
 Sin Wi-Fi	否 Wi-Fi
 El sensor no está: ¿se desconectó o se borró de modules.txt?	传感器不存在:断开,或从 modules.txt?
 La escala tiene los dos puntos en la misma tensión	比例尺有两个点, 同一电压
-sin resistencia	没有阻力
+sin resistencia	无电阻
  · invertida	 ·逆转
 en volts	在伏尔特
 crudo	原材料

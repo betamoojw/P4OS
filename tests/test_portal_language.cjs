@@ -123,6 +123,11 @@ test('Simplified and Traditional Chinese use the device locale offline', async (
     const { ctx } = fixture(); await ctx.setLang(code);
     assert.equal(ctx.tr('Ajustes'), text);
     assert.equal(vm.runInContext('LOCALE', ctx), locale);
+    const minute = vm.runInContext("fmtUnit(2, 'minute')", ctx);
+    const hour = vm.runInContext("fmtUnit(3, 'hour')", ctx);
+    assert.match(minute, code === 'zh-Hans' ? /分钟/ : /分鐘/);
+    assert.match(hour, code === 'zh-Hans' ? /小时/ : /小時/);
+    assert.doesNotMatch(minute + hour, /\b(?:min|h)\b/);
   }
 });
 test('app catalogues cannot overwrite portal or another app translations', async () => {
@@ -133,6 +138,12 @@ test('app catalogues cannot overwrite portal or another app translations', async
   assert.equal(ctx.pageTranslator('one')('Pantalla'), 'First app');
   assert.equal(ctx.pageTranslator('two')('Pantalla'), 'Second app');
   assert.equal(ctx.pageTranslator('one')('Inicio'), 'Home');
+});
+test('Cartero and printer pages bind their scoped catalogues', () => {
+  for (const page of ['cartero', 'impresoras']) {
+    const pageSource = fs.readFileSync(path.join(root, 'apps', page, 'web', `${page}.js`), 'utf8');
+    assert.match(pageSource, new RegExp(`window\\.P4OS\\.forPage\\('${page}'\\)`));
+  }
 });
 test('legacy SD app pages retain translations without replacing portal words', async () => {
   const { ctx } = fixture(); await ctx.setLang('en');

@@ -4,7 +4,7 @@ Tramas	框架
 Por id	通过ID
 Enviar	发送
 Señales	信号
-Conectá el bus primero	首先连接巴士.
+Conectá el bus primero	请先连接总线
 No hay tarjeta	未插入存储卡
 Grabando en la tarjeta, carpeta can	正在录入存储卡, 文件夹可以
 Recuperando: 128 silencios de 11 bits y vuelve	恢复:128个11位的沉默,它回来了
@@ -26,8 +26,8 @@ No hay lugar para otra tarea	没有其他任务的空间
 desconectado	断开连接
 activo	活跃
 con avisos	警告
-pasivo	动态
-fuera del bus	开车
+pasivo	被动
+fuera del bus	总线关闭
 Normal	正常
 Autoprueba	自行测试
 Solo escucha	只是听着
@@ -51,7 +51,7 @@ Remota	远程
 Guardar	保存
 Entre 25 y 1000 kbit/s	在25到1000kbit之间/s
 Velocidad en kbit/s	在 kbit 中的速度/s
-Normal: la placa confirma tramas y puede mandar. En un auto, no.	常见:开发板承认框架,可以发送.
+Normal: la placa confirma tramas y puede mandar. En un auto, no.	正常模式：开发板会确认帧并可发送。在车辆上请勿使用。
 En hexa, como 0C0	在 hex,像 0C0
 En hexa, como 7FF	在魔术,像7FF
 Id del filtro, en hexa	过滤 ID, 以十六进制
@@ -81,11 +81,11 @@ RX GPIO%d · p%u	RX GPIO%d · p%u
 3V3 · p18	3V3 · p18
 GND · p19	GND · p19
 bus	公共汽车
-En un auto, sólo escucha. Una trama mandada al bus de un auto puede apagar el motor, el tablero o los frenos asistidos, y un nodo que no confirma bien lo puede trabar entero. La app arranca siempre en Solo escucha.	在汽车上,只听。一个被发送到汽车上的框架可以阻止引擎、仪表板或刹车辅助器,而一个承认错误的节点可以阻塞所有的。应用程序总是从听开始。
+En un auto, sólo escucha. Una trama mandada al bus de un auto puede apagar el motor, el tablero o los frenos asistidos, y un nodo que no confirma bien lo puede trabar entero. La app arranca siempre en Solo escucha.	在车辆上仅监听。向车载总线发送帧可能影响发动机、仪表或制动辅助；确认异常的节点也可能令整条总线失效。应用始终以“仅监听”启动。
 · El transceptor tiene que ser de 3,3 V: SN65HVD230, 231 o 232. Uno de 5 V (MCP2551, TJA1050) le devuelve 5 V al pin RX, y el header no los aguanta.	必须使用 3.3 V 收发器，例如 SN65HVD230、231 或 232。5 V 型号（MCP2551、TJA1050）会向 RX 引脚输出 5 V，扩展接口无法承受此电压。
-· Una resistencia de 120 Ω en cada punta del bus: con todo apagado se miden 60 Ω entre CANH y CANL. Muchos módulos traen la suya; si la placa no va en una punta, sacala.	· 公共汽车的两端都有120 Ω阻力:所有东西都关闭,CANH和CANL之间有60 Ω.许多模块都带来自己的电池板;如果板子没有在一端,请移除它.
-· GND común con el resto del bus, y la misma velocidad en todos los nodos.	· GND 在每一个节点上都相同的速度.
-· En el conector OBD-II de un auto: CANH en la pata 6, CANL en la 14, masa en la 4 o 5; casi siempre a 500 kbit/s.	· On a car's OBD-II connector: CANH on pin 6, CANL on 14, ground on 4 or 5; nearly always at 500 kbit/s.
+· Una resistencia de 120 Ω en cada punta del bus: con todo apagado se miden 60 Ω entre CANH y CANL. Muchos módulos traen la suya; si la placa no va en una punta, sacala.	· 总线两端各接 120 Ω 终端电阻；断电时 CANH 与 CANL 之间应测得 60 Ω。许多模块自带终端电阻；若开发板不在总线末端，请将其移除。
+· GND común con el resto del bus, y la misma velocidad en todos los nodos.	· 与总线其余节点共地，并确保所有节点使用相同速率。
+· En el conector OBD-II de un auto: CANH en la pata 6, CANL en la 14, masa en la 4 o 5; casi siempre a 500 kbit/s.	· 车辆 OBD-II 接口：CANH 为 6 脚，CANL 为 14 脚，地为 4 或 5 脚；通常使用 500 kbit/s。
 · Sin transceptor: modo Autoprueba con TX y RX en el mismo pin. La placa se manda y se escucha.	·无接收器:自行测试模式,TX和RX在同一针上.板发送到自己并听到自己.
 Para repetir hace falta modo Normal o Autoprueba	复制需要正常或自行测试模式
 Ya hay una repitiéndose	一个已经重演了

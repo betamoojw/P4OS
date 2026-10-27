@@ -1,18 +1,18 @@
 # Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
 # Spanish keys and printf/escape tokens are preserved.
 Pantalla	螢幕
-Inicio	主頁
+Inicio	主畫面
 Wi-Fi	Wi-Fi
 Red	網路
 Terminal	終端
 Programador	燒錄工具
-Banco	測試臺
+Banco	測試台
 Macro pad	宏鍵盤
-Expansión	擴充套件
+Expansión	擴充
 Archivos	檔案
 Ajustes	設定
 Firmware	韌體
-Registro	日誌
+Registro	記錄
 El idioma de la placa cambió. Recargá la página después de guardar los cambios.	裝置語言已更改。請儲存當前更改後重新整理網頁。
 sin red	沒有網路
 sin conexión	沒有連線
@@ -140,26 +140,26 @@ EN/BOOT por RTS/DTR	透過 RTS/DTR 控制 EN/BOOT
 con EN/BOOT	使用 EN/BOOT
 sin EN/BOOT	不使用 EN/BOOT
 sin detectar	未檢測到
-Flash cifrada o arranque seguro: no se puede grabar desde acá	密碼快閃記憶體或安全啟動:從這裡無法快閃記憶體
+Flash cifrada o arranque seguro: no se puede grabar desde acá	Flash 已加密或啟用了安全啟動，無法從此處燒錄。
 Detectar	檢測
 para %s	適用於 %s
 chip desconocido	未知晶片
 1 archivo	1 個檔案
 %s archivos	%s 個檔案
-No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.	沒有韌體 /firmware. Upload an ESP-IDF build folder or a .bin.
+No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.	/firmware 中沒有韌體。請上傳 ESP-IDF 的 build 目錄或 .bin 檔案。
 archivo %s de %s: %s	第 %s 個檔案，共 %s 個：%s
 %s de %s	%s / %s
 faltan %s	剩餘 %s
 en %s	用時 %s
 MD5 verificado	MD5 校驗透過
-Grabar firmware	閃電韌體
+Grabar firmware	燒錄韌體
 La placa a programar	待燒錄開發板
-Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).	連線到標題:TX,RX和 GND 到港口, EN 和 BOOT to the pins modules.txt 名稱 (模組目標... en= boot=).
+Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).	連接到擴充排針：TX、RX、GND 接到連接埠；EN、BOOT 接到 modules.txt 指定的引腳（module target … en= boot=）。
 Firmware en la tarjeta	儲存卡中的韌體
 Subir carpeta de build…	上傳構建目錄…
 Subir .bin…	上傳 .bin…
 Grabación	燒錄
-Registro del programador	燒錄日誌
+Registro del programador	燒錄記錄
 Shanghái (UTC+8)	上海（UTC+8）
 Taipéi (UTC+8)	臺北（UTC+8）
 Hong Kong (UTC+8)	香港（UTC+8）
@@ -172,7 +172,7 @@ Zona horaria cambiada	時區已更改
 Nombre en la red	網路名稱
 Ahora responde como %s.local	現在可透過 %s.local 訪問
 Cambiar	更改
-Letras minúsculas, números y guiones. Es lo que responde como <nombre>.local.	僅使用小寫字母、數字和連字元。設定後可透過 <名稱>.local 訪問裝置。
+Letras minúsculas, números y guiones. Es lo que responde como <nombre>.local.	僅使用小寫字母、數字和連字號。設定後可透過 <名稱>.local 存取裝置。
 Zona horaria	時區
 Idioma	語言
 Orientación	方向
@@ -183,28 +183,28 @@ Volumen	音量
 Fondo de pantalla	桌布
 Seguridad	安全
 La contraseña, las redes de confianza y HTTPS se cambian sólo en la placa: Ajustes, Portal web.	密碼、受信任網路和 HTTPS 只能在裝置本機的“設定 → 網頁管理”中修改。
-Bajar la autoridad HTTPS de la placa	下載裝置 HTTPS 根證書
-Instalada una vez como confiable en la Mac (Acceso a Llaveros, "Confiar siempre") o en el iPhone (Ajustes, General, Información, Confianza de certificados), el navegador deja de avisar por https://%s.local. Sólo sirve para nombres .local y direcciones de la red de casa.	將證書設為受信任後，可訪問 https://%s.local。Mac：鑰匙串訪問 → 始終信任；iPhone：設定 → 通用 → 關於本機 → 證書信任設定。證書僅用於 .local 名稱和家庭區域網地址。
+Bajar la autoridad HTTPS de la placa	下載裝置的 HTTPS 根憑證
+Instalada una vez como confiable en la Mac (Acceso a Llaveros, "Confiar siempre") o en el iPhone (Ajustes, General, Información, Confianza de certificados), el navegador deja de avisar por https://%s.local. Sólo sirve para nombres .local y direcciones de la red de casa.	將憑證設為受信任後，即可存取 https://%s.local。Mac：鑰匙圈存取 → 永遠信任；iPhone：設定 → 一般 → 關於本機 → 憑證信任設定。憑證僅適用於 .local 名稱和家用區域網路位址。
 Sistema	系統
 ¿Reiniciar la placa?	確定重啟裝置嗎？
 Reiniciando…	正在重啟…
-Reiniciar	重啟
+Reiniciar	重新啟動
 %s de %s líneas	%s 行，共 %s 行
 (se ven las últimas %s)	（顯示最後 %s 行）
 Pausar	暫停
 filtrar (texto o /regex/)	filter (text or /regex/)
-Ver el arranque actual	讓我們看看.
-Ver el arranque anterior	顯示前一個 boot
+Ver el arranque actual	檢視本次啟動日誌
+Ver el arranque anterior	檢視上次啟動日誌
 Descargar	下載
 un firmware que no se sabe	一個未知的韌體
-La placa se cayó: hay un volcado sin leer (%s, visto %s).	開發板崩潰: 有一個未讀的傾棄處 (U)%s已見 %s).
-La placa se cayó: hay un volcado sin leer (%s).	開發板崩潰: 有一個未讀的傾棄處 (U)%s).
+La placa se cayó: hay un volcado sin leer (%s, visto %s).	裝置發生當機：有一份未讀取的當機傾印（%s，發現於 %s）。
+La placa se cayó: hay un volcado sin leer (%s).	裝置發生當機：有一份未讀取的當機傾印（%s）。
 Verlo en Firmware	在Firmware中檢視
-Lo último que escribió el arranque anterior (se conserva al reiniciar, no al desenchufar).	之前的開啟寫的最後一行 (透過重新啟動,而不是切斷).
+Lo último que escribió el arranque anterior (se conserva al reiniciar, no al desenchufar).	上次啟動寫入的最後內容（重新啟動後保留，斷電後不保留）。
 En vivo. El anillo guarda los últimos 256 KB.	實時顯示，環形緩衝區保留最近 256 KB 資料。
-No hay registro del arranque anterior: la placa se desenchufó, o arrancó un firmware distinto (el anillo cambia de lugar con cada compilación).	之前的啟動沒有日誌:板塊被斷開,或者另一個韌體啟動 (環隨著每個構建移動).
+No hay registro del arranque anterior: la placa se desenchufó, o arrancó un firmware distinto (el anillo cambia de lugar con cada compilación).	沒有上次啟動日誌：裝置可能已斷電，或啟動了不同韌體（每次編譯環形緩衝區位置都會變化）。
 No se pudo leer: %s	讀取失敗：%s
-Reiniciar con el firmware nuevo	重啟並執行新韌體
+Reiniciar con el firmware nuevo	使用新韌體重新啟動
 Tiene que ser el .bin del firmware (%s)	請選擇韌體 .bin 檔案（%s）。
 Subiendo %s de %s…	正在上傳 %s，共 %s…
 Listo: %s escritos en %s s. Arranca a prueba al reiniciar.	已完成：寫入 %s，用時 %s 秒。重啟後將試執行新韌體。
@@ -218,6 +218,11 @@ Versión	版本
 Compilado	編譯時間
 Ranura	韌體分割區
 a prueba	試執行中
+confirmada	已確認
+marcada como mala	已標記為無效
+a medio instalar	安裝未完成
+nueva	新韌體
+estado desconocido	未知狀態
 La otra ranura	另一韌體分割區
 vacía	空
 Actualizar por Wi-Fi	透過 Wi-Fi 更新
@@ -268,7 +273,7 @@ Sin conectar.	未連線。
 Fuente Riden	Riden 供應
 Fijar V	集 V
 Fijar A	設定A
-Registro a CSV	登入到CSV
+Registro a CSV	記錄為 CSV
 cada	每一個
 Osciloscopio Rigol	螺旋示波儀
 Medidas	測量
@@ -655,8 +660,8 @@ registerPage: "%s" es del portal	註冊頁面: "%s"屬於門戶
 La página falló: %s	頁面失敗: %s
 No cargó: %s	沒有載入: %s
 /web/%s no cargó: %s	/web/%s 沒有載入: %s
-Esta red pide la contraseña del portal.	這個網路要求門戶的密碼.
+Esta red pide la contraseña del portal.	此網路需要網頁管理密碼。
 Entrar	登入
 Se pone, se cambia o se quita en la placa: Ajustes, Portal web.	在板上設定,更改或刪除:設定,網頁門戶.
-La autoridad HTTPS de la placa	開發板的 HTTPS 權威
+La autoridad HTTPS de la placa	裝置的 HTTPS 憑證授權單位
 , para que el navegador confíe en ella.	所以瀏覽器信任它.

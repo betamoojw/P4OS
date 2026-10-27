@@ -337,9 +337,12 @@ static bool load_bin(const char *path, aos_flasher_source_t *src, char *err, siz
     } else {
         f->offset = 0;
         src->kind = AOS_FLASHER_BIN_MERGED;
-        /* the bootloader of a merged image: at 0x0 on most chips, after
-         * 4 KB of padding on an ESP32 and the S2, and 8 KB on the P4 */
-        if (!hd.image) parse_head(h, read_at(path, 0x1000, h, sizeof h), &hd);
+    }
+    if (f->offset == 0 && !hd.image) {
+        /* the bootloader of a merged image (or of a whole flash read back):
+         * at 0x0 on most chips, after 4 KB of padding on an ESP32 and the
+         * S2, and 8 KB on the P4 */
+        parse_head(h, read_at(path, 0x1000, h, sizeof h), &hd);
         if (!hd.image) parse_head(h, read_at(path, 0x2000, h, sizeof h), &hd);
     }
     note_revs(src, &hd);
@@ -373,6 +376,30 @@ static bool has_args(const char *dir)
     return file_size(p, &sz);
 }
 
+/* A dump's chip from the .json beside it ("chip":"ESP32-S3"), for a flash
+ * whose first bytes say nothing (erased, or not an ESP image): the ESP
+ * labels back to the names the rest uses ("esp32s3"), others as they are. */
+static void dump_chip(const char *bin, aos_flasher_source_t *src)
+{
+    char jp[264];
+    size_t l = strlen(bin);
+    if (l < 5 || l + 2 > sizeof jp) return;
+    snprintf(jp, sizeof jp, "%.*s.json", (int)(l - 4), bin);
+    char j[512];
+    size_t n = read_at(jp, 0, (uint8_t *)j, sizeof j - 1);
+    j[n] = 0;
+    const char *k = strstr(j, "\"chip\":\"");
+    if (!k) return;
+    k += 8;
+    char label[16];
+    size_t i = 0;
+    while (k[i] && k[i] != '"' && i + 1 < sizeof label) { label[i] = k[i]; i++; }
+    label[i] = 0;
+    for (size_t c = 0; c < N_CHIPS; c++)
+        if (!strcasecmp(CHIPS[c].label, label)) { snprintf(src->chip, sizeof src->chip, "%s", CHIPS[c].name); return; }
+    snprintf(src->chip, sizeof src->chip, "%s", label);
+}
+
 bool aos_flasher_source_load(const char *path, aos_flasher_source_t *out, char *err, size_t err_len)
 {
     memset(out, 0, sizeof *out);
@@ -400,7 +427,11 @@ bool aos_flasher_source_load(const char *path, aos_flasher_source_t *out, char *
         return load_project(dir, out, err, err_len);
     }
     snprintf(out->path, sizeof out->path, "%s", dir);
-    return load_bin(dir, out, err, err_len);
+    const char *dd = aos_flasher_dump_dir();
+    out->dump = dd && !strncmp(dir, dd, strlen(dd)) && dir[strlen(dd)] == '/';
+    if (!load_bin(dir, out, err, err_len)) return false;
+    if (out->dump && !out->chip[0]) dump_chip(dir, out);
+    return true;
 }
 
 const char *aos_flasher_dir(void)
@@ -412,9 +443,13 @@ const char *aos_flasher_dir(void)
     return dir;
 }
 
+/* Projects, then loose files, then the dumps, newest first (their names
+ * end in the date) */
 static int by_kind_name(const void *a, const void *b)
 {
     const aos_flasher_source_t *x = a, *y = b;
+    if (x->dump != y->dump) return x->dump ? 1 : -1;
+    if (x->dump) return -strcasecmp(x->name, y->name);
     if (x->project != y->project) return x->project ? -1 : 1;
     return strcasecmp(x->name, y->name);
 }
@@ -444,6 +479,18 @@ int aos_flasher_scan(aos_flasher_source_t *out, int max)
         else aos_hal_log("flasher", "%s skipped: %s", e->d_name, err);
     }
     closedir(d);
+    /* the dumps: loose files at the address in their names */
+    const char *dd = aos_flasher_dump_dir();
+    d = dd ? opendir(dd) : NULL;
+    while (d && (e = readdir(d)) && n < max) {
+        size_t l = strlen(e->d_name);
+        if (e->d_name[0] == '.' || l < 5 || strcasecmp(e->d_name + l - 4, ".bin")) continue;
+        char p[256];
+        snprintf(p, sizeof p, "%.190s/%.60s", dd, e->d_name);
+        char err[64];
+        if (aos_flasher_source_load(p, &out[n], err, sizeof err)) n++;
+    }
+    if (d) closedir(d);
     qsort(out, (size_t)n, sizeof out[0], by_kind_name);
     return n;
 }

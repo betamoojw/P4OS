@@ -277,7 +277,8 @@ header with who holds each pin.
 - **Terminal:** two serial ports, hex, filters and alerts.
 - **Programmer:** flashes another ESP32 from firmware on the card
   (esp-serial-flasher), wired to the header or plugged into the USB host
-  (a dev board goes into its bootloader by itself, through RTS and DTR).
+  (a dev board goes into its bootloader by itself, through RTS and DTR);
+  reads its flash to the card, to keep or to clone, and erases it.
 - **Modbus:** a Riden RD60xx supply over RTU, and a gateway.
 - **Bench:** a Rigol scope over the LAN, the Riden, a UNI-T generator over
   USB, and a logger to CSV.

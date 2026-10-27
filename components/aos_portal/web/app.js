@@ -478,7 +478,12 @@ async function pageTerminal() {
 /* ---- Programador ---- */
 const PHASES = { idle: N_('Listo'), opening: N_('Abriendo el puerto'), connecting: N_('Conectando con la placa'), stub: N_('Cargando el stub'),
   baud: N_('Subiendo la velocidad'), info: N_('Leyendo el chip'), erasing: N_('Borrando'), writing: N_('Grabando'), verifying: N_('Verificando'),
-  resetting: N_('Reiniciando la placa'), done: N_('Grabación terminada'), failed: N_('Falló'), cancelled: N_('Cancelado') };
+  reading: N_('Leyendo la flash'), resetting: N_('Reiniciando la placa'), done: N_('Grabación terminada'), failed: N_('Falló'), cancelled: N_('Cancelado') };
+/* the end of a dump or an erase says what it was */
+const JOB_DONE = { read: N_('Volcado guardado'), erase: N_('Flash borrada') };
+/* "/sdcard/firmware/volcados/x.bin" -> "/firmware/volcados/x.bin", as the card's API names it */
+const cardPath = p => { const i = p.indexOf('/firmware/'); return i >= 0 ? p.slice(i) : p; };
+const dumpLink = (p, text) => h('a', { href: '/api/fs/get?attachment=1&path=' + encodeURIComponent(cardPath(p)) }, text);
 let flashT, flashSel = '', flashPort = 'uart.b', flashLog = 0;
 const fmtMs = ms => { const s = Math.round(ms / 1000); return s < 60 ? s + ' s' : Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 
@@ -514,6 +519,19 @@ async function pageProgramador() {
   const pickBin = h('input', { type: 'file', accept: '.bin', multiple: true, style: 'display:none',
     onchange: async e => { cwd = '/firmware'; await fetch('/api/fs/mkdir?path=%2Ffirmware', { method: 'POST' }); await upload(e.target.files, bar); location.hash = '#programador'; load(true); } });
   let last = null, lastSources = '';
+  /* the range of a dump, in hex or decimal ("0x10000", "1M", "512K"); empty: all */
+  const fromIn = h('input', { placeholder: '0x0', style: 'width:7em' }), lenIn = h('input', { placeholder: tr('toda'), style: 'width:7em' });
+  const num = v => { v = v.trim().toLowerCase(); if (!v) return 0; const m = v.match(/^(0x[0-9a-f]+|\d+)([km]?)$/); if (!m) return NaN;
+    return Number(m[1]) * (m[2] === 'k' ? 1024 : m[2] === 'm' ? 1048576 : 1); };
+  const readFlash = async () => {
+    const from = num(fromIn.value), len = num(lenIn.value);
+    if (isNaN(from) || isNaN(len)) { toast(tr('El rango va en hexadecimal (0x10000) o con K o M'), true); return; }
+    try { await post('flash/read', { port: flashPort, from, len }); flashLog = 0; put(log); load(); } catch (e) { toast(e.message, true); }
+  };
+  const eraseFlash = async () => {
+    if (!confirm(tr('¿Borrar toda la flash de la placa en %s? Se queda sin programa. Para guardarlo antes, usá Leer la flash.', flashPort))) return;
+    try { await post('flash/erase', { port: flashPort }); flashLog = 0; put(log); load(); } catch (e) { toast(e.message, true); }
+  };
   const start = async () => {
     try { await post('flash/start', { path: flashSel, port: flashPort }); flashLog = 0; put(log); load(); }
     catch (e) { toast(e.message, true); }
@@ -533,7 +551,10 @@ async function pageProgramador() {
       c && c.mac ? row('MAC', c.mac) : null,
       c && c.secure ? h('div', { class: 'row warn' }, tr('Flash cifrada o arranque seguro: no se puede grabar desde acá')) : null,
       h('div', { class: 'row' }, h('div', { class: 'grow' }, portSel),
-        h('button', { class: 'btn', disabled: st.busy, onclick: async () => { try { await post('flash/detect', { port: flashPort }); load(); } catch (e) { toast(e.message, true); } } }, tr('Detectar'))));
+        h('button', { class: 'btn', disabled: st.busy, onclick: async () => { try { await post('flash/detect', { port: flashPort }); load(); } catch (e) { toast(e.message, true); } } }, tr('Detectar'))),
+      h('div', { class: 'row' }, h('div', { class: 'grow small muted' }, tr('Desde'), ' ', fromIn, ' ', tr('cuánto'), ' ', lenIn),
+        h('button', { class: 'btn', disabled: st.busy, onclick: readFlash }, tr('Leer la flash')),
+        h('button', { class: 'btn red', disabled: st.busy, onclick: eraseFlash }, tr('Borrar la flash'))));
     /* firmware on the card; redrawn only when it changes */
     const sig = JSON.stringify(st.sources.map(x => x.path + x.total)) + flashSel + st.busy;
     if (sig !== lastSources || force) {
@@ -543,8 +564,9 @@ async function pageProgramador() {
         const on = x.path === flashSel, other = c && x.chip && c.name.toLowerCase().replace(/-/g, '') !== x.chip.toLowerCase();
         return h('div', { class: 'row click' + (on ? ' sel' : ''), style: on ? 'background:var(--card2)' : '', onclick: () => { flashSel = x.path; load(true); } },
           h('div', { class: 'ico' }, on ? '●' : '○'),
-          h('div', { class: 'grow' }, h('div', {}, x.name, x.version ? h('span', { class: 'muted small' }, '  ' + x.version) : null),
-            h('div', { class: 'small ' + (other ? 'warn' : 'muted') }, (x.chip ? (other ? tr('para %s', x.chip_label || x.chip.toUpperCase()) : (x.chip_label || x.chip.toUpperCase())) : tr('chip desconocido')) + ' · ' +
+          h('div', { class: 'grow' }, h('div', {}, x.name, x.version ? h('span', { class: 'muted small' }, '  ' + x.version) : null,
+              x.dump ? h('span', { class: 'small', onclick: e => e.stopPropagation() }, '  ', dumpLink(x.path, tr('bajar'))) : null),
+            h('div', { class: 'small ' + (other ? 'warn' : 'muted') }, (x.dump ? tr('Volcado') + ' · ' : '') + (x.chip ? (other ? tr('para %s', x.chip_label || x.chip.toUpperCase()) : (x.chip_label || x.chip.toUpperCase())) : tr('chip desconocido')) + ' · ' +
               (x.files.length === 1 ? tr('1 archivo') : tr('%s archivos', x.files.length)) + ' · ' + fmtBytes(x.total)),
             on ? h('div', { class: 'small muted', style: 'font-family:ui-monospace,Menlo,monospace;margin-top:6px' },
               x.files.map(f => h('div', {}, f.offset + '  ' + f.name + '  (' + fmtBytes(f.size) + ')'))) : null));
@@ -552,14 +574,17 @@ async function pageProgramador() {
     }
     /* the job */
     const done = st.phase === 'done', failed = st.phase === 'failed' || st.phase === 'cancelled';
-    put(job, st.job === 'flash' || st.busy ? h('div', { class: 'card pad' },
-      h('div', { class: 'btns' }, h('b', { class: done ? 'ok' : failed ? 'bad' : '' }, tr(PHASES[st.phase] || st.phase)),
-        h('span', { class: 'muted small' }, st.source + (st.file_count ? ' · ' + tr('archivo %s de %s: %s', st.file_index + 1, st.file_count, st.file_name) : '')),
+    const title = done && JOB_DONE[st.job] ? JOB_DONE[st.job] : PHASES[st.phase] || st.phase;
+    put(job, (st.job && st.job !== 'detect') || st.busy ? h('div', { class: 'card pad' },
+      h('div', { class: 'btns' }, h('b', { class: done ? 'ok' : failed ? 'bad' : '' }, tr(title)),
+        h('span', { class: 'muted small' }, st.job === 'read' && st.dump ? dumpLink(st.dump.path, st.dump.path.split('/').pop()) :
+          st.source + (st.file_count ? ' · ' + tr('archivo %s de %s: %s', st.file_index + 1, st.file_count, st.file_name) : '')),
         st.busy ? h('button', { class: 'btn red', style: 'margin-left:auto', onclick: () => post('flash/cancel') }, tr('Cancelar')) : null),
       h('div', { class: 'prog', style: 'height:10px;margin-top:12px' }, h('div', { style: `width:${st.percent}%;${done ? 'background:var(--green)' : failed ? 'background:var(--red)' : ''}` })),
       h('div', { class: 'small muted', style: 'margin-top:8px' },
         tr('%s de %s', fmtBytes(st.done), fmtBytes(st.total)) + ` · ${st.bytes_per_s ? fmtBytes(st.bytes_per_s) + '/s' : '—'} · ` +
-        (st.busy ? (st.eta_ms ? tr('faltan %s', fmtMs(st.eta_ms)) : '') : tr('en %s', fmtMs(st.elapsed_ms))) + (done && st.verified ? ' · ' + tr('MD5 verificado') : '')),
+        (st.busy ? (st.eta_ms ? tr('faltan %s', fmtMs(st.eta_ms)) : '') : tr('en %s', fmtMs(st.elapsed_ms))) + (done && st.verified ? ' · ' + tr('MD5 verificado') : '') +
+        (done && st.dump ? ' · SHA-256 ' + st.dump.sha256.slice(0, 16) + '…' : '')),
       failed && st.error ? h('div', { class: 'bad small', style: 'margin-top:6px' }, st.error) : null) : null);
     startBtn.disabled = st.busy || !flashSel;
     /* its log */

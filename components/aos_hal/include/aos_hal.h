@@ -1368,6 +1368,13 @@ int  aos_hal_ble_gatt_events(aos_ble_gatt_ev_t *out, int max);
 /* Bytes from the hardware's random number generator. */
 void aos_hal_random(void *buf, size_t len);
 void aos_hal_sha256(const void *data, size_t len, uint8_t out[32]);
+/* The same over data that arrives in pieces (a file, a flash being read):
+ * begin, any number of updates, end, which gives the hash and frees the
+ * context. NULL from begin: out of memory. */
+typedef struct aos_hal_sha256_ctx aos_hal_sha256_ctx_t;
+aos_hal_sha256_ctx_t *aos_hal_sha256_begin(void);
+void aos_hal_sha256_update(aos_hal_sha256_ctx_t *c, const void *data, size_t len);
+void aos_hal_sha256_end(aos_hal_sha256_ctx_t *c, uint8_t out[32]);
 void aos_hal_hmac_sha256(const void *key, size_t klen, const void *data, size_t len, uint8_t out[32]);
 /* RFC 5869; salt may be NULL (then 32 zero bytes). out up to 255 * 32 bytes. */
 bool aos_hal_hkdf_sha256(const void *salt, size_t slen, const void *ikm, size_t ilen,

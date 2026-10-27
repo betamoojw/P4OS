@@ -22,7 +22,9 @@ every aos_io_uart_lines()). It answers what esp-serial-flasher 2.x sends:
     so an unerased sector shows), SPI_FLASH_MD5 (32 hex chars from the ROM,
     16 raw bytes from the stub), MEM_BEGIN/DATA/END (the flasher stub: after
     MEM_END with an entry point it says "OHAI" and behaves as the stub:
-    two status bytes instead of four, ERASE_FLASH/ERASE_REGION), READ_FLASH.
+    two status bytes instead of four, ERASE_FLASH/ERASE_REGION), READ_FLASH,
+    and the stub's READ_FLASH (packets of the size asked for, each waiting
+    for the host's ack of the bytes so far, then the MD5 of all of it).
     Anything else is logged as UNKNOWN and answered with INVALID_COMMAND.
 
 The flash starts dirty (a fixed pseudo-random "old firmware"), so a region
@@ -128,6 +130,7 @@ class Target:
         self.rx = bytearray()
         self.in_frame = False
         self.writing = None             # (offset, packet_size, next_seq)
+        self.reading = None             # the stub's READ_FLASH in progress
         self.mem = None
         self.regions = []
         self.counts = {}
@@ -249,6 +252,13 @@ class Target:
     # -- commands ---------------------------------------------------------
 
     def packet(self, p):
+        if self.reading is not None and len(p) == 4:
+            (got,) = struct.unpack("<I", p)
+            if got == self.reading["sent"]:
+                self.read_next()
+            else:
+                log(f"  READ_FLASH ack of {got} B, sent {self.reading['sent']}")
+            return
         if len(p) < 8 or p[0] != 0:
             log(f"  junk frame of {len(p)} bytes")
             return
@@ -400,6 +410,29 @@ class Target:
     def c_read_flash(self, cmd, d, chk):
         addr, size = struct.unpack_from("<II", d)
         self.reply(cmd, data=self.flash[addr:addr + size])
+
+    def c_read_flash_stub(self, cmd, d, chk):
+        addr, size, psize, inflight = struct.unpack_from("<IIII", d)
+        log(f"READ_FLASH (stub) 0x{addr:06x} +{size} in {psize} B packets")
+        if not self.stub or addr + size > self.flash_size or not psize:
+            return self.reply(cmd, ok=False, err=COMMAND_FAILED)
+        self.reply(cmd)
+        self.reading = dict(addr=addr, size=size, psize=psize, sent=0, md5=hashlib.md5())
+        self.read_next()
+
+    def read_next(self):
+        r = self.reading
+        if r["sent"] >= r["size"]:
+            self.slip(r["md5"].digest())
+            self.reading = None
+            return
+        n = min(r["psize"], r["size"] - r["sent"])
+        chunk = bytes(self.flash[r["addr"] + r["sent"]:r["addr"] + r["sent"] + n])
+        r["md5"].update(chunk)
+        r["sent"] += n
+        if not self.a.fast:
+            time.sleep(n * 10 / self.baud)
+        self.slip(chunk)
 
     def c_erase_flash(self, cmd, d, chk):
         if not self.stub:

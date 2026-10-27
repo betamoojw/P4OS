@@ -32,6 +32,8 @@
  *   GET  /api/settings   POST /api/settings {name,tz,lang,wallpaper,brightness,volume,landscape,retro_hw}
  *   GET  /api/flash                    the Programador: status, ports, firmware on the card
  *   POST /api/flash/start {path,port,baud}   POST /api/flash/detect {port}   POST /api/flash/cancel
+ *   POST /api/flash/read {port,from,len,baud}   a dump to <sd>/firmware/volcados (len 0: to the end)
+ *   POST /api/flash/erase {port}       all of the target's flash
  *   GET  /api/flash/log?from=          its log lines
  *   GET  /api/serial?ch=               a channel: state, ports, triggers
  *   GET  /api/serial/lines?ch=&from=   its lines since a position (with their marks)
@@ -1053,7 +1055,8 @@ static void api_fs_op(aos_httpd_req_t *r, const char *op)
 /* -------------------------------------------------------------------------- */
 
 static const char *const FLASH_PHASE[] = { "idle", "opening", "connecting", "stub", "baud", "info", "erasing",
-                                           "writing", "verifying", "resetting", "done", "failed", "cancelled" };
+                                           "writing", "verifying", "reading", "resetting", "done", "failed", "cancelled" };
+static const char *const FLASH_JOB[] = { "", "detect", "flash", "read", "erase" };
 
 static void api_flash(aos_httpd_req_t *r)
 {
@@ -1061,7 +1064,7 @@ static void api_flash(aos_httpd_req_t *r)
     aos_flasher_status(&st);
     cJSON *o = cJSON_CreateObject();
     cJSON_AddBoolToObject(o, "busy", st.busy);
-    cJSON_AddStringToObject(o, "job", st.job == AOS_FLASHER_JOB_FLASH ? "flash" : st.job == AOS_FLASHER_JOB_DETECT ? "detect" : "");
+    cJSON_AddStringToObject(o, "job", st.job <= AOS_FLASHER_JOB_ERASE ? FLASH_JOB[st.job] : "");
     cJSON_AddStringToObject(o, "phase", st.phase <= AOS_FLASHER_CANCELLED ? FLASH_PHASE[st.phase] : "?");
     cJSON_AddNumberToObject(o, "seq", st.seq);
     cJSON_AddStringToObject(o, "port", st.port);
@@ -1078,6 +1081,12 @@ static void api_flash(aos_httpd_req_t *r)
     cJSON_AddBoolToObject(o, "ok", st.ok);
     cJSON_AddBoolToObject(o, "verified", st.verified);
     cJSON_AddStringToObject(o, "error", st.error);
+    if (st.out_path[0]) {
+        cJSON *d = cJSON_AddObjectToObject(o, "dump");
+        cJSON_AddStringToObject(d, "path", st.out_path);
+        cJSON_AddNumberToObject(d, "from", st.out_from);
+        cJSON_AddStringToObject(d, "sha256", st.out_sha256);
+    }
     if (st.chip_known) {
         cJSON *c = cJSON_AddObjectToObject(o, "chip");
         cJSON_AddStringToObject(c, "name", st.chip);
@@ -1128,6 +1137,7 @@ static void api_flash(aos_httpd_req_t *r)
         cJSON_AddStringToObject(e, "name", src[i].name);
         cJSON_AddStringToObject(e, "path", src[i].path);
         cJSON_AddBoolToObject(e, "project", src[i].project);
+        cJSON_AddBoolToObject(e, "dump", src[i].dump);
         cJSON_AddStringToObject(e, "chip", src[i].chip);
         cJSON_AddStringToObject(e, "chip_label", src[i].chip[0] ? aos_flasher_chip_label(src[i].chip) : "");
         cJSON_AddStringToObject(e, "app", src[i].app_name);
@@ -1172,6 +1182,26 @@ static void api_flash_start(aos_httpd_req_t *r)
     cJSON_Delete(b);
     if (ok) send_ok(r);
     else send_err(r, 409, err[0] ? err : _("falta path"));
+}
+
+/* A dump ({"port", "from", "len"}, len 0 or missing: to the end of the
+ * flash) or an erase ({"port"}) */
+static void api_flash_job(aos_httpd_req_t *r, aos_flasher_job_t job)
+{
+    cJSON *b = body_json(r);
+    const char *port = jstr(b, "port");
+    const cJSON *from = cJSON_GetObjectItemCaseSensitive(b, "from"), *len = cJSON_GetObjectItemCaseSensitive(b, "len"),
+                *baud = cJSON_GetObjectItemCaseSensitive(b, "baud");
+    aos_flasher_opts_t o = {
+        .baud = cJSON_IsNumber(baud) ? (uint32_t)baud->valuedouble : 0,
+        .read_from = cJSON_IsNumber(from) ? (uint32_t)from->valuedouble : 0,
+        .read_len = cJSON_IsNumber(len) ? (uint32_t)len->valuedouble : 0,
+    };
+    port = port && port[0] ? port : "uart.b";
+    bool ok = job == AOS_FLASHER_JOB_READ ? aos_flasher_read(port, &o) : aos_flasher_erase(port, &o);
+    cJSON_Delete(b);
+    if (ok) send_ok(r);
+    else send_err(r, 409, _("ya hay un trabajo en curso"));
 }
 
 static void api_flash_detect(aos_httpd_req_t *r)
@@ -1577,6 +1607,8 @@ static void handler(aos_httpd_req_t *r)
     else if (get && !strcmp(p, "flash")) api_flash(r);
     else if (post && !strcmp(p, "flash/start")) api_flash_start(r);
     else if (post && !strcmp(p, "flash/detect")) api_flash_detect(r);
+    else if (post && !strcmp(p, "flash/read")) api_flash_job(r, AOS_FLASHER_JOB_READ);
+    else if (post && !strcmp(p, "flash/erase")) api_flash_job(r, AOS_FLASHER_JOB_ERASE);
     else if (post && !strcmp(p, "flash/cancel")) { aos_flasher_cancel(); send_ok(r); }
     else if (get && !strcmp(p, "flash/log")) api_flash_log(r);
     else if (get && !strcmp(p, "serial")) api_serial(r);

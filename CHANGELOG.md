@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+- **The Programmer reads and erases.** "Leer la flash" copies a board's
+  whole flash (or a range, from the portal) to the card, in
+  `firmware/volcados/`, named after the chip, the board's MAC and the date,
+  with a `.json` beside it (chip, revision, range, SHA-256); with the stub
+  every 16 KB piece is checked by the MD5 the target computes. A dump comes
+  back in the list as firmware, so writing it puts a board back as it was,
+  or clones it onto another. "Borrar la flash" erases all of it, after
+  asking. Tried in the simulator against `tools/fake_esp_rom.py`, which now
+  speaks the stub's read: 4 MB read at 460800 baud in 110 s, byte for
+  byte; dump, erase, write back and read again gave the same flash.
+- The first steps of a universal programmer (`docs/plan/PROGRAMADOR.md`):
+  the service is split into a core and families (ESP32 is the first), and
+  it reads `.hex`, `.elf` and `.uf2` into regions for the families to come
+  (SWD, Arduino, STM32), with a test on the Mac (`tests/flasher_img`).
+- `aos_hal_sha256_begin/update/end`: SHA-256 over data that comes in
+  pieces.
+
 ## 0.22.2 — 2026-10-26
 
 - **Cartero**, a new app on the card: an API client in the manner of

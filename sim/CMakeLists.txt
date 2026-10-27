@@ -278,11 +278,13 @@ target_link_directories(p4os_sim PRIVATE ${SDL2_LIBRARY_DIRS} ${AVCODEC_LIBRARY_
 # Espressif's esp-serial-flasher. The library comes with the firmware's
 # managed components (git-ignored, like esp_new_jpeg above): its own plain
 # CMake build, with the port left to us (aos_flasher.c talks aos_io), quiet
-# because it is third-party. Without it aos_flasher.c compiles to a stub that
-# says a firmware build is needed first.
+# because it is third-party. Without it aos_flasher_esp.c compiles to a stub
+# that says a firmware build is needed first.
 target_sources(p4os_sim PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_flasher/aos_flasher.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_flasher/aos_flasher_src.c)
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_flasher/aos_flasher_esp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_flasher/aos_flasher_src.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_flasher/aos_flasher_img.c)
 target_include_directories(p4os_sim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_flasher/include)
 set(AOS_ESF_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../managed_components/espressif__esp-serial-flasher)
 if(EXISTS ${AOS_ESF_DIR}/CMakeLists.txt)

@@ -10,6 +10,9 @@
  * with the Programador app closed. Everything here is callable from the LVGL
  * task - the calls only copy state under a lock or start/stop the thread.
  *
+ * Besides writing, a job can read the target's flash to a file on the card
+ * (a dump, for a backup or to clone a board) or erase all of it.
+ *
  * Firmware comes from the card, <sd>/firmware/ (aos_flasher_dir()):
  *   - a folder with ESP-IDF's flasher_args.json and its bins (what
  *     `idf.py build` leaves in build/; the folder itself or a build/ inside
@@ -17,6 +20,8 @@
  *   - a .bin whose name ends in "@0x10000.bin": that file at that offset;
  *   - any other .bin: a merged/factory image at 0x0 - unless it is a bare
  *     application image (it has the app descriptor), which goes to 0x10000.
+ * Dumps go to <sd>/firmware/volcados/ as "<chip>-<date>@0x<from>.bin", each
+ * with a .json beside it, and come back in the list as firmware to write.
  */
 #pragma once
 
@@ -63,10 +68,13 @@ typedef struct {
     aos_flasher_file_t files[AOS_FLASHER_FILES_MAX];
     uint32_t total;             /* bytes of all the files */
     aos_flasher_kind_t kind;    /* how the offsets were decided */
+    bool     dump;              /* read off a board by the programmer (firmware/volcados) */
 } aos_flasher_source_t;
 
 /* <sd>/firmware; NULL without a card. */
 const char *aos_flasher_dir(void);
+/* <sd>/firmware/volcados, where the dumps go; NULL without a card. */
+const char *aos_flasher_dump_dir(void);
 /* What is in it, projects first, then loose .bin files, by name. Reads the
  * card: from a worker or on a user's tap, not every frame. */
 int  aos_flasher_scan(aos_flasher_source_t *out, int max);
@@ -85,19 +93,27 @@ typedef enum {
     AOS_FLASHER_ERASING,        /* FLASH_BEGIN of a file */
     AOS_FLASHER_WRITING,
     AOS_FLASHER_VERIFYING,      /* MD5 of what the target has */
+    AOS_FLASHER_READING,        /* a dump: the flash to the card */
     AOS_FLASHER_RESETTING,
     AOS_FLASHER_DONE,
     AOS_FLASHER_FAILED,
     AOS_FLASHER_CANCELLED,
 } aos_flasher_phase_t;
 
-typedef enum { AOS_FLASHER_JOB_NONE = 0, AOS_FLASHER_JOB_DETECT, AOS_FLASHER_JOB_FLASH } aos_flasher_job_t;
+typedef enum {
+    AOS_FLASHER_JOB_NONE = 0, AOS_FLASHER_JOB_DETECT, AOS_FLASHER_JOB_FLASH,
+    AOS_FLASHER_JOB_READ,       /* a dump to the card */
+    AOS_FLASHER_JOB_ERASE,      /* all of the flash */
+} aos_flasher_job_t;
 
 typedef struct {
     uint32_t baud;              /* for the writing; 0 = 460800. Falls back to 115200 */
     bool     no_stub;           /* talk to the ROM itself (slower, no ERASE_REGION) */
     bool     no_verify;         /* skip the MD5 of each file */
     bool     no_reset;          /* leave the target in its bootloader at the end */
+    /* a dump: from this address, this many bytes (0 = to the end of the
+     * flash); with no_verify each piece is not checked against the target */
+    uint32_t read_from, read_len;
 } aos_flasher_opts_t;
 
 /* Connects, reads the chip and resets the target back to its program. */
@@ -105,6 +121,11 @@ bool aos_flasher_detect(const char *port);
 /* Flashes 'src' (copied) through 'port'. false: a job is running, or the
  * thread could not start. */
 bool aos_flasher_flash(const char *port, const aos_flasher_source_t *src, const aos_flasher_opts_t *opts);
+/* Reads the target's flash (opts->read_from/read_len) to a new file in
+ * aos_flasher_dump_dir(); the status says where (out_path) when it ends. */
+bool aos_flasher_read(const char *port, const aos_flasher_opts_t *opts);
+/* Erases all of the target's flash: what is on it is gone. */
+bool aos_flasher_erase(const char *port, const aos_flasher_opts_t *opts);
 void aos_flasher_cancel(void);
 bool aos_flasher_busy(void);
 
@@ -139,6 +160,11 @@ typedef struct {
     uint32_t baud;              /* the speed the job ended up at */
     bool     secure;            /* secure boot or flash encryption on */
     bool     lines;             /* the port has EN/BOOT */
+    /* a dump: where it went (kept after the job; removed if the job failed),
+     * the address it started at and its SHA-256 in hex */
+    char     out_path[176];
+    uint32_t out_from;
+    char     out_sha256[65];
 } aos_flasher_status_t;
 
 void aos_flasher_status(aos_flasher_status_t *out);
@@ -154,6 +180,40 @@ int      aos_flasher_log_line(uint32_t index, char *out, int cap);
 
 /* "ESP32-S3" for "esp32s3", as the service names chips. */
 const char *aos_flasher_chip_label(const char *idf_name);
+
+/* ---- images (aos_flasher_img.c) ----
+ * What a file asks to be written where, for the families that write
+ * microcontrollers (SWD, AVR, STM32): a .bin at an address given by the
+ * caller (or its name's "@0x"), Intel HEX (what Arduino and most IDEs give),
+ * ELF (the segments that load, at their load address) and UF2 (the Pico's).
+ * The file is read whole into PSRAM and turned into regions: sorted by
+ * address, never overlapping, with the gaps of up to 256 bytes between two
+ * pieces filled with 0xFF (alignment padding, a hex file's short holes) so a
+ * firmware is a few regions, not thousands. */
+#define AOS_FLASHER_REGIONS_MAX 64
+
+typedef enum { AOS_IMG_BIN = 0, AOS_IMG_HEX, AOS_IMG_ELF, AOS_IMG_UF2 } aos_flasher_img_fmt_t;
+
+typedef struct {
+    uint32_t addr, len;
+    uint8_t *data;
+} aos_flasher_region_t;
+
+typedef struct {
+    aos_flasher_img_fmt_t fmt;
+    int      n;
+    aos_flasher_region_t r[AOS_FLASHER_REGIONS_MAX];
+    uint32_t total;             /* bytes in all the regions */
+    uint32_t uf2_family;        /* a .uf2's family ID (0xE48BFF56: RP2040), 0 none */
+    uint32_t entry;             /* an .elf's entry point, a .hex's start address; 0 none */
+    void    *mem;               /* what aos_flasher_image_free() lets go */
+} aos_flasher_image_t;
+
+/* By the extension: .hex/.ihex, .elf/.axf, .uf2, anything else a .bin. */
+aos_flasher_img_fmt_t aos_flasher_image_fmt(const char *path);
+/* Loads 'path'; a .bin goes at bin_addr. false with a reason in err. */
+bool aos_flasher_image_load(const char *path, uint32_t bin_addr, aos_flasher_image_t *img, char *err, size_t err_len);
+void aos_flasher_image_free(aos_flasher_image_t *img);
 
 #ifdef __cplusplus
 }

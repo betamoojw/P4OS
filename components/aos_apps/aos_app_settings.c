@@ -709,6 +709,7 @@ static void build_root(lv_obj_t *p)
     row(g, AOS_SYM_VOLUME_HIGH, 0xFF375F, _("Sonido"), NULL, true, open_cb, (void *)PG_SOUND);
     row(g, AOS_SYM_PALETTE, 0x30B0C7, _("Fondo de pantalla"), NULL, true, open_cb, (void *)PG_WALL);
     row(g, AOS_SYM_VIEW_GRID_OUTLINE, 0xFF9F0A, _("Editar inicio"), NULL, true, edit_home_cb, NULL);
+    note(p, _("En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo."));
 
     g = group(p, NULL);
     row(g, AOS_SYM_EXPANSION_CARD, 0x8E8E93, _("Expansión"), NULL, true, open_cb, (void *)PG_EXP);
@@ -1034,6 +1035,7 @@ static void build_sound(lv_obj_t *p)
 
 static void wall_cb(lv_event_t *e) { aos_ui_set_wallpaper((int)(intptr_t)lv_event_get_user_data(e)); show(PG_WALL); }
 static void wall_photo_off_cb(lv_event_t *e) { aos_ui_wall_photo_set((int)(intptr_t)lv_event_get_user_data(e), NULL); show(PG_WALL); }
+static void album_off_cb(lv_event_t *e) { (void)e; aos_ui_lock_album_set(NULL); show(PG_WALL); }
 static void accent_cb(lv_event_t *e)
 {
     aos_theme_set_accent(aos_theme_accent_at((int)(intptr_t)lv_event_get_user_data(e)));
@@ -1080,15 +1082,19 @@ static void build_wall(lv_obj_t *p)
     lv_obj_t *g = group(p, _("FOTO"));
     static const char *const WHERE[] = { N_("Inicio"), N_("Pantalla de bloqueo") };
     for (int i = 0; i < 2; i++) {
-        char path[192];
-        bool has = aos_ui_wall_photo(i, path, sizeof path);
+        char path[256];
+        bool album = i == AOS_WALL_LOCK && aos_ui_lock_album(path, sizeof path);
+        bool has = album || aos_ui_wall_photo(i, path, sizeof path);
         const char *name = has ? strrchr(path, '/') : NULL;
         name = name ? name + 1 : path;
-        row(g, i ? AOS_SYM_LOCK : AOS_SYM_PALETTE, i ? 0x8E8E93 : 0x30B0C7, _(WHERE[i]),
-            has ? name : _("Sin foto"), false, NULL, NULL);
+        char shown[96];
+        if (album) snprintf(shown, sizeof shown, _("%s, rotando"), name);
+        else snprintf(shown, sizeof shown, "%.95s", has ? name : _("Sin foto"));
+        row(g, i ? AOS_SYM_LOCK : AOS_SYM_PALETTE, i ? 0x8E8E93 : 0x30B0C7, _(WHERE[i]), shown, false, NULL, NULL);
+        if (album) row(g, AOS_SYM_IMAGE, 0x30B0C7, _("Dejar la foto de ahora"), NULL, false, album_off_cb, NULL);
         if (has) row(g, AOS_SYM_CLOSE, 0xFF3B30, _("Quitar la foto"), NULL, false, wall_photo_off_cb, (void *)(intptr_t)i);
     }
-    note(p, _("Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha."));
+    note(p, _("Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea."));
 
     /* the accent: switches, selections, the active buttons */
     lv_obj_t *ag = group(p, _("COLOR DE ACENTO"));

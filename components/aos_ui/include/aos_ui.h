@@ -214,6 +214,16 @@ void aos_ui_wallpaper_colors(int index, uint32_t *top, uint32_t *bottom);
 enum { AOS_WALL_HOME = 0, AOS_WALL_LOCK = 1 };
 void aos_ui_wall_photo_set(int which, const char *path);
 bool aos_ui_wall_photo(int which, char *out, size_t len);   /* false: none */
+/* A folder of photos behind the lock screen instead of one: another of
+ * them, at random, every time the board locks. NULL or "" stops it and
+ * keeps the photo on show. Setting one lock photo stops it too. Saved. */
+void aos_ui_lock_album_set(const char *dir);
+/* The home screen's photo stays in PSRAM (1.8 MB) while an app is in front,
+ * so the way home shows it at once. An app that needs every megabyte (a
+ * 1920x1080 stream) has it let go with true, and back with false; going
+ * home brings it back anyway, a moment later. */
+void aos_ui_wall_photo_spare(bool spare);
+bool aos_ui_lock_album(char *out, size_t len);               /* false: none */
 
 /* Records the screen to an MP4 in the card's /videos (the PPA and the
  * H.264 engine, aos_hal_screenrec_*), or stops it, with the control centre's
@@ -259,6 +269,24 @@ void aos_ui_toast(const char *text, uint32_t ms);
  * clear LV_OBJ_FLAG_EVENT_BUBBLE on itself. Register before aos_ui_init(). */
 typedef void (*aos_widget_create_t)(lv_obj_t *card, int32_t w, int32_t h, const char *arg);
 void aos_ui_register_widget(const char *type, aos_widget_create_t create);
+
+/* What the home screen's edit mode needs to offer a registered type: its
+ * name and a line about it (Spanish literals, translated where they are
+ * shown: N_() them), its glyph (aos_sym_44), and, if the widget can be told
+ * what to show, the choices.
+ * choices() fills up to 'max' and returns how many; the ones picked go into
+ * the arg as their values joined by commas, at most 'max_pick' of them (none
+ * picked: the widget chooses on its own, with an empty arg). A type without
+ * a description still works from menu.txt and the portal, but is not offered
+ * on the board. Register it with the type, before aos_ui_init(). */
+typedef struct {
+    char value[64];                     /* "scd4x:co2", "light.living" */
+    char label[64];                     /* "CO₂ · scd4x", "Luz del living" */
+    char detail[32];                    /* "678 ppm", "Encendida"; may be empty */
+} aos_widget_choice_t;
+typedef int (*aos_widget_choices_t)(aos_widget_choice_t *out, int max);
+void aos_ui_describe_widget(const char *type, const char *name, const char *about, const char *glyph,
+                            int max_pick, aos_widget_choices_t choices);
 
 /* ---- gestures ---- */
 /* An app that needs whole drags (a drawing canvas, a game) switches the

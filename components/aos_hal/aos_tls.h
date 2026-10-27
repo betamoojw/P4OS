@@ -4,8 +4,10 @@
  * simulator (aos_tls.c).
  *
  * Users: aos_http.c (requests and aos_http_stream_*, the radio) and aos_ws.c
- * (Home Assistant over ws:// and wss://). Apps never see it: they have
- * aos_hal_http_* and aos_hal_tcp_*.
+ * (Home Assistant over ws:// and wss://). Most apps use aos_hal_http_* and
+ * aos_hal_tcp_*; the calls are in the symbol table for the ones that speak a
+ * protocol of their own over TLS (Impresoras 3D: MQTT to Bambu Lab), which
+ * declare them without including this header (it pulls in mbedtls's).
  *
  * Every call takes its own timeout, so one connection can do a 10 s HTTP
  * request, a 1 s radio read or a 100 ms WebSocket poll without anybody
@@ -42,7 +44,7 @@ typedef struct {
     mbedtls_ssl_config       conf;
     mbedtls_entropy_context  ent;
     mbedtls_ctr_drbg_context drbg;
-    mbedtls_x509_crt         ca;        /* only used by the simulator; see trust_attach */
+    mbedtls_x509_crt         ca;        /* the simulator's store, or aos_tls_open_trust's authority */
 } aos_tls_t;
 
 /* Connects (and with AOS_TLS_ENCRYPT verifies and negotiates) within
@@ -54,6 +56,20 @@ typedef struct {
  * left open. */
 int  aos_tls_open(aos_tls_t *c, const char *host, int port, unsigned flags,
                   int timeout_ms, char *why, size_t why_n);
+
+/* aos_tls_open() against an authority and a name the caller gives, for a
+ * device that signs its own certificates: the chain is verified against the
+ * certificates in ca_pem ONLY (ca_len bytes; the terminating NUL may be
+ * counted or not), not the bundle, and the server's certificate is checked
+ * against 'name' instead of 'host' (also sent as SNI; NULL or "" is the
+ * host). A Bambu Lab printer: its "BBL CA" and its serial number. Still
+ * VERIFY_REQUIRED, never "any certificate": one not from that authority or
+ * not for that name does not connect, and 'why' says which. Always TLS
+ * (AOS_TLS_ENCRYPT is implied); the same return codes as aos_tls_open().
+ * New after 0.22.0 (2026-10-25). */
+int  aos_tls_open_trust(aos_tls_t *c, const char *host, int port, unsigned flags,
+                        const char *ca_pem, size_t ca_len, const char *name,
+                        int timeout_ms, char *why, size_t why_n);
 
 /* Everything or nothing: true if all 'len' bytes went out. Gives up once a
  * write has waited timeout_ms (plus one grace round on TLS). */

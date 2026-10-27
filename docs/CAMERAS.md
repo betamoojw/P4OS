@@ -44,7 +44,9 @@ and an MJPEG camera, on the house's Wi-Fi through the C6.
   against 8.9. `aos_hal_video_i420` stays in the firmware, off by default
   (pref `video_hw`, `/api/video?hw=`).
 - **Memory**: a 1920×1080 stream did not fit next to the two wallpaper
-  photos (3.7 MB); since 0.21.5 they are let go while an app is in front.
+  photos (3.7 MB). The lock screen's is let go while an app is in front;
+  the home screen's stays, so going home shows it at once, and the viewer
+  has it let go only while it shows HD (`aos_ui_wall_photo_spare`).
 - Profile **Main** (CABAC) is refused with a message: tinyh264 decodes
   Baseline only.
 

@@ -1,6 +1,82 @@
 # Changelog
 
-## Unreleased
+## 0.22.2 — 2026-10-26
+
+- **Cartero**, a new app on the card: an API client in the manner of
+  Postman, on the board and in the portal. Requests by hand (GET, POST,
+  PUT, PATCH, DELETE, HEAD, OPTIONS) with params, headers, a body (JSON
+  with a validity mark and Formatear, text, XML, form, GraphQL) and auth
+  (Bearer, Basic, API key, inherited); the response with its status, the
+  four times as a bar, headers, and the body as a JSON tree whose values go
+  into variables with a tap. Tests in JavaScript with Postman's `pm` (and
+  the old globals), run by the app's own interpreter on the board and by
+  the browser in the portal; collections with folders that run in sequence
+  (iterations, a pause, `setNextRequest`, stop at the first failure);
+  environments and globals whose `{{variables}}` change the server without
+  rewriting a request. The files are Postman's own (Collection v2.1,
+  environments), so collections go both ways. A portal page, `#cartero`,
+  with the same editor, runner and environments, that sends straight from
+  the browser or through the board (no CORS, the board's network).
+  `apps/cartero/tools/fake_api.py` is an API to try it against. Tried on
+  the board against an HTTPS test server.
+- Cartero tells a certificate it cannot verify ("El certificado del
+  servidor no se pudo verificar") from a TLS handshake that did not finish
+  ("No se pudo establecer la conexión segura"); they were one message, and
+  it sent the first test on the board looking at the wrong thing.
+- **A big TLS session ticket no longer locks a server out.** A server that
+  handed out a 5.5 KB ticket broke the next connection on the board (its
+  ClientHello did not fit the 4 KB output buffer, -0x6a00), and every one
+  after it until a restart. Tickets that would not fit are not kept (up to
+  3 KB are), and a handshake that fails while resuming a stored session
+  forgets it and tries once more without it. Any app over HTTPS or wss://
+  had it; it was seen with Cartero. `tools/fake_tls_tickets.c` reproduces it.
+- Cartero's name in the language packs, and the app in the simulator.
+
+## 0.22.1 — 2026-10-25
+
+- **Impresoras 3D**, a new app on the card: every 3D printer in the house.
+  A list with each one's state, heaters, progress, time left and the hour
+  it ends; a printer's status (progress ring, the job's picture, pause and
+  cancel, heaters, preheat by material, a temperature chart, a Bambu's AMS),
+  controls (jog, home, extrude, fan, speed, flow, light, motors off,
+  emergency stop), files, camera and G-code console. Notices when a print
+  ends, fails or pauses, from the background. Eight protocols: OctoPrint,
+  PrusaLink, Bambu Lab (LAN mode), Klipper/Moonraker, Duet RRF, Elegoo
+  SDCP, FlashForge and Creality. A portal page, `#impresoras`, with the
+  printers live and the list to edit. Tried on the board with three MK3S
+  on OctoPrint; the others against `apps/impresoras/tools/fake_printers.py`.
+- **TLS against a device's own authority**: `aos_tls_open_trust()` verifies
+  the certificate against a PEM and a name the app gives (a Bambu Lab
+  printer: its CA and its serial number) instead of the bundle and the
+  address, still refusing anything else. For Impresoras 3D.
+- Impresoras 3D's name in English and German, and the app in the simulator.
+
+## 0.22.0 — 2026-10-25
+
+- **Widgets chosen on the board.** The home screen's edit mode has
+  "+ Widget" (clock, sensors, Home Assistant, Monitor, Claude), and a tap
+  on a widget opens its sheet: its size (2×2, 4×2, 4×4), what it shows,
+  and a way to take it off. Until now widgets came only from the portal.
+  Settings, Edit home screen, says where. A widget long pressed starts the
+  edit mode, as an icon does, and in it a widget held a moment drags to
+  another place or page. Apps describe their widget with
+  `aos_ui_describe_widget()`.
+- **A sensor widget** (`widget sensors`): up to six of the sensor service's
+  values, CO₂ and particles coloured by their level; on its own it picks
+  CO₂, temperature, humidity, pressure and the like, or the ones chosen.
+- **The Home Assistant widget shows chosen entities**, up to eight in a
+  4×4, instead of the favourites.
+- A widget's data in `menu.txt` grows from 63 to 255 bytes.
+- **A folder of photos behind the lock screen**: another of them, at
+  random, every time the board locks. Photos' palette, "Lock screen: the
+  whole folder, rotating"; Settings, Wallpaper, keeps the current one or
+  takes it off. Picked on a thread of its own, nothing written at each lock
+  (`aos_ui_lock_album_set()`).
+- **The home screen's photo stays in memory** with an app in front: going
+  home showed the gradient for a second and a half while it was decoded
+  again. Cameras lets it go while it shows HD (`aos_ui_wall_photo_spare()`).
+
+## 0.21.6 — 2026-10-23
 
 - Integrated upstream wallpaper, sound, screen-recording and Pipes features.
   Compressed Latin fonts retain the Chinese fallback and decoder lock;

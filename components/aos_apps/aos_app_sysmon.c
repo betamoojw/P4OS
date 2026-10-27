@@ -1423,6 +1423,7 @@ void aos_app_sysmon_get(aos_app_t *app)
     if (!widget) {
         widget = true;
         aos_ui_register_widget("sysmon", widget_create);
+        aos_ui_describe_widget("sysmon", N_("Monitor"), N_("La memoria, el procesador y la red de la placa."), AOS_SYM_MEMORY, 0, NULL);
     }
     *app = (aos_app_t){
         .desc = {

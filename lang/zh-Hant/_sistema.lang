@@ -1755,7 +1755,7 @@ El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El 
 FOTO	照片
 Sin foto	未設定照片
 Quitar la foto	移除照片
-Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.	在“照片”中開啟所需圖片，再點選右上角的調色盤圖示。
+Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea.	在「照片」中開啟所需圖片，再點選右上角的調色盤圖示。鎖定畫面可使用整個資料夾，每次鎖定時顯示另一張照片。
 COLOR DE ACENTO	主題色
 puerto	港口
 en uso	使用中的
@@ -2708,3 +2708,28 @@ Turbo	渦輪
 Video	影片
 Visor 3D	3D 顯示器
 VNC	其他
++ Widget	+ 小工具
+La hora y la fecha, grandes.	以大字顯示時間和日期。
+Chico	小
+Agregar widget	新增小工具
+Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo.	新增後，點按它可選擇大小和顯示內容；長按片刻並拖曳可移動。
+Hasta %d	最多 %d 個
+no está ahora	目前無法使用
+Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.	顯示內容：最多 %d 項，依點選順序排列。目前大小容納不下的項目不會顯示。
+Automático	自動
+El widget elige lo que conviene mostrar	小工具會自動選擇適合顯示的內容
+Todavía no hay nada para elegir: mientras tanto, el widget elige solo.	暫無可選內容；在此期間，小工具會自動選擇。
+Quitar widget	移除小工具
+Cuánto queda del uso de Claude.	Claude 使用量還剩多少。
+Las entidades del widget no están en Home Assistant	小工具中的實體不在 Home Assistant 中
+Luces, enchufes y sensores de la casa, a un toque.	一鍵控制家中的燈、插座和感測器。
+La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea	鎖定畫面每次鎖定時會顯示此資料夾中的另一張照片
+Bloqueo: toda la carpeta, rotando	鎖定畫面：輪替整個資料夾
+En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	在編輯模式中，「+ 小工具」可將時鐘、感測器、Home Assistant 等新增到主畫面；點按小工具可選擇大小和顯示內容，或將其移除。
+%s, rotando	%s，輪替顯示
+Dejar la foto de ahora	保留目前照片
+La memoria, el procesador y la red de la placa.	裝置的記憶體、處理器和網路。
+Todavía no hay sensores. Conectá uno al header o agregalo en Módulos.	還沒有感測器。請將感測器連接到排針，或在「模組」中新增。
+Lo que miden los sensores conectados: CO₂, temperatura, humedad…	已連接感測器的測量值：CO₂、溫度、濕度等。
+Cartero	郵差
+Impresoras 3D	3D 印表機

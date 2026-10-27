@@ -1,0 +1,241 @@
+# amoledos-lang 1   es -> de
+# web.impresoras.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/impresoras/web/impresoras.js:25
+Clave de la API	API-Schlüssel
+
+#: apps/impresoras/web/impresoras.js:26
+En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario).	In OctoPrint: Einstellungen, API (oder ein Anwendungsschlüssel des Benutzers).
+
+#: apps/impresoras/web/impresoras.js:27
+Contraseña de PrusaLink	PrusaLink-Passwort
+
+#: apps/impresoras/web/impresoras.js:28
+MK4, MK3.9, MINI, XL, CORE One, MK3S con PrusaLink: las de Prusa Connect, por la red de la casa. En la impresora: Ajustes, Red, PrusaLink (usuario maker).	MK4, MK3.9, MINI, XL, CORE One, MK3S mit PrusaLink: die von Prusa Connect, über das Heimnetz. Am Drucker: Einstellungen, Netzwerk, PrusaLink (Benutzer maker).
+
+#: apps/impresoras/web/impresoras.js:29
+Código de acceso	Zugangscode
+
+#: apps/impresoras/web/impresoras.js:30
+Modo LAN, y el modo desarrollador para manejarla. El código de acceso está en Ajustes, Red; el número de serie en Ajustes, Dispositivo.	LAN-Modus, und der Entwicklermodus zum Steuern. Der Zugangscode steht unter Einstellungen, Netzwerk; die Seriennummer unter Einstellungen, Gerät.
+
+#: apps/impresoras/web/impresoras.js:31
+Clave de la API (opcional)	API-Schlüssel (optional)
+
+#: apps/impresoras/web/impresoras.js:32
+Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig: toda la que tenga Mainsail o Fluidd. Puerto 7125, o 80 si va por nginx.	Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig: jeder mit Mainsail oder Fluidd. Port 7125, oder 80 über nginx.
+
+#: apps/impresoras/web/impresoras.js:33
+Contraseña (si tiene)	Passwort (falls vorhanden)
+
+#: apps/impresoras/web/impresoras.js:34
+Duet 2 y 3 con RepRapFirmware 3, sola o con SBC.	Duet 2 und 3 mit RepRapFirmware 3, allein oder mit SBC.
+
+#: apps/impresoras/web/impresoras.js:35
+MainboardID (opcional)	MainboardID (optional)
+
+#: apps/impresoras/web/impresoras.js:36
+Centauri Carbon y las de resina con Wi-Fi.	Centauri Carbon und die Harzdrucker mit WLAN.
+
+#: apps/impresoras/web/impresoras.js:37
+Código de verificación (check code)	Prüfcode (check code)
+
+#: apps/impresoras/web/impresoras.js:38
+Adventurer 5M, 5M Pro, AD5X: número de serie y código de Ajustes, Red, Sólo LAN. Sin código: las viejas, por el puerto 8899.	Adventurer 5M, 5M Pro, AD5X: Seriennummer und Code aus Einstellungen, Netzwerk, Nur LAN. Ohne Code: die älteren, über Port 8899.
+
+#: apps/impresoras/web/impresoras.js:40
+K1, K1C, K1 Max, K2 Plus, Ender-3 V3, Hi, sin root. Con Moonraker, mejor como Klipper.	K1, K1C, K1 Max, K2 Plus, Ender-3 V3, Hi, ohne Root. Mit Moonraker besser als Klipper.
+
+#: apps/impresoras/web/impresoras.js:44
+Sin conexión	Offline
+
+#: apps/impresoras/web/impresoras.js:44
+Conectando	Verbinde
+
+#: apps/impresoras/web/impresoras.js:44
+Lista	Bereit
+
+#: apps/impresoras/web/impresoras.js:44
+Preparando	Bereitet vor
+
+#: apps/impresoras/web/impresoras.js:44
+Imprimiendo	Druckt
+
+#: apps/impresoras/web/impresoras.js:44
+En pausa	Pausiert
+
+#: apps/impresoras/web/impresoras.js:45
+Terminó	Fertig
+
+#: apps/impresoras/web/impresoras.js:45
+Cancelada	Abgebrochen
+
+#: apps/impresoras/web/impresoras.js:45
+Error	Fehler
+
+#: apps/impresoras/web/impresoras.js:120
+impresora %d	Drucker %d
+
+#: apps/impresoras/web/impresoras.js:121
+%s: el nombre, de 1 a 47 caracteres y sin corchetes	%s: der Name, 1 bis 47 Zeichen und ohne eckige Klammern
+
+#: apps/impresoras/web/impresoras.js:122
+%s: hay dos con ese nombre	%s: zwei haben diesen Namen
+
+#: apps/impresoras/web/impresoras.js:124
+%s: falta la dirección (IP o nombre, sin espacios)	%s: die Adresse fehlt (IP oder Name, ohne Leerzeichen)
+
+#: apps/impresoras/web/impresoras.js:125
+%s: el puerto va de 1 a 65535	%s: der Port geht von 1 bis 65535
+
+#: apps/impresoras/web/impresoras.js:127
+%s: falta %s	%s: %s fehlt
+
+#: apps/impresoras/web/impresoras.js:127
+el número de serie	die Seriennummer
+
+#: apps/impresoras/web/impresoras.js:137
+%d h %s min	%d h %s min
+
+#: apps/impresoras/web/impresoras.js:138
+%d min	%d min
+
+#: apps/impresoras/web/impresoras.js:139
+%d s	%d s
+
+#: apps/impresoras/web/impresoras.js:162
+La placa no tomó la orden (%d)	Das Board hat den Befehl nicht angenommen (%d)
+
+#: apps/impresoras/web/impresoras.js:182
+Reanudando	Wird fortgesetzt
+
+#: apps/impresoras/web/impresoras.js:182
+Reanudar	Fortsetzen
+
+#: apps/impresoras/web/impresoras.js:183
+Pausando	Pausiert
+
+#: apps/impresoras/web/impresoras.js:183
+Pausar	Pause
+
+#: apps/impresoras/web/impresoras.js:187
+¿Cancelar la impresión de %s?	Den Druck auf %s abbrechen?
+
+#: apps/impresoras/web/impresoras.js:187
+Cancelando	Wird abgebrochen
+
+#: apps/impresoras/web/impresoras.js:188
+Cancelar	Abbrechen
+
+#: apps/impresoras/web/impresoras.js:192
+Precalentando para %s	Vorheizen für %s
+
+#: apps/impresoras/web/impresoras.js:194
+Enfriando	Kühlt ab
+
+#: apps/impresoras/web/impresoras.js:194
+Enfriar	Abkühlen
+
+#: apps/impresoras/web/impresoras.js:197
+Apagar la luz	Licht aus
+
+#: apps/impresoras/web/impresoras.js:197
+Prender la luz	Licht an
+
+#: apps/impresoras/web/impresoras.js:199
+Ocultar cámara	Kamera ausblenden
+
+#: apps/impresoras/web/impresoras.js:199
+Ver cámara	Kamera zeigen
+
+#: apps/impresoras/web/impresoras.js:201
+Enviado: %s	Gesendet: %s
+
+#: apps/impresoras/web/impresoras.js:228
+Enviar	Senden
+
+#: apps/impresoras/web/impresoras.js:254
+faltan %s · %s	noch %s · %s
+
+#: apps/impresoras/web/impresoras.js:254
+faltan %s	noch %s
+
+#: apps/impresoras/web/impresoras.js:255
+capa %d de %d	Schicht %d von %d
+
+#: apps/impresoras/web/impresoras.js:271
+Sin nombre	Ohne Namen
+
+#: apps/impresoras/web/impresoras.js:272
+¿Sacar %s de la lista?	%s aus der Liste nehmen?
+
+#: apps/impresoras/web/impresoras.js:272
+esta impresora	diesen Drucker
+
+#: apps/impresoras/web/impresoras.js:272
+Borrar	Löschen
+
+#: apps/impresoras/web/impresoras.js:275
+Qué es	Was es ist
+
+#: apps/impresoras/web/impresoras.js:276
+Nombre	Name
+
+#: apps/impresoras/web/impresoras.js:277
+Dirección (IP o nombre)	Adresse (IP oder Name)
+
+#: apps/impresoras/web/impresoras.js:278
+Puerto (vacío: el de siempre)	Port (leer: der übliche)
+
+#: apps/impresoras/web/impresoras.js:279
+Usuario	Benutzer
+
+#: apps/impresoras/web/impresoras.js:281
+Número de serie	Seriennummer
+
+#: apps/impresoras/web/impresoras.js:282
+Cámara (vacío: la que diga la impresora; off: ninguna)	Kamera (leer: die des Druckers; off: keine)
+
+#: apps/impresoras/web/impresoras.js:284
+HTTPS (con certificado válido)	HTTPS (mit gültigem Zertifikat)
+
+#: apps/impresoras/web/impresoras.js:295
+#: apps/impresoras/web/impresoras.js:375
+Impresoras 3D	3D-Drucker
+
+#: apps/impresoras/web/impresoras.js:305
+Leyendo...	Wird gelesen...
+
+#: apps/impresoras/web/impresoras.js:306
+Guardar en la tarjeta	Auf der Karte speichern
+
+#: apps/impresoras/web/impresoras.js:337
+La app Impresoras 3D no está abierta en la placa. 	Die App 3D-Drucker ist auf dem Board nicht geöffnet.
+
+#: apps/impresoras/web/impresoras.js:338
+Abrirla	Öffnen
+
+#: apps/impresoras/web/impresoras.js:344
+Ninguna impresora todavía: agregalas abajo.	Noch kein Drucker: unten hinzufügen.
+
+#: apps/impresoras/web/impresoras.js:348
+No se puede leer el estado: %s	Status nicht lesbar: %s
+
+#: apps/impresoras/web/impresoras.js:362
+Guardado: la placa se reconecta sola	Gespeichert: das Board verbindet sich von selbst neu
+
+#: apps/impresoras/web/impresoras.js:364
+No se pudo guardar: %s	Konnte nicht speichern: %s
+
+#: apps/impresoras/web/impresoras.js:372
++ Agregar una impresora	+ Drucker hinzufügen
+
+#: apps/impresoras/web/impresoras.js:377
+Las impresoras	Die Drucker
+
+#: apps/impresoras/web/impresoras.js:378
+OctoPrint, PrusaLink (las de Prusa Connect), Bambu Lab en modo LAN, Klipper, Duet, Elegoo, FlashForge y Creality. Las claves quedan guardadas en la tarjeta (%s) y se pueden leer.	OctoPrint, PrusaLink (die von Prusa Connect), Bambu Lab im LAN-Modus, Klipper, Duet, Elegoo, FlashForge und Creality. Die Schlüssel bleiben auf der Karte (%s) und sind lesbar.

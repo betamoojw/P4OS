@@ -43,7 +43,11 @@ A sensor's sheet also draws its history: the last 6 hours, 24 hours or
 7 days, from HA's recorder.
 
 The home screen widget (`widget ha 4x2` in `menu.txt`) shows the first four
-favourites; tapping one toggles it. The Control Centre's Home Assistant tile
+favourites, eight in a 4x4; tapping one toggles it. It can show chosen
+entities instead, in their order: on the board, in the home screen's edit
+mode, tap the widget and pick them (favourites first, then the rest of the
+house); in the portal, its entity ids separated by commas in the widget's
+data (`widget ha 4x4 light.living,switch.coffee,sensor.patio_temperature`). The Control Centre's Home Assistant tile
 runs up to four scenes and scripts: the favourite ones first, then the
 house's other scenes.
 

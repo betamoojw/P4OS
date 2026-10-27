@@ -1,0 +1,1081 @@
+# amoledos-lang 1   es -> zh-Hans
+# web.cartero.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps\cartero\web\cartero.js:272
+recién	recién
+
+#: apps\cartero\web\cartero.js:273
+hace %d min	hace %d min
+
+#: apps\cartero\web\cartero.js:274
+hace %d h	hace %d h
+
+#: apps\cartero\web\cartero.js:280
+Copiado	Copiado
+
+#: apps\cartero\web\cartero.js:294
+El navegador no dejó copiar	El navegador no dejó copiar
+
+#: apps\cartero\web\cartero.js:352
+La placa no tomó el mensaje (%d)	La placa no tomó el mensaje (%d)
+
+#: apps\cartero\web\cartero.js:1138
+No hay entorno activo: «%s» no se guarda	No hay entorno activo: «%s» no se guarda
+
+#: apps\cartero\web\cartero.js:1233
+require('%s'): Cartero no trae librerías	require('%s'): Cartero no trae librerías
+
+#: apps\cartero\web\cartero.js:1250
+tests["%s"] dio %s	tests["%s"] dio %s
+
+#: apps\cartero\web\cartero.js:1267
+#: apps\cartero\web\cartero.js:1491
+sin respuesta	sin respuesta
+
+#: apps\cartero\web\cartero.js:1318
+auth de «%s»	auth de «%s»
+
+#: apps\cartero\web\cartero.js:1318
+auth	auth
+
+#: apps\cartero\web\cartero.js:1328
+auth, en la URL	auth, en la URL
+
+#: apps\cartero\web\cartero.js:1332
+La auth «%s» no está en Cartero: va sin ella	La auth «%s» no está en Cartero: va sin ella
+
+#: apps\cartero\web\cartero.js:1352
+«%s»: los archivos de form-data no van, sólo los textos	«%s»: los archivos de form-data no van, sólo los textos
+
+#: apps\cartero\web\cartero.js:1364
+Las variables de GraphQL no son JSON: %s	Las variables de GraphQL no son JSON: %s
+
+#: apps\cartero\web\cartero.js:1370
+Un archivo como cuerpo no está en Cartero: va sin cuerpo	Un archivo como cuerpo no está en Cartero: va sin cuerpo
+
+#: apps\cartero\web\cartero.js:1373
+por el cuerpo	por el cuerpo
+
+#: apps\cartero\web\cartero.js:1374
+de siempre	de siempre
+
+#: apps\cartero\web\cartero.js:1385
+El navegador no deja pedir HTTP desde una página HTTPS. Mandalo vía la placa.	El navegador no deja pedir HTTP desde una página HTTPS. Mandalo vía la placa.
+
+#: apps\cartero\web\cartero.js:1386
+El navegador no pudo hacer el pedido: el servidor no lo permite desde otra página (CORS), no contesta, o su certificado no es válido. Vía la placa no hay CORS.	El navegador no pudo hacer el pedido: el servidor no lo permite desde otra página (CORS), no contesta, o su certificado no es válido. Vía la placa no hay CORS.
+
+#: apps\cartero\web\cartero.js:1418
+Se pasó el tiempo de espera (%s)	Se pasó el tiempo de espera (%s)
+
+#: apps\cartero\web\cartero.js:1419
+#: apps\cartero\web\cartero.js:1485
+Cancelado	Cancelado
+
+#: apps\cartero\web\cartero.js:1420
+Se cortó la respuesta: %s	Se cortó la respuesta: %s
+
+#: apps\cartero\web\cartero.js:1425
+El servidor redirige y el navegador no deja ver adónde: activá «Seguir redirecciones» o mandalo vía la placa	El servidor redirige y el navegador no deja ver adónde: activá «Seguir redirecciones» o mandalo vía la placa
+
+#: apps\cartero\web\cartero.js:1448
+La placa no contesta (%d)	La placa no contesta (%d)
+
+#: apps\cartero\web\cartero.js:1453
+Cartero no está abierta en la placa	Cartero no está abierta en la placa
+
+#: apps\cartero\web\cartero.js:1476
+La app Cartero se cerró en la placa	La app Cartero se cerró en la placa
+
+#: apps\cartero\web\cartero.js:1486
+La placa no contestó a tiempo	La placa no contestó a tiempo
+
+#: apps\cartero\web\cartero.js:1518
+colección «%s»	colección «%s»
+
+#: apps\cartero\web\cartero.js:1518
+carpeta «%s»	carpeta «%s»
+
+#: apps\cartero\web\cartero.js:1530
+#: apps\cartero\web\cartero.js:1541
+el pedido	el pedido
+
+#: apps\cartero\web\cartero.js:1535
+El navegador no manda cuerpo en un %s: va sin él	El navegador no manda cuerpo en un %s: va sin él
+
+#: apps\cartero\web\cartero.js:1536
+Falta la URL	Falta la URL
+
+#: apps\cartero\web\cartero.js:1578
+No se pudieron guardar las variables: %s	No se pudieron guardar las variables: %s
+
+#: apps\cartero\web\cartero.js:1665
+No empieza con curl	No empieza con curl
+
+#: apps\cartero\web\cartero.js:1706
+El comando no tiene URL	El comando no tiene URL
+
+#: apps\cartero\web\cartero.js:1902
+dinámica	dinámica
+
+#: apps\cartero\web\cartero.js:1906
+#: apps\cartero\web\cartero.js:3576
+entorno «%s»	entorno «%s»
+
+#: apps\cartero\web\cartero.js:1910
+colección	colección
+
+#: apps\cartero\web\cartero.js:1912
+globales	globales
+
+#: apps\cartero\web\cartero.js:1921
+Error	Error
+
+#: apps\cartero\web\cartero.js:1950
+Clave	Clave
+
+#: apps\cartero\web\cartero.js:1950
+#: apps\cartero\web\cartero.js:1982
+#: apps\cartero\web\cartero.js:2856
+Valor	Valor
+
+#: apps\cartero\web\cartero.js:1951
+#: apps\cartero\web\cartero.js:1983
+#: apps\cartero\web\cartero.js:2903
+Descripción	Descripción
+
+#: apps\cartero\web\cartero.js:1957
+Activado	Activado
+
+#: apps\cartero\web\cartero.js:1960
+archivo: %s	archivo: %s
+
+#: apps\cartero\web\cartero.js:1960
+Los archivos de form-data no se mandan desde Cartero	Los archivos de form-data no se mandan desde Cartero
+
+#: apps\cartero\web\cartero.js:1966
+Secreto: se ve como puntos	Secreto: se ve como puntos
+
+#: apps\cartero\web\cartero.js:1968
+#: apps\cartero\web\cartero.js:2847
+Mostrar u ocultar	Mostrar u ocultar
+
+#: apps\cartero\web\cartero.js:1969
+Sacar	Sacar
+
+#: apps\cartero\web\cartero.js:1981
+Clave nueva	Clave nueva
+
+#: apps\cartero\web\cartero.js:2049
+https://api.ejemplo.com/recurso, o {{base}}/recurso	https://api.ejemplo.com/recurso, o {{base}}/recurso
+
+#: apps\cartero\web\cartero.js:2049
+URL	URL
+
+#: apps\cartero\web\cartero.js:2074
+Variable desconocida: no está en el entorno, la colección ni las globales	Variable desconocida: no está en el entorno, la colección ni las globales
+
+#: apps\cartero\web\cartero.js:2132
+#: apps\cartero\web\cartero.js:3121
+#: apps\cartero\web\cartero.js:3205
+Cancelar	Cancelar
+
+#: apps\cartero\web\cartero.js:2144
+Colecciones	Colecciones
+
+#: apps\cartero\web\cartero.js:2144
+Historial	Historial
+
+#: apps\cartero\web\cartero.js:2144
+Entornos	Entornos
+
+#: apps\cartero\web\cartero.js:2144
+Corridas	Corridas
+
+#: apps\cartero\web\cartero.js:2156
+Mostrar	Mostrar
+
+#: apps\cartero\web\cartero.js:2156
+Ocultar	Ocultar
+
+#: apps\cartero\web\cartero.js:2164
+Buscar	Buscar
+
+#: apps\cartero\web\cartero.js:2166
+#: apps\cartero\web\cartero.js:2270
+#: apps\cartero\web\cartero.js:3862
+Colección nueva	Colección nueva
+
+#: apps\cartero\web\cartero.js:2166
+Colección	Colección
+
+#: apps\cartero\web\cartero.js:2167
+Un pedido suelto, sin colección	Un pedido suelto, sin colección
+
+#: apps\cartero\web\cartero.js:2167
+#: apps\cartero\web\cartero.js:2235
+#: apps\cartero\web\cartero.js:2289
+#: apps\cartero\web\cartero.js:2994
+Pedido nuevo	Pedido nuevo
+
+#: apps\cartero\web\cartero.js:2167
+#: apps\cartero\web\cartero.js:3587
+Pedido	Pedido
+
+#: apps\cartero\web\cartero.js:2169
+Los últimos %d	Los últimos %d
+
+#: apps\cartero\web\cartero.js:2170
+Borrar el historial	Borrar el historial
+
+#: apps\cartero\web\cartero.js:2172
+#: apps\cartero\web\cartero.js:3048
+Entorno	Entorno
+
+#: apps\cartero\web\cartero.js:2174
+Correr una colección	Correr una colección
+
+#: apps\cartero\web\cartero.js:2180
+#: apps\cartero\web\cartero.js:3841
+Leyendo la tarjeta...	Leyendo la tarjeta...
+
+#: apps\cartero\web\cartero.js:2188
+Ninguna colección todavía. Creá una o importá una de Postman.	Ninguna colección todavía. Creá una o importá una de Postman.
+
+#: apps\cartero\web\cartero.js:2195
+no se pudo leer	no se pudo leer
+
+#: apps\cartero\web\cartero.js:2204
+#: apps\cartero\web\cartero.js:2204
+#: apps\cartero\web\cartero.js:2414
+#: apps\cartero\web\cartero.js:2645
+Más	Más
+
+#: apps\cartero\web\cartero.js:2211
+(sin nombre)	(sin nombre)
+
+#: apps\cartero\web\cartero.js:2216
+vacía	vacía
+
+#: apps\cartero\web\cartero.js:2221
+Nada con «%s».	Nada con «%s».
+
+#: apps\cartero\web\cartero.js:2236
+#: apps\cartero\web\cartero.js:2289
+Carpeta nueva	Carpeta nueva
+
+#: apps\cartero\web\cartero.js:2237
+Auth, scripts y variables	Auth, scripts y variables
+
+#: apps\cartero\web\cartero.js:2237
+Auth y scripts	Auth y scripts
+
+#: apps\cartero\web\cartero.js:2238
+Correr…	Correr…
+
+#: apps\cartero\web\cartero.js:2240
+#: apps\cartero\web\cartero.js:2246
+#: apps\cartero\web\cartero.js:2429
+Renombrar	Renombrar
+
+#: apps\cartero\web\cartero.js:2241
+#: apps\cartero\web\cartero.js:2247
+#: apps\cartero\web\cartero.js:2430
+#: apps\cartero\web\cartero.js:2648
+Duplicar	Duplicar
+
+#: apps\cartero\web\cartero.js:2242
+#: apps\cartero\web\cartero.js:2431
+#: apps\cartero\web\cartero.js:3052
+Exportar	Exportar
+
+#: apps\cartero\web\cartero.js:2243
+#: apps\cartero\web\cartero.js:2249
+#: apps\cartero\web\cartero.js:2433
+#: apps\cartero\web\cartero.js:2525
+Borrar	Borrar
+
+#: apps\cartero\web\cartero.js:2245
+Abrir	Abrir
+
+#: apps\cartero\web\cartero.js:2258
+La colección ya no está en la tarjeta	La colección ya no está en la tarjeta
+
+#: apps\cartero\web\cartero.js:2267
+No encuentro «%s» en la tarjeta: se cambió en otro lado. Volvé a la página para leerla de nuevo.	No encuentro «%s» en la tarjeta: se cambió en otro lado. Volvé a la página para leerla de nuevo.
+
+#: apps\cartero\web\cartero.js:2270
+#: apps\cartero\web\cartero.js:3006
+Nombre de la colección	Nombre de la colección
+
+#: apps\cartero\web\cartero.js:2289
+Nombre de la carpeta	Nombre de la carpeta
+
+#: apps\cartero\web\cartero.js:2289
+Nombre del pedido	Nombre del pedido
+
+#: apps\cartero\web\cartero.js:2309
+#: apps\cartero\web\cartero.js:2487
+Nombre nuevo	Nombre nuevo
+
+#: apps\cartero\web\cartero.js:2333
+#: apps\cartero\web\cartero.js:2346
+#: apps\cartero\web\cartero.js:2500
+(copia)	(copia)
+
+#: apps\cartero\web\cartero.js:2358
+¿Borrar la colección «%s» con todo lo que tiene?	¿Borrar la colección «%s» con todo lo que tiene?
+
+#: apps\cartero\web\cartero.js:2368
+¿Borrar la carpeta «%s» con todo lo que tiene?	¿Borrar la carpeta «%s» con todo lo que tiene?
+
+#: apps\cartero\web\cartero.js:2368
+¿Borrar el pedido «%s»?	¿Borrar el pedido «%s»?
+
+#: apps\cartero\web\cartero.js:2386
+Todavía no se mandó nada.	Todavía no se mandó nada.
+
+#: apps\cartero\web\cartero.js:2392
+error	error
+
+#: apps\cartero\web\cartero.js:2396
+¿Borrar el historial?	¿Borrar el historial?
+
+#: apps\cartero\web\cartero.js:2412
+El activo	El activo
+
+#: apps\cartero\web\cartero.js:2416
+1 variable	1 variable
+
+#: apps\cartero\web\cartero.js:2416
+%d variables	%d variables
+
+#: apps\cartero\web\cartero.js:2418
+#: apps\cartero\web\cartero.js:3044
+Globales	Globales
+
+#: apps\cartero\web\cartero.js:2421
+Ningún entorno todavía.	Ningún entorno todavía.
+
+#: apps\cartero\web\cartero.js:2427
+Desactivar	Desactivar
+
+#: apps\cartero\web\cartero.js:2427
+#: apps\cartero\web\cartero.js:3050
+Activar	Activar
+
+#: apps\cartero\web\cartero.js:2428
+Editar	Editar
+
+#: apps\cartero\web\cartero.js:2453
+Nombre del entorno	Nombre del entorno
+
+#: apps\cartero\web\cartero.js:2453
+Entorno nuevo	Entorno nuevo
+
+#: apps\cartero\web\cartero.js:2476
+El entorno ya no está en la tarjeta	El entorno ya no está en la tarjeta
+
+#: apps\cartero\web\cartero.js:2506
+¿Borrar el entorno «%s»?	¿Borrar el entorno «%s»?
+
+#: apps\cartero\web\cartero.js:2517
+Ninguna corrida guardada.	Ninguna corrida guardada.
+
+#: apps\cartero\web\cartero.js:2527
+¿Borrar esta corrida?	¿Borrar esta corrida?
+
+#: apps\cartero\web\cartero.js:2542
+Heredar del padre	Heredar del padre
+
+#: apps\cartero\web\cartero.js:2542
+#: apps\cartero\web\cartero.js:2544
+Sin auth	Sin auth
+
+#: apps\cartero\web\cartero.js:2542
+#: apps\cartero\web\cartero.js:2544
+Bearer token	Bearer token
+
+#: apps\cartero\web\cartero.js:2543
+Basic (usuario y contraseña)	Basic (usuario y contraseña)
+
+#: apps\cartero\web\cartero.js:2543
+#: apps\cartero\web\cartero.js:2544
+API key	API key
+
+#: apps\cartero\web\cartero.js:2544
+Basic	Basic
+
+#: apps\cartero\web\cartero.js:2545
+#: apps\cartero\web\cartero.js:3534
+ninguno	ninguno
+
+#: apps\cartero\web\cartero.js:2546
+Texto	Texto
+
+#: apps\cartero\web\cartero.js:2550
+Guardar variable de entorno	Guardar variable de entorno
+
+#: apps\cartero\web\cartero.js:2551
+Variable de esta corrida	Variable de esta corrida
+
+#: apps\cartero\web\cartero.js:2552
+Leer una variable	Leer una variable
+
+#: apps\cartero\web\cartero.js:2553
+Agregar encabezado	Agregar encabezado
+
+#: apps\cartero\web\cartero.js:2554
+Saltear el pedido	Saltear el pedido
+
+#: apps\cartero\web\cartero.js:2557
+Status 200	Status 200
+
+#: apps\cartero\web\cartero.js:2558
+Tiempo < 500 ms	Tiempo < 500 ms
+
+#: apps\cartero\web\cartero.js:2559
+Guardar variable de la respuesta	Guardar variable de la respuesta
+
+#: apps\cartero\web\cartero.js:2560
+JSON tiene propiedad	JSON tiene propiedad
+
+#: apps\cartero\web\cartero.js:2561
+Cuerpo contiene texto	Cuerpo contiene texto
+
+#: apps\cartero\web\cartero.js:2562
+Es JSON	Es JSON
+
+#: apps\cartero\web\cartero.js:2563
+Siguiente pedido	Siguiente pedido
+
+#: apps\cartero\web\cartero.js:2574
+«%s» tiene cambios sin guardar. ¿Descartarlos?	«%s» tiene cambios sin guardar. ¿Descartarlos?
+
+#: apps\cartero\web\cartero.js:2574
+El pedido	El pedido
+
+#: apps\cartero\web\cartero.js:2623
+Sin colección	Sin colección
+
+#: apps\cartero\web\cartero.js:2630
+#: apps\cartero\web\cartero.js:3042
+Cambios sin guardar	Cambios sin guardar
+
+#: apps\cartero\web\cartero.js:2631
+#: apps\cartero\web\cartero.js:2631
+#: apps\cartero\web\cartero.js:2856
+#: apps\cartero\web\cartero.js:3008
+Nombre	Nombre
+
+#: apps\cartero\web\cartero.js:2635
+#: apps\cartero\web\cartero.js:3051
+Guardar (Ctrl+S)	Guardar (Ctrl+S)
+
+#: apps\cartero\web\cartero.js:2635
+#: apps\cartero\web\cartero.js:3008
+#: apps\cartero\web\cartero.js:3051
+Guardar	Guardar
+
+#: apps\cartero\web\cartero.js:2646
+Guardar como…	Guardar como…
+
+#: apps\cartero\web\cartero.js:2647
+#: apps\cartero\web\cartero.js:3255
+#: apps\cartero\web\cartero.js:3285
+Copiar como cURL	Copiar como cURL
+
+#: apps\cartero\web\cartero.js:2647
+#: apps\cartero\web\cartero.js:3255
+#: apps\cartero\web\cartero.js:3285
+Comando copiado	Comando copiado
+
+#: apps\cartero\web\cartero.js:2650
+Método	Método
+
+#: apps\cartero\web\cartero.js:2663
+Mandar (Ctrl+Enter)	Mandar (Ctrl+Enter)
+
+#: apps\cartero\web\cartero.js:2696
+Params	Params
+
+#: apps\cartero\web\cartero.js:2697
+#: apps\cartero\web\cartero.js:2900
+Auth	Auth
+
+#: apps\cartero\web\cartero.js:2698
+#: apps\cartero\web\cartero.js:3247
+Encabezados	Encabezados
+
+#: apps\cartero\web\cartero.js:2699
+#: apps\cartero\web\cartero.js:3246
+Cuerpo	Cuerpo
+
+#: apps\cartero\web\cartero.js:2700
+#: apps\cartero\web\cartero.js:2901
+Scripts	Scripts
+
+#: apps\cartero\web\cartero.js:2712
+Parámetro	Parámetro
+
+#: apps\cartero\web\cartero.js:2713
+Variables de la ruta	Variables de la ruta
+
+#: apps\cartero\web\cartero.js:2715
+La tabla y la URL van juntas: lo que se cambia en una se ve en la otra. Los desactivados quedan guardados y no van.	La tabla y la URL van juntas: lo que se cambia en una se ve en la otra. Los desactivados quedan guardados y no van.
+
+#: apps\cartero\web\cartero.js:2717
+#: apps\cartero\web\cartero.js:2855
+Encabezado	Encabezado
+
+#: apps\cartero\web\cartero.js:2726
+Corren después de los de la colección y sus carpetas, en ese orden.	Corren después de los de la colección y sus carpetas, en ese orden.
+
+#: apps\cartero\web\cartero.js:2744
+Host, Content-Length, Connection y User-Agent los pone la placa.	Host, Content-Length, Connection y User-Agent los pone la placa.
+
+#: apps\cartero\web\cartero.js:2744
+Host, Content-Length, User-Agent, Origin y los demás los pone el navegador.	Host, Content-Length, User-Agent, Origin y los demás los pone el navegador.
+
+#: apps\cartero\web\cartero.js:2745
+Se agregan solos	Se agregan solos
+
+#: apps\cartero\web\cartero.js:2771
+#: apps\cartero\web\cartero.js:2803
+JSON con errores	JSON con errores
+
+#: apps\cartero\web\cartero.js:2771
+JSON válido	JSON válido
+
+#: apps\cartero\web\cartero.js:2791
+No se puede formatear: %s	No se puede formatear: %s
+
+#: apps\cartero\web\cartero.js:2792
+Formatear JSON	Formatear JSON
+
+#: apps\cartero\web\cartero.js:2799
+Sólo campos de texto: van como multipart/form-data.	Sólo campos de texto: van como multipart/form-data.
+
+#: apps\cartero\web\cartero.js:2805
+Consulta	Consulta
+
+#: apps\cartero\web\cartero.js:2807
+Variables (JSON)	Variables (JSON)
+
+#: apps\cartero\web\cartero.js:2809
+Va como JSON: {"query": ..., "variables": ...}.	Va como JSON: {"query": ..., "variables": ...}.
+
+#: apps\cartero\web\cartero.js:2812
+Este cuerpo («%s») no está en Cartero: se guarda como está y no se manda.	Este cuerpo («%s») no está en Cartero: se guarda como está y no se manda.
+
+#: apps\cartero\web\cartero.js:2814
+#: apps\cartero\web\cartero.js:3321
+Sin cuerpo.	Sin cuerpo.
+
+#: apps\cartero\web\cartero.js:2851
+Token	Token
+
+#: apps\cartero\web\cartero.js:2852
+Usuario	Usuario
+
+#: apps\cartero\web\cartero.js:2852
+Contraseña	Contraseña
+
+#: apps\cartero\web\cartero.js:2855
+Parámetro de la URL	Parámetro de la URL
+
+#: apps\cartero\web\cartero.js:2856
+Va en	Va en
+
+#: apps\cartero\web\cartero.js:2860
+Hereda «%s» de «%s».	Hereda «%s» de «%s».
+
+#: apps\cartero\web\cartero.js:2861
+Nadie más arriba tiene auth: va sin.	Nadie más arriba tiene auth: va sin.
+
+#: apps\cartero\web\cartero.js:2861
+Sin colección no hay de quién heredar: va sin.	Sin colección no hay de quién heredar: va sin.
+
+#: apps\cartero\web\cartero.js:2863
+Va sin auth, aunque la carpeta o la colección tengan.	Va sin auth, aunque la carpeta o la colección tengan.
+
+#: apps\cartero\web\cartero.js:2865
+Esta auth («%s») no está en Cartero: se guarda como está y no se manda.	Esta auth («%s») no está en Cartero: se guarda como está y no se manda.
+
+#: apps\cartero\web\cartero.js:2867
+Tipo	Tipo
+
+#: apps\cartero\web\cartero.js:2868
+Los valores pueden llevar {{variables}}.	Los valores pueden llevar {{variables}}.
+
+#: apps\cartero\web\cartero.js:2881
+Pre-request	Pre-request
+
+#: apps\cartero\web\cartero.js:2881
+#: apps\cartero\web\cartero.js:3248
+#: apps\cartero\web\cartero.js:3587
+Tests	Tests
+
+#: apps\cartero\web\cartero.js:2885
+El JavaScript del navegador, con pm como en Postman; la placa corre un subconjunto (sin expresiones regulares, clases ni async).	El JavaScript del navegador, con pm como en Postman; la placa corre un subconjunto (sin expresiones regulares, clases ni async).
+
+#: apps\cartero\web\cartero.js:2902
+Variables	Variables
+
+#: apps\cartero\web\cartero.js:2908
+Corren antes que los de cada carpeta y pedido de la colección.	Corren antes que los de cada carpeta y pedido de la colección.
+
+#: apps\cartero\web\cartero.js:2908
+Corren después de los de la colección y antes que los de cada pedido de la carpeta.	Corren después de los de la colección y antes que los de cada pedido de la carpeta.
+
+#: apps\cartero\web\cartero.js:2909
+Las variables de la colección: las usa cualquier pedido de ella si el entorno activo no tiene una con el mismo nombre.	Las variables de la colección: las usa cualquier pedido de ella si el entorno activo no tiene una con el mismo nombre.
+
+#: apps\cartero\web\cartero.js:2915
+Para qué es, en Markdown	Para qué es, en Markdown
+
+#: apps\cartero\web\cartero.js:2919
+#: apps\cartero\web\cartero.js:3527
+Correr	Correr
+
+#: apps\cartero\web\cartero.js:2920
+La colección: lo que pongas acá vale para todos sus pedidos.	La colección: lo que pongas acá vale para todos sus pedidos.
+
+#: apps\cartero\web\cartero.js:2920
+La carpeta: lo que pongas acá vale para todos sus pedidos.	La carpeta: lo que pongas acá vale para todos sus pedidos.
+
+#: apps\cartero\web\cartero.js:2952
+«%s» ya no está en la colección (se cambió en otro lado): usá Guardar como…	«%s» ya no está en la colección (se cambió en otro lado): usá Guardar como…
+
+#: apps\cartero\web\cartero.js:2960
+#: apps\cartero\web\cartero.js:2987
+#: apps\cartero\web\cartero.js:3094
+Guardado	Guardado
+
+#: apps\cartero\web\cartero.js:3005
+Colección nueva…	Colección nueva…
+
+#: apps\cartero\web\cartero.js:3008
+Guardar como	Guardar como
+
+#: apps\cartero\web\cartero.js:3008
+Dónde	Dónde
+
+#: apps\cartero\web\cartero.js:3010
+Falta el nombre	Falta el nombre
+
+#: apps\cartero\web\cartero.js:3014
+Falta el nombre de la colección	Falta el nombre de la colección
+
+#: apps\cartero\web\cartero.js:3032
+Guardado en «%s»	Guardado en «%s»
+
+#: apps\cartero\web\cartero.js:3048
+Variables de todas las colecciones	Variables de todas las colecciones
+
+#: apps\cartero\web\cartero.js:3049
+Activo	Activo
+
+#: apps\cartero\web\cartero.js:3054
+Variable nueva	Variable nueva
+
+#: apps\cartero\web\cartero.js:3055
+Las globales valen siempre, después del entorno activo y de la colección.	Las globales valen siempre, después del entorno activo y de la colección.
+
+#: apps\cartero\web\cartero.js:3056
+El entorno activo manda sobre la colección y las globales. Cambiarlo acá también lo cambia en la placa.	El entorno activo manda sobre la colección y las globales. Cambiarlo acá también lo cambia en la placa.
+
+#: apps\cartero\web\cartero.js:3057
+Un secreto se ve como puntos, pero queda en la tarjeta tal cual: cualquiera con la tarjeta lo lee.	Un secreto se ve como puntos, pero queda en la tarjeta tal cual: cualquiera con la tarjeta lo lee.
+
+#: apps\cartero\web\cartero.js:3061
+El entorno tiene cambios sin guardar. ¿Descartarlos?	El entorno tiene cambios sin guardar. ¿Descartarlos?
+
+#: apps\cartero\web\cartero.js:3121
+Enviar	Enviar
+
+#: apps\cartero\web\cartero.js:3131
+El runner está corriendo	El runner está corriendo
+
+#: apps\cartero\web\cartero.js:3176
+conexión	conexión
+
+#: apps\cartero\web\cartero.js:3176
+envío	envío
+
+#: apps\cartero\web\cartero.js:3176
+espera	espera
+
+#: apps\cartero\web\cartero.js:3176
+descarga	descarga
+
+#: apps\cartero\web\cartero.js:3204
+Mandando vía la placa…	Mandando vía la placa…
+
+#: apps\cartero\web\cartero.js:3204
+Mandando desde el navegador…	Mandando desde el navegador…
+
+#: apps\cartero\web\cartero.js:3210
+La respuesta va a aparecer acá. Ctrl+Enter (⌘+Enter) manda, Ctrl+S guarda.	La respuesta va a aparecer acá. Ctrl+Enter (⌘+Enter) manda, Ctrl+S guarda.
+
+#: apps\cartero\web\cartero.js:3213
+Abriendo Cartero en la placa…	Abriendo Cartero en la placa…
+
+#: apps\cartero\web\cartero.js:3216
+Cartero no terminó de abrir en la placa. Probá de nuevo.	Cartero no terminó de abrir en la placa. Probá de nuevo.
+
+#: apps\cartero\web\cartero.js:3216
+Cartero no está abierta en la placa, y hace falta para mandar vía la placa.	Cartero no está abierta en la placa, y hace falta para mandar vía la placa.
+
+#: apps\cartero\web\cartero.js:3217
+Abrir Cartero en la placa	Abrir Cartero en la placa
+
+#: apps\cartero\web\cartero.js:3218
+Mandarlo directo desde el navegador	Mandarlo directo desde el navegador
+
+#: apps\cartero\web\cartero.js:3224
+El pre-request salteó el pedido (pm.execution.skipRequest): no se mandó.	El pre-request salteó el pedido (pm.execution.skipRequest): no se mandó.
+
+#: apps\cartero\web\cartero.js:3231
+Tiempo	Tiempo
+
+#: apps\cartero\web\cartero.js:3232
+Tamaño	Tamaño
+
+#: apps\cartero\web\cartero.js:3234
+%d redirecciones	%d redirecciones
+
+#: apps\cartero\web\cartero.js:3234
+redirigido	redirigido
+
+#: apps\cartero\web\cartero.js:3235
+#: apps\cartero\web\cartero.js:3534
+vía la placa	vía la placa
+
+#: apps\cartero\web\cartero.js:3235
+#: apps\cartero\web\cartero.js:3534
+desde el navegador	desde el navegador
+
+#: apps\cartero\web\cartero.js:3239
+Mandarlo vía la placa	Mandarlo vía la placa
+
+#: apps\cartero\web\cartero.js:3241
+La placa guardó sólo una parte del cuerpo (%s): lo que sigue no está.	La placa guardó sólo una parte del cuerpo (%s): lo que sigue no está.
+
+#: apps\cartero\web\cartero.js:3242
+No se pudo leer el cuerpo de la tarjeta: %s	No se pudo leer el cuerpo de la tarjeta: %s
+
+#: apps\cartero\web\cartero.js:3248
+Tests %d/%d	Tests %d/%d
+
+#: apps\cartero\web\cartero.js:3275
+Cuerpo copiado	Cuerpo copiado
+
+#: apps\cartero\web\cartero.js:3275
+Copiar	Copiar
+
+#: apps\cartero\web\cartero.js:3276
+#: apps\cartero\web\cartero.js:3852
+Descargar	Descargar
+
+#: apps\cartero\web\cartero.js:3278
+Nombre del archivo en %s	Nombre del archivo en %s
+
+#: apps\cartero\web\cartero.js:3283
+Guardado en %s	Guardado en %s
+
+#: apps\cartero\web\cartero.js:3284
+Guardar en la tarjeta	Guardar en la tarjeta
+
+#: apps\cartero\web\cartero.js:3291
+Sin encabezados.	Sin encabezados.
+
+#: apps\cartero\web\cartero.js:3292
+Desde el navegador se ven sólo los encabezados que el servidor deja ver (CORS, Access-Control-Expose-Headers). Vía la placa se ven todos.	Desde el navegador se ven sólo los encabezados que el servidor deja ver (CORS, Access-Control-Expose-Headers). Vía la placa se ven todos.
+
+#: apps\cartero\web\cartero.js:3301
+%d pasaron	%d pasaron
+
+#: apps\cartero\web\cartero.js:3301
+%d fallaron	%d fallaron
+
+#: apps\cartero\web\cartero.js:3302
+%d salteados	%d salteados
+
+#: apps\cartero\web\cartero.js:3307
+Sin respuesta: los tests no corrieron.	Sin respuesta: los tests no corrieron.
+
+#: apps\cartero\web\cartero.js:3309
+Este pedido no tiene tests. Se escriben en Scripts, Tests.	Este pedido no tiene tests. Se escriben en Scripts, Tests.
+
+#: apps\cartero\web\cartero.js:3311
+#: apps\cartero\web\cartero.js:3653
+Error en el script (%s, %s): %s	Error en el script (%s, %s): %s
+
+#: apps\cartero\web\cartero.js:3311
+#: apps\cartero\web\cartero.js:3581
+#: apps\cartero\web\cartero.js:3653
+tests	tests
+
+#: apps\cartero\web\cartero.js:3311
+#: apps\cartero\web\cartero.js:3653
+pre-request	pre-request
+
+#: apps\cartero\web\cartero.js:3322
+Lindo	Lindo
+
+#: apps\cartero\web\cartero.js:3322
+Crudo	Crudo
+
+#: apps\cartero\web\cartero.js:3322
+#: apps\cartero\web\cartero.js:3338
+Vista	Vista
+
+#: apps\cartero\web\cartero.js:3327
+Se muestran los primeros 2 MB: el resto está en Descargar.	Se muestran los primeros 2 MB: el resto está en Descargar.
+
+#: apps\cartero\web\cartero.js:3334
+Una imagen de %s (%s).	Una imagen de %s (%s).
+
+#: apps\cartero\web\cartero.js:3335
+Binario, %s (%s): se puede descargar o guardar en la tarjeta.	Binario, %s (%s): se puede descargar o guardar en la tarjeta.
+
+#: apps\cartero\web\cartero.js:3345
+Dice ser JSON pero no lo es: %s	Dice ser JSON pero no lo es: %s
+
+#: apps\cartero\web\cartero.js:3412
+#: apps\cartero\web\cartero.js:3440
+Copiado: %s	Copiado: %s
+
+#: apps\cartero\web\cartero.js:3418
+%d elementos	%d elementos
+
+#: apps\cartero\web\cartero.js:3418
+%d claves	%d claves
+
+#: apps\cartero\web\cartero.js:3433
+… %d más	… %d más
+
+#: apps\cartero\web\cartero.js:3440
+Clic: copia %s	Clic: copia %s
+
+#: apps\cartero\web\cartero.js:3441
+Guardar este valor en una variable del entorno activo	Guardar este valor en una variable del entorno activo
+
+#: apps\cartero\web\cartero.js:3441
+variable	variable
+
+#: apps\cartero\web\cartero.js:3445
+Filtrar claves y valores	Filtrar claves y valores
+
+#: apps\cartero\web\cartero.js:3450
+Cerrar todo	Cerrar todo
+
+#: apps\cartero\web\cartero.js:3451
+Abrir todo	Abrir todo
+
+#: apps\cartero\web\cartero.js:3460
+Nombre de la variable en «%s»	Nombre de la variable en «%s»
+
+#: apps\cartero\web\cartero.js:3460
+No hay entorno activo: va a las globales. Nombre de la variable	No hay entorno activo: va a las globales. Nombre de la variable
+
+#: apps\cartero\web\cartero.js:3474
+{{%s}} = %s	{{%s}} = %s
+
+#: apps\cartero\web\cartero.js:3525
+#: apps\cartero\web\cartero.js:3941
+Runner	Runner
+
+#: apps\cartero\web\cartero.js:3526
+Detener	Detener
+
+#: apps\cartero\web\cartero.js:3529
+Colección o carpeta	Colección o carpeta
+
+#: apps\cartero\web\cartero.js:3530
+Iteraciones	Iteraciones
+
+#: apps\cartero\web\cartero.js:3531
+Demora entre pedidos (ms)	Demora entre pedidos (ms)
+
+#: apps\cartero\web\cartero.js:3532
+Detener al primer fallo	Detener al primer fallo
+
+#: apps\cartero\web\cartero.js:3532
+No hay colecciones para correr.	No hay colecciones para correr.
+
+#: apps\cartero\web\cartero.js:3533
+Con el entorno %s, %s. Los cambios de variables de los scripts se guardan; los pedidos no van al historial.	Con el entorno %s, %s. Los cambios de variables de los scripts se guardan; los pedidos no van al historial.
+
+#: apps\cartero\web\cartero.js:3558
+iteración %d	iteración %d
+
+#: apps\cartero\web\cartero.js:3559
+salteado	salteado
+
+#: apps\cartero\web\cartero.js:3577
+guardada en %s	guardada en %s
+
+#: apps\cartero\web\cartero.js:3580
+pedidos	pedidos
+
+#: apps\cartero\web\cartero.js:3582
+pasaron	pasaron
+
+#: apps\cartero\web\cartero.js:3583
+fallaron	fallaron
+
+#: apps\cartero\web\cartero.js:3584
+en total	en total
+
+#: apps\cartero\web\cartero.js:3587
+Estado	Estado
+
+#: apps\cartero\web\cartero.js:3588
+Empezando…	Empezando…
+
+#: apps\cartero\web\cartero.js:3588
+Nada que correr.	Nada que correr.
+
+#: apps\cartero\web\cartero.js:3602
+Detenida a mano.	Detenida a mano.
+
+#: apps\cartero\web\cartero.js:3607
+Hay un pedido en camino	Hay un pedido en camino
+
+#: apps\cartero\web\cartero.js:3611
+Esa carpeta ya no está	Esa carpeta ya no está
+
+#: apps\cartero\web\cartero.js:3628
+Más de 10000 pasos en una iteración: ¿un setNextRequest en ronda?	Más de 10000 pasos en una iteración: ¿un setNextRequest en ronda?
+
+#: apps\cartero\web\cartero.js:3642
+Cartero no está abierta en la placa: la corrida se detuvo.	Cartero no está abierta en la placa: la corrida se detuvo.
+
+#: apps\cartero\web\cartero.js:3659
+Detenida en el primer fallo.	Detenida en el primer fallo.
+
+#: apps\cartero\web\cartero.js:3663
+setNextRequest: no hay un pedido «%s»; la iteración terminó.	setNextRequest: no hay un pedido «%s»; la iteración terminó.
+
+#: apps\cartero\web\cartero.js:3686
+No se pudo guardar la corrida: %s	No se pudo guardar la corrida: %s
+
+#: apps\cartero\web\cartero.js:3689
+La corrida terminó: %d de %d tests pasaron	La corrida terminó: %d de %d tests pasaron
+
+#: apps\cartero\web\cartero.js:3695
+La corrida ya no está	La corrida ya no está
+
+#: apps\cartero\web\cartero.js:3708
+Pegá acá una colección o un entorno de Postman (JSON), o un comando curl	Pegá acá una colección o un entorno de Postman (JSON), o un comando curl
+
+#: apps\cartero\web\cartero.js:3718
+#: apps\cartero\web\cartero.js:3722
+#: apps\cartero\web\cartero.js:3940
+Importar	Importar
+
+#: apps\cartero\web\cartero.js:3719
+Una colección de Postman (v2.0 o v2.1) queda en la tarjeta como un archivo más; un entorno, también; un comando curl se abre como un pedido nuevo, para guardarlo donde quieras.	Una colección de Postman (v2.0 o v2.1) queda en la tarjeta como un archivo más; un entorno, también; un comando curl se abre como un pedido nuevo, para guardarlo donde quieras.
+
+#: apps\cartero\web\cartero.js:3723
+Elegir un archivo…	Elegir un archivo…
+
+#: apps\cartero\web\cartero.js:3729
+No hay nada que importar	No hay nada que importar
+
+#: apps\cartero\web\cartero.js:3733
+El comando quedó como un pedido nuevo: guardalo con Guardar como…	El comando quedó como un pedido nuevo: guardalo con Guardar como…
+
+#: apps\cartero\web\cartero.js:3737
+No es JSON ni un comando curl: %s	No es JSON ni un comando curl: %s
+
+#: apps\cartero\web\cartero.js:3742
+Es una colección de Postman v1: exportala de nuevo como v2.1.	Es una colección de Postman v1: exportala de nuevo como v2.1.
+
+#: apps\cartero\web\cartero.js:3746
+Importada	Importada
+
+#: apps\cartero\web\cartero.js:3755
+Colección «%s» importada: %d pedidos, en %s.	Colección «%s» importada: %d pedidos, en %s.
+
+#: apps\cartero\web\cartero.js:3760
+Son globales: ¿agregarlas a las de la tarjeta? Las que tengan el mismo nombre se reemplazan.	Son globales: ¿agregarlas a las de la tarjeta? Las que tengan el mismo nombre se reemplazan.
+
+#: apps\cartero\web\cartero.js:3770
+%d globales importadas.	%d globales importadas.
+
+#: apps\cartero\web\cartero.js:3773
+Importado	Importado
+
+#: apps\cartero\web\cartero.js:3780
+Entorno «%s» importado: %d variables.	Entorno «%s» importado: %d variables.
+
+#: apps\cartero\web\cartero.js:3781
+Abrirlo	Abrirlo
+
+#: apps\cartero\web\cartero.js:3784
+No reconozco ese JSON: ni una colección ni un entorno de Postman.	No reconozco ese JSON: ni una colección ni un entorno de Postman.
+
+#: apps\cartero\web\cartero.js:3811
+Sin entorno	Sin entorno
+
+#: apps\cartero\web\cartero.js:3815
+La placa hace el pedido: sin CORS, desde su red	La placa hace el pedido: sin CORS, desde su red
+
+#: apps\cartero\web\cartero.js:3815
+Vía la placa	Vía la placa
+
+#: apps\cartero\web\cartero.js:3816
+El navegador hace el pedido: hace falta que el servidor permita CORS	El navegador hace el pedido: hace falta que el servidor permita CORS
+
+#: apps\cartero\web\cartero.js:3816
+Directo desde el navegador	Directo desde el navegador
+
+#: apps\cartero\web\cartero.js:3822
+#: apps\cartero\web\cartero.js:3942
+#: apps\cartero\web\cartero.js:3942
+Ajustes de los pedidos	Ajustes de los pedidos
+
+#: apps\cartero\web\cartero.js:3823
+Tiempo de espera (ms)	Tiempo de espera (ms)
+
+#: apps\cartero\web\cartero.js:3824
+Seguir redirecciones	Seguir redirecciones
+
+#: apps\cartero\web\cartero.js:3825
+Se guardan en este navegador.	Se guardan en este navegador.
+
+#: apps\cartero\web\cartero.js:3825
+Listo	Listo
+
+#: apps\cartero\web\cartero.js:3827
+El tiempo va de 500 a 300000 ms	El tiempo va de 500 a 300000 ms
+
+#: apps\cartero\web\cartero.js:3851
+Correr de nuevo	Correr de nuevo
+
+#: apps\cartero\web\cartero.js:3857
+#: apps\cartero\web\cartero.js:3914
+#: apps\cartero\web\cartero.js:3938
+Cartero	Cartero
+
+#: apps\cartero\web\cartero.js:3858
+Un cliente de APIs como Postman: los pedidos en colecciones y carpetas, entornos con sus variables, tests en JavaScript y un runner. Todo queda en la tarjeta, en el formato de Postman, y la app de la placa lo usa igual.	Un cliente de APIs como Postman: los pedidos en colecciones y carpetas, entornos con sus variables, tests en JavaScript y un runner. Todo queda en la tarjeta, en el formato de Postman, y la app de la placa lo usa igual.
+
+#: apps\cartero\web\cartero.js:3859
+Elegí un pedido de la izquierda, o:	Elegí un pedido de la izquierda, o:
+
+#: apps\cartero\web\cartero.js:3863
+Importar de Postman o cURL	Importar de Postman o cURL
+
+#: apps\cartero\web\cartero.js:3929
+El entorno activo (también en la placa)	El entorno activo (también en la placa)
+
+#: apps\cartero\web\cartero.js:3940
+Importar una colección, un entorno o un comando curl	Importar una colección, un entorno o un comando curl

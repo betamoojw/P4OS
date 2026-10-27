@@ -506,4 +506,5 @@ static void widget_create(lv_obj_t *cardo, int32_t cw, int32_t ch, const char *a
 void aos_claude_widget_register(void)
 {
     aos_ui_register_widget("claude", widget_create);
+    aos_ui_describe_widget("claude", "Claude", N_("Cuánto queda del uso de Claude."), AOS_SYM_ROBOT, 0, NULL);
 }

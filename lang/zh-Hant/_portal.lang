@@ -510,7 +510,7 @@ La carpeta «%s»	資料夾“%s”
 %s tiene una sola app: al editar el inicio en la placa, se deshace.	%s 只有一個應用程式:在板上編輯主螢幕將它分解.
 El widget «%s»: el tipo va sin espacios y con hasta 15 caracteres.	外掛%s”:該型別沒有空格,最多有15個字元。
 El widget «%s»: el tamaño va de 1x1 a 8x8.	外掛%s”:大小從1x1到8x8。
-El widget «%s»: el dato pasa de 63 bytes.	外掛%s”:資料超過63位元組。
+El widget «%s»: el dato pasa de 255 bytes.	小工具「%s」：資料超過 255 位元組。
 Hay %s páginas: la placa muestra 16 como mucho.	有一些 %s 頁面:表顯示最多為16頁.
 Las páginas vacías no se guardan.	沒有空頁面可以儲存.
 El archivo no pasaría la lectura de la placa: %s.	開發板無法讀取檔案: %s.
@@ -558,7 +558,9 @@ Tamaño	大小
 %s celdas	%s 細胞
 Dato (opcional)	資料 (可選)
 lo que el widget lea	不管該小工具是什麼
-Hasta 63 bytes. La mayoría de los widgets no lo usan.	最多 63 位元組。大多數小元件不使用此項。
+Hasta 255 bytes. La mayoría de los widgets no lo usan.	最多 255 位元組。大多數小工具不使用此項。
+Vacío: el widget elige solo (CO2, temperatura, humedad...). Si no, sensor:valor separados por comas, con el nombre del sensor como lo muestra Módulos. También se eligen en la placa: en el modo edición, tocá el widget.	留空時，小工具會自動選擇（CO2、溫度、濕度等）。否則請用逗號分隔「感測器:數值」，感測器名稱應與「模組」中顯示的一致。也可在裝置的編輯模式中點按小工具來選擇。
+Vacío: los favoritos de la app (la estrella). Si no, las entidades de Home Assistant separadas por comas: controles que se tocan y sensores con su valor. 4 en un 4×2, 8 en un 4×4. También se eligen en la placa: en el modo edición, tocá el widget.	留空時顯示應用程式收藏項目（星號）。否則請用逗號分隔 Home Assistant 實體，包括可點按的控制項與帶數值的感測器。4×2 顯示 4 個，4×4 顯示 8 個。也可在裝置的編輯模式中點按小工具來選擇。
 Quitar widget	刪除 widget
 Buscar un glifo…	搜尋字型...
 Ninguno se llama así.	沒有什麼名字.

@@ -671,7 +671,7 @@ No se pudo leer: %s	Couldn't read: %s
 Reiniciar con el firmware nuevo	Restart into the new firmware
 
 #: components/aos_portal/web/app.js:738
-Tiene que ser el .bin del firmware (%s)	Choose the firmware .bin file (%s)
+Tiene que ser el .bin del firmware (%s)	It has to be the firmware's .bin (%s)
 
 #: components/aos_portal/web/app.js:741
 Subiendo %s de %s…	Uploading %s of %s…
@@ -719,7 +719,7 @@ vacía	empty
 Actualizar por Wi-Fi	Update over Wi-Fi
 
 #: components/aos_portal/web/app.js:775
-Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.	Choose %s. Upload writes the other slot; after restarting, the new firmware runs on trial. If it cannot run for 30 seconds, the board rolls back. From a terminal: tools/ota.sh.
+Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.	Pick %s. It is written to the other slot as it uploads; on restart it boots on trial and, if it doesn't make it to 30 s, the board goes back to the current firmware by itself. From the terminal: tools/ota.sh.
 
 #: components/aos_portal/web/app.js:776
 Elegir el .bin…	Choose the .bin…
@@ -1586,7 +1586,7 @@ El widget «%s»: el tipo va sin espacios y con hasta 15 caracteres.	The widget 
 El widget «%s»: el tamaño va de 1x1 a 8x8.	The widget “%s”: the size goes from 1x1 to 8x8.
 
 #: components/aos_portal/web/app.js:1860
-El widget «%s»: el dato pasa de 63 bytes.	The widget “%s”: the data is over 63 bytes.
+El widget «%s»: el dato pasa de 255 bytes.	The widget “%s”: the data is over 255 bytes.
 
 #: components/aos_portal/web/app.js:1863
 Hay %s páginas: la placa muestra 16 como mucho.	There are %s pages: the board shows 16 at most.
@@ -1737,7 +1737,7 @@ Dato (opcional)	Data (optional)
 lo que el widget lea	whatever the widget reads
 
 #: components/aos_portal/web/app.js:2369
-Hasta 63 bytes. La mayoría de los widgets no lo usan.	Up to 63 bytes. Most widgets don't use it.
+Hasta 255 bytes. La mayoría de los widgets no lo usan.	Up to 255 bytes. Most widgets don't use it.
 
 #: components/aos_portal/web/app.js:2371
 Quitar widget	Remove widget
@@ -2060,3 +2060,5 @@ Taipéi (UTC+8)	Taipei (UTC+8)
 Hong Kong (UTC+8)	Hong Kong (UTC+8)
 Idioma no disponible.	Language unavailable.
 No se pudo cambiar el idioma. Comprobá que el paquete de fuentes esté instalado.	Could not change language. Check that the font resource is installed.
+Vacío: el widget elige solo (CO2, temperatura, humedad...). Si no, sensor:valor separados por comas, con el nombre del sensor como lo muestra Módulos. También se eligen en la placa: en el modo edición, tocá el widget.	Empty: the widget picks on its own (CO2, temperature, humidity...). Otherwise, sensor:value separated by commas, with the sensor's name as Modules shows it. They can also be chosen on the board: in edit mode, tap the widget.
+Vacío: los favoritos de la app (la estrella). Si no, las entidades de Home Assistant separadas por comas: controles que se tocan y sensores con su valor. 4 en un 4×2, 8 en un 4×4. También se eligen en la placa: en el modo edición, tocá el widget.	Empty: the app's favourites (the star). Otherwise, Home Assistant entities separated by commas: controls to tap and sensors with their value. 4 in a 4×2, 8 in a 4×4. They can also be chosen on the board: in edit mode, tap the widget.

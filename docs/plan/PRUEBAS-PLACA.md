@@ -443,11 +443,83 @@ Que necesitan la mano del usuario o equipos:
       (`keeping aos.datalog ... running: background`); después de una OTA
       arrancó solo (`started hidden`). Dibujo, con el DS18B20 leyéndose,
       ya no queda como "running: pins": se cierra al salir (1674 KB).
+- [ ] **Cartero** (`apps/cartero`, 2026-10-26): hecha y probada en el
+      simulador contra `apps/cartero/tools/fake_api.py` (la colección demo:
+      18 pedidos, 36 tests, en la pantalla y en el Runner del portal vía la
+      placa). Falta en la placa: un pedido por HTTPS a un servicio público
+      (el certificado, el primer apretón TLS), una respuesta grande (4 MB)
+      y cuánto tarda en el árbol JSON, el tiempo de una corrida (el
+      intérprete con doble precisión por software), la página del portal
+      vía la placa con otra app adelante, y la RAM interna libre antes y
+      después (todo va a PSRAM: arenas, la pila de 96 KB del hilo).
+  - 2026-10-26, primera prueba del usuario contra un servidor HTTPS de
+    prueba (TLS 1.2, certificado válido: `openssl` verifica bien):
+    `TLS handshake ... failed (-0x6a00)`, que es
+    `MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL`. El servidor da un ticket de sesión
+    de ~5,5 KB; la HAL (`aos_tls.c`, `session_save`) lo guarda y en la
+    conexión siguiente lo pone en el ClientHello, que no entra en
+    `CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN=4096`. Como el apretón falla, la
+    sesión rota nunca se reemplaza: todas las conexiones a ese servidor
+    fallan hasta reiniciar. Es de firmware y pega a cualquier app.
+    Cartero ya no lo llama "certificado" (sólo lo es cuando la razón de la
+    HAL habla del certificado).
+  - Arreglado en el firmware el 2026-10-26 (`aos_tls.c`, sin OTA todavía):
+    un ticket que no entra en el ClientHello (más de 3 KB con el búfer de
+    4 KB) no se guarda, y un apretón que falla retomando una sesión guardada
+    la olvida y reintenta una vez sin ella. Reproducido y probado en el
+    simulador con `tools/fake_tls_tickets.c` (ticket de 5520 B, el servidor
+    corta los ClientHello de más de 4096 B): las tres conexiones seguidas
+    de Cartero andan, con el ticket descartado y con el reintento. El
+    ClientHello sin ticket mide 329 B en el simulador. Falta en la placa,
+    después de la OTA: tres pedidos seguidos de Cartero al mismo servidor
+    de prueba (el registro dice "a 5520-byte session ticket does not fit a
+    ClientHello here; not kept"), y que otro servidor HTTPS cualquiera
+    siga retomando su sesión (la segunda conexión más rápida que la
+    primera).
+  - Probado en la placa el 2026-10-26 (OTA `v0.22.1-3-g32888d4`): el
+    usuario mandó pedidos seguidos con Cartero a su servidor de prueba y
+    andan, sin el -0x6a00.
+  - 2026-10-26, en la placa con el arreglo instalado: el usuario hizo
+    desde Cartero un POST al mismo servidor de prueba que devuelve un
+    token, y anduvo. Cada conexión a ese servidor es un apretón completo
+    con "not kept" en el registro, como se esperaba.
+  - Los demás servidores siguen retomando (el registro de la placa, donde
+    `esp-x509-crt-bundle: Certificate validated` marca cada apretón
+    completo): Cotizaciones contra dolarapi, el primer pedido valida el
+    certificado y tarda 1116 ms con la respuesta; el segundo, enseguida,
+    no valida nada y tarda 603 ms; otro 2,5 min después, 431 ms sin
+    validar. Con Cartero contra open-meteo, en cambio, cada conexión
+    (separadas 20-30 s) validó el certificado y tardó ~1,7 s: es del
+    servidor, que desde una Mac (`openssl s_client -tls1_2 -reconnect`)
+    tampoco retomó la primera sesión (salió otra, con otro certificado,
+    RSA y después ECDSA) y sí las siguientes.
+- [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
+      del usuario por OctoPrint:
+  - Lista con estado, temperaturas, avance y modelo (del perfil de
+    OctoPrint); detalle de la que imprimía, pausar y cancelar a mano.
+  - Cámaras por MJPEG: una webcam USB a 640x480, 14,6-16,5 fps con
+    ~460 KB/s y 6 ms de decodificación; una raspicam a 1920x1080, ~1 fps
+    con ~540 KB/s (la red, no la placa: cada cuadro que llega se muestra).
+  - Falta: PrusaLink, Bambu, Klipper, Duet, Elegoo, FlashForge y Creality
+    con máquinas reales (sólo contra `fake_printers.py`), y el tiempo
+    restante de un trabajo que OctoPrint todavía no estima.
+- [x] Widgets y fotos (2026-10-25, 0.22.0), en la placa, probados por el
+      usuario:
+  - "+ Widget", la hoja de cada widget y arrastrarlos en el modo edición.
+  - Widget de sensores en automático con la MAX6675 y el DS18B20 (22,5 y
+    21,8 °C, igual que `/api/sensors`); el SCD41 no estaba conectado.
+  - Home Assistant configurado y probado, con entidades elegidas en la hoja.
+  - Fotos del bloqueo rotando por carpeta.
+  - La foto del inicio queda en PSRAM con una app al frente: vuelve al
+    instante (antes 1,5 s de degradado, visto en video). Con las fotos
+    cargadas: 14,7 MB de PSRAM y 265 KB de RAM interna libres. Cámaras la
+    suelta sólo en HD.
 - [x] Fondos, cámaras, grabación de pantalla y sonidos (2026-10-22, 0.21.5 y
       lo que siguió), en la placa:
   - Fotos de fondo de Mila en el inicio y el bloqueo: 3,7 MB de PSRAM, nada
     de RAM interna; redibujar el inicio entero 72,9 -> 101,7 ms con la foto.
-    Desde 0.21.5 se sueltan con una app al frente.
+    Desde 0.21.5 se sueltan con una app al frente; desde 0.22.0 sólo la del
+    bloqueo (la del inicio tardaba 1,5 s en volver).
   - El bloqueo ya no dibuja lo de abajo: con foto, 143 -> 108 ms.
   - Aceleradores para copiar (PPA escalador, PPA mezclador, AXI-GDMA):
     todos más lentos que la CPU en el inicio y el bloqueo (133,6 / 113,5 /

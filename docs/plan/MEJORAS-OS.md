@@ -14,13 +14,14 @@ a poco; esta lista dice qué está hecho y qué queda.
 | Reloj del bloqueo a elección: tamaño, lugar, color (blanco, acento o el de la foto del bloqueo, aclarado) | `aos_lock.c`, Ajustes, Pantalla de bloqueo | después de 0.21.5 (309a8c8) |
 | Sonidos del sistema (bloquear, desbloquear, notificación, llamada, captura, grabación, clic del teclado opcional); se apagan con la campana del Centro de control o en Ajustes, Sonido | `aos_sounds.c` | después de 0.21.5 (309a8c8) |
 | Grabación de pantalla a MP4 (PPA + codificador H.264 del P4) | `aos_screenrec_p4.c`, Centro de control | 0.21.5 |
+| Widget de sensores en el inicio (CO₂, temperatura, humedad o lo que haya), y el de Home Assistant con entidades elegidas | `aos_widget_sensors.c`, `aos_app_ha.c` | después de 0.21.6 |
+| Widgets elegidos en la placa: "+ Widget" en el modo edición, y tocar un widget para su tamaño, qué muestra o quitarlo (antes, sólo desde el portal); se arrastran como los íconos | `aos_widget_edit.c`, `aos_home.c` | después de 0.21.6 |
+| Presentación de fotos en el bloqueo: una carpeta de Fotos, otra foto al azar cada vez que se bloquea | `aos_wallpaper.c` (`lock_album`), Fotos, Ajustes | después de 0.21.6 |
 
 ## Pendientes
 
 | # | Mejora | Costo | Notas |
 |---|---|---|---|
-| 4 | **Widget de sensores en el inicio**: CO₂, temperatura, humedad o lo que haya conectado, desde el servicio de sensores | poco | lo que más le queda a esta placa; los widgets del inicio ya existen (`aos_ui_widget_*`) |
-| 6 | **Presentación de fotos en el bloqueo**: un álbum de Fotos que rota cada vez que se bloquea | PSRAM (1,8 MB, el mismo búfer) | reusa `aos_wallpaper.c`: cambiar `lock_img` al bloquear |
 | 7 | **Modo reposo**: con la placa acostada (y cargando, si algún día hay batería), un reloj grande con fotos o sensores, como el StandBy del iPhone | PSRAM | una app de sistema o una capa como el bloqueo |
 | 8 | **Estilo de íconos**: forma (redondeado, círculo), cuántas columnas, nombres sí o no | nada | `aos_home.c`, `aos_icon.c` |
 | 9 | **Animación de arranque** con logo, y **carpetas que se abren animadas** | poco | la pantalla de arranque ya muestra el avance real |

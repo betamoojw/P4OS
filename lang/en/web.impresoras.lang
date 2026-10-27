@@ -1,0 +1,241 @@
+# amoledos-lang 1   es -> en
+# web.impresoras.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps/impresoras/web/impresoras.js:25
+Clave de la API	API key
+
+#: apps/impresoras/web/impresoras.js:26
+En OctoPrint: Ajustes, API (o la clave de una aplicación del usuario).	In OctoPrint: Settings, API (or an application key of the user).
+
+#: apps/impresoras/web/impresoras.js:27
+Contraseña de PrusaLink	PrusaLink password
+
+#: apps/impresoras/web/impresoras.js:28
+MK4, MK3.9, MINI, XL, CORE One, MK3S con PrusaLink: las de Prusa Connect, por la red de la casa. En la impresora: Ajustes, Red, PrusaLink (usuario maker).	MK4, MK3.9, MINI, XL, CORE One, MK3S with PrusaLink: the Prusa Connect ones, over the home network. On the printer: Settings, Network, PrusaLink (user maker).
+
+#: apps/impresoras/web/impresoras.js:29
+Código de acceso	Access code
+
+#: apps/impresoras/web/impresoras.js:30
+Modo LAN, y el modo desarrollador para manejarla. El código de acceso está en Ajustes, Red; el número de serie en Ajustes, Dispositivo.	LAN mode, and developer mode to control it. The access code is in Settings, Network; the serial number in Settings, Device.
+
+#: apps/impresoras/web/impresoras.js:31
+Clave de la API (opcional)	API key (optional)
+
+#: apps/impresoras/web/impresoras.js:32
+Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig: toda la que tenga Mainsail o Fluidd. Puerto 7125, o 80 si va por nginx.	Voron, Sovol, Elegoo Neptune 4, Qidi, RatRig: every one with Mainsail or Fluidd. Port 7125, or 80 through nginx.
+
+#: apps/impresoras/web/impresoras.js:33
+Contraseña (si tiene)	Password (if any)
+
+#: apps/impresoras/web/impresoras.js:34
+Duet 2 y 3 con RepRapFirmware 3, sola o con SBC.	Duet 2 and 3 with RepRapFirmware 3, standalone or with an SBC.
+
+#: apps/impresoras/web/impresoras.js:35
+MainboardID (opcional)	MainboardID (optional)
+
+#: apps/impresoras/web/impresoras.js:36
+Centauri Carbon y las de resina con Wi-Fi.	Centauri Carbon and the resin printers with Wi-Fi.
+
+#: apps/impresoras/web/impresoras.js:37
+Código de verificación (check code)	Check code
+
+#: apps/impresoras/web/impresoras.js:38
+Adventurer 5M, 5M Pro, AD5X: número de serie y código de Ajustes, Red, Sólo LAN. Sin código: las viejas, por el puerto 8899.	Adventurer 5M, 5M Pro, AD5X: serial number and the code from Settings, Network, LAN only. Without a code: the older ones, over port 8899.
+
+#: apps/impresoras/web/impresoras.js:40
+K1, K1C, K1 Max, K2 Plus, Ender-3 V3, Hi, sin root. Con Moonraker, mejor como Klipper.	K1, K1C, K1 Max, K2 Plus, Ender-3 V3, Hi, not rooted. With Moonraker, better as Klipper.
+
+#: apps/impresoras/web/impresoras.js:44
+Sin conexión	Offline
+
+#: apps/impresoras/web/impresoras.js:44
+Conectando	Connecting
+
+#: apps/impresoras/web/impresoras.js:44
+Lista	Ready
+
+#: apps/impresoras/web/impresoras.js:44
+Preparando	Preparing
+
+#: apps/impresoras/web/impresoras.js:44
+Imprimiendo	Printing
+
+#: apps/impresoras/web/impresoras.js:44
+En pausa	Paused
+
+#: apps/impresoras/web/impresoras.js:45
+Terminó	Finished
+
+#: apps/impresoras/web/impresoras.js:45
+Cancelada	Cancelled
+
+#: apps/impresoras/web/impresoras.js:45
+Error	Error
+
+#: apps/impresoras/web/impresoras.js:120
+impresora %d	printer %d
+
+#: apps/impresoras/web/impresoras.js:121
+%s: el nombre, de 1 a 47 caracteres y sin corchetes	%s: the name, 1 to 47 characters and no brackets
+
+#: apps/impresoras/web/impresoras.js:122
+%s: hay dos con ese nombre	%s: there are two with that name
+
+#: apps/impresoras/web/impresoras.js:124
+%s: falta la dirección (IP o nombre, sin espacios)	%s: the address is missing (IP or name, no spaces)
+
+#: apps/impresoras/web/impresoras.js:125
+%s: el puerto va de 1 a 65535	%s: the port goes from 1 to 65535
+
+#: apps/impresoras/web/impresoras.js:127
+%s: falta %s	%s: %s is missing
+
+#: apps/impresoras/web/impresoras.js:127
+el número de serie	the serial number
+
+#: apps/impresoras/web/impresoras.js:137
+%d h %s min	%d h %s min
+
+#: apps/impresoras/web/impresoras.js:138
+%d min	%d min
+
+#: apps/impresoras/web/impresoras.js:139
+%d s	%d s
+
+#: apps/impresoras/web/impresoras.js:162
+La placa no tomó la orden (%d)	The board did not take the command (%d)
+
+#: apps/impresoras/web/impresoras.js:182
+Reanudando	Resuming
+
+#: apps/impresoras/web/impresoras.js:182
+Reanudar	Resume
+
+#: apps/impresoras/web/impresoras.js:183
+Pausando	Pausing
+
+#: apps/impresoras/web/impresoras.js:183
+Pausar	Pause
+
+#: apps/impresoras/web/impresoras.js:187
+¿Cancelar la impresión de %s?	Cancel the print on %s?
+
+#: apps/impresoras/web/impresoras.js:187
+Cancelando	Cancelling
+
+#: apps/impresoras/web/impresoras.js:188
+Cancelar	Cancel
+
+#: apps/impresoras/web/impresoras.js:192
+Precalentando para %s	Preheating for %s
+
+#: apps/impresoras/web/impresoras.js:194
+Enfriando	Cooling down
+
+#: apps/impresoras/web/impresoras.js:194
+Enfriar	Cool down
+
+#: apps/impresoras/web/impresoras.js:197
+Apagar la luz	Light off
+
+#: apps/impresoras/web/impresoras.js:197
+Prender la luz	Light on
+
+#: apps/impresoras/web/impresoras.js:199
+Ocultar cámara	Hide camera
+
+#: apps/impresoras/web/impresoras.js:199
+Ver cámara	Show camera
+
+#: apps/impresoras/web/impresoras.js:201
+Enviado: %s	Sent: %s
+
+#: apps/impresoras/web/impresoras.js:228
+Enviar	Send
+
+#: apps/impresoras/web/impresoras.js:254
+faltan %s · %s	%s left · %s
+
+#: apps/impresoras/web/impresoras.js:254
+faltan %s	%s left
+
+#: apps/impresoras/web/impresoras.js:255
+capa %d de %d	layer %d of %d
+
+#: apps/impresoras/web/impresoras.js:271
+Sin nombre	No name
+
+#: apps/impresoras/web/impresoras.js:272
+¿Sacar %s de la lista?	Take %s off the list?
+
+#: apps/impresoras/web/impresoras.js:272
+esta impresora	this printer
+
+#: apps/impresoras/web/impresoras.js:272
+Borrar	Delete
+
+#: apps/impresoras/web/impresoras.js:275
+Qué es	What it is
+
+#: apps/impresoras/web/impresoras.js:276
+Nombre	Name
+
+#: apps/impresoras/web/impresoras.js:277
+Dirección (IP o nombre)	Address (IP or name)
+
+#: apps/impresoras/web/impresoras.js:278
+Puerto (vacío: el de siempre)	Port (empty: the usual one)
+
+#: apps/impresoras/web/impresoras.js:279
+Usuario	User
+
+#: apps/impresoras/web/impresoras.js:281
+Número de serie	Serial number
+
+#: apps/impresoras/web/impresoras.js:282
+Cámara (vacío: la que diga la impresora; off: ninguna)	Camera (empty: the printer's own; off: none)
+
+#: apps/impresoras/web/impresoras.js:284
+HTTPS (con certificado válido)	HTTPS (with a valid certificate)
+
+#: apps/impresoras/web/impresoras.js:295
+#: apps/impresoras/web/impresoras.js:375
+Impresoras 3D	3D Printers
+
+#: apps/impresoras/web/impresoras.js:305
+Leyendo...	Reading...
+
+#: apps/impresoras/web/impresoras.js:306
+Guardar en la tarjeta	Save to the card
+
+#: apps/impresoras/web/impresoras.js:337
+La app Impresoras 3D no está abierta en la placa. 	The 3D Printers app is not open on the board.
+
+#: apps/impresoras/web/impresoras.js:338
+Abrirla	Open it
+
+#: apps/impresoras/web/impresoras.js:344
+Ninguna impresora todavía: agregalas abajo.	No printer yet: add them below.
+
+#: apps/impresoras/web/impresoras.js:348
+No se puede leer el estado: %s	Cannot read the status: %s
+
+#: apps/impresoras/web/impresoras.js:362
+Guardado: la placa se reconecta sola	Saved: the board reconnects by itself
+
+#: apps/impresoras/web/impresoras.js:364
+No se pudo guardar: %s	Could not save: %s
+
+#: apps/impresoras/web/impresoras.js:372
++ Agregar una impresora	+ Add a printer
+
+#: apps/impresoras/web/impresoras.js:377
+Las impresoras	The printers
+
+#: apps/impresoras/web/impresoras.js:378
+OctoPrint, PrusaLink (las de Prusa Connect), Bambu Lab en modo LAN, Klipper, Duet, Elegoo, FlashForge y Creality. Las claves quedan guardadas en la tarjeta (%s) y se pueden leer.	OctoPrint, PrusaLink (the Prusa Connect ones), Bambu Lab in LAN mode, Klipper, Duet, Elegoo, FlashForge and Creality. The keys are kept on the card (%s) and can be read.

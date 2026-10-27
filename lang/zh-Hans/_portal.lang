@@ -510,7 +510,7 @@ La carpeta «%s»	文件夹“%s”
 %s tiene una sola app: al editar el inicio en la placa, se deshace.	%s 只有一个应用程序:在板上编辑主屏幕将它分解.
 El widget «%s»: el tipo va sin espacios y con hasta 15 caracteres.	插件%s”:该类型没有空格,最多有15个字符。
 El widget «%s»: el tamaño va de 1x1 a 8x8.	插件%s”:大小从1x1到8x8。
-El widget «%s»: el dato pasa de 63 bytes.	插件%s”:数据超过63字节。
+El widget «%s»: el dato pasa de 255 bytes.	小组件“%s”：数据超过 255 字节。
 Hay %s páginas: la placa muestra 16 como mucho.	有一些 %s 页面:表显示最多为16页.
 Las páginas vacías no se guardan.	没有空页面可以保存.
 El archivo no pasaría la lectura de la placa: %s.	开发板无法读取文件: %s.
@@ -558,7 +558,9 @@ Tamaño	大小
 %s celdas	%s 细胞
 Dato (opcional)	数据 (可选)
 lo que el widget lea	不管该小工具是什么
-Hasta 63 bytes. La mayoría de los widgets no lo usan.	最多 63 字节。大多数小组件不使用此项。
+Hasta 255 bytes. La mayoría de los widgets no lo usan.	最多 255 字节。大多数小组件不使用此项。
+Vacío: el widget elige solo (CO2, temperatura, humedad...). Si no, sensor:valor separados por comas, con el nombre del sensor como lo muestra Módulos. También se eligen en la placa: en el modo edición, tocá el widget.	留空时，小组件会自动选择（CO2、温度、湿度等）。否则请用逗号分隔“传感器:数值”，传感器名称应与“模块”中显示的一致。也可在设备的编辑模式中点按小组件来选择。
+Vacío: los favoritos de la app (la estrella). Si no, las entidades de Home Assistant separadas por comas: controles que se tocan y sensores con su valor. 4 en un 4×2, 8 en un 4×4. También se eligen en la placa: en el modo edición, tocá el widget.	留空时显示应用收藏项（星标）。否则请用逗号分隔 Home Assistant 实体，包括可点按的控件和带数值的传感器。4×2 显示 4 个，4×4 显示 8 个。也可在设备的编辑模式中点按小组件来选择。
 Quitar widget	删除 widget
 Buscar un glifo…	搜索字体...
 Ninguno se llama así.	没有什么名字.

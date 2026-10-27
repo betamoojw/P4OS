@@ -1755,7 +1755,7 @@ El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El 
 FOTO	照片
 Sin foto	未设置照片
 Quitar la foto	移除照片
-Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha.	在“照片”中打开所需图片，再点击右上角的调色板图标。
+Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea.	在“照片”中打开所需图片，再点击右上角的调色板图标。锁屏可使用整个文件夹，每次锁定时显示另一张照片。
 COLOR DE ACENTO	主题色
 puerto	港口
 en uso	使用中的
@@ -2708,3 +2708,28 @@ Turbo	涡轮
 Video	视频
 Visor 3D	3D 显示器
 VNC	其他
++ Widget	+ 小组件
+La hora y la fecha, grandes.	以大号显示时间和日期。
+Chico	小
+Agregar widget	添加小组件
+Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo.	添加后，点按它可选择大小和显示内容；长按片刻并拖动可移动。
+Hasta %d	最多 %d 个
+no está ahora	当前不可用
+Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.	显示内容：最多 %d 项，按点选顺序排列。当前大小容纳不下的项目不会显示。
+Automático	自动
+El widget elige lo que conviene mostrar	小组件会自动选择适合显示的内容
+Todavía no hay nada para elegir: mientras tanto, el widget elige solo.	暂无可选内容；在此期间，小组件会自动选择。
+Quitar widget	移除小组件
+Cuánto queda del uso de Claude.	Claude 使用量还剩多少。
+Las entidades del widget no están en Home Assistant	小组件中的实体不在 Home Assistant 中
+Luces, enchufes y sensores de la casa, a un toque.	一键控制家中的灯、插座和传感器。
+La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea	锁屏每次锁定时会显示此文件夹中的另一张照片
+Bloqueo: toda la carpeta, rotando	锁屏：轮换整个文件夹
+En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	在编辑模式中，“+ 小组件”可将时钟、传感器、Home Assistant 等添加到主屏幕；点按小组件可选择大小和显示内容，或将其移除。
+%s, rotando	%s，轮换显示
+Dejar la foto de ahora	保留当前照片
+La memoria, el procesador y la red de la placa.	设备的内存、处理器和网络。
+Todavía no hay sensores. Conectá uno al header o agregalo en Módulos.	还没有传感器。请将传感器连接到排针，或在“模块”中添加。
+Lo que miden los sensores conectados: CO₂, temperatura, humedad…	已连接传感器的测量值：CO₂、温度、湿度等。
+Cartero	邮差
+Impresoras 3D	3D 打印机

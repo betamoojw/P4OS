@@ -1236,12 +1236,18 @@ void aos_app_ha_get(aos_app_t *app)
 /* The home-screen widget                                                      */
 /* -------------------------------------------------------------------------- */
 
-#define W_TILES 4
+/* The widget shows HA's favourites (the app's star), or the entities its
+ * arg names, comma-separated ("light.living,sensor.patio_temperature",
+ * since 2026-10-25): controls a tap away, sensors with their value. As
+ * many as its size holds, up to W_TILES: 4 in a 4x2, 8 in a 4x4. */
+#define W_TILES 8
 
 typedef struct {
     lv_obj_t *title, *hint;
     lv_obj_t *tile[W_TILES], *glyph[W_TILES], *name[W_TILES], *state[W_TILES];
     char id[W_TILES][64];
+    char want[W_TILES][64];         /* from the arg; none: the favourites */
+    int nwant, ntiles;
     int n;
     uint32_t seen;
     lv_timer_t *timer;
@@ -1260,10 +1266,12 @@ static void w_refresh(widget_t *w)
     aos_ha_lock();
     lv_label_set_text(w->title, aos_ha_location());
     char ids[W_TILES][64];
-    int nf = aos_ha_favs(ids, W_TILES);
+    int nf = w->nwant;
+    if (nf) memcpy(ids, w->want, sizeof ids);
+    else nf = aos_ha_favs(ids, w->ntiles);
     bool ready = aos_ha_state() == AOS_HA_READY || aos_ha_count();
     int shown = 0;
-    for (int k = 0; k < W_TILES; k++) {
+    for (int k = 0; k < w->ntiles; k++) {
         int i = k < nf && ready ? aos_ha_find(ids[k]) : -1;
         if (i < 0) { lv_obj_add_flag(w->tile[k], LV_OBJ_FLAG_HIDDEN); continue; }
         const aos_ha_entity_t *e = aos_ha_at(i);
@@ -1284,7 +1292,9 @@ static void w_refresh(widget_t *w)
     }
     aos_ha_state_t st = aos_ha_state();
     lv_label_set_text(w->hint, shown ? "" : st == AOS_HA_UNCONFIGURED ? _("Tocá para configurar la conexión")
-                             : !ready ? state_name(st) : _("Marcá favoritos en la app con la estrella"));
+                             : !ready ? state_name(st)
+                             : w->nwant ? _("Las entidades del widget no están en Home Assistant")
+                             : _("Marcá favoritos en la app con la estrella"));
     aos_ha_unlock();
 }
 
@@ -1304,10 +1314,17 @@ static void w_deleted_cb(lv_event_t *ev)
 
 static void widget_create(lv_obj_t *card, int32_t cw, int32_t ch, const char *arg)
 {
-    (void)arg;
     aos_ha_start();
     widget_t *w = calloc(1, sizeof *w);
     if (!w) return;
+    if (arg && arg[0]) {                    /* the entities, by id */
+        char buf[256];
+        snprintf(buf, sizeof buf, "%s", arg);
+        for (char *tok = strtok(buf, ","); tok && w->nwant < W_TILES; tok = strtok(NULL, ",")) {
+            while (*tok == ' ') tok++;
+            if (strchr(tok, '.')) snprintf(w->want[w->nwant++], sizeof w->want[0], "%s", tok);
+        }
+    }
     lv_obj_add_flag(card, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(card, w_open_cb, LV_EVENT_SHORT_CLICKED, NULL);
     lv_obj_t *g = aos_label(card, AOS_SYM_HOME_ASSISTANT, &aos_sym_28, C_HA);
@@ -1318,11 +1335,14 @@ static void widget_create(lv_obj_t *card, int32_t cw, int32_t ch, const char *ar
     lv_obj_set_width(w->hint, cw - 44);
     lv_label_set_long_mode(w->hint, LV_LABEL_LONG_MODE_WRAP);
     lv_obj_align(w->hint, LV_ALIGN_BOTTOM_LEFT, 0, 0);
-    int cols = cw > 900 ? 4 : cw > 500 ? 4 : 2;
-    int rows = W_TILES / cols;
+    int cols = cw > 500 ? 4 : 2;
     int32_t iw = cw - 44, ih = ch - 44 - 48, gap = 12;
+    /* a 2x2 has four small tiles and a 4x2 four big ones, as before; a
+     * 4x4 has room for a second row of four */
+    int rows = cols == 2 || ih >= 450 ? 2 : 1;
+    w->ntiles = cols * rows;
     int32_t tw = (iw - (cols - 1) * gap) / cols, th = (ih - (rows - 1) * gap) / rows;
-    for (int k = 0; k < W_TILES; k++) {
+    for (int k = 0; k < w->ntiles; k++) {
         lv_obj_t *t = box(card, tw, th);
         lv_obj_set_pos(t, (k % cols) * (tw + gap), 48 + (k / cols) * (th + gap));
         lv_obj_set_style_radius(t, 22, 0);
@@ -1476,8 +1496,39 @@ static void cc_create(lv_obj_t *tile, int32_t w, int32_t h, const char *arg)
     lv_obj_add_event_cb(tile, cc_deleted_cb, LV_EVENT_DELETE, c);
 }
 
+/* For the edit mode's sheet: the favourites first, in their order, then the
+ * rest of the house as the service has it */
+static void choice_fill(aos_widget_choice_t *c, const aos_ha_entity_t *e)
+{
+    snprintf(c->value, sizeof c->value, "%s", e->id);
+    snprintf(c->label, sizeof c->label, "%s", e->name[0] ? e->name : e->id);
+    if (e->domain == HA_SENSOR) fmt_value(e, c->detail, sizeof c->detail);
+    else state_text(e, c->detail, sizeof c->detail);
+}
+
+static int w_choices(aos_widget_choice_t *out, int max)
+{
+    aos_ha_start();                     /* its lock is made there */
+    aos_ha_lock();
+    char favs[W_TILES * 4][64];
+    int nf = aos_ha_favs(favs, W_TILES * 4), n = 0;
+    for (int k = 0; k < nf && n < max; k++) {
+        int i = aos_ha_find(favs[k]);
+        if (i >= 0) choice_fill(&out[n++], aos_ha_at(i));
+    }
+    int count = aos_ha_count();
+    for (int i = 0; i < count && n < max; i++) {
+        const aos_ha_entity_t *e = aos_ha_at(i);
+        if (!aos_ha_is_fav(e->id)) choice_fill(&out[n++], e);
+    }
+    aos_ha_unlock();
+    return n;
+}
+
 void aos_ha_widget_register(void)
 {
     aos_ui_register_widget("ha", widget_create);
+    aos_ui_describe_widget("ha", "Home Assistant", N_("Luces, enchufes y sensores de la casa, a un toque."), AOS_SYM_HOME_ASSISTANT,
+                           W_TILES, w_choices);
     aos_ui_register_widget("cc.ha", cc_create);
 }

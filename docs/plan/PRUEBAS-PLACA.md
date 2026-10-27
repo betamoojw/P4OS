@@ -493,6 +493,25 @@ Que necesitan la mano del usuario o equipos:
     servidor, que desde una Mac (`openssl s_client -tls1_2 -reconnect`)
     tampoco retomó la primera sesión (salió otra, con otro certificado,
     RSA y después ECDSA) y sí las siguientes.
+- [x] Programador: leer y borrar (2026-10-27, después de la 0.22.2), en la
+      placa con el reloj AmoledOS del usuario (ESP32-S3 v0.2, 16 MB) por
+      su propia USB-Serial-JTAG en `usb0`:
+  - Leer la flash entera: 16 MB en 121 s (~135 KB/s, con el stub y el MD5
+    de cada pedazo), guardada en `firmware/volcados/` con su `.json`.
+  - Grabar ese volcado de vuelta: 98,5 s (~190 KB/s, la velocidad en
+    baudios no cuenta por esa USB), MD5 bien; el reloj arrancó con todo
+    como estaba (ajustes, Wi-Fi). Fotos en `docs/img/photo-flasher-*.jpg`.
+  - Encontrado y arreglado en la prueba: después del primer trabajo, todos
+    los siguientes en el mismo puerto daban "The board did not answer"
+    hasta desenchufar el reloj. Al reiniciarse en su programa, un pedido
+    IN de la USB terminaba con error (`a transfer failed (1)`) y el
+    driver CDC-ACM no lo vuelve a armar; el HAL dejaba el puerto "en
+    reposo" con esa lectura muerta. Ahora el puerto que tuvo un error se
+    abre de cero la vez siguiente, y el Programador reintenta una vez por
+    USB. Probado: grabar y enseguida Detectar, sin tocar el cable,
+    conecta al primer intento (`its transfers had failed, opened anew`).
+  - Falta: borrar la flash en la placa (probado sólo en el simulador) y
+    leer por el header con EN/BOOT.
 - [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
       del usuario por OctoPrint:
   - Lista con estado, temperaturas, avance y modelo (del perfil de
@@ -735,7 +754,8 @@ laberinto, pong, radar, walkie, remoto y sensores.
 **Terminal y Programador**
 - [ ] El UART a 460800 por el header.
 - [ ] EN/BOOT reales para programar otra placa.
-- [ ] esp-serial-flasher contra un ESP32 de verdad.
+- [x] esp-serial-flasher contra un ESP32 de verdad (por USB: 2026-10-05 y
+      2026-10-27, el reloj AmoledOS leído y grabado entero).
 
 **Modbus y Banco**
 - [ ] La Riden por TTL: los 20 ms entre pedidos y las escrituras que rechaza en

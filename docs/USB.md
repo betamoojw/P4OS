@@ -343,6 +343,17 @@ Tried with an ESP32-C3 (v0.4, 4 MB) whose old firmware restarted every
 1.5 s (250 KB/s: USB, not the baud rate), then read and written in the
 Terminal.
 
+**And reads a board's flash back** (2026-10-27): an AmoledOS watch, an
+ESP32-S3 with 16 MB on its own USB-Serial-JTAG, read whole to the card in
+121 s and written back in 98.5 s, its MD5 checked. That test found a port
+going deaf: when the watch restarted into its program at the end of a
+job, an IN transfer of its port ended in an error, and Espressif's
+CDC-ACM driver does not submit a failed transfer again. The port stayed
+open at rest (see the top of `aos_usb_serial_p4.c`) with nothing able to
+come in, and every job after it timed out until the cable was pulled. A
+port whose transfer failed is now closed for real at its next open and
+opened anew (`its transfers had failed, opened anew` in the log).
+
 **An ESP32-P4-Nano** (2026-10-15): its USB-C is a WCH CH343 (`1a86:55d3`),
 a standard CDC-ACM device under the CH340's vendor id, so CDC-ACM is taken
 before the vendor drivers (the CH34x driver reset the target but the data

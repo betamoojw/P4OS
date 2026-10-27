@@ -927,7 +927,7 @@ static const char blob_en__sistema_lang[] =
     "Leyendo la flash\tReading the flash\n"
     "Reiniciando la placa\tResetting the board\n"
     "Grabación terminada\tFlashing done\n"
-    "No se pudo grabar\tCould not record\n"
+    "No se pudo grabar\tCouldn't flash\n"
     "Grabación cancelada\tFlashing cancelled\n"
     "Volcado guardado\tDump saved\n"
     "No se pudo leer\tCouldn't read\n"
@@ -2589,6 +2589,7 @@ static const char blob_en__sistema_lang[] =
     "el chip no lo soporta\tthe chip does not support it\n"
     "respuesta inválida\tinvalid response\n"
     "El stub no arrancó (%s): sigo con la ROM\tThe stub did not start (%s): going on with the ROM\n"
+    "La placa no respondió: desenchufala y enchufala, o enchufala con BOOT apretado\tThe board did not answer: unplug it and plug it back, or plug it in holding BOOT\n"
     "La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT\tThe board did not answer: check TX/RX crossed, GND, EN and BOOT\n"
     "No se pudo conectar: %s\tCould not connect: %s\n"
     "Secure boot o descarga segura activos\tSecure boot or secure download mode is on\n"
@@ -2621,6 +2622,7 @@ static const char blob_en__sistema_lang[] =
     "%s: EN/BOOT ocupados por %s\t%s: EN/BOOT taken by %s\n"
     "otro\tanother\n"
     "%s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)\t%s without EN/BOOT: put the board in download mode (hold BOOT and press reset)\n"
+    "No respondió: reabro el puerto y pruebo otra vez\tNo answer: reopening the port to try once more\n"
     "No entra: llega a %u KB y la flash tiene %u KB\tIt does not fit: it reaches %u KB and the flash has %u KB\n"
     "Placa reiniciada\tBoard restarted\n"
     "Reseteá la placa para que arranque el firmware nuevo\tReset the board to start the new firmware\n"
@@ -3700,7 +3702,7 @@ static const char blob_de__sistema_lang[] =
     "Leyendo la flash\tFlash wird gelesen\n"
     "Reiniciando la placa\tSetze Platine zurück\n"
     "Grabación terminada\tFlashen fertig\n"
-    "No se pudo grabar\tAufnahme fehlgeschlagen\n"
+    "No se pudo grabar\tFlashen fehlgeschlagen\n"
     "Grabación cancelada\tFlashen abgebrochen\n"
     "Volcado guardado\tAbbild gespeichert\n"
     "No se pudo leer\tLesen fehlgeschlagen\n"
@@ -5362,6 +5364,7 @@ static const char blob_de__sistema_lang[] =
     "el chip no lo soporta\tder Chip unterstützt das nicht\n"
     "respuesta inválida\tungültige Antwort\n"
     "El stub no arrancó (%s): sigo con la ROM\tDer Stub ist nicht gestartet (%s): weiter mit dem ROM\n"
+    "La placa no respondió: desenchufala y enchufala, o enchufala con BOOT apretado\tDie Platine antwortet nicht: aus- und wieder einstecken, oder mit gedrückter BOOT-Taste einstecken\n"
     "La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT\tDie Platine hat nicht geantwortet: TX/RX gekreuzt, GND, EN und BOOT prüfen\n"
     "No se pudo conectar: %s\tVerbindung fehlgeschlagen: %s\n"
     "Secure boot o descarga segura activos\tSecure Boot oder sicherer Download-Modus aktiv\n"
@@ -5394,6 +5397,7 @@ static const char blob_de__sistema_lang[] =
     "%s: EN/BOOT ocupados por %s\t%s: EN/BOOT belegt von %s\n"
     "otro\tein anderer\n"
     "%s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)\t%s ohne EN/BOOT: Platine in den Download-Modus bringen (BOOT halten und Reset drücken)\n"
+    "No respondió: reabro el puerto y pruebo otra vez\tKeine Antwort: öffne den Port neu und versuche es noch einmal\n"
     "No entra: llega a %u KB y la flash tiene %u KB\tPasst nicht: reicht bis %u KB, der Flash hat %u KB\n"
     "Placa reiniciada\tPlatine neu gestartet\n"
     "Reseteá la placa para que arranque el firmware nuevo\tPlatine zurücksetzen, damit die neue Firmware startet\n"
@@ -5561,7 +5565,7 @@ static const aos_lang_file_t files_de[] = {
 };
 
 const aos_lang_pack_t aos_lang_packs[] = {
-    { "en", "English", 2766, 0, files_en, 1 },
-    { "de", "Deutsch", 2766, 0, files_de, 1 },
+    { "en", "English", 2768, 0, files_en, 1 },
+    { "de", "Deutsch", 2768, 0, files_de, 1 },
 };
 const int aos_lang_pack_count = 2;

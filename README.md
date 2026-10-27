@@ -102,6 +102,15 @@ its gas resistance, which fell to half with alcohol near it and came back.</em><
 <p align="center"><em>An SCD41 found by itself at 0x62: the chart is the CO2
 of a breath on it, from 3000 ppm back to the room's 600.</em></p>
 
+<p align="center">
+  <img src="docs/img/photo-flasher-read.jpg" width="300" alt="The Flasher reading the 16 MB flash of an ESP32-S3 watch over USB, 13 %, 144 KB/s">
+  <img src="docs/img/photo-flasher-write.jpg" width="300" alt="The Flasher writing the same dump back to the watch, 72 %, 193 KB/s, the watch showing its face">
+</p>
+
+<p align="center"><em>The Programmer reading the whole flash of an AmoledOS
+watch (an ESP32-S3 on its own USB) to the card, and writing it back: the
+watch came back with every setting it had.</em></p>
+
 ---
 
 ## What it does

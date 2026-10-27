@@ -362,6 +362,8 @@ static bool connect(ctx_t *c, bool stub)
     if (e == ESP_LOADER_SUCCESS && !stub && esp_loader_get_target(&c->L) == ESP32P4_CHIP)
         p4_power_on_flash(&c->L);
     if (fl_cancel) return false;
+    if (e != ESP_LOADER_SUCCESS && e == ESP_LOADER_ERROR_TIMEOUT && !strncmp(J.port, "usb", 3))
+        return fl_fail("%s", _("La placa no respondió: desenchufala y enchufala, o enchufala con BOOT apretado"));
     if (e != ESP_LOADER_SUCCESS)
         return fl_fail(e == ESP_LOADER_ERROR_TIMEOUT ? _("La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT")
                                                    : _("No se pudo conectar: %s"), err_text(e));
@@ -599,7 +601,23 @@ static bool run(ctx_t *c)
     /* the stub for anything but a look: it reads in 4 KB packets with an
      * MD5 and erases the whole chip in one command */
     bool stub = J.job != AOS_FLASHER_JOB_DETECT && !J.opts.no_stub;
-    if (!connect(c, stub)) return false;
+    bool ok = connect(c, stub);
+    if (!ok && usb && !fl_cancel) {
+        /* once more on a port opened again: a USB port whose input had
+         * died (a failed transfer, which the driver never resubmits) comes
+         * back opened anew from the HAL (aos_usb_serial_p4.c) */
+        fl_logf(L_WARN, "%s", _("No respondió: reabro el puerto y pruebo otra vez"));
+        aos_io_uart_close(c->u);
+        c->u = NULL;
+        for (int i = 0; !c->u && i < 30 && !fl_cancel; i++) {
+            c->u = aos_io_uart_open(J.port, 115200, false, AOS_FLASHER_OWNER);
+            if (!c->u) aos_hal_sleep_ms(100);
+        }
+        if (!c->u) return fl_fail(_("No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?"), J.port);
+        c->P.u = c->u;
+        ok = connect(c, stub);
+    }
+    if (!ok) return false;
     if (!read_info(c)) return false;
     if (J.job == AOS_FLASHER_JOB_DETECT) return true;
     if (J.job == AOS_FLASHER_JOB_READ) return go_fast(c) && read_flash(c);

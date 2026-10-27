@@ -41,6 +41,12 @@ regiones (dirección, bytes) antes de ir a la familia.
 
 ## F1: la base común y el volcado
 
+**Hecha el 2026-10-27** (a9d041a y el arreglo del USB que siguió): leer y
+borrar un ESP, en el simulador y en la placa con el reloj AmoledOS por USB
+(16 MB leídos en 121 s, grabados de vuelta en 98,5 s). Los formatos están
+hechos y probados en la Mac; la lista todavía muestra sólo los `.bin`,
+hasta que una familia que los use (SWD, AVR) los pida.
+
 - **Familias en el servicio**: `aos_flasher.c` se queda con el trabajo, el
   hilo, el estado y el registro; cada familia es un archivo con
   `detectar / grabar / leer / borrar / reiniciar` (`aos_flasher_esp.c` el

@@ -9,9 +9,18 @@
   every 16 KB piece is checked by the MD5 the target computes. A dump comes
   back in the list as firmware, so writing it puts a board back as it was,
   or clones it onto another. "Borrar la flash" erases all of it, after
-  asking. Tried in the simulator against `tools/fake_esp_rom.py`, which now
-  speaks the stub's read: 4 MB read at 460800 baud in 110 s, byte for
-  byte; dump, erase, write back and read again gave the same flash.
+  asking. On the board, an AmoledOS watch (ESP32-S3, 16 MB) on its own USB:
+  read whole in 121 s, written back in 98.5 s with its MD5 checked, and
+  it came back with all its settings. In the simulator, against
+  `tools/fake_esp_rom.py`, which now speaks the stub's read: dump, erase,
+  write back and read again gave the same flash, byte for byte.
+- **A USB serial port no longer goes deaf after its device restarts.** A
+  port at rest whose input transfer had failed (an ESP32-S3 restarting into
+  its program at the end of a job did it) never received another byte:
+  the CDC-ACM driver does not submit a failed transfer again. Such a port
+  is now opened anew, and the Programmer retries once over USB; before, it
+  took pulling the cable. "Could not record" was the English for the
+  Programmer's "No se pudo grabar": it is "Couldn't flash" now.
 - The first steps of a universal programmer (`docs/plan/PROGRAMADOR.md`):
   the service is split into a core and families (ESP32 is the first), and
   it reads `.hex`, `.elf` and `.uf2` into regions for the families to come

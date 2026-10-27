@@ -1278,7 +1278,7 @@ Dispositivo desconocido	Unbekanntes Gerät
 
 #: components/aos_apps/aos_app_bus.c:679
 #: components/aos_apps/aos_app_modbus.c:1360
-#: components/aos_flasher/aos_flasher.c:312
+#: components/aos_flasher/aos_flasher.c:313
 Leer	Lesen
 
 #: components/aos_apps/aos_app_bus.c:686
@@ -2543,7 +2543,7 @@ Tipo	Typ
 No se pudo leer %s	%s nicht lesbar
 
 #: components/aos_apps/aos_app_files.c:976
-#: components/aos_flasher/aos_flasher.c:202
+#: components/aos_flasher/aos_flasher.c:203
 No se pudo crear %s	%s nicht erstellbar
 
 #: components/aos_apps/aos_app_files.c:991
@@ -2946,8 +2946,8 @@ Seguir usando	Weiter nutzen
 %s de %s · %s de %s%s%s	%s von %s · %s von %s%s%s
 
 #: components/aos_apps/aos_app_files.c:4116
-#: components/aos_flasher/aos_flasher.c:294
-#: components/aos_flasher/aos_flasher.c:303
+#: components/aos_flasher/aos_flasher.c:295
+#: components/aos_flasher/aos_flasher.c:304
 Cancelado	Abgebrochen
 
 #: components/aos_apps/aos_app_files.c:4117
@@ -3055,7 +3055,7 @@ Reiniciando la placa	Setze Platine zurück
 Grabación terminada	Flashen fertig
 
 #: components/aos_apps/aos_app_flasher.c:75
-No se pudo grabar	Aufnahme fehlgeschlagen
+No se pudo grabar	Flashen fehlgeschlagen
 
 #: components/aos_apps/aos_app_flasher.c:76
 Grabación cancelada	Flashen abgebrochen
@@ -3106,7 +3106,7 @@ Buscando	Suche
 
 #: components/aos_apps/aos_app_flasher.c:295
 #: components/aos_apps/aos_app_flasher.c:518
-#: components/aos_flasher/aos_flasher.c:310
+#: components/aos_flasher/aos_flasher.c:311
 Detectar	Erkennen
 
 #: components/aos_apps/aos_app_flasher.c:329
@@ -3816,8 +3816,8 @@ Paso	Schritt
 Patrón	Muster
 
 #: components/aos_apps/aos_app_life.c:593
-#: components/aos_flasher/aos_flasher_esp.c:627
-#: components/aos_flasher/aos_flasher_esp.c:629
+#: components/aos_flasher/aos_flasher_esp.c:645
+#: components/aos_flasher/aos_flasher_esp.c:647
 Sin memoria	Kein Speicher
 
 #: components/aos_apps/aos_app_life.c:644
@@ -8334,25 +8334,25 @@ La placa se cayó la vez anterior: el volcado está en el portal, en Registro.	D
 #: components/aos_flasher/aos_flasher.c:185
 No hay tarjeta para guardar el volcado	Keine Karte, um das Abbild zu speichern
 
-#: components/aos_flasher/aos_flasher.c:217
+#: components/aos_flasher/aos_flasher.c:218
 Leyendo %s desde 0x%X	Lese %s ab 0x%X
 
-#: components/aos_flasher/aos_flasher.c:224
+#: components/aos_flasher/aos_flasher.c:225
 No se pudo escribir en la tarjeta: ¿está llena?	Schreiben auf die Karte fehlgeschlagen: ist sie voll?
 
-#: components/aos_flasher/aos_flasher.c:242
+#: components/aos_flasher/aos_flasher.c:243
 No se pudo guardar %s	%s konnte nicht gespeichert werden
 
-#: components/aos_flasher/aos_flasher.c:275
+#: components/aos_flasher/aos_flasher.c:276
 Guardado: %s	Gespeichert: %s
 
-#: components/aos_flasher/aos_flasher.c:301
+#: components/aos_flasher/aos_flasher.c:302
 Listo en %u,%u s	Fertig in %u,%u s
 
-#: components/aos_flasher/aos_flasher.c:345
+#: components/aos_flasher/aos_flasher.c:346
 %s %s en %s	%s %s an %s
 
-#: components/aos_flasher/aos_flasher.c:350
+#: components/aos_flasher/aos_flasher.c:351
 No se pudo lanzar la tarea	Der Task konnte nicht gestartet werden
 
 #: components/aos_flasher/aos_flasher_esp.c:225
@@ -8386,112 +8386,119 @@ respuesta inválida	ungültige Antwort
 El stub no arrancó (%s): sigo con la ROM	Der Stub ist nicht gestartet (%s): weiter mit dem ROM
 
 #: components/aos_flasher/aos_flasher_esp.c:366
+La placa no respondió: desenchufala y enchufala, o enchufala con BOOT apretado	Die Platine antwortet nicht: aus- und wieder einstecken, oder mit gedrückter BOOT-Taste einstecken
+
+#: components/aos_flasher/aos_flasher_esp.c:368
 La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT	Die Platine hat nicht geantwortet: TX/RX gekreuzt, GND, EN und BOOT prüfen
 
-#: components/aos_flasher/aos_flasher_esp.c:367
+#: components/aos_flasher/aos_flasher_esp.c:369
 No se pudo conectar: %s	Verbindung fehlgeschlagen: %s
 
-#: components/aos_flasher/aos_flasher_esp.c:412
+#: components/aos_flasher/aos_flasher_esp.c:414
 Secure boot o descarga segura activos	Secure Boot oder sicherer Download-Modus aktiv
 
-#: components/aos_flasher/aos_flasher_esp.c:414
+#: components/aos_flasher/aos_flasher_esp.c:416
 La flash está cifrada: grabarla en claro la deja sin arrancar	Der Flash ist verschlüsselt: unverschlüsselt beschrieben startet die Platine nicht mehr
 
-#: components/aos_flasher/aos_flasher_esp.c:416
+#: components/aos_flasher/aos_flasher_esp.c:418
 La flash está cifrada: el volcado sale cifrado, sirve para esta misma placa	Der Flash ist verschlüsselt: das Abbild auch, es taugt nur für dieselbe Platine
 
-#: components/aos_flasher/aos_flasher_esp.c:418
+#: components/aos_flasher/aos_flasher_esp.c:420
 El firmware es para %s y la placa es %s	Die Firmware ist für %s, die Platine ist %s
 
-#: components/aos_flasher/aos_flasher_esp.c:423
+#: components/aos_flasher/aos_flasher_esp.c:425
 El firmware acepta la revisión v%u.%u a v%u.%u y el chip es v%u.%u: no arrancaría	Die Firmware akzeptiert Revision v%u.%u bis v%u.%u, der Chip ist v%u.%u: sie würde nicht starten
 
-#: components/aos_flasher/aos_flasher_esp.c:442
+#: components/aos_flasher/aos_flasher_esp.c:444
 Velocidad: %u baudios	Geschwindigkeit: %u Baud
 
-#: components/aos_flasher/aos_flasher_esp.c:448
+#: components/aos_flasher/aos_flasher_esp.c:450
 A %u baudios no contesta: vuelvo a 115200	Bei %u Baud keine Antwort: zurück auf 115200
 
-#: components/aos_flasher/aos_flasher_esp.c:449
+#: components/aos_flasher/aos_flasher_esp.c:451
 La placa quedó a %u baudios: reseteala y probá de nuevo	Die Platine steht auf %u Baud: zurücksetzen und erneut versuchen
 
-#: components/aos_flasher/aos_flasher_esp.c:460
-#: components/aos_flasher/aos_flasher_esp.c:582
+#: components/aos_flasher/aos_flasher_esp.c:462
+#: components/aos_flasher/aos_flasher_esp.c:584
 No se pudo abrir %s	%s konnte nicht geöffnet werden
 
-#: components/aos_flasher/aos_flasher_esp.c:479
+#: components/aos_flasher/aos_flasher_esp.c:481
 0x%x: no empezó (%s)	0x%x: nicht begonnen (%s)
 
-#: components/aos_flasher/aos_flasher_esp.c:487
+#: components/aos_flasher/aos_flasher_esp.c:489
 %s: no se pudo leer de la tarjeta	%s: konnte nicht von der Karte gelesen werden
 
-#: components/aos_flasher/aos_flasher_esp.c:492
+#: components/aos_flasher/aos_flasher_esp.c:494
 0x%x: falló la escritura (%s)	0x%x: Schreiben fehlgeschlagen (%s)
 
-#: components/aos_flasher/aos_flasher_esp.c:509
+#: components/aos_flasher/aos_flasher_esp.c:511
 : escrito	: geschrieben
 
-#: components/aos_flasher/aos_flasher_esp.c:509
+#: components/aos_flasher/aos_flasher_esp.c:511
 : escrito, MD5 bien	: geschrieben, MD5 in Ordnung
 
-#: components/aos_flasher/aos_flasher_esp.c:520
+#: components/aos_flasher/aos_flasher_esp.c:522
 0x%X queda fuera de la flash (%u KB)	0x%X liegt außerhalb des Flash (%u KB)
 
-#: components/aos_flasher/aos_flasher_esp.c:523
+#: components/aos_flasher/aos_flasher_esp.c:525
 No se sabe el tamaño de la flash: indicá cuánto leer	Flash-Größe unbekannt: gib an, wie viel gelesen werden soll
 
-#: components/aos_flasher/aos_flasher_esp.c:537
+#: components/aos_flasher/aos_flasher_esp.c:539
 0x%X: falló la lectura (%s)	0x%X: Lesen fehlgeschlagen (%s)
 
-#: components/aos_flasher/aos_flasher_esp.c:547
+#: components/aos_flasher/aos_flasher_esp.c:549
 Leído con la ROM: sin verificar	Mit dem ROM gelesen: nicht geprüft
 
-#: components/aos_flasher/aos_flasher_esp.c:554
+#: components/aos_flasher/aos_flasher_esp.c:556
 Borrando toda la flash (%u MB)	Lösche den ganzen Flash (%u MB)
 
-#: components/aos_flasher/aos_flasher_esp.c:558
+#: components/aos_flasher/aos_flasher_esp.c:560
 No se pudo borrar: %s	Löschen fehlgeschlagen: %s
 
-#: components/aos_flasher/aos_flasher_esp.c:560
+#: components/aos_flasher/aos_flasher_esp.c:562
 Flash borrada en %u,%u s	Flash gelöscht in %u,%u s
 
-#: components/aos_flasher/aos_flasher_esp.c:569
+#: components/aos_flasher/aos_flasher_esp.c:571
 No hay un puerto serie %s	Es gibt keinen seriellen Port %s
 
-#: components/aos_flasher/aos_flasher_esp.c:578
+#: components/aos_flasher/aos_flasher_esp.c:580
+#: components/aos_flasher/aos_flasher_esp.c:616
 No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?	%s konnte nicht geöffnet werden: angeschlossen, oder im Terminal offen?
 
-#: components/aos_flasher/aos_flasher_esp.c:582
+#: components/aos_flasher/aos_flasher_esp.c:584
 %s está ocupado: lo tiene %s	%s ist belegt: %s nutzt ihn
 
-#: components/aos_flasher/aos_flasher_esp.c:593
+#: components/aos_flasher/aos_flasher_esp.c:595
 %s: la USB-Serial-JTAG del chip, se reinicia sola	%s: das USB-Serial-JTAG des Chips, setzt sich selbst zurück
 
-#: components/aos_flasher/aos_flasher_esp.c:594
+#: components/aos_flasher/aos_flasher_esp.c:596
 %s, EN por RTS y BOOT por DTR	%s, EN über RTS und BOOT über DTR
 
-#: components/aos_flasher/aos_flasher_esp.c:595
+#: components/aos_flasher/aos_flasher_esp.c:597
 %s, EN GPIO%d, BOOT GPIO%d	%s, EN GPIO%d, BOOT GPIO%d
 
-#: components/aos_flasher/aos_flasher_esp.c:596
+#: components/aos_flasher/aos_flasher_esp.c:598
 %s: EN/BOOT ocupados por %s	%s: EN/BOOT belegt von %s
 
-#: components/aos_flasher/aos_flasher_esp.c:596
+#: components/aos_flasher/aos_flasher_esp.c:598
 otro	ein anderer
 
-#: components/aos_flasher/aos_flasher_esp.c:597
+#: components/aos_flasher/aos_flasher_esp.c:599
 %s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)	%s ohne EN/BOOT: Platine in den Download-Modus bringen (BOOT halten und Reset drücken)
 
-#: components/aos_flasher/aos_flasher_esp.c:614
+#: components/aos_flasher/aos_flasher_esp.c:609
+No respondió: reabro el puerto y pruebo otra vez	Keine Antwort: öffne den Port neu und versuche es noch einmal
+
+#: components/aos_flasher/aos_flasher_esp.c:632
 No entra: llega a %u KB y la flash tiene %u KB	Passt nicht: reicht bis %u KB, der Flash hat %u KB
 
-#: components/aos_flasher/aos_flasher_esp.c:639
+#: components/aos_flasher/aos_flasher_esp.c:657
 Placa reiniciada	Platine neu gestartet
 
-#: components/aos_flasher/aos_flasher_esp.c:641
+#: components/aos_flasher/aos_flasher_esp.c:659
 Reseteá la placa para que arranque el firmware nuevo	Platine zurücksetzen, damit die neue Firmware startet
 
-#: components/aos_flasher/aos_flasher_esp.c:654
+#: components/aos_flasher/aos_flasher_esp.c:672
 Falta esp-serial-flasher: compilá el firmware una vez (managed_components)	esp-serial-flasher fehlt: die Firmware einmal bauen (managed_components)
 
 #: components/aos_hal/aos_net_p4.c:448

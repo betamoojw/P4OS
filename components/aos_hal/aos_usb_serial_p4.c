@@ -12,7 +12,11 @@
  *
  * What comes in lands in a stream buffer in PSRAM (16 KB) that the reader
  * empties; writing blocks up to half a second. A device unplugged while
- * open closes its port: reads answer -1 from then on.
+ * open closes its port: reads answer -1 from then on. So does the host
+ * stopping (the pendrive host off, or lent to the probe): an open port
+ * keeps its buffer, which its reader may be waiting on at that moment,
+ * until whoever has it closes it (2026-11-03: the Terminal on usb0 and the
+ * host turned off freed it under the reader, and the board fell).
  *
  * Once opened, the USB side stays open until the device goes (or the host
  * stops): closing the port only puts it to rest, dropping what comes in,
@@ -21,6 +25,14 @@
  * an FTDI (measured on 2026-10-04): the CDC-ACM driver resets its side of
  * the endpoints on close and not the device's, so their data toggles part
  * ways. And that close is where the driver aborted under heavy traffic.
+ *
+ * But a port at rest whose IN transfer failed is dead: the driver reports
+ * the error (CDC_ACM_HOST_ERROR) and does not submit the transfer again, so
+ * nothing would ever come in on it. An ESP32-S3 on its own USB-Serial-JTAG
+ * did that when it restarted into its program at the end of a programmer's
+ * job (2026-10-27): every job after it on the same port timed out, until the
+ * cable was pulled. Such a port is closed for real at its next open and
+ * opened anew.
  */
 #include "aos_hal.h"
 
@@ -56,6 +68,7 @@ typedef struct {
     StreamBufferHandle_t rx;
     volatile bool closed;           /* unplugged while open */
     volatile bool in_use;           /* opened by someone; false: at rest, input dropped */
+    volatile bool broken;           /* a transfer failed: the IN side is dead until a fresh open */
 } ser_t;
 
 static struct {
@@ -191,13 +204,20 @@ static void event_cb(const cdc_acm_host_dev_event_data_t *ev, void *arg)
     if (ev->type == CDC_ACM_HOST_DEVICE_DISCONNECTED) {
         ESP_LOGI(TAG, "serial \"%s\" unplugged", s->name);
         s->closed = true;
+    } else if (ev->type == CDC_ACM_HOST_ERROR) {
+        if (!s->broken) ESP_LOGW(TAG, "serial \"%s\": a transfer failed (%d)", s->name, ev->data.error);
+        s->broken = true;
     }
 }
 
 bool aos_p4_usb_serial_start(void)
 {
     if (!S.mx) S.mx = xSemaphoreCreateMutex();
-    memset(S.s, 0, sizeof S.s);
+    /* a port still open from before the host stopped stays, closed, until
+     * its owner closes it */
+    xSemaphoreTake(S.mx, portMAX_DELAY);
+    for (int i = 0; i < SER_MAX; i++) if (!S.s[i].in_use) memset(&S.s[i], 0, sizeof S.s[i]);
+    xSemaphoreGive(S.mx);
     const cdc_acm_host_driver_config_t cfg = { .driver_task_stack_size = 4096, .driver_task_priority = 5, .xCoreID = 0,
                                                .new_dev_cb = new_dev };
     esp_err_t e = cdc_acm_host_install(&cfg);
@@ -209,10 +229,23 @@ bool aos_p4_usb_serial_start(void)
 void aos_p4_usb_serial_stop(void)
 {
     if (!S.installed) return;
-    for (int i = 0; i < SER_MAX; i++) dispose(&S.s[i]);
-    cdc_acm_host_uninstall();
+    xSemaphoreTake(S.mx, portMAX_DELAY);
+    for (int i = 0; i < SER_MAX; i++) {
+        ser_t *s = &S.s[i];
+        if (s->in_use) {
+            /* its USB side goes; its buffer stays for the reader (as an
+             * unplugged device's), freed when the port is closed */
+            if (s->cdc) cdc_acm_host_close(s->cdc);
+            s->cdc = NULL;
+            s->closed = true;
+        } else {
+            dispose(s);
+            memset(s, 0, sizeof *s);
+        }
+    }
     S.installed = false;
-    memset(S.s, 0, sizeof S.s);
+    xSemaphoreGive(S.mx);
+    cdc_acm_host_uninstall();
 }
 
 int aos_hal_usb_serial_count(void)
@@ -253,6 +286,11 @@ int aos_hal_usb_serial_open(int index, uint32_t baud)
     ser_t *s = i >= 0 ? &S.s[i] : NULL;
     xSemaphoreGive(S.mx);
     if (!s || s->in_use || s->closed) return -1;
+    if (s->cdc && s->broken) {
+        ESP_LOGI(TAG, "serial \"%s\": its transfers had failed, opened anew", s->name);
+        dispose(s);
+    }
+    s->broken = false;
     if (s->cdc) {
         /* at rest since its last close: taken back as it is */
         xStreamBufferReset(s->rx);
@@ -341,7 +379,7 @@ bool aos_hal_usb_serial_lines(int h, bool dtr, bool rts)
 
 void aos_hal_usb_serial_close(int h)
 {
-    if (h < 0 || h >= SER_MAX || !S.installed) return;
+    if (h < 0 || h >= SER_MAX || !S.mx) return;        /* with the host stopped too: its buffer goes now */
     xSemaphoreTake(S.mx, portMAX_DELAY);
     ser_t *s = &S.s[h];
     s->in_use = false;                  /* at rest: the USB side stays open (see the top) */

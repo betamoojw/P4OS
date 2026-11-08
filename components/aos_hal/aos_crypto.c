@@ -18,12 +18,17 @@
 #include "mbedtls/md.h"
 #include "mbedtls/sha256.h"
 
+#include <stdlib.h>
+
 #ifdef ESP_PLATFORM
+#include "esp_heap_caps.h"
 #include "esp_random.h"
 void aos_hal_random(void *buf, size_t len) { esp_fill_random(buf, len); }
+/* a context is ~110 bytes: plain malloc would put it in internal RAM */
+#define CTX_ALLOC(n) heap_caps_malloc(n, MALLOC_CAP_SPIRAM)
 #else
-#include <stdlib.h>
 void aos_hal_random(void *buf, size_t len) { arc4random_buf(buf, len); }
+#define CTX_ALLOC(n) malloc(n)
 #endif
 
 static int rng(void *ctx, unsigned char *out, size_t n)
@@ -36,6 +41,30 @@ static int rng(void *ctx, unsigned char *out, size_t n)
 void aos_hal_sha256(const void *data, size_t len, uint8_t out[32])
 {
     mbedtls_sha256(data, len, out, 0);
+}
+
+struct aos_hal_sha256_ctx { mbedtls_sha256_context c; };
+
+aos_hal_sha256_ctx_t *aos_hal_sha256_begin(void)
+{
+    aos_hal_sha256_ctx_t *h = CTX_ALLOC(sizeof *h);
+    if (!h) return NULL;
+    mbedtls_sha256_init(&h->c);
+    mbedtls_sha256_starts(&h->c, 0);
+    return h;
+}
+
+void aos_hal_sha256_update(aos_hal_sha256_ctx_t *h, const void *data, size_t len)
+{
+    if (h && len) mbedtls_sha256_update(&h->c, data, len);
+}
+
+void aos_hal_sha256_end(aos_hal_sha256_ctx_t *h, uint8_t out[32])
+{
+    if (!h) return;
+    if (out) mbedtls_sha256_finish(&h->c, out);
+    mbedtls_sha256_free(&h->c);
+    free(h);
 }
 
 void aos_hal_hmac_sha256(const void *key, size_t klen, const void *data, size_t len, uint8_t out[32])

@@ -7,6 +7,71 @@ fuera del bus	总线关闭
 Solo escucha	只是听着
 Normal	正常
 Autoprueba	自行测试
+Luz de falla y códigos	发动机故障灯与故障码
+Carga calculada	计算负荷
+Refrigerante	冷却液温度
+Corrección corta, banco 1	第 1 缸列短期燃油修正
+Corrección larga, banco 1	第 1 缸列长期燃油修正
+Corrección corta, banco 2	第 2 缸列短期燃油修正
+Corrección larga, banco 2	第 2 缸列长期燃油修正
+Presión de combustible	燃油压力
+Presión del múltiple	进气歧管压力
+Régimen del motor	发动机转速
+Velocidad	车速
+Avance del encendido	点火提前角
+Aire de admisión	进气温度
+Caudal de aire (MAF)	空气流量（MAF）
+Mariposa	节气门开度
+Sonda de oxígeno, banco 1, 1	氧传感器，第 1 缸列第 1 个
+Sonda de oxígeno, banco 1, 2	氧传感器，第 1 缸列第 2 个
+Norma OBD	OBD 标准
+Desde el arranque	发动机启动后运行时间
+Recorrido con la luz de falla	故障灯点亮后行驶距离
+Presión del riel (relativa)	燃油轨压力（相对值）
+Presión del riel	燃油轨压力
+EGR comandada	指令 EGR 开度
+Error de la EGR	EGR 误差
+Purga del cánister	燃油蒸发系统清除指令
+Nivel de combustible	燃油液位
+Calentamientos desde el borrado	清码后的暖机次数
+Recorrido desde el borrado	清码后行驶距离
+Presión barométrica	大气压力
+Catalizador, banco 1, 1	催化器温度，第 1 缸列第 1 个
+Catalizador, banco 2, 1	催化器温度，第 2 缸列第 1 个
+Tensión del módulo	控制模块电压
+Carga absoluta	绝对负荷
+Lambda comandada	指令空燃当量比
+Mariposa relativa	相对节气门开度
+Temperatura ambiente	环境温度
+Mariposa absoluta B	绝对节气门开度 B
+Pedal D	加速踏板位置 D
+Pedal E	加速踏板位置 E
+Mariposa comandada	指令节气门开度
+Tiempo con la luz de falla	故障灯点亮时间
+Tiempo desde el borrado	清码后经过时间
+Combustible	燃料类型
+Etanol	乙醇含量
+Presión del riel (absoluta)	燃油轨压力（绝对值）
+Pedal relativo	相对加速踏板位置
+Batería del híbrido	混合动力电池电量
+Aceite	机油温度
+Inyección	喷油正时
+Consumo	燃油消耗率
+Par pedido	请求扭矩
+Par real	实际扭矩
+Par de referencia	参考扭矩
+Odómetro	里程表
+sin dato	不可用
+nafta	汽油
+metanol	甲醇
+etanol	乙醇
+diésel	柴油
+GLP	液化石油气
+GNC	压缩天然气
+propano	丙烷
+eléctrico	电动
+sin OBD	无 OBD 支持
+código %d	代码 %d
 CAN	CAN
 Abierta en la placa	在板上打开
 Abrir CAN en la placa	打开 CAN 在板上
@@ -33,8 +98,46 @@ n	n
 datos	数据
 por s	每个月
 vistas	看到的
-La app no está contestando: lo que mandes se manda cuando vuelva.	应用程序没有回复:你发送的东西返回时会被删除.
+Buscar un mensaje por id o nombre	按 ID 或名称搜索报文
+No está can/%s	缺少 can/%s
+%s no es un .dbc	%s 不是 .dbc 文件
+Subido a can/dbc	已上传到 can/dbc
+Subir .dbc	上传 .dbc
+¿Borrar %s de la tarjeta? No se puede deshacer.	从存储卡删除 %s？此操作无法撤销。
+Borrar	删除
+%d mensajes, %d señales. La placa muestra los mensajes elegidos acá, o los que pasan por el bus.	%d 条报文，%d 个信号。开发板显示此处选中的报文，或总线上出现的报文。
+Leyendo…	正在读取…
+Los .dbc van en la carpeta can/dbc de la tarjeta. Bibliotecas abiertas: opendbc de comma.ai (github.com/commaai/opendbc, carpeta opendbc/dbc) y nberlette/canbus (carpeta dbc, con OBD-II y J1939 genéricos); las dos con licencia MIT.	.dbc 文件放在存储卡的 can/dbc 文件夹中。可使用开放库：comma.ai 的 opendbc（github.com/commaai/opendbc，目录 opendbc/dbc）和 nberlette/canbus（目录 dbc，包含通用 OBD-II 和 J1939）；两者均使用 MIT 许可证。
+Los que pasan por el bus	总线上出现的报文
+Marcá los mensajes que querés ver	勾选要显示的报文
+Elegidos: %d	已选：%d
+Hasta %d mensajes	最多 %d 条报文
+%d señales	%d 个信号
+en el bus	总线上已出现
+Y %d más: buscá para acotar.	另有 %d 条：请搜索以缩小范围。
+Ningún mensaje del archivo pasa por el bus (o la app no está mirando).	文件中的报文尚未出现在总线上（或应用尚未监听）。
+Sin mensajes elegidos.	未选择报文。
+Preguntar (11 bits)	查询（11 位）
+Preguntar (29 bits)	查询（29 位）
+Parar	停止
+Pregunta los PIDs del modo 01 de SAE J1979 a 7DF (o 18DB33F1): primero el PID 00, el mapa de los que conoce el auto, y después esos, en vuelta. Necesita el modo Normal, que se elige en la placa: la app abre siempre en Solo escucha. En muchos autos modernos el conector OBD da sólo diagnóstico, porque un gateway separa los buses internos.	向 7DF（或 18DB33F1）查询 SAE J1979 模式 01 的 PID：先请求 PID 00 获取车辆支持的 PID，再循环查询。需在开发板上选择“正常”模式，应用默认以“仅监听”模式打开。许多现代汽车的 OBD 接口仅提供诊断信息，因为网关隔离了内部总线。
+Detenido	已停止
+Preguntando qué PIDs conoce…	正在查询支持的 PID…
+En vivo	实时
+Nadie contestó	无设备响应
+Detenido: hace falta el modo Normal	已停止：需要“正常”模式
+Detenido: nadie confirma lo que manda	已停止：发送的数据未收到确认
+Sin datos de la app.	暂无应用数据。
+contestan %s · %d respuestas	%s 正在响应 · %d 次响应
 El bus está desconectado en la app.	公共汽车在应用程序中断开.
+La app está en %s: para preguntar hace falta Normal, y se cambia en la placa.	应用处于 %s 模式：主动查询需要“正常”模式，请在开发板上更改。
+PID	参数 ID
+qué	参数
+valor	数值
+de	来源
+hace	距今
+sin fórmula	无解码公式
+La app no está contestando: lo que mandes se manda cuando vuelva.	应用程序没有回复:你发送的东西返回时会被删除.
 La app está en Solo escucha: no sale nada. El modo se cambia en la placa.	应用程序只在听话中,没有任何东西会输出.
 Autoprueba: vuelve sólo a la placa, no sale al bus.	自行测试:它只返回板上,而不是去公共汽车.
 Normal: sale al bus. Nunca al de un auto en marcha.	通常,它会走到公共汽车上.
@@ -48,15 +151,16 @@ Bajar	下载
 Se está grabando: pararla primero	它正在录制:先停止它
 ¿Borrar %s? No se puede deshacer.	删除 %s这不能被撤销.
 Borrada	删除
-Borrar	删除
 Todavía no hay grabaciones: se graba desde la placa o con el botón de arriba.	尚未录制任何录音:从开发板或上面的按钮中录制。
 Guardado: la app lo vuelve a leer	保存:应用程序再次阅读
 Guardar	保存
 Tramas guardadas	保存的框架
 can/enviar.txt: una por línea, la trama, el período en ms (0 a mano) y un nombre.	可以/enviar.txt:每行一个,框架, ms (0 手动) 的时间和名称.
-Señales	信号
-can/senales.dbc: un .dbc (BO_ y SG_; lo demás se saltea). La app las decodifica y grafica.	可以/senales.dbc: .dbc (BO_和 SG_;其余部分是省略的).
+Señales propias	自定义信号
+can/senales.dbc: un .dbc propio (BO_, SG_, VAL_). Los bajados van en can/dbc y se eligen arriba.	can/senales.dbc：自定义 .dbc 文件（BO_、SG_、VAL_）。下载的文件放入 can/dbc，并在上方选择。
 Por id	通过ID
+Señales	信号
+OBD-II	OBD-II 诊断
 Últimas tramas	最新框架
 Grabaciones	录音
 Archivos de la app	应用程序的文件

@@ -660,6 +660,15 @@ __attribute__((weak)) void aos_hal_random(void *buf, size_t len)
 __attribute__((weak)) void aos_hal_sha256(const void *data, size_t len, uint8_t out[32])
 { }
 
+__attribute__((weak)) aos_hal_sha256_ctx_t * aos_hal_sha256_begin(void)
+{ return NULL; }
+
+__attribute__((weak)) void aos_hal_sha256_update(aos_hal_sha256_ctx_t *c, const void *data, size_t len)
+{ }
+
+__attribute__((weak)) void aos_hal_sha256_end(aos_hal_sha256_ctx_t *c, uint8_t out[32])
+{ }
+
 __attribute__((weak)) void aos_hal_hmac_sha256(const void *key, size_t klen, const void *data, size_t len, uint8_t out[32])
 { }
 
@@ -953,6 +962,15 @@ __attribute__((weak)) void aos_hal_usb_restore(void)
 
 __attribute__((weak)) bool aos_hal_usb_mouse_hold(int buttons)
 { bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) int aos_hal_usb_probe_read(uint8_t *buf, int cap, uint32_t timeout_ms)
+{ int v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) bool aos_hal_usb_probe_write(const uint8_t *buf, int len)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) int aos_hal_usb_probe_packet(void)
+{ int v; memset(&v, 0, sizeof v); return v; }
 
 __attribute__((weak)) bool aos_hal_usb_host_on(void)
 { bool v; memset(&v, 0, sizeof v); return v; }

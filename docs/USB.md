@@ -20,6 +20,7 @@ devices plugged into the board, is a switch of its own, at the end):
 | Off | nothing | on the board |
 | Keyboard and mouse | a HID keyboard, mouse and media keys, a gamepad, a MIDI keyboard and a network (the Macro pad, `docs/MACROPAD.md`) | on the board |
 | Disk | the microSD as a USB drive | the computer's, until it ejects it |
+| Probe | a CMSIS-DAP v2 debug probe on a header port's SWD pins (the Programador's: see below) | on the board |
 
 The mode is remembered across restarts (pref `usb_mode`,
 `aos_hal_usb_restore()` once the boot has read the card): after an OTA the
@@ -154,6 +155,53 @@ internal RAM audit, `docs/MEMORY.md`).
 - **VBUS is not monitored,** so pulling the cable without ejecting looks to
   the board like a suspended bus, not an unplug: the card stays on the USB
   side until a mode is chosen in Settings.
+
+## Probe mode
+
+A CMSIS-DAP v2 debug probe on the SWD pins of a header port, for OpenOCD,
+pyOCD and probe-rs on the computer (`docs/plan/PROGRAMADOR.md`, F5). It is
+a job of the Programador's, started from its SWD page ("Sonda para la
+computadora") or from Settings' row, which uses the Programador's last
+header port (`uart.b` if it has another). Closing it, in the Programador or
+by choosing another mode in Settings, puts the port back in the mode it had
+(and then in the one chosen). It is not remembered across a restart, and it
+does not open in disk mode.
+
+**The pendrive host lends it the OTG controller.** With the host on pins
+25/27 or on both, opening the probe leaves the host on 21/23 alone, or off
+while the probe lasts when 25/27 was all it had; closing the probe brings
+it back as it was. The host's own setting never changes, so a restart in
+the middle comes back with the host as chosen (`s_host_lent`,
+`host_map_now()` in `aos_usb_p4.c`). Turning the host on or off, or moving
+its pins, while the probe runs leaves the probe alone.
+
+**The first time on a Mac**, macOS asks whether to allow the new accessory,
+and until it is allowed the device stays half enumerated (`ioreg` shows it
+`!registered`, and no debugger sees it); after that it is there at once.
+
+What the computer sees: `303A:4020`, "P4OS <name> CMSIS-DAP", one vendor
+interface named "P4OS CMSIS-DAP" with a bulk OUT and a bulk IN (512 bytes
+at High Speed, 64 at Full). The debuggers find it by that name, with no
+driver on macOS and Linux (on Linux, a udev rule for the device as for any
+probe, if the user is not root). The device is USB 2.1 with a BOS carrying
+Microsoft's OS 2.0 descriptors, so Windows binds WinUSB to it with CMSIS-DAP
+v2's interface GUID and no `.inf`.
+
+TinyUSB's vendor class runs without its FIFOs
+(`CONFIG_TINYUSB_VENDOR_RX_BUFSIZE=0`, `..._TX_BUFSIZE=0`): each command
+arrives whole in `tud_vendor_rx_cb`, as the computer sent it, and goes to a
+queue of four in PSRAM that the Programador's job reads
+(`aos_hal_usb_probe_read`); a response is one transfer. The probe says it
+takes four commands before an answer, so the queue never overflows; a lost
+one would be logged when the probe closes.
+
+```bash
+openocd -f interface/cmsis-dap.cfg -c "transport select swd" -f target/rp2040.cfg
+```
+
+```bash
+pyocd commander -t rp2040
+```
 
 ## The USB host
 
@@ -351,6 +399,17 @@ Tried with an ESP32-C3 (v0.4, 4 MB) whose old firmware restarted every
 2.7 s: detected in 0.5 s, the same test firmware written and verified in
 1.5 s (250 KB/s: USB, not the baud rate), then read and written in the
 Terminal.
+
+**And reads a board's flash back** (2026-10-27): an AmoledOS watch, an
+ESP32-S3 with 16 MB on its own USB-Serial-JTAG, read whole to the card in
+121 s and written back in 98.5 s, its MD5 checked. That test found a port
+going deaf: when the watch restarted into its program at the end of a
+job, an IN transfer of its port ended in an error, and Espressif's
+CDC-ACM driver does not submit a failed transfer again. The port stayed
+open at rest (see the top of `aos_usb_serial_p4.c`) with nothing able to
+come in, and every job after it timed out until the cable was pulled. A
+port whose transfer failed is now closed for real at its next open and
+opened anew (`its transfers had failed, opened anew` in the log).
 
 **An ESP32-P4-Nano** (2026-10-15): its USB-C is a WCH CH343 (`1a86:55d3`),
 a standard CDC-ACM device under the CH340's vendor id, so CDC-ACM is taken

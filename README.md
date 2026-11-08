@@ -42,7 +42,7 @@ the microSD, loaded as shared objects:
 - **The workshop:** I2C, SPI, 1-Wire and GPIO on the 40-pin header, with
   112 kinds of sensor read by themselves (temperature, pressure, air
   quality, light, motion, current, distance...), addressable LED strips on
-  any free pin (WLED's way), a serial terminal, an ESP32 programmer,
+  any free pin (WLED's way), a serial terminal, an ESP32, Arduino and SWD programmer,
   Modbus, a bench supply and scope, an EEPROM reader and writer, a PWM and
   servo generator with an analog level (and sixteen more servos on a
   PCA9685), a learning
@@ -107,6 +107,88 @@ its gas resistance, which fell to half with alcohol near it and came back.</em><
 
 <p align="center"><em>An SCD41 found by itself at 0x62: the chart is the CO2
 of a breath on it, from 3000 ppm back to the room's 600.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-flasher-read.jpg" width="300" alt="The Flasher reading the 16 MB flash of an ESP32-S3 watch over USB, 13 %, 144 KB/s">
+  <img src="docs/img/photo-flasher-write.jpg" width="300" alt="The Flasher writing the same dump back to the watch, 72 %, 193 KB/s, the watch showing its face">
+</p>
+
+<p align="center"><em>The Programmer reading the whole flash of an AmoledOS
+watch (an ESP32-S3 on its own USB) to the card, and writing it back: the
+watch came back with every setting it had.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-flasher-swd-rp2040.jpg" width="300" alt="The Flasher in SWD mode with a Raspberry Pi Pico wired to the header: RP2040, Cortex-M0+, DPIDR 0BC12477, doble.uf2 chosen to write">
+  <img src="docs/img/photo-flasher-swd-done.jpg" width="300" alt="The same Pico after the write: Flashing done, doble.uf2 on RP2040, verified, 8 of 8 KB at 25.9 KB/s">
+</p>
+
+<p align="center"><em>And by SWD, three wires to a Pico's debug header: the
+RP2040 found behind its multidrop port and a new firmware written and
+verified in under half a second.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-flasher-uboot-camera.jpg" width="300" alt="The Flasher reading a HiSilicon IP camera's 16 MB flash through its U-Boot console on uart.b: U-Boot 2010.06, mtdparts, working RAM 0x82000000 with crc32">
+  <img src="docs/img/photo-terminal-camera.jpg" width="300" alt="The Terminal on uart.b at 115200 with the camera's console: its Linux and its app starting, the OV9732 sensor">
+</p>
+
+<p align="center"><em>A cheap Wi-Fi camera (a Hi3518EV200) opened up, its
+console pads soldered to the header: U-Boot stopped with a mix of keys and its
+16 MB read out through its own commands, twice, with the same SHA-256 -
+the copy kept before giving it a new firmware.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-flasher-ekobadge-dump.jpg" width="300" alt="The Flasher with the Ekoparty 2026 badge by SWD: nRF52840, 1 MB read twice in 8 s at 133 KB/s">
+  <img src="docs/img/photo-terminal-nano.jpg" width="300" alt="The Terminal on usb0 at 115200 with an Arduino Nano on the USB host, its program printing each blink">
+</p>
+
+<p align="center"><em>The Ekoparty 2026 badge (an nRF52840 running
+Meshtastic) read whole by SWD in 8 seconds, and an Arduino Nano from a
+drawer on the USB host: written by the Programmer, then talking in the
+Terminal.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-flasher-bluepill.jpg" width="300" alt="The Flasher in SWD mode with a Blue Pill wired to the header: STM32F1 medium, 128 KB flash in 1 KB sectors, Cortex-M3, DPIDR 2BA01477">
+</p>
+
+<p align="center"><em>A Blue Pill by SWD: its chip a clone (DPIDR 2BA01477,
+a CKS32) with 128 KB that really are there. Read whole in a second, written
+and erased; and the same again through ST's serial bootloader on the same
+two wires.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-flasher-esp32-header.jpg" width="300" alt="The Flasher after writing hola_esp32 to an ESP32 DevKit wired to the header: Flashing done, MD5 verified, 200 KB">
+  <img src="docs/img/bench-esp32.svg" width="420" alt="Wiring diagram: an ESP32 DevKit of 38 pins on uart.b, with the EN line to EN and the BOOT line to IO0">
+</p>
+
+<p align="center"><em>An ESP32 DevKit on the header with six wires: the
+board resets it into its ROM by itself and writes it at up to 921600 baud;
+the Mac's esptool does the same through the board's bridge.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-terminal-nano-header.jpg" width="300" alt="The Terminal on uart.b at 115200 reading an Arduino Nano on a breadboard, wired to the header through a resistor divider">
+  <img src="docs/img/bench-nano.svg" width="420" alt="Wiring diagram: an Arduino Nano on uart.b, its 5 V TX through a 1 k / 2 k divider, the EN line on its reset">
+</p>
+
+<p align="center"><em>The same Nano, now on the header: its 5 V TX through
+a divider, the EN line on its reset. Written and read by the Flasher, and
+by avrdude on the Mac through the bridge.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-flasher-mega.jpg" width="300" alt="The Flasher after writing a program to an Arduino Mega 2560 on the USB host: verified">
+  <img src="docs/img/photo-flasher-promicro.jpg" width="300" alt="The Flasher with a Pro Micro on the USB host: the 1200-baud touch, an ATmega32U4 with Caterina, its flash saved">
+</p>
+
+<p align="center"><em>A Mega 2560 from an old 3D printer and a Pro Micro on
+the USB host: the Mega's own bootloader, and the Pro Micro's, reached with
+the 1200-baud touch.</em></p>
+
+<p align="center">
+  <img src="docs/img/photo-terminal-yun.jpg" width="300" alt="The Terminal on usb0 with an Arduino Yún's Linux through its 32U4: md5sum of its U-Boot partition, the same as the board's dump">
+</p>
+
+<p align="center"><em>An Arduino Yún: its Linux in the Terminal through the
+32U4, and its old U-Boot (no sf, no crc32, a big-endian MIPS) read whole by
+the Programador, the same MD5 its Linux gives.</em></p>
 
 ---
 
@@ -283,7 +365,23 @@ header with who holds each pin.
 - **Terminal:** two serial ports, hex, filters and alerts.
 - **Programmer:** flashes another ESP32 from firmware on the card
   (esp-serial-flasher), wired to the header or plugged into the USB host
-  (a dev board goes into its bootloader by itself, through RTS and DTR).
+  (a dev board goes into its bootloader by itself, through RTS and DTR);
+  reads its flash to the card, to keep or to clone, and erases it. The
+  same for an AVR Arduino through the bootloader it already has (Uno,
+  Nano, Pro Mini, Mega, Leonardo, Micro), from the `.hex` the Arduino IDE
+  exports. And by SWD, on the same pins: an nRF52, an RP2040, an RP2350,
+  an STM32 (F0, F1, F2, F4 like the Black Pill, G0, G4, L4), a SAMD21 or
+  SAMD51 (Arduino Zero and MKR, Adafruit M0 and M4, Seeed XIAO, their
+  bootloader kept) or a SAM3X (an Arduino Due) written, verified and read
+  to the card, its read protection taken off by erasing it, and the RTT
+  console of the firmware running on it. Anything with U-Boot on a
+  serial console - an IP camera, a router, a set-top box - has its
+  whole flash read out through U-Boot's own commands, each piece checked
+  by U-Boot's CRC, and nothing written. Or an STM32 through its own serial bootloader, with
+  BOOT0 and NRST on the same lines an ESP32 uses. And it lends its port to
+  the computer: esptool over `rfc2217://p4os.local:4000`, avrdude over
+  `net:p4os.local:4001`; or becomes its CMSIS-DAP debug probe on the OTG
+  connector, for OpenOCD, pyOCD and probe-rs.
 - **Modbus:** a Riden RD60xx supply over RTU, and a gateway.
 - **Bench:** a Rigol scope over the LAN, the Riden, a UNI-T generator over
   USB, and a logger to CSV.
@@ -320,8 +418,11 @@ pins it uses, has a wiring drawing on the board and a page in the portal.
   Panasonic, RC5, RC6, or raw) and sends them back; air conditioners, TVs, fans and lights
   from [SmartIR](https://github.com/litinoveweedle/SmartIR)'s code library.
 - **CAN:** a bus analyser on the P4's TWAI controller: frames live, by id,
-  sending, decoding signals, and recording to the card. It needs a 3.3 V
-  transceiver (SN65HVD230); its self test needs none.
+  sending, decoding signals, and recording to the card. The signals come
+  from any `.dbc` in a folder of the card (opendbc's and nberlette/canbus's
+  open libraries read as they are), and an OBD-II scanner asks a car the
+  PIDs of SAE J1979. It needs a 3.3 V transceiver (SN65HVD230); its self
+  test needs none.
 
 Tried on the bench on 2026-10-05: PWM at three frequencies at once with a
 servo and the analog level checked with a meter (1.34 V asked, 1.313 V
@@ -329,6 +430,15 @@ measured), a WS2812B strip straight from 3.3 V, a monitor's remote learned
 and sent back, and a 24LC256 read, edited, written and restored with its
 checksums matching on a computer. The wiring drawings and the numbers are
 in [docs/MODULES.md](docs/MODULES.md).
+
+<p align="center">
+  <img src="docs/img/photo-can-frames.jpg" width="300" alt="The CAN app on the board: the frames of an ESP32 playing a car, 162 a second at 500 kbit/s, no errors">
+  <img src="docs/img/photo-can-signals.jpg" width="300" alt="The CAN app's Signals tab charting the engine speed through the gears, up to 3019 rpm, decoded from a .dbc">
+</p>
+
+<p align="center"><em>A CAN bus on the bench: an ESP32 with an SN65HVD230
+playing a car, the P4 with another. Every frame, no errors, and the engine
+speed decoded from a .dbc and charted through the gears.</em></p>
 
 <p align="center">
   <img src="docs/img/bench-pwm-photo.jpg" width="230" alt="PWM on the bench: two LEDs, a servo, the RC filter and a meter reading 1.313 V">

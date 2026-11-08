@@ -37,7 +37,7 @@ se prueba.
 ### Pendientes, en resumen
 
 Sin probar en la placa (2026-10-07, firmware `2611062` en adelante):
-- [ ] **BLE** (`apps/ble`, docs/BLUETOOTH.md "The apps' scanner"). **Instalada
+- [x] **BLE** (`apps/ble`, docs/BLUETOOTH.md "The apps' scanner"). **Instalada
       el 2026-10-07** (firmware `0973f16`, por OTA). Medido: escanea (10-12
       equipos reales, ~9 paquetes/s al 30 %, ~16 al 100 %, ninguno perdido);
       el Wi-Fi sigue arriba sin pérdidas y baja de ~0,9 a ~0,7-0,8 MB/s al
@@ -135,10 +135,10 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       baja potencia: de cerca puede quemar la entrada del R820T y la placa
       se reinició con uno cerca, sin volcado: sospecha de RF en los cables
       del host USB), y que siga sonando bloqueada y con otra app adelante.
-- [ ] **Apps del taller** (los cableados en `docs/img/bench-*.svg`, que arma
+- [x] **Apps del taller** (los cableados en `docs/img/bench-*.svg`, que arma
       `tools/bench_diagrams.py`: PWM, IR, tira WS2812B y 24LC;
-      instaladas el 2026-10-05, probadas sólo en el
-      simulador): EEPROM con una 24LC256 en i2c.ext (pines 15/17,
+      instaladas el 2026-10-05, probadas en la placa salvo el CAN con
+      transceptores, que sigue abajo como pendiente): EEPROM con una 24LC256 en i2c.ext (pines 15/17,
       pull-ups de 4,7 kΩ): detectada en 0x50 y el tamaño medido
       escribiendo da 24LC256 (2026-10-05); leída entera y guardada como
       versión, editada, escrita y verificada, restaurada a la original y
@@ -174,6 +174,8 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       que los toques parecen no hacer nada; una tecla la despierta);
       Dibujo con el dedo y el mouse USB (**probado por el usuario en la
       placa, funciona bien**, confirmado el 2026-10-09).
+- [ ] CAN con dos transceptores SN65HVD230 (o parecidos) entre la placa y
+      otro nodo: la autoprueba ya anduvo; falta el bus de verdad.
 - [x] Red, pestaña Wi-Fi fluida (2026-10-06, `5362893`): los gráficos de
       canales y el nivel en vivo se dibujaban en cada cuadro del scroll;
       ahora se pintan una vez en una imagen en PSRAM cuando cambian los
@@ -270,7 +272,8 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       ni los dos reinicios del vigilante de red; el botón de reset (que
       corta la alimentación) sí, al instante. Desde ahora el registro se
       guarda en `/sdcard/logs/sin-red-N.txt` antes de reintentar: la
-      próxima vez, leerlo de la tarjeta.
+      próxima vez, leerlo de la tarjeta. **Hay tres, del 2026-10-09**
+      (`sin-red-1.txt` a `-3.txt`, ~21 KB cada uno), sin leer todavía.
 
 Hecho el 2026-10-04 (0.7.0):
 - [x] Bluetooth con el iPhone 15 Pro Max: aparece en Ajustes del iPhone
@@ -315,7 +318,7 @@ Hecho el 2026-10-04 (0.7.0):
       (2026-10-04). Radio probada en la placa por el usuario: emisoras
       nuevas en las teclas. Cámaras, sólo en el simulador con la cámara
       falsa.
-- [ ] Red guarda cada barrido en `/redes` (NDJSON, los 40 últimos) y el
+- [x] Red guarda cada barrido en `/redes` (NDJSON, los 40 últimos) y el
       portal tiene la página Red: lanzar un barrido (`/api/net`), ver los
       guardados, cambios contra el anterior, gráfico de canales, CSV.
       Barrido real en la placa hecho por el usuario (2026-10-04): anda.
@@ -446,8 +449,8 @@ Que necesitan la mano del usuario o equipos:
 - [ ] **Cartero** (`apps/cartero`, 2026-10-26): hecha y probada en el
       simulador contra `apps/cartero/tools/fake_api.py` (la colección demo:
       18 pedidos, 36 tests, en la pantalla y en el Runner del portal vía la
-      placa). Falta en la placa: un pedido por HTTPS a un servicio público
-      (el certificado, el primer apretón TLS), una respuesta grande (4 MB)
+      placa). Falta en la placa (el HTTPS a un servicio público ya anduvo,
+      abajo): una respuesta grande (4 MB)
       y cuánto tarda en el árbol JSON, el tiempo de una corrida (el
       intérprete con doble precisión por software), la página del portal
       vía la placa con otra app adelante, y la RAM interna libre antes y
@@ -493,6 +496,409 @@ Que necesitan la mano del usuario o equipos:
     servidor, que desde una Mac (`openssl s_client -tls1_2 -reconnect`)
     tampoco retomó la primera sesión (salió otra, con otro certificado,
     RSA y después ECDSA) y sí las siguientes.
+- [x] Programador por SWD (F2, 2026-10-29): en la placa con una RP2040,
+      un nRF52840 (la Ekobadge) y un STM32F1 (la Blue Pill, más abajo); lo
+      que falta, en el ítem siguiente a éste. En la placa:
+  - Medir el reloj (SWCLK) con el analizador o el osciloscopio: el lazo
+    de espera de `aos_io_pulse_p4.c` apunta a ~1 MHz sin medir.
+  - La RP2040 del usuario (una Pico) por el conector DEBUG a `uart.b`
+    (pines 12 y 14, GND), con el firmware `015ae4f`: **Detectar anduvo**
+    (RP2040, Cortex-M0+, DPIDR 0BC12477, flash externa) - el bit-bang
+    contesta, al reloj que sea. Fotos: `docs/img/photo-flasher-swd-rp2040.jpg`
+    (detectada) y `photo-flasher-swd-done.jpg` (grabada, 25,9 KB/s).
+  - Encontrado ahí: el trabajo siguiente (grabar `doble.uf2`) decía
+    "Cortex-M?" y "no sé grabar". La primera vez los DP de la RP2040 están
+    dormidos y se despiertan eligiendo el núcleo 0 con TARGETSEL; después
+    quedan despiertos, contestan los tres juntos al primer DPIDR (el mismo
+    valor) y el Programador no los elegía: todo lo demás chocaba. Ahora un
+    DPIDR 0BC12477 siempre lleva a un reset de línea y TARGETSEL, y el
+    simulador hace chocar a los tres DP igual que la placa. Con eso
+    instalado (`e03fa9c`) elegía bien el núcleo 0, y grabar fallaba en
+    "No se pudo preparar la flash": la tabla de funciones de la ROM se
+    leía por palabras desde su dirección, que no es múltiplo de 4, y el bus
+    alinea para abajo. Ahora se lee alineada y se recorre por medias
+    palabras, y cada paso de la preparación dice en el registro si falló;
+    el simulador pone su tabla desalineada y alinea los accesos como el
+    bus. **Con `3756ab5`, anduvo:** `doble.uf2` (de
+    `tools/swd_test/blink_pico/`) grabado sobre el Blink de medio segundo
+    en 0,4 s, verificado, el objetivo reiniciado y el LED con el doble
+    destello. **La consola RTT también, con `00e81f4`:** encontró el
+    bloque en 0x20001000 (buscando en los 264 KB de RAM), leyó las líneas
+    "doble N" y lo enviado por `POST /api/flash/console/send` volvió como
+    "recibido: hola desde P4OS". Lo que el firmware escribió antes de abrir
+    la consola llena los 512 B del buffer y el resto se pierde (el modo
+    NO_BLOCK_SKIP de RTT, como en cualquier sonda): por eso las primeras
+    líneas saltan de "doble 50" a "doble 817". La barra para escribirle
+    desde la app, sin probar en la placa.
+  - **El reloj, medido desde la placa** (Detectar lo cronometra: 10240
+    ciclos en vacío y 200 lecturas del DP de 48 ciclos, con
+    `aos_hal_uptime_us`): con el primer retardo, 390 kHz para 1000
+    pedidos. Ahora el backend se calibra al abrir el puerto (512 ciclos con
+    dos retardos) y da 1005 kHz medidos, 200 lecturas de 200 bien; regrabar
+    `doble.uf2` bajó de 0,4 a 0,2 s. El techo con `gpio_ll` es ~1,14 MHz
+    (retardo 0): cada escritura de un GPIO cuesta casi medio microsegundo.
+    Más rápido pide los GPIO dedicados del P4 o PARLIO, no este lazo.
+  - La Ekobadge 2026 (desde el 2026-10-31): ver su chip, grabar y RTT.
+    **Probada el 2026-11-02** (SWCLK, SWDIO y GND a `uart.b`, con su
+    batería): Detectar dijo nRF52840 AAD0 (la revisión vieja, sin
+    APPROTECT por hardware), abierta, 1 MB, DPIDR 2BA01477, y del UICR el
+    bootloader en 0x000F4000. Leer la flash: 1 MB en 8 s (133 KB/s, leído
+    dos veces; 7,7 s de cable, 0 WAIT). Adentro: el MBR, la SoftDevice
+    desde 0x1000, Meshtastic 2.8.0 hecho para `ekoparty_badge_v1` desde
+    0x27000 (hasta 0xDA000), su LittleFS en 0xED000 y el bootloader UF2
+    0.11 de Adafruit ("Ekoparty Badge v1"). La consola RTT no encontró el
+    bloque: Meshtastic no usa RTT, habla por su USB.
+
+    <p align="center"><img src="../img/photo-flasher-ekobadge-dump.jpg" width="300" alt="El Programador con la Ekobadge por SWD: volcado guardado, 1 MB en 8 s a 133 KB/s, leído dos veces"></p>
+
+    Su consola es la de Meshtastic por su USB: la badge en el host de la
+    placa ("Ekoparty Badge v1", cafe:e001, tomada como serie), y en la
+    Terminal `usb0` a 115200 sale el registro entero (paquetes LoRa de
+    otros nodos, la batería, el router, HopScaling). Es Meshtastic 2.8.0
+    de base; lo propio de la badge es un módulo `EkopartyBadge`: la intro
+    animada de la OLED (EKO/OS :: CHAOS, ORDER IS AN ILLUSION...), los
+    créditos en "Acerca de", sus mensajes rápidos, una melodía y las
+    animaciones de reposo. La Terminal no la listaba (armaba la lista al
+    abrirse): arreglado en `64fb8e4`, que también reabre `usb0` si el
+    aparato se va y vuelve. Probado: la lista con la badge enchufada y la
+    captura en el canal B. **Probado el 2026-11-03:** con la Terminal en
+    `usb0` (canal B) se apagó y prendió la badge: se fue del host a los
+    80,7 s, volvió a los 84,5 y el canal la reabrió solo 250 ms después;
+    la Terminal tiene el arranque desde el segundo 0 (`S:B:255,2.8.0...,
+    ekoparty_badge_v1`, `EkopartyBadge enabled: startup demo, NeoPixel
+    pin=13, count=6`, la demo de ~12 s, el Bluetooth anunciado después).
+    Mientras no estaba, el registro decía "no USB serial port usb0" cada
+    medio segundo: ahora lo intenta sólo cuando el host tiene ese puerto
+    (una línea al irse). Y apagar el host USB con `usb0` abierto tiraba la
+    placa (`serial1`, un spinlock sobre memoria liberada): el host al
+    parar liberaba el búfer del puerto mientras el lector lo esperaba. Ya
+    no: un puerto abierto queda cerrado con su búfer hasta que su dueño lo
+    cierra, como al desenchufar. Probado: host apagado y prendido con
+    `usb0` abierto, sin caída, y el canal volvió solo.
+
+    <p align="center"><img src="../img/photo-terminal-ekobadge.jpg" width="300" alt="La Terminal leyendo usb0, la Ekobadge por USB: el registro de Meshtastic, con la badge al lado"></p>
+    Para la primera vez (el Programador ya sabe de los nRF52 nuevos, los
+    que cierran el SWD en cada reinicio, sólo en el simulador):
+    1. Buscar en la badge SWDIO, SWCLK, GND (y RESET, si está a mano):
+       un conector de 10 pines de 1,27 mm, pads de prueba o un Tag-Connect.
+       Con su propia batería o USB; el 3V3 de acá sólo si no tiene.
+    2. SWCLK al pin 12, SWDIO al 14, GND, y RESET al 11 si hay. Detectar.
+       El registro dice el chip, la flash, si está protegido, y del UICR
+       la dirección del bootloader y si va por VDDH con sus pines a 3,3 V.
+       Si dice "APPROTECT por hardware", es de las revisiones nuevas.
+    3. **Abierto:** antes de tocar nada, Leer la flash entera: es la
+       copia del firmware de fábrica (`firmware/volcados`). Para volver a
+       él, grabar ese volcado: graba página por página y deja el UICR
+       (bootloader, REGOUT0) como está. Mejor no usar "Borrar la flash"
+       en una badge abierta: se lleva el UICR (REGOUT0 se repone solo).
+    4. **Protegido:** no se lee (se respeta). Sólo queda Borrar la flash,
+       que se lleva su firmware. Si es de las nuevas, queda abierta (el
+       UICR en HwDisabled y 24 bytes de arranque); si va por VDDH, avisa
+       que sus pines bajaron a 1,8 V: desconectar y que su firmware nuevo
+       ponga REGOUT0, o grabarle uno que lo haga.
+    5. Grabar algo propio (un blink o su firmware) y la consola RTT, si
+       el firmware la trae.
+  - **2026-11-05: OpenIPC instalado** por la consola desde P4OS: a la RAM
+    desde la microSD de la cámara, grabado y verificado por CRC
+    (05f1243a); arranca OpenIPC con su OV9732 (`PROGRAMADOR.md`, F7).
+  - **Hecho el 2026-11-04:** dos volcados enteros por la familia U-Boot,
+    102 min cada uno (a 115200: su U-Boot no acepta más), **iguales byte
+    a byte**, SHA-256 `1f508d2720af6fa0c129afbad47227b29da52cd5870247b70e3008b91b70e295`.
+    Revisado en la Mac (sin binwalk, a mano): U-Boot en 0, el uImage
+    `Linux-3.4.35` de 2208808 bytes en 0x80000, jffs2 en 0x300000 y la
+    config en 0xF80000, como dice mtdparts. Lo que costó: la fuente de la
+    cámara (con la primera llegaba basura), y que se frena sólo con
+    Ctrl+C. Para la cámara: `camara-sc10w/HANDOFF-DESDE-P4OS.md`.
+
+    <p align="center"><img src="../img/photo-flasher-uboot-camera.jpg" width="300" alt="El Programador leyendo la flash de la cámara por su U-Boot"></p>
+  - La cámara SC10W del usuario por U-Boot (F7, 2026-11-04): su consola
+    en `uart.b` (TXD de la cámara al pin 14, RXD al 12, GND; su 3,3 V
+    no), la cámara con su propia fuente. Detectar con la familia U-Boot
+    y Leer la flash entera (16 MB); en la Mac, `binwalk` tiene que ver
+    U-Boot, el uImage y el jffs2 donde dice mtdparts, y un segundo
+    volcado dar el mismo SHA-256. Antes, a mano por el portal: la consola
+    a 115200, frenada con Ctrl+C, `version`, `printenv`, `sf probe 0`
+    (detalles en `PROGRAMADOR.md`, F7).
+  - El Arduino Due del usuario (SAM3X8E, desde el 2026-11-02; hecho
+    sólo en el simulador): su conector "JTAG" de 10 pines a 1,27 mm
+    junto al chip, SWDIO (pin 2) al 14 del header, SWCLK (4) al 12, GND
+    (3, 5 o 9) a GND, y su reset (10) al 11 si se quiere; el Due con su
+    propio USB. Detectar: SAM3X8E, 512 KB, CIDR 285E0A60, y si arranca
+    desde la flash (GPNVM1). Leer la flash entera antes de tocar nada
+    (es el sketch que trae). Grabar un sketch (el `.bin` que deja el IDE
+    de Arduino va solo a 0x80000) y ver que corre al reiniciar; Borrar
+    entero y ver que queda el SAM-BA de la ROM (el puerto "Programming"
+    del Due lo ve como antes). En espera (2026-11-03): faltan cables
+    de 1,27 mm para su conector; el firmware ya lo tiene (`6e5c65c`).
+  - Una RP2350 (Pico 2), si aparece una: Detectar (`DPIDR 4C013477`,
+    Cortex-M33) y grabar un `.uf2` que arranque (con su IMAGE_DEF).
+- [ ] SWD, lo que queda: el Arduino Due (en espera de cables de 1,27 mm;
+      cómo, en el ítem de arriba), una RP2350 si aparece, y escribirle a la
+      consola RTT desde la barra de la app (por el portal anduvo).
+- [x] El puente del Programador (F4, 2026-10-29; en la placa el
+      2026-11-05 con stm32loader, esptool y avrdude): desde la Mac en la red
+      de casa, `esptool --port rfc2217://p4os.local:4000 chip_id` con un
+      ESP32 en `uart.b`, y `write_flash`; un Arduino con avrdude por
+      `net:p4os.local:4001`.
+  - Con `2d38897` instalado: el puente abre en `uart.b`, acepta a la Mac
+    desde la red de casa y negocia RFC 2217 con pyserial (velocidad a
+    230400 incluida). Sin un ESP32 en el puerto todavía (está la Pico por
+    SWD), así que esptool queda para cuando haya uno conectado.
+  - **Hecho con un STM32 el 2026-11-05:** la Blue Pill en `uart.b` con
+    BOOT0 en 1 (TX al PA10, RX al PA9) y stm32loader 0.7.1 en la Mac por
+    `rfc2217://<placa>:4000`. stm32loader abre `serial.Serial(port=...)`,
+    que no acepta URLs: un envoltorio de cuatro líneas lo cambia por
+    `serial.serial_for_url`. El 8E1 se negoció por RFC 2217 solo.
+    Identificó (bootloader 0x22, 0x410, UID, 128 KB), borró todo, grabó
+    `charla.bin` y verificó ("Verification OK", 9 s), y leyó los 128 KB
+    (113 s: un pedido de 256 bytes por vez, cada uno con la ida y vuelta
+    por la red; el Programador directo tarda 32). El registro del puente
+    dice cada cliente y los bytes de cada lado. Si una conexión empieza
+    con el bootloader ya sincronizado por la anterior, stm32loader dice
+    "activation timeout -- retrying" y sigue bien. Sin EN ni BOOT
+    cableados; con ellos (EN al R, BOOT al BOOT0) irían `-s -B`, que no se
+    probó.
+  - **Y con un ESP32 el mismo día**, cableado como en
+    `docs/img/bench-esp32.svg`: esptool 4.13 en la Mac,
+    `--port "rfc2217://<placa>:4000?ign_set_control"`. `chip_id` y
+    `write_flash` de `hola_esp32` a 460800 (el puente siguió los cambios de
+    velocidad: 9600 para el reset, 115200, 460800), los tres hashes bien,
+    y el reset al final por RTS lo dejó corriendo. El reset y el modo de
+    descarga, por RTS/DTR → EN/BOOT del header, como en el simulador.
+  - **Y avrdude por 4001 con el Nano** en el header (2026-11-05): el
+    puente a 57600 (su bootloader viejo) y el avrdude del IDE de Arduino,
+    `-c arduino -p m328p -P net:<placa>:4001`: la firma (1E 95 0F), y
+    `rapido.hex` y `charla.hex` grabados y verificados. Cada conexión lo
+    resetea por EN; el registro del puente dice cada una con sus bytes.
+    Con esto el puente queda probado con las tres herramientas.
+- [x] La sonda CMSIS-DAP del Programador (F5, 2026-10-30, `adfe1b2`): la
+      Pico en `uart.b` (SWCLK al pin 12, SWDIO al 14, GND), el conector
+      OTG de la placa a la Mac, pyOCD 0.46 en la Mac:
+  - La primera vez macOS pide permiso para el accesorio nuevo, y hasta
+    aceptarlo la deja a medio enumerar (en `ioreg`, `!registered`);
+    después aparece en High Speed y `pyocd list` la muestra como "P4OS
+    p4os CMSIS-DAP", sin drivers.
+  - Con `-t rp2040`: conecta en 0,04 s con el multidrop (TARGETSEL por
+    `DAP_SWD_Sequence`, DPIDR 0BC12477, CHIP_ID 10002927), frena el blink,
+    lee los registros, un paso, 1 KB de RAM ida y vuelta, **64 KB de la
+    flash en 1,8 s (35,7 KB/s)**, y la suelta corriendo.
+  - El préstamo del OTG: con el host de pendrives en "los dos", la sonda
+    abre y el host queda en 21/23; pyOCD igual que arriba; al cerrarla el
+    USB vuelve solo a host en los dos, el ajuste intacto.
+- [x] SWD por los GPIO dedicados (2026-10-31, `7abf845`): la Pico en
+      `uart.b`. Detectar a 1, 4 (el valor por defecto), 8 y 9 MHz pedidos:
+      0,93, 3,8 y 5,5 MHz medidos con lo que cuesta cada llamada, un DPIDR
+      cada 52, 14 y 8 µs, 200 de 200 bien en todas; la calibración da 4060
+      kHz para 4000, techo ~9 MHz. pyOCD por la sonda: 64 KB iguales a 1,
+      4, 8, 12 y 16 MHz pedidos, 34 KB/s a 1 MHz y ~55 KB/s arriba (el
+      límite es pyOCD: una ronda USB con la sonda tarda 0,16 ms).
+- [x] Grabar la Pico con el Programador por los GPIO dedicados
+      (2026-10-31): `blink256.uf2` en la tarjeta (el blink de medio
+      segundo y relleno hasta 256 KB, 64 sectores), grabado y verificado:
+      16,7 s a 1 MHz (31 KB/s), **11,6 s a 4 MHz** (44 KB/s, el valor por
+      defecto) y 10,8 s a 9 MHz (48 KB/s). Más allá de 4 MHz manda la
+      propia RP2040 borrando y grabando su flash QSPI. La Pico quedó con
+      el blink de medio segundo.
+- [x] Leer la flash por SWD (2026-10-31, `7786953`): la Pico en `uart.b`
+      a 4 MHz. Midió su flash donde se repite (2048 KB), la leyó entera dos
+      veces en 45,5 s (`RP2040-…@0x10000000.bin` en `firmware/volcados`) y
+      sus primeros 256 KB son byte a byte lo que grabó `blink256.uf2`.
+      Lento al lado del cable (cada lectura cuesta poco): el tiempo se va
+      en leer dos veces y en la tarjeta; para mejorar si hace falta.
+  - Con la suma del DMA de la RP en vez de la segunda lectura: el mismo
+    SHA-256, 36,7 s (cable 35,5 s, tarjeta 1,1 s, 4,6 millones de WAIT:
+    la flash de la Pico de pruebas, en serie lenta, es el límite). Por
+    la sonda, 64 KB de su RAM salen en 0,32 s y de su flash en 1,2 s.
+  - [x] Volcar una Pico que corre como un firmware del SDK (2026-10-31):
+        `rapido.uf2` de `tools/swd_test/blink_pico` (cristal y PLL a
+        125 MHz, flash quad a 62,5 MHz) grabado por SWD en 0,2 s. Los
+        2 MB salieron en 9,5 s (cable 8,2 s, tarjeta 1,2 s, 0 WAIT): el
+        límite es el cable, y la suma del DMA no se nota. Son byte a byte
+        lo grabado (el resto, lo de `blink256.uf2`), y la consola RTT
+        mostró el blink corriendo a medio segundo por vuelta.
+- [x] La sonda con OpenOCD (`-f interface/cmsis-dap.cfg -f
+      target/rp2040.cfg`) y gdb con un breakpoint en el blink; `program`
+      de OpenOCD con su algoritmo; probe-rs; y abrirla desde la fila de
+      Ajustes → USB (en el simulador anduvo; en la placa se abrió por la
+      API, que es el mismo trabajo).
+  - Preparado el 2026-10-31: OpenOCD 0.12, probe-rs 0.32 y
+    arm-none-eabi-gdb 18.1 en la Mac (Homebrew), y
+    `tools/swd_test/debuggers.sh rp2040|nrf52 [imagen]`, que hace todo de
+    una (probe-rs la lista; OpenOCD conecta, frena, lee y sigue; gdb con
+    un breakpoint de hardware en el reset handler; `program` si se le da
+    una imagen; probe-rs lee la flash). Los descriptores coinciden con lo
+    que pide el driver CMSIS-DAP v2 de OpenOCD 0.12 (interfaz vendor
+    "CMSIS-DAP", bulk OUT y después IN), y el TARGETSEL de la RP2040 lo
+    manda por DAP_SWD_Sequence (33 bits), que la sonda maneja. OpenOCD y
+    probe-rs sólo hablan USB: esto no corre contra el simulador. Con el
+    cable de la Mac en el OTG, nada en el enchufe "2.0".
+  - **Probada el 2026-11-03 con la Ekobadge** (nRF52840 por SWD en
+    `uart.b`, con su batería): `debuggers.sh nrf52` todo bien. probe-rs
+    la lista ("P4OS p4os CMSIS-DAP", 303a:4020); OpenOCD 0.12 la toma
+    como CMSIS-DAP v2 (firmware 2.1.1), DPIDR 2BA01477, Cortex-M4 r0p1,
+    "nRF52840-xxAA (build code D0)", la frena, lee la PC y la RAM y la
+    suelta; gdb, con OpenOCD de servidor, la reinicia frenada, pone un
+    breakpoint de hardware en el reset handler (0xA80, el del MBR) y se
+    para justo ahí; probe-rs lee las primeras palabras de la flash. La
+    Mac la ve a High Speed. Lo que costó: con los cables de los enchufes
+    de atrás conectados al header (aun con la badge en el "1.1") la Mac
+    no la enumeraba (ni rastro en su registro; la placa sólo decía
+    "suspended by the computer"); sin ellos, al toque. Para usar la
+    sonda, los enchufes de atrás desconectados.
+  - Visto ese día: después de cortes de corriente (los cambios de
+    cable), la placa volvió con el host USB apagado y sin restaurarlo
+    (la preferencia estaba en apagado; no hubo caída: el volcado que
+    tiene es viejo, del 2026-10-26). No se pudo ver cuándo se guardó
+    así: los cortes se llevaron el registro anterior. A mirar.
+    Revisado el mismo día por el portal, con reinicios: el host en
+    "both" vuelve prendido tanto si la placa se reinicia con la sonda
+    abierta (el host prestado a 21/23) como si se abre y se cierra antes.
+    No se reprodujo. El único camino que lo apaga es elegir la fila
+    "libre" del puerto OTG con el host en "both" (el OTG es del host, así
+    que esa fila lo apaga), con o sin sonda: si se cerró la sonda así,
+    es eso.
+- [ ] La sonda, lo que queda: `program` de OpenOCD con su algoritmo (la
+      Ekobadge no se grabó, sólo se leyó), y abrirla desde la fila de
+      Ajustes → USB en vez de por la API.
+- [x] **Programador con STM32 por su bootloader serie** (F4, 2026-10-29;
+      en la placa el 2026-11-05 con la Blue Pill de abajo): BOOT0 en 1 por
+      el jumper, `uart.b` TX al PA10 y RX al PA9, sin EN ni BOOT (el
+      "Placa reiniciada" del log no llega: el reset y BOOT0 a mano).
+      Detectar (AN3155 v2.2, 115200 8E1, PID 0x410, 128 KB, 1,4 s), leer
+      los 128 KB (32 s; igual al volcado por SWD), grabar un `.bin` y un
+      `.hex` (verificados, ~1 s), borrar todo (1,3 s; el volcado siguiente,
+      todo 0xFF). Con BOOT0 en 0 y reset, arrancó lo grabado. Falta: EN al
+      NRST y BOOT al BOOT0, para que P4OS maneje las dos líneas solo.
+- [ ] La Black Pill por SWD (2026-10-30, sólo en el simulador: F411, G071,
+      L476; el F1 ya probado con la Blue Pill): SWCLK y SWDIO del conector
+      de 4 pines de la placa al pin 12 y al 14 de `uart.b`, GND, y NRST al
+      EN si se quiere el reset. Detectar (STM32F411, 512 KB, sin página:
+      sectores), grabar un `.bin` o `.hex` que cruce el sector 4 (64 KB),
+      verificar, borrar todo. Y si aparece una con RDP, que "Borrar" la
+      deje limpia.
+- [x] **La Blue Pill del usuario por SWD** (2026-11-05), con
+      `tools/swd_test/blink_bluepill` (`rapido`: el LED de PC13 cada
+      100 ms; `charla`: cada 200 ms y USART1 a 115200). Foto en el README
+      (`docs/img/photo-flasher-bluepill.jpg`).
+      - **Es un clon:** DPIDR `2BA01477` (un CKS32; un ST dice `1BA01477`),
+        DBGMCU 0x410 como un F103 "medium". Dice 128 KB y los tiene: datos
+        al azar grabados en 0x08010000 y 0x0801F800 volvieron iguales, sin
+        repetir la mitad de abajo.
+      - SWCLK medido 3657 kHz (200 de 200 lecturas bien). Volcado de
+        fábrica, 128 KB en 1,1 s: 1,2 KB de programa (el blink de siempre,
+        sin textos). `rapido` grabado y verificado en 0,4 s, el LED a
+        100 ms; `charla` igual, a 200 ms.
+      - **Terminal** en `uart.b` (TX al PA10, RX al PA9): el saludo, las
+        vueltas (202 ms de promedio: el HSI del clon atrasa ~1 %, la UART ni
+        se entera) y `recibido: ...` de vuelta, con acentos y eñe. Basura
+        `0x7F`/`0xFF` antes del primer eco: ruido de mover los cables con el
+        programa andando, juntado en la línea hasta el primer Enter.
+- [ ] Una SAMD21 o SAMD51 por SWD (2026-10-30, sólo en el simulador): una
+      Seeed XIAO SAMD21 (SWCLK y SWDIO en sus pads de abajo), una Arduino
+      Zero (su conector SWD de 10 pines) o una Adafruit M0/M4, al pin 12 y
+      14 de `uart.b` y GND. Detectar (BOOTPROT dice el bootloader), grabar
+      el `.bin` que exporta el IDE de Arduino (va solo a 0x2000 en una D21,
+      0x4000 en una D51), que arranque;
+      "Borrar" y ver que el bootloader UF2 sigue (doble toque al reset).
+- [x] Programador con Arduino (F3, 2026-10-29): en la placa un Nano por
+      USB (2026-11-03) y por el header (2026-11-05); el Mega y el Leonardo,
+      en el ítem siguiente. En la placa:
+  - Un Uno o un Nano por USB (`usb0`, reset por DTR): Detectar (firma y
+    "optiboot 8.0" o "STK500 v1 1.16, 57600"), grabar el `.hex` de Blink,
+    Monitor a 9600, Leer y Borrar el programa.
+    **Hecho el 2026-11-03** con un Nano de cajón (CH340, 1a86:7523) en el
+    enchufe "1.1" del host: Detectar dijo ATmega328P (1E 95 0F), 32 KB,
+    "STK500 v1 1.16, 57600" (el bootloader viejo), reseteado por DTR.
+    Leer la flash: 32 KB en 16 s, leído dos veces. Grabar `rapido.hex` de
+    `tools/avr_test/blink_nano` (2 páginas) en 1,9 s, verificado, y el LED
+    "L" parpadeando rápido; `charla.hex` (6 páginas) en 2,1 s, y por la
+    Terminal en `usb0` a 115200 sus líneas y el eco de lo que se le manda
+    (la primera versión leía la entrada cada milisegundo y perdía casi
+    todo: ahora por interrupción). Borrar: 0xFF sobre los 30 KB del
+    programa en 8,9 s, el bootloader queda; los primeros 4 KB leídos de
+    vuelta, todos 0xFF. De paso: la captura de la Terminal en `usb0` (de
+    la badge, que ya no estaba) había tomado al Nano al ocupar ese lugar,
+    y el Programador no lo podía abrir; arreglado en `30b6431` (reabre
+    sólo el mismo VID:PID), instalado el mismo día.
+
+    <p align="center"><img src="../img/photo-terminal-nano.jpg" width="300" alt="La Terminal en usb0 a 115200 con el Nano por el host USB: las vueltas del programa charla, y el Nano al lado"></p>
+  - El mismo por el header: TX/RX cruzados con un divisor en su TX, EN al
+    RESET. Uno de 3,3 V (Pro Mini) va directo. Cableado en
+    `docs/img/bench-nano.svg`. **Hecho el 2026-11-05**, el divisor con tres
+    de 1 kΩ (3,33 V): la Terminal leyó `charla` y le contestó; Detectar
+    (ATmega328P, STK500 v1 1.16 a 57600, 2,2 s), grabar `rapido.hex`
+    (1,3 s) y `charla.hex` (1,7 s) verificados página por página, leer los
+    32 KB (15,5 s). La primera vez el cable de EN no estaba en RST:
+    Detectar "no respondió" y el contador de `charla` siguió de largo, sin
+    reiniciarse; el diagrama lo dice. Foto en el README. Desde `57d715d`
+    (en la 0.23.1) eso tiene su mensaje: con el cable de RST afuera,
+    Detectar dijo "Its program is talking: the reset does not reach it (EN
+    to RST) or it has no bootloader"; con el cable puesto, lo encontró.
+- [x] **Un Arduino Yún por USB** (2026-11-05): su 32U4 con el Programador
+      (los IDs del Yún faltaban en la lista de Caterina: `ac84f47`),
+      `YunSerialTerminal` grabado, y por ese puente su Linux (OpenWrt de
+      2013, root sin clave) y su U-Boot 1.1.4 (`ar7240>`, 250000 baudios,
+      se frena con cualquier tecla). Con la familia U-Boot nueva: Detectar
+      y los primeros 256 KB (su U-Boot) leídos sin `sf` ni `crc32`, con el
+      mismo MD5 que su `/dev/mtd0` (`PROGRAMADOR.md`, F7). Su Linux tira
+      errores de squashfs al arrancar: tiene parte de la flash corrupta.
+      **Los 16 MB enteros** (2026-11-05/06, `75432b5`): sin tocar nada, la
+      familia vio su Linux ("no es U-Boot"), lo esperó, frenó el U-Boot al
+      reiniciarse (AR9331, flash Winbond 0xEF 40 18) y leyó todo en 94,5
+      min (2,9 KB/s; en 66 de los 256 pedazos repitió algún tramo, 7
+      vacíos). Revisado en la Mac: los 256 KB de U-Boot con el MD5 de su
+      Linux, el uImage "MIPS OpenWrt Linux-3.8.3" con los dos CRC de su
+      encabezado bien (1,17 MB leídos sin un error), el squashfs (6,8 MB)
+      en 0x50000, el jffs2 en 0x720000 y ART con la MAC. El volcado queda
+      en la tarjeta (tiene su MAC y su configuración: no va al repo).
+
+      <p align="center"><img src="../img/photo-terminal-yun.jpg" width="300" alt="La Terminal en usb0 con el Linux del Yún a través del puente del 32U4: md5sum de /dev/mtd0, el mismo del volcado por U-Boot"></p>
+- [x] **Un Mega 2560 y una Pro Micro por USB** (2026-11-05), con
+      `tools/avr_test/blink_nano` (que ahora arma también `mega-rapido` y
+      `mega-charla`) y `tools/usb_test/p4os_leonardo` (con `-DRAPIDO`, otra
+      línea para notar el cambio).
+  - El Mega (de un cajón; venía de una impresora 3D): Detectar dijo
+    ATmega2560 (1E 98 01), STK500 v2 "AVRISP_2" a 115200, reset por DTR.
+    Leer los 256 KB: 61 s, leídos dos veces. Traía un sketch casero en
+    castellano (un panel con reloj, SD, mails por ESP8266 y SMS por un
+    SIM800) y detrás, sin pisar, la cola de un Marlin 1.0.2 de una Replikat
+    XY: el bootloader sólo regraba las páginas del sketch nuevo. El volcado
+    queda en la tarjeta; tiene un número de teléfono, no copiarlo al repo.
+    Grabar `mega-rapido` (0,5 s) y `mega-charla` (0,6 s), verificados; la
+    Terminal en `usb0` leyó las vueltas y devolvió lo mandado. Borrar el
+    programa: 0xFF sobre 248 KB en 37 s, el bootloader queda; los primeros
+    8 KB leídos de vuelta, todos 0xFF.
+
+    <p align="center"><img src="../img/photo-flasher-mega.jpg" width="300" alt="El Programador después de grabar mega-charla.hex en un Arduino Mega 2560 por USB: verificado"></p>
+  - La Pro Micro (CJMCU, ATmega32U4 con Caterina; es la placa de las
+    pruebas del host USB, con `p4os_leonardo` adentro): **el toque a 1200
+    baudios anduvo a la primera**, el bootloader volvió como otro aparato y
+    el Programador lo tomó. Detectar: ATmega32U4 (1E 95 87), AVR109
+    (Caterina). Leer los 32 KB en 2 s. Grabar la variante `rapido` (48
+    páginas, 1,2 s), verificada, y el sketch volvió solo: la Terminal leyó
+    "P4OS Leonardo rapido N" y devolvió "HOLA PRO MICRO". Borrar en 1,8 s
+    (los primeros 4 KB leídos de vuelta, 0xFF) y de nuevo su sketch.
+
+    <p align="center"><img src="../img/photo-flasher-promicro.jpg" width="300" alt="El Programador con una Pro Micro por USB: el toque a 1200 baudios, ATmega32U4 con Caterina, volcado guardado"></p>
+- [x] Programador: leer y borrar (2026-10-27, después de la 0.22.2), en la
+      placa con el reloj AmoledOS del usuario (ESP32-S3 v0.2, 16 MB) por
+      su propia USB-Serial-JTAG en `usb0`:
+  - Leer la flash entera: 16 MB en 121 s (~135 KB/s, con el stub y el MD5
+    de cada pedazo), guardada en `firmware/volcados/` con su `.json`.
+  - Grabar ese volcado de vuelta: 98,5 s (~190 KB/s, la velocidad en
+    baudios no cuenta por esa USB), MD5 bien; el reloj arrancó con todo
+    como estaba (ajustes, Wi-Fi). Fotos en `docs/img/photo-flasher-*.jpg`.
+  - Encontrado y arreglado en la prueba: después del primer trabajo, todos
+    los siguientes en el mismo puerto daban "The board did not answer"
+    hasta desenchufar el reloj. Al reiniciarse en su programa, un pedido
+    IN de la USB terminaba con error (`a transfer failed (1)`) y el
+    driver CDC-ACM no lo vuelve a armar; el HAL dejaba el puerto "en
+    reposo" con esa lectura muerta. Ahora el puerto que tuvo un error se
+    abre de cero la vez siguiente, y el Programador reintenta una vez por
+    USB. Probado: grabar y enseguida Detectar, sin tocar el cable,
+    conecta al primer intento (`its transfers had failed, opened anew`).
+  - Falta: borrar la flash en la placa (probado sólo en el simulador) y
+    leer por el header con EN/BOOT.
 - [x] Impresoras 3D (2026-10-25, 0.22.1), en la placa con las tres MK3S
       del usuario por OctoPrint:
   - Lista con estado, temperaturas, avance y modelo (del perfil de
@@ -626,12 +1032,15 @@ Que necesitan la mano del usuario o equipos:
 - [x] USB como teclado, mouse y macro pad (2026-09-30): enumera en HS,
       los tres reports, despierta la Mac y la placa se alimenta por el OTG.
 - [x] USB como disco (2026-09-30): la tarjeta en la Mac y de vuelta.
-- [ ] Cámaras (timbre y exterior).
+- [ ] Cámaras: la de la entrada (manda H.264 Main y sólo se decodifica
+      Baseline). El timbre anda desde la 0.21.5 (arriba).
 - [ ] Ganancia del micrófono (ES7210), calentamiento del amplificador y
       latencia.
-- [ ] Riden por TTL y Rigol por la LAN, Terminal a 460800 y Programador contra
-      un ESP32.
-- [ ] HA con `wss://` real, Mosquitto real y módulos I2C reales.
+- [ ] Riden por TTL y Rigol por la LAN. (La Terminal a 460800 y el
+      Programador contra un ESP32, hechos: 2026-10-05 por USB y 2026-11-05
+      por el header.)
+- [ ] HA con `wss://` real y Mosquitto real. (Módulos I2C reales, hechos:
+      BME280, AHT10, SGP30, INA219, 24LC256.)
 - [ ] La prueba 17: la hora con una pila en H3.
 - [ ] Jugar a mano en la placa lo que no se puede tocar por el portal: Mila y
       Golf leen el táctil del panel.
@@ -697,7 +1106,9 @@ laberinto, pong, radar, walkie, remoto y sensores.
   - [x] throughput y ventana TCP (2026-09-29): 1,1 MB/s de subida y 1,8
         de bajada por el portal, detalle en `docs/MEMORY.md`;
   - [ ] cuántos sockets entran a la vez: portal + HA + MQTT + cámaras;
-    `aos_tcp` ahora tiene 6.
+    `aos_tcp` dice tener 10 lugares, pero hasta el 2026-11-05 usaba 6: los
+    últimos cuatro arrancaban en 0 y nunca contaban como libres (arreglado,
+    probado en la Mac: entran 10, la 11 da sin lugar; falta en la placa).
 - [ ] **Audio:**
   - [ ] calentamiento del amplificador;
   - [ ] curva de volumen: la de esp_codec_dev (-50..0 dB, lineal) dejaba
@@ -733,9 +1144,25 @@ laberinto, pong, radar, walkie, remoto y sensores.
 ## Por app
 
 **Terminal y Programador**
-- [ ] El UART a 460800 por el header.
-- [ ] EN/BOOT reales para programar otra placa.
-- [ ] esp-serial-flasher contra un ESP32 de verdad.
+- [x] El UART a 460800 por el header (2026-11-05): el Programador grabó un
+      ESP32 a 460800 (45 KB/s) y a 921600 (89 KB/s), MD5 bien. Y la
+      Terminal a 460800 con `hola_esp32` compilado con la consola a esa
+      velocidad (`sdkconfig.defaults.460800`): sus "Hola mundo" y diez
+      líneas de 120 caracteres mandadas seguidas, devueltas idénticas, sin
+      un byte raro.
+- [x] **EN/BOOT reales para programar otra placa** (2026-11-05): un ESP32
+      DevKit de 38 pines (ESP32-D0WD-V3 v3.1, flash 4 MB) por `uart.b`,
+      cableado en `docs/img/bench-esp32.svg`, foto en el README. Detectar
+      lo pone solo en modo de descarga (1,2 s); `hola_esp32` grabado a
+      115200, 460800 y 921600, y la Terminal leyó sus "Hola mundo" y le
+      contestó ("Recibido: ..."). **Lo que costó:** GND puesto en CMD (la
+      selección de la flash, al lado del GND de abajo a la izquierda): el
+      ESP32 contesta, el stub arranca, pero la flash no (ID ff/ffff, "Flash
+      size detection failed", la grabación "did not start") y en la consola
+      un bucle de "invalid header: 0xffffffff". El diagrama marca esas
+      patas.
+- [x] esp-serial-flasher contra un ESP32 de verdad (por USB: 2026-10-05 y
+      2026-10-27, el reloj AmoledOS leído y grabado entero).
 
 **Modbus y Banco**
 - [ ] La Riden por TTL: los 20 ms entre pedidos y las escrituras que rechaza en
@@ -796,9 +1223,15 @@ laberinto, pong, radar, walkie, remoto y sensores.
   cambian en las preferencias (`claude_*`) sin grabar firmware.
 
 **Cámaras**
-- [ ] tinyh264 a la resolución del timbre.
-- [ ] El motor JPEG con los MJPEG.
-- [ ] El escalado por CPU (si no alcanza, pasar al PPA).
+- [x] tinyh264 a la resolución del timbre: 704x576 directo al framebuffer
+      a 7-9 fps sin descartar; 1920x1080 a ~1 cuadro por segundo (590 ms de
+      decodificación), 2026-10-22, en "Fondos, cámaras..." arriba.
+- [x] El motor JPEG con los MJPEG (`aos_jpeg_p4.c`, el motor del P4 para
+      JPEG baseline): una webcam USB por MJPEG a 640x480, 14,6-16,5 fps con
+      6 ms por cuadro, 2026-10-25, en "Impresoras 3D" arriba.
+- [x] El escalado por CPU: alcanza, y el PPA convirtiendo cámaras dio menos
+      (6,1 fps contra 8,9 por CPU), así que quedó apagado (`video_hw`),
+      2026-10-22.
 - [ ] Cuatro cámaras a la vez con la RAM interna que queda.
 
 **Macro pad (USB OTG en modo dispositivo)** (probado el 2026-09-30, todo seguido
@@ -925,8 +1358,9 @@ por el Registro del portal sin cable serie)
 **Módulos**
 - [ ] Abrir y cerrar el bus I2C en cada vuelta.
 - [ ] Más de 8 dispositivos en un puerto.
-- [ ] Que los chips reales se identifiquen como supone el código (SHT4x,
-      INA219, AHT20).
+- [ ] Que los chips reales se identifiquen como supone el código: falta un
+      SHT4x y un AHT20 de verdad (el INA219 y el AHT10, que antes se tomaba
+      por AHT20, ya: 2026-10-19).
 - [ ] Precisión contra un instrumento de referencia.
 
 **Lienzo retro**

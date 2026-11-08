@@ -20,6 +20,7 @@ Reproduciendo una grabación: no se puede sintonizar	播放录音:无法调整
 Buscando una RTL-SDR…	寻找一个RTL-SDR...
 Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.	连接到高速 USB host with wires shorter than 15 cm. Check data and power pins in Settings and this board’s pin map. Full Speed supports 240 thousand samples per second.
 El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí.	其他 USB 主机已关闭:在设置中启用 → USB → USB 接收并将RTL-SDR连接到在那里显示的高速端口.
+Si el conector OTG de la placa está enchufado a una computadora, sacalo: comparte las líneas del host USB High Speed y la computadora se queda con la RTL-SDR.	若开发板的 OTG 接口连接着电脑，请断开：它与 USB 高速主机共用线路，电脑会抢先占用 RTL-SDR。
 señal	信号
 silenciado	无声
 estéreo	立体音频

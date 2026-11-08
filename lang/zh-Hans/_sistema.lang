@@ -9,6 +9,7 @@ Atender	接听
 Home Assistant: configurar en Ajustes	Home Assistant：请在设置中配置
 Clima: próximamente	天气：即将推出
 Listo	完成
++ Widget	+ 小组件
 Nombre de la carpeta	文件夹名称
 Editar	编辑
 Carpeta vacía	空文件夹
@@ -288,6 +289,21 @@ Falta la fuente china: instalá el paquete completo por USB.	缺少中文字库�
 No se pudo cambiar el idioma.	无法切换语言。
 Captura guardada en	截图已保存到
 No se pudo guardar la captura (¿hay tarjeta?)	无法保存截图，请检查存储卡是否可用。
+Reloj	时钟
+La hora y la fecha, grandes.	以大号显示时间和日期。
+Chico	小
+Mediano	中
+Grande	大
+Agregar widget	添加小组件
+Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo.	添加后，点按它可选择大小和显示内容；长按片刻并拖动可移动。
+Hasta %d	最多 %d 个
+no está ahora	当前不可用
+Tamaño	大小
+Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.	显示内容：最多 %d 项，按点选顺序排列。当前大小容纳不下的项目不会显示。
+Automático	自动
+El widget elige lo que conviene mostrar	小组件会自动选择适合显示的内容
+Todavía no hay nada para elegir: mientras tanto, el widget elige solo.	暂无可选内容；在此期间，小组件会自动选择。
+Quitar widget	移除小组件
 Osciloscopio	示波器
 Fuente	电源
 Generador	信号发生器
@@ -386,7 +402,6 @@ sin CS	无片选
 GPIO%d · puerto	GPIO%d · 端口引脚
 Bytes a enviar, hasta %d	待发送字节，最多 %d 个
 Enviar	发送
-Reloj	时钟
 Modo (CPOL, CPHA)	模式（CPOL、CPHA）
 Chip select	片选
 Primero va el bit	位序
@@ -487,6 +502,7 @@ Semana, 7 días	过去 7 天的周用量
 5 h: se renueva en %s	5 小时用量：%s 后重置
 iniciá sesión desde el portal	请在管理网页中登录
 5 h	5 h
+Cuánto queda del uso de Claude.	Claude 使用量还剩多少。
 Mundial	世界时钟
 Alarmas	闹钟
 Cronómetro	秒表
@@ -741,7 +757,6 @@ En /lang están los idiomas.	语言包位于 /lang 目录。
 En /icons están los íconos de las apps.	应用图标位于 /icons 目录。
 Nombre	名称
 Fecha	日期
-Tamaño	大小
 Tipo	类型
 No se pudo leer %s	无法读取 %s
 No se pudo crear %s	无法创建 %s
@@ -897,61 +912,136 @@ Leyendo el chip	正在读取芯片信息
 Borrando	正在擦除
 Grabando	烧录
 Verificando	正在校验
+Leyendo la flash	正在读取闪存
 Reiniciando la placa	正在重启开发板
+Consola RTT abierta	RTT 控制台已打开
+Puente abierto	串口桥接已打开
+Sonda abierta	调试探针已打开
 Grabación terminada	烧录完成
 No se pudo grabar	无法录制
 Grabación cancelada	闪光取消
+Volcado guardado	转储文件已保存
+No se pudo leer	读取失败
+Lectura cancelada	读取已取消
+Puente cerrado	串口桥接已关闭
+No se pudo abrir el puente	无法打开串口桥接
+Sonda cerrada	调试探针已关闭
+No se pudo abrir la sonda	无法打开调试探针
+Consola cerrada	控制台已关闭
+No se pudo abrir la consola	无法打开控制台
+Programa borrado	程序已擦除
+Flash borrada	闪存已擦除
+No se pudo borrar	无法删除
+Borrado cancelado	擦除已取消
 Terminal	终端
+Protegido contra lectura: sólo se puede borrar entero	已启用读保护：只能整片擦除
 de flash	闪光
+sector	扇区
+página	页
+flash externa	外部闪存
+Sin driver de flash todavía	尚无闪存驱动
+Firma desconocida	未知芯片签名
 flash ?	闪光?
 Buscando la placa…	在找开发板...
 No respondió	没有回应
 Placa sin detectar	没有发现板
+Conectá el Arduino y tocá Detectar	连接 Arduino，然后点击“检测”
+SWCLK, SWDIO y GND al header, y tocá Detectar	将 SWCLK、SWDIO 和 GND 接到排针，然后点击“检测”
+Al header con BOOT0 y NRST, y tocá Detectar	通过排针连接 BOOT0 和 NRST，然后点击“检测”
+TX, RX y GND a la consola del aparato, y tocá Detectar	将 TX、RX 和 GND 接到设备控制台，然后点击“检测”
 Conectala al header y tocá Detectar	连接到标题,然后点击检测
 Buscando	寻找
 Detectar	检测
 %s tiene %s	%s 使用 %s
+Sin EN/BOOT en modules.txt: poné BOOT0 en 1 y apretá reset al empezar	modules.txt 未配置 EN/BOOT：将 BOOT0 置为 1，并在开始时按复位键
+Sin EN en modules.txt para el RESET: apretá el reset del Arduino al empezar	modules.txt 未配置用于 RESET 的 EN：开始时按下 Arduino 的复位键
 Sin EN/BOOT en modules.txt: poné la placa en modo descarga a mano	否 EN/BOOT 在 modules.txt:手动将板放入下载模式
 No se pudo empezar	我不能开始.
+La tarjeta la tiene la computadora (modo Disco)	电脑有卡 (磁盘模式)
+¿Borrar el programa?	擦除程序？
+¿Borrar toda la flash?	擦除全部闪存？
+El Arduino conectado en %s se queda sin programa; su bootloader queda. Para guardarlo antes, usá Leer la flash.	%s 上的 Arduino 将失去程序，但保留引导程序。若要先备份，请使用“读取闪存”。
+El chip en %s está protegido: borrarlo entero se lleva su firmware y la protección.	%s 上的芯片已受保护：整片擦除会删除固件并解除保护。
+El chip conectado en %s se queda sin programa.	%s 上的芯片将失去程序。
+La placa conectada en %s se queda sin programa. Para guardarlo antes, usá Leer la flash.	%s 上的开发板将失去程序。若要先备份，请使用“读取闪存”。
+Leer la flash	读取闪存
+Borrar la flash	擦除闪存
+Borrar el programa	擦除程序
+Consola RTT	RTT 控制台
+Sonda USB	USB 调试探针
+Puente para la Mac	Mac 串口桥接
 Liberar	释放
 CONEXIÓN	连接
+SWCLK del objetivo	目标芯片的 SWCLK
+RX del Arduino (D0)	Arduino 的 RX（D0）
+RX del STM32 (PA10)	STM32 的 RX（PA10）
 RX de la placa (U0RXD)	板 RX (U0RXD)
+SWDIO del objetivo	目标芯片的 SWDIO
+TX del Arduino (D1), ver abajo	Arduino 的 TX（D1），见下方说明
+TX del STM32 (PA9)	STM32 的 TX（PA9）
 TX de la placa (U0TXD)	开发板TX (U0TXD)
+RESET, si lo tiene a mano	RESET（若可连接）
+RESET	复位
+NRST	复位（NRST）
 EN / RST	EN / RST
+BOOT0 (el puente, en una Blue Pill)	BOOT0（Blue Pill 上的跳线）
 GPIO0 (GPIO9 en C3/C6/H2, GPIO35 en P4)	GPIO0 (GPIO9 在C3上/C6/H2, GPIO35 在P4上
 GND, común a las dos	GND两者共享
+Un objetivo de 3,3 V con su propia alimentación; el 3V3 de acá sólo si no la tiene. En una Pico: el conector DEBUG (SWCLK, GND, SWDIO).	目标设备应使用 3.3 V 并独立供电；仅在没有电源时使用本板的 3V3。Pico 使用 DEBUG 排针（SWCLK、GND、SWDIO）。
+Un Arduino de 5 V (Uno, Nano, Mega, Leonardo): su TX va al RX de acá por un divisor (1 kΩ en serie, 2 kΩ a GND) o un adaptador de niveles. Uno de 3,3 V va directo. Por USB no hace falta nada.	5 V Arduino（Uno、Nano、Mega、Leonardo）的 TX 需经分压器（串联 1 kΩ，接地 GND 电阻 2 kΩ）或电平转换器接到本板 RX。3.3 V 型号可直接连接。通过 USB 连接则无需这些电路。
 1 firmware en la tarjeta	卡上有一个固件
 Tarjeta leída	读取卡
 Flash	烧录
 Imagen de app: va a 0x10000, sobre el bootloader que la placa ya tenga	应用图像:到0x10000,通过板上已经设置的启动器
 Imagen completa: va entera desde 0x0	完整图像:从0x0写成全
 La dirección sale del nombre del archivo	地址来自文件名
+Las direcciones salen del archivo	地址由文件指定
+Volcado del %d/%d %02d:%02d	%d/%d %02d:%02d 的转储
 FIRMWARE EN LA TARJETA	存储卡上的密码
 No hay firmware en /firmware	没有固件 /firmware
+Copiá ahí el .hex, .elf, .uf2 o .bin de tu firmware (un .bin va al comienzo de la flash).	将固件的 .hex、.elf、.uf2 或 .bin 复制到此处（.bin 从闪存起始地址写入）。
+Copiá ahí el .hex de tu sketch: en el IDE de Arduino, Sketch > Exportar binario compilado. El que no dice with_bootloader.	将程序的 .hex 复制到此处：在 Arduino IDE 中选择“项目 > 导出已编译的二进制文件”，使用文件名不含 with_bootloader 的版本。
 Copiá ahí la carpeta build/ de un proyecto de ESP-IDF (la que tiene flasher_args.json) o un .bin. Un nombre como app@0x10000.bin dice dónde va.	Copy the build/ folder of an ESP-IDF project there (the one with flasher_args.json一个名字如app@0x10000.bin说它去哪里.
 Para	对于
 chip ?	一个芯片?
 archivos	文件
-en	在
-MD5 verificado	MD5 校验通过
+En firmware/volcados	位于 firmware/volcados
 sin verificar	未经验证
+leído dos veces	已读取两次
+MD5 verificado	MD5 校验通过
+%s sin programa: lista para grabar	%s 已无程序：可以烧录
+No se guardó nada	未保存任何数据
+Puede haber quedado a medio borrar	可能仅完成了部分擦除
+en	在
+verificado	已校验
 Quedó a medio grabar: grabala de nuevo para que arranque	只闪过一部分光,再闪一次,这样它就会穿靴子
 archivo	文件
 de	的
+La computadora la tiene: OpenOCD, pyOCD o probe-rs	由电脑使用：OpenOCD、pyOCD 或 probe-rs
+Conectá el conector OTG a la computadora	将 OTG 接口连接到电脑
+lo que escribe su firmware, abajo	固件输出显示在下方
 con stub	带有根管
 con la ROM	通过ROM
+COMANDOS	命令数
+TRANSFERIDO	转移
+PAQUETES SWD	SWD 数据包
+VELOCIDAD	速度
 TIEMPO	时间
 RESTANTE	剩下的
-TRANSFERIDO	转移
-VELOCIDAD	速度
 ARCHIVOS	文件
 REGISTRO	标签
+No entró: esperá que el firmware lea lo anterior	缓冲区已满：请等待固件读取上一条数据
+Escribile al firmware…	向固件发送内容…
+Cerrar el puente	关闭串口桥接
+Cerrar la sonda	关闭调试探针
 Monitor	监视器
+Grabar el volcado	写入转储文件
 Elegí un firmware	选择一个固件
 Programador	烧录工具
 Ese archivo no es un firmware que se pueda grabar	那份文件不是可以闪现的坚固软件
 Grabación terminada: %s en %s	闪光完成: %s 在 %s
-No se pudo grabar: %s	无法烧录：%s
+Volcado de %s guardado en la tarjeta	%s 的转储已保存到存储卡
+Flash de %s borrada	%s 的闪存已擦除
 Frío	很棒.
 Calor	热量
 Frío/calor	热量/cool
@@ -1031,8 +1121,10 @@ Mantené apretado un mosaico en cualquier ambiente y tocá la estrella.	按下,�
 SENSORES	传感器
 CONTROLES	控制
 Tocá para configurar la conexión	击点设置连接
+Las entidades del widget no están en Home Assistant	小组件中的实体不在 Home Assistant 中
 Marcá favoritos en la app con la estrella	在应用程序中标记最喜欢的星
 Sin escenas en Home Assistant	没有场景 Home Assistant
+Luces, enchufes y sensores de la casa, a un toque.	一键控制家中的灯、插座和传感器。
 Efectos	影响
 Tira	灯带
 Consumo	功率
@@ -1580,12 +1672,14 @@ TIPOS	类型
 Simulador: son servicios de ejemplo; en la placa se le pregunta a la red de verdad.	模拟器:这些是样本服务;在板上要求真正的网络.
 No hay memoria para abrir Red	没有足够的内存来打开网络
 No se pudo abrir esta foto	我无法打开这张照片.
+La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea	锁屏每次锁定时会显示此文件夹中的另一张照片
 Es el fondo del inicio y de la pantalla de bloqueo	已设为主屏幕和锁屏壁纸
 Es el fondo del inicio	已设为主屏幕壁纸
 Es el fondo de la pantalla de bloqueo	已设为锁屏壁纸
 Fondo del inicio	主屏幕壁纸
 Pantalla de bloqueo	锁屏
 Los dos	同时设置
+Bloqueo: toda la carpeta, rotando	锁屏：轮换整个文件夹
 %d fotos \xC2\xB7 1 álbum	%d 照片 \xC2\xB7 一张专辑
 %d fotos \xC2\xB7 %d álbumes	%d 照片 \xC2\xB7 %d 专辑
 1 foto	一张照片
@@ -1655,6 +1749,7 @@ Computadora	计算机
 La placa como teclado, mouse y teclas de medios de una computadora: se empareja desde los ajustes de Bluetooth de la Mac o la PC, y el Macro pad y las apps mandan las teclas por ahí cuando no hay un cable USB. El teléfono sigue conectado.	板作为计算机的键盘,鼠标和媒体键:将其与Mac或PC的蓝牙设置结合起来. USB 电话保持连接.
 Teclado y mouse	键盘和鼠标
 Disco	磁盘
+Sonda	调试探针
 Cambiando de modo…	切换模式...
 La computadora tomó la placa como teclado y mouse. El portal también contesta por el cable: 192.168.7.1	计算机已将开发板识别为键盘和鼠标。也可通过 USB 连接访问管理网页：192.168.7.1。
 La computadora tomó la placa como teclado y mouse.	计算机已将开发板识别为键盘和鼠标。
@@ -1662,6 +1757,8 @@ Esperando a la computadora. Conectá el cable al conector OTG.	正在等待计�
 La computadora tiene la tarjeta. Cuando termines, expulsala ahí: vuelve sola a la placa.	存储卡正由计算机使用。操作完成后，请在计算机上安全弹出，设备将自动重新接管。
 Esperando a la computadora. La tarjeta ya salió de la placa: las apps de la tarjeta no abren.	正在等待计算机连接。设备已卸载存储卡，暂时无法打开卡上的应用。
 Lo usa el host USB de alta velocidad.	正在由高速 USB 主机使用。
+La computadora tiene la sonda CMSIS-DAP. Otro modo, acá o en el Programador, la cierra.	电脑正在使用 CMSIS-DAP 调试探针。在此处或烧录器中切换模式会关闭探针。
+La sonda CMSIS-DAP espera a la computadora. Otro modo, acá o en el Programador, la cierra.	CMSIS-DAP 调试探针正在等待电脑连接。在此处或烧录器中切换模式会关闭探针。
 El puerto está libre: la placa no aparece en la computadora.	接口处于空闲状态，计算机不会识别到此设备。
 teclado	键盘
 mouse	鼠标
@@ -1680,12 +1777,15 @@ sin uso todavía	未使用
 sin FAT32 que montar: exFAT y NTFS no se leen	没有 FAT32 将安装:exFAT和NTFS不读取
 El USB está cambiando de modo	USB 是切换模式
 Primero expulsá la tarjeta en la computadora	请先在计算机上安全弹出存储卡
+El Programador está trabajando: esperá a que termine	烧录器正在工作，请等待完成
+Sonda en %s: SWCLK al TX, SWDIO al RX	探针端口 %s：SWCLK 接 TX，SWDIO 接 RX
 Mejor expulsar la tarjeta en la computadora antes	最好先把卡扔到电脑上.
 AHORA	现在
 QUÉ ES EL PUERTO OTG	什么是OTG港口
 El puerto queda libre y la placa no aparece en la computadora. La consola sigue por el conector UART, y el registro en el portal.	机器的端口保持自由,板块不会显示在计算机上. UART 连接器和门户的日志.
 La placa es un teclado, un mouse, las teclas multimedia, un joystick y un teclado MIDI de la computadora: lo que usa el Macro pad. Además, una red por el cable: el portal contesta en 192.168.7.1 aunque no haya Wi-Fi. La tarjeta sigue en la placa. Abrir el Macro pad lo elige solo.	机板是计算机的键盘,鼠标,媒体键盘,游戏pad和MIDI键盘:Macropad所使用的.加上电缆上的网络:门户端在192.168.7.1号码上回答即使没有 Wi-Fi存储卡留在板上,打开宏盘就会自行选择.
 La microSD aparece en la computadora como un pendrive, para copiar apps, música, fotos o mapas a la velocidad del USB. Mientras la tiene la computadora la placa no la toca: al elegirlo se cierran las otras apps, y las de la tarjeta no abren. Expulsala en la computadora y vuelve sola a la placa, con el modo de antes.	微SD显示在计算机上作为一个 USB 它们可以复制应用,音乐,照片或地图 USB 在电脑拥有它的时候,板块不会触摸它:选择这个方法会关闭其他应用程序,卡的应用程序不会打开.
+La placa es una sonda de depuración CMSIS-DAP: OpenOCD, pyOCD y probe-rs depuran el chip conectado por SWD a %s (SWCLK al TX, SWDIO al RX, NRST al EN). Si el host de pendrives usa el conector OTG, se lo presta mientras dure.	本板可作为 CMSIS-DAP 调试探针：OpenOCD、pyOCD 和 probe-rs 可调试通过 SWD 连接到 %s 的芯片（SWCLK 接 TX，SWDIO 接 RX，NRST 接 EN）。若 U 盘主机使用 OTG 接口，探针工作期间会临时占用该接口。
 El conector OTG es el USB 2.0 de alta velocidad del P4 (480 Mbit/s). La placa puede alimentarse por él o por el UART, y pasar de uno al otro sin reiniciarse.	OTG 连接器使用 P4 的高速 USB 2.0（480 Mbit/s）。开发板可由此接口或 UART 接口供电，两者之间切换时无需重启。
 PENDRIVES Y TECLADOS	U 盘和键盘
 Host USB	USB 主机
@@ -1710,6 +1810,7 @@ Sin conectar	没有连接
 Con código	有一个代码
 Fondo de pantalla	壁纸
 Editar inicio	编辑首页屏幕
+En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	在编辑模式中，“+ 小组件”可将时钟、传感器、Home Assistant 等添加到主屏幕；点按小组件可选择大小和显示内容，或将其移除。
 sin tarjeta	未检测到存储卡
 modo seguro	安全模式
 hubo un cuelgue	有一个绞刑
@@ -1753,7 +1854,9 @@ Clic del teclado	键盘音效
 Al bloquear y desbloquear, las notificaciones, las capturas y la grabación de pantalla. Se apagan también con la campana del Centro de control.	锁定、解锁、通知、截图和录屏时播放音效。也可通过控制中心的铃铛按钮关闭。
 El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El degradado queda debajo de la foto, si elegís una.	带时钟的壁纸会随时间呈现夜晚、黎明、白天和黄昏的色彩。选择照片后，渐变背景会保留在照片下方。
 FOTO	照片
+%s, rotando	%s，轮换显示
 Sin foto	未设置照片
+Dejar la foto de ahora	保留当前照片
 Quitar la foto	移除照片
 Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea.	在“照片”中打开所需图片，再点击右上角的调色板图标。锁屏可使用整个文件夹，每次锁定时显示另一张照片。
 COLOR DE ACENTO	主题色
@@ -1766,7 +1869,6 @@ Apps y sus datos	应用程序及其数据
 Videos	视频
 Mapas	地图
 Grabaciones	录音
-La tarjeta la tiene la computadora (modo Disco)	电脑有卡 (磁盘模式)
 Esperá a que termine de contar	等到它完成数量
 Tocá otra vez para expulsarla	再点击,将它排出
 Ya podés sacar la tarjeta	你现在可以拿出存储卡
@@ -1834,7 +1936,6 @@ pico en la alimentación	电源故障
 CPU trabada	CPU 无响应
 %u KB (mínimo %u)	%u KB（最低 %u）
 Volcado borrado	崩溃转储已删除
-No se pudo borrar	无法删除
 Temperatura del chip	芯片温度
 CPU (núcleos 0 · 1)	处理器 (核心0 · 1)
 Interna libre	可用内部内存
@@ -1880,8 +1981,6 @@ Cambiar el código	改变代码
 Modo seguro: el código no se pide, así que podés quitarlo o cambiarlo sin saberlo.	安全模式不要求输入密码，可直接移除或更改密码。
 ¿Te olvidaste el código? Reiniciá con BOOT apretado (modo seguro): ahí no se pide, y lo quitás desde acá. Después de 5 intentos mal, espera 30 s, y más cada vez.	忘记了代码吗? BOOT (安全模式):它没有被要求在那里,你把它从这里. 5次错误尝试后它等30秒,每次更长时间.
 RELOJ	观察
-Grande	大
-Mediano	中
 Arriba	顶部
 Al medio	居中
 Color de acento	主题色
@@ -2113,6 +2212,7 @@ Partición	分区
 Último reinicio	最后重新设置
 El tráfico en bytes no se cuenta: lwIP lo haría con sus estadísticas, que este firmware tiene apagadas.	通过数据的数据, lwIP可以使用其统计数据来计算.
 RAM	存储器
+La memoria, el procesador y la red de la placa.	设备的内存、处理器和网络。
 No se pudo escribir en la tarjeta.	我不能写信给卡.
 No hay tarjeta.	没有卡.
 Elegí al menos un valor.	选择至少一个值.
@@ -2175,6 +2275,26 @@ Home Assistant rechazó el token	Home Assistant 拒绝了标志
 No terminó la autenticación	验证未完成
 Se perdió la conexión	连接丢失
 No se pudo arrancar el servicio	无法启动服务
+Mac	Mac
+Pegar	粘贴
+Deshacer	撤销
+Spotlight	Spotlight
+Cambiar app	切换应用
+Silencio	静音
+Anterior	上一项
+Play	播放
+Volumen -	音量 -
+Volumen +	音量 +
+Casa	家庭
+Taller	工作间
+Banco	测试台
+Modbus	Modbus
+MQTT	MQTT
+Soldador	电烙铁
+Extractor	排烟器
+Luz banco	工作台照明
+Abrir Terminal en la Mac y compilar	在 Mac 上打开终端并编译
+Salir monitor	退出监视器
 Falta la combinación de teclas	关键组合是缺失的
 No conozco esa tecla	我不知道那个钥匙.
 Falta el texto	文本缺失
@@ -2264,6 +2384,8 @@ no se encuentra «%s»	«%s找不到“ ”
 no quedan conexiones libres	没有自由连接
 %s:%d no contesta	%s:%d 没有回答.
 %s:%d no respondió a *IDN?	%s:%d 没有回答身份证?
+Todavía no hay sensores. Conectá uno al header o agregalo en Módulos.	还没有传感器。请将传感器连接到排针，或在“模块”中添加。
+Lo que miden los sensores conectados: CO₂, temperatura, humedad…	已连接传感器的测量值：CO₂、温度、湿度等。
 No hay lugar para mas alarmas	没有更多的报警空间
 Elegi al menos un dia	选择至少一个天
 todos los dias	每天
@@ -2512,6 +2634,75 @@ sin ruta	没有路径
 no se pudo cargar %s: %s	无法加载 %s: %s
 Modo seguro: sin las apps de la tarjeta. Reiniciá para volver a la normalidad.	安全模式下不加载存储卡应用。重启后恢复正常模式。
 La placa se cayó la vez anterior: el volcado está en el portal, en Registro.	上次板子崩溃了: 垃圾场在入口处, 在登记簿页面上。
+No hay tarjeta para guardar el volcado	没有可用于保存转储的存储卡
+Leyendo %s desde 0x%X	正在读取 %s，起始地址 0x%X
+No se pudo escribir en la tarjeta: ¿está llena?	无法写入存储卡：空间是否已满？
+No se pudo guardar %s	无法保存 %s
+Guardado: %s	已保存：%s
+Listo en %u,%u s	完成 %u.%u s
+Puente	串口桥接
+%s %s en %s	%s %s 在 %s
+Placa: %s	开发板：%s
+No se pudo lanzar la tarea	不能开始任务
+Toque a 1200 baudios: la placa vuelve como su bootloader	通过 1200 波特率触发复位：开发板将以引导程序模式重新连接
+El bootloader apareció en %s	引导程序已出现在 %s
+El bootloader no apareció: apretá reset dos veces seguidas y probá de nuevo	未发现引导程序：请快速按两次复位键后重试
+El bootloader no contestó	引导程序未响应
+Sin línea de reset: apretá el botón de reset de la placa	未连接复位线：请按下开发板的复位键
+Llegan datos de su programa: el reset no le llega (EN a RST) o no tiene bootloader	收到应用程序数据：复位信号未到达（EN 接 RST），或设备没有引导程序
+La placa no respondió: revisá TX/RX cruzados, GND y RESET	开发板未响应：请检查 TX/RX 交叉连接、GND 和 RESET
+La placa no respondió: apretá reset justo después de empezar	开发板未响应：请在开始后立即按复位键
+No se pudo leer la firma del chip	无法读取芯片签名
+Firma %s: un chip que no conozco	签名 %s：未知芯片
+No sé el tamaño de su flash ni de su página	未知闪存容量和页大小
+Esta flash pasa de 128 KB: el STK500 v1 no llega	闪存超过 128 KB：STK500 v1 无法访问
+Una carpeta de ESP-IDF no es para un Arduino	ESP-IDF 构建目录不适用于 Arduino
+No entra: llega a %u KB y la flash tiene %u KB	它不适合:它达到 %u KB和闪光已经 %u KB
+%s trae un bootloader (0x%X): grabá el .hex sin \"with_bootloader\"	%s 包含引导程序（0x%X）：请烧录不含 \"with_bootloader\" 的 .hex 文件
+El bootloader (desde 0x%X) no se toca	保留引导程序（从 0x%X 开始）
+El archivo no tiene nada para grabar	文件中没有可写入的数据
+%u páginas de %u bytes (%u KB)	%u 页，每页 %u 字节（%u KB）
+El bootloader no entró en modo de grabación	引导程序未进入编程模式
+0x%X: falló la escritura	0x%X：写入失败
+%s: escrito	%s：已写入
+0x%X: falló la lectura	0x%X：读取失败
+0x%X: la placa tiene %02X y el archivo %02X	0x%X：开发板中为 %02X，文件中为 %02X
+Verificado: cada página igual al archivo	校验通过：每一页都与文件一致
+0x%X queda fuera de la flash (%u KB)	0x%X 超出闪存范围（%u KB）
+0x%X: dos lecturas distintas: revisá el cable	0x%X：两次读取不一致，请检查连接线
+Escribiendo 0xFF en el programa (%u KB)	正在用 0xFF 覆盖程序（%u KB）
+Programa borrado en %u,%u s (el bootloader queda)	程序已擦除，用时 %u.%u 秒（保留引导程序）
+No hay un puerto serie %s	没有连接端口 %s
+No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?	不能打开 %s:它是连接的,还是在终端开放的?
+%s está ocupado: lo tiene %s	%s 忙碌: %s 有没有?
+No se pudo abrir %s	不能打开 %s
+%s, reset por DTR	%s，通过 DTR 复位
+%s, RESET por EN (GPIO%d)	%s，EN（GPIO%d）连接 RESET
+Placa reiniciada	板重新启动
+una red que no es de casa	非受信任的家庭网络
+la red pide contraseña y un socket no la puede dar	网络需要密码，而套接字连接无法提供密码
+Puente: %u baudios	串口桥接：%u 波特率
+Puente: se fue el cliente (%s); %u bytes al objetivo, %u de vuelta	串口桥接：客户端已断开（%s）；向目标发送 %u 字节，接收 %u 字节
+Puente: %s quiso entrar y ya hay alguien	串口桥接：%s 尝试连接，但已有客户端连接
+Puente: %s rechazado: %s	串口桥接：拒绝 %s：%s
+Puente: %s conectado (%s)	串口桥接：%s 已连接（%s）
+crudo	原始数据
+No se pudieron abrir los puertos %d y %d	无法打开端口 %d 和 %d
+Puente abierto en %s a %u baudios	已在 %s 打开串口桥接，波特率 %u
+cerró	已关闭
+error	错误
+%s se desconectó	%s 已拔出
+se cerró el puente	串口桥接已关闭
+El depurador pidió SWCLK a %u kHz	调试器请求将 SWCLK 设为 %u kHz
+El depurador se conectó (SWD)	调试器已连接（SWD）
+El depurador se desconectó	调试器已断开
+El USB cambió de modo (Ajustes): la sonda se cerró	USB 模式已在设置中更改：调试探针已关闭
+La computadora tomó la sonda	电脑已开始使用调试探针
+La computadora soltó la sonda	电脑已释放调试探针
+El USB está en modo Disco: expulsá la tarjeta en la computadora primero	USB 处于磁盘模式：请先在电脑上弹出存储卡
+El host de pendrives le presta el conector OTG a la sonda	U 盘主机暂时将 OTG 接口让给调试探针
+El USB no pasó a modo sonda	USB 未切换到调试探针模式
+Sonda CMSIS-DAP lista en el conector OTG	OTG 接口上的 CMSIS-DAP 调试探针已就绪
 bien	很好
 no respondió a tiempo	没有及时回答
 la imagen no entra en la flash	图像不适合闪光
@@ -2522,37 +2713,160 @@ chip no soportado	不支持的芯片
 el chip no lo soporta	芯片不支持它
 respuesta inválida	无效的反应
 El stub no arrancó (%s): sigo con la ROM	根没有开始( )%s):继续使用ROM
+La placa no respondió: desenchufala y enchufala, o enchufala con BOOT apretado	开发板未响应：请拔出后重新连接，或按住 BOOT 键连接
 La placa no respondió: revisá TX/RX cruzados, GND, EN y BOOT	开发板没有回答:查看TX/RX 交叉, GND, EN 和 BOOT
 No se pudo conectar: %s	无法连接: %s
 Secure boot o descarga segura activos	安全启动或安全下载模式已启动
+La flash no contestó su ID: si no graba, mirá que nada toque CMD, SD0-SD3 o CLK	闪存未返回 ID：若无法烧录，请检查 CMD、SD0–SD3 或 CLK 是否连接了其他线路
 La flash está cifrada: grabarla en claro la deja sin arrancar	闪光是加密的:写在清晰的会让板无法启动
+La flash está cifrada: el volcado sale cifrado, sirve para esta misma placa	闪存已加密：转储内容也已加密，仅适用于这块开发板
 El firmware es para %s y la placa es %s	固件是为了 %s 而开发板是 %s
 El firmware acepta la revisión v%u.%u a v%u.%u y el chip es v%u.%u: no arrancaría	固件进行了修改.%u.%u 到v%u.%u 而芯片是v%u.%u:它不会开始
 Velocidad: %u baudios	速度: %u 电压
 A %u baudios no contesta: vuelvo a 115200	没有答案 %u Baud: 回到115200
 La placa quedó a %u baudios: reseteala y probá de nuevo	开发板被留在 %u 波特:重新设置并再次尝试
-No se pudo abrir %s	不能打开 %s
 0x%x: no empezó (%s)	0x%x:没有开始 (%s)
 %s: no se pudo leer de la tarjeta	%s:无法从卡上读取
 0x%x: falló la escritura (%s)	0x%x: 写作失败 (%s)
 : escrito	书面:
 : escrito, MD5 bien	书面: MD5 很好
-No hay un puerto serie %s	没有连接端口 %s
-No se pudo abrir %s: ¿está enchufado, o abierto en la Terminal?	不能打开 %s:它是连接的,还是在终端开放的?
-%s está ocupado: lo tiene %s	%s 忙碌: %s 有没有?
+No se sabe el tamaño de la flash: indicá cuánto leer	未知闪存容量：请指定读取大小
+0x%X: falló la lectura (%s)	0x%X：读取失败（%s）
+Leído con la ROM: sin verificar	已通过 ROM 读取：未经校验
+Borrando toda la flash (%u MB)	正在擦除全部闪存（%u MB）
+No se pudo borrar: %s	擦除失败：%s
+Flash borrada en %u,%u s	闪存已擦除，用时 %u.%u 秒
+%s no es una imagen de ESP: es para un Arduino u otro micro	%s 不是 ESP 镜像：它适用于 Arduino 或其他微控制器
 %s: la USB-Serial-JTAG del chip, se reinicia sola	%s: 芯片本身 USB- 连续JTAG,它自行重新设置
 %s, EN por RTS y BOOT por DTR	%s, EN 在 RTS 和 BOOT 在 DTR
 %s, EN GPIO%d, BOOT GPIO%d	%s, EN GPIO%d, BOOT GPIO%d
 %s: EN/BOOT ocupados por %s	%s: EN/BOOT 通过 %s
 otro	另一个
 %s sin EN/BOOT: poné la placa en modo descarga (BOOT apretado y reset)	%s 没有 EN/BOOT: 将板放入下载模式 (保持) BOOT and press reset)
-No entra: llega a %u KB y la flash tiene %u KB	它不适合:它达到 %u KB和闪光已经 %u KB
-Placa reiniciada	板重新启动
+No respondió: reabro el puerto y pruebo otra vez	未响应：正在重新打开端口并重试
 Reseteá la placa para que arranque el firmware nuevo	重新设置板以启动新的固件
-Listo en %u,%u s	完成 %u.%u s
-%s %s en %s	%s %s 在 %s
-No se pudo lanzar la tarea	不能开始任务
 Falta esp-serial-flasher: compilá el firmware una vez (managed_components)	esp-serial-flasher 缺失:建立一个固件 (managed_components)
+Sin EN/BOOT: poné BOOT0 en 1 y apretá el reset del STM32	未配置 EN/BOOT：请将 BOOT0 置为 1，然后按 STM32 的复位键
+El bootloader del STM32 no contestó: revisá TX/RX cruzados, GND, BOOT0 y NRST	STM32 引导程序未响应：请检查 TX/RX 交叉连接、GND、BOOT0 和 NRST
+El bootloader no contestó a GET	引导程序未响应 GET 命令
+El bootloader no dijo qué chip es	引导程序未报告芯片型号
+borrado extendido	扩展擦除
+borrado clásico	标准擦除
+Protegido contra lectura (RDP): sólo se puede quitar borrando todo	已启用读保护（RDP）：只能通过整片擦除解除
+Un STM32 que no está en la tabla: grabarlo borra todo antes	STM32 型号不在列表中：写入前将先整片擦除
+Borrando toda la flash (este chip no tiene el mapa de páginas acá)	正在擦除全部闪存（尚无此芯片的页布局）
+%d páginas o sectores borrados	已擦除 %d 个页或扇区
+El chip está protegido contra lectura: no se graba. Borralo entero primero.	芯片已启用读保护，未写入。请先执行整片擦除。
+Una carpeta de ESP-IDF no es para este chip	ESP-IDF 构建目录不适用于此芯片
+0x%08X queda fuera de la flash (0x%08X, %u KB)	0x%08X 超出闪存范围（起始 0x%08X，%u KB）
+0x%08X: falló la escritura	0x%08X：写入失败
+0x%08X: falló la lectura	0x%08X：读取失败
+0x%08X: el chip tiene %02X y el archivo %02X	0x%08X：芯片中为 %02X，文件中为 %02X
+Verificado: la flash es igual al archivo	校验通过：闪存内容与文件一致
+El chip está protegido contra lectura: no se puede leer	芯片已启用读保护，无法读取
+Quitando la protección: el chip se borra entero y se reinicia	正在解除保护：芯片将整片擦除并重新启动
+No se pudo quitar la protección	无法解除保护
+Borrando toda la flash	正在擦除全部闪存
+%s, NRST por EN (GPIO%d) y BOOT0 por BOOT (GPIO%d)	%s，EN（GPIO%d）连接 NRST，BOOT（GPIO%d）连接 BOOT0
+%s, NRST por RTS y BOOT0 por DTR	%s，RTS 连接 NRST，DTR 连接 BOOT0
+Eso no se hace con el bootloader del STM32	STM32 引导程序不支持此操作
+La RP2040 contestó pero no se pudo elegir su núcleo 0	RP2040 已响应，但无法选择核心 0
+Nadie contestó por SWD: revisá SWCLK, SWDIO, GND y que el objetivo tenga alimentación	SWD 未响应：请检查 SWCLK、SWDIO、GND 和目标供电
+El DP no aceptó el pedido de encendido	DP 拒绝了上电请求
+El depurador del objetivo no se encendió	目标调试模块未上电
+Va por VDDH y su UICR quedó sin REGOUT0: sus pines bajan a 1,8 V y este SWD es de 3,3 V	设备由 VDDH 供电，但 UICR 丢失了 REGOUT0：引脚电压降至 1.8 V，而此 SWD 使用 3.3 V
+UICR.APPROTECT en HwDisabled y un arranque de 24 bytes que abre el SWD, como nrfjprog --recover	将 UICR.APPROTECT 设为 HwDisabled，并写入 24 字节的启动代码以开启 SWD，与 nrfjprog --recover 的行为一致
+UICR.APPROTECT en HwDisabled: el SWD sigue abierto si el firmware lo abre al arrancar	UICR.APPROTECT 已设为 HwDisabled：若固件在启动时开启 SWD，它将保持可用
+No pude dejar el SWD abierto en el UICR	无法在 UICR 中保持 SWD 开启
+REGOUT0 repuesto: sus pines siguen a %u,%u V	已恢复 REGOUT0：引脚电压保持为 %u.%u V
+bootloader en 0x%08X	引导程序位于 0x%08X
+%sVDDH, pines a %u,%u V	%sVDDH，引脚电压 %u.%u V
+APPROTECT por hardware; UICR en HwDisabled: el firmware decide si el SWD queda abierto	硬件启用 APPROTECT；UICR 为 HwDisabled：固件决定是否保持 SWD 开启
+APPROTECT por hardware y el UICR no lo abre: al reiniciar se cierra el SWD	硬件启用 APPROTECT，且 UICR 未开启访问：下次复位将关闭 SWD
+Dos bancos de %u KB	两个存储区，每区 %u KB
+El bootloader (%u KB, protegido por BOOTPROT) queda	保留引导程序（%u KB，受 BOOTPROT 保护）
+El borrado total de un SAM se lleva también su bootloader	SAM 的整片擦除也会删除引导程序
+Bootloader protegido (BOOTPROT): los primeros %u KB	受保护的引导程序（BOOTPROT）：前 %u KB
+Región %u del banco %d desbloqueada (16 KB)	已解锁存储区 %u（所属存储体 %d，16 KB）
+GPNVM1 en 1: arranca desde la flash	GPNVM1 已置位：从闪存启动
+No se pudo poner GPNVM1: seguirá arrancando el SAM-BA de la ROM	无法设置 GPNVM1：仍将启动 ROM 中的 SAM-BA
+GPNVM1 en 0: arranca el SAM-BA de la ROM, como con el botón ERASE	GPNVM1 已清零：启动 ROM 中的 SAM-BA，与按下 ERASE 键后的状态一致
+GPNVM1 en 0: arranca el SAM-BA de la ROM	GPNVM1 已清零：启动 ROM 中的 SAM-BA
+%s: la ROM no tiene su marca (0x%06X)	%s：ROM 缺少识别标记（0x%06X）
+%s: a la tabla de la ROM (0x%04X) le falta %.2s	%s：ROM 表（0x%04X）中没有 %.2s
+RP2350: el firmware bloqueó ACCESSCTRL para el depurador: no se toca	RP2350：固件已通过 ACCESSCTRL 禁止调试器访问，未进行修改
+RP2350: bootrom_state_reset no volvió	RP2350：bootrom_state_reset 未返回
+%s: el núcleo no se detuvo	%s：核心未暂停
+%s: connect_internal_flash no volvió	%s：connect_internal_flash 未返回
+%s: flash_exit_xip no volvió	%s：flash_exit_xip 未返回
+La memoria no contesta: está protegido (a un Arduino Due lo libera su botón ERASE)	存储器未响应：已受保护（Arduino Due 可按 ERASE 键解除）
+Todavía no sé grabar la flash de este chip	尚不支持写入此芯片的闪存
+Todavía no sé grabar la flash de %s	尚不支持写入 %s 的闪存
+Un .bin sin dirección va después del bootloader, a 0x%X	未指定地址的 .bin 将写入引导程序之后，即 0x%X
+%s es un .uf2 para otro chip (familia 0x%08X)	%s 是其他芯片的 .uf2 文件（系列 0x%08X）
+El bootloader del archivo es el que ya tiene: queda como está	文件中的引导程序与现有版本相同，保持不变
+El bootloader ocupa los primeros %u KB (BOOTPROT): el programa va desde 0x%X, no 0x%X	引导程序占用前 %u KB（BOOTPROT）：程序应从 0x%X 开始，而非 0x%X
+%u sectores, %u KB, desde 0x%08X	%u 个扇区，共 %u KB，起始地址 0x%08X
+%u sectores de %u KB desde 0x%08X	%u 个扇区，每区 %u KB，起始地址 0x%08X
+No se pudo preparar la flash (detener el núcleo, desbloquearla)	无法准备闪存（暂停核心并解锁）
+0x%08X: no se pudo borrar	0x%08X：擦除失败
+El chip está protegido contra lectura: no se lee	芯片已启用读保护，未读取
+Todavía no sé leer la flash de %s	尚不支持读取 %s 的闪存
+La flash de la placa: %u KB (donde se repite)	开发板闪存：%u KB（按地址重复位置判定）
+Cada pedazo se lee una vez y se compara con la suma que hace su DMA (canal %d)	每段读取一次，并与芯片 DMA 计算的校验值比较（通道 %d）
+Por el cable %u ms, en la tarjeta %u ms; el chip hizo esperar %u veces	传输用时 %u 毫秒，存储卡写入用时 %u 毫秒；芯片共等待 %u 次
+Todavía no sé borrar la flash de %s	尚不支持擦除 %s 的闪存
+Para quitar la protección de este chip hace falta cambiar sus option bytes: todavía no	解除此芯片的保护需要修改选项字节，暂不支持
+Quitando la protección (RDP): el chip borra toda su flash	正在解除读保护（RDP）：芯片将擦除全部闪存
+Protección quitada y flash borrada en %u,%u s	保护已解除，闪存已擦除，用时 %u.%u 秒
+El chip se reinició sin la protección: tocá Detectar	芯片已在解除保护后重启：请点击“检测”
+Borrando todo por el CTRL-AP: se va la protección y el firmware	通过 CTRL-AP 整片擦除：保护和固件都将清除
+Se borró, pero el chip volvió a cerrar el SWD al reiniciarse	已擦除，但芯片在重启后再次关闭了 SWD
+Buscando el bloque de RTT en 0x%08X (%u KB)	正在 0x%08X 查找 RTT 控制块（%u KB）
+No hay bloque de RTT en la RAM: el firmware tiene que usar SEGGER RTT (y estar corriendo)	RAM 中没有 RTT 控制块：固件必须使用 SEGGER RTT，且正在运行
+El bloque de RTT no tiene un buffer de subida válido	RTT 控制块没有有效的上行缓冲区
+RTT en 0x%08X: %u bytes de subida%s	RTT 位于 0x%08X：上行 %u 字节%s
+, se le puede escribir	，可写入
+Se perdió el contacto con el objetivo	与目标设备失去连接
+SWCLK medido: %u kHz; una lectura del DP cada %u µs (%u kHz efectivos, %d de 200 bien)	实测 SWCLK：%u kHz；每 %u µs 读取一次 DP（有效速率 %u kHz，200 次中 %d 次成功）
+SWD va por los pines de un puerto del header (uart.a, uart.b): %s no es uno	SWD 需使用排针串口（uart.a、uart.b）的引脚：%s 不符合要求
+SWCLK GPIO%d, SWDIO GPIO%d, NRST GPIO%d, ~%u kHz	SWCLK GPIO%d，SWDIO GPIO%d，NRST GPIO%d，约 %u kHz
+SWCLK GPIO%d, SWDIO GPIO%d, sin NRST, ~%u kHz	SWCLK GPIO%d，SWDIO GPIO%d，无 NRST，约 %u kHz
+A %u kHz no contestó: pruebo a %u kHz	%u kHz 下未响应：改用 %u kHz 重试
+Objetivo reiniciado	目标设备已重启
+Pide que se escriba \"%s\" para frenar: se lo escribo	需要输入 \"%s\" 才能停止启动：正在输入
+EN (GPIO%d) en bajo un momento, por si va al reset del aparato	将 EN（GPIO%d）短暂拉低，以触发可能连接的设备复位
+Prendé o reiniciá el aparato: se le frena el arranque	请为设备上电或重启设备：将拦截其自动启动
+\"%s\" no es U-Boot (¿su Linux?): reiniciá el aparato, sigo esperando	\"%s\" 不是 U-Boot（可能是 Linux）：请重启设备，继续等待
+Sólo contestó \"%s\", que no es U-Boot: reinicialo mientras se lo frena	仅收到 \"%s\"，并非 U-Boot：请在拦截启动期间重启设备
+Arrancó sin dejarse frenar: la consola puede estar cerrada (queda la pinza SOIC8)	未能停止启动：控制台可能已关闭（可考虑 SOIC8 夹具）
+Vi la cuenta del autoboot pero no se frenó: puede pedir otra tecla o una clave	发现自动启动倒计时，但未能停止：可能需要其他按键或密码
+Llegaron %u bytes sin un prompt: ¿la velocidad no es %u, o falta GND?	已收到 %u 字节，但没有提示符：波特率是否不是 %u，或未连接 GND？
+No llegó nada: revisá TX/RX cruzados, GND y que el aparato se haya prendido	未收到数据：请检查 TX/RX 交叉连接、GND 和设备供电
+\"%s\" no es U-Boot: no contestó a version	\"%s\" 不是 U-Boot：未响应 version 命令
+Prompt \"%s\", RAM de trabajo 0x%08X, %s	提示符 \"%s\"，工作 RAM 0x%08X，%s
+con crc32	支持 crc32
+sin crc32: cada pedazo se lee dos veces	不支持 crc32：每段读取两次
+Sin sf: la flash está mapeada en 0x%08X y se lee con md	不支持 sf：闪存映射在 0x%08X，使用 md 读取
+sf probe 0 no anduvo: la flash no se puede leer por acá	sf probe 0 失败：无法通过此方式读取闪存
+Por el USB de un Arduino (un puente) la velocidad de la consola no se cambia	通过 Arduino 的 USB 桥接时，不更改控制台波特率
+Consola a %u baudios (sin saveenv: al reiniciar vuelve a %u)	控制台波特率 %u（不执行 saveenv：重启后恢复为 %u）
+La consola pasó a %u baudios y no contesta ahí: reiniciá el aparato	控制台已切换到 %u 波特率，但未响应：请重启设备
+La consola se queda a %u baudios	控制台保持 %u 波特率
+Consola de vuelta a %u baudios	控制台已恢复为 %u 波特率
+md muestra las palabras en big-endian (un MIPS): se dan vuelta	md 以大端序显示数据字（MIPS）：正在转换字节顺序
+0x%X: %u tramos repetidos hasta que dos lecturas coincidieron	0x%X：%u 段重复读取，直至两次结果一致
+0x%X: otra vez (%d)	0x%X：重试（%d）
+0x%X: %u pedazos de 4 KB repetidos	0x%X：%u 段 4 KB 数据已重复读取
+El registro de la consola: %s	控制台日志：%s
+Sin sf probe no se puede leer la flash por U-Boot	缺少 sf probe，无法通过 U-Boot 读取闪存
+0x%X queda fuera de la flash (%u MB)	0x%X 超出闪存范围（%u MB）
+0x%X: no salió bien en tres intentos	0x%X：三次尝试均失败
+%u pedazos de 64 KB vacíos (todo 0xFF), sin imprimir	%u 段空白 64 KB 数据（全部为 0xFF），不输出
+%u pedazos de 64 KB vacíos (todo 0xFF)	%u 段空白 64 KB 数据（全部为 0xFF）
+Por la consola de U-Boot sólo se lee: no se graba ni se borra	U-Boot 控制台仅支持读取，不写入或擦除
+%s a %u baudios	%s，波特率 %u
+Queda frenado en \"%s\": reset en la Terminal, o su corriente, lo arranca	停留在 \"%s\"：通过终端复位或重新上电即可启动
 no se pudo abrir la imagen	图像无法打开
 el C6 no aceptó empezar	C6不会启动
 se cortó al mandar la imagen	在发送图像时,链接断裂
@@ -2583,6 +2897,7 @@ ya hay una grabación en curso	一个闪光已经在进行中
 no se pudo empezar	不能开始
 falta path	路径不存在
 ya hay un trabajo en curso	一个工作已经在运行
+no hay una consola abierta	没有已打开的控制台
 no se pudo abrir el puerto (¿lo tiene otra app?)	无法打开端口 (还有其他应用程序吗?)
 el canal no está conectado	频道没有连接
 hace falta el canal conectado y la tarjeta	需要连接的通道和卡
@@ -2595,6 +2910,9 @@ la radio está ocupada	无线模块正忙
 no hay enlace que congelar	没有结冰的联系.
 demasiados intentos: esperá un poco	太多的尝试:等一点
 contraseña incorrecta	错误的密码
+Portal cerrado en esta red	此网络上的网页管理已关闭
+Esta red no está marcada como de confianza en la placa.	此网络未在设备上标记为受信任网络。
+Entrá por la red propia de la placa o por el cable USB, o habilitá el acceso con contraseña en Ajustes, Portal web.	请通过设备热点或 USB 数据线访问，或在“设置 > 网页管理”中启用密码访问。
 nombre desconocido: entrá por la IP de la placa o por su nombre .local	不知名名称:使用板块的IP或本地名称
 pedido desde otra página: rechazado	来自另一个页面的请求:拒绝
 pedido sin origen: rechazado	没有来源的申请:被拒绝
@@ -2646,7 +2964,6 @@ clave desconocida	不知名钥匙
 se leen al arrancar: reiniciar para aplicar	在启动时读取:重新启动
 la otra ranura no tiene una imagen	另一个插槽没有图像
 no se pudo borrar	无法删除
-Banco	测试台
 Calculadora	计算器
 Calendario	日历
 Claude	Claude
@@ -2654,9 +2971,7 @@ Conversor	转换器
 Electrónica	电子工具
 Tiras LED	灯光带
 Macro pad	宏键盘
-Modbus	Modbus
 Módulos	模块
-MQTT	MQTT
 Control PC	电脑控制
 Cronometro	秒表
 Reloj mundial	世界时钟
@@ -2671,6 +2986,7 @@ Buscaminas	矿山扫描机
 Cámaras	摄像头
 CAN	CAN
 Caños	管道拼图
+Cartero	邮差
 CAS	标准化法
 Chatarra	查塔拉
 Claude Jump	克劳德跳跃
@@ -2688,6 +3004,7 @@ Flappy	快乐的
 2043	2043
 Gemas	宝石
 Golf	高尔夫球
+Impresoras 3D	3D 打印机
 tap	打点
 Mila	迈拉
 Monster Hop	怪物跳
@@ -2708,48 +3025,3 @@ Turbo	涡轮
 Video	视频
 Visor 3D	3D 显示器
 VNC	其他
-+ Widget	+ 小组件
-La hora y la fecha, grandes.	以大号显示时间和日期。
-Chico	小
-Agregar widget	添加小组件
-Después de agregarlo, tocalo para elegir el tamaño y qué muestra; mantenelo apretado un momento y arrastralo para moverlo.	添加后，点按它可选择大小和显示内容；长按片刻并拖动可移动。
-Hasta %d	最多 %d 个
-no está ahora	当前不可用
-Qué muestra: hasta %d, en el orden en que los tocás. Los que no entran en el tamaño quedan afuera.	显示内容：最多 %d 项，按点选顺序排列。当前大小容纳不下的项目不会显示。
-Automático	自动
-El widget elige lo que conviene mostrar	小组件会自动选择适合显示的内容
-Todavía no hay nada para elegir: mientras tanto, el widget elige solo.	暂无可选内容；在此期间，小组件会自动选择。
-Quitar widget	移除小组件
-Cuánto queda del uso de Claude.	Claude 使用量还剩多少。
-Las entidades del widget no están en Home Assistant	小组件中的实体不在 Home Assistant 中
-Luces, enchufes y sensores de la casa, a un toque.	一键控制家中的灯、插座和传感器。
-La pantalla de bloqueo muestra otra foto de esta carpeta cada vez que se bloquea	锁屏每次锁定时会显示此文件夹中的另一张照片
-Bloqueo: toda la carpeta, rotando	锁屏：轮换整个文件夹
-En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	在编辑模式中，“+ 小组件”可将时钟、传感器、Home Assistant 等添加到主屏幕；点按小组件可选择大小和显示内容，或将其移除。
-%s, rotando	%s，轮换显示
-Dejar la foto de ahora	保留当前照片
-La memoria, el procesador y la red de la placa.	设备的内存、处理器和网络。
-Todavía no hay sensores. Conectá uno al header o agregalo en Módulos.	还没有传感器。请将传感器连接到排针，或在“模块”中添加。
-Lo que miden los sensores conectados: CO₂, temperatura, humedad…	已连接传感器的测量值：CO₂、温度、湿度等。
-Cartero	邮差
-Impresoras 3D	3D 打印机
-Portal cerrado en esta red	此网络上的网页管理已关闭
-Esta red no está marcada como de confianza en la placa.	此网络未在设备上标记为受信任网络。
-Entrá por la red propia de la placa o por el cable USB, o habilitá el acceso con contraseña en Ajustes, Portal web.	请通过设备热点或 USB 数据线访问，或在“设置 > 网页管理”中启用密码访问。
-Mac	Mac
-Pegar	粘贴
-Deshacer	撤销
-Spotlight	Spotlight
-Cambiar app	切换应用
-Silencio	静音
-Anterior	上一项
-Play	播放
-Volumen -	音量 -
-Volumen +	音量 +
-Casa	家庭
-Taller	工作间
-Soldador	电烙铁
-Extractor	排烟器
-Luz banco	工作台照明
-Abrir Terminal en la Mac y compilar	在 Mac 上打开终端并编译
-Salir monitor	退出监视器

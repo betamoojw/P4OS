@@ -22,8 +22,12 @@ every aos_io_uart_lines()). It answers what esp-serial-flasher 2.x sends:
     so an unerased sector shows), SPI_FLASH_MD5 (32 hex chars from the ROM,
     16 raw bytes from the stub), MEM_BEGIN/DATA/END (the flasher stub: after
     MEM_END with an entry point it says "OHAI" and behaves as the stub:
-    two status bytes instead of four, ERASE_FLASH/ERASE_REGION), READ_FLASH.
+    two status bytes instead of four, ERASE_FLASH/ERASE_REGION), READ_FLASH,
+    and the stub's READ_FLASH (packets of the size asked for, each waiting
+    for the host's ack of the bytes so far, then the MD5 of all of it).
     Anything else is logged as UNKNOWN and answered with INVALID_COMMAND.
+    --mute-flash makes the flash chip silent, as a wire on its CMD pin does:
+    its ID reads ff ffff and FLASH_BEGIN gets no answer.
 
 The flash starts dirty (a fixed pseudo-random "old firmware"), so a region
 that was written without being erased first fails the check. --dump writes
@@ -128,6 +132,7 @@ class Target:
         self.rx = bytearray()
         self.in_frame = False
         self.writing = None             # (offset, packet_size, next_seq)
+        self.reading = None             # the stub's READ_FLASH in progress
         self.mem = None
         self.regions = []
         self.counts = {}
@@ -178,7 +183,7 @@ class Target:
             if op == 0x9F:
                 cap = {1 << 20: 0x14, 2 << 20: 0x15, 4 << 20: 0x16, 8 << 20: 0x17, 16 << 20: 0x18,
                        32 << 20: 0x19}.get(self.flash_size, 0x16)
-                self.regs[spi + r["w0"]] = 0xEF | (0x40 << 8) | (cap << 16)
+                self.regs[spi + r["w0"]] = 0xFFFFFF if self.a.mute_flash else 0xEF | (0x40 << 8) | (cap << 16)
             else:
                 log(f"  SPI user command 0x{op:02x} (not emulated)")
             value &= ~(1 << 18)             # done at once
@@ -249,6 +254,13 @@ class Target:
     # -- commands ---------------------------------------------------------
 
     def packet(self, p):
+        if self.reading is not None and len(p) == 4:
+            (got,) = struct.unpack("<I", p)
+            if got == self.reading["sent"]:
+                self.read_next()
+            else:
+                log(f"  READ_FLASH ack of {got} B, sent {self.reading['sent']}")
+            return
         if len(p) < 8 or p[0] != 0:
             log(f"  junk frame of {len(p)} bytes")
             return
@@ -320,6 +332,8 @@ class Target:
         erase, packets, psize, off = struct.unpack_from("<IIII", d)
         enc = struct.unpack_from("<I", d, 16)[0] if len(d) >= 20 else None
         log(f"FLASH_BEGIN 0x{off:06x} erase {erase} B, {packets} x {psize} B" + (f", encrypted={enc}" if enc is not None else ""))
+        if self.a.mute_flash:
+            return log("  the flash does not answer: no reply")
         if off + erase > self.flash_size:
             return self.reply(cmd, ok=False, err=COMMAND_FAILED)
         self.erase(off, erase)
@@ -400,6 +414,29 @@ class Target:
     def c_read_flash(self, cmd, d, chk):
         addr, size = struct.unpack_from("<II", d)
         self.reply(cmd, data=self.flash[addr:addr + size])
+
+    def c_read_flash_stub(self, cmd, d, chk):
+        addr, size, psize, inflight = struct.unpack_from("<IIII", d)
+        log(f"READ_FLASH (stub) 0x{addr:06x} +{size} in {psize} B packets")
+        if not self.stub or addr + size > self.flash_size or not psize:
+            return self.reply(cmd, ok=False, err=COMMAND_FAILED)
+        self.reply(cmd)
+        self.reading = dict(addr=addr, size=size, psize=psize, sent=0, md5=hashlib.md5())
+        self.read_next()
+
+    def read_next(self):
+        r = self.reading
+        if r["sent"] >= r["size"]:
+            self.slip(r["md5"].digest())
+            self.reading = None
+            return
+        n = min(r["psize"], r["size"] - r["sent"])
+        chunk = bytes(self.flash[r["addr"] + r["sent"]:r["addr"] + r["sent"] + n])
+        r["md5"].update(chunk)
+        r["sent"] += n
+        if not self.a.fast:
+            time.sleep(n * 10 / self.baud)
+        self.slip(chunk)
 
     def c_erase_flash(self, cmd, d, chk):
         if not self.stub:
@@ -591,6 +628,8 @@ def main():
     s.add_argument("--lines")
     s.add_argument("--fast", action="store_true", help="no simulated wire or erase time")
     s.add_argument("--no-stub-support", action="store_true", help="MEM_END does not start a stub")
+    s.add_argument("--mute-flash", action="store_true",
+                   help="a flash chip that never answers (a wire on its CMD pin): ID ff ffff, FLASH_BEGIN unanswered")
     c = sub.add_parser("check")
     c.add_argument("--dump", required=True)
     c.add_argument("source")

@@ -131,33 +131,74 @@ Leyendo el chip	正在读取芯片信息
 Borrando	正在擦除
 Grabando	正在写入
 Verificando	正在校验
+Leyendo la flash	正在读取闪存
 Reiniciando la placa	正在重启开发板
+Consola RTT abierta	RTT 控制台已打开
+Puente abierto	串口桥接已打开
+Sonda abierta	调试探针已打开
 Grabación terminada	烧录完成
 Falló	失败
 Cancelado	已取消
+Volcado guardado	转储文件已保存
+Flash borrada	闪存已擦除
+Consola cerrada	控制台已关闭
+Puente cerrado	串口桥接已关闭
+Sonda cerrada	调试探针已关闭
 Subidos %s archivos a /firmware	已上传 %s 个文件到 /firmware
+STM32 (serie)	STM32（串口）
+toda	全部
+El rango va en hexadecimal (0x10000) o con K o M	范围可使用十六进制（0x10000），或带 K、M 单位
+Escribile al firmware y Enter	输入发送给固件的内容，然后按回车
+¿Borrar el programa del Arduino en %s? Su bootloader queda. Para guardarlo antes, usá Leer la flash.	擦除 %s 上 Arduino 的程序？引导程序将保留。若要先备份，请使用“读取闪存”。
+¿Borrar toda la flash del chip en %s? Se queda sin programa (y sin su protección, si la tenía).	擦除 %s 上芯片的全部闪存？程序将被删除，已有保护也将解除。
+¿Borrar toda la flash de la placa en %s? Se queda sin programa. Para guardarlo antes, usá Leer la flash.	擦除 %s 上开发板的全部闪存？开发板将失去程序。若要先备份，请使用“读取闪存”。
 EN/BOOT por RTS/DTR	通过 RTS/DTR 控制 EN/BOOT
 con EN/BOOT	使用 EN/BOOT
 sin EN/BOOT	不使用 EN/BOOT
+Tipo de placa	开发板类型
 sin detectar	未检测到
+página %s B	每页 %s 字节
+Núcleo	核心
+Protegido contra lectura: sólo se puede borrar entero	已启用读保护：只能整片擦除
 Flash cifrada o arranque seguro: no se puede grabar desde acá	Flash 已加密或启用了安全启动，无法从此处烧录。
 Detectar	检测
+Desde	起始地址
+cuánto	读取大小
+Leer la flash	读取闪存
+Puente para la Mac	Mac 串口桥接
+Borrar el programa	擦除程序
+Borrar la flash	擦除闪存
+Consola RTT	RTT 控制台
+Sonda para la computadora	电脑调试探针
+bajar	下载
+Volcado	崩溃转储
 para %s	适用于 %s
 chip desconocido	未知芯片
 1 archivo	1 个文件
 %s archivos	%s 个文件
+No hay firmware en /firmware. Subí el .hex, .elf, .uf2 o .bin de tu firmware.	/firmware 中没有固件。请上传固件的 .hex、.elf、.uf2 或 .bin 文件。
+No hay firmware en /firmware. Subí el .hex de tu sketch (Sketch, Exportar binario compilado en el IDE de Arduino).	/firmware 中没有固件。请上传程序的 .hex 文件（在 Arduino IDE 中选择“项目 > 导出已编译的二进制文件”）。
 No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.	/firmware 中没有固件。请上传 ESP-IDF 的 build 目录或 .bin 文件。
+CMSIS-DAP en el conector OTG: %s comandos, %s transferencias SWD	OTG 接口上的 CMSIS-DAP：%s 条命令，%s 次 SWD 传输
 archivo %s de %s: %s	第 %s 个文件，共 %s 个：%s
+Cerrar la consola	关闭控制台
+Cerrar el puente	关闭串口桥接
+Cerrar la sonda	关闭调试探针
 %s de %s	%s / %s
 faltan %s	剩余 %s
 en %s	用时 %s
 MD5 verificado	MD5 校验通过
+leído dos veces	已读取两次
+verificado	已校验
 Grabar firmware	烧录固件
 La placa a programar	待烧录开发板
 Conectada al header: TX, RX y GND al puerto, y EN y BOOT a los pines que dice modules.txt (module target … en= boot=).	连接到扩展排针：TX、RX、GND 接到端口；EN、BOOT 接到 modules.txt 指定的引脚（module target … en= boot=）。
+Un Arduino: EN va a su RESET, y el TX de uno de 5 V llega al RX de la placa por un divisor (1 kΩ y 2 kΩ) o un adaptador de niveles. Por USB, nada.	Arduino：EN 接 RESET。5 V 型号的 TX 需通过分压器（1 kΩ 和 2 kΩ）或电平转换器接本板 RX。使用 USB 连接则无需这些电路。
+SWD: el TX del puerto es SWCLK, el RX es SWDIO y EN es NRST (opcional), con GND común.	SWD：端口 TX 接 SWCLK，RX 接 SWDIO，EN 接 NRST（可选），并共接 GND。
+STM32 por serie: TX al PA10, RX al PA9, EN al NRST y BOOT al BOOT0.	STM32 串口连接：TX 接 PA10，RX 接 PA9，EN 接 NRST，BOOT 接 BOOT0。
 Firmware en la tarjeta	存储卡中的固件
 Subir carpeta de build…	上传构建目录…
-Subir .bin…	上传 .bin…
+Subir un archivo…	上传文件…
 Grabación	烧录
 Registro del programador	烧录日志
 Shanghái (UTC+8)	上海（UTC+8）
@@ -214,15 +255,15 @@ Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranq
 Corriendo %s a prueba: se confirma a los 30 s…	正在试运行 %s，稳定运行 30 秒后确认…
 Confirmado: %s es el firmware ahora.	已确认：当前运行固件为 %s。
 La placa no contestó en un minuto y medio: mirala.	设备在 90 秒内未响应，请检查开发板。
-Versión	版本
-Compilado	编译时间
-Ranura	固件分区
-a prueba	试运行中
 confirmada	已确认
 marcada como mala	已标记为无效
 a medio instalar	安装未完成
 nueva	新固件
+a prueba	试运行中
 estado desconocido	未知状态
+Versión	版本
+Compilado	编译时间
+Ranura	固件分区
 La otra ranura	另一固件分区
 vacía	空
 Actualizar por Wi-Fi	通过 Wi-Fi 更新
@@ -232,7 +273,6 @@ Elegir el .bin…	选择 .bin 文件…
 Arranca %s al reiniciar	下次重启将启动 %s
 Volver a la otra ranura	切换到另一固件分区
 Último cuelgue	最近一次崩溃
-Volcado	崩溃转储
 dañado	损坏
 Tarea	任务
 el de ahora	当前固件
@@ -563,9 +603,9 @@ Tamaño	大小
 %s celdas	%s 细胞
 Dato (opcional)	数据 (可选)
 lo que el widget lea	不管该小工具是什么
-Hasta 255 bytes. La mayoría de los widgets no lo usan.	最多 255 字节。大多数小组件不使用此项。
 Vacío: el widget elige solo (CO2, temperatura, humedad...). Si no, sensor:valor separados por comas, con el nombre del sensor como lo muestra Módulos. También se eligen en la placa: en el modo edición, tocá el widget.	留空时，小组件会自动选择（CO2、温度、湿度等）。否则请用逗号分隔“传感器:数值”，传感器名称应与“模块”中显示的一致。也可在设备的编辑模式中点按小组件来选择。
 Vacío: los favoritos de la app (la estrella). Si no, las entidades de Home Assistant separadas por comas: controles que se tocan y sensores con su valor. 4 en un 4×2, 8 en un 4×4. También se eligen en la placa: en el modo edición, tocá el widget.	留空时显示应用收藏项（星标）。否则请用逗号分隔 Home Assistant 实体，包括可点按的控件和带数值的传感器。4×2 显示 4 个，4×4 显示 8 个。也可在设备的编辑模式中点按小组件来选择。
+Hasta 255 bytes. La mayoría de los widgets no lo usan.	最多 255 字节。大多数小组件不使用此项。
 Quitar widget	删除 widget
 Buscar un glifo…	搜索字体...
 Ninguno se llama así.	没有什么名字.

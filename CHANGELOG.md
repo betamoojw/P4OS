@@ -1,5 +1,232 @@
 # Changelog
 
+## 0.23.2 — 2026-11-06
+
+- **Ten TCP connections for the apps, not six.** `aos_tcp` (the cameras'
+  RTSP, MQTT, Modbus TCP, the scope) had ten slots, but only the first six
+  started free: the other four never counted, so the mosaic and the rest
+  shared six. Tried on the Mac: ten connect, the eleventh is refused.
+- **The Programador knows every Arduino whose USB is its own chip's.** The
+  Arduino family took a Leonardo, Micro, Esplora or SparkFun Pro Micro to
+  its bootloader with the 1200-baud touch, but not a Yún, Yún Mini,
+  Leonardo ETH, Industrial 101, Linino One, the newer Micro or Adafruit's
+  Circuit Playground: their USB IDs, from the Arduino IDE's own list, are
+  in now. Tried with a Yún on the USB host: detected, read and written.
+- **The U-Boot family reads old U-Boots too: no sf, no crc32, big-endian.**
+  An Arduino Yún's Atheros AR9331 has a U-Boot 1.1.4 from 2013 with little
+  more than md. The family now:
+  - finds the NOR where the SoC maps it (bootcmd's address rounded down
+    to the flash's size: 0x9f000000 on the Yún) and reads it with md;
+  - tells a big-endian CPU's words (a MIPS) by md.b against md.l;
+  - without crc32, takes each line of md when two prints of it agree,
+    and prints again only the lines that do not;
+  - types the word a countdown asks for ("stop with 'lin'");
+  - waits for a restart when the prompt it found is the device's Linux,
+    instead of failing;
+  - keeps the console's speed through an Arduino's USB bridge.
+
+  Through the Yún's 32U4 bridge, its first 256 KB came out with the same
+  MD5 its own Linux gives for that partition, and then the whole 16 MB in
+  95 minutes, on its own: the kernel inside passes both CRCs of its
+  header. `tools/fake_uboot.py --atheros` plays that U-Boot for the
+  simulator.
+
+## 0.23.1 — 2026-11-05
+
+- **The U-Boot family stops consoles whose "any key" is not any.** The
+  user's camera says "Hit any key" but let Ctrl+C and Enter by; it stops
+  on a mix of Ctrl+C, Enter, space, q, x and Esc, which the family now
+  sends while the device powers on. With it, OpenIPC was installed on that
+  camera from P4OS's console.
+- **The Programador says what is wrong when a wire is.** Two mistakes made
+  on the bench, each of which got only a vague error:
+  - An ESP32 whose flash does not answer (a GND wire on its CMD pin): the
+    chip and its ROM answer, the flash's ID reads ff ffff and the write
+    then fails with a bare timeout. Detect now warns at once that the
+    flash gave no ID and which pins to look at.
+  - An Arduino on the header whose RESET is not wired: its program keeps
+    talking while the Programador knocks at its bootloader. It now says
+    the reset is not reaching the board (or that it has no bootloader)
+    instead of "check TX/RX, GND and RESET".
+
+  `tools/fake_esp_rom.py --mute-flash` and `tools/fake_avr_boot.py
+  --no-reset` imitate both for the simulator.
+- **Tried on the board, with no change to the code:** a Blue Pill (a CKS32
+  clone) by SWD and by ST's serial bootloader; an ESP32 DevKit and an
+  Arduino Nano on the header, with the EN and BOOT lines, at up to 921600
+  baud; a Mega 2560 and a Pro Micro (Caterina, the 1200-baud touch) on the
+  USB host; the Terminal at 460800; and the bridge from the Mac with
+  stm32loader, esptool and avrdude. Wiring diagrams in
+  `docs/img/bench-esp32.svg` and `docs/img/bench-nano.svg`.
+
+## 0.23.0 — 2026-11-04
+
+- **The Programador reads anything with U-Boot on a serial console** (an
+  IP camera, a router, a set-top box): a new family, "U-Boot", that only
+  reads. It stops the boot with Ctrl+C, finds the prompt, asks U-Boot
+  what flash and partitions it has, and reads the whole flash through
+  U-Boot's own commands, each 64 KB checked by U-Boot's crc32 (only the
+  4 KB parts that came wrong are read again), with the console moved to
+  921600 meanwhile and back at the end. The boot log goes to a .txt
+  beside the dump. Made for the user's HiSilicon camera (a Hi3518EV200):
+  its 16 MB read twice through its console, the same SHA-256 both times.
+- **The Arduino Due by SWD.** The Programador knows the SAM3X/A: detect,
+  read, write and erase, both banks of its flash, its lock regions
+  cleared first and its boot bit set after a write (so it boots the
+  program, not the ROM's SAM-BA; an erase of it all goes back to the
+  SAM-BA, as the board's ERASE button). A chip with its security bit
+  answers nothing, and the Programador says the ERASE button frees it.
+  In the simulator; the user's Due is next.
+- **The Terminal and USB serial devices that come and go.** A USB serial
+  device plugged in after the Terminal opened now shows up in its list,
+  and a capture on it opens it again when it comes back (a board
+  restarting takes its USB with it), so its boot is caught. Found with the
+  Ekoparty badge, whose Meshtastic log now reads in the Terminal.
+- **Fixed: turning the USB host off with a USB serial port open restarted
+  the board.** The host freed the port's buffer while its reader waited on
+  it; an open port now stays, closed, until whoever has it closes it.
+- **The newer nRF52s by SWD.** Those made since about 2021 close their
+  debug port at every reset unless their UICR and their firmware open it.
+  After erasing one whole, the Programador leaves what Nordic's own tool
+  leaves: the UICR set to keep it open and, on the empty flash, a 24-byte
+  start that opens it, so the next reset finds it open. An erase-all also
+  puts back the chip's own pin voltage (REGOUT0), and warns when a
+  protected one, powered through VDDH, is left with its pins at 1.8 V.
+  Detect shows its bootloader's address and its pin voltage. In the
+  simulator, for the newer nRF52840 open and protected.
+- **Reading a chip's flash by SWD.** "Leer la flash" works for SWD too:
+  all of it or a range, to `firmware/volcados` on the card, each piece
+  read twice, while the target runs, and written back like any dump. An
+  RP2040's or RP2350's flash size is found where the XIP window repeats
+  it. A protected chip is not read, and nothing tries to. In the
+  simulator for every emulated chip (nRF52840, STM32F411/G071, SAMD21/51,
+  RP2040, RP2350), byte for byte. On an RP each piece is read once and
+  checked against a sum its own DMA makes of the same flash, instead of
+  twice; on the board, a Pico's 2 MB came out the same, and the log says
+  how the time went (the wire, the card, the chip's waits). With the Pico
+  running as a pico-sdk program does (quad flash at 125 MHz), its 2 MB
+  take 9.5 s; `tools/swd_test/blink_pico` has such a blink, `rapido.uf2`.
+- **SWD four to nine times faster.** The wire runs on the P4's dedicated
+  GPIO: the same two pins, moved by CPU instructions and timed in cycles,
+  instead of register writes over the bus. The Programador starts at
+  4 MHz (it was 1) and falls back to 1 MHz by itself when nothing
+  answers; the probe goes as fast as the debugger asks, up to ~9 MHz.
+  Measured with a Pico: a DP read every 14 µs at 4 MHz, every 8 at the
+  top (50 before). An SWD Detectar from the portal takes `"baud"` as its
+  clock in kHz, to try a wire at another speed.
+- **SAMD21 and SAMD51 by SWD:** Arduino Zero, MKR and Nano 33 IoT,
+  Adafruit's M0 and M4 boards, the Seeed XIAO SAMD21 (and their kin: D1x,
+  D20, L2x, C2x, E5x). The bootloader BOOTPROT protects is kept: never
+  written or erased, an image over it refused with where a program for the
+  board starts, and "Borrar" removes the program only. A chip with its
+  security bit set is cleared by its own chip erase, bootloader included,
+  and says so. In the simulator against an emulated D21 and D51.
+- **More STM32s by SWD:** the F2/F4 (the Black Pill's F401 and F411, the
+  F405/407, F446...) through their sector-based flash controller, and the
+  G0, G4 and L4 through the one they share (2 KB pages, double words, a
+  second bank where they have one). And "Borrar" now takes an STM32's read
+  protection off by the chip's own means, which erases all of its flash,
+  as it already did for an nRF52. In the simulator, against an emulated
+  F411, G071 and L476 (and the F103 again), comparing the whole flash after
+  each write; no STM32 on the bench yet.
+- **The board as the computer's debug probe.** "Sonda para la computadora"
+  (Programador, SWD) turns the OTG connector into a CMSIS-DAP v2 probe on
+  the port's SWD pins until it is closed: OpenOCD, pyOCD and probe-rs use
+  it with no driver (Windows too, through Microsoft's OS 2.0 descriptors)
+  for breakpoints, stepping and their own flash algorithms. The probe's
+  firmware is P4OS's own, on the same SWD wire as the Programador
+  (`aos_flasher_dap.c`), and the USB has a fourth mode for it, also in
+  Settings → USB, that gives the port back when it closes. A pendrive host
+  on the OTG connector lends it for as long as the probe lasts, and its
+  setting stays as it was. In the simulator, pyOCD drives it over TCP
+  (`tools/swd_test/dap_tcp.py`) against the emulated nRF52840, STM32F103
+  and RP2040 (multidrop included): halt, registers, RAM, flash, a step.
+  On the board, pyOCD on a Mac debugged a Pico through it: multidrop,
+  halt, registers, a step, RAM, and its flash read at 35.7 KB/s.
+- **A bridge for the computer's tools.** "Puente para la Mac" lends the
+  Programador's port over TCP until it is closed: RFC 2217 on 4000 for
+  esptool and pyserial (`--port rfc2217://p4os.local:4000`, with its
+  speed and its reset through EN/BOOT), the bytes alone on 4001 for
+  avrdude (`-c arduino -P net:p4os.local:4001`, an Arduino reset at each
+  connection). One client at a time, and only from where the portal opens
+  without a password. In the simulator, esptool wrote with its MD5 checked
+  and avrdude wrote and verified through it.
+- **The Programmer writes STM32s through their serial bootloader** (ST's
+  AN3155), a fourth kind of board: BOOT0 on the port's BOOT line, NRST on
+  EN, 8E1. It finds the chip by its PID and the flash by its family's
+  size register, erases only the pages (or an F2/F4's sectors) the image
+  touches, writes and reads back to compare; it reads the flash to the
+  card and erases it. Read protection is said and kept; "Borrar" removes
+  it by the bootloader's own READOUT UNPROTECT, which erases everything.
+  In the simulator against `tools/fake_stm32_boot.py` (F103, F411, G071);
+  no STM32 on the bench yet.
+- **The Programmer speaks SWD.** A third kind of board: an Arm Cortex-M
+  through its debug port, on the pins of a header UART port (TX is SWCLK,
+  RX is SWDIO, EN is NRST), bit-banged by a new `aos_io_swd_*`. It finds
+  the chip (an RP2040 behind its multidrop DP, with the dormant wake-up
+  and TARGETSEL), writes a `.hex`, `.elf`, `.uf2` or `.bin` and reads it
+  back to compare: nRF52 through its NVMC, STM32F0/F1 through their flash
+  controller, RP2040 and RP2350 through their boot ROM's functions (the
+  RP2350's debug port is ADIv6; tried only in the simulator). Read protection is
+  said and kept; an nRF52's can only go with an erase of the whole chip
+  through its CTRL-AP. And the **RTT console**: what a running firmware
+  writes through SEGGER RTT, read from its RAM into the log, with a line
+  typed in the portal going down to it. Reading a chip's whole flash by
+  SWD is left out on purpose (`docs/plan/PROGRAMADOR.md`). In the
+  simulator, against an emulated target (`sim/swd_sim.c`,
+  `P4_SIM_SWD=nrf52840|stm32f103|rp2040`). On the board, with a Pico on
+  `uart.b`: found, and a blink written and verified in 0.4 s, after two
+  fixes the board showed (its DPs, left awake, answering all at once; the
+  ROM's table of functions not starting on a word). The clock calibrates
+  itself when the port opens, and Detectar measures it: 1005 kHz for the
+  1000 asked (the first guess gave 390), about 1.14 MHz at most this way. A test firmware for
+  it, built with the Mac's own clang, is in `tools/swd_test/blink_pico`.
+- **The Programmer writes Arduinos.** A new kind of board, "Arduino", next
+  to "ESP32": an AVR through the bootloader it already has, as the Arduino
+  IDE does with avrdude. STK500 v1 (optiboot on an Uno, a Nano or a Pro
+  Mini, and the old ATmegaBOOT at 57600), STK500 v2 (the Mega 2560) and
+  AVR109 (Caterina: a Leonardo or a Micro on the USB host, sent to its
+  bootloader by the 1200-baud touch and found again when it comes back as
+  another device). The board is reset by DTR on USB, or by the port's EN
+  line wired to RESET on the header, and the protocol is found by trying,
+  in the order the USB ID makes likely. The chip comes from its signature.
+  It writes the `.hex` the IDE exports, every page read back and compared;
+  it refuses the "with_bootloader" one, which only an ISP can write. It
+  reads the flash to the card (each page twice) and writes a dump back
+  without touching the bootloader; it erases the program and keeps the
+  bootloader. The list shows `.hex`, `.elf` and `.uf2` files for the
+  families that take them; the portal page has the same choice
+  (`"family":"avr"` in its API). The wiring card says that a 5 V board's
+  TX needs a divider or a level shifter to reach the P4. In the simulator,
+  against `tools/fake_avr_boot.py` (optiboot, ATmegaBOOT, the Mega's and
+  Caterina on a pty, speaking only at their own speed): write, verify,
+  read, erase and a dump written back, byte for byte, with the four.
+- **The Programmer reads and erases.** "Leer la flash" copies a board's
+  whole flash (or a range, from the portal) to the card, in
+  `firmware/volcados/`, named after the chip, the board's MAC and the date,
+  with a `.json` beside it (chip, revision, range, SHA-256); with the stub
+  every 16 KB piece is checked by the MD5 the target computes. A dump comes
+  back in the list as firmware, so writing it puts a board back as it was,
+  or clones it onto another. "Borrar la flash" erases all of it, after
+  asking. On the board, an AmoledOS watch (ESP32-S3, 16 MB) on its own USB:
+  read whole in 121 s, written back in 98.5 s with its MD5 checked, and
+  it came back with all its settings. In the simulator, against
+  `tools/fake_esp_rom.py`, which now speaks the stub's read: dump, erase,
+  write back and read again gave the same flash, byte for byte.
+- **A USB serial port no longer goes deaf after its device restarts.** A
+  port at rest whose input transfer had failed (an ESP32-S3 restarting into
+  its program at the end of a job did it) never received another byte:
+  the CDC-ACM driver does not submit a failed transfer again. Such a port
+  is now opened anew, and the Programmer retries once over USB; before, it
+  took pulling the cable. "Could not record" was the English for the
+  Programmer's "No se pudo grabar": it is "Couldn't flash" now.
+- The first steps of a universal programmer (`docs/plan/PROGRAMADOR.md`):
+  the service is split into a core and families (ESP32 is the first), and
+  it reads `.hex`, `.elf` and `.uf2` into regions for the families to come
+  (SWD, Arduino, STM32), with a test on the Mac (`tests/flasher_img`).
+- `aos_hal_sha256_begin/update/end`: SHA-256 over data that comes in
+  pieces.
+
 ## 0.22.2 — 2026-10-26
 
 - **Cartero**, a new app on the card: an API client in the manner of

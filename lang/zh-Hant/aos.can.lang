@@ -4,6 +4,7 @@ Tramas	框架
 Por id	透過ID
 Enviar	傳送
 Señales	訊號
+OBD	車載診斷
 Conectá el bus primero	請先連接匯流排
 No hay tarjeta	未插入儲存卡
 Grabando en la tarjeta, carpeta can	正在錄入儲存卡, 資料夾可以
@@ -23,6 +24,11 @@ Un solo pin para TX y RX sirve sólo en la autoprueba	TX和RX的一針 只在自
 El GPIO%d lo tiene %s	GPIO%d 是由 %s
 El controlador no arrancó: mirá el registro	控制器未啟動:檢視日誌
 No hay lugar para otra tarea	沒有其他任務的空間
+No está can/%s	缺少 can/%s
+El archivo pasa de 4 MB	檔案超過 4 MB
+El archivo está vacío	檔案為空
+No hay memoria para leerlo	記憶體不足，無法讀取
+El archivo no tiene señales (BO_ y SG_)	檔案沒有訊號 (BO_和 SG_)
 desconectado	斷開連線
 activo	活躍
 con avisos	警告
@@ -31,9 +37,105 @@ fuera del bus	匯流排關閉
 Normal	正常
 Autoprueba	自行測試
 Solo escucha	只是聽著
-No está %s	%s 失蹤
-El archivo no tiene señales (BO_ y SG_)	檔案沒有訊號 (BO_和 SG_)
 No se pudo guardar en la tarjeta	不能儲存到卡上
+Luz de falla y códigos	發動機故障燈與故障碼
+Carga calculada	計算負荷
+Refrigerante	冷卻液溫度
+Corrección corta, banco 1	第 1 缸列短期燃油修正
+Corrección larga, banco 1	第 1 缸列長期燃油修正
+Corrección corta, banco 2	第 2 缸列短期燃油修正
+Corrección larga, banco 2	第 2 缸列長期燃油修正
+Presión de combustible	燃油壓力
+Presión del múltiple	進氣歧管壓力
+Régimen del motor	發動機轉速
+Velocidad	速度
+Avance del encendido	點火提前角
+Aire de admisión	進氣溫度
+Caudal de aire (MAF)	空氣流量（MAF）
+Mariposa	節氣門開度
+Sonda de oxígeno, banco 1, 1	氧感測器，第 1 缸列第 1 個
+Sonda de oxígeno, banco 1, 2	氧感測器，第 1 缸列第 2 個
+Norma OBD	OBD 標準
+Desde el arranque	發動機啟動後執行時間
+Recorrido con la luz de falla	故障燈點亮後行駛距離
+Presión del riel (relativa)	燃油軌壓力（相對值）
+Presión del riel	燃油軌壓力
+EGR comandada	指令 EGR 開度
+Error de la EGR	EGR 誤差
+Purga del cánister	燃油蒸發系統清除指令
+Nivel de combustible	燃油液位
+Calentamientos desde el borrado	清除故障碼後的暖機次數
+Recorrido desde el borrado	清除故障碼後行駛距離
+Presión barométrica	大氣壓力
+Catalizador, banco 1, 1	催化器溫度，第 1 缸列第 1 個
+Catalizador, banco 2, 1	催化器溫度，第 2 缸列第 1 個
+Tensión del módulo	控制模組電壓
+Carga absoluta	絕對負荷
+Lambda comandada	指令空燃當量比
+Mariposa relativa	相對節氣門開度
+Temperatura ambiente	環境溫度
+Mariposa absoluta B	絕對節氣門開度 B
+Pedal D	加速踏板位置 D
+Pedal E	加速踏板位置 E
+Mariposa comandada	指令節氣門開度
+Tiempo con la luz de falla	故障燈點亮時間
+Tiempo desde el borrado	清除故障碼後經過時間
+Combustible	燃料型別
+Etanol	乙醇含量
+Presión del riel (absoluta)	燃油軌壓力（絕對值）
+Pedal relativo	相對加速踏板位置
+Batería del híbrido	混合動力電池電量
+Aceite	機油溫度
+Inyección	噴油正時
+Consumo	燃油消耗率
+Par pedido	請求扭力
+Par real	實際扭力
+Par de referencia	參考扭力
+Odómetro	里程錶
+sin dato	不可用
+nafta	汽油
+metanol	甲醇
+etanol	乙醇
+diésel	柴油
+GLP	液化石油氣
+GNC	壓縮天然氣
+propano	丙烷
+eléctrico	電動
+bicombustible (%d)	雙燃料（%d）
+híbrido (%d)	混合動力（%d）
+código %d	程式碼 %d
+sin OBD	無 OBD 支援
+encendida · %d códigos	亮 · %d 個故障碼
+apagada · %d códigos	滅 · %d 個故障碼
+Conectá el bus primero, en modo Normal	請先以“正常”模式連線匯流排
+Preguntar necesita el modo Normal	主動查詢需要“正常”模式
+Detenido	已停止
+Preguntando qué PIDs conoce…	正在查詢支援的 PID…
+En vivo	實時
+Nadie contestó	無裝置響應
+Detenido: hace falta el modo Normal	已停止：需要“正常”模式
+Detenido: nadie confirma lo que manda	已停止：傳送的資料未收到確認
+Contestan:	響應裝置：
+ · %d PIDs · %u respuestas	 · %d 個 PID · %u 次響應
+Pregunta a 18DB33F1; contestan desde 18DAF1xx	向 18DB33F1 查詢；響應來自 18DAF1xx
+Pregunta a 7DF; contestan desde 7E8 a 7EF	向 7DF 查詢；響應來自 7E8–7EF
+Parar	停止
+Preguntar	查詢
+PID %02X · %s · hace %u s	PID %02X · %s · %u 秒前
+PID %02X · %s	參數 PID %02X · %s
+11 bits	11位
+29 bits	29位
+El bus está desconectado	匯流排未連線
+La app está en Solo escucha	應用處於“僅監聽”模式
+La app está en Autoprueba	應用處於“自檢”模式
+El escáner pregunta, así que necesita el modo Normal: la app abre siempre en Solo escucha para no tocar un bus ajeno. Cambialo en la conexión. En un auto, casi siempre 500 kbit/s (algunos, 250), con el motor en marcha o el contacto puesto. En Solo escucha sí se ven las respuestas a las preguntas de otro escáner enchufado al mismo conector.	掃描器需要傳送查詢，因此必須使用“正常”模式。應用預設以“僅監聽”模式開啟，以免干擾其他裝置的匯流排，請在連線設定中更改。汽車通常使用 500 kbit/s（部分為 250），需啟動發動機或開啟點火開關。“僅監聽”模式也能顯示同一介面上其他掃描器收到的響應。
+Conexión	連線
+El filtro del controlador está puesto: si no deja pasar 7E8-7EF (o 18DAF1xx), las respuestas no llegan.	控制器過濾器已啟用：若未放行 7E8–7EF（或 18DAF1xx），將收不到響應。
+PID %02X, sin fórmula	PID %02X，無解碼公式
+Esperando el mapa de PIDs…	正在等待支援的 PID 列表…
+Preguntar pide primero el PID 00, el mapa de los que conoce el auto, y después da vueltas por esos con las fórmulas de SAE J1979.	點選“查詢”後，先請求 PID 00 獲取車輛支援的 PID，再按 SAE J1979 公式迴圈查詢。
+Sin fórmula en la tabla de la app (se muestran los bytes):%s	應用表中沒有對應公式（顯示原始位元組）：%s
+OBD-II es lo único igual en todos los autos: el diagnóstico de emisiones (modo 01 de SAE J1979). En muchos autos modernos el conector OBD da sólo eso: un gateway separa los buses internos (motor, carrocería, tablero), así que en Tramas se ve poco o nada más que estas respuestas, y los .dbc del auto sirven conectado detrás del gateway.	OBD-II 提供通用的排放診斷功能（SAE J1979 模式 01）。許多現代汽車的 OBD 介面只提供此功能：閘道器隔離了發動機、車身和儀表等內部匯流排，因此“幀”頁面可能只顯示這些響應，或沒有其他資料。車輛專用 .dbc 檔案通常需連線到閘道器後的內部匯流排才有用。
 Un id de 11 bits llega hasta 7FF: marcá 29 bits	一個11位的ID上升到7FF:標記29位
 En solo escucha no sale nada: cambiá el modo	只有在聽話中,沒有什麼能出來.
 La cola de envío está llena	傳送佇列滿了
@@ -46,7 +148,6 @@ Sin bus: conectalo arriba para mandar.	沒有公共汽車:連線上去傳送.
 En solo escucha no sale nada: cambiá el modo en la conexión.	只有在聽話中,沒有什麼能出來.
 Autoprueba: lo que mandes vuelve sólo a esta placa.	自我測試:你傳送的資訊只返回這個板塊.
 Normal: lo que mandes sale al bus.	正常:你傳送的東西會到巴士.
-29 bits	29位
 Remota	遠端
 Guardar	儲存
 Entre 25 y 1000 kbit/s	在25到1000kbit之間/s
@@ -57,10 +158,8 @@ En hexa, como 7FF	在魔術,像7FF
 Id del filtro, en hexa	過濾 ID, 以十六進位制
 Máscara del filtro, en hexa	過濾面罩, 在十六進位制中
 pata	引腳
-Conexión	連線
 Pines del header	標題針
 TX va a la D (CTX) del transceptor y RX a su R (CRX). En la autoprueba alcanza un pin: elegí el mismo en los dos y no hace falta cablear nada.	TX進入收發機的D(CTX)和RX進入R(CRX)。在自我測試中,一個針就足夠了:在兩種情況下都選同一針,不需要電線。
-Velocidad	速度
 Otra…	其他...
 Otra: %u.%u k	其他: %u.%u k
 Modo	模式
@@ -69,7 +168,6 @@ Participa: confirma las tramas de los otros y puede mandar.	參與:承認其他�
 Sin transceptor: manda y se escucha a sí misma. No sale al bus.	沒有接收器,傳送和聽到自己.
 Filtro del controlador	主計長過濾器
 Sin filtro	無過濾器
-11 bits	11位
 Id %X	標籤: %X
 Máscara %X	面具 %X
 Pasa la trama cuyo id coincide con el del filtro en los bits de la máscara: 7FF deja un id solo, 700 los de 0x100 en 0x100. Lo que no pasa no llega ni a la grabación.	僅當幀 ID 在掩碼指定位上與過濾器一致時才會透過：7FF 僅允許一個 ID，700 允許以 0x100 為步長的 ID。未透過的幀也不會被記錄。
@@ -93,7 +191,6 @@ Se está grabando: pará la grabación primero	它正在錄音:先停止錄音
 ¿Borrar?	刪除?
 Grabaciones	錄音
 Repitiendo %s	複製 %s
-Parar	停止
 En la tarjeta, carpeta can, en el CSV de SavvyCAN (GVRET). Se bajan desde la página CAN del portal. Repetir manda cada trama a su tiempo: hace falta modo Normal o Autoprueba.	On the card, folder can, in SavvyCAN's CSV (GVRET). They are downloaded from the portal's CAN 每個影象都需要正常或自我測試模式.
 Todavía no hay grabaciones: el botón rojo de arriba graba.	還沒有錄音 上面的紅色按鈕
 Repetir	再播放
@@ -104,7 +201,27 @@ Esperando su id…	等待他的身份證...
 Sin bus	沒有公共汽車
 Sin señales	沒有訊號
 Señales leídas de nuevo	訊號再次讀取
-%d señales de can/senales.dbc (se edita desde el portal)	%d signals from can/senales.dbc (從入口網站編輯)
+%d mensajes, %d señales	%d 條訊息，%d 個訊號
+Archivo .dbc	.dbc 檔案
+Los .dbc de la carpeta can/dbc de la tarjeta, y can/senales.dbc. Se bajan de bibliotecas abiertas (opendbc de comma.ai, nberlette/canbus; las dos MIT) y se copian ahí desde la computadora o se suben desde la página CAN del portal.	讀取儲存卡 can/dbc 資料夾中的 .dbc 檔案和 can/senales.dbc。可從開放庫獲取（comma.ai 的 opendbc、nberlette/canbus，均為 MIT 許可證），透過電腦複製或管理網頁的 CAN 頁面上傳。
+Todavía no hay ninguno.	暫無檔案。
+Elegidos: %d	已選：%d
+Tocá los mensajes que querés ver	點選要顯示的訊息
+Hasta 64 mensajes	最多 64 條訊息
+El archivo no tiene mensajes	檔案中沒有訊息
+Mensajes	訊息
+Los que pasan por el bus	匯流排上出現的訊息
+Ninguno	無
+%s: %d mensajes. Tocá uno para sumarlo o sacarlo (hasta 64); arriba, los que se vieron en el bus. La lista entera, con buscador, está en la página CAN del portal.	%s：%d 條訊息。點選可新增或移除（最多 64 條），匯流排上出現過的優先顯示。完整列表和搜尋功能位於管理網頁的 CAN 頁面。
+%u · en el bus	%u · 匯流排上已出現
+Y %d más: se eligen desde el portal.	另有 %d 條：請在管理網頁中選擇。
+En el bus	匯流排上已出現
+%d elegidos	已選 %d 條
+De Por id	來自“按 ID”頁面
+%s: %d mensajes, %d señales.	%s：%d 條訊息，%d 個訊號。
+ %d de más de 32 bits, salteadas.	 %d 個訊號超過 32 位，已跳過。
+ Se muestran los que pasan por el bus: todavía no pasó ninguno.	 僅顯示匯流排上出現的訊息：目前尚未收到。
+ Y %d señales más: elegí menos mensajes.	 另有 %d 個訊號：請減少所選訊息。
 Leer de nuevo	再次閱讀
    tiempo   id        n  datos                    ascii	 時間 id n 資料
    tiempo   id        n  datos	 時間 id n 資料

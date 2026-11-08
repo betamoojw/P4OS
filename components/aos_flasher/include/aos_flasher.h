@@ -6,9 +6,22 @@
  * esp-serial-flasher; this is the part of it that knows about ports, the
  * card and a thread.
  *
+ * Each job is for one family of targets (aos_flasher_opts_t.family): the
+ * ESP32s above, the AVR Arduinos through their own bootloader (Uno, Nano,
+ * Pro Mini, Mega, Leonardo, Micro: aos_flasher_avr.c), from a .hex, or an
+ * Arm Cortex-M through its SWD port (nRF52, RP2040, STM32F0/F1:
+ * aos_flasher_swd.c), on the pins of a UART port of the header: TX is
+ * SWCLK, RX is SWDIO, EN is NRST. An SWD job can also be the target's RTT
+ * console: what its firmware writes, read from its RAM while it runs. And
+ * an STM32 through the bootloader in its system memory, on a UART with
+ * BOOT0 on the port's BOOT line and NRST on EN (aos_flasher_stm32.c).
+ *
  * A service, not an app: one job at a time runs in its own thread and goes on
  * with the Programador app closed. Everything here is callable from the LVGL
  * task - the calls only copy state under a lock or start/stop the thread.
+ *
+ * Besides writing, a job can read the target's flash to a file on the card
+ * (a dump, for a backup or to clone a board) or erase all of it.
  *
  * Firmware comes from the card, <sd>/firmware/ (aos_flasher_dir()):
  *   - a folder with ESP-IDF's flasher_args.json and its bins (what
@@ -17,6 +30,8 @@
  *   - a .bin whose name ends in "@0x10000.bin": that file at that offset;
  *   - any other .bin: a merged/factory image at 0x0 - unless it is a bare
  *     application image (it has the app descriptor), which goes to 0x10000.
+ * Dumps go to <sd>/firmware/volcados/ as "<chip>-<date>@0x<from>.bin", each
+ * with a .json beside it, and come back in the list as firmware to write.
  */
 #pragma once
 
@@ -32,6 +47,20 @@ extern "C" {
 #define AOS_FLASHER_FILES_MAX 8
 #define AOS_FLASHER_SOURCES_MAX 24
 
+/* ---- families ---- */
+
+typedef enum {
+    AOS_FLASHER_ESP = 0,        /* ESP32 / ESP8266 through the ROM's serial bootloader */
+    AOS_FLASHER_AVR,            /* an Arduino through its bootloader: STK500 v1/v2, AVR109 */
+    AOS_FLASHER_SWD,            /* an Arm Cortex-M through its debug port */
+    AOS_FLASHER_STM32,          /* an STM32 through its system bootloader (AN3155) */
+    AOS_FLASHER_UBOOT,          /* anything with U-Boot on a serial console: only read (aos_flasher_uboot.c) */
+    AOS_FLASHER_FAMILIES,
+} aos_flasher_family_t;
+
+/* "ESP32", "Arduino" */
+const char *aos_flasher_family_name(int family);
+
 /* ---- firmware on the card ---- */
 
 typedef struct {
@@ -46,6 +75,7 @@ typedef enum {
     AOS_FLASHER_BIN_AT,         /* name@0x10000.bin */
     AOS_FLASHER_BIN_APP,        /* a bare app image: 0x10000, over the bootloader already there */
     AOS_FLASHER_BIN_MERGED,     /* anything else: a whole image from 0x0 */
+    AOS_FLASHER_IMAGE,          /* a .hex, .elf or .uf2: it says its own addresses */
 } aos_flasher_kind_t;
 
 typedef struct {
@@ -63,10 +93,21 @@ typedef struct {
     aos_flasher_file_t files[AOS_FLASHER_FILES_MAX];
     uint32_t total;             /* bytes of all the files */
     aos_flasher_kind_t kind;    /* how the offsets were decided */
+    bool     dump;              /* read off a board by the programmer (firmware/volcados) */
+    int8_t   family;            /* the family it is for (an ESP image, a dump's .json), -1 not known */
 } aos_flasher_source_t;
 
-/* <sd>/firmware; NULL without a card. */
+/* Whether the list shows 'src' for a job of 'family': its own, or one that
+ * does not say - except a .hex/.elf/.uf2 for the ESP family, which only
+ * writes images. */
+bool aos_flasher_source_fits(const aos_flasher_source_t *src, int family);
+
+/* <sd>/firmware; NULL without a card. Besides the ESP folders and .bin
+ * files, any .hex, .elf or .uf2 in it is listed (AOS_FLASHER_IMAGE: one
+ * "file" from its lowest address, its size the bytes it holds). */
 const char *aos_flasher_dir(void);
+/* <sd>/firmware/volcados, where the dumps go; NULL without a card. */
+const char *aos_flasher_dump_dir(void);
 /* What is in it, projects first, then loose .bin files, by name. Reads the
  * card: from a worker or on a user's tap, not every frame. */
 int  aos_flasher_scan(aos_flasher_source_t *out, int max);
@@ -85,26 +126,70 @@ typedef enum {
     AOS_FLASHER_ERASING,        /* FLASH_BEGIN of a file */
     AOS_FLASHER_WRITING,
     AOS_FLASHER_VERIFYING,      /* MD5 of what the target has */
+    AOS_FLASHER_READING,        /* a dump: the flash to the card */
     AOS_FLASHER_RESETTING,
+    AOS_FLASHER_CONSOLE,        /* the RTT console: reading until cancelled */
+    AOS_FLASHER_BRIDGE,         /* the port lent over TCP, until cancelled */
+    AOS_FLASHER_PROBE,          /* the computer's debugger on the SWD pins, until cancelled */
     AOS_FLASHER_DONE,
     AOS_FLASHER_FAILED,
     AOS_FLASHER_CANCELLED,
 } aos_flasher_phase_t;
 
-typedef enum { AOS_FLASHER_JOB_NONE = 0, AOS_FLASHER_JOB_DETECT, AOS_FLASHER_JOB_FLASH } aos_flasher_job_t;
+typedef enum {
+    AOS_FLASHER_JOB_NONE = 0, AOS_FLASHER_JOB_DETECT, AOS_FLASHER_JOB_FLASH,
+    AOS_FLASHER_JOB_READ,       /* a dump to the card */
+    AOS_FLASHER_JOB_ERASE,      /* all of the flash */
+    AOS_FLASHER_JOB_CONSOLE,    /* SWD: the target's RTT console, until cancelled */
+    AOS_FLASHER_JOB_BRIDGE,     /* the port over TCP for the computer's tools, until cancelled */
+    AOS_FLASHER_JOB_PROBE,      /* SWD: the board as the computer's CMSIS-DAP probe, until cancelled */
+} aos_flasher_job_t;
 
 typedef struct {
-    uint32_t baud;              /* for the writing; 0 = 460800. Falls back to 115200 */
+    aos_flasher_family_t family;    /* who the target is; 0 = an ESP */
+    uint32_t baud;              /* for the writing; 0 = 460800. Falls back to 115200. Not for an AVR */
     bool     no_stub;           /* talk to the ROM itself (slower, no ERASE_REGION) */
     bool     no_verify;         /* skip the MD5 of each file */
     bool     no_reset;          /* leave the target in its bootloader at the end */
+    /* a dump: from this address, this many bytes (0 = to the end of the
+     * flash); with no_verify each piece is not checked against the target */
+    uint32_t read_from, read_len;
+    /* U-Boot: the console's speed (0 = 115200; baud above is the faster one
+     * it is moved to for reading, 0 = the fastest it takes), and the RAM it
+     * reads the flash into (0 = from its loadaddr or bdinfo) */
+    uint32_t console_baud, ram;
 } aos_flasher_opts_t;
 
 /* Connects, reads the chip and resets the target back to its program. */
 bool aos_flasher_detect(const char *port);
+/* The same for a family other than the ESP's (opts->family; the rest is
+ * not used). */
+bool aos_flasher_detect_ex(const char *port, const aos_flasher_opts_t *opts);
 /* Flashes 'src' (copied) through 'port'. false: a job is running, or the
  * thread could not start. */
 bool aos_flasher_flash(const char *port, const aos_flasher_source_t *src, const aos_flasher_opts_t *opts);
+/* Reads the target's flash (opts->read_from/read_len) to a new file in
+ * aos_flasher_dump_dir(); the status says where (out_path) when it ends. */
+bool aos_flasher_read(const char *port, const aos_flasher_opts_t *opts);
+/* Erases all of the target's flash: what is on it is gone. */
+bool aos_flasher_erase(const char *port, const aos_flasher_opts_t *opts);
+/* SWD: the target's RTT console. What its firmware writes to its first up
+ * buffer goes to the log, a line at a time (level 1), until cancelled;
+ * aos_flasher_console_send() puts bytes in its first down buffer. */
+bool aos_flasher_console(const char *port, const aos_flasher_opts_t *opts);
+bool aos_flasher_console_send(const void *data, int n);
+/* The port lent to the computer over TCP (aos_flasher_bridge.c): RFC 2217
+ * on 4000 (esptool, pyserial), the bytes alone on 4001 with an Arduino's
+ * reset at each connection (avrdude), at opts->baud; until cancelled, and
+ * only from where the portal opens without a password. */
+bool aos_flasher_bridge(const char *port, const aos_flasher_opts_t *opts);
+/* SWD: the board as a CMSIS-DAP v2 probe on its OTG connector
+ * (aos_flasher_dap.c): OpenOCD, pyOCD and probe-rs on the computer drive the
+ * port's SWD pins - breakpoints, stepping, their own flash algorithms. The
+ * USB goes to PROBE mode while it runs and back to the mode it had after;
+ * until cancelled. The status counts the commands (done) and the SWD
+ * transfers (total). */
+bool aos_flasher_probe(const char *port, const aos_flasher_opts_t *opts);
 void aos_flasher_cancel(void);
 bool aos_flasher_busy(void);
 
@@ -137,8 +222,16 @@ typedef struct {
     uint32_t flash_size;        /* bytes, 0 unknown */
     bool     stub;              /* the flasher stub ran */
     uint32_t baud;              /* the speed the job ended up at */
-    bool     secure;            /* secure boot or flash encryption on */
+    bool     secure;            /* secure boot or flash encryption on; SWD: read protection */
     bool     lines;             /* the port has EN/BOOT */
+    aos_flasher_family_t family;
+    char     boot[32];          /* an AVR: its bootloader, "optiboot 8.0, 115200"; SWD: the core, "Cortex-M4, DP v2" */
+    uint16_t page;              /* an AVR: the flash page, bytes */
+    /* a dump: where it went (kept after the job; removed if the job failed),
+     * the address it started at and its SHA-256 in hex */
+    char     out_path[176];
+    uint32_t out_from;
+    char     out_sha256[65];
 } aos_flasher_status_t;
 
 void aos_flasher_status(aos_flasher_status_t *out);
@@ -154,6 +247,40 @@ int      aos_flasher_log_line(uint32_t index, char *out, int cap);
 
 /* "ESP32-S3" for "esp32s3", as the service names chips. */
 const char *aos_flasher_chip_label(const char *idf_name);
+
+/* ---- images (aos_flasher_img.c) ----
+ * What a file asks to be written where, for the families that write
+ * microcontrollers (SWD, AVR, STM32): a .bin at an address given by the
+ * caller (or its name's "@0x"), Intel HEX (what Arduino and most IDEs give),
+ * ELF (the segments that load, at their load address) and UF2 (the Pico's).
+ * The file is read whole into PSRAM and turned into regions: sorted by
+ * address, never overlapping, with the gaps of up to 256 bytes between two
+ * pieces filled with 0xFF (alignment padding, a hex file's short holes) so a
+ * firmware is a few regions, not thousands. */
+#define AOS_FLASHER_REGIONS_MAX 64
+
+typedef enum { AOS_IMG_BIN = 0, AOS_IMG_HEX, AOS_IMG_ELF, AOS_IMG_UF2 } aos_flasher_img_fmt_t;
+
+typedef struct {
+    uint32_t addr, len;
+    uint8_t *data;
+} aos_flasher_region_t;
+
+typedef struct {
+    aos_flasher_img_fmt_t fmt;
+    int      n;
+    aos_flasher_region_t r[AOS_FLASHER_REGIONS_MAX];
+    uint32_t total;             /* bytes in all the regions */
+    uint32_t uf2_family;        /* a .uf2's family ID (0xE48BFF56: RP2040), 0 none */
+    uint32_t entry;             /* an .elf's entry point, a .hex's start address; 0 none */
+    void    *mem;               /* what aos_flasher_image_free() lets go */
+} aos_flasher_image_t;
+
+/* By the extension: .hex/.ihex, .elf/.axf, .uf2, anything else a .bin. */
+aos_flasher_img_fmt_t aos_flasher_image_fmt(const char *path);
+/* Loads 'path'; a .bin goes at bin_addr. false with a reason in err. */
+bool aos_flasher_image_load(const char *path, uint32_t bin_addr, aos_flasher_image_t *img, char *err, size_t err_len);
+void aos_flasher_image_free(aos_flasher_image_t *img);
 
 #ifdef __cplusplus
 }

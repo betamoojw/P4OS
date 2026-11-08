@@ -35,6 +35,13 @@ On the board, with the Terminal (or `/api/serial`) on `usb0`, sending `!`
 types into the text field whose on-screen keyboard is open (Notas only
 takes keys while its keyboard is up).
 
+Built with `-prefs=compiler.cpp.extra_flags=-DRAPIDO` it also blinks the
+"L" LED every 100 ms and says `P4OS Leonardo rapido <n>`, so a write by
+the Programador shows. With both on the card, the Programador's Arduino
+family wrote them to a Pro Micro on the USB host on 2026-11-05: the
+1200-baud touch, the bootloader coming back as another device, and the
+sketch back by itself after the write.
+
 ## hola_esp32
 
 An ESP-IDF project for an ESP32, to try the Programmer and the Terminal
@@ -56,3 +63,13 @@ those paths, and the Programmer lists it. Tried on 2026-10-05 with an
 ESP32 dev board on a CP2102 at `usb0`: written and verified in 6.6 s at
 460800 baud, with no button pressed, and read back in the Terminal; and
 with an ESP32-C3 on its own USB: 1.5 s.
+
+With the console at 460800 instead (`sdkconfig.defaults.460800`), into a
+build directory of its own so the usual one stays at 115200:
+
+    idf.py -B build-460800 -D SDKCONFIG=build-460800/sdkconfig \
+      -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.defaults.460800" build
+
+It says `Consola a 460800 baudios` after its greeting. Tried on 2026-11-05
+with an ESP32 DevKit on the header's `uart.b`: the Terminal at 460800 read
+it, and ten 120-character lines sent in a row came back intact.

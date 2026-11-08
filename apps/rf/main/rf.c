@@ -1375,13 +1375,20 @@ static void ui_timer(lv_timer_t *t)
         if (!lv_obj_has_flag(a->empty, LV_OBJ_FLAG_HIDDEN)) lv_obj_add_flag(a->empty, LV_OBJ_FLAG_HIDDEN);
     } else {
         lv_obj_remove_flag(a->empty, LV_OBJ_FLAG_HIDDEN);
-        char s[400];
+        char s[600];
+        bool host = aos_hal_usb_host_on();
         if (a->state == ST_SEARCH) snprintf(s, sizeof s, "%s", _("Buscando una RTL-SDR…"));
         else
-            snprintf(s, sizeof s, "%s\n\n%s", a->why ? _(a->why) : "",
-                     aos_hal_usb_host_on()
+            snprintf(s, sizeof s, "%s\n\n%s%s%s", a->why ? _(a->why) : "",
+                     host
                          ? _("Enchufala en el host USB High Speed, con cables de menos de 15 cm. Consultá los pines de datos y alimentación en Ajustes y en el mapa de esta placa. Full Speed alcanza para 240 mil muestras por segundo.")
-                         : _("El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí."));
+                         : _("El host USB está apagado: prendelo en Ajustes → USB → Host USB y conectá la RTL-SDR al puerto High Speed indicado allí."),
+                     /* The High-Speed header pair shares the OTG wires: a computer
+                      * on it takes the stick before the board's host does */
+                     host && aos_hal_usb_host_port() != AOS_HAL_USB_HOST_HEADER ? "\n\n" : "",
+                     host && aos_hal_usb_host_port() != AOS_HAL_USB_HOST_HEADER
+                         ? _("Si el conector OTG de la placa está enchufado a una computadora, sacalo: comparte las líneas del host USB High Speed y la computadora se queda con la RTL-SDR.")
+                         : "");
         lv_label_set_text(a->empty_lbl, s);
     }
     /* the engine changed the rate (listening keeps to 960 k or 1.92 M) */

@@ -122,7 +122,8 @@ class Svg:
         self.add(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{C["card"]}" stroke="{C["line"]}"/>')
         self.add(f'<text x="{x+18}" y="{y+24}" font-size="14" font-weight="bold" fill="#111">{title}</text>')
         for i, l in enumerate(lines):
-            self.add(f'<text x="{x+18}" y="{y+46+20*i}" font-size="12" fill="{C["text"]}">{l}</text>')
+            ind = 9 if l.startswith("  ") else 0         # a bullet's second line, under its text
+            self.add(f'<text x="{x+18+ind}" y="{y+46+20*i}" font-size="12" fill="{C["text"]}">{l.strip()}</text>')
 
     def header(self, used):
         """used: {pin: colour} for the pins wired in this diagram."""
@@ -393,8 +394,303 @@ def eeprom24():
     s.save("bench-24lc.svg")
 
 
+DEVKIT_LEFT = ["3V3", "EN", "VP", "VN", "IO34", "IO35", "IO32", "IO33", "IO25", "IO26", "IO27", "IO14",
+               "IO12", "GND", "IO13", "SD2", "SD3", "CMD", "5V"]
+DEVKIT_RIGHT = ["GND", "IO23", "IO22", "TX0", "RX0", "IO21", "GND", "IO19", "IO18", "IO5", "IO17", "IO16",
+                "IO4", "IO0", "IO2", "IO15", "SD1", "SD0", "CLK"]
+
+
+def devkit(s, DX, DY0, hot, DW=200):
+    """An ESP32 DevKit of 38 pins from the top: the module (antenna up), 19 pins down each side, USB
+    at the bottom. hot: {("L" or "R", index): colour} for the pins wired. Returns the left and right
+    pin columns' x, the pins' y as a function of the index, and the board's top and bottom."""
+    left, right = DEVKIT_LEFT, DEVKIT_RIGHT
+    top, bot = DY0 - 66, DY0 + 18 * STEP + 70
+    lx, rx_ = DX + 14, DX + DW - 14
+    py = lambda i: DY0 + i * STEP                       # noqa: E731
+    s.add(f'<rect x="{DX}" y="{top}" width="{DW}" height="{bot-top}" rx="8" fill="#1e293b"/>')
+    s.add(f'<rect x="{DX+40}" y="{top+8}" width="{DW-80}" height="44" rx="3" fill="#cbd5e1" stroke="#94a3b8"/>')
+    s.add(f'<path d="M{DX+52} {top+20} h20 v12 h16 v-12 h16 v12 h16 v-12 h20" stroke="#64748b" stroke-width="2" fill="none"/>')
+    s.plain(DX + DW / 2, top + 47, "ESP32-WROOM-32", size=10, color="#334155", anchor="middle", bold=True)
+    s.add(f'<rect x="{DX+DW/2-30}" y="{py(5)}" width="60" height="150" rx="4" fill="#0f172a"/>')
+    s.plain(DX + DW / 2, py(8) + 4, "ESP32", size=13, color="#e2e8f0", anchor="middle", bold=True)
+    s.plain(DX + DW / 2, py(9) + 4, "DevKit", size=11, color="#94a3b8", anchor="middle")
+    s.plain(DX + DW / 2, py(10) + 4, "top view", size=10, color="#94a3b8", anchor="middle")
+    s.plain(DX + DW / 2, py(16) + 4, "flash pins", size=10, color="#fca5a5", anchor="middle", bold=True)
+    s.plain(DX + DW / 2, py(17) + 4, "leave free", size=10, color="#fca5a5", anchor="middle")
+    # the micro-USB and the two buttons at the bottom
+    s.add(f'<rect x="{DX+DW/2-22}" y="{bot-22}" width="44" height="30" rx="3" fill="#9ca3af" stroke="#6b7280"/>')
+    s.plain(DX + DW / 2, bot + 24, "micro-USB", size=11, color="#6b7280", anchor="middle")
+    for bx_, name in ((DX + 34, "EN"), (DX + DW - 34, "BOOT")):
+        s.add(f'<rect x="{bx_-12}" y="{bot-30}" width="24" height="18" rx="3" fill="#e5e7eb" stroke="#6b7280"/>')
+        s.plain(bx_, bot - 36, name, size=9, color="#e2e8f0", anchor="middle", bold=True)
+    flash = {"CMD", "SD0", "SD1", "SD2", "SD3", "CLK"}      # the SPI flash's own pins: nothing goes there
+    for side, names, x, anchor, dx in (("L", left, lx, "start", 14), ("R", right, rx_, "end", -14)):
+        for i, nm in enumerate(names):
+            h = hot.get((side, i))
+            fill = "#e5e7eb" if h == "#111111" else h       # a black (GND) pin keeps a light name
+            s.over(f'<circle cx="{x}" cy="{py(i)}" r="{7 if h else 6}" fill="{h or "#d1a33a"}" stroke="#fff" stroke-width="{2 if h else 0}"/>')
+            s.plain(x + dx, py(i) + 4, nm, size=11, color=fill or ("#fca5a5" if nm in flash else "#e5e7eb"),
+                    anchor=anchor, bold=bool(h))
+    return lx, rx_, py, top, bot
+
+
+def esp32_devkit():
+    """An ESP32 DevKit of 38 pins (DevKitC V4 and its many copies) on uart.b with EN and BOOT."""
+    s = Svg(1100, 965, "An ESP32 DevKit (38 pins) on the 40-pin header",
+            "uart.b with its EN and BOOT lines: the Flasher puts it in download mode by itself, "
+            "and esptool does the same through the bridge")
+    c_tx, c_rx, c_boot, c_en = "#ea580c", "#16a34a", "#7c3aed", "#0891b2"
+    used = {1: "#dc2626", 8: c_boot, 11: c_en, 12: c_tx, 13: "#111111", 14: c_rx}
+    right = DEVKIT_RIGHT
+    lx, rx_, py, top, bot = devkit(s, 130, ROW0 + STEP, {
+        ("L", 1): c_en, ("L", 18): "#dc2626", ("R", 0): "#111111",
+        ("R", 3): c_rx, ("R", 4): c_tx, ("R", 13): c_boot})
+    # TX of uart.b (pin 12) to RX0, straight across; TX0 to RX of uart.b (pin 14): crossed
+    x12, y12 = pin_xy(12)
+    x14, y14 = pin_xy(14)
+    x8, y8 = pin_xy(8)
+    i_rx0, i_tx0, i_io0 = right.index("RX0"), right.index("TX0"), right.index("IO0")
+    lane_rx, lane_boot = 375, 405
+    s.wire([(x12 - 8, y12), (lane_rx - 10, y12), (lane_rx - 10, py(i_rx0)), (rx_ + 8, py(i_rx0))], c_tx, 3)
+    s.wire([(x14 - 8, y14), (lane_rx + 10, y14), (lane_rx + 10, py(i_tx0)), (rx_ + 8, py(i_tx0))], c_rx, 3)
+    s.wire([(x8 - 8, y8), (lane_boot, y8), (lane_boot, py(i_io0)), (rx_ + 8, py(i_io0))], c_boot, 3)
+    # EN and GND by tags: pin 11 and pin 13 are on the header's right column
+    x11, y11 = pin_xy(11)
+    x13, y13 = pin_xy(13)
+    s.wire([(x11 + 8, y11), (690, y11)], c_en, 3)
+    s.net(690, y11, "EN", c_en, side="right")
+    s.wire([(x13 + 8, y13), (690, y13)], C["gnd"], 3)
+    s.net(690, y13, "GND", C["gnd"], side="right")
+    s.wire([(lx - 8, py(1)), (100, py(1))], c_en, 3)
+    s.net(100, py(1), "EN", c_en)
+    s.wire([(rx_ + 8, py(0)), (352, py(0))], C["gnd"], 3)
+    s.net(352, py(0), "GND", C["gnd"], side="right")
+    # the legend: the six wires, header pin first
+    gx, gy = 730, pin_xy(23)[1] - 14
+    rows = [(c_tx, "pin 12, GPIO3 (uart.b TX)", "RX0"), (c_rx, "pin 14, GPIO4 (uart.b RX)", "TX0"),
+            (c_boot, "pin 8, GPIO2 (the BOOT line)", "IO0"), (c_en, "pin 11, GPIO5 (the EN line)", "EN"),
+            (C["gnd"], "pin 13, GND", "GND"), (C["p5"], "pin 1, 5 V", "5V")]
+    s.add(f'<rect x="{gx}" y="{gy}" width="330" height="{44 + 26 * len(rows)}" rx="8" fill="{C["card"]}" stroke="{C["line"]}"/>')
+    s.text(gx + 16, gy + 24, "The six wires: header → DevKit", size=13, color="#111", bold=True)
+    for k, (col, frm, to) in enumerate(rows):
+        y = gy + 50 + 26 * k
+        s.wire([(gx + 16, y - 4), (gx + 46, y - 4)], col, 4)
+        s.text(gx + 56, y, frm, size=12)
+        s.text(gx + 316, y, to, size=12, color=col if col != C["gnd"] else "#111", anchor="end", bold=True)
+    # 5 V from pin 1 over the top and down the left to the DevKit's 5V pin
+    x1, y1 = pin_xy(1)
+    v5 = 40
+    s.wire([(x1 + 8, y1), (640, y1), (640, top - 24), (v5, top - 24), (v5, py(18)), (lx - 8, py(18))], C["p5"], 3)
+    s.text(v5 + 10, top - 30, "5 V from pin 1 to its 5V pin (or its own micro-USB, not both)", color="#b91c1c")
+    s.notes(40, bot + 46, 1020, "What it tries (all of it worked on the board, 2026-11-05)", [
+        "• uart.b crossed: TX (GPIO3, pin 12) to the DevKit's RX0, its TX0 to RX (GPIO4, pin 14); GND (pin 13) to one of its GND pins",
+        "• The EN line (GPIO5, pin 11) to EN, the BOOT line (GPIO2, pin 8) to IO0: Detect resets it into the ROM by itself. Open-drain, so its buttons still work",
+        "• Written by the Flasher at 115200, 460800 and 921600 (89 KB/s), MD5 fine; the Terminal read it and talked back to it",
+        "• From the Mac through the bridge: esptool --port rfc2217://p4os.local:4000 chip_id, and write_flash at 460800, hashes verified",
+        "• Power: 5 V from pin 1 to its 5V pin, or its own micro-USB; never both. CMD, SD0-SD3 and CLK are the flash's: a wire there (GND on CMD)",
+        "  leaves the flash silent, ID ff/ffff and \"invalid header: 0xffffffff\" in a loop. Printed names vary: TX0/TXD/TX, RX0/RXD/RX, IO0/G0",
+    ])
+    s.header(used)
+    s.save("bench-esp32.svg")
+
+
+def nano_header():
+    """An Arduino Nano (5 V) on uart.b: its TX through a divider, the EN line to its reset."""
+    s = Svg(1100, 895, "An Arduino Nano on the 40-pin header",
+            "uart.b with the EN line on its reset: the Flasher writes it through its bootloader, "
+            "and avrdude does the same through the bridge")
+    c_tx, c_rx, c_en = "#ea580c", "#16a34a", "#0891b2"
+    used = {1: "#dc2626", 11: c_en, 12: c_tx, 13: "#111111", 14: c_rx}
+    # the Nano from the top, USB up: D12..D2, GND, RST, RX0, TX1 down the side facing the header
+    DX, DW, DY0 = 60, 170, ROW0 + 2 * STEP
+    left = ["D13", "3V3", "REF", "A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "5V", "RST", "GND", "VIN"]
+    right = ["D12", "D11", "D10", "D9", "D8", "D7", "D6", "D5", "D4", "D3", "D2", "GND", "RST", "RX0", "TX1"]
+    top, bot = DY0 - 64, DY0 + 14 * STEP + 34
+    lx, rx_ = DX + 14, DX + DW - 14
+    py = lambda i: DY0 + i * STEP                       # noqa: E731
+    s.add(f'<rect x="{DX}" y="{top}" width="{DW}" height="{bot-top}" rx="6" fill="#1e3a8a"/>')
+    s.add(f'<rect x="{DX+DW/2-26}" y="{top-14}" width="52" height="40" rx="3" fill="#9ca3af" stroke="#6b7280"/>')
+    s.plain(DX + DW / 2, top - 22, "USB", size=11, color="#6b7280", anchor="middle")
+    s.add(f'<rect x="{DX+DW/2-34}" y="{py(5)}" width="68" height="68" rx="3" fill="#0f172a" transform="rotate(45 {DX+DW/2} {py(5)+34})"/>')
+    s.plain(DX + DW / 2, py(6) + 10, "ATmega", size=11, color="#e2e8f0", anchor="middle", bold=True)
+    s.plain(DX + DW / 2, py(7) + 4, "328P", size=11, color="#e2e8f0", anchor="middle", bold=True)
+    s.plain(DX + DW / 2, py(10) + 4, "Nano", size=13, color="#e2e8f0", anchor="middle", bold=True)
+    s.plain(DX + DW / 2, py(11) + 4, "top view", size=10, color="#93c5fd", anchor="middle")
+    s.add(f'<rect x="{DX+DW/2-12}" y="{py(12)-6}" width="24" height="20" rx="3" fill="#e5e7eb" stroke="#6b7280"/>')
+    s.plain(DX + DW / 2, py(13) + 14, "RESET", size=9, color="#e2e8f0", anchor="middle", bold=True)
+    hot_r = {"RX0": c_tx, "TX1": c_rx, "RST": c_en, "GND": "#111111"}
+    for i, nm in enumerate(left):
+        hot = "#dc2626" if nm == "5V" else None
+        s.over(f'<circle cx="{lx}" cy="{py(i)}" r="{7 if hot else 6}" fill="{hot or "#d1a33a"}" stroke="#fff" stroke-width="{2 if hot else 0}"/>')
+        s.plain(lx + 14, py(i) + 4, nm, size=11, color=hot or "#e5e7eb", bold=bool(hot))
+    for i, nm in enumerate(right):
+        hot = hot_r.get(nm)
+        s.over(f'<circle cx="{rx_}" cy="{py(i)}" r="{7 if hot else 6}" fill="{hot or "#d1a33a"}" stroke="#fff" stroke-width="{2 if hot else 0}"/>')
+        txt = "#e5e7eb" if hot in (None, "#111111") else hot
+        s.plain(rx_ - 14, py(i) + 4, nm, size=11, color=txt, anchor="end", bold=bool(hot))
+    i_gnd, i_rst, i_rx0, i_tx1 = 11, 12, 13, 14
+    x12, y12 = pin_xy(12)
+    x14, y14 = pin_xy(14)
+    lane_tx, node = 305, 390
+    # TX of uart.b (pin 12) straight to RX0: 3.3 V is a high for a 5 V ATmega
+    s.wire([(x12 - 8, y12), (lane_tx, y12), (lane_tx, py(i_rx0)), (rx_ + 8, py(i_rx0))], c_tx, 3)
+    # TX1 is 5 V: 1 kOhm to the node, 2 kOhm from the node down to GND, the node (3.3 V) up to RX (pin 14)
+    ty = py(i_tx1)
+    s.resistor_h(rx_ + 8, node, ty, "1 kΩ", above=False)
+    s.wire([(node, ty), (node, y14), (x14 - 8, y14)], c_rx, 3)
+    s.dot(node, ty, c_rx)
+    s.resistor_v(node, ty, ty + 96, "", C["gnd"])
+    s.text(node - 16, ty + 46, "2 kΩ", anchor="end")
+    s.text(node - 16, ty + 62, "(or 2 × 1 kΩ)", size=11, color=C["dim"], anchor="end")
+    s.gnd_sym(node, ty + 96)
+    s.text(node - 8, ty - 10, "3.3 V", size=11, color=c_rx, anchor="end", bold=True)
+    # RST and GND by tags, as on the header's right column
+    s.wire([(rx_ + 8, py(i_rst)), (250, py(i_rst))], c_en, 3)
+    s.net(250, py(i_rst), "EN", c_en, side="right")
+    s.wire([(rx_ + 8, py(i_gnd)), (250, py(i_gnd))], C["gnd"], 3)
+    s.net(250, py(i_gnd), "GND", C["gnd"], side="right")
+    x11, y11 = pin_xy(11)
+    x13, y13 = pin_xy(13)
+    s.wire([(x11 + 8, y11), (690, y11)], c_en, 3)
+    s.net(690, y11, "EN", c_en, side="right")
+    s.wire([(x13 + 8, y13), (690, y13)], C["gnd"], 3)
+    s.net(690, y13, "GND", C["gnd"], side="right")
+    # 5 V from pin 1 over the top and down the left to its 5V pin
+    x1, y1 = pin_xy(1)
+    v5 = 30
+    s.wire([(x1 + 8, y1), (640, y1), (640, top - 50), (v5, top - 50), (v5, py(11)), (lx - 8, py(11))], C["p5"], 3)
+    s.text(v5 + 10, top - 56, "5 V from pin 1 to its 5V pin (or its own USB, not both)", color="#b91c1c")
+    # the legend
+    gx, gy = 730, pin_xy(23)[1] - 14
+    rows = [(c_tx, "pin 12, GPIO3 (uart.b TX)", "RX0 (D0)"), (c_rx, "pin 14, GPIO4 (uart.b RX)", "TX1 (D1) via 1k/2k"),
+            (c_en, "pin 11, GPIO5 (the EN line)", "RST"), (C["gnd"], "pin 13, GND", "GND"), (C["p5"], "pin 1, 5 V", "5V")]
+    s.add(f'<rect x="{gx}" y="{gy}" width="330" height="{44 + 26 * len(rows)}" rx="8" fill="{C["card"]}" stroke="{C["line"]}"/>')
+    s.text(gx + 16, gy + 24, "The five wires: header → Nano", size=13, color="#111", bold=True)
+    for k, (col, frm, to) in enumerate(rows):
+        y = gy + 50 + 26 * k
+        s.wire([(gx + 16, y - 4), (gx + 46, y - 4)], col, 4)
+        s.text(gx + 56, y, frm, size=12)
+        s.text(gx + 316, y, to, size=12, color=col if col != C["gnd"] else "#111", anchor="end", bold=True)
+    s.notes(40, NOTES_Y, 1020, "What it tries (all of it worked on the board, 2026-11-05)", [
+        "• TX (GPIO3, pin 12) straight to RX0: 3.3 V is a high for a 5 V ATmega. Its TX1 is 5 V: to RX (GPIO4, pin 14) only through",
+        "  1 kΩ in series with 2 kΩ to GND (or two 1 kΩ in series: 3.33 V at the node); never straight. A 3.3 V Pro Mini needs none",
+        "• The EN line (GPIO5, pin 11) to RST: Detect found its old bootloader (STK500 v1 1.16, 57600) and the Flasher wrote, read and verified it",
+        "  If Detect gets no answer while its program keeps running (a counter that never restarts), the EN wire is not on RST",
+        "• Bridge: avrdude -c arduino -p m328p -P net:p4os.local:4001 -b 57600 wrote and verified it; each connection resets it through EN",
+        "• Power: 5 V from pin 1 to its 5V pin, or its own USB; never both. Tags with the same name (EN, GND) are one wire",
+    ])
+    s.header(used)
+    s.save("bench-nano.svg")
+
+
+def sn65(s, x, w, ys, side, title, chip_y, smd_y):
+    """An SN65HVD230 board (the blue GY-230 and its copies) with its six pins down one edge, 'left'
+    or 'right', at the y of ys (3V3, GND, CTX, CRX, CANH, CANL); returns where a wire meets each
+    pin. The chip is marked VP230; the SMD marked 121 is its 120 ohm across CANH and CANL."""
+    top, bot = min(ys[0], chip_y) - 28, max(ys[-1], smd_y) + 32
+    s.add(f'<rect x="{x}" y="{top}" width="{w}" height="{bot-top}" rx="6" fill="#1e3a8a"/>')
+    s.text(x + w / 2, top - 12, title, size=13, color="#111", anchor="middle", bold=True)
+    px = x + w - 14 if side == "right" else x + 14
+    inner = x + 14 if side == "right" else x + w - 68        # the chip and the SMD, away from the pins
+    # the chip, legs up and down as on the board, pin 1 dot at the bottom left
+    s.add(f'<rect x="{inner}" y="{chip_y}" width="54" height="40" rx="3" fill="#0f172a"/>')
+    for k in range(4):
+        lx = inner + 9 + k * 12
+        s.add(f'<rect x="{lx-2}" y="{chip_y-6}" width="4" height="6" fill="#9ca3af"/>')
+        s.add(f'<rect x="{lx-2}" y="{chip_y+40}" width="4" height="6" fill="#9ca3af"/>')
+    s.add(f'<circle cx="{inner+8}" cy="{chip_y+32}" r="2.5" fill="#475569"/>')
+    s.plain(inner + 27, chip_y + 24, "VP230", size=10, color="#e2e8f0", anchor="middle", bold=True)
+    s.add(f'<rect x="{inner}" y="{smd_y-8}" width="30" height="16" rx="2" fill="#111827" stroke="#9ca3af"/>')
+    s.plain(inner + 15, smd_y + 4, "121", size=9, color="#e5e7eb", anchor="middle", bold=True)
+    s.plain(inner + 36, smd_y + 4, "120 Ω", size=10, color="#fde68a", bold=True)
+    names = ["3V3", "GND", "CTX", "CRX", "CANH", "CANL"]
+    for nm, y in zip(names, ys):
+        s.over(f'<circle cx="{px}" cy="{y}" r="7" fill="#d1a33a" stroke="#fff" stroke-width="2"/>')
+        if side == "right":
+            s.plain(px - 14, y + 4, nm, size=11, anchor="end", bold=True)
+        else:
+            s.plain(px + 14, y + 4, nm, size=11, bold=True)
+    return px + 8 if side == "right" else px - 8
+
+
+def can():
+    """Two SN65HVD230 on one bus: the P4's TWAI on the header, an ESP32 DevKit's on its IO21/IO22."""
+    s = Svg(1200, 1090, "CAN on the 40-pin header: the P4 and an ESP32 on one bus",
+            "two 3.3 V SN65HVD230 transceivers and a twisted pair with 120 Ω at each end; "
+            "the P4's TWAI on GPIO28/29, the ESP32's on IO21/IO22")
+    c_tx, c_rx, c_h, c_l, c_p = "#ea580c", "#16a34a", "#ca8a04", "#2563eb", C["p3"]
+    used = {16: c_tx, 18: c_p, 19: "#111111", 20: c_rx}
+    y_h, y_l = 830, 852                                 # the bus, under everything
+    # the P4's transceiver, left of the header: CTX straight from pin 16, CRX from pin 20
+    x16, y16 = pin_xy(16)
+    x18, y18 = pin_xy(18)
+    x19, y19 = pin_xy(19)
+    x20, y20 = pin_xy(20)
+    ys1 = [y16 - 4 * STEP, y16 - 2 * STEP, y16, y20, y20 + 2 * STEP, y20 + 4 * STEP]
+    m1 = sn65(s, 190, 150, ys1, "right", "SN65HVD230 #1", ys1[0] + 34, (ys1[4] + ys1[5]) / 2)
+    s.wire([(x16 - 8, y16), (m1, y16)], c_tx, 3)
+    s.wire([(x20 - 8, y20), (m1, y20)], c_rx, 3)
+    # power by tags: the board's 3V3 and GND are the header's pins 18 and 19
+    s.wire([(m1, ys1[0]), (380, ys1[0])], c_p, 3)
+    s.net(380, ys1[0], "3V3", side="right")
+    s.wire([(m1, ys1[1]), (380, ys1[1])], C["gnd"], 3)
+    s.net(380, ys1[1], "GND", C["gnd"], side="right")
+    s.wire([(x18 - 8, y18), (440, y18)], c_p, 3)
+    s.net(440, y18, "3V3")
+    s.wire([(x19 + 8, y19), (690, y19)], C["gnd"], 3)
+    s.net(690, y19, "GND", C["gnd"], side="right")
+    # the ESP32 DevKit, right of the header: IO21 is its TX, IO22 its RX
+    right = DEVKIT_RIGHT
+    i_gnd, i_rx, i_tx = 0, right.index("IO22"), right.index("IO21")
+    lx, rx_, py, top, bot = devkit(s, 760, ROW0 + STEP, {
+        ("L", 0): c_p, ("R", i_gnd): "#111111", ("R", i_rx): c_rx, ("R", i_tx): c_tx})
+    ys2 = [py(-1), py(0), py(1), py(2), py(3), py(4)]
+    m2 = sn65(s, 1030, 150, ys2, "left", "SN65HVD230 #2", py(0) - 6, py(3) + 4)
+    s.wire([(rx_ + 8, py(i_gnd)), (m2, ys2[1])], C["gnd"], 3)
+    s.wire([(rx_ + 8, py(i_rx)), (m2, ys2[3])], c_rx, 3)
+    s.wire([(rx_ + 8, py(i_tx)), (975, py(i_tx)), (975, ys2[2]), (m2, ys2[2])], c_tx, 3)
+    s.wire([(lx - 8, py(0)), (744, py(0)), (744, top - 24), (990, top - 24), (990, ys2[0]), (m2, ys2[0])], c_p, 3)
+    s.text(760, top - 30, "the DevKit's 3V3 feeds transceiver #2")
+    s.text(985, bot + 46, "its micro-USB on a USB host socket of the P4: 5 V, a GND shared with the P4, its console",
+           color=C["dim"], anchor="end")
+    # the bus: down from each board, twisted along the bottom
+    h1, l1, h2, l2 = 390, 372, 1000, 1016
+    s.wire([(m1, ys1[4]), (h1, ys1[4]), (h1, y_h), (450, y_h)], c_h, 3)
+    s.wire([(m1, ys1[5]), (l1, ys1[5]), (l1, y_l), (450, y_l)], c_l, 3)
+    s.wire([(930, y_h), (h2, y_h), (h2, ys2[4]), (m2, ys2[4])], c_h, 3)
+    s.wire([(930, y_l), (l2, y_l), (l2, ys2[5]), (m2, ys2[5])], c_l, 3)
+    for col, start in ((c_l, 1), (c_h, 0)):
+        d, y0 = "", (y_h, y_l)
+        for k in range(12):
+            a, b = y0[(k + start) % 2], y0[(k + start + 1) % 2]
+            x0 = 450 + 40 * k
+            d += f"{'M' if k == 0 else ' L'}{x0} {a} C{x0+20} {a} {x0+20} {b} {x0+40} {b}"
+        s.add(f'<path d="{d}" stroke="{col}" stroke-width="3" fill="none"/>')
+    s.text(h1 + 8, 640, "CANH", color=c_h, bold=True)
+    s.text(l1 - 8, 660, "CANL", color=c_l, anchor="end", bold=True)
+    s.text(h2 - 8, 760, "CANH", color=c_h, anchor="end", bold=True)
+    s.text(l2 + 8, 760, "CANL", color=c_l, bold=True)
+    s.text(690, y_h - 18, "a twisted pair (two wires twisted by hand will do on a bench)", anchor="middle")
+    s.text(690, y_l + 28, "60 Ω between CANH and CANL with everything off: the two 120 Ω in parallel",
+           anchor="middle", bold=True)
+    s.notes(40, y_l + 50, 1120, "Wiring it (the bus itself is still to be tried on the board: docs/plan/PRUEBAS-PLACA.md)", [
+        "• P4: TX (GPIO28, pin 16) to CTX and RX (GPIO29, pin 20) to CRX, not crossed as on a UART; 3V3 from pin 18, GND from pin 19",
+        "• ESP32: IO21 to CTX and IO22 to CRX, its own 3V3 and GND. Not IO5 nor the other pins that toggle at boot: garbage on the bus",
+        "• The ESP32's micro-USB on a USB host socket of the P4 (docs/USB.md): its 5 V, a GND shared with the P4, its console in the Terminal",
+        "• 120 Ω at each end of the bus (these boards carry one, marked 121): 60 Ω between CANH and CANL with everything off (60.3 Ω measured)",
+        "  A third node in the middle of the bus goes without its own. Tags with the same name (3V3, GND) are one wire",
+        "• Only 3.3 V transceivers (SN65HVD230, 231, 232): a 5 V one (MCP2551, TJA1050) puts 5 V on the header. The same speed on every node",
+    ])
+    s.header(used)
+    s.save("bench-can.svg")
+
+
 if __name__ == "__main__":
     pwm()
     ir()
     strip()
     eeprom24()
+    esp32_devkit()
+    nano_header()
+    can()

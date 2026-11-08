@@ -602,6 +602,14 @@ moved by itself on a line held weakly high.
 
 **On a real CAN bus** a 3.3 V transceiver goes between the pins and
 CANH/CANL (SN65HVD230 and kin): the header's pins are not 5 V tolerant.
+The bench's bus is the P4 and an ESP32 DevKit, each with its own
+SN65HVD230, on a twisted pair:
+
+![CAN on the header: the P4 and an ESP32, each with an SN65HVD230, on one twisted pair](img/bench-can.svg)
+
+Wired as drawn on 2026-11-07: 60.3 Ω between CANH and CANL with
+everything off, the two boards' 120 Ω (the SMD marked 121) in parallel.
+The frames on it are still to be tried.
 
 **The clock of the LEDC.** All its timers share one clock, and the
 backlight's (set up by the BSP) is the crystal. Asking for the 80 MHz PLL
@@ -621,7 +629,9 @@ in the room presses a key every 6 s (`P4_SIM_IR_REMOTE=0` stops it). All
 the CAN nodes share a bus with a car on it (engine speed 0x0C0, vehicle
 speed 0x1A0, temperatures 0x3E8, a J1939-style 0x18FEF100;
 `P4_SIM_CAN_TRAFFIC=0` takes it off), and a node in the self test hears
-only itself.
+only itself. The car answers OBD-II too, mode 01, as two units: the engine
+on 7E8 (18DAF110 with 29-bit ids) with some twenty PIDs, the gearbox on
+7E9 (18DAF118) with 01 and 0D; the CAN app's OBD tab scans it.
 
 **EEPROMs** have no API of their own: they are I2C, SPI or GPIO. A 24LC
 on the header's I2C bus:

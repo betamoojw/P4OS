@@ -163,54 +163,67 @@ NOTES_Y = ROW0 + 20 * STEP + 20
 def pwm():
     s = Svg(1200, 880, "PWM on the 40-pin header",
             "two LEDs at two frequencies, a servo at 50 Hz and an analog level: three LEDC timers and the sigma-delta")
-    used = {16: "#f59e0b", 20: "#f59e0b", 22: "#8b5cf6", 26: "#111111", 31: "#f59e0b", 33: "#111111"}
-    gx = 60
-    x16, y16 = pin_xy(16)
-    x20, y20 = pin_xy(20)
-    x22, y22 = pin_xy(22)
+    used = {5: "#111111", 26: "#111111", 28: "#f59e0b", 35: "#f59e0b", 37: "#8b5cf6", 39: "#f59e0b"}
+    gx, rail = 60, 1150
+    # LED 1, left: GPIO34 (pin 28) through its resistor to the GND of pin 26, one row up
     x26, y26 = pin_xy(26)
-    # LED 1 and LED 2: resistor, LED, to the GND rail on the left
-    for (x, y, col, lbl) in ((x16, y16, "#ef4444", "LED 1, 1 kHz"), (x20, y20, "#22c55e", "LED 2, 5 kHz")):
-        s.resistor_h(x - 8, 300, y, "330 Ω")
-        s.wire([(300, y), (230, y)])
-        s.led_h(230, y, col)
-        s.wire([(194, y), (gx, y)], C["gnd"])
-        s.dot(gx, y)
-        s.text(160, y - 18, lbl, anchor="middle")
-    # the analog level: 1 kΩ, a node, 1 µF down to the GND wire of pin 26
-    s.resistor_h(x22 - 8, 330, y22, "1 kΩ", fill="#ddd6fe", edge="#5b21b6", above=False)
-    s.wire([(330, y22), (220, y22)], "#7c3aed")
-    s.dot(220, y22, "#7c3aed")
-    s.wire([(220, y22), (220, y22 + 8)], "#7c3aed")
-    s.add(f'<path d="M206 {y22+9} H234 M206 {y22+17} H234" stroke="#5b21b6" stroke-width="3"/>')
-    s.wire([(220, y22 + 18), (220, y26)], C["gnd"])
-    s.dot(220, y26)
-    s.text(240, y22 + 18, "1 µF")
-    s.wire([(x26 - 8, y26), (gx, y26), (gx, y16)], C["gnd"])
-    s.dot(gx, y26)
-    s.text(gx, y26 + 22, "GND (pin 26)", bold=True, color="#111")
-    s.wire([(220, y22), (150, y26 + 60)], "#7c3aed", 1.5, "4 3")
-    s.box(40, y26 + 60, 230, 30, "#f5f3ff", "#7c3aed")
-    s.text(155, y26 + 80, "meter here to GND: 0-3.3 V", color="#5b21b6", anchor="middle")
-    s.text(155, y26 + 110, "analog level (sigma-delta, no timer)", color="#7c3aed", anchor="middle")
-    # the servo: signal pin 31, GND pin 33, and its own 5 V supply beside it
-    x31, y31 = pin_xy(31)
-    x33, y33 = pin_xy(33)
-    top = y31 - 160
-    s.box(870, top, 130, 64, "#2563eb", "#1e3a8a", "Servo", "SG90, MG90...", "#fff")
-    s.box(1040, top, 140, 64, "#fee2e2", "#dc2626", "its own 5 V", "supply", "#991b1b")
-    s.wire([(1000, top + 22), (1040, top + 22)], "#dc2626", 3)
-    s.text(1020, top + 12, "+", color="#dc2626", anchor="middle", bold=True)
-    s.wire([(x31 + 8, y31), (900, y31), (900, top + 64)], "#f97316", 3)
-    s.wire([(x33 + 8, y33), (1110, y33), (1110, top + 64)], "#78350f", 3)
-    s.wire([(960, y33), (960, top + 64)], "#78350f", 3)
-    s.dot(960, y33, "#78350f")
-    s.text(760, y31 - 8, "signal (orange): PWM 50 Hz")
-    s.text(760, y33 + 20, "GND (brown), shared by the servo and its supply")
-    s.notes(40, NOTES_Y, 1120, "What it tries (all of it worked on the board, 2026-10-05)", [
-        "• LED 1 (GPIO28, pin 16) at 1 kHz and LED 2 (GPIO29, pin 20) at 5 kHz: two LEDC timers. LEDs: the long leg (anode) toward the resistor",
-        "• The servo (GPIO32, pin 31) at 50 Hz, 500-2500 µs: the third timer, the last one free (LEDC timer 1 is the screen's backlight)",
-        "• The analog level (GPIO30, pin 22): sigma-delta through 1 kΩ and 1 µF, no timer; 1.34 V asked, 1.313 V measured",
+    x28, y28 = pin_xy(28)
+    s.resistor_h(x28 - 8, 250, y28, "330 Ω", above=False)
+    s.wire([(250, y28), (230, y28)])
+    s.led_h(230, y28, "#ef4444")
+    s.wire([(194, y28), (gx, y28)], C["gnd"])
+    s.wire([(x26 - 8, y26), (gx, y26), (gx, y28)], C["gnd"])
+    s.dot(gx, y28)
+    s.text(212, y28 + 36, "LED 1, 1 kHz", anchor="middle")
+    s.text(gx, y26 - 10, "GND (pin 26)", bold=True, color="#111")
+    # the right side: pins 35, 37 and 39 turn up into three rows of their own, GND from pin 5 down a rail
+    x5, y5 = pin_xy(5)
+    x35, y35 = pin_xy(35)
+    x37, y37 = pin_xy(37)
+    x39, y39 = pin_xy(39)
+    ya, yb, yc = 300, 400, 500
+    s.wire([(x5 + 8, y5), (rail, y5), (rail, yc + 60)], C["gnd"])
+    s.text(rail - 10, y5 - 8, "GND (pin 5)", anchor="end", bold=True, color="#111")
+    # LED 2 on GPIO46
+    s.wire([(x35 + 8, y35), (720, y35), (720, ya)])
+    s.resistor_h(720, 880, ya, "330 Ω")
+    s.wire([(880, ya), (920, ya)])
+    s.led_h(920, ya, "#22c55e", toward="right")
+    s.wire([(956, ya), (rail, ya)], C["gnd"])
+    s.dot(rail, ya)
+    s.text(938, ya - 24, "LED 2, 5 kHz", anchor="middle")
+    # the analog level on GPIO47: 1 kΩ, a node, 1 µF down to GND
+    s.wire([(x37 + 8, y37), (745, y37), (745, yb)], "#7c3aed")
+    s.resistor_h(745, 905, yb, "1 kΩ", fill="#ddd6fe", edge="#5b21b6")
+    s.wire([(905, yb), (980, yb)], "#7c3aed")
+    s.dot(980, yb, "#7c3aed")
+    s.wire([(980, yb), (980, yb + 8)], "#7c3aed")
+    s.add(f'<path d="M966 {yb+9} H994 M966 {yb+17} H994" stroke="#5b21b6" stroke-width="3"/>')
+    s.wire([(980, yb + 18), (980, yb + 40), (rail, yb + 40)], C["gnd"])
+    s.dot(rail, yb + 40)
+    s.text(1000, yb + 18, "1 µF")
+    s.wire([(980, yb), (1000, yb - 30)], "#7c3aed", 1.5, "4 3")
+    s.box(890, yb - 60, 230, 30, "#f5f3ff", "#7c3aed")
+    s.text(1005, yb - 40, "meter here to GND: 0-3.3 V", color="#5b21b6", anchor="middle")
+    s.text(965, yb + 32, "analog level (sigma-delta, no timer)", color="#7c3aed", anchor="end")
+    # the servo on GPIO48, with its own 5 V supply beside it
+    s.wire([(x39 + 8, y39), (770, y39), (770, yc), (880, yc)], "#f97316", 3)
+    s.box(880, yc - 32, 120, 64, "#2563eb", "#1e3a8a", "Servo", "SG90, MG90...", "#fff")
+    s.box(1030, yc - 32, 100, 64, "#fee2e2", "#dc2626", "its own 5 V", "supply", "#991b1b")
+    s.wire([(1000, yc - 10), (1030, yc - 10)], "#dc2626", 3)
+    s.text(1015, yc - 18, "+", color="#dc2626", anchor="middle", bold=True)
+    s.wire([(940, yc + 32), (940, yc + 60), (rail, yc + 60)], "#78350f", 3)
+    s.wire([(1080, yc + 32), (1080, yc + 60)], "#78350f", 3)
+    s.dot(1080, yc + 60, "#78350f")
+    s.dot(rail, yc + 60)
+    s.text(782, yc - 10, "signal (orange)")
+    s.text(782, yc + 20, "PWM 50 Hz")
+    s.text(rail - 10, yc + 82, "GND (brown), shared by the servo and its supply", anchor="end")
+    s.notes(40, NOTES_Y, 1120, "What it tries (on the pins the pin map leaves free; it worked on the board on 2026-10-05, then on GPIO28, 29, 30 and 32)", [
+        "• LED 1 (GPIO34, pin 28) at 1 kHz and LED 2 (GPIO46, pin 35) at 5 kHz: two LEDC timers. LEDs: the long leg (anode) toward the resistor",
+        "• The servo (GPIO48, pin 39) at 50 Hz, 500-2500 µs: the third timer, the last one free (LEDC timer 1 is the screen's backlight)",
+        "• The analog level (GPIO47, pin 37): sigma-delta through 1 kΩ and 1 µF, no timer; 1.34 V asked, 1.313 V measured",
+        "• GPIO46 and GPIO47 are where the CAN app starts: one or the other. More outputs than pins: a PCA9685 on the I2C port",
         "• Without its own supply, a small servo can take 5 V from pin 1 or 3, with 470 µF across it near the servo",
     ])
     s.header(used)
@@ -220,80 +233,84 @@ def pwm():
 def ir():
     s = Svg(1100, 860, "Infrared on the 40-pin header",
             "a demodulating receiver (VS1838B, TSOP38238) and an IR LED driven by an NPN transistor")
-    used = {1: "#dc2626", 11: "#f59e0b", 13: "#111111", 18: "#dc2626", 24: "#f59e0b", 26: "#111111"}
+    used = {1: "#dc2626", 10: "#111111", 16: "#f59e0b", 18: "#dc2626", 31: "#f59e0b", 33: "#111111"}
     x1, y1 = pin_xy(1)
-    x11, y11 = pin_xy(11)
-    x13, y13 = pin_xy(13)
+    x10, y10 = pin_xy(10)
+    x16, y16 = pin_xy(16)
     x18, y18 = pin_xy(18)
-    x24, y24 = pin_xy(24)
-    x26, y26 = pin_xy(26)
-    # the receiver, right: OUT pin 11, GND pin 13; VCC from 3V3 pin 18 around the bottom
-    rx, ry = 830, y11 - 26
+    x31, y31 = pin_xy(31)
+    x33, y33 = pin_xy(33)
+    # the receiver, left: OUT straight from pin 16; its GND and VCC by tags (pin 18 is the row its GND is on)
+    rx, ry = 130, y16 - 26
+    re = rx + 150                           # the box's right edge, where its three legs come out
+    gy, vy = y16 + STEP, y16 + 2 * STEP
     s.box(rx, ry, 150, 110, "#111827", "#111827")
-    s.add(f'<circle cx="{rx+90}" cy="{ry+50}" r="24" fill="#374151"/>')
-    s.plain(rx + 90, ry + 98, "receiver", anchor="middle")
-    s.wire([(x11 + 8, y11), (rx, y11)])
-    s.wire([(x13 + 8, y13), (rx, y13)], C["gnd"])
-    vy = y13 + 26
-    # 3V3 by tags: pin 18's and the receiver's are the same wire
-    s.wire([(x18 - 8, y18), (420, y18)], C["p3"])
-    s.net(420, y18, "3V3")
-    s.wire([(rx - 60, vy), (rx, vy)], C["p3"])
-    s.net(rx - 60, vy, "3V3")
-    for (y, t) in ((y11, "OUT"), (y13, "GND"), (vy, "VCC")):
-        s.plain(rx + 8, y + 4, t, bold=True)
+    s.add(f'<circle cx="{rx+60}" cy="{ry+50}" r="24" fill="#374151"/>')
+    s.plain(rx + 60, ry + 98, "receiver", anchor="middle")
+    s.wire([(x16 - 8, y16), (re, y16)])
+    s.wire([(re, gy), (re + 40, gy)], C["gnd"])
+    s.net(re + 40, gy, "GND", C["gnd"], side="right")
+    s.wire([(re, vy), (re + 40, vy)], C["p3"])
+    s.net(re + 40, vy, "3V3", side="right")
+    s.wire([(x18 - 8, y18), (440, y18)], C["p3"])
+    s.net(440, y18, "3V3")
+    s.wire([(x10 - 8, y10), (440, y10)], C["gnd"])
+    s.net(440, y10, "GND", C["gnd"])
+    for (y, t) in ((y16, "OUT"), (gy, "GND"), (vy, "VCC")):
+        s.plain(re - 8, y + 4, t, anchor="end", bold=True)
     s.text(rx, ry + 136, "VS1838B from the front: OUT, GND, VCC")
     s.text(rx, ry + 154, "(other models differ: check yours)")
     s.text(rx, ry + 172, "VCC to 3.3 V (pin 18), never 5 V", color="#b91c1c")
-    # the sender, left: pin 24 -> 1 kΩ -> base
-    s.resistor_h(x24 - 8, 330, y24, "1 kΩ")
-    bx = 260                                # the base bar
-    s.wire([(330, y24), (bx, y24)])
-    s.add(f'<circle cx="{bx-18}" cy="{y24}" r="32" fill="#fff" stroke="#111" stroke-width="2"/>')
-    s.add(f'<path d="M{bx} {y24-18} V{y24+18}" stroke="#111" stroke-width="3"/>')
-    cx_ = bx - 34                           # collector and emitter leave on this x
-    s.add(f'<path d="M{bx} {y24-8} L{cx_} {y24-26} V{y24-70}" stroke="#111" stroke-width="2.4" fill="none"/>')
-    s.add(f'<path d="M{bx} {y24+8} L{cx_} {y24+26} V{y26}" stroke="#111" stroke-width="2.4" fill="none"/>')
-    s.add(f'<path d="M{cx_+4} {y24+18} L{cx_-2} {y24+28} L{cx_+10} {y24+28} Z" fill="#111"/>')
-    s.text(bx + 6, y24 - 12, "B", size=11)
-    s.text(cx_ - 16, y24 - 40, "C", size=11)
-    s.text(cx_ - 16, y24 + 46, "E", size=11)
-    s.text(cx_ - 120, y24 + 6, "NPN 2N2222", size=11)
-    s.text(cx_ - 120, y24 + 22, "or BC547", size=11)
-    s.wire([(x26 - 8, y26), (cx_, y26)], C["gnd"])
-    s.dot(cx_, y26)
-    s.text(cx_ + 10, y26 + 20, "emitter to GND (pin 26)")
-    # the IR LED and its 47 Ω up to 5 V from pin 1 (over the top)
-    ly = y24 - 150
-    s.wire([(cx_, y24 - 70), (cx_, ly + 32)], C["gnd"])
+    # the sender, right: pin 31 -> 1 kΩ -> base; the emitter to the GND of pin 33, one row down
+    s.resistor_h(x31 + 8, 790, y31, "1 kΩ")
+    bx = 840                                # the base bar
+    s.wire([(790, y31), (bx, y31)])
+    s.add(f'<circle cx="{bx+18}" cy="{y31}" r="32" fill="#fff" stroke="#111" stroke-width="2"/>')
+    s.add(f'<path d="M{bx} {y31-18} V{y31+18}" stroke="#111" stroke-width="3"/>')
+    cx_ = bx + 34                           # collector and emitter leave on this x
+    s.add(f'<path d="M{bx} {y31-8} L{cx_} {y31-26} V{y31-70}" stroke="#111" stroke-width="2.4" fill="none"/>')
+    s.add(f'<path d="M{bx} {y31+8} L{cx_} {y31+26} V{y33}" stroke="#111" stroke-width="2.4" fill="none"/>')
+    s.add(f'<path d="M{cx_-4} {y31+18} L{cx_+2} {y31+28} L{cx_-10} {y31+28} Z" fill="#111"/>')
+    s.text(bx - 6, y31 - 12, "B", size=11, anchor="end")
+    s.text(cx_ + 8, y31 - 40, "C", size=11)
+    s.text(cx_ + 8, y31 + 46, "E", size=11)
+    s.text(cx_ + 34, y31 + 6, "NPN 2N2222", size=11)
+    s.text(cx_ + 34, y31 + 22, "or BC547", size=11)
+    s.wire([(x33 + 8, y33), (cx_, y33)], C["gnd"])
+    s.dot(cx_, y33)
+    s.text(cx_ - 10, y33 + 20, "emitter to GND (pin 33)", anchor="end")
+    # the IR LED and its 47 Ω up to 5 V, straight across from pin 1
+    ly = y31 - 150
+    s.wire([(cx_, y31 - 70), (cx_, ly + 32)], C["gnd"])
     s.add(f'<path d="M{cx_-14} {ly} L{cx_+14} {ly} L{cx_} {ly+30} Z" fill="#7c3aed" stroke="#4c1d95" stroke-width="2"/>')
     s.add(f'<path d="M{cx_-14} {ly+32} H{cx_+14}" stroke="#4c1d95" stroke-width="3"/>')
     s.add(f'<path d="M{cx_+20} {ly+8} l14 -10 M{cx_+22} {ly+20} l14 -10" stroke="#7c3aed" stroke-width="2"/>')
     s.text(cx_ + 42, ly + 14, "IR LED (940 nm)")
     s.text(cx_ + 42, ly + 30, "long leg up, toward 47 Ω")
     s.resistor_v(cx_, ly - 90, ly, "47 Ω", C["p5"])
-    s.wire([(x1 + 8, y1), (620, y1), (620, ROW0 - 60), (cx_, ROW0 - 60), (cx_, ly - 90)], C["p5"])
-    s.text(cx_ + 10, ROW0 - 66, "5 V from pin 1 (or 3)", color="#b91c1c")
-    s.notes(40, NOTES_Y + 20, 1020, "What it tries (all of it worked on the board, 2026-10-05)", [
-        "• Learn: the receiver on GPIO5 (pin 11) read a monitor's remote: Samsung, address 0x0707, command 7 (volume up)",
-        "• Send: the LED on GPIO31 (pin 24) at 38 kHz turned the monitor's volume up, from the learned code and from SmartIR's library",
+    s.wire([(x1 + 8, y1), (cx_, y1), (cx_, ly - 90)], C["p5"])
+    s.text(cx_ + 10, y1 - 8, "5 V from pin 1 (or 3)", color="#b91c1c")
+    s.notes(40, NOTES_Y + 20, 1020, "What it tries (the Infrarrojo app's own pins; it worked on the board on 2026-10-05, then on GPIO5 and GPIO31)", [
+        "• Learn: the receiver on GPIO28 (pin 16). On the board it read a monitor's remote: Samsung, address 0x0707, command 7 (volume up)",
+        "• Send: the LED on GPIO32 (pin 31) at 38 kHz. On the board it turned the monitor's volume up, from the learned code and from SmartIR's",
         "• A header pin gives about 20 mA; through the transistor the LED takes ~70 mA from 5 V and reaches across a room",
-        "• Not GPIO21/22 for the receiver: they are the I2C bus the system scans by itself. The two 3V3 tags are one wire",
+        "• Not GPIO21/22 for the receiver: they are the I2C bus the system scans by itself. Tags with the same name (3V3, GND) are one wire",
     ])
     s.header(used)
     s.save("bench-ir.svg")
 
 
 def strip():
-    s = Svg(1100, 840, "A WS2812B strip on the 40-pin header",
+    s = Svg(1100, 870, "A WS2812B strip on the 40-pin header",
             "12 LEDs fed from the header's 5 V, the data straight from a 3.3 V pin through a resistor")
-    used = {1: "#dc2626", 10: "#111111", 14: "#f59e0b"}
+    used = {1: "#dc2626", 40: "#111111", 39: "#f59e0b"}
     x1, y1 = pin_xy(1)
-    x10, y10 = pin_xy(10)
-    x14, y14 = pin_xy(14)
-    vd, vg, v5 = 350, 325, 300            # the three wires come down left of the pin labels
-    # the strip lies below, its input at the right end: 5V, GND, DIN pads
-    sy = y14 + 170
+    x39, y39 = pin_xy(39)
+    x40, y40 = pin_xy(40)
+    v5, vd, vg = 290, 318, 385            # the three wires, left of the pin labels
+    under = y40 + 33                      # the data runs under the header to the left
+    # the strip lies on the left, its input at the right end: 5V, GND, DIN pads
+    sy = 501
     end = 270
     s.add(f'<rect x="30" y="{sy-34}" width="{end-30}" height="110" rx="8" fill="#111827"/>')
     for i in range(4):
@@ -307,24 +324,24 @@ def strip():
     for name, y in pads.items():
         s.add(f'<rect x="{end-6}" y="{y-7}" width="18" height="14" rx="2" fill="#d1a33a"/>')
         s.plain(end - 12, y + 4, name, size=11, anchor="end", bold=True)
-    s.wire([(x14 - 8, y14), (vd, y14)])
-    s.resistor_v(vd, y14, pads["DIN"], "330 Ω")
+    s.wire([(x39 + 8, y39), (716, y39), (716, under), (vd, under)])
+    s.resistor_v(vd, pads["DIN"], under, "330 Ω")
     s.wire([(vd, pads["DIN"]), (end + 12, pads["DIN"])])
-    s.wire([(x10 - 8, y10), (vg, y10), (vg, pads["GND"]), (end + 12, pads["GND"])], C["gnd"])
+    s.wire([(x40 - 8, y40), (vg, y40), (vg, pads["GND"]), (end + 12, pads["GND"])], C["gnd"])
     s.wire([(x1 + 8, y1), (620, y1), (620, ROW0 - 60), (v5, ROW0 - 60), (v5, pads["5V"]), (end + 12, pads["5V"])], C["p5"])
     s.text(v5 + 6, ROW0 - 66, "5 V from pin 1 (or 3)", color="#b91c1c")
-    s.text(vg + 8, y10 - 8, "GND (pin 10)")
-    s.text(vd + 18, y14 - 8, "DIN", color="#b45309", bold=True)
+    s.text(vg + 8, y40 + 19, "GND (pin 40)")
+    s.text(560, under + 18, "DIN: GPIO48 (pin 39), round under the header", color="#b45309", bold=True)
     # the capacitor across the input
     cxp = 200
     s.add(f'<path d="M{cxp} {sy-92} V{sy-78} M{cxp-14} {sy-78} H{cxp+14} M{cxp-14} {sy-70} H{cxp+14} M{cxp} {sy-70} V{sy-56}" stroke="#5b21b6" stroke-width="2.6" fill="none"/>')
     s.text(cxp - 22, sy - 76, "470-1000 µF", anchor="end")
     s.text(cxp - 22, sy - 60, "5V to GND", anchor="end")
     s.text(cxp - 22, sy - 44, "at the strip", anchor="end")
-    s.notes(40, NOTES_Y, 1020, "What it tries (it worked on the board, 2026-10-05)", [
-        "• The data on GPIO4 (pin 14) through 330 Ω near the strip; 5 V from pin 1 (or 3), GND from pin 10",
-        "• In LED Strips: GPIO4, WS2812B, GRB, 12 LEDs, a 500 mA budget (12 LEDs at full white would take ~720 mA)",
-        "• Colours in the right order, effects at 50 fps, and back by itself after a restart",
+    s.notes(40, NOTES_Y + 30, 1020, "What it tries (the pin the pin map suggests for a strip; it worked on the board on 2026-10-05, then on GPIO4)", [
+        "• The data on GPIO48 (pin 39) through 330 Ω near the strip; 5 V from pin 1 (or 3), GND from pin 40, the pin beside it",
+        "• In LED Strips: GPIO48, WS2812B, GRB, 12 LEDs, a 500 mA budget (12 LEDs at full white would take ~720 mA)",
+        "• On the board: colours in the right order, effects at 50 fps, and back by itself after a restart",
         "• 3.3 V data was enough with short wires; if LEDs flicker at random, a level shifter (74AHCT125)",
     ])
     s.header(used)
@@ -616,21 +633,23 @@ def sn65(s, x, w, ys, side, title, chip_y, smd_y):
 
 def can():
     """Two SN65HVD230 on one bus: the P4's TWAI on the header, an ESP32 DevKit's on its IO21/IO22."""
-    s = Svg(1200, 1090, "CAN on the 40-pin header: the P4 and an ESP32 on one bus",
+    s = Svg(1200, 1180, "CAN on the 40-pin header: the P4 and an ESP32 on one bus",
             "two 3.3 V SN65HVD230 transceivers and a twisted pair with 120 Ω at each end; "
-            "the P4's TWAI on GPIO28/29, the ESP32's on IO21/IO22")
+            "the P4's TWAI on GPIO46/47, the ESP32's on IO21/IO22")
     c_tx, c_rx, c_h, c_l, c_p = "#ea580c", "#16a34a", "#ca8a04", "#2563eb", C["p3"]
-    used = {16: c_tx, 18: c_p, 19: "#111111", 20: c_rx}
-    y_h, y_l = 830, 852                                 # the bus, under everything
-    # the P4's transceiver, left of the header: CTX straight from pin 16, CRX from pin 20
-    x16, y16 = pin_xy(16)
+    used = {35: c_tx, 18: c_p, 19: "#111111", 37: c_rx}
+    y_h, y_l = 910, 932                                 # the bus, under everything
+    # the P4's transceiver, low on the left: pins 35 and 37 are in the right column, so their wires
+    # go round under the header and meet CTX and CRX straight on
     x18, y18 = pin_xy(18)
     x19, y19 = pin_xy(19)
-    x20, y20 = pin_xy(20)
-    ys1 = [y16 - 4 * STEP, y16 - 2 * STEP, y16, y20, y20 + 2 * STEP, y20 + 4 * STEP]
+    x35, y35 = pin_xy(35)
+    x37, y37 = pin_xy(37)
+    y_tx = pin_xy(40)[1] + 35
+    ys1 = [y_tx + (k - 2) * 2 * STEP for k in range(6)]
     m1 = sn65(s, 190, 150, ys1, "right", "SN65HVD230 #1", ys1[0] + 34, (ys1[4] + ys1[5]) / 2)
-    s.wire([(x16 - 8, y16), (m1, y16)], c_tx, 3)
-    s.wire([(x20 - 8, y20), (m1, y20)], c_rx, 3)
+    s.wire([(x35 + 8, y35), (712, y35), (712, ys1[2]), (m1, ys1[2])], c_tx, 3)
+    s.wire([(x37 + 8, y37), (728, y37), (728, ys1[3]), (m1, ys1[3])], c_rx, 3)
     # power by tags: the board's 3V3 and GND are the header's pins 18 and 19
     s.wire([(m1, ys1[0]), (380, ys1[0])], c_p, 3)
     s.net(380, ys1[0], "3V3", side="right")
@@ -667,15 +686,15 @@ def can():
             x0 = 450 + 40 * k
             d += f"{'M' if k == 0 else ' L'}{x0} {a} C{x0+20} {a} {x0+20} {b} {x0+40} {b}"
         s.add(f'<path d="{d}" stroke="{col}" stroke-width="3" fill="none"/>')
-    s.text(h1 + 8, 640, "CANH", color=c_h, bold=True)
-    s.text(l1 - 8, 660, "CANL", color=c_l, anchor="end", bold=True)
+    s.text(h1 + 8, y_h - 30, "CANH", color=c_h, bold=True)
+    s.text(l1 - 8, y_l - 14, "CANL", color=c_l, anchor="end", bold=True)
     s.text(h2 - 8, 760, "CANH", color=c_h, anchor="end", bold=True)
     s.text(l2 + 8, 760, "CANL", color=c_l, bold=True)
     s.text(690, y_h - 18, "a twisted pair (two wires twisted by hand will do on a bench)", anchor="middle")
     s.text(690, y_l + 28, "60 Ω between CANH and CANL with everything off: the two 120 Ω in parallel",
            anchor="middle", bold=True)
-    s.notes(40, y_l + 50, 1120, "Wiring it (the bus itself is still to be tried on the board: docs/plan/PRUEBAS-PLACA.md)", [
-        "• P4: TX (GPIO28, pin 16) to CTX and RX (GPIO29, pin 20) to CRX, not crossed as on a UART; 3V3 from pin 18, GND from pin 19",
+    s.notes(40, y_l + 50, 1120, "Wiring it (the CAN app's own pins; on GPIO28/29 it worked on the board, 2026-11-07: 162 frames a second at 500 kbit/s, no errors)", [
+        "• P4: TX (GPIO46, pin 35) to CTX and RX (GPIO47, pin 37) to CRX, not crossed as on a UART; 3V3 from pin 18, GND from pin 19",
         "• ESP32: IO21 to CTX and IO22 to CRX, its own 3V3 and GND. Not IO5 nor the other pins that toggle at boot: garbage on the bus",
         "• The ESP32's micro-USB on a USB host socket of the P4 (docs/USB.md): its 5 V, a GND shared with the P4, its console in the Terminal",
         "• 120 Ω at each end of the bus (these boards carry one, marked 121): 60 Ω between CANH and CANL with everything off (60.3 Ω measured)",
@@ -686,6 +705,216 @@ def can():
     s.save("bench-can.svg")
 
 
+def auto485(s, x, top, title):
+    """The bench's RS485 module as it sits on the table, parts up: an automatic-direction "RS485 to
+    TTL" board (an 8-pin transceiver, a 74HC-type chip that switches the direction on the data,
+    TXD and RXD LEDs, fuses and TVS diodes, 120 ohm marked 121 across A and B). The green terminal
+    block on top (A+, B-, earth), the four pins at the bottom (VCC, TXD, RXD, GND). Returns the x
+    of each pin and terminal, and where the pins end and the screws start."""
+    w, h = 150, 330
+    s.add(f'<rect x="{x}" y="{top}" width="{w}" height="{h}" rx="5" fill="#1e3a8a"/>')
+    s.text(x + w / 2, top - 92, title, size=13, color="#111", anchor="middle", bold=True)
+    # the terminal block
+    s.add(f'<rect x="{x+6}" y="{top-34}" width="{w-12}" height="44" rx="3" fill="#4ade80" stroke="#15803d"/>')
+    tx = {"A+": x + 33, "B-": x + 75, "E": x + 117}
+    for nm, cx in tx.items():
+        s.add(f'<circle cx="{cx}" cy="{top-12}" r="13" fill="#d1d5db" stroke="#6b7280" stroke-width="2"/>')
+        s.add(f'<path d="M{cx-7} {top-12} h14 M{cx} {top-19} v14" stroke="#6b7280" stroke-width="2"/>')
+        s.plain(cx, top + 26, "⏚" if nm == "E" else nm.replace("-", "−"), size=12, color="#fde68a", anchor="middle", bold=True)
+    # the parts: two fuses, the TVS, the transceiver, the direction chip, the LEDs, the 120 ohm
+    s.add(f'<rect x="{x+16}" y="{top+44}" width="30" height="40" rx="2" fill="#ca8a04"/>')
+    s.add(f'<rect x="{x+54}" y="{top+44}" width="30" height="40" rx="2" fill="#ca8a04"/>')
+    s.add(f'<rect x="{x+92}" y="{top+46}" width="20" height="34" rx="2" fill="#111827"/>')
+    s.add(f'<rect x="{x+118}" y="{top+46}" width="20" height="34" rx="2" fill="#111827"/>')
+    s.add(f'<rect x="{x+60}" y="{top+120}" width="56" height="44" rx="3" fill="#0f172a"/>')
+    s.plain(x + 88, top + 146, "485", size=10, color="#e2e8f0", anchor="middle", bold=True)
+    s.add(f'<rect x="{x+40}" y="{top+210}" width="90" height="40" rx="3" fill="#0f172a"/>')
+    s.plain(x + 85, top + 234, "74HC", size=10, color="#e2e8f0", anchor="middle", bold=True)
+    s.plain(x + 85, top + 268, "auto direction", size=9, color="#bfdbfe", anchor="middle")
+    for k, nm in enumerate(("TXD", "RXD")):
+        lx = x + 18 + k * 26
+        s.add(f'<rect x="{lx}" y="{top+150}" width="10" height="16" rx="2" fill="#f87171"/>')
+        s.plain(lx + 5, top + 182, nm, size=8, color="#e5e7eb", anchor="middle")
+    s.add(f'<rect x="{x+16}" y="{top+96}" width="22" height="10" rx="2" fill="#111827" stroke="#9ca3af"/>')
+    s.plain(x + 27, top + 104, "121", size=7, color="#e5e7eb", anchor="middle", bold=True)
+    s.plain(x + 44, top + 105, "120 Ω on board", size=9, color="#fde68a", bold=True)
+    # the pins
+    px = {nm: x + 30 + 30 * k for k, nm in enumerate(("VCC", "TXD", "RXD", "GND"))}
+    bot = top + h
+    for nm, cx in px.items():
+        s.add(f'<rect x="{cx-5}" y="{bot}" width="10" height="20" fill="#9ca3af"/>')
+        s.over(f'<circle cx="{cx}" cy="{bot+22}" r="7" fill="#d1a33a" stroke="#fff" stroke-width="2"/>')
+        s.plain(cx, bot - 10, nm, size=10, color="#e5e7eb", anchor="middle", bold=True)
+    return px, tx, bot + 22, top - 12
+
+
+def rs485():
+    """Two automatic RS485 modules on one bus: the P4's uart.a on the header, an ESP32 DevKit's UART2."""
+    s = Svg(1240, 1280, "RS485 on the 40-pin header: the P4 and an ESP32 on one bus",
+            "two automatic \"RS485 to TTL\" modules (no DE pin, 120 Ω each) on 3.3 V and a twisted pair; the P4's uart.a "
+            "on GPIO30/31, the ESP32's UART2 on IO17/IO4, and a WS2812B strip on its IO18 for DMX")
+    c_tx, c_rx, c_a, c_b, c_p = "#ea580c", "#16a34a", "#ca8a04", "#2563eb", C["p3"]
+    used = {18: c_p, 22: c_tx, 24: c_rx, 26: "#111111"}
+    c_din = "#7c3aed"
+    y_a, y_b = 1000, 1022
+    x18, y18 = pin_xy(18)
+    x22, y22 = pin_xy(22)
+    x24, y24 = pin_xy(24)
+    x26, y26 = pin_xy(26)
+    # the P4's module, left of the header
+    p1, t1, yp1, yt1 = auto485(s, 150, 260, "RS485 module #1 (the P4's)")
+    s.wire([(x22 - 8, y22), (400, y22), (400, yp1 + 70), (p1["TXD"], yp1 + 70), (p1["TXD"], yp1 + 8)], c_tx, 3)
+    s.wire([(x24 - 8, y24), (380, y24), (380, yp1 + 50), (p1["RXD"], yp1 + 50), (p1["RXD"], yp1 + 8)], c_rx, 3)
+    s.text(406, y22 - 8, "TX → TXD", color=c_tx, bold=True)
+    s.text(374, y24 + 18, "RX ← RXD", color=c_rx, anchor="end", bold=True)
+    s.wire([(p1["VCC"], yp1 + 8), (p1["VCC"], yp1 + 22)], c_p, 3)
+    s.net(p1["VCC"] + 6, yp1 + 33, "3V3", side="left")
+    s.wire([(p1["GND"], yp1 + 8), (p1["GND"], yp1 + 22)], C["gnd"], 3)
+    s.net(p1["GND"] - 6, yp1 + 33, "GND", C["gnd"], side="right")
+    s.wire([(x18 - 8, y18), (450, y18)], c_p, 3)
+    s.net(450, y18, "3V3")
+    s.wire([(x26 - 8, y26), (450, y26)], C["gnd"], 3)
+    s.net(450, y26, "GND", C["gnd"])
+    s.text(440, pin_xy(20)[1] + 4, "pin 20 (DE): free", color=C["dim"], anchor="end")
+    # the ESP32 DevKit and its module
+    right = DEVKIT_RIGHT
+    i_gnd, i_tx, i_rx, i_din = 0, right.index("IO17"), right.index("IO4"), right.index("IO18")
+    i_5v, i_g2 = DEVKIT_LEFT.index("5V"), DEVKIT_LEFT.index("GND")
+    lx, rx_, py, top, bot = devkit(s, 760, ROW0 + STEP, {
+        ("L", 0): c_p, ("R", i_gnd): "#111111", ("R", i_tx): c_tx, ("R", i_rx): c_rx,
+        ("R", i_din): c_din, ("L", i_5v): C["p5"], ("L", i_g2): "#111111"})
+    p2, t2, yp2, yt2 = auto485(s, 1010, 260, "RS485 module #2 (the ESP32's)")
+    s.wire([(rx_ + 8, py(i_tx)), (985, py(i_tx)), (985, yp2 + 70), (p2["TXD"], yp2 + 70), (p2["TXD"], yp2 + 8)], c_tx, 3)
+    s.wire([(rx_ + 8, py(i_rx)), (1000, py(i_rx)), (1000, yp2 + 50), (p2["RXD"], yp2 + 50), (p2["RXD"], yp2 + 8)], c_rx, 3)
+    s.wire([(p2["VCC"], yp2 + 8), (p2["VCC"], yp2 + 22)], c_p, 3)
+    s.net(p2["VCC"] + 6, yp2 + 33, "ESP 3V3", side="left")
+    s.wire([(p2["GND"], yp2 + 8), (p2["GND"], yp2 + 22)], C["gnd"], 3)
+    s.net(p2["GND"] - 6, yp2 + 33, "GND", C["gnd"], side="right")
+    s.wire([(lx - 8, py(0)), (730, py(0))], c_p, 3)
+    s.net(730, py(0), "ESP 3V3")
+    s.wire([(rx_ + 8, py(i_gnd)), (990, py(i_gnd))], C["gnd"], 3)
+    s.net(990, py(i_gnd), "GND", C["gnd"], side="right")
+    s.text(985, bot + 46, "its micro-USB on a USB host socket of the P4 (or the Mac): 5 V, GND, its console",
+           color=C["dim"], anchor="end")
+    # the DMX light: 8 WS2812B pixels, by tags (IO18 to DIN, the DevKit's 5V and a GND)
+    s.wire([(rx_ + 8, py(i_din)), (962, py(i_din))], c_din, 3)
+    s.net(962, py(i_din), "DIN", c_din, side="right")
+    s.wire([(lx - 8, py(i_5v)), (732, py(i_5v))], C["p5"], 3)
+    s.net(732, py(i_5v), "ESP 5V", C["p5"])
+    s.wire([(lx - 8, py(i_g2)), (742, py(i_g2))], C["gnd"], 3)
+    s.net(742, py(i_g2), "GND", C["gnd"])
+    sx0, sx1, sy = 470, 870, 836
+    s.add(f'<rect x="{sx0}" y="{sy}" width="{sx1-sx0}" height="68" rx="8" fill="#111827"/>')
+    for i in range(8):
+        cx_ = sx1 - 40 - i * 46
+        col = ["#ef4444", "#f97316", "#facc15", "#22c55e", "#06b6d4", "#3b82f6", "#8b5cf6", "#ec4899"][i]
+        s.add(f'<rect x="{cx_-15}" y="{sy+19}" width="30" height="30" rx="4" fill="#f9fafb"/>')
+        s.add(f'<circle cx="{cx_}" cy="{sy+34}" r="9" fill="{col}"/>')
+    s.plain(sx0 + 12, sy + 88, "8 WS2812B pixels (the DMX light role: channels 1-24, RGB each); data runs right to left",
+            size=11, color=C["dim"])
+    pads = {"5V": sy + 10, "GND": sy + 34, "DIN": sy + 58}
+    lab = {"5V": ("ESP 5V", C["p5"]), "GND": ("GND", C["gnd"]), "DIN": ("DIN", c_din)}
+    for name, y in pads.items():
+        s.add(f'<rect x="{sx1}" y="{y-6}" width="14" height="12" rx="2" fill="#d1a33a"/>')
+        s.wire([(sx1 + 14, y), (sx1 + 40, y)], lab[name][1], 3)
+        s.net(sx1 + 40, y, lab[name][0], lab[name][1], side="right")
+    s.text(sx0 + 4, sy - 12, "WS2812B strip on the ESP32 (only for DMX)", size=13, color="#111", bold=True)
+    # the bus: from each terminal block, round the board and along the bottom
+    s.wire([(t1["A+"], yt1 - 14), (t1["A+"], 214), (120, 214), (120, y_a), (450, y_a)], c_a, 3)
+    s.wire([(t1["B-"], yt1 - 14), (t1["B-"], 200), (104, 200), (104, y_b), (450, y_b)], c_b, 3)
+    s.wire([(t2["B-"], yt2 - 14), (t2["B-"], 214), (1190, 214), (1190, y_a), (890, y_a)], c_b, 3)
+    s.wire([(t2["A+"], yt2 - 14), (t2["A+"], 200), (1206, 200), (1206, y_b), (890, y_b)], c_a, 3)
+    for col, start in ((c_b, 1), (c_a, 0)):
+        d, y0 = "", (y_a, y_b)
+        for k in range(11):                     # an odd count: A and B swap lanes, as a twist does
+            a, b = y0[(k + start) % 2], y0[(k + start + 1) % 2]
+            x0 = 450 + 40 * k
+            d += f"{'M' if k == 0 else ' L'}{x0} {a} C{x0+20} {a} {x0+20} {b} {x0+40} {b}"
+        s.add(f'<path d="{d}" stroke="{col}" stroke-width="3" fill="none"/>')
+    s.text(126, 760, "A+", color=c_a, bold=True)
+    s.text(98, 780, "B−", color=c_b, anchor="end", bold=True)
+    s.text(1184, 860, "B−", color=c_b, anchor="end", bold=True)
+    s.text(1212, 880, "A+", color=c_a, bold=True)
+    s.text(670, y_a - 18, "a twisted pair: A+ to A+ and B− to B−", anchor="middle")
+    s.text(670, y_b + 28, "60 Ω between A and B with everything off: the two modules' 120 Ω in parallel",
+           anchor="middle", bold=True)
+    s.notes(40, y_b + 50, 1160, "Wiring it (tools/rs485_test/README.md; the Modbus app's Cableado tab says the same)", [
+        "• P4: TX (GPIO30, pin 22) to TXD, RX (GPIO31, pin 24) to RXD; VCC to 3V3 (pin 18), GND to pin 26. GPIO29 (DE) stays free",
+        "• ESP32: IO17 to TXD, IO4 to RXD, VCC to its 3V3, GND to its GND. IO16 (DE) stays free",
+        "• DMX light: the strip's DIN to IO18, its 5V to the DevKit's 5V pin (from its USB), GND to a GND. 8 pixels at a third of the light",
+        "• These modules name TXD and RXD the MCU's way (TX to TXD). If the TXD LED does not blink when the P4 sends, or nobody",
+        "  answers, swap TXD and RXD on that module: at 3.3 V on both sides nothing gets hurt",
+        "• Feed them from 3.3 V, not 5 V: at 5 V the RXD pin would put 5 V on the header, which is not 5 V tolerant",
+        "• Each module carries its 120 Ω (marked 121): right for a bus of two. A third module in the middle needs its 121 lifted",
+        "• The third screw (earth) is for a cable's shield; on the bench the two boards share GND through the USB already",
+    ])
+    s.header(used)
+    s.save("bench-rs485.svg")
+
+
+def w5500():
+    """A W5500 Lite Ethernet module (HW-884) on spi.a, seen from above with its RJ45 at the top."""
+    s = Svg(1100, 905, "A W5500 Ethernet module on the 40-pin header",
+            "the W5500 Lite (HW-884) on spi.a with jumper wires: the bench before the auxiliary board")
+    c_sck, c_mo, c_mi, c_cs = "#2563eb", "#16a34a", "#ca8a04", "#ea580c"
+    used = {18: C["p3"], 26: "#111111", 32: c_cs, 34: c_mo, 36: c_mi, 38: c_sck}
+    x18, y18 = pin_xy(18)
+    x26, y26 = pin_xy(26)
+    x32, y32 = pin_xy(32)
+    x34, y34 = pin_xy(34)
+    x36, y36 = pin_xy(36)
+    x38, y38 = pin_xy(38)
+    # the module: two rows of six pins 20.32 mm apart (eight pitches), MI level with the header's pin 36
+    lx, rx = 76, 76 + 8 * STEP
+    ys = [y36 - (5 - k) * STEP for k in range(6)]
+    s.add(f'<rect x="{lx-18}" y="{ys[0]-32}" width="{rx-lx+36}" height="{ys[5]-ys[0]+70}" rx="5" fill="#15803d"/>')
+    s.add(f'<rect x="{lx+42}" y="{ys[0]-107}" width="{rx-lx-84}" height="205" rx="4" fill="#9ca3af" stroke="#6b7280" stroke-width="2"/>')
+    s.add(f'<rect x="{lx+60}" y="{ys[0]-107}" width="{rx-lx-120}" height="34" fill="#374151"/>')
+    s.plain((lx + rx) / 2, ys[0] - 40, "RJ45", size=13, color="#374151", anchor="middle", bold=True)
+    s.plain((lx + rx) / 2, ys[0] - 22, "top view", size=10, color="#4b5563", anchor="middle")
+    s.plain((lx + rx) / 2, ys[5] + 26, "W5500 Lite", size=12, color="#dcfce7", anchor="middle", bold=True)
+    for nm, y in zip(["G", "G", "MO", "SCK", "CS", "INT"], ys):
+        s.over(f'<circle cx="{lx}" cy="{y}" r="7" fill="#d1a33a" stroke="#fff" stroke-width="2"/>')
+        s.plain(lx + 13, y + 4, nm, size=11, bold=True)
+    for nm, y in zip(["GND", "V", "V", "NC", "RST", "MI"], ys):
+        s.over(f'<circle cx="{rx}" cy="{y}" r="7" fill="#d1a33a" stroke="#fff" stroke-width="2"/>')
+        s.plain(rx - 13, y + 4, nm, size=11, anchor="end", bold=True)
+    # MISO straight across; SCK round the bottom; CS and MOSI over the top, to the far row
+    s.wire([(x36 - 8, y36), (rx + 8, ys[5])], c_mi, 3)
+    s.wire([(x38 - 8, y38), (400, y38), (400, 700), (20, 700), (20, ys[3]), (lx - 8, ys[3])], c_sck, 3)
+    s.wire([(36, ys[3] - 9), (36, ys[3] + 9)], "#ffffff", 9)        # CS hops over SCK: the one crossing
+    s.wire([(x32 - 8, y32), (380, y32), (380, 340), (36, 340), (36, ys[4]), (lx - 8, ys[4])], c_cs, 3)
+    s.wire([(x34 - 8, y34), (360, y34), (360, 355), (52, 355), (52, ys[2]), (lx - 8, ys[2])], c_mo, 3)
+    s.text(400 + 8, 690, "SCK", color=c_sck, bold=True)
+    s.text(380 + 8, 334, "CS", color=c_cs, bold=True)
+    s.text(322, 372, "MOSI", color=c_mo, bold=True)
+    s.text(350, y36 - 8, "MISO", color=c_mi, bold=True)
+    # power by tags: every tag with the same name is one wire
+    s.wire([(x18 - 8, y18), (440, y18)], C["p3"])
+    s.net(440, y18, "3V3")
+    s.wire([(x26 - 8, y26), (440, y26)], C["gnd"])
+    s.net(440, y26, "GND", C["gnd"])
+    s.wire([(rx + 8, ys[0]), (rx + 24, ys[0])], C["gnd"])
+    s.net(rx + 24, ys[0], "GND", C["gnd"], side="right")
+    s.wire([(rx + 8, ys[1]), (rx + 24, ys[1])], C["p3"])
+    s.net(rx + 24, ys[1], "3V3", side="right")
+    s.notes(720, 330, 340, "The first test, with no new firmware", [
+        "• Bus, SPI: port spi.a, CS 49, mode 0, 1 MHz",
+        "• send the bytes 00 39 00 00",
+        "• the fourth byte back must be 04:",
+        "  the W5500's version register",
+    ])
+    s.notes(40, NOTES_Y + 20, 1020, "Wiring it (it worked on the board, 2026-11-11: the chip answered 00 00 00 04, its version, at 1 MHz)", [
+        "• SCK to GPIO52 (pin 38), MO to GPIO50 (pin 34), MI to GPIO51 (pin 36), CS to GPIO49 (pin 32): the header's spi.a",
+        "• V to 3V3 (pin 18), GND to pin 26. The module is 3.3 V only, about 200 mA, with no regulator of its own: never 5 V",
+        "• INT, NC, RST and the second V and G stay free: the driver polls. If the chip does not answer, try RST to 3V3",
+        "• The pins as printed on the board: G, G, MO, SCK, CS, INT down one side, GND, V, V, NC, RST, MI down the other. Read yours before powering it",
+        "• Short wires: the SPI runs at several MHz. Tags with the same name (3V3, GND) are one wire. The two rows are 20.32 mm apart",
+    ])
+    s.header(used)
+    s.save("bench-w5500.svg")
+
+
 if __name__ == "__main__":
     pwm()
     ir()
@@ -694,3 +923,5 @@ if __name__ == "__main__":
     esp32_devkit()
     nano_header()
     can()
+    rs485()
+    w5500()

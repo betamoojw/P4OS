@@ -57,3 +57,30 @@
 验证镜像在合并提交前构建，版本为 `v0.15.0-140-ga0c8ac8-dirty`；应用 SHA-256 为 `2f9659c6309abfe97034a4f2ffd925bf54bc553aa9e13d41b192c61f935e9d4c`，ELF SHA-256 为 `9ee2e583e2ac4af5179f20b0afc12466b5bf07fb21dc69ae0f9aebe572156d96`。提交源码不会自动更新镜像的版本标识。
 
 本地记录：`build/merge-main-20261108-firmware.log`、`build/merge-main-20261108-python-tests.log`（含首次检查后已修复的两项语言问题）、`build/merge-main-20261108-chinese-final-tests.log`、`build/merge-main-20261108-web-tests.log`、`build/merge-main-20261108-apps.log`、`build/merge-main-20261108-apps-final-check.log`。最终应用兼容性报告为 `build/apps-abi101/rev3_x/report-selected.json`。
+
+## 2026-11-12 合入远程 main
+
+合入源为 `origin/main` 的 `44502f0d5df7e63fe4f180f7cad7bd8dfd342420`，合入前 `dev` 为 `7972bdd`。获取远程状态后确认本地与远程 `dev` 一致，本次引入 102 个上游提交，包括 W5500 以太网、SSH、系统搜索、剪贴板、Modbus、DMX 和灯光控制。
+
+冲突及兼容性处理：
+
+- 解决 8 个冲突文件：网络校时、六份英语/德语目录，以及生成的内嵌语言文件。语言目录按键合并，保留双方新增项，再从最终目录重新生成内嵌资源。
+- 修复自动合并未发现的 Flash 布局冲突：上游把设置存储放在 `0x1000000`，会与本分支的中文资源重叠。本分支继续保留该地址的 12 MB 字库和 `0x1C00000` 的崩溃转储，将 256 KB 设置存储放在 `0x1D00000`。旧 `dev` 分区表通过 ESP-IDF 注册相同的空闲区域，注册时检查芯片容量和分区重叠；失败时退回旧 NVS。异常的已命名分区不会被初始化或擦除，擦除失败也不会继续初始化。迁移清理保留旧 NVS 中的语言选择，便于回退。
+- 校时保留三个服务器及事件线程中的串行初始化，同时支持仅有线联网时手动校时，避免把 Wi-Fi 关闭误判为没有网络。
+- 每种中文补齐 1,002 个新增条目，合并后各有 87 份目录，其中 57 份原生应用目录。保留旧翻译，为新增条目保存简繁审校覆盖表，检查占位符、换行和字形覆盖。DMX、SSH 保留协议名称。字库二进制无需改变，也不需要 SD 卡。
+- 新增灯光和 Modbus 网页使用各自的翻译目录，避免与管理页相互覆盖。灯带提示移除仅适用于 LCD-5 的固定针脚编号，保留 GPIO 编号和各板型引脚图。
+- `docs/BUILDING.md` 更新分区布局及旧 `dev` 的 OTA 兼容方式。上游 `main` 的不同分区布局不能直接当作本分支的布局使用。
+
+验证范围：
+
+- 27 项 Python 回归与 22 项网页测试通过，共 49 项。新增分区保护测试，扩展仅以太网联网的校时测试和新增网页的翻译隔离检查；保留四种板型的几何、针脚映射及横竖屏触摸检查。最后一次资源整理后，六项中文检查与三项网页资源检查再次通过。
+- 本机 `lcd10_1/rev3_x` 的旧构建配置同步开启 `CONFIG_ETH_USE_SPI_ETHERNET=y` 和 `CONFIG_ETH_SPI_ETHERNET_W5500=y`。压缩字体、三个 SNTP 服务器及 USB vendor 接口配置保持开启。
+- ESP-IDF 5.5.5 完整编译成功，并在最终目录整理后增量编译，确认原生语言对象和网页资源均晚于最终语言源文件。最终 `p4os.bin` 为 7,664,496 字节，应用分区剩余约 8%；镜像校验有效，芯片范围为 P4 v3.0–v3.99。只有既有的 LVGL/stb_image 及 `screen_off_cb` 未使用警告。
+- 本次新增或改动的 11 个动态应用（`can`、`dmx`、`eeprom`、`equipos`、`golf`、`luces`、`modbus`、`monsterhop`、`notas`、`ssh`、`turbo`）按 `rev3_x` 重新编译成功，并针对最终 `lcd10_1/rev3_x` ELF 再次通过 ABI 101、导入符号、LVGL 版本/配置和指令集检查，失败数为 0。其余动态应用未重编译。
+- 不包含烧录或实机测试；未重新编译另外七种板型/硅配置组合。
+
+本地测试日志：`build/merge-main-20261112-python-tests.log`（首次检查提示 DMX、SSH 协议名需加入保留名称表，现已修复）、`build/merge-main-20261112-chinese-final-tests.log`、`build/merge-main-20261112-assets-final-tests.log`、`build/merge-main-20261112-web-tests.log`。构建产物和日志保留在本机，不纳入 Git。
+
+最终固件日志：`build/merge-main-20261112-firmware-verified.log`；应用日志：`build/merge-main-20261112-apps.log` 和 `build/merge-main-20261112-apps-final-check.log`。兼容性报告在 `build/apps-abi101/rev3_x/report-selected.json`。
+
+验证镜像在合并提交前构建，版本为 `v0.15.0-219-g7972bdd-dirty`；应用 SHA-256 为 `664a15b45330027bedba6a8fcfb37bb346a76cebaa9d31420ea48f0b44d4393a`，ELF SHA-256 为 `302800528e3927716d2505c61bca1ab60fc32abe8ead0c4c3960940bdb6143e1`。打包字库的 SHA-256 仍为 `c957559d3da940ca81caea0b256c06ff92e2df919a9e2896aac174eb8f679a6b`。提交不会自动改变这些镜像的版本标识。

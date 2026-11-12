@@ -2,9 +2,9 @@
  * GENERADO POR tools/gen_symbols.py - no editar a mano.
  *
  * Simbolos que el firmware le presta a las apps dinamicas.
- * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io
+ * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io, monocypher, aos_ssh
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3483 simbolos.
+ * Total: 3620 simbolos.
  */
 
 #include <stddef.h>
@@ -16,6 +16,7 @@ extern int NT_KNOWN_N;
 extern int NT_KNOWN_PORTS;
 extern int NT_MDNS_NTYPES;
 extern int NT_MDNS_TYPES;
+extern int SSH_SIG_ALGS;
 extern int __adddf3;
 extern int __ashldi3;
 extern int __divdf3;
@@ -74,7 +75,6 @@ extern int aos_app_ha_get;
 extern int aos_app_leds_get;
 extern int aos_app_life_get;
 extern int aos_app_macropad_get;
-extern int aos_app_modbus_get;
 extern int aos_app_modules_get;
 extern int aos_app_mqtt_get;
 extern int aos_app_music_get;
@@ -128,6 +128,13 @@ extern int aos_emoji_font;
 extern int aos_emoji_init;
 extern int aos_emoji_match;
 extern int aos_emoji_ready;
+extern int aos_eth_boot;
+extern int aos_eth_enable;
+extern int aos_eth_info;
+extern int aos_eth_on_pause;
+extern int aos_eth_port_free;
+extern int aos_eth_set_clock;
+extern int aos_eth_yield;
 extern int aos_flash_call;
 extern int aos_flashop_init;
 extern int aos_folder_font;
@@ -405,6 +412,7 @@ extern int aos_hal_net_ip;
 extern int aos_hal_net_low_latency;
 extern int aos_hal_net_mac;
 extern int aos_hal_net_mdns_visible;
+extern int aos_hal_net_mdns_visible_wired;
 extern int aos_hal_net_retry_info;
 extern int aos_hal_net_rssi;
 extern int aos_hal_net_scan;
@@ -415,6 +423,11 @@ extern int aos_hal_net_state;
 extern int aos_hal_net_sync_time;
 extern int aos_hal_net_test_absent;
 extern int aos_hal_net_test_freeze_link;
+extern int aos_hal_net_wifi_ip;
+extern int aos_hal_net_wifi_state;
+extern int aos_hal_net_wired;
+extern int aos_hal_net_wired_ip;
+extern int aos_hal_net_wired_set;
 extern int aos_hal_night_info;
 extern int aos_hal_night_sleep_enable;
 extern int aos_hal_night_sleep_enabled;
@@ -567,8 +580,10 @@ extern int aos_hal_steps_set_goal;
 extern int aos_hal_sys_info;
 extern int aos_hal_sys_stats;
 extern int aos_hal_tasks;
+extern int aos_hal_tcp_accept;
 extern int aos_hal_tcp_close;
 extern int aos_hal_tcp_connect;
+extern int aos_hal_tcp_listen;
 extern int aos_hal_tcp_recv;
 extern int aos_hal_tcp_send;
 extern int aos_hal_thread_start;
@@ -591,6 +606,9 @@ extern int aos_hal_touch_sleep_enable;
 extern int aos_hal_touch_sleep_enabled;
 extern int aos_hal_touch_stats;
 extern int aos_hal_tune_reset;
+extern int aos_hal_udp_open;
+extern int aos_hal_udp_recv;
+extern int aos_hal_udp_send;
 extern int aos_hal_unlock;
 extern int aos_hal_uptime_ms;
 extern int aos_hal_uptime_us;
@@ -687,6 +705,7 @@ extern int aos_home_create;
 extern int aos_home_edit;
 extern int aos_home_editing;
 extern int aos_home_icon_rect;
+extern int aos_home_idle;
 extern int aos_home_rebuild;
 extern int aos_home_tick;
 extern int aos_http_stream_close;
@@ -740,6 +759,10 @@ extern int aos_io_be_count_open;
 extern int aos_io_be_dac_close;
 extern int aos_io_be_dac_open;
 extern int aos_io_be_dac_set;
+extern int aos_io_be_dmx_close;
+extern int aos_io_be_dmx_open;
+extern int aos_io_be_dmx_rdm;
+extern int aos_io_be_dmx_read;
 extern int aos_io_be_edges_arm;
 extern int aos_io_be_edges_close;
 extern int aos_io_be_edges_get;
@@ -785,12 +808,15 @@ extern int aos_io_be_swd_seq;
 extern int aos_io_be_swd_seq_in;
 extern int aos_io_be_swd_xfer;
 extern int aos_io_be_uart_close;
+extern int aos_io_be_uart_errors;
+extern int aos_io_be_uart_give;
 extern int aos_io_be_uart_lines;
 extern int aos_io_be_uart_lines_release;
 extern int aos_io_be_uart_open;
 extern int aos_io_be_uart_read;
 extern int aos_io_be_uart_set_baud;
 extern int aos_io_be_uart_set_format;
+extern int aos_io_be_uart_take;
 extern int aos_io_be_uart_write;
 extern int aos_io_can_close;
 extern int aos_io_can_filter;
@@ -807,6 +833,12 @@ extern int aos_io_dac_close;
 extern int aos_io_dac_level;
 extern int aos_io_dac_open;
 extern int aos_io_dac_set;
+extern int aos_io_dmx_close;
+extern int aos_io_dmx_config;
+extern int aos_io_dmx_open;
+extern int aos_io_dmx_rdm;
+extern int aos_io_dmx_read;
+extern int aos_io_dmx_write;
 extern int aos_io_ds18b20_convert_all;
 extern int aos_io_ds18b20_read;
 extern int aos_io_ds18b20_set_bits;
@@ -900,6 +932,7 @@ extern int aos_io_swd_xfer;
 extern int aos_io_uart_close;
 extern int aos_io_uart_desc;
 extern int aos_io_uart_dtr_rts;
+extern int aos_io_uart_errors;
 extern int aos_io_uart_is_usb_jtag;
 extern int aos_io_uart_lines;
 extern int aos_io_uart_open;
@@ -909,6 +942,8 @@ extern int aos_io_uart_set_format;
 extern int aos_io_uart_write;
 extern int aos_io_validate;
 extern int aos_jpeg_probe_picture;
+extern int aos_keyboard_attach;
+extern int aos_keyboard_init;
 extern int aos_keyboard_style;
 extern int aos_label;
 extern int aos_label_boxed;
@@ -1097,6 +1132,9 @@ extern int aos_scope_screenshot_file;
 extern int aos_scope_start;
 extern int aos_scope_status;
 extern int aos_scope_wave;
+extern int aos_search_close;
+extern int aos_search_is_open;
+extern int aos_search_open;
 extern int aos_sensor_at;
 extern int aos_sensor_candidates;
 extern int aos_sensor_cat_name;
@@ -1138,6 +1176,10 @@ extern int aos_serial_trigger_remove;
 extern int aos_serial_trigger_rename;
 extern int aos_serial_trigger_set;
 extern int aos_settings_font;
+extern int aos_sshkey_ui_cancel;
+extern int aos_sshkey_ui_layout;
+extern int aos_sshkey_ui_tick;
+extern int aos_sshkey_ui_visible;
 extern int aos_stats_flush;
 extern int aos_stats_tick;
 extern int aos_statusbar_app_gone;
@@ -1156,6 +1198,16 @@ extern int aos_sym_72;
 extern int aos_tasks_p4_start;
 extern int aos_text_font_has;
 extern int aos_text_safe;
+extern int aos_textfield_accent;
+extern int aos_textfield_active;
+extern int aos_textfield_init;
+extern int aos_textfield_is_password;
+extern int aos_textsel_attach;
+extern int aos_textsel_clear;
+extern int aos_textsel_delete;
+extern int aos_textsel_extend;
+extern int aos_textsel_has;
+extern int aos_textsel_key;
 extern int aos_theme_accent;
 extern int aos_theme_accent_at;
 extern int aos_theme_accent_rgb;
@@ -1195,6 +1247,9 @@ extern int aos_ui_boot_start_ids;
 extern int aos_ui_boot_start_run;
 extern int aos_ui_boot_start_set;
 extern int aos_ui_button;
+extern int aos_ui_clip_get;
+extern int aos_ui_clip_paste_here;
+extern int aos_ui_clip_set;
 extern int aos_ui_close;
 extern int aos_ui_close_others;
 extern int aos_ui_current_app;
@@ -1215,6 +1270,7 @@ extern int aos_ui_keyclick_set;
 extern int aos_ui_landscape;
 extern int aos_ui_lock_album;
 extern int aos_ui_lock_album_set;
+extern int aos_ui_make_room;
 extern int aos_ui_open;
 extern int aos_ui_open_app_with;
 extern int aos_ui_overlay;
@@ -1230,6 +1286,7 @@ extern int aos_ui_request_open;
 extern int aos_ui_request_snapshot;
 extern int aos_ui_request_toast;
 extern int aos_ui_restyle;
+extern int aos_ui_room_back;
 extern int aos_ui_safe_mode;
 extern int aos_ui_screenrec;
 extern int aos_ui_set_badge;
@@ -1286,6 +1343,66 @@ extern int clock;
 extern int close;
 extern int closedir;
 extern int cosf;
+extern int crypto_aead_init_djb;
+extern int crypto_aead_init_ietf;
+extern int crypto_aead_init_x;
+extern int crypto_aead_lock;
+extern int crypto_aead_read;
+extern int crypto_aead_unlock;
+extern int crypto_aead_write;
+extern int crypto_argon2;
+extern int crypto_argon2_no_extras;
+extern int crypto_blake2b;
+extern int crypto_blake2b_final;
+extern int crypto_blake2b_init;
+extern int crypto_blake2b_keyed;
+extern int crypto_blake2b_keyed_init;
+extern int crypto_blake2b_update;
+extern int crypto_chacha20_djb;
+extern int crypto_chacha20_h;
+extern int crypto_chacha20_ietf;
+extern int crypto_chacha20_x;
+extern int crypto_ed25519_check;
+extern int crypto_ed25519_key_pair;
+extern int crypto_ed25519_ph_check;
+extern int crypto_ed25519_ph_sign;
+extern int crypto_ed25519_sign;
+extern int crypto_eddsa_check;
+extern int crypto_eddsa_check_equation;
+extern int crypto_eddsa_key_pair;
+extern int crypto_eddsa_mul_add;
+extern int crypto_eddsa_reduce;
+extern int crypto_eddsa_scalarbase;
+extern int crypto_eddsa_sign;
+extern int crypto_eddsa_to_x25519;
+extern int crypto_eddsa_trim_scalar;
+extern int crypto_elligator_key_pair;
+extern int crypto_elligator_map;
+extern int crypto_elligator_rev;
+extern int crypto_poly1305;
+extern int crypto_poly1305_final;
+extern int crypto_poly1305_init;
+extern int crypto_poly1305_update;
+extern int crypto_sha512;
+extern int crypto_sha512_final;
+extern int crypto_sha512_hkdf;
+extern int crypto_sha512_hkdf_expand;
+extern int crypto_sha512_hmac;
+extern int crypto_sha512_hmac_final;
+extern int crypto_sha512_hmac_init;
+extern int crypto_sha512_hmac_update;
+extern int crypto_sha512_init;
+extern int crypto_sha512_update;
+extern int crypto_verify16;
+extern int crypto_verify32;
+extern int crypto_verify64;
+extern int crypto_wipe;
+extern int crypto_x25519;
+extern int crypto_x25519_dirty_fast;
+extern int crypto_x25519_dirty_small;
+extern int crypto_x25519_inverse;
+extern int crypto_x25519_public_key;
+extern int crypto_x25519_to_eddsa;
 extern int dsps_biquad_f32_ansi;
 extern int dsps_biquad_f32_arp4;
 extern int dsps_biquad_gen_bpf_f32;
@@ -3403,6 +3520,7 @@ extern int music_cover_offer;
 extern int music_cover_request;
 extern int music_cover_take;
 extern int music_folder_cover;
+extern int namelist_has;
 extern int nt_big_calloc;
 extern int nt_guess;
 extern int nt_init;
@@ -3447,6 +3565,12 @@ extern int qrcodegen_makeEci;
 extern int qrcodegen_makeNumeric;
 extern int qrcodegen_version2size;
 extern int qsort;
+extern int rb_bool;
+extern int rb_byte;
+extern int rb_cstr;
+extern int rb_mpint;
+extern int rb_string;
+extern int rb_u32;
 extern int read;
 extern int readdir;
 extern int realloc;
@@ -3461,6 +3585,13 @@ extern int snprintf;
 extern int sprintf;
 extern int sqrtf;
 extern int sscanf;
+extern int ssh_chachapoly_init;
+extern int ssh_chachapoly_length;
+extern int ssh_chachapoly_open;
+extern int ssh_chachapoly_seal;
+extern int ssh_chachapoly_wipe;
+extern int ssh_key_describe;
+extern int ssh_key_verify;
 extern int stat;
 extern int strcasecmp;
 extern int strcat;
@@ -3494,6 +3625,12 @@ extern int tud_vendor_control_xfer_cb;
 extern int tud_vendor_rx_cb;
 extern int unlink;
 extern int vsnprintf;
+extern int wb_byte;
+extern int wb_bytes;
+extern int wb_cstr;
+extern int wb_mpint;
+extern int wb_string;
+extern int wb_u32;
 extern int write;
 #pragma GCC diagnostic pop
 
@@ -3502,6 +3639,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(NT_KNOWN_PORTS),
     ESP_ELFSYM_EXPORT(NT_MDNS_NTYPES),
     ESP_ELFSYM_EXPORT(NT_MDNS_TYPES),
+    ESP_ELFSYM_EXPORT(SSH_SIG_ALGS),
     ESP_ELFSYM_EXPORT(__adddf3),
     ESP_ELFSYM_EXPORT(__ashldi3),
     ESP_ELFSYM_EXPORT(__divdf3),
@@ -3560,7 +3698,6 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_app_leds_get),
     ESP_ELFSYM_EXPORT(aos_app_life_get),
     ESP_ELFSYM_EXPORT(aos_app_macropad_get),
-    ESP_ELFSYM_EXPORT(aos_app_modbus_get),
     ESP_ELFSYM_EXPORT(aos_app_modules_get),
     ESP_ELFSYM_EXPORT(aos_app_mqtt_get),
     ESP_ELFSYM_EXPORT(aos_app_music_get),
@@ -3614,6 +3751,13 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_emoji_init),
     ESP_ELFSYM_EXPORT(aos_emoji_match),
     ESP_ELFSYM_EXPORT(aos_emoji_ready),
+    ESP_ELFSYM_EXPORT(aos_eth_boot),
+    ESP_ELFSYM_EXPORT(aos_eth_enable),
+    ESP_ELFSYM_EXPORT(aos_eth_info),
+    ESP_ELFSYM_EXPORT(aos_eth_on_pause),
+    ESP_ELFSYM_EXPORT(aos_eth_port_free),
+    ESP_ELFSYM_EXPORT(aos_eth_set_clock),
+    ESP_ELFSYM_EXPORT(aos_eth_yield),
     ESP_ELFSYM_EXPORT(aos_flash_call),
     ESP_ELFSYM_EXPORT(aos_flashop_init),
     ESP_ELFSYM_EXPORT(aos_folder_font),
@@ -3891,6 +4035,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_net_low_latency),
     ESP_ELFSYM_EXPORT(aos_hal_net_mac),
     ESP_ELFSYM_EXPORT(aos_hal_net_mdns_visible),
+    ESP_ELFSYM_EXPORT(aos_hal_net_mdns_visible_wired),
     ESP_ELFSYM_EXPORT(aos_hal_net_retry_info),
     ESP_ELFSYM_EXPORT(aos_hal_net_rssi),
     ESP_ELFSYM_EXPORT(aos_hal_net_scan),
@@ -3901,6 +4046,11 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_net_sync_time),
     ESP_ELFSYM_EXPORT(aos_hal_net_test_absent),
     ESP_ELFSYM_EXPORT(aos_hal_net_test_freeze_link),
+    ESP_ELFSYM_EXPORT(aos_hal_net_wifi_ip),
+    ESP_ELFSYM_EXPORT(aos_hal_net_wifi_state),
+    ESP_ELFSYM_EXPORT(aos_hal_net_wired),
+    ESP_ELFSYM_EXPORT(aos_hal_net_wired_ip),
+    ESP_ELFSYM_EXPORT(aos_hal_net_wired_set),
     ESP_ELFSYM_EXPORT(aos_hal_night_info),
     ESP_ELFSYM_EXPORT(aos_hal_night_sleep_enable),
     ESP_ELFSYM_EXPORT(aos_hal_night_sleep_enabled),
@@ -4053,8 +4203,10 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_sys_info),
     ESP_ELFSYM_EXPORT(aos_hal_sys_stats),
     ESP_ELFSYM_EXPORT(aos_hal_tasks),
+    ESP_ELFSYM_EXPORT(aos_hal_tcp_accept),
     ESP_ELFSYM_EXPORT(aos_hal_tcp_close),
     ESP_ELFSYM_EXPORT(aos_hal_tcp_connect),
+    ESP_ELFSYM_EXPORT(aos_hal_tcp_listen),
     ESP_ELFSYM_EXPORT(aos_hal_tcp_recv),
     ESP_ELFSYM_EXPORT(aos_hal_tcp_send),
     ESP_ELFSYM_EXPORT(aos_hal_thread_start),
@@ -4077,6 +4229,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_touch_sleep_enabled),
     ESP_ELFSYM_EXPORT(aos_hal_touch_stats),
     ESP_ELFSYM_EXPORT(aos_hal_tune_reset),
+    ESP_ELFSYM_EXPORT(aos_hal_udp_open),
+    ESP_ELFSYM_EXPORT(aos_hal_udp_recv),
+    ESP_ELFSYM_EXPORT(aos_hal_udp_send),
     ESP_ELFSYM_EXPORT(aos_hal_unlock),
     ESP_ELFSYM_EXPORT(aos_hal_uptime_ms),
     ESP_ELFSYM_EXPORT(aos_hal_uptime_us),
@@ -4173,6 +4328,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_home_edit),
     ESP_ELFSYM_EXPORT(aos_home_editing),
     ESP_ELFSYM_EXPORT(aos_home_icon_rect),
+    ESP_ELFSYM_EXPORT(aos_home_idle),
     ESP_ELFSYM_EXPORT(aos_home_rebuild),
     ESP_ELFSYM_EXPORT(aos_home_tick),
     ESP_ELFSYM_EXPORT(aos_http_stream_close),
@@ -4226,6 +4382,10 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_be_dac_close),
     ESP_ELFSYM_EXPORT(aos_io_be_dac_open),
     ESP_ELFSYM_EXPORT(aos_io_be_dac_set),
+    ESP_ELFSYM_EXPORT(aos_io_be_dmx_close),
+    ESP_ELFSYM_EXPORT(aos_io_be_dmx_open),
+    ESP_ELFSYM_EXPORT(aos_io_be_dmx_rdm),
+    ESP_ELFSYM_EXPORT(aos_io_be_dmx_read),
     ESP_ELFSYM_EXPORT(aos_io_be_edges_arm),
     ESP_ELFSYM_EXPORT(aos_io_be_edges_close),
     ESP_ELFSYM_EXPORT(aos_io_be_edges_get),
@@ -4271,12 +4431,15 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_be_swd_seq_in),
     ESP_ELFSYM_EXPORT(aos_io_be_swd_xfer),
     ESP_ELFSYM_EXPORT(aos_io_be_uart_close),
+    ESP_ELFSYM_EXPORT(aos_io_be_uart_errors),
+    ESP_ELFSYM_EXPORT(aos_io_be_uart_give),
     ESP_ELFSYM_EXPORT(aos_io_be_uart_lines),
     ESP_ELFSYM_EXPORT(aos_io_be_uart_lines_release),
     ESP_ELFSYM_EXPORT(aos_io_be_uart_open),
     ESP_ELFSYM_EXPORT(aos_io_be_uart_read),
     ESP_ELFSYM_EXPORT(aos_io_be_uart_set_baud),
     ESP_ELFSYM_EXPORT(aos_io_be_uart_set_format),
+    ESP_ELFSYM_EXPORT(aos_io_be_uart_take),
     ESP_ELFSYM_EXPORT(aos_io_be_uart_write),
     ESP_ELFSYM_EXPORT(aos_io_can_close),
     ESP_ELFSYM_EXPORT(aos_io_can_filter),
@@ -4293,6 +4456,12 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_dac_level),
     ESP_ELFSYM_EXPORT(aos_io_dac_open),
     ESP_ELFSYM_EXPORT(aos_io_dac_set),
+    ESP_ELFSYM_EXPORT(aos_io_dmx_close),
+    ESP_ELFSYM_EXPORT(aos_io_dmx_config),
+    ESP_ELFSYM_EXPORT(aos_io_dmx_open),
+    ESP_ELFSYM_EXPORT(aos_io_dmx_rdm),
+    ESP_ELFSYM_EXPORT(aos_io_dmx_read),
+    ESP_ELFSYM_EXPORT(aos_io_dmx_write),
     ESP_ELFSYM_EXPORT(aos_io_ds18b20_convert_all),
     ESP_ELFSYM_EXPORT(aos_io_ds18b20_read),
     ESP_ELFSYM_EXPORT(aos_io_ds18b20_set_bits),
@@ -4386,6 +4555,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_uart_close),
     ESP_ELFSYM_EXPORT(aos_io_uart_desc),
     ESP_ELFSYM_EXPORT(aos_io_uart_dtr_rts),
+    ESP_ELFSYM_EXPORT(aos_io_uart_errors),
     ESP_ELFSYM_EXPORT(aos_io_uart_is_usb_jtag),
     ESP_ELFSYM_EXPORT(aos_io_uart_lines),
     ESP_ELFSYM_EXPORT(aos_io_uart_open),
@@ -4395,6 +4565,8 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_uart_write),
     ESP_ELFSYM_EXPORT(aos_io_validate),
     ESP_ELFSYM_EXPORT(aos_jpeg_probe_picture),
+    ESP_ELFSYM_EXPORT(aos_keyboard_attach),
+    ESP_ELFSYM_EXPORT(aos_keyboard_init),
     ESP_ELFSYM_EXPORT(aos_keyboard_style),
     ESP_ELFSYM_EXPORT(aos_label),
     ESP_ELFSYM_EXPORT(aos_label_boxed),
@@ -4583,6 +4755,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_scope_start),
     ESP_ELFSYM_EXPORT(aos_scope_status),
     ESP_ELFSYM_EXPORT(aos_scope_wave),
+    ESP_ELFSYM_EXPORT(aos_search_close),
+    ESP_ELFSYM_EXPORT(aos_search_is_open),
+    ESP_ELFSYM_EXPORT(aos_search_open),
     ESP_ELFSYM_EXPORT(aos_sensor_at),
     ESP_ELFSYM_EXPORT(aos_sensor_candidates),
     ESP_ELFSYM_EXPORT(aos_sensor_cat_name),
@@ -4624,6 +4799,10 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_serial_trigger_rename),
     ESP_ELFSYM_EXPORT(aos_serial_trigger_set),
     ESP_ELFSYM_EXPORT(aos_settings_font),
+    ESP_ELFSYM_EXPORT(aos_sshkey_ui_cancel),
+    ESP_ELFSYM_EXPORT(aos_sshkey_ui_layout),
+    ESP_ELFSYM_EXPORT(aos_sshkey_ui_tick),
+    ESP_ELFSYM_EXPORT(aos_sshkey_ui_visible),
     ESP_ELFSYM_EXPORT(aos_stats_flush),
     ESP_ELFSYM_EXPORT(aos_stats_tick),
     ESP_ELFSYM_EXPORT(aos_statusbar_app_gone),
@@ -4642,6 +4821,16 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_tasks_p4_start),
     ESP_ELFSYM_EXPORT(aos_text_font_has),
     ESP_ELFSYM_EXPORT(aos_text_safe),
+    ESP_ELFSYM_EXPORT(aos_textfield_accent),
+    ESP_ELFSYM_EXPORT(aos_textfield_active),
+    ESP_ELFSYM_EXPORT(aos_textfield_init),
+    ESP_ELFSYM_EXPORT(aos_textfield_is_password),
+    ESP_ELFSYM_EXPORT(aos_textsel_attach),
+    ESP_ELFSYM_EXPORT(aos_textsel_clear),
+    ESP_ELFSYM_EXPORT(aos_textsel_delete),
+    ESP_ELFSYM_EXPORT(aos_textsel_extend),
+    ESP_ELFSYM_EXPORT(aos_textsel_has),
+    ESP_ELFSYM_EXPORT(aos_textsel_key),
     ESP_ELFSYM_EXPORT(aos_theme_accent),
     ESP_ELFSYM_EXPORT(aos_theme_accent_at),
     ESP_ELFSYM_EXPORT(aos_theme_accent_rgb),
@@ -4681,6 +4870,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_boot_start_run),
     ESP_ELFSYM_EXPORT(aos_ui_boot_start_set),
     ESP_ELFSYM_EXPORT(aos_ui_button),
+    ESP_ELFSYM_EXPORT(aos_ui_clip_get),
+    ESP_ELFSYM_EXPORT(aos_ui_clip_paste_here),
+    ESP_ELFSYM_EXPORT(aos_ui_clip_set),
     ESP_ELFSYM_EXPORT(aos_ui_close),
     ESP_ELFSYM_EXPORT(aos_ui_close_others),
     ESP_ELFSYM_EXPORT(aos_ui_current_app),
@@ -4701,6 +4893,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_landscape),
     ESP_ELFSYM_EXPORT(aos_ui_lock_album),
     ESP_ELFSYM_EXPORT(aos_ui_lock_album_set),
+    ESP_ELFSYM_EXPORT(aos_ui_make_room),
     ESP_ELFSYM_EXPORT(aos_ui_open),
     ESP_ELFSYM_EXPORT(aos_ui_open_app_with),
     ESP_ELFSYM_EXPORT(aos_ui_overlay),
@@ -4716,6 +4909,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_ui_request_snapshot),
     ESP_ELFSYM_EXPORT(aos_ui_request_toast),
     ESP_ELFSYM_EXPORT(aos_ui_restyle),
+    ESP_ELFSYM_EXPORT(aos_ui_room_back),
     ESP_ELFSYM_EXPORT(aos_ui_safe_mode),
     ESP_ELFSYM_EXPORT(aos_ui_screenrec),
     ESP_ELFSYM_EXPORT(aos_ui_set_badge),
@@ -4772,6 +4966,66 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(close),
     ESP_ELFSYM_EXPORT(closedir),
     ESP_ELFSYM_EXPORT(cosf),
+    ESP_ELFSYM_EXPORT(crypto_aead_init_djb),
+    ESP_ELFSYM_EXPORT(crypto_aead_init_ietf),
+    ESP_ELFSYM_EXPORT(crypto_aead_init_x),
+    ESP_ELFSYM_EXPORT(crypto_aead_lock),
+    ESP_ELFSYM_EXPORT(crypto_aead_read),
+    ESP_ELFSYM_EXPORT(crypto_aead_unlock),
+    ESP_ELFSYM_EXPORT(crypto_aead_write),
+    ESP_ELFSYM_EXPORT(crypto_argon2),
+    ESP_ELFSYM_EXPORT(crypto_argon2_no_extras),
+    ESP_ELFSYM_EXPORT(crypto_blake2b),
+    ESP_ELFSYM_EXPORT(crypto_blake2b_final),
+    ESP_ELFSYM_EXPORT(crypto_blake2b_init),
+    ESP_ELFSYM_EXPORT(crypto_blake2b_keyed),
+    ESP_ELFSYM_EXPORT(crypto_blake2b_keyed_init),
+    ESP_ELFSYM_EXPORT(crypto_blake2b_update),
+    ESP_ELFSYM_EXPORT(crypto_chacha20_djb),
+    ESP_ELFSYM_EXPORT(crypto_chacha20_h),
+    ESP_ELFSYM_EXPORT(crypto_chacha20_ietf),
+    ESP_ELFSYM_EXPORT(crypto_chacha20_x),
+    ESP_ELFSYM_EXPORT(crypto_ed25519_check),
+    ESP_ELFSYM_EXPORT(crypto_ed25519_key_pair),
+    ESP_ELFSYM_EXPORT(crypto_ed25519_ph_check),
+    ESP_ELFSYM_EXPORT(crypto_ed25519_ph_sign),
+    ESP_ELFSYM_EXPORT(crypto_ed25519_sign),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_check),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_check_equation),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_key_pair),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_mul_add),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_reduce),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_scalarbase),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_sign),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_to_x25519),
+    ESP_ELFSYM_EXPORT(crypto_eddsa_trim_scalar),
+    ESP_ELFSYM_EXPORT(crypto_elligator_key_pair),
+    ESP_ELFSYM_EXPORT(crypto_elligator_map),
+    ESP_ELFSYM_EXPORT(crypto_elligator_rev),
+    ESP_ELFSYM_EXPORT(crypto_poly1305),
+    ESP_ELFSYM_EXPORT(crypto_poly1305_final),
+    ESP_ELFSYM_EXPORT(crypto_poly1305_init),
+    ESP_ELFSYM_EXPORT(crypto_poly1305_update),
+    ESP_ELFSYM_EXPORT(crypto_sha512),
+    ESP_ELFSYM_EXPORT(crypto_sha512_final),
+    ESP_ELFSYM_EXPORT(crypto_sha512_hkdf),
+    ESP_ELFSYM_EXPORT(crypto_sha512_hkdf_expand),
+    ESP_ELFSYM_EXPORT(crypto_sha512_hmac),
+    ESP_ELFSYM_EXPORT(crypto_sha512_hmac_final),
+    ESP_ELFSYM_EXPORT(crypto_sha512_hmac_init),
+    ESP_ELFSYM_EXPORT(crypto_sha512_hmac_update),
+    ESP_ELFSYM_EXPORT(crypto_sha512_init),
+    ESP_ELFSYM_EXPORT(crypto_sha512_update),
+    ESP_ELFSYM_EXPORT(crypto_verify16),
+    ESP_ELFSYM_EXPORT(crypto_verify32),
+    ESP_ELFSYM_EXPORT(crypto_verify64),
+    ESP_ELFSYM_EXPORT(crypto_wipe),
+    ESP_ELFSYM_EXPORT(crypto_x25519),
+    ESP_ELFSYM_EXPORT(crypto_x25519_dirty_fast),
+    ESP_ELFSYM_EXPORT(crypto_x25519_dirty_small),
+    ESP_ELFSYM_EXPORT(crypto_x25519_inverse),
+    ESP_ELFSYM_EXPORT(crypto_x25519_public_key),
+    ESP_ELFSYM_EXPORT(crypto_x25519_to_eddsa),
     ESP_ELFSYM_EXPORT(dsps_biquad_f32_ansi),
     ESP_ELFSYM_EXPORT(dsps_biquad_f32_arp4),
     ESP_ELFSYM_EXPORT(dsps_biquad_gen_bpf_f32),
@@ -6889,6 +7143,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(music_cover_request),
     ESP_ELFSYM_EXPORT(music_cover_take),
     ESP_ELFSYM_EXPORT(music_folder_cover),
+    ESP_ELFSYM_EXPORT(namelist_has),
     ESP_ELFSYM_EXPORT(nt_big_calloc),
     ESP_ELFSYM_EXPORT(nt_guess),
     ESP_ELFSYM_EXPORT(nt_init),
@@ -6933,6 +7188,12 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(qrcodegen_makeNumeric),
     ESP_ELFSYM_EXPORT(qrcodegen_version2size),
     ESP_ELFSYM_EXPORT(qsort),
+    ESP_ELFSYM_EXPORT(rb_bool),
+    ESP_ELFSYM_EXPORT(rb_byte),
+    ESP_ELFSYM_EXPORT(rb_cstr),
+    ESP_ELFSYM_EXPORT(rb_mpint),
+    ESP_ELFSYM_EXPORT(rb_string),
+    ESP_ELFSYM_EXPORT(rb_u32),
     ESP_ELFSYM_EXPORT(read),
     ESP_ELFSYM_EXPORT(readdir),
     ESP_ELFSYM_EXPORT(realloc),
@@ -6947,6 +7208,13 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(sprintf),
     ESP_ELFSYM_EXPORT(sqrtf),
     ESP_ELFSYM_EXPORT(sscanf),
+    ESP_ELFSYM_EXPORT(ssh_chachapoly_init),
+    ESP_ELFSYM_EXPORT(ssh_chachapoly_length),
+    ESP_ELFSYM_EXPORT(ssh_chachapoly_open),
+    ESP_ELFSYM_EXPORT(ssh_chachapoly_seal),
+    ESP_ELFSYM_EXPORT(ssh_chachapoly_wipe),
+    ESP_ELFSYM_EXPORT(ssh_key_describe),
+    ESP_ELFSYM_EXPORT(ssh_key_verify),
     ESP_ELFSYM_EXPORT(stat),
     ESP_ELFSYM_EXPORT(strcasecmp),
     ESP_ELFSYM_EXPORT(strcat),
@@ -6980,6 +7248,12 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(tud_vendor_rx_cb),
     ESP_ELFSYM_EXPORT(unlink),
     ESP_ELFSYM_EXPORT(vsnprintf),
+    ESP_ELFSYM_EXPORT(wb_byte),
+    ESP_ELFSYM_EXPORT(wb_bytes),
+    ESP_ELFSYM_EXPORT(wb_cstr),
+    ESP_ELFSYM_EXPORT(wb_mpint),
+    ESP_ELFSYM_EXPORT(wb_string),
+    ESP_ELFSYM_EXPORT(wb_u32),
     ESP_ELFSYM_EXPORT(write),
     ESP_ELFSYM_END,
 };

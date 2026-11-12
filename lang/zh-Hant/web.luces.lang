@@ -1,0 +1,117 @@
+# Offline Traditional Chinese catalogue; reviewed terms: ../zh-Hant-key-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Rojo	紅色
+Naranja	橙色
+Ámbar	琥珀色
+Amarillo	黃色
+Verde	綠色
+Cian	青色
+Azul	藍色
+Violeta	紫色
+Magenta	洋紅色
+Cálido	暖色
+Blanco	白色
+Sin strobe	無頻閃
+Lento	慢速
+Medio	平均值
+Rápido	快速
+Ninguno	無
+Arcoíris	彩虹
+Ola	波浪
+Destellos	閃閃發光
+Recorrido	逐燈點亮
+Colores	顏色
+Respirar	呼吸
+Corte	切換
+0,5 s	0.5 秒
+1 s	1 秒
+2 s	2 秒
+3 s	3 秒
+5 s	5 秒
+Mitad	半程漸變
+Todo fundido	全程漸變
+Luces	燈光
+La app Luces no está abierta en la placa (%s)	開發板上的“燈光”應用未開啟（%s）
+Buscando la app…	正在查詢應用…
+Abrir salida	開啟輸出
+Posición (pan y tilt)	位置（水平和俯仰）
+Al centro	居中
+Todos	全部
+Pares	偶數
+Impares	奇數
+Intensidad	亮度
+Color	顏色
+Otro	其他
+Efectos y pruebas	效果和測試
+Velocidad	速度
+El efecto corre sobre los aparatos elegidos al tocarlo (todos, si no hay ninguno elegido), encima de la escena.	效果會應用於輕點時所選的燈具，併疊加到目前場景上；未選擇燈具時應用於全部燈具。
+Pruebas: Recorrido prende un aparato por vez en blanco (cuál es cuál; uno fuera de turno tiene la dirección mal). Colores pasa todos por rojo, verde, azul y blanco (uno de otro color tiene los canales en otro orden que su tipo). Respirar sube y baja la intensidad despacio (escalones o parpadeo abajo son la curva del aparato).	測試：“逐燈點亮”依次將燈具點亮為白色，用於識別燈具；順序錯誤表示地址有誤。“顏色”讓所有燈具依次顯示紅、綠、藍、白；顏色不一致表示通道順序與燈具型別不符。“呼吸”緩慢改變亮度，低亮度時的跳變或閃爍反映了燈具的調光曲線。
+Andar	執行
+Hacen falta al menos dos escenas distintas: con una sola, la secuencia llama siempre a la misma. "Escenas de muestra" agrega cinco.	至少需要兩個不同的場景；只有一個時，追逐會反覆呼叫同一場景。“示例場景”可新增五個場景。
+Guardar lo que hay	儲存目前效果
+Escenas de muestra	示例場景
+Fundido de las escenas nuevas (cada una guarda el suyo)	新場景的漸變（各場景獨立儲存）
+Secuencia: una escena tras otra, al tiempo	追逐：按節拍依次播放場景
+Pasa por todas las escenas en orden, una por golpe. Tap: tocalo al ritmo de la música, tres o cuatro veces.	按順序播放所有場景，每拍一個。可隨音樂輕點節拍按鈕三到四次。
+Nombre de la escena	場景名稱
+Escena %d	場景 %d
+%s: 1 volver a grabar con lo que hay ahora, 2 cambiar el nombre, 3 borrar, 4 su fundido	%s：1 用目前效果重新儲存，2 重新命名，3 刪除，4 設定漸變
+Fundido de %s al llamarla, en segundos	呼叫 %s 時的漸變時長（秒）
+¿Borrar la escena %s?	刪除場景 %s？
+PAR de 8 canales	8 通道 PAR 燈
+Agregar aparatos	新增燈具
+Tipo	型別
+Cuántos	數量
+Universo	域
+Agregar	新增
+Van desde la primera dirección libre, uno tras otro.	從第一個空閒地址開始依次排列。
+Tipos de aparato	燈具型別
+Un tipo nuevo	新建型別
+Nombre	名稱
+Canales, en orden	按順序填寫通道
+Guardar en la tarjeta	儲存到儲存卡
+Una palabra por canal, como dice el manual del aparato: %s; o un número, para un canal fijo en ese valor (un modo, una macro en 0).	按燈具手冊為每個通道填寫一個關鍵詞：%s；也可填寫數字，將該通道固定在指定值（如模式通道，或將宏設為 0）。關鍵詞保留西班牙語。
+Falta el nombre o los canales	請填寫名稱和通道
+No entiendo: %s	無法識別：%s
+Guardado en %s	儲存到 %s
+Se pisa con otro aparato o se pasa del canal 512	與其他燈具重疊，或超過第 512 通道
+Sacar del patch	從設定中移除
+¿Sacar %s del patch?	從設定中移除 %s？
+%d aparatos, %d canales de 512	%d 個燈具，已用 %d / 512 通道
+Dirección	地址
+Canales	頻道
+incluido	內建
+vacío: a toda la red	留空表示整個網路
+Puerto	港口
+Mandar por la red	透過網路傳送
+IP del nodo	節點 IP
+Universo Art-Net del U1	U1 的 Art-Net 域號
+Cada universo con algún aparato sale 40 veces por segundo como Art-Net (UDP 6454). U1 lleva el universo elegido, U2 el siguiente, y así. El U1 también sale por RS485.	包含燈具的各個域每秒透過 Art-Net（UDP 6454）傳送 40 次。U1 使用選定的域號，U2 使用下一個，以此類推。U1 同時透過 RS485 輸出。
+Los 512 canales como salen	512 個輸出通道
+Oscuros: sin aparato. Tocá un canal para ver qué es.	暗色表示未分配燈具。輕點通道可檢視詳情。
+Canal %d: %d	通道 %d：%d
+fijo	固定
+sin aparato	未分配燈具
+Saliendo por %s: %s paquetes/s, %d mandados.	透過 %s 傳送：%s 包/秒，已傳送 %d 包。
+Salida cerrada (%s).	輸出已關閉（%s）。
+Apagado.	已關閉。
+%s paquetes mandados a %s	已傳送 %s 包到 %s
+Elegí aparatos antes de guardar un grupo	請先選擇燈具，再儲存分組
+Nombre del grupo (con los aparatos elegidos)	分組名稱（包含所選燈具）
+Grupo %d	分組 %d
+¿Borrar el grupo %s? Los aparatos quedan.	刪除分組 %s？燈具將保留。
++ Grupo	+ 分組
+%d elegidos	已選 %d 條
+ninguno elegido: todos	未選擇：應用於全部
+corte	直接切換
+Grabar, renombrar o borrar	儲存、重新命名或刪除
+Todavía no hay escenas. Armá un look en Escenario y guardalo acá.	尚無場景。請在“舞臺”中設定效果，再到此處儲存。
+Parar	停止
+Saliendo por %s · %s paquetes/s	透過 %s 傳送 · %s 包/秒
+Salida cerrada (%s)	輸出已關閉（%s）
+Cerrar salida	關閉輸出
+La app Luces no está abierta en la placa: abrila ahí (o desde Apps) y esta página la maneja.	開發板上的“燈光”應用未開啟。請在開發板或“應用”頁面中開啟，即可透過此頁面控制。
+Escenario	舞臺
+Escenas	場景
+Patch	燈具設定
+Salida	輸出

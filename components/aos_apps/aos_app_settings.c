@@ -37,6 +37,7 @@
 #include "aos_sys_glyphs.h"
 #include "aos_lock.h"
 #include "aos_access.h"
+#include "aos_eth.h"
 #include "aos_flasher.h"
 
 #include <stdio.h>
@@ -56,13 +57,13 @@ static void *big_calloc(size_t n)
 #endif
 
 enum { PG_ROOT = 0, PG_WIFI, PG_DISPLAY, PG_SOUND, PG_WALL, PG_EXP, PG_LANG, PG_TIME, PG_ABOUT, PG_USB,
-       PG_STORAGE, PG_UPDATE, PG_DIAG, PG_LOCK, PG_BT, PG_DEV, PG_PORTAL, PG_COUNT };
+       PG_STORAGE, PG_UPDATE, PG_DIAG, PG_LOCK, PG_BT, PG_DEV, PG_PORTAL, PG_NETS, PG_ETH, PG_COUNT };
 
 static const char *const PG_TITLE[PG_COUNT] = { N_("Ajustes"), N_("Wi-Fi"), N_("Pantalla"), N_("Sonido"), N_("Fondo"),
                                                 N_("Expansión"), N_("Idioma"), N_("Fecha y hora"), N_("Acerca de"),
                                                 "USB", N_("Almacenamiento"), N_("Actualización"), N_("Diagnóstico"),
                                                 N_("Pantalla de bloqueo"), "Bluetooth", N_("Desarrollador"),
-                                                N_("Portal web") };
+                                                N_("Portal web"), N_("Redes"), "Ethernet" };
 
 static struct {
     lv_obj_t *root, *page, *kb, *ta, *overlay;
@@ -86,6 +87,7 @@ static struct {
     int ap_shown;                   /* Wi-Fi: the access point's state the page shows */
     int bt_shown;                   /* Bluetooth: the state the page shows */
     int pt_shown;                   /* Portal web: the network the page shows */
+    int nets_shown;                 /* Redes and Ethernet: the state the page shows */
     lv_obj_t *dg_temp, *dg_cpu, *dg_int, *dg_psram, *dg_up;
     lv_obj_t *c6_state;             /* Update: the C6's firmware going in */
     /* the page's own column, kept scrolled where it was when it is rebuilt */
@@ -751,13 +753,123 @@ static void build_usb(lv_obj_t *p)
     usb_refresh();
 }
 
+/* ---- Redes: every way onto a network, and which one is the way out ---- */
+
+static int nets_key(void)
+{
+    aos_eth_info_t e;
+    aos_eth_info(&e);
+    return (int)aos_hal_net_wifi_state() | e.enabled << 4 | e.running << 5 | e.link << 6 | e.paused << 7 |
+           (e.ip[0] != 0) << 8 | aos_hal_net_ap_active() << 9 | aos_hal_net_wired() << 10 |
+           aos_access_wire_trusted() << 11 | (int)(e.spi_hz / 1000000) << 12;
+}
+
+/* Ethernet in a word, for a row's right side. */
+static const char *eth_text(const aos_eth_info_t *e)
+{
+    if (!e->enabled) return _("No");
+    if (e->paused) return _("En pausa");
+    if (!e->running) return _("Sin módulo");
+    if (!e->link) return _("Sin cable");
+    return e->ip[0] ? e->ip : _("Sin dirección");
+}
+
+static void build_nets(lv_obj_t *p)
+{
+    U.nets_shown = nets_key();
+    aos_eth_info_t e;
+    aos_eth_info(&e);
+    bool wifi = aos_hal_net_wifi_state() == AOS_NET_CONNECTED;
+    lv_obj_t *g = group(p, _("SALIDA A INTERNET"));
+    if (aos_hal_net_wired()) row(g, AOS_SYM_LAN_CONNECT, 0x34C759, _("Por cable"), aos_hal_net_wired_ip(), false, NULL, NULL);
+    else if (wifi) row(g, AOS_SYM_WIFI, 0x0A84FF, aos_hal_net_ssid(), aos_hal_net_wifi_ip(), false, NULL, NULL);
+    else row(g, AOS_SYM_LAN_DISCONNECT, 0x8E8E93, _("Ninguna"), NULL, false, NULL, NULL);
+    note(p, _("Con cable y Wi-Fi a la vez, la placa sale por el cable. Si el cable se va, sigue por el Wi-Fi sin tocar nada."));
+
+    g = group(p, _("CONEXIONES"));
+    row(g, AOS_SYM_WIFI, 0x0A84FF, _("Wi-Fi"), wifi ? aos_hal_net_ssid() : aos_hal_net_enabled() ? _("Sin conectar") : _("No"),
+        true, open_cb, (void *)PG_WIFI);
+    row(g, AOS_SYM_LAN, 0x34C759, "Ethernet", eth_text(&e), true, open_cb, (void *)PG_ETH);
+    row(g, AOS_SYM_ACCESS_POINT, 0xFF9F0A, _("Red propia"), aos_hal_net_ap_active() ? aos_hal_net_ap_ssid() : _("No"),
+        true, open_cb, (void *)PG_WIFI);
+}
+
+static void eth_sw_cb(lv_event_t *e)
+{
+    aos_eth_enable(lv_obj_has_state(lv_event_get_target(e), LV_STATE_CHECKED));
+    show(PG_ETH);
+}
+
+static void eth_hz_cb(lv_event_t *e)
+{
+    aos_eth_info_t i;
+    aos_eth_info(&i);
+    aos_eth_set_clock((uint32_t)(uintptr_t)lv_event_get_user_data(e));
+    if (i.running) {                    /* the clock is the port's: it is taken at the next start */
+        aos_eth_enable(false);
+        aos_eth_enable(true);
+    }
+    show(PG_ETH);
+}
+
+static void eth_trust_cb(lv_event_t *e)
+{
+    aos_access_set_wire_trusted(lv_obj_has_state(lv_event_get_target(e), LV_STATE_CHECKED));
+    show(PG_ETH);
+}
+
+static void build_eth(lv_obj_t *p)
+{
+    U.nets_shown = nets_key();
+    aos_eth_info_t e;
+    aos_eth_info(&e);
+    char v[64];
+    lv_obj_t *g = group(p, NULL);
+    row_switch(g, AOS_SYM_LAN, 0x34C759, "Ethernet", e.enabled, eth_sw_cb);
+    if (!e.enabled) {
+        note(p, _("Red por cable con un módulo W5500 en el puerto spi.a del conector de 40 pines. Apagado, no usa el puerto."));
+        return;
+    }
+    if (e.paused) {
+        snprintf(v, sizeof v, "%s · %s", e.port, e.paused_by);
+        g = group(p, _("EN PAUSA"));
+        row(g, NULL, 0, _("Lo usa"), v, false, NULL, NULL);
+        note(p, _("Una app está usando el puerto. Ethernet vuelve solo unos segundos después de que lo suelte."));
+    } else if (!e.running) {
+        note(p, e.err[0] ? _(e.err) : _("No arrancó."));
+    } else {
+        g = group(p, _("ESTADO"));
+        if (e.link) snprintf(v, sizeof v, "%d Mbit/s, %s", e.speed_mbps, e.full_duplex ? _("dúplex completo") : _("medio dúplex"));
+        else snprintf(v, sizeof v, "%s", _("Sin cable"));
+        row(g, NULL, 0, _("Enlace"), v, false, NULL, NULL);
+        row(g, NULL, 0, _("Dirección"), e.ip[0] ? e.ip : "—", false, NULL, NULL);
+        if (e.gw[0]) row(g, NULL, 0, _("Puerta de enlace"), e.gw, false, NULL, NULL);
+        snprintf(v, sizeof v, "%02X:%02X:%02X:%02X:%02X:%02X", e.mac[0], e.mac[1], e.mac[2], e.mac[3], e.mac[4], e.mac[5]);
+        row(g, NULL, 0, "MAC", v, false, NULL, NULL);
+        snprintf(v, sizeof v, "%s · CS %d", e.port, e.cs);
+        row(g, NULL, 0, _("Puerto"), v, false, NULL, NULL);
+    }
+    g = group(p, _("RELOJ DEL SPI"));
+    static const uint32_t HZ[3] = { 8000000, 20000000, 40000000 };
+    for (int i = 0; i < 3; i++) {
+        snprintf(v, sizeof v, "%u MHz", (unsigned)(HZ[i] / 1000000));
+        pick_row(g, v, e.spi_hz == HZ[i], eth_hz_cb, (void *)(uintptr_t)HZ[i]);
+    }
+    note(p, _("Con cables sueltos, 8 MHz. Con el módulo en una placa, hasta 40: más reloj es más velocidad de red."));
+    g = group(p, _("EN EL PORTAL"));
+    row_switch(g, AOS_SYM_SERVER_NETWORK, 0x30B0C7, _("De confianza"), aos_access_wire_trusted(), eth_trust_cb);
+    note(p, _("Una red por cable no tiene nombre para reconocerla. Con esto apagado, lo que entra por el cable se trata como una red que no es de confianza."));
+    note(p, _("Mientras una app usa el puerto (Bus, EEPROM), Ethernet se pone en pausa y vuelve solo."));
+}
+
 static void build_root(lv_obj_t *p)
 {
     char buf[48];
     lv_obj_t *g = group(p, NULL);
-    snprintf(buf, sizeof buf, "%s", aos_hal_net_state() == AOS_NET_CONNECTED ? aos_hal_net_ssid()
+    snprintf(buf, sizeof buf, "%s", aos_hal_net_wired() ? _("Por cable")
+                                    : aos_hal_net_wifi_state() == AOS_NET_CONNECTED ? aos_hal_net_ssid()
                                     : aos_hal_net_enabled() ? _("Sin conectar") : _("No"));
-    row(g, AOS_SYM_WIFI, 0x0A84FF, _("Wi-Fi"), buf, true, open_cb, (void *)PG_WIFI);
+    row(g, aos_hal_net_wired() ? AOS_SYM_LAN_CONNECT : AOS_SYM_WIFI, 0x0A84FF, _("Redes"), buf, true, open_cb, (void *)PG_NETS);
     row(g, AOS_SYM_BLUETOOTH, 0x0A84FF, "Bluetooth", bt_root_text(), true, open_cb, (void *)PG_BT);
     lv_obj_t *u = row(g, AOS_SYM_USB, 0x636366, "USB", usb_root_text(), true, open_cb, (void *)PG_USB);
     U.usb_root = lv_obj_get_user_data(u);
@@ -1020,7 +1132,7 @@ static void build_wifi(lv_obj_t *p)
 {
     lv_obj_t *g = group(p, NULL);
     row_switch(g, AOS_SYM_WIFI, 0x0A84FF, _("Wi-Fi"), aos_hal_net_enabled(), wifi_sw_cb);
-    bool conn = aos_hal_net_state() == AOS_NET_CONNECTED;
+    bool conn = aos_hal_net_wifi_state() == AOS_NET_CONNECTED;     /* the Wi-Fi's own: the wire is another page */
     char v[48];
     snprintf(v, sizeof v, "%s", conn ? aos_hal_net_ssid() : _("Sin conectar"));
     U.wifi_state = row(g, NULL, 0, _("Red"), v, false, NULL, NULL);
@@ -1263,7 +1375,7 @@ static void build_exp(lv_obj_t *p)
               : owner ? PC_TAKEN
               : (pin->flags & (AOS_PIN_RESERVED | AOS_PIN_BOARD)) ? PC_BOARD
               : in_port ? PC_PORT
-              : (pin->flags & (AOS_PIN_STRAPPING | AOS_PIN_VO4 | AOS_PIN_USB_JTAG)) ? PC_CARE
+              : (pin->flags & (AOS_PIN_STRAPPING | AOS_PIN_USB_JTAG)) ? PC_CARE
               : PC_FREE;
         const char *desc = owner ? owner : in_port ? port : pin->note;
         lv_obj_t *c = lv_obj_create(grid);
@@ -2214,13 +2326,20 @@ static int portal_key(void)
 static const char *portal_root_text(void)
 {
     if (aos_hal_net_state() != AOS_NET_CONNECTED) return NULL;
-    aos_access_t a = aos_access_need(aos_access_here_trusted() ? AOS_ZONE_HOME : AOS_ZONE_AWAY);
+    /* of the network the board goes out by: the wire when it has one */
+    aos_access_t a = aos_access_need(aos_access_ip_trusted(aos_hal_net_ip()) ? AOS_ZONE_HOME : AOS_ZONE_AWAY);
     return a == AOS_ACCESS_OPEN ? _("abierto") : a == AOS_ACCESS_LOGIN ? _("con contraseña") : _("cerrado acá");
 }
 
 static void pt_trust_cb(lv_event_t *e)
 {
     aos_access_trust(aos_hal_net_ssid(), lv_obj_has_state(lv_event_get_target(e), LV_STATE_CHECKED));
+    show(PG_PORTAL);
+}
+
+static void pt_wire_cb(lv_event_t *e)
+{
+    aos_access_set_wire_trusted(lv_obj_has_state(lv_event_get_target(e), LV_STATE_CHECKED));
     show(PG_PORTAL);
 }
 
@@ -2309,12 +2428,88 @@ static void pt_cert_cb(lv_event_t *e)
 static void pick_row(lv_obj_t *g, const char *label, bool on, lv_event_cb_t cb, void *ud);
 static void dev_restart_cb(lv_event_t *e);
 
+/* ---- SSH (components/aos_ssh, docs/SSH.md) ---- */
+
+static void pt_ssh_cb(lv_event_t *e)
+{
+    aos_access_set_ssh(lv_obj_has_state(lv_event_get_target(e), LV_STATE_CHECKED));
+    show(PG_PORTAL);
+}
+
+static void pt_ssh_key_rm_cb(lv_event_t *e)
+{
+    if (!second_tap(e, _("Tocá otra vez para quitarla"))) return;
+    aos_access_ssh_key_remove((int)(intptr_t)lv_event_get_user_data(e));
+    show(PG_PORTAL);
+}
+
+static void pt_ssh_host_cb(lv_event_t *e)
+{
+    if (!second_tap(e, _("Tocá otra vez: ssh va a avisar que la placa cambió"))) return;
+    aos_access_ssh_host_forget();
+    aos_ui_toast(_("La placa tiene una clave nueva"), 2000);
+    show(PG_PORTAL);
+}
+
+/* the comment of a key line ("type base64 comment"), else its type */
+static void ssh_key_label(const char *line, char *out, size_t n)
+{
+    const char *b = strchr(line, ' ');
+    const char *c = b ? strchr(b + 1, ' ') : NULL;
+    while (c && *c == ' ') c++;
+    if (c && *c) snprintf(out, n, "%s", c);
+    else snprintf(out, n, "%.*s", b ? (int)(b - line) : (int)strlen(line), line);
+}
+
+static void build_ssh(lv_obj_t *p)
+{
+    lv_obj_t *g = group(p, "SSH");
+    bool on = aos_access_ssh();
+    row_switch(g, AOS_SYM_KEYBOARD_OUTLINE, 0xFF9F0A, _("SSH (puerto 22)"), on, pt_ssh_cb);
+    char fp[64];
+    aos_access_ssh_host_fingerprint(fp, sizeof fp);
+    if (fp[0]) action_row(g, _("Clave nueva de la placa"), AOS_C_RED, pt_ssh_host_cb);
+    if (on && fp[0]) {
+        lv_obj_t *f = aos_label(p, fp, aos_font_caption, AOS_C_TEXT);
+        lv_obj_set_width(f, lv_pct(100));
+        lv_label_set_long_mode(f, LV_LABEL_LONG_MODE_WRAP);
+        lv_obj_set_style_pad_hor(f, 24, 0);
+    }
+    note(p, _("Una consola de la placa desde la Mac: ssh p4os.local. Sigue las reglas de arriba: donde el portal está abierto entra cualquiera, donde pide la contraseña entra con ella o con una clave de la lista, y donde está cerrado no entra nadie. Lo de arriba es la huella de la placa: ssh la muestra la primera vez."));
+
+    char *line = malloc(1024);
+    if (!line) return;
+    g = group(p, _("CLAVES QUE PUEDEN ENTRAR"));
+    int n = 0;
+    for (int i = 0; i < AOS_ACCESS_SSH_KEYS; i++) {
+        if (!aos_access_ssh_key_get(i, line, 1024)) continue;
+        char label[64];
+        ssh_key_label(line, label, sizeof label);
+        row(g, NULL, 0, label, _("quitar"), false, pt_ssh_key_rm_cb, (void *)(intptr_t)i);
+        n++;
+    }
+    free(line);
+    if (!n) row(g, NULL, 0, _("Ninguna"), NULL, false, NULL, NULL);
+    note(p, _("Una clave que no está en la lista pide permiso acá, en la pantalla, con su huella: compará con la que da ssh-keygen -lf en la Mac. Quitar una cierra las sesiones de SSH abiertas."));
+}
+
 static void build_access(lv_obj_t *p)
 {
     U.pt_shown = portal_key();
-    bool up = aos_hal_net_state() == AOS_NET_CONNECTED, pw = aos_access_has_password();
+    /* the Wi-Fi's own state: with a wire, aos_hal_net_state() is "connected" whatever the Wi-Fi does */
+    bool up = aos_hal_net_wifi_state() == AOS_NET_CONNECTED, pw = aos_access_has_password();
     const char *ssid = aos_hal_net_ssid();
     lv_obj_t *g;
+    /* the wire, when the board has one switched on: no name to know its network by, so a switch */
+    aos_eth_info_t eth;
+    aos_eth_info(&eth);
+    if (eth.enabled || aos_hal_net_wired()) {
+        g = group(p, _("LA RED POR CABLE"));
+        row_switch(g, AOS_SYM_SERVER_NETWORK, 0x30B0C7, _("De confianza"), aos_access_wire_trusted(), pt_wire_cb);
+        note(p, aos_access_wire_trusted()
+                    ? _("De confianza: por cable el portal está abierto.")
+                    : _("Por cable el portal se porta como en una red que no es de confianza. Una red por cable no tiene nombre para reconocerla: prendelo sólo donde confiás en todo lo que está enchufado."));
+    }
     if (up && ssid[0]) {
         g = group(p, _("ESTA RED"));
         row_switch(g, AOS_SYM_WIFI, 0x0A84FF, ssid, aos_access_is_trusted(ssid), pt_trust_cb);
@@ -2358,6 +2553,8 @@ static void build_access(lv_obj_t *p)
         lv_obj_set_style_pad_hor(f, 24, 0);
     }
     note(p, _("Con HTTPS, lo que viaja va cifrado, la contraseña incluida, y fuera de casa el portal manda del HTTP al HTTPS. La placa tiene su propia autoridad: se baja desde el portal (Ajustes, Seguridad) y se instala una vez como confiable en la Mac o el iPhone, y el navegador deja de avisar. Lo de arriba es su huella SHA-256, para compararla. Se aplica al reiniciar."));
+
+    build_ssh(p);
 
     char v[16];
     g = group(p, _("SESIONES Y SCRIPTS"));
@@ -2611,13 +2808,15 @@ static void fill(lv_obj_t *col, int pg, bool back)
     case PG_LOCK: build_lock(col); break;
     case PG_DEV: build_dev(col); break;
     case PG_PORTAL: build_access(col); break;
+    case PG_NETS: build_nets(col); break;
+    case PG_ETH: build_eth(col); break;
     default: build_root(col); break;
     }
 }
 
 /* Portrait: one page, pushed over the list. Landscape: the list on the left
  * and the chosen page on the right, like the tablet's; with nothing chosen
- * yet the right side shows Wi-Fi. */
+ * yet the right side shows Redes. */
 #define SIDEBAR_W 460
 
 static void build(int pg)
@@ -2625,7 +2824,7 @@ static void build(int pg)
     kb_close();
     int32_t side_y = U.side ? lv_obj_get_scroll_y(U.side) : 0;
     /* the same page again (a choice made, a state that moved): where it was */
-    int32_t body_y = U.body && U.body_pg == (U.land && pg == PG_ROOT ? PG_WIFI : pg) ? lv_obj_get_scroll_y(U.body) : 0;
+    int32_t body_y = U.body && U.body_pg == (U.land && pg == PG_ROOT ? PG_NETS : pg) ? lv_obj_get_scroll_y(U.body) : 0;
     U.body = NULL;
     if (U.page) lv_obj_delete(U.page);
     U.wifi_list = U.wifi_state = U.side = NULL;
@@ -2647,7 +2846,7 @@ static void build(int pg)
     lv_obj_remove_style_all(U.page);
     lv_obj_set_size(U.page, U.W, U.H);
     lv_obj_remove_flag(U.page, LV_OBJ_FLAG_SCROLLABLE);
-    int right = pg == PG_ROOT ? PG_WIFI : pg;
+    int right = pg == PG_ROOT ? PG_NETS : pg;
     U.selected = right;
     lv_obj_t *side = column(U.page, 0, SIDEBAR_W);
     lv_obj_set_style_pad_right(side, AOS_UI_PAD / 2, 0);
@@ -2693,6 +2892,7 @@ static void timer_cb(lv_timer_t *t)
     if (pg == PG_WIFI && U.ap_shown != ap_key() && !U.overlay && !U.armed) build(pg);   /* the access point came up or down */
     if (pg == PG_BT && U.bt_shown != bt_key() && !U.overlay && !U.armed) build(pg);     /* a phone or a computer came or went */
     if (pg == PG_PORTAL && U.pt_shown != portal_key() && !U.overlay && !U.armed) build(pg);   /* another network */
+    if ((pg == PG_NETS || pg == PG_ETH) && U.nets_shown != nets_key() && !U.overlay && !U.armed) build(pg);   /* a cable, a link */
     if (pg == PG_STORAGE && U.st_shown != S.gen && !U.overlay) build(pg);   /* the count moved on */
     static int ticks;
     if (U.dg_temp && ++ticks % 3 == 0) diag_refresh();
@@ -2727,6 +2927,29 @@ static void destroy(aos_app_t *self, void *inst)
 
 static bool back(aos_app_t *self, void *inst) { return pop(); }
 
+/* Opened on a page (the system's search, aos_search.c): its key as the
+ * open argument, the page over the list as if chosen from it */
+static void settings_show(aos_app_t *self, void *inst)
+{
+    (void)self; (void)inst;
+    const char *arg = aos_ui_take_open_arg("aos.settings");
+    if (!arg) return;
+    static const struct { const char *key; int pg; } K[] = {
+        { "network", PG_NETS }, { "ethernet", PG_ETH }, { "wifi", PG_WIFI }, { "display", PG_DISPLAY }, { "sound", PG_SOUND }, { "wallpaper", PG_WALL },
+        { "expansion", PG_EXP }, { "language", PG_LANG }, { "time", PG_TIME }, { "about", PG_ABOUT },
+        { "usb", PG_USB }, { "storage", PG_STORAGE }, { "update", PG_UPDATE }, { "diag", PG_DIAG },
+        { "lock", PG_LOCK }, { "bluetooth", PG_BT }, { "developer", PG_DEV }, { "portal", PG_PORTAL },
+    };
+    for (size_t i = 0; i < sizeof K / sizeof K[0]; i++) {
+        if (strcmp(arg, K[i].key)) continue;
+        kb_close();
+        U.depth = 1;
+        U.stack[0] = PG_ROOT;
+        show(K[i].pg);
+        return;
+    }
+}
+
 void aos_app_settings_get(aos_app_t *app)
 {
     *app = (aos_app_t){
@@ -2735,6 +2958,6 @@ void aos_app_settings_get(aos_app_t *app)
             .color_a = 0x8E8E93, .color_b = 0x48484A,
             .flags = AOS_APP_FLAG_KEEP, .order = 900,
         },
-        .create = create, .destroy = destroy, .back = back,
+        .create = create, .destroy = destroy, .back = back, .show = settings_show,
     };
 }

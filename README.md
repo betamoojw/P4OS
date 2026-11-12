@@ -43,7 +43,9 @@ the microSD, loaded as shared objects:
   112 kinds of sensor read by themselves (temperature, pressure, air
   quality, light, motion, current, distance...), addressable LED strips on
   any free pin (WLED's way), a serial terminal, an ESP32, Arduino and SWD programmer,
-  Modbus, a bench supply and scope, an EEPROM reader and writer, a PWM and
+  RS485 with a Modbus tester (master, slave, monitor, a TCP gateway) and
+  DMX512 (a test console, an analyzer, RDM, an Art-Net and sACN node, and a
+  lighting console for a phone), a bench supply and scope, an EEPROM reader and writer, a PWM and
   servo generator with an analog level (and sixteen more servos on a
   PCA9685), a learning
   infrared remote with SmartIR's codes, and a CAN bus analyser. Each one
@@ -231,6 +233,16 @@ The home screen has icon pages, folders, a dock and widgets.
   the encoder's YUV, the hardware H.264 encoder compresses it (70 ms a
   frame between them, 15 fps on a quiet screen and 7-9 while apps move),
   and the CPU mostly waits. It plays on a Mac or a phone as it is.
+- **Typing** (since 0.24.0): the field being edited shows a blinking cursor
+  and a ring in the accent colour. The keyboard has an ñ, holding a key
+  opens its accents (á, ü, ñ, ¿...), shift gives one capital or locks with
+  two taps, and dragging along the space bar moves the cursor. Holding a
+  field selects, cuts, copies and pastes; the clipboard is shared with the
+  apps and with the portal, which can type a long password or an address
+  straight into the field open on the board.
+- **Search** (since 0.24.0): a swipe down from the middle of the home screen
+  finds apps, the pages of Settings, notes by their text and the card's
+  files, and works out a sum typed in.
 - **The status bar** shows the Wi-Fi or the board's own network, the card
   and the USB.
 - **The orientation** is chosen in Settings or the control centre, because
@@ -337,9 +349,11 @@ port (`i2c.ext`, `spi.a`, `uart.*`, GPIO) and which modules hang from them.
 While an app uses a port it owns it, and Settings, Expansion draws the
 header with who holds each pin.
 
-| Bus (I2C scan) | Modules | Terminal | Programmer | Modbus | Electronics |
+The whole header, pin by pin, is under [The hardware](#the-40-pin-header).
+
+| Bus (I2C scan) | Modules | Terminal | Programmer | Equipos (Riden) | Electronics |
 |---|---|---|---|---|---|
-| <img src="docs/img/app-bus.png" width="125"> | <img src="docs/img/app-modules.png" width="125"> | <img src="docs/img/app-serial.png" width="125"> | <img src="docs/img/app-flasher.png" width="125"> | <img src="docs/img/app-modbus.png" width="125"> | <img src="docs/img/app-elec.png" width="125"> |
+| <img src="docs/img/app-bus.png" width="125"> | <img src="docs/img/app-modules.png" width="125"> | <img src="docs/img/app-serial.png" width="125"> | <img src="docs/img/app-flasher.png" width="125"> | <img src="docs/img/app-equipos.png" width="125"> | <img src="docs/img/app-elec.png" width="125"> |
 
 - **Bus:** scans I2C and names what answers, talks to SPI chips with presets
   (flash memories, the MAX31855 and MAX6675 thermocouples, the MCP3008, the
@@ -382,7 +396,29 @@ header with who holds each pin.
   the computer: esptool over `rfc2217://p4os.local:4000`, avrdude over
   `net:p4os.local:4001`; or becomes its CMSIS-DAP debug probe on the OTG
   connector, for OpenOCD, pyOCD and probe-rs.
-- **Modbus:** a Riden RD60xx supply over RTU, and a gateway.
+- **Modbus** (on the card since 0.25.0): a tester for Modbus RTU on RS485.
+  A master (any function, once or live; find the units on a bus, and its
+  speed and format, the format by the line's parity and framing errors),
+  a slave with faults on demand (silent, slow, broken CRC, busy) that also
+  serves Modbus TCP, and a monitor that only listens. Device profiles as
+  CSV (six examples; Home Assistant and ESPHome YAML imported on the
+  portal), so a master reads "Temperatura 23.4 °C" and a slave plays the
+  device. A TCP → RTU gateway for a PC program or a SCADA, every frame in
+  hex and in words, and the portal page drives it all.
+- **Equipos:** the Riden RD60xx supply over RTU and a DOMCOM gateway, out
+  of the old Modbus app.
+- **DMX** (0.25.0): DMX512 on the same RS485 port. A test console (512
+  faders, a chase to find channels, the packet's shape), a fixture the
+  board plays, an analyzer with the BREAK and MAB measured on the pin, an
+  Art-Net and sACN node (the network out as DMX, ArtPoll answered), and
+  RDM: the fixtures on the line found by discovery, their address and name
+  set, identify.
+- **Luces** (0.25.0): a lighting console. Fixture types (twelve built in,
+  more as CSV), a patch in four universes, a programmer for the selected
+  fixtures (intensity, colour, strobe, a pan/tilt pad), groups, effects and
+  three test modes, scenes with their own fade, a chase with tap tempo;
+  universe 1 on RS485 and all of them as Art-Net. Its portal page is a
+  second console for a phone.
 - **Bench:** a Rigol scope over the LAN, the Riden, a UNI-T generator over
   USB, and a logger to CSV.
 - **Electronics:** resistor colours, Ohm's law, dividers, LEDs, the 555 and
@@ -458,6 +494,34 @@ turn behind the last ([video](docs/media/pca9685-servos.mp4)).
   <a href="docs/media/pca9685-servos.mp4"><img src="docs/img/pca9685-servos.gif" width="240" alt="Five servos on a PCA9685 moving in a wave, driven by the PWM app on the board"></a>
   <img src="docs/img/photo-pwm-pca9685-centre.jpg" width="240" alt="The PWM app with the servos at 90 degrees, the PCA9685 and five servos">
   <img src="docs/img/photo-pwm-pca9685-wave.jpg" width="240" alt="The servos mid-wave, the app showing a 4 s period">
+</p>
+
+### RS485: Modbus, DMX and Luces
+
+Since 0.25, three apps on the card for the header's RS485 port (`uart.a`,
+with a 3.3 V transceiver or an automatic "RS485 to TTL" module), each with
+a page in the portal (the Modbus, DMX, Luces and Equipos bullets above say
+what they do).
+
+| Modbus: a slave playing a profile | Modbus: traffic | DMX: analyzer | DMX: RDM | Luces: stage | Luces: scenes |
+|---|---|---|---|---|---|
+| <img src="docs/img/app-modbus.png" width="125"> | <img src="docs/img/app-modbus-traffic.png" width="125"> | <img src="docs/img/app-dmx-analyzer.png" width="125"> | <img src="docs/img/app-dmx-rdm.png" width="125"> | <img src="docs/img/app-luces-stage.png" width="125"> | <img src="docs/img/app-luces-scenes.png" width="125"> |
+
+The bench is the P4 and an ESP32 DevKit, each with an automatic module, on
+a twisted pair (`tools/rs485_test`): the ESP32 plays a Modbus slave or
+master, a DMX console, or a DMX light on a strip of 8 WS2812B pixels that
+also answers RDM. On the board: Modbus both ways with thousands of requests
+and only the errors played on purpose, the format of a slave found by the
+line's errors, DMX at 40 packets a second both ways, RDM finding the ESP32
+and moving its address, and Art-Net from a Mac coming out as DMX.
+
+<p align="center">
+  <img src="docs/img/bench-rs485-photo.jpg" width="230" alt="The P4 reading the ESP32 drive through two RS485 modules on a twisted pair">
+  <img src="docs/img/bench-dmx-photo.jpg" width="230" alt="The DMX console on the P4 sending a rainbow; the ESP32 in the DMX light role shows it on its strip">
+  <img src="docs/img/luces-strip.gif" width="230" alt="Luces on the P4 lighting the ESP32's strip">
+</p>
+<p align="center">
+  <img src="docs/img/bench-rs485.svg" width="560" alt="Wiring: the P4 and an ESP32, each with an automatic RS485 module, on one twisted pair, and the strip on the ESP32">
 </p>
 
 ### Datalog
@@ -871,6 +935,24 @@ Frame rates measured on the board:
 [docs/APPS-P4.md](docs/APPS-P4.md) has them all, and explains how to write
 an app.
 
+### SSH
+
+Both ways. **The SSH app** is a terminal on the board into a Mac, a
+Raspberry Pi or any SSH server ([apps/ssh/README.md](apps/ssh/README.md)):
+saved computers, the fingerprint shown the first time, the board's own
+Ed25519 key installed on the computer with the padlock, an xterm with 256
+colours where `htop` and `vim` run, and a keyboard with Esc, Tab, Ctrl,
+Alt, the arrows and F1-F12 (or a USB one). **The board's console:**
+`ssh p4os.local` opens a shell with the card's files, the log, the tasks
+and the memory (`free -m` maps the PSRAM's big blocks), under the portal's
+own rules ([docs/SSH.md](docs/SSH.md)).
+
+<p align="center">
+  <img src="docs/img/app-ssh-htop.png" width="230" alt="htop on a Raspberry Pi 4, over SSH from the board">
+</p>
+
+<p align="center"><em>htop on a Raspberry Pi, from the board.</em></p>
+
 ### Connected
 
 | | |
@@ -878,6 +960,7 @@ an app.
 | **Web portal** | at `p4os.local`: a file explorer, the firmware (updates, both slots, the last crash dump), the log (including the tail of the previous boot), and the network sweeps (each device with its MAC and maker, what changed since the last one, the Wi-Fi channels). The apps bring their own pages from the card, with no firmware: Notes, Radio, RF, Cameras, Recorder, Weather, Quotes, Maps, Lua, Python, CAS, Pixel Art, the 3D viewer and 3D Printers have one, and an app can stream live data to its page ([docs/PORTAL-PAGES.md](docs/PORTAL-PAGES.md)) |
 | **Updates over the air** | two slots: an update is written into the idle one and boots on trial. If the board restarts in the first 30 s, the bootloader goes back by itself. Settings, Update can go back on purpose |
 | **USB** | the OTG port is high speed (480 Mbit/s). **Keyboard and mouse:** keyboard, media keys, mouse, a gamepad, a MIDI keyboard, and a network over the cable (the portal at `192.168.7.1`, 6.7 MB/s). **Disk:** the microSD as a USB drive. The mode is kept across restarts. **Host:** devices on the 40-pin header (5 V from pin 1, data on pins 21/23, 25/27 or both at once, through P4OS's own copy of ESP-IDF's host library): pendrives at `/usb` (7.4 MB/s), keyboards that type into any text field, a mouse pointer, gamepads that play every game ([docs/GAMEPAD.md](docs/GAMEPAD.md)), webcams in Cameras, sound cards for all the board's sound and recording, USB serial ports in the Terminal (CH340, CP210x, FTDI, CDC-ACM), MIDI, and raw devices for apps that bring their own driver (an RTL-SDR in RF); a Raspberry Pi Pico is programmed by copying its `.uf2` ([docs/USB.md](docs/USB.md)) |
+| **Ethernet** | optional, off until switched on: a W5500 module on the header's SPI port (four wires and power, [the drawing](docs/img/bench-w5500.svg)). The board then goes out by the wire, with the Wi-Fi on or off, and the portal, updates and SSH answer there. Switched on in Settings, Redes, or in the portal. An app that needs the SPI port pauses it and it comes back by itself. A download ran at 0.5 to 0.9 MB/s ([docs/MODULES.md](docs/MODULES.md), "Ethernet") |
 | **Its own Wi-Fi** | an access point, `P4OS-XXXX`, next to the home network or alone. Two QR codes: one joins the phone, the other opens the portal at `192.168.4.1`. A phone downloaded from it at ~3 MB/s |
 | **Bluetooth** | through the C6. **The phone:** pairs from the iPhone's own Settings, Bluetooth; its notifications, battery and time come to the board, its music shows and is driven from the control centre and the lock screen, and a call can be answered or rejected on the board. **Keyboard mode:** the board is a Mac's or PC's keyboard, mouse and media keys at the same time; the Macro pad's keys and trackpad go over Bluetooth when there is no cable. [docs/BLUETOOTH.md](docs/BLUETOOTH.md) |
 | **The C6's firmware** | updated from the P4, with no cable: Settings, Update, or `tools/install_c6.sh`. It runs esp_hosted 3.0.9, the same as the P4, and going back to the factory firmware works the same way. [docs/C6.md](docs/C6.md) |
@@ -1009,6 +1092,20 @@ A pseudo-locale is available for testing layouts.
   permission command, also from the portal. That thermometer activated
   from the board (a new bind key in ~5 s, its readings decrypted with it
   right after).
+- SSH both ways (0.24.0): `ssh p4os.local` from a Mac (`ls`, `top`, `log`,
+  `free`), and the SSH app into a Raspberry Pi 4 running `htop`.
+- CAN on a real bus at 500 kbit/s: the P4 and an ESP32 playing a car, each
+  with an SN65HVD230; frames, by id and signals decoded from a `.dbc`.
+- Typing (0.24.0): the Spanish keyboard, the cursor moved with the space
+  bar, copy and paste on the board and from the portal's clipboard box,
+  and the search (a page of Settings, an app and an MP3 found and opened).
+- RS485 (0.25.0), the P4 and an ESP32 with two automatic modules on a
+  twisted pair: Modbus both ways and the monitor, the format found by the
+  line's errors (19200 8E1 told from 8N1), the TCP gateway asked from a
+  Mac; DMX at 40 packets a second both ways with no bad packet, a pixel
+  strip lit by the console and by Luces, RDM discovery, identify and a new
+  address on the ESP32, and Art-Net from a Mac through the board to the
+  strip.
 
 **Waiting for hardware on the bench:**
 
@@ -1020,8 +1117,6 @@ A pseudo-locale is available for testing layouts.
   (MH-Z19, PMS5003, PZEM-004T, LD2410): they run against their emulated
   twins in the simulator.
 - A PCA9685's real oscillator against a scope, for `osc=`.
-- CAN on a real bus, with two SN65HVD230 transceivers and an ESP32-C3 as
-  the other node.
 - A 25xx SPI EEPROM in the EEPROM app.
 - The Riden over TTL, the Rigol over the LAN, and the terminal at 460800.
 - The microphone's gain, and the speaker's latency and heating.
@@ -1056,7 +1151,40 @@ The board-side checklist is in
 | Memory | 768 KB internal RAM, 32 MB PSRAM, 32 MB flash |
 | Radio | ESP32-C6 over SDIO (esp_hosted 3.0.9): Wi-Fi 6 at 2.4 GHz |
 | Audio | ES8311 (speaker) + ES7210 (two microphones), full duplex |
-| Other | microSD (4-bit), CH340 serial, RS485, USB 2.0 OTG, the 40-pin header, BOOT, RESET and POWER |
+| Other | microSD (4-bit), CH340 serial, USB 2.0 OTG, the 40-pin header, BOOT, RESET and POWER |
+
+### The 40-pin header
+
+This drawing is the reference for every pin on the rear header: the
+documents, the wiring drawings and the apps follow it.
+
+<p align="center"><img src="docs/img/pinout.svg" width="760" alt="The 40-pin header as it faces you on the board, with the default ports of modules.txt (i2c.board, i2c.ext, uart.a for RS485, uart.b with the target's EN and BOOT and SWD, spi.a), the two USB host ports, the pins the apps start with (infrared on GPIO28 and GPIO32, CAN on GPIO46 and GPIO47) and the suggested ones (1-Wire on GPIO34, a LED strip or a servo on GPIO48)"></p>
+
+<p align="center"><em>The header out of the box. Only the console, BOOT and
+the board's own I2C bus are fixed: the rest is the default profile, and
+<code>modules.txt</code> on the card or an app's own choice moves it.</em></p>
+
+| For | GPIO (pin) | Set by |
+|---|---|---|
+| `i2c.ext`, the sensors' bus | SDA 21 (15), SCL 22 (17) | `modules.txt` |
+| `i2c.board`, the board's own bus (touch, audio) | SDA 7 (4), SCL 8 (6) | fixed |
+| `uart.a`, RS485 | TX 30 (22), RX 31 (24), DE 29 (20) | `modules.txt` |
+| `uart.b`, the Terminal and the Flasher's target | TX 3 (12), RX 4 (14), EN 5 (11), BOOT 2 (8) | `modules.txt` |
+| SWD | SWCLK 3 (12), SWDIO 4 (14), NRST 5 (11) | `uart.b`'s pins |
+| `spi.a` | SCK 52 (38), MOSI 50 (34), MISO 51 (36), CS 49 (32) | `modules.txt` |
+| USB host, Full Speed | D− 24 (21), D+ 25 (23), 5 V on pins 1 and 3 | Settings, USB |
+| USB host, High Speed | pins 25 and 27, the OTG connector's lines | Settings, USB |
+| Infrared | receiver 28 (16), LED 32 (31) | the Infrarrojo app's start |
+| CAN | TX 46 (35), RX 47 (37) | the CAN app's start |
+| 1-Wire | 34 (28) | suggested; Bus starts there |
+| A LED strip, a servo, one PWM output | 48 (39) | suggested |
+| The console and BOOT | 37, 38 (7, 9) and 35 (30) | the board: not for use |
+
+Signals are 3.3 V on every pin. Pins 1 and 3 give 5 V even with the board
+switched off. More in [docs/MODULES.md](docs/MODULES.md#suggested-pins).
+
+The case on the photos is in [case/](case): a remix of a public-domain
+enclosure, with the two USB host sockets on the back.
 
 ## Building
 
@@ -1201,9 +1329,10 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, fotos de fondo para el inicio y el bloqueo, grabación de pantalla en MP4, 23 apps propias y 46 de la tarjeta (juegos, un pinball 3D de seis mesas, un juego de caños con seis líquidos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, y taller con I2C, SPI, 1-Wire, GPIO y tiras LED direccionables |
-| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave, dos cámaras IP (un timbre H.264 directo a la pantalla y una MJPEG) y la grabación de pantalla en MP4 por el codificador H.264 del P4 |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, fotos de fondo para el inicio y el bloqueo, grabación de pantalla en MP4, 22 apps propias y 50 de la tarjeta (juegos, un pinball 3D de seis mesas, un juego de caños con seis líquidos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR, Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, SSH en los dos sentidos (una consola de la placa y un terminal a otras máquinas), un teclado con ñ y acentos, copiar y pegar (también desde la computadora por el portal), un buscador que se abre deslizando hacia abajo en el inicio, y taller con I2C, SPI, 1-Wire, GPIO, CAN, tiras LED direccionables y RS485: Modbus (maestro, esclavo, monitor, perfiles de equipos y pasarela TCP), DMX con RDM y nodo Art-Net/sACN, y una consola de luces que también se maneja desde el celular |
+| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave, dos cámaras IP (un timbre H.264 directo a la pantalla y una MJPEG), la grabación de pantalla en MP4 por el codificador H.264 del P4, SSH desde la Mac y hacia una Raspberry Pi, un bus CAN real con un ESP32, el teclado, copiar y pegar y el buscador, y RS485 con un ESP32 y dos módulos automáticos: Modbus en las dos direcciones, DMX con una tira de pixeles, RDM y Art-Net desde la Mac |
 | Qué falta | probar en la placa el RC522, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, y encontrar por qué se cortó la red durante dos OTA |
+| El conector de 40 pines | el dibujo de referencia de todos los pines, con los puertos, los pines con que arranca cada app y los sugeridos, está en [The 40-pin header](#the-40-pin-header); la carcasa impresa, en [case/](case) |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |
 | Cómo se instala | la primera vez por el CH340; después `tools/ota.sh p4os.local` o el portal |
 

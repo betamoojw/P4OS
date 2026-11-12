@@ -1,0 +1,245 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-key-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+no se pudo escuchar en el puerto %u (¿lo usa otro?)	无法监听端口 %u（是否被其他程序占用？）
+Modbus TCP, escuchando en el puerto %u	Modbus TCP 正在监听端口 %u
+no se pudo abrir %s (¿lo tiene otra app?)	无法打开 %s (有没有其他应用程序使用它?)
+%s no acepta 8%c%d	%s 不接受8个%c%d
+no contesta %s:%d	没有答案 %s:%d
+Id	标识
+Fabricante	制造商
+Producto	产品
+Versión	版本
+El eco volvió igual.	回显内容一致。
+El eco volvió distinto.	回显内容不一致。
+El monitor escucha un bus RS485: por TCP no hay nada que escuchar.	监视器用于监听 RS485 总线，TCP 模式无法监听总线流量。
+leer coils	读取线圈
+leer entradas	读取离散输入
+leer holding	读取保持寄存器
+leer input	读取输入寄存器
+escribir coil	写入线圈
+escribir registro	写入寄存器
+diagnóstico	诊断
+escribir coils	写入多个线圈
+escribir registros	写入多个寄存器
+identificarse	报告从站标识
+identificación	设备识别
+función desconocida	未知功能
+función no soportada	不支持此功能
+dirección inválida	无效地址
+valor inválido	无效值
+falla del esclavo	从站故障
+aceptado, sigue trabajando	已接受，仍在处理
+esclavo ocupado	从站忙
+gateway sin camino	网关路径不可用
+el equipo tras el gateway no contesta	网关后的设备未响应
+ruido	噪声
+excepción	异常
+valores	数值
+dato	数据
+sin respuesta	无响应
+respuesta dañada (CRC)	腐败反应 (CRC)
+respuesta que no corresponde	不匹配的反应
+falló el puerto o la conexión	端口或连接故障
+pedido inválido	无效的请求
+ruido: bytes que no forman una trama	噪声：无法组成帧的字节
+01 Coils	01 线圈
+02 Entradas	02 离散输入
+03 Holding	03 保持寄存器
+04 Input	04 输入寄存器
+05 Coil	05 线圈
+06 Registro	06 寄存器
+15 Coils	15 多个线圈
+16 Registros	16 多个寄存器
+08 Eco	08 回显
+17 Id	17 标识
+43 Identificación	43 设备识别
+Unidad (0 = broadcast, sin respuesta)	站号（0 = 广播，无响应）
+Dirección inicial (desde 0)	起始地址（从 0 开始）
+Cantidad	数量
+Valor	数值
+No entendí los valores	无法读取这些数值
+Coils a escribir, separadas por espacios (1 0 1 1)	要写入的线圈值，以空格分隔（1 0 1 1）
+Registros a escribir, separados por espacios (100 0x1F -5)	要写入的寄存器值，以空格分隔（100 0x1F -5）
+Sólo por RTU	仅适用于 RTU
+Puerto TCP de la pasarela	网关 TCP 端口
+PASARELA MODBUS TCP → RTU	MODBUS TCP → RTU 网关
+Atender clientes TCP	为 TCP 客户端提供服务
+Puerto	港口
+Un programa de la PC (Modbus Poll, un SCADA, Home Assistant) pide por la red a esta placa, y ella le pregunta al equipo por el bus: la unidad del pedido es la del equipo. Si el equipo no contesta, el cliente recibe la excepción 0B. Anda con la conexión abierta.	电脑程序（Modbus Poll、SCADA、Home Assistant）通过网络向开发板请求数据，开发板再查询总线设备；请求中的站号就是设备站号。设备无响应时，客户端收到异常码 0B。连接打开期间持续工作。
+Apagada.	已关闭。
+Prendida: arranca al abrir la conexión.	已启用，将在连接打开时启动。
+Escuchando en %s:%u · cliente: %s · %u pedidos, %u contestados, %u sin respuesta	正在监听 %s:%u · 客户端：%s · %u 次请求，%u 次响应，%u 次无响应
+ninguno	无
+Escribir el registro %u (FC 06)	写入寄存器 %u（FC 06）
+y %d más	还有 %d 项
+Buscando unidades: %d de %d…	正在搜索站号：%d / %d…
+Probando velocidades: %d de %d…	正在尝试波特率：%d / %d…
+Lo marcado contestó sin errores de línea: ése es el formato. Los otros contestaron con bytes de paridad o de parada malos.	高亮项响应正常且无线路错误，因此是正确格式。其他项存在奇偶校验或停止位错误。
+La velocidad es segura; el formato no salió claro (contestaron varios sin errores, o todos con errores). El manual del equipo dice cuál (el estándar pide 8E1).	波特率已确定，但格式尚不明确（多个格式均无错误，或全部存在错误）。请查阅设备手册；标准要求使用 8E1。
+Nadie contestó.	没有设备响应。
+Tocá Enviar.	请轻点“发送”。
+Enviar abre la conexión.	发送时会打开连接。
+%u pedidos · %u respuestas · %u sin respuesta · %u CRC · %u excepciones · promedio %u ms, máximo %u ms	%u 次请求 · %u 次响应 · %u 次无响应 · %u 次 CRC 错误 · %u 次异常 · 平均 %u 毫秒，最大 %u 毫秒
+HERRAMIENTAS	工具
+Detener	停止
+Buscar unidades	搜索站号
+Buscar velocidad	搜索波特率
+Buscar unidades pregunta a las 1 a 247 por el holding 0. Buscar velocidad prueba ocho velocidades y cuatro formatos con la unidad elegida; tocá un resultado para usarlo.	搜索站号会向 1 至 247 号站读取保持寄存器 0。搜索波特率会对所选站号尝试八种速率和四种格式；轻点结果即可使用。
+PEDIDO	要求
+Unidad	单位
+Desde	来源
+Dato	数据
+Valores	数值
+Enviar	发送
+En vivo	实时
+RESPUESTA	答案
+Borrar cuentas	清空计数
+Tocá una coil para invertirla (FC 05).	轻点线圈切换状态（FC 05）。
+Tocá un registro para escribirlo (FC 06).	按一个注册表来写 (FC 06).
+Normal	正常
+Mudo	沉默
+Lento	慢速
+CRC malo	CRC 错误
+Ocupado (06)	忙（06）
+Falla (04)	故障（04）
+Contestar como la unidad	响应站号
+Demora de la respuesta	响应延迟
+Holding %d	保持寄存器 %d
+%u tramas oídas · %u para esta unidad · %u para otras · %u broadcast · %u CRC malos · %u excepciones	已监听 %u 帧 · 本站 %u 帧 · 其他站 %u 帧 · 广播 %u 帧 · CRC 错误 %u 帧 · 异常 %u 次
+Abrí la conexión para que conteste.	请打开连接以开始响应。
+Cliente:	客户端：
+ninguno todavía	暂无
+Último pedido:	上次请求：
+COMO CONTESTA	响应方式
+Demora	延迟
+Valores que se mueven	动态数值
+Mudo no contesta; Lento contesta después de la demora; CRC malo manda la respuesta con el CRC roto; Ocupado y Falla contestan esas excepciones. Para ver cómo se las arregla el maestro.	“静默”不响应；“慢速”按设定延迟响应；“CRC 错误”返回校验错误的数据；“忙”和“故障”返回对应异常码。可用于观察主站如何处理故障。
+EL EQUIPO QUE HACE	模拟的设备
+Cada tabla va de 0 a 9999; fuera de eso contesta la excepción 02. Input 0: segundos; 1: un seno x1000; 2: una temperatura x10; 3: ruido; 4-5: un contador de 32 bits; 6-7: un float. Entradas 0 y 1 cambian solas. También contesta las funciones 08, 17 y 43.	每个数据表的地址范围为 0–9999，超出范围返回异常码 02。输入寄存器 0：秒数；1：正弦值 ×1000；2：温度 ×10；3：噪声；4–5：32 位计数器；6–7：浮点数。离散输入 0 和 1 会自动变化。同时支持功能码 08、17 和 43。
+HOLDING 0-15 (TOCÁ PARA CAMBIAR)	保持寄存器 0–15（轻点修改）
+COILS 0-15 (TOCÁ PARA INVERTIR)	线圈 0–15（轻点切换）
+INPUT 0-7	输入寄存器 0–7
+ENTRADAS 0-7 (TOCÁ PARA INVERTIR)	离散输入 0–7（轻点切换）
+Abrí la conexión para escuchar.	请打开连接以开始监听。
+%u tramas · %u bytes · %u con CRC malo · %u bytes de ruido · %u bytes con error de línea	%u 帧 · %u 字节 · CRC 错误 %u 帧 · 噪声 %u 字节 · 线路错误 %u 字节
+Broadcast	广播
+%u pedidos · %u respuestas · %u sin respuesta · %u excepciones · %u CRC\ndemora promedio %u ms, máxima %u ms\núltimo: %s	%u 次请求 · %u 次响应 · %u 次无响应 · %u 次异常 · %u 次 CRC 错误\n平均延迟 %u 毫秒，最大 %u 毫秒\n最近一次：%s
+LO QUE PASA POR EL BUS	总线上的数据
+Escucha sin transmitir nunca: el DE queda abajo, como si la placa no estuviera. Junta cada pedido con su respuesta; un pedido que se queda sin respuesta (otro pedido llega antes, o pasa un segundo) cuenta como sin respuesta de esa unidad. Cada trama, en Tráfico.	仅监听，不发送：DE 保持低电平，如同开发板不在总线上。每个请求会与响应配对；若下一个请求先到，或一秒内仍无响应，则计为该站无响应。所有帧都可在“流量”中查看。
+el esclavo se calla (falla elegida)	从站保持静默（所选故障模式）
+llegó fuera de un pedido	收到非请求对应的数据
+no es la respuesta esperada	响应与预期不符
+conexión abierta	连接已打开
+conexión cerrada	连接已关闭
+CRC MALO	CRC 错误
+ · contestó en %u ms	 · %u 毫秒后响应
+Seguir	继续
+Pausa	暂停
+Sólo errores	只有错误
+Borrar	清空
+Lo más nuevo arriba. Los tiempos son de cuando los bytes llegaron a la app (unos caracteres después de pasar por el cable); \"+\" es el silencio antes de la trama. El botón BOOT pausa.	最新数据在顶部。时间为字节到达应用的时刻，比线路传输略晚几个字符；“+”表示帧前的静默间隔。按 BOOT 按钮可暂停。
+equipo	设备
+DEL HEADER AL TRANSCEPTOR	扩展接口与收发器接线
+→ TXD del módulo (DI en un transceptor suelto)	→ 模块 TXD（裸收发器为 DI）
+← RXD del módulo (RO)	← 模块 RXD（RO）
+→ DE y /RE unidos; libre con un módulo automático	→ DE 与 /RE 并接；自动收发模块无需连接
+Este puerto no tiene DE: sirve con un módulo de dirección automática (sólo TX, RX, VCC y GND).	此端口没有 DE，需使用自动切换方向的模块（只接 TX、RX、VCC 和 GND）。
+Un adaptador USB-RS485 (CH340 o FT232 con un transceptor automático) en el host USB de la placa: A, B y GND al bus; nada más que cablear.	将 USB-RS485 适配器（CH340 或 FT232 搭配自动收发器）插入开发板 USB 主机接口，再将 A、B、GND 接到总线即可。
+Por TCP no hay cables: el equipo está en la red.	TCP 模式无需接线，设备通过网络连接。
+EL BUS	总线
+LO QUE HAY QUE SABER	使用须知
+Un módulo \"RS485 to TTL\" automático (VCC, TXD, RXD, GND; sin DE) cambia de dirección solo: alcanza con TX, RX y alimentarlo con 3,3 V. Si el LED TXD no parpadea cuando la placa manda, invertí TXD y RXD: con 3,3 V de los dos lados no se rompe nada.	自动收发的“RS485 转 TTL”模块（VCC、TXD、RXD、GND，无 DE）会自动切换方向，只需 TX、RX 和 3.3 V 供电。若开发板发送时 TXD 指示灯不闪，可交换 TXD 与 RXD；两侧均为 3.3 V 时不会损坏设备。
+Alimentá el módulo con 3,3 V, no con 5 V: a 5 V su salida pone 5 V en el header, y los pines del P4 no lo aguantan. El MAX485 suelto es de 5 V; los de 3,3 V son MAX3485, SP3485, THVD1420.	请用 3.3 V 为模块供电，不要使用 5 V；5 V 供电可能使输出达到 5 V，超出 P4 引脚承受范围。裸 MAX485 是 5 V 器件，3.3 V 型号包括 MAX3485、SP3485、THVD1420。
+Con un transceptor que tiene DE, DE y /RE van juntos al pin DE: el P4 lo sube mientras transmite y lo baja para escuchar. Como monitor no transmite nunca.	带 DE 的收发器应将 DE 与 /RE 并接到 DE 引脚；P4 发送时拉高，监听时拉低。监视器模式从不发送。
+120 Ω sólo en las dos puntas del bus, no en cada equipo (muchos módulos ya traen una, marcada 121). Con todo apagado, entre A y B se miden unos 60 Ω (las dos en paralelo).	仅在总线两端各接一个 120 Ω 电阻，不要每台设备都接（很多模块自带，标记为 121）。全部断电后，A 与 B 之间应约为 60 Ω（两个电阻并联）。
+A y B: el estándar dice A = D− y B = D+, pero muchos fabricantes los rotulan al revés. Si nadie contesta, invertirlos no rompe nada.	A 与 B：标准定义 A = D−、B = D+，但不少厂商标记相反。若没有响应，可尝试交换两者，不会因此损坏设备。
+Polarización: una resistencia de A a 3,3 V y otra de B a GND (unos 680 Ω), en un solo lugar del bus, dejan la línea quieta en 1 cuando nadie habla. Muchos módulos ya las traen; sin ellas el monitor ve ruido entre tramas.	偏置：在总线某一处，将 A 通过约 680 Ω 电阻接到 3.3 V，将 B 通过同值电阻接到 GND，使无人发送时线路保持逻辑 1。很多模块已自带；缺少偏置时，监视器可能看到帧间噪声。
+GND común entre los equipos (el tercer cable), sobre todo con fuentes distintas: RS485 aguanta diferencias de unos pocos volts, no más.	设备之间需要共地（第三根线），尤其在使用不同电源时；RS485 只能承受几伏的地电位差。
+Par trenzado para A y B. A 9600 baudios el bus puede tener cientos de metros; a 115200, mucho menos.	A、B 使用双绞线。9600 波特率下可达数百米；115200 波特率下可用距离明显缩短。
+Perfil actualizado	配置已更新
+Perfil	设备配置
+Sin perfil: a mano	未选配置：手动设置
+Editar	编辑
+sin leer	未读
+esclavo	从站
+cada	每一个
+Este perfil no tiene puntos todavía: Editar los agrega.	此配置尚无数据点，请通过“编辑”添加。
+La app hace de este equipo: contesta en sus direcciones y los valores se mueven como dice el perfil. Tocá uno para cambiarlo (uno que se mueve vuelve a moverse).	应用模拟此设备：在配置的地址响应，数值按配置变化。轻点数值可修改；动态数值随后仍会继续变化。
+Lee el perfil entero cada período. Tocá un valor que se puede escribir (rw) para cambiarlo.	每个周期读取整个配置。轻点可写数值（rw）即可修改。
+Listo	完成
+No se pudo escribir en la tarjeta	无法写入存储卡
+Nombre del perfil nuevo	新配置名称
+Perfiles	设备配置
+Sin perfil: el pedido a mano	未选配置：手动构造请求
+puntos	数据点
+Nuevo	新的
+Un perfil dice qué tiene un equipo y dónde: al elegirlo, Maestro lo lee entero y Esclavo hace de ese equipo. Toma su unidad, velocidad y formato. Son archivos CSV en la tarjeta (modbus/perfiles): la página Modbus del portal los edita, los sube y los baja.	配置描述设备的数据及地址。选定后，“主站”读取全部数据，“从站”模拟该设备，并采用其站号、波特率和格式。配置以 CSV 文件保存在存储卡的 modbus/perfiles 目录，可通过网页管理中的 Modbus 页面编辑、上传和下载。
+Nombre	名称
+Nota (qué es, de dónde salió el mapa)	备注（设备说明、寄存器表来源）
+Unidad del esclavo	从站站号
+No entran más puntos	无法再添加数据点
+Tocá de nuevo para borrar el archivo	再次轻点以删除文件
+Nota…	备注…
+Esclavo	从站
+tomar la de la conexión	使用连接设置
+Velocidad: tomar la de la conexión	波特率：使用连接设置
+LEERLO CADA	读取周期
+PUNTOS	数据点
+Agregar punto	添加数据点
+Borrar perfil	删除配置
+Cada cambio se guarda en la tarjeta. Un punto nuevo sigue al último; tocalo para cambiarlo.	每次更改都会保存到存储卡。新数据点添加到末尾，轻点即可修改。
+Nombre del punto	数据点名称
+Unidad (°C, V, rpm…)	单位（°C、V、rpm…）
+Dirección (desde 0; 0x para hex)	地址（从 0 开始；十六进制以 0x 开头）
+Escala: el valor es el número crudo por esto	比例系数：实际值等于原始值乘以此系数
+Mínimo	最低
+Máximo	最大值
+Valor inicial	初始值
+TABLA Y DIRECCIÓN	数据表和地址
+coil (01)	线圈（01）
+entrada (02)	离散输入（02）
+holding (03)	保持寄存器（03）
+input (04)	输入寄存器（04）
+Dirección	地址
+TIPO	类型
+32 bits: u32, s32 y f32 toman dos registros, el alto primero (ABCD); los \"cdab\", el bajo primero.	32 位类型：u32、s32、f32 占两个寄存器，高位在前（ABCD）；带 cdab 后缀的类型低位在前。
+ESCALA (VALOR = CRUDO x ESCALA)	比例换算（实际值 = 原始值 × 系数）
+otra…	其他…
+ACCESO	访问权限
+sólo lectura	只读
+lectura y escritura	读写
+CUANDO LA APP HACE DE ESCLAVO	应用模拟从站时
+mín	最小值
+máx	最大值
+empieza en	初始值
+fijo se queda en el valor inicial; seno y rampa van de mín a máx en un minuto; deriva camina al azar entre los dos; contador sube máx por hora; alterna cambia cada pocos segundos; azar salta una vez por segundo.	fijo：保持初始值；seno 和 rampa：一分钟内在最小值与最大值之间按正弦或斜坡变化；deriva：在范围内随机漂移；contador：每小时增加 max；alterna：每隔几秒切换；azar：每秒随机跳变。
+Borrar este punto	删除此数据点
+Maestro	师父
+Monitor	监视器
+Tráfico	交通
+Cableado	电缆
+maestro	主站
+monitor	监视器
+Cancelar	取消
+Aplicar	应用
+Velocidad (baudios)	速率（波特率）
+Equipo Modbus TCP (dirección:puerto)	Modbus TCP 设备（地址:端口）
+Conexión	连接
+PUERTO	港口
+Un puerto con pin DE maneja el transceptor RS485 solo; usb0 es un adaptador USB-RS485 enchufado al host USB.	带 DE 引脚的端口会自动控制 RS485 收发器；usb0 对应 USB 主机接口上的 USB-RS485 适配器。
+VELOCIDAD	速度
+FORMATO	格式
+El estándar pide 8E1; muchos equipos vienen en 8N1 o 8N2. Si no contesta, en Maestro está \"Buscar velocidad\".	标准要求 8E1；许多设备默认 8N1 或 8N2。若没有响应，可使用“主站”中的“搜索波特率”。
+EQUIPO	团队
+tocá para poner la dirección	点击设置地址
+Por TCP la app es sólo maestro, por ahora.	TCP 模式目前仅支持主站。
+ESPERA DE LA RESPUESTA (MAESTRO)	响应超时（主站）
+SILENCIO ANTES DE CADA PEDIDO	每次请求前的静默间隔
+Algunos equipos (la Riden, varios medidores) dejan de contestar si los pedidos llegan pegados.	请求过于密集时，部分设备（如 Riden 和某些仪表）会停止响应。
+abriendo… (%s)	正在打开…（%s）
+cerrado · rol: %s	已关闭 · 角色：%s
+Cerrar	关闭
+Abrir	打开连接
+Tráfico en pausa	流量显示已暂停
+Tráfico sigue	流量显示已继续
+No hay memoria para el banco Modbus	内存不足，无法启动 Modbus 测试台

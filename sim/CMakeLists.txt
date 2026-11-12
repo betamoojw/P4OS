@@ -68,7 +68,7 @@ if(NOT DEFINED P4OS_SIM_APPS)
     set(P4OS_SIM_APPS hello_app cotiz clima burbujas simon dados flappy gemas buscaminas atasco radio recorder afinador
         arkanos topos cjump g2043 claudito camaras pixel neon blackjack truco lua video doom chatarra
         visor3d mapas monsterhop turbo mila golf notas eeprom dibujo pwm infrarrojo can vnc rf datalog
-        impresoras cartero)
+        impresoras cartero ssh)
 endif()
 set(AOS_DYNAPP_SRC "")
 foreach(a ${P4OS_SIM_APPS})
@@ -190,6 +190,7 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_live.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_live.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_net.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_eth.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_access.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_claude.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_mqtt.c
@@ -198,6 +199,14 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_macropad.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_modules.c
     ${AOS_WEB_C}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_wire.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_crypto.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_chacha.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_shell.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_cmds.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/monocypher/monocypher.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/monocypher/monocypher-ed25519.c
     main.c
     hal_sim.c
     dirscan_sim.c
@@ -232,8 +241,10 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_modules.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_io_signal.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_io_pulse.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_io_dmx.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/aos_pca9685.c
     io_sim.c
+    eth_sim.c
     uart_emu_sim.c
     swd_sim.c
     usb_probe_sim.c
@@ -243,6 +254,9 @@ add_executable(p4os_sim
     eeprom_sim.c
     io_signal_sim.c
     io_pulse_sim.c
+    io_dmx_sim.c
+    # the bench ESP32's RDM responder plays the simulator's RDM fixtures
+    ${CMAKE_CURRENT_SOURCE_DIR}/../tools/rs485_test/esp32/main/rdm_resp.c
     ${AOS_UI_SRC}
     ${AOS_APPS_SRC}
     ${AOS_FONT_SRC}
@@ -251,6 +265,7 @@ add_executable(p4os_sim
 
 target_include_directories(p4os_sim PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../tools/rs485_test/esp32/main
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ui/include
@@ -258,6 +273,8 @@ target_include_directories(p4os_sim PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_fonts/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/monocypher/include
     ${SDL2_INCLUDE_DIRS}
     ${MBEDTLS_INCLUDE_DIR}
     ${AVCODEC_INCLUDE_DIRS}

@@ -270,3 +270,4 @@ leída	閱讀
 No se pudo leer	我讀不懂.
 borrada	刪除
 No se pudo escribir	我不能寫
+Ethernet usa este puerto: al leer o grabar se pone en pausa y la red por cable se corta. Vuelve solo unos segundos después.	乙太網正在使用此埠；讀寫會暫停乙太網並斷開有線連線，幾秒後會自動恢復。

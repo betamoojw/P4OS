@@ -34,6 +34,7 @@
 #include "aos_hal.h"
 #include "aos_ui.h"
 #include "aos_io.h"
+#include "aos_eth.h"
 #include "aos_sensors.h"
 #include "aos_sys_glyphs.h"
 #include "aos_mono.h"
@@ -1221,6 +1222,15 @@ static void build_spi_top(lv_obj_t *parent, int32_t w)
         if (pt->pins[3] >= 0) snprintf(cs, sizeof cs, " · CS %d", pt->pins[3]);
         lv_label_set_text_fmt(st, "SCK %d · MOSI %d%s%s", pt->pins[0], pt->pins[1], miso, cs);
     }
+    /* Ethernet lives on this port: sending here stops it for a while (aos_eth.h). Said before, not after. */
+    aos_eth_info_t eth;
+    aos_eth_info(&eth);
+    if (eth.enabled && (eth.running || eth.paused) && !strcmp(eth.port, S.spi_port)) {
+        lv_obj_t *w2 = caption(parent, eth.paused ? _("Ethernet está en pausa mientras se usa este puerto. Vuelve solo unos segundos después del último envío.")
+                                                  : _("Ethernet usa este puerto: al enviar se pone en pausa y la red por cable se corta. Vuelve solo unos segundos después."), w);
+        lv_obj_set_style_pad_left(w2, 12, 0);
+        lv_obj_set_style_text_color(w2, C_AMBER, 0);
+    }
 }
 
 static void build_spi_settings(lv_obj_t *parent, int32_t w)
@@ -1527,7 +1537,7 @@ static void build_gpio(lv_obj_t *parent)
             pin_refresh(p->gpio);
         }
     }
-    lv_obj_t *leg = caption(col, _("IN ↑ / IN ↓: con pull-up o pull-down interno. Los pines 35 a 39 van por el LDO VO4: medí antes de colgarles algo."), w);
+    lv_obj_t *leg = caption(col, _("IN ↑ / IN ↓: con pull-up o pull-down interno."), w);
     (void)leg;
 }
 
@@ -1559,7 +1569,7 @@ static struct {
     bool read_ok[OW_MAX];
     int8_t open_gpio;
 } OW;
-__attribute__((constructor)) static void OW_defaults(void) { OW.gpio = 28; OW.pullup = true; OW.n = -1; OW.open_gpio = -1; }
+__attribute__((constructor)) static void OW_defaults(void) { OW.gpio = 34; OW.pullup = true; OW.n = -1; OW.open_gpio = -1; }
 
 static struct {
     lv_obj_t *status, *dev_temp[OW_MAX], *dev_bits[OW_MAX][4];

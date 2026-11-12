@@ -705,3 +705,29 @@ Entrar	登录
 Se pone, se cambia o se quita en la placa: Ajustes, Portal web.	在板上设置,更改或删除:设置,网页门户.
 La autoridad HTTPS de la placa	设备的 HTTPS 证书颁发机构
 , para que el navegador confíe en ella.	所以浏览器信任它.
+Texto para la placa, o lo que copiaste en ella	输入要发送到开发板的文本，或读取板上复制的内容
+Quedó en el portapapeles: no hay un campo abierto en la placa	已保存到剪贴板；开发板上没有打开的输入框
+Escrito en la placa	已输入到开发板
+En el portapapeles de la placa	已复制到开发板剪贴板
+El portapapeles de la placa está vacío	开发板剪贴板为空
+Copiado también en esta computadora	也已复制到此电脑
+Escribir en la placa	输入到开发板
+Copiar en la placa	复制到开发板
+Traer de la placa	从开发板读取
+"Escribir" lo pega en el campo abierto en la placa; en la placa, mantené apretado un campo para Copiar o Pegar.	“输入”会将文本粘贴到开发板当前打开的输入框；在开发板上长按输入框可复制或粘贴。
+Portapapeles	剪贴板
+En pausa: %s usa el puerto	已暂停：%s 正在使用端口
+Sin módulo	未检测到模块
+Sin cable	网线未连接
+Sin dirección	尚未获取地址
+Enlace	链路
+dúplex completo	全双工
+medio dúplex	半双工
+Puerta de enlace	门口
+Estás entrando por el cable: al apagar Ethernet esta página deja de contestar. ¿Apagarlo?	您正在通过有线网络访问；关闭以太网后，此页面将无法响应。是否关闭？
+El reloj nuevo se usa la próxima vez que arranque Ethernet	新时钟将在下次启动以太网时生效
+Apagar Ethernet	关闭以太网
+Prender Ethernet	开启以太网
+Reloj del SPI	SPI 时钟
+Wi-Fi y Ethernet	Wi-Fi 与以太网
+Red por cable con un módulo W5500 en el puerto spi.a del conector de 40 pines. Con cable y Wi-Fi a la vez, la placa sale por el cable. Si la red por cable es de confianza se elige sólo en la placa (Ajustes, Portal web).	通过 40 针扩展接口的 spi.a 端口连接 W5500 模块，提供有线网络。有线网络和 Wi-Fi 同时连接时，优先使用有线网络。是否信任有线网络只能在开发板上设置（设置 → 网页管理）。

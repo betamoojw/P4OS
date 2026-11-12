@@ -1,0 +1,67 @@
+# Offline Traditional Chinese catalogue; reviewed terms: ../zh-Hant-key-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+La fuente no aceptó %s	電源沒有接受 %s
+modelo	模型
+presets	預設
+lectura	閱讀
+contadores	計數器
+sensores	感測器
+relés	聯結器
+módulos	模組
+dimmers	dimmers 點數
+magnéticos	磁性
+Falta la dirección del equipo.	裝置的地址不見.
+unidad	單位
+conectando…	正在連線…
+Cancelar	取消
+Aplicar	應用
+Unidad (esclavo)	單元識別碼（從站位址）
+Equipo Modbus TCP (dirección:puerto)	Modbus TCP 裝置（位址:連接埠）
+Unidad	單位
+tocá para poner la dirección	點選設定地址
+Tensión de salida	輸出電壓
+Límite de corriente	電流限制
+encender	啟動
+apagar	關閉
+firmware	韌體
+SALIDA APAGADA	關閉
+Salida encendida	輸出已開啟
+Salida apagada	輸出已關閉
+Tope %s V: la entrada es de %s V y la fuente no eleva.	最高 %s V：輸入電壓為 %s V，此電源不支援升壓。
+ninguna	無
+bloqueado	鎖定
+libre	可用
+buscando la fuente…	正在查詢電源…
+Salida	輸出
+Tensión	電壓
+Corriente	電流
+Entrada	輸入
+Temperatura	溫度
+Protección	保護
+Teclado	鍵盤
+POTENCIA, ÚLTIMOS 60 s	最後60秒
+PRESETS: TOCÁ UNO PARA CARGARLO	預示:按一下才能載入
+CONEXIÓN	連線
+La fuente habla por su puerto TTL a 115200 (3,3 V): TX, RX y GND al puerto elegido. Cada valor que se escribe se vuelve a leer, porque la Riden rechaza en silencio lo que no le gusta.	電力供應商談判 TTL 在 115200 (3.3 V) 的港口:TX,RX和 GND 每個寫入的值都會被讀回,因為 Riden 沉默地拒絕不喜歡的東西.
+relé %d	繼電器 %d
+módulo %d	模組 %d
+Humedad	溼度
+Presión	氣壓
+Calidad del aire	空氣質量
+Encendido hace	執行時長
+Estado	狀態
+sin red	沒有網路
+ausente	缺席
+error de sensor	感測器錯誤
+Encendido	開啟
+Apagado	關閉
+Abierto	開啟
+Cerrado	關閉
+Poné la dirección del gateway (el puerto Modbus TCP es 502 salvo que lo hayas cambiado).	輸入門口地址 ( Modbus 如果您沒有更改 TCP 埠,則是502.
+SENSORES	感測器
+RELÉS Y MÓDULOS	連線和模組
+Relé %d	繼電器 %d
+Módulo %d	模組 %d
+DIMMERS	鑽石
+SENSORES MAGNÉTICOS	磁感測器
+Puerta %d	門 %d

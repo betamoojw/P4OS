@@ -1,0 +1,63 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-key-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+No se pudo hacer la clave	无法生成密钥
+La clave de la placa	开发板密钥
+Para entrar sin contraseña, esta línea va en ~/.ssh/authorized_keys del equipo. Lo más fácil: entrá una vez con la contraseña y tocá el candado de arriba.	要免密码登录，请将此行添加到电脑的 ~/.ssh/authorized_keys。简便方法：先用密码登录一次，再轻点顶部的锁图标。
+Con el SSH de la placa, desde la Mac: ssh %s.local cat %s/ssh/id_ed25519.pub	可从电脑通过开发板的 SSH 获取：ssh %s.local cat %s/ssh/id_ed25519.pub
+Listo	完成
+No entran más equipos	无法再添加电脑
+Ningún equipo todavía: agregalo con +.\n\nEn la Mac: Ajustes del Sistema, General, Compartir, «Sesión remota». En una Raspberry Pi: sudo raspi-config, Interface Options, SSH.	尚未添加电脑，请轻点 +。\n\nMac：系统设置 → 通用 → 共享 → 远程登录。Raspberry Pi：sudo raspi-config → Interface Options → SSH。
+Falta la dirección	请填写地址
+Falta el usuario	请填写用户名
+No se pudo guardar en la tarjeta	无法保存到存储卡
+Tocá otra vez para borrar	再次轻点以删除
+Equipo nuevo	添加电脑
+Equipo	电脑
+Nombre	名称
+Dirección (IP o nombre)	地址（IP 或主机名）
+Puerto	港口
+Usuario	用户名
+La contraseña no se guarda: se pide al conectar. Con la clave de la placa instalada en el equipo no hace falta.	不会保存密码，连接时会要求输入。将开发板密钥安装到电脑后，即可免密码登录。
+Guardar	保存
+Borrar	删除
+Volver	返回
+Reconectar	再连接
+¡La clave de este equipo cambió!	此电脑的密钥已更改！
+Primera vez con este equipo	首次连接此电脑
+Puede que lo hayan reinstalado, o que alguien se haya puesto en el medio. Si no sabés por qué cambió, no te conectes.	电脑可能已重装系统，也可能存在中间人攻击。若不清楚密钥更改原因，请不要连接。
+Para estar seguro, compará la huella con la del equipo: en él, ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub. Se recuerda para la próxima.	请在该电脑上运行 ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub，比对密钥指纹。确认后会保存指纹供下次核对。
+Cancelar	取消
+Aceptar la nueva	接受新密钥
+Conectar	连接
+Contraseña de %s	%s 的密码
+No anduvo: probá de nuevo.	验证失败，请重试。
+Entrar	登录
+No hay memoria para la terminal	内存不足，无法打开终端
+No se pudo empezar la conexión	无法建立连接
+Conectando con %s…	正在连接 %s…
+Se cortó la conexión.	连接已中断。
+El equipo mandó algo que no es SSH.	电脑返回的内容不是 SSH 数据。
+Un paquete llegó dañado.	收到损坏的数据包。
+El equipo cerró la conexión.	电脑已关闭连接。
+El equipo cortó: %s	电脑断开连接：%s
+El equipo no tiene curve25519 (ningún algoritmo en común).	电脑不支持 curve25519，双方没有共同的密钥交换算法。
+El equipo no tiene un tipo de clave que la placa conozca.	电脑没有开发板支持的密钥类型。
+El equipo no tiene chacha20-poly1305 (ningún cifrado en común).	电脑不支持 chacha20-poly1305，双方没有共同的加密算法。
+El equipo sólo acepta compresión.	电脑仅接受压缩连接。
+La firma del equipo no coincide con su clave.	电脑的签名与其密钥不符。
+La clave del equipo cambió: no se conectó.	电脑的密钥已更改，未连接。
+No se aceptó la clave del equipo.	未接受电脑的密钥。
+La clave del equipo cambió en medio de la sesión.	会话期间电脑的密钥发生变化。
+El equipo no acepta la clave de la placa ni contraseña (%s).	电脑既不接受开发板密钥，也不接受密码（%s）。
+No se entró.	尚未登录。
+La contraseña no anduvo tres veces.	密码验证已连续失败三次。
+El equipo no abrió una sesión.	电脑未打开会话。
+El equipo no abrió un segundo canal para instalar la clave.	电脑未打开用于安装密钥的第二条通道。
+La clave de la placa quedó en ~/.ssh/authorized_keys: la próxima vez entra sin contraseña.	开发板密钥已添加到 ~/.ssh/authorized_keys，下次可免密码登录。
+No se pudo instalar la clave (¿no es un Unix?).	无法安装密钥（目标系统可能不是 Unix）。
+El equipo no dejó correr el comando para instalar la clave.	电脑不允许执行安装密钥的命令。
+El equipo no abrió una consola.	电脑未打开控制台。
+La sesión terminó.	会话已结束。
+No se encontró %s.	找不到 %s。
+No se pudo conectar con %s.	无法连接到 %s。
+%s no contestó como un servidor SSH.	%s 未按 SSH 服务器协议响应。

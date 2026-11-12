@@ -223,6 +223,33 @@ function pagePantalla() {
   const apps = h('select', { onchange: async e => { if (!e.target.value) return; await api('open?id=' + encodeURIComponent(e.target.value), { method: 'POST' }); e.target.value = ''; after(); } },
     h('option', { value: '' }, tr('Abrir una app…')));
   api('apps').then(list => list.sort((a, b) => a.name.localeCompare(b.name)).forEach(a => apps.append(h('option', { value: a.id }, a.name)))).catch(() => {});
+  /* The board's clipboard (/api/clip): text from here into a field on the
+   * board (a long password, an address) or from the board to here. */
+  const clipTa = h('textarea', { rows: 3, placeholder: tr('Texto para la placa, o lo que copiaste en ella'),
+    style: 'width:100%;box-sizing:border-box;resize:vertical' });
+  const clipSend = async paste => {
+    try {
+      const j = await post('clip', { text: clipTa.value, paste });
+      if (paste && !j.pasted) toast(tr('Quedó en el portapapeles: no hay un campo abierto en la placa'));
+      else toast(paste ? tr('Escrito en la placa') : tr('En el portapapeles de la placa'));
+      if (paste) after();
+    } catch (err) { toast(err.message, true); }
+  };
+  const clipGet = async () => {
+    try {
+      const j = await api('clip');
+      clipTa.value = j.text || '';
+      if (!j.text) { toast(tr('El portapapeles de la placa está vacío')); return; }
+      try { await navigator.clipboard.writeText(j.text); toast(tr('Copiado también en esta computadora')); } catch {}
+    } catch (err) { toast(err.message, true); }
+  };
+  const clipBox = h('div', {},
+    clipTa,
+    h('div', { class: 'btns', style: 'margin-top:8px' },
+      h('button', { class: 'btn pri', onclick: () => clipSend(true) }, tr('Escribir en la placa')),
+      h('button', { class: 'btn', onclick: () => clipSend(false) }, tr('Copiar en la placa')),
+      h('button', { class: 'btn', onclick: clipGet }, tr('Traer de la placa'))),
+    h('p', { class: 'note' }, tr('"Escribir" lo pega en el campo abierto en la placa; en la placa, mantené apretado un campo para Copiar o Pegar.')));
   const side = h('div', { class: 'side' },
     h('div', { class: 'btns' },
       h('button', { class: 'btn', onclick: nav('home') }, tr('Inicio')),
@@ -232,6 +259,8 @@ function pagePantalla() {
       h('button', { class: 'btn', onclick: save }, tr('Guardar PNG'))),
     h('div', { style: 'margin-top:12px' }, apps),
     h('p', { class: 'note' }, tr('Un clic es un toque; arrastrar es deslizar. Desde el borde de abajo hacia arriba vas al inicio, como en la placa.')),
+    h('h2', {}, tr('Portapapeles')),
+    clipBox,
     h('h2', {}, tr('La placa')),
     h('div', { class: 'card', id: 'infocard' }));
   put(main, h('h1', {}, tr('Pantalla')), h('div', { class: 'screen-wrap' }, h('div', { class: 'screen' }, img, busy), side));
@@ -286,10 +315,43 @@ async function pageWifi() {
   };
   const manual = () => join(prompt(tr('Nombre de la red (SSID)')) || '', true);
   const sb = h('button', { class: 'btn pri', onclick: e => scan(e.target) }, tr('Buscar redes'));
-  put(main, h('h1', {}, tr('Wi-Fi')), st, form, h('h2', {}, tr('Redes')),
+  /* Ethernet: a W5500 module on the header, when there is one (GET/POST /api/eth). Whether the wired
+   * network is trusted is not here: like every rule of the portal's, that is set on the board. */
+  const eth = h('div', { class: 'card' }), ethBtns = h('div', { class: 'btns', style: 'margin:10px 0' });
+  const loadEth = async () => {
+    let e;
+    try { e = await api('eth'); } catch (x) { put(eth, h('div', { class: 'row muted' }, x.message)); put(ethBtns); return; }
+    const state = !e.on ? [tr('Apagado'), 'muted'] : e.paused ? [tr('En pausa: %s usa el puerto', e.paused_by), 'muted']
+      : !e.running ? [e.error || tr('Sin módulo'), 'bad'] : !e.link ? [tr('Sin cable'), 'muted']
+      : e.ip ? [tr('Conectada'), 'ok'] : [tr('Sin dirección'), 'muted'];
+    const rows = [row(tr('Estado'), state[0], state[1])];
+    if (e.running) rows.push(
+      row(tr('Enlace'), e.link ? e.speed + ' Mbit/s, ' + (e.full_duplex ? tr('dúplex completo') : tr('medio dúplex')) : '—'),
+      row(tr('Dirección'), e.ip || '—'), row(tr('Puerta de enlace'), e.gw || '—'), row('MAC', e.mac || '—'));
+    if (e.on && e.port) rows.push(row(tr('Puerto'), e.port + ' · CS ' + e.cs + (e.spi_hz ? ' · ' + Math.round(e.spi_hz / 1e6) + ' MHz' : '')));
+    put(eth, ...rows);
+    const sw = async on => {
+      /* switched off from the wire itself, the page that asked would never hear the answer */
+      if (!on && e.ip && location.hostname === e.ip &&
+          !confirm(tr('Estás entrando por el cable: al apagar Ethernet esta página deja de contestar. ¿Apagarlo?'))) return;
+      try { const r = await post('eth', { on }); if (on && !r.running && r.error) toast(r.error, true); } catch (x) { toast(x.message, true); }
+      setTimeout(loadEth, on ? 3500 : 400);
+    };
+    const hz = h('select', {}, ...[8, 20, 40].map(m => h('option', { value: m * 1e6 }, m + ' MHz')));
+    hz.value = String([8, 20, 40].map(m => m * 1e6).find(v => Math.abs(v - e.spi_hz) < 3e6) || 8e6);
+    hz.onchange = async () => {
+      try { await post('eth', { hz: +hz.value }); toast(tr('El reloj nuevo se usa la próxima vez que arranque Ethernet')); } catch (x) { toast(x.message, true); }
+    };
+    put(ethBtns, h('button', { class: 'btn' + (e.on ? '' : ' pri'), onclick: () => sw(!e.on) }, e.on ? tr('Apagar Ethernet') : tr('Prender Ethernet')),
+      h('span', { class: 'muted', style: 'margin-left:14px' }, tr('Reloj del SPI') + ' '), hz);
+  };
+  put(main, h('h1', {}, tr('Wi-Fi y Ethernet')), h('h2', {}, tr('Wi-Fi')), st, form, h('h2', {}, tr('Redes')),
     h('div', { class: 'btns', style: 'margin-bottom:10px' }, sb, h('button', { class: 'btn', onclick: manual }, tr('Red oculta…'))), list,
-    h('p', { class: 'note' }, tr('La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.')));
+    h('p', { class: 'note' }, tr('La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.')),
+    h('h2', {}, 'Ethernet'), eth, ethBtns,
+    h('p', { class: 'note' }, tr('Red por cable con un módulo W5500 en el puerto spi.a del conector de 40 pines. Con cable y Wi-Fi a la vez, la placa sale por el cable. Si la red por cable es de confianza se elige sólo en la placa (Ajustes, Portal web).')));
   load();
+  loadEth();
 }
 
 /* ---- Home Assistant ---- */

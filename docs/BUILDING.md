@@ -51,10 +51,33 @@ writes an app slot and nothing else. The table is:
 
 | Partition | Offset | Size | |
 |---|---|---|---|
-| nvs, otadata, phy_init | 0x9000 | 32 KB | settings, which slot boots |
+| nvs, otadata, phy_init | 0x9000 | 32 KB | the Bluetooth bonds, which slot boots |
 | ota_0, ota_1 | 0x20000, 0x810000 | 7.94 MB each | the firmware, twice |
-| storage | 0x1000000 | 12 MB | a FAT nobody mounts yet |
+| storage | 0x1000000 | 12 MB | read-only offline Simplified/Traditional Chinese font image |
 | coredump | 0x1C00000 | 1 MB | the last crash, for the portal |
+| prefs | 0x1D00000 | 256 KB | the preferences, the system's and the apps' |
+
+**The preferences are in `prefs`, not in `nvs`.** The 24 KB of `nvs` hold
+630 entries, and the apps' settings and scores filled them: on 2026-11-11 a
+board had all 630 in use and no preference was being kept, in silence. Since
+then they live in 256 KB of their own (8064 entries). In `dev` this is the
+unused space after `coredump`; the first 12 MB of `storage` contain the
+Chinese fonts and must never be erased for NVS. A board updated over the air
+from an older `dev` table registers this free area at runtime. ESP-IDF checks
+the chip size and rejects any overlapping partition before NVS touches it;
+if unavailable, preferences remain in the original NVS. No serial table
+update is needed for these older `dev` boards. The first boot copies the
+keys over and, once the image is confirmed, trims the old store to what
+an older firmware needs to get on the network and stay locked (Wi-Fi, the
+lock, the portal's access, SSH, Bluetooth, language): going back by hand to a firmware
+from before this keeps those and loses the rest. A preference that cannot be
+kept now says so in the log (`pref: ... not kept`).
+
+Upstream `main` used `prefs` at `0x1000000` and moved `storage` to
+`0x1040000`. That table is incompatible with this branch's existing font
+image. When moving a board from that layout to `dev`, back up its settings
+and use a serial update of the partition table and font image. The firmware
+rejects an unexpected `prefs` address instead of initializing or erasing it.
 
 **Both app slots must lie whole in the first 16 MB.** The cache maps the
 flash with 24-bit addresses: an image that reaches past 0x1000000 fails its

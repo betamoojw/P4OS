@@ -20,9 +20,9 @@ INTENTIONALLY_IDENTICAL = {
     '+10 s', '-10 s', '-12 h', '-24 h', '1 h', '12 V (30 mA)',
     '2 × %s', '2043', '24 h', '3V3 · p18', '5 h', '555', '6 h',
     'A-Z', 'A4', 'Basic', 'BLE', 'BTU', 'CAN', 'CAS', 'Cartero', 'Claude',
-    'DE AD BE EF', 'EEPROM', 'EN / RST', 'GND · p19', 'Home Assistant',
+    'DE AD BE EF', 'DMX', 'EEPROM', 'EN / RST', 'GND · p19', 'Home Assistant',
     'Mac', 'Modbus', 'MQTT', 'PSRAM', 'PWM', 'RX GPIO%d · p%u', 'Spotlight',
-    'TX GPIO%d · p%u', 'URL', 'USB', 'USB 3 (850 mA)', 'USB…',
+    'SSH', 'TX GPIO%d · p%u', 'URL', 'USB', 'USB 3 (850 mA)', 'USB…',
     'V/div', 'Wi-Fi', 'n', '{{%s}} = %s', '≈ %s m', '≈ %s m · %s',
 }
 

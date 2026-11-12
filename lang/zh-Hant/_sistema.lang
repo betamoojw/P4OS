@@ -332,7 +332,6 @@ Salida	輸出
 Entrada	輸入
 Protección	保護
 ÚLTIMOS 2 MINUTOS	最近 2 分鐘
-La fuente se conecta por su puerto TTL (3,3 V) al puerto que elegiste en Modbus, pestaña Riden; el enlace es el mismo. Cada valor que se escribe se vuelve a leer, porque la Riden rechaza en silencio lo que no le gusta.	將電源的 TTL 介面（3.3 V）連線到 Modbus 的 Riden 頁中所選串列埠。寫入後會回讀數值，因為 Riden 可能直接忽略無效設定而不返回錯誤。
 generador de funciones, 2 canales, 30 MHz	函式訊號發生器，2 個通道，30 MHz
 Necesita un hub USB con alimentación	需要外接供電的 USB 集線器
 El generador habla USBTMC por USB, sin red ni puerto serie. El puerto USB-OTG de la placa no entrega 5 V, así que el generador se enchufa a un hub alimentado y el hub a la placa. Cuando esté el hub, esta pestaña maneja los dos canales.	訊號發生器透過 USB 使用 USBTMC 通訊，無需網路或串列埠。開發板的 USB-OTG 埠不提供 5 V，請將訊號發生器接入外部供電的 USB 集線器，再將集線器連線到開發板。連線後可在此頁控制兩個通道。
@@ -421,7 +420,6 @@ Soltar	釋放
 Tocá el modo para cambiarlo. En OUT, tocá el nivel para invertirlo. Los pines quedan así al cerrar la app, hasta que los sueltes.	點選可切換模式。在 OUT 模式下，點選電平可翻轉輸出。關閉應用後引腳仍保持當前狀態，直到手動釋放。
 reservado	已保留
 de la placa	開發板
-IN ↑ / IN ↓: con pull-up o pull-down interno. Los pines 35 a 39 van por el LDO VO4: medí antes de colgarles algo.	IN ↑ / IN ↓: with internal pull-up or pull-down. Pins 35 to 39 go through the VO4 在連線任何東西之前測量.
 Abriendo el bus…	正在開啟匯流排…
 No se pudo abrir el bus en GPIO%d	無法在 GPIO%d 上開啟匯流排
 Nadie contestó. ¿La resistencia de 4,7 kΩ entre datos y 3V3? ¿VDD a 3V3 y GND?	裝置未響應。請檢查資料線與 3.3 V 之間的 4.7 kΩ 上拉電阻，以及 VDD、GND 接線。
@@ -1162,7 +1160,6 @@ COLORES	顏色
 Segundo	秒
 Blanco (canal W)	白色 (W頻道)
 PIN DE DATOS	資料 PIN
-GPIO · pin del conector. Los que tiene otra app aparecen apagados. * con cuidado: arranque, dominio VO4 o USB (Ajustes, Expansión).	GPIO ·標題針. 其他應用程式所持有的標籤是灰色的. VO4 域名或 USB (設定,擴充套件)
 TIPO DE LED	LED型別
 WS2812B también sirve para WS2813, WS2815 y WS2811 de 800 kHz. Las RGBW llevan un cuarto LED blanco.	WS2812B 對於 WS2813, WS2815 和800kHz WS2811在RGBW帶上有第四個白色LED.
 ORDEN DE LOS COLORES	顏色順序
@@ -1310,55 +1307,15 @@ ACCIÓN	行動
 ÍCONO	標籤:
 COLOR	顏色
 Explorar	探索
-Entradas	謹慎
 La fuente no aceptó %s	電源沒有接受 %s
 modelo	模型
-presets	預設
 lectura	閱讀
-contadores	計數器
-sensores	感測器
-relés	聯結器
-módulos	模組
-dimmers	dimmers 點數
-magnéticos	磁性
-Falta la dirección del equipo.	裝置的地址不見.
 unidad	單位
-Unidad (esclavo)	單元識別碼（從站位址）
-Equipo Modbus TCP (dirección:puerto)	Modbus TCP 裝置（位址:連接埠）
-Unidad	單位
-tocá para poner la dirección	點選設定地址
 encender	啟動
 apagar	關閉
-SALIDA APAGADA	關閉
-bloqueado	鎖定
-Teclado	鍵盤
-POTENCIA, ÚLTIMOS 60 s	最後60秒
-PRESETS: TOCÁ UNO PARA CARGARLO	預示:按一下才能載入
-La fuente habla por su puerto TTL a 115200 (3,3 V): TX, RX y GND al puerto elegido. Cada valor que se escribe se vuelve a leer, porque la Riden rechaza en silencio lo que no le gusta.	電力供應商談判 TTL 在 115200 (3.3 V) 的港口:TX,RX和 GND 每個寫入的值都會被讀回,因為 Riden 沉默地拒絕不喜歡的東西.
-relé %d	繼電器 %d
-módulo %d	模組 %d
 Encendido hace	執行時長
 sin red	沒有網路
-ausente	缺席
-error de sensor	感測器錯誤
-Abierto	開啟
-Cerrado	關閉
-Poné la dirección del gateway (el puerto Modbus TCP es 502 salvo que lo hayas cambiado).	輸入門口地址 ( Modbus 如果您沒有更改 TCP 埠,則是502.
-RELÉS Y MÓDULOS	連線和模組
-Relé %d	繼電器 %d
-Módulo %d	模組 %d
-DIMMERS	鑽石
-SENSORES MAGNÉTICOS	磁感測器
-Puerta %d	門 %d
-Dirección inicial	起始位址
-Escribir el registro %u	寫入暫存器 %u
-Tocá Leer.	打點閱讀.
-%u valores desde %u	從 %u 起的 %u 個值
-PEDIDO	要求
 Desde	透過
-Tocá una coil para invertirla.	點選線圈以切換其狀態。
-Tocá un registro para escribirlo (FC 06).	按一個登錄檔來寫 (FC 06).
-RESPUESTA	答案
 Puertos	港口
 Sensores	感測器
 VCC_5V: vivo aun con la placa apagada	VCC_5V:即使板子被切除,也可以活下去
@@ -1380,7 +1337,6 @@ Strapping de la fuente del JTAG: usable después del arranque	JTAG 源綁帶: �
 BOOT: strapping, con pull-up de 4,7K	BOOT: strapping, with 4.7K pull-up
 ADC2 canal 0	ADC2 頻道0
 ADC2 canal 1	ADC2 頻道1
-Dominio VO4: medí la tensión antes de usarlo	VO4 域:在使用之前測量電壓
 ADC2 canal 2, comparador	ADC2 channel 2, comparator
 Dominio VO4	VO4 域名
 ADC2 canal 3, comparador	ADC2 channel 3, comparator
@@ -1442,7 +1398,6 @@ Agregado a modules.txt	加入 modules.txt
 Agregar módulo	新增模組
 QUÉ MIDE	衡量什麼?
 QUÉ ES	什麼是
-Un transceptor RS485 (MAX485 o uno automático) para Modbus RTU; el DE va en el pin de del puerto.	Modbus RTU 需要 RS-485 收發器（MAX485 或自動方向型）；DE 接所選連接埠的 de 引腳。
 EL BUS (UN PIN)	公共汽車 (一號碼)
 PRIMER PIN	第一號碼
 EL PIN	號碼
@@ -2119,7 +2074,6 @@ Paneles con tus entidades, escenas y sensores, por la API WebSocket.	透過WebSo
 Monitor serie de los puertos del header y del USB, con disparadores y grabación.	標題的連續顯示器 USB 有觸發器和錄音機.
 Graba ESP32, ESP8266 y STM32 por el header, o desde la Mac por RFC2217.	閃光 ESP32, ESP8266 和 STM32 透過標題,或從Mac RFC2217.
 Scanner I2C, registros, GPIO en vivo, PWM y ADC.	I2C 掃描器,登記器,直播 GPIO, PWM 和 ADC.
-Maestro RTU y TCP, con perfiles para el gateway DOMCOM y la Riden.	對於DOMCOM門口和 Riden.
 Colores de resistencias, códigos SMD, Ohm, divisores, 555.	阻力顏色, SMD 程式碼,哦,分裂器,555。
 WiFi, pantalla, sonido, idioma, módulos, respaldo.	Wi-Fi、螢幕、聲音、語言、模組與備份。
 Reloj mundial, alarmas, temporizador, cronómetro y pomodoro, en una app.	世界時鐘,警報,計時器,止步表和波莫多羅,在一個應用.
@@ -3025,3 +2979,143 @@ Turbo	渦輪
 Video	影片
 Visor 3D	3D 顯示器
 VNC	其他
+Redes	網路
+Cuenta	計算結果
+Tocá para copiarlo	輕點複製
+Buscando en la tarjeta…	正在搜尋儲存卡…
+Nada con eso	未找到結果
+¿Dejar entrar esta clave por SSH?	允許此金鑰透過 SSH 登入？
+%s, como «%s», desde %s	%s，以“%s”身份，來自 %s
+Queda en la lista de Ajustes, Portal web, hasta que la saques.	此金鑰將保留在“設定 → 網頁管理”的清單中，直到您將其移除。
+Permitir	允許
+Todo	全部
+Ethernet en pausa: %s lo usa %s	乙太網已暫停：%s 正由 %s 使用
+Ethernet volvió	乙太網已恢復
+La fuente se conecta por su puerto TTL (3,3 V) al puerto que elegiste en Equipos, pestaña Riden; el enlace es el mismo. Cada valor que se escribe se vuelve a leer, porque la Riden rechaza en silencio lo que no le gusta.	將電源的 TTL 介面（3.3 V）連線到“裝置 → Riden”中選擇的埠，兩者共用同一連線。每次寫入後都會讀回校驗，因為 Riden 可能拒絕不支援的值而不回報錯誤。
+Ethernet está en pausa mientras se usa este puerto. Vuelve solo unos segundos después del último envío.	使用此埠時，乙太網會暫停。最後一次傳送結束幾秒後會自動恢復。
+Ethernet usa este puerto: al enviar se pone en pausa y la red por cable se corta. Vuelve solo unos segundos después.	乙太網正在使用此埠；傳送資料會暫停乙太網並斷開有線連線，幾秒後會自動恢復。
+IN ↑ / IN ↓: con pull-up o pull-down interno.	IN ↑ / IN ↓：啟用內部上拉或下拉。
+GPIO · pin del conector. Los que tiene otra app aparecen apagados. Sugerido para una tira: GPIO48. * con cuidado: arranque o USB (Ajustes, Expansión).	GPIO · 排針編號。其他應用佔用的接腳顯示為灰色。燈條建議使用 GPIO48。* 請謹慎使用：啟動或 USB 接腳（設定 → 擴充）。
+Un transceptor RS485 de 3,3 V (MAX3485, SP3485 o uno automático) para Modbus RTU o DMX; el DE va en el pin de del puerto.	用於 Modbus RTU 或 DMX 的 3.3 V RS485 收發器（MAX3485、SP3485 或自動收發型號）；DE 連線到埠的 de 接腳。
+Sin módulo	未檢測到模組
+Sin cable	網線未連線
+Sin dirección	尚未獲取地址
+SALIDA A INTERNET	網際網路出口
+Por cable	有線連線
+Con cable y Wi-Fi a la vez, la placa sale por el cable. Si el cable se va, sigue por el Wi-Fi sin tocar nada.	有線網路和 Wi-Fi 同時連線時，開發板優先使用有線網路。網線斷開後會自動切換到 Wi-Fi。
+Red propia	裝置熱點
+Red por cable con un módulo W5500 en el puerto spi.a del conector de 40 pines. Apagado, no usa el puerto.	透過 40 針擴充介面的 spi.a 埠連線 W5500 模組，提供有線網路。關閉後不佔用埠。
+Lo usa	佔用者
+Una app está usando el puerto. Ethernet vuelve solo unos segundos después de que lo suelte.	應用正在使用此埠。釋放埠幾秒後，乙太網會自動恢復。
+No arrancó.	啟動失敗。
+dúplex completo	全雙工
+medio dúplex	半雙工
+Enlace	鏈路
+RELOJ DEL SPI	SPI 時鐘
+Con cables sueltos, 8 MHz. Con el módulo en una placa, hasta 40: más reloj es más velocidad de red.	使用杜邦線連線時選擇 8 MHz；模組安裝在電路板上時最高可用 40 MHz。時鐘越高，網路速度越快。
+EN EL PORTAL	網頁管理
+De confianza	受信任
+Una red por cable no tiene nombre para reconocerla. Con esto apagado, lo que entra por el cable se trata como una red que no es de confianza.	有線網路沒有可供識別的網路名稱。關閉此選項後，有線連線將按不受信任的網路處理。
+Mientras una app usa el puerto (Bus, EEPROM), Ethernet se pone en pausa y vuelve solo.	應用（如匯流排、EEPROM）使用埠時，乙太網會暫停，使用結束後自動恢復。
+Tocá otra vez: ssh va a avisar que la placa cambió	再次輕點確認：SSH 將提示開發板的金鑰已更改
+La placa tiene una clave nueva	已生成開發板的新金鑰
+SSH (puerto 22)	SSH（埠 22）
+Clave nueva de la placa	重新生成開發板金鑰
+Una consola de la placa desde la Mac: ssh p4os.local. Sigue las reglas de arriba: donde el portal está abierto entra cualquiera, donde pide la contraseña entra con ella o con una clave de la lista, y donde está cerrado no entra nadie. Lo de arriba es la huella de la placa: ssh la muestra la primera vez.	可在電腦上執行 ssh p4os.local 連線開發板控制台。存取規則與上方一致：網頁開放時允許任何人登入；需要密碼時，可使用密碼或清單中的金鑰登入；關閉存取時，任何人都無法登入。上方是開發板的金鑰指紋，首次連線時 SSH 會顯示它。
+CLAVES QUE PUEDEN ENTRAR	允許登入的金鑰
+Una clave que no está en la lista pide permiso acá, en la pantalla, con su huella: compará con la que da ssh-keygen -lf en la Mac. Quitar una cierra las sesiones de SSH abiertas.	不在清單中的金鑰會在此螢幕上顯示指紋並請求授權。請與電腦上 ssh-keygen -lf 的輸出比對。移除金鑰會關閉已建立的 SSH 會話。
+LA RED POR CABLE	有線網路
+De confianza: por cable el portal está abierto.	受信任：有線連線可直接存取網頁管理。
+Por cable el portal se porta como en una red que no es de confianza. Una red por cable no tiene nombre para reconocerla: prendelo sólo donde confiás en todo lo que está enchufado.	有線連線預設按不受信任的網路處理。它沒有可供識別的網路名稱；僅當您信任該網路上的所有裝置時，才應開啟此選項。
+por cable	有線連線
+la placa está ocupada	開發板正忙
+abierta	開放
+Esta clave (%s %s) no está en la lista de la placa. Mirá su pantalla: tenés %d segundos para permitirla.	此金鑰（%s %s）不在開發板的清單中。請檢視開發板螢幕，在 %d 秒內授權。
+La placa está preguntando por otra clave; probá de nuevo en un rato.	開發板正在請求授權另一把金鑰，請稍後重試。
+La placa no permitió la clave.	開發板未授權此金鑰。
+contraseña	密碼
+Demasiados intentos: esperá %d s.	嘗試次數過多，請等待 %d 秒。
+%s: no conozco la opción -%c\n	%s：未知選項 -%c\n
+help: no existe «%s»\n	help：不存在“%s”\n
+no es una carpeta	不是資料夾
+(y más: se muestran las primeras %d)\n	（還有更多，僅顯示前 %d 項）\n
+cat: ¿qué archivo?\n	cat：請指定檔案\n
+%s: ¿qué archivo?\n	%s：請指定檔案\n
+rm: ¿qué borro?\n	rm：請指定要刪除的內容\n
+eso no se borra	無法刪除該項
+es una carpeta (rm -r)	這是資料夾，請使用 rm -r
+mkdir: ¿qué carpeta?\n	mkdir：請指定資料夾\n
+rmdir: ¿qué carpeta?\n	rmdir：請指定資料夾\n
+mv: mv origen destino\n	mv：用法為 mv 源路徑 目標路徑\n
+eso no se mueve	無法移動該項
+cp: no terminó; el destino se borró\n	cp：複製未完成，已刪除目標檔案\n
+cp: cp origen destino\n	cp：用法為 cp 源路徑 目標路徑\n
+es una carpeta	這是資料夾
+total	總計
+usado	已用
+%u d %u h %u min	%u 天 %u 小時 %u 分鐘
+%u h %u min	%u 小時 %u 分鐘
+%u min %u s	%u 分鐘 %u 秒
+prendida hace %s\n	已執行 %s\n
+la placa todavía no sabe la hora\n	開發板尚未獲取時間\n
+%s rev %d.%d, %d núcleos a %d MHz · ESP-IDF %s\n	%s 版本 %d.%d，%d 核心，頻率 %d MHz · ESP-IDF %s\n
+ranura %s · último reinicio: %s\n	分割槽 %s · 上次重啟原因：%s\n
+usada	已用
+interna	內部
+bloque	塊
+mínima	最低
+tarea	任務
+cpu	CPU
+prio	優先順序
+núcleo	核心
+pila	棧
+(y %d más)\n	（還有 %d 項）\n
+cpu: % de un núcleo · pila: K* en PSRAM · libre: lo mínimo que tuvo, en bytes\n	CPU：單核佔用百分比 · 棧：K* 表示位於 PSRAM · 可用：歷史最低可用位元組數\n
+P4OS %s · prendida hace %s · libre: %s interna, %s PSRAM · q sale\n\n	P4OS %s · 已執行 %s · 可用：內部 %s，PSRAM %s · 按 q 退出\n\n
+[se perdieron %u bytes del registro]\n	[已丟失 %u 位元組日誌]\n
+log: log [-f] [-p] [-n líneas]\n	log：用法為 log [-f] [-p] [-n 行數]\n
+no hay registro del arranque anterior\n	沒有上次啟動的日誌\n
+ · canal %d	 · 通道 %d
+Red propia: %s · %s · %d conectados\n	裝置熱點：%s · %s · 已連線 %d 臺裝置\n
+> al frente · * abierta\n	> 前臺 · * 已開啟\n
+open: ¿qué app? («apps» las lista)\n	open：請指定應用（執行 apps 檢視清單）\n
+open: no encuentro «%s»\n	open：找不到“%s”\n
+%-12s desde %-16s hace %u min (%s)\n	%-12s 來自 %-16s，%u 分鐘前連線（%s）\n
+Reiniciando la placa...\n	正在重啟開發板…\n
+esta lista	顯示此幫助清單
+lo que hay en una carpeta (-l con detalle)	列出資料夾內容（-l 顯示詳細資訊）
+cambia de carpeta (sola: la raíz de la tarjeta)	切換資料夾（不帶引數時進入儲存卡根目錄）
+la carpeta en la que estás	顯示目前資料夾
+muestra archivos	顯示檔案內容
+las primeras líneas	顯示檔案開頭幾行
+las últimas líneas	顯示檔案末尾幾行
+copia un archivo	複製檔案
+mueve o renombra	移動或重新命名
+borra (-r: carpetas con todo adentro)	刪除（-r：刪除資料夾及其全部內容）
+crea carpetas	建立資料夾
+borra carpetas vacías	刪除空資料夾
+crea archivos vacíos	建立空檔案
+el espacio de la tarjeta y los pendrives	顯示儲存卡和 隨身碟的空間
+el registro (-f lo sigue, -p el arranque anterior)	檢視日誌（-f 持續跟蹤，-p 檢視上次啟動）
+las tareas y cuánto usan, cada segundo	每秒更新任務及其資源用量
+las tareas, una vez	顯示一次任務清單
+la memoria: interna, DMA y PSRAM	檢視內部、DMA 和 PSRAM 記憶體
+cuánto hace que está prendida	檢視執行時長
+la fecha y la hora	檢視日期和時間
+versión, chip y último reinicio	檢視版本、晶片及上次重啟原因
+el Wi-Fi y las direcciones	檢視 Wi-Fi 和網路地址
+las apps instaladas	列出已安裝應用
+abre una app en la pantalla	在螢幕上開啟應用
+vuelve al inicio en la pantalla	返回裝置主螢幕
+atrás, en la pantalla	在裝置螢幕上返回上一頁
+quiénes están conectados por SSH	檢視透過 SSH 連線的使用者
+reinicia la placa	重啟開發板
+limpia la pantalla	清空螢幕
+escribe lo que le pasen	輸出傳入的引數
+cierra la sesión (también Ctrl-D)	結束會話（也可按 Ctrl-D）
+%s: no existe ese comando; «help» muestra los que hay.\n	%s：沒有此命令，執行 help 檢視可用命令。\n
+«help» muestra los comandos; Ctrl-D o «exit» para salir.\n	執行 help 檢視命令，按 Ctrl-D 或輸入 exit 退出。\n
+DMX	DMX
+Equipos	裝置
+Luces	燈光
+SSH	SSH

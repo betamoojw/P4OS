@@ -1,0 +1,245 @@
+# Offline Traditional Chinese catalogue; reviewed terms: ../zh-Hant-key-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+no se pudo escuchar en el puerto %u (¿lo usa otro?)	無法監聽埠 %u（是否被其他程式佔用？）
+Modbus TCP, escuchando en el puerto %u	Modbus TCP 正在監聽埠 %u
+no se pudo abrir %s (¿lo tiene otra app?)	無法開啟 %s (有沒有其他應用程式使用它?)
+%s no acepta 8%c%d	%s 不接受8個%c%d
+no contesta %s:%d	沒有答案 %s:%d
+Id	標識
+Fabricante	製造商
+Producto	產品
+Versión	版本
+El eco volvió igual.	回顯內容一致。
+El eco volvió distinto.	回顯內容不一致。
+El monitor escucha un bus RS485: por TCP no hay nada que escuchar.	監視器用於監聽 RS485 匯流排，TCP 模式無法監聽匯流排流量。
+leer coils	讀取線圈
+leer entradas	讀取離散輸入
+leer holding	讀取保持暫存器
+leer input	讀取輸入暫存器
+escribir coil	寫入線圈
+escribir registro	寫入暫存器
+diagnóstico	診斷
+escribir coils	寫入多個線圈
+escribir registros	寫入多個暫存器
+identificarse	報告從站標識
+identificación	裝置識別
+función desconocida	未知功能
+función no soportada	不支援此功能
+dirección inválida	無效地址
+valor inválido	無效值
+falla del esclavo	從站故障
+aceptado, sigue trabajando	已接受，仍在處理
+esclavo ocupado	從站忙
+gateway sin camino	閘道器路徑不可用
+el equipo tras el gateway no contesta	閘道器後的裝置未回應
+ruido	噪聲
+excepción	異常
+valores	數值
+dato	資料
+sin respuesta	無回應
+respuesta dañada (CRC)	腐敗反應 (CRC)
+respuesta que no corresponde	不匹配的反應
+falló el puerto o la conexión	埠或連線故障
+pedido inválido	無效的請求
+ruido: bytes que no forman una trama	噪聲：無法組成幀的位元組
+01 Coils	01 線圈
+02 Entradas	02 離散輸入
+03 Holding	03 保持暫存器
+04 Input	04 輸入暫存器
+05 Coil	05 線圈
+06 Registro	06 暫存器
+15 Coils	15 多個線圈
+16 Registros	16 多個暫存器
+08 Eco	08 回顯
+17 Id	17 標識
+43 Identificación	43 裝置識別
+Unidad (0 = broadcast, sin respuesta)	站號（0 = 廣播，無回應）
+Dirección inicial (desde 0)	起始地址（從 0 開始）
+Cantidad	數量
+Valor	數值
+No entendí los valores	無法讀取這些數值
+Coils a escribir, separadas por espacios (1 0 1 1)	要寫入的線圈值，以空格分隔（1 0 1 1）
+Registros a escribir, separados por espacios (100 0x1F -5)	要寫入的暫存器值，以空格分隔（100 0x1F -5）
+Sólo por RTU	僅適用於 RTU
+Puerto TCP de la pasarela	閘道器 TCP 埠
+PASARELA MODBUS TCP → RTU	MODBUS TCP → RTU 閘道器
+Atender clientes TCP	為 TCP 客戶端提供服務
+Puerto	港口
+Un programa de la PC (Modbus Poll, un SCADA, Home Assistant) pide por la red a esta placa, y ella le pregunta al equipo por el bus: la unidad del pedido es la del equipo. Si el equipo no contesta, el cliente recibe la excepción 0B. Anda con la conexión abierta.	電腦程式（Modbus Poll、SCADA、Home Assistant）透過網路向開發板請求資料，開發板再查詢匯流排裝置；請求中的站號就是裝置站號。裝置無回應時，客戶端收到異常碼 0B。連線開啟期間持續工作。
+Apagada.	已關閉。
+Prendida: arranca al abrir la conexión.	已啟用，將在連線開啟時啟動。
+Escuchando en %s:%u · cliente: %s · %u pedidos, %u contestados, %u sin respuesta	正在監聽 %s:%u · 客戶端：%s · %u 次請求，%u 次回應，%u 次無回應
+ninguno	無
+Escribir el registro %u (FC 06)	寫入暫存器 %u（FC 06）
+y %d más	還有 %d 項
+Buscando unidades: %d de %d…	正在搜尋站號：%d / %d…
+Probando velocidades: %d de %d…	正在嘗試鮑率：%d / %d…
+Lo marcado contestó sin errores de línea: ése es el formato. Los otros contestaron con bytes de paridad o de parada malos.	高亮項回應正常且無線路錯誤，因此是正確格式。其他項存在奇偶校驗或停止位錯誤。
+La velocidad es segura; el formato no salió claro (contestaron varios sin errores, o todos con errores). El manual del equipo dice cuál (el estándar pide 8E1).	鮑率已確定，但格式尚不明確（多個格式均無錯誤，或全部存在錯誤）。請查閱裝置手冊；標準要求使用 8E1。
+Nadie contestó.	沒有裝置回應。
+Tocá Enviar.	請輕點“傳送”。
+Enviar abre la conexión.	傳送時會開啟連線。
+%u pedidos · %u respuestas · %u sin respuesta · %u CRC · %u excepciones · promedio %u ms, máximo %u ms	%u 次請求 · %u 次回應 · %u 次無回應 · %u 次 CRC 錯誤 · %u 次異常 · 平均 %u 毫秒，最大 %u 毫秒
+HERRAMIENTAS	工具
+Detener	停止
+Buscar unidades	搜尋站號
+Buscar velocidad	搜尋鮑率
+Buscar unidades pregunta a las 1 a 247 por el holding 0. Buscar velocidad prueba ocho velocidades y cuatro formatos con la unidad elegida; tocá un resultado para usarlo.	搜尋站號會向 1 至 247 號站讀取保持暫存器 0。搜尋鮑率會對所選站號嘗試八種速率和四種格式；輕點結果即可使用。
+PEDIDO	要求
+Unidad	單位
+Desde	來源
+Dato	資料
+Valores	數值
+Enviar	傳送
+En vivo	實時
+RESPUESTA	答案
+Borrar cuentas	清空計數
+Tocá una coil para invertirla (FC 05).	輕點線圈切換狀態（FC 05）。
+Tocá un registro para escribirlo (FC 06).	按一個登錄檔來寫 (FC 06).
+Normal	正常
+Mudo	沉默
+Lento	慢速
+CRC malo	CRC 錯誤
+Ocupado (06)	忙（06）
+Falla (04)	故障（04）
+Contestar como la unidad	回應站號
+Demora de la respuesta	回應延遲
+Holding %d	保持暫存器 %d
+%u tramas oídas · %u para esta unidad · %u para otras · %u broadcast · %u CRC malos · %u excepciones	已監聽 %u 幀 · 本站 %u 幀 · 其他站 %u 幀 · 廣播 %u 幀 · CRC 錯誤 %u 幀 · 異常 %u 次
+Abrí la conexión para que conteste.	請開啟連線以開始回應。
+Cliente:	客戶端：
+ninguno todavía	暫無
+Último pedido:	上次請求：
+COMO CONTESTA	回應方式
+Demora	延遲
+Valores que se mueven	動態數值
+Mudo no contesta; Lento contesta después de la demora; CRC malo manda la respuesta con el CRC roto; Ocupado y Falla contestan esas excepciones. Para ver cómo se las arregla el maestro.	“靜默”不回應；“慢速”按設定延遲回應；“CRC 錯誤”返回校驗錯誤的資料；“忙”和“故障”返回對應異常碼。可用於觀察主站如何處理故障。
+EL EQUIPO QUE HACE	模擬的裝置
+Cada tabla va de 0 a 9999; fuera de eso contesta la excepción 02. Input 0: segundos; 1: un seno x1000; 2: una temperatura x10; 3: ruido; 4-5: un contador de 32 bits; 6-7: un float. Entradas 0 y 1 cambian solas. También contesta las funciones 08, 17 y 43.	每個資料表的地址範圍為 0–9999，超出範圍返回異常碼 02。輸入暫存器 0：秒數；1：正弦值 ×1000；2：溫度 ×10；3：噪聲；4–5：32 位元計數器；6–7：浮點數。離散輸入 0 和 1 會自動變化。同時支援功能碼 08、17 和 43。
+HOLDING 0-15 (TOCÁ PARA CAMBIAR)	保持暫存器 0–15（輕點修改）
+COILS 0-15 (TOCÁ PARA INVERTIR)	線圈 0–15（輕點切換）
+INPUT 0-7	輸入暫存器 0–7
+ENTRADAS 0-7 (TOCÁ PARA INVERTIR)	離散輸入 0–7（輕點切換）
+Abrí la conexión para escuchar.	請開啟連線以開始監聽。
+%u tramas · %u bytes · %u con CRC malo · %u bytes de ruido · %u bytes con error de línea	%u 幀 · %u 位元組 · CRC 錯誤 %u 幀 · 噪聲 %u 位元組 · 線路錯誤 %u 位元組
+Broadcast	廣播
+%u pedidos · %u respuestas · %u sin respuesta · %u excepciones · %u CRC\ndemora promedio %u ms, máxima %u ms\núltimo: %s	%u 次請求 · %u 次回應 · %u 次無回應 · %u 次異常 · %u 次 CRC 錯誤\n平均延遲 %u 毫秒，最大 %u 毫秒\n最近一次：%s
+LO QUE PASA POR EL BUS	匯流排上的資料
+Escucha sin transmitir nunca: el DE queda abajo, como si la placa no estuviera. Junta cada pedido con su respuesta; un pedido que se queda sin respuesta (otro pedido llega antes, o pasa un segundo) cuenta como sin respuesta de esa unidad. Cada trama, en Tráfico.	僅監聽，不傳送：DE 保持低準位，如同開發板不在匯流排上。每個請求會與回應配對；若下一個請求先到，或一秒內仍無回應，則計為該站無回應。所有幀都可在“流量”中檢視。
+el esclavo se calla (falla elegida)	從站保持靜默（所選故障模式）
+llegó fuera de un pedido	收到非請求對應的資料
+no es la respuesta esperada	回應與預期不符
+conexión abierta	連線已開啟
+conexión cerrada	連線已關閉
+CRC MALO	CRC 錯誤
+ · contestó en %u ms	 · %u 毫秒後回應
+Seguir	繼續
+Pausa	暫停
+Sólo errores	只有錯誤
+Borrar	清空
+Lo más nuevo arriba. Los tiempos son de cuando los bytes llegaron a la app (unos caracteres después de pasar por el cable); \"+\" es el silencio antes de la trama. El botón BOOT pausa.	最新資料在頂部。時間為位元組到達應用的時刻，比線路傳輸略晚幾個字元；“+”表示幀前的靜默間隔。按 BOOT 按鈕可暫停。
+equipo	裝置
+DEL HEADER AL TRANSCEPTOR	擴充介面與收發器接線
+→ TXD del módulo (DI en un transceptor suelto)	→ 模組 TXD（裸收發器為 DI）
+← RXD del módulo (RO)	← 模組 RXD（RO）
+→ DE y /RE unidos; libre con un módulo automático	→ DE 與 /RE 並接；自動收發模組無需連線
+Este puerto no tiene DE: sirve con un módulo de dirección automática (sólo TX, RX, VCC y GND).	此埠沒有 DE，需使用自動切換方向的模組（只接 TX、RX、VCC 和 GND）。
+Un adaptador USB-RS485 (CH340 o FT232 con un transceptor automático) en el host USB de la placa: A, B y GND al bus; nada más que cablear.	將 USB-RS485 介面卡（CH340 或 FT232 搭配自動收發器）插入開發板 USB 主機介面，再將 A、B、GND 接到匯流排即可。
+Por TCP no hay cables: el equipo está en la red.	TCP 模式無需接線，裝置透過網路連線。
+EL BUS	匯流排
+LO QUE HAY QUE SABER	使用須知
+Un módulo \"RS485 to TTL\" automático (VCC, TXD, RXD, GND; sin DE) cambia de dirección solo: alcanza con TX, RX y alimentarlo con 3,3 V. Si el LED TXD no parpadea cuando la placa manda, invertí TXD y RXD: con 3,3 V de los dos lados no se rompe nada.	自動收發的“RS485 轉 TTL”模組（VCC、TXD、RXD、GND，無 DE）會自動切換方向，只需 TX、RX 和 3.3 V 供電。若開發板傳送時 TXD 指示燈不閃，可交換 TXD 與 RXD；兩側均為 3.3 V 時不會損壞裝置。
+Alimentá el módulo con 3,3 V, no con 5 V: a 5 V su salida pone 5 V en el header, y los pines del P4 no lo aguantan. El MAX485 suelto es de 5 V; los de 3,3 V son MAX3485, SP3485, THVD1420.	請用 3.3 V 為模組供電，不要使用 5 V；5 V 供電可能使輸出達到 5 V，超出 P4 接腳承受範圍。裸 MAX485 是 5 V 器件，3.3 V 型號包括 MAX3485、SP3485、THVD1420。
+Con un transceptor que tiene DE, DE y /RE van juntos al pin DE: el P4 lo sube mientras transmite y lo baja para escuchar. Como monitor no transmite nunca.	帶 DE 的收發器應將 DE 與 /RE 並接到 DE 接腳；P4 傳送時拉高，監聽時拉低。監視器模式從不傳送。
+120 Ω sólo en las dos puntas del bus, no en cada equipo (muchos módulos ya traen una, marcada 121). Con todo apagado, entre A y B se miden unos 60 Ω (las dos en paralelo).	僅在匯流排兩端各接一個 120 Ω 電阻，不要每臺裝置都接（很多模組自帶，標記為 121）。全部斷電後，A 與 B 之間應約為 60 Ω（兩個電阻並聯）。
+A y B: el estándar dice A = D− y B = D+, pero muchos fabricantes los rotulan al revés. Si nadie contesta, invertirlos no rompe nada.	A 與 B：標準定義 A = D−、B = D+，但不少廠商標記相反。若沒有回應，可嘗試交換兩者，不會因此損壞裝置。
+Polarización: una resistencia de A a 3,3 V y otra de B a GND (unos 680 Ω), en un solo lugar del bus, dejan la línea quieta en 1 cuando nadie habla. Muchos módulos ya las traen; sin ellas el monitor ve ruido entre tramas.	偏置：在匯流排某一處，將 A 透過約 680 Ω 電阻接到 3.3 V，將 B 透過同值電阻接到 GND，使無人傳送時線路保持邏輯 1。很多模組已自帶；缺少偏置時，監視器可能看到幀間噪聲。
+GND común entre los equipos (el tercer cable), sobre todo con fuentes distintas: RS485 aguanta diferencias de unos pocos volts, no más.	裝置之間需要共地（第三根線），尤其在使用不同電源時；RS485 只能承受幾伏的地電位差。
+Par trenzado para A y B. A 9600 baudios el bus puede tener cientos de metros; a 115200, mucho menos.	A、B 使用雙絞線。9600 鮑率下可達數百米；115200 鮑率下可用距離明顯縮短。
+Perfil actualizado	設定已更新
+Perfil	裝置設定
+Sin perfil: a mano	未選設定：手動設定
+Editar	編輯
+sin leer	未讀
+esclavo	從站
+cada	每一個
+Este perfil no tiene puntos todavía: Editar los agrega.	此設定尚無資料點，請透過“編輯”新增。
+La app hace de este equipo: contesta en sus direcciones y los valores se mueven como dice el perfil. Tocá uno para cambiarlo (uno que se mueve vuelve a moverse).	應用模擬此裝置：在設定的地址回應，數值按設定變化。輕點數值可修改；動態數值隨後仍會繼續變化。
+Lee el perfil entero cada período. Tocá un valor que se puede escribir (rw) para cambiarlo.	每個週期讀取整個設定。輕點可寫數值（rw）即可修改。
+Listo	完成
+No se pudo escribir en la tarjeta	無法寫入儲存卡
+Nombre del perfil nuevo	新設定名稱
+Perfiles	裝置設定
+Sin perfil: el pedido a mano	未選設定：手動構造請求
+puntos	資料點
+Nuevo	新的
+Un perfil dice qué tiene un equipo y dónde: al elegirlo, Maestro lo lee entero y Esclavo hace de ese equipo. Toma su unidad, velocidad y formato. Son archivos CSV en la tarjeta (modbus/perfiles): la página Modbus del portal los edita, los sube y los baja.	設定描述裝置的資料及地址。選定後，“主站”讀取全部資料，“從站”模擬該裝置，並採用其站號、鮑率和格式。設定以 CSV 檔案儲存在儲存卡的 modbus/perfiles 目錄，可透過網頁管理中的 Modbus 頁面編輯、上傳和下載。
+Nombre	名稱
+Nota (qué es, de dónde salió el mapa)	備註（裝置說明、暫存器表來源）
+Unidad del esclavo	從站站號
+No entran más puntos	無法再新增資料點
+Tocá de nuevo para borrar el archivo	再次輕點以刪除檔案
+Nota…	備註…
+Esclavo	從站
+tomar la de la conexión	使用連線設定
+Velocidad: tomar la de la conexión	鮑率：使用連線設定
+LEERLO CADA	讀取週期
+PUNTOS	資料點
+Agregar punto	新增資料點
+Borrar perfil	刪除設定
+Cada cambio se guarda en la tarjeta. Un punto nuevo sigue al último; tocalo para cambiarlo.	每次更改都會儲存到儲存卡。新資料點新增到末尾，輕點即可修改。
+Nombre del punto	資料點名稱
+Unidad (°C, V, rpm…)	單位（°C、V、rpm…）
+Dirección (desde 0; 0x para hex)	地址（從 0 開始；十六進位制以 0x 開頭）
+Escala: el valor es el número crudo por esto	比例係數：實際值等於原始值乘以此係數
+Mínimo	最低
+Máximo	最大值
+Valor inicial	初始值
+TABLA Y DIRECCIÓN	資料表和地址
+coil (01)	線圈（01）
+entrada (02)	離散輸入（02）
+holding (03)	保持暫存器（03）
+input (04)	輸入暫存器（04）
+Dirección	地址
+TIPO	型別
+32 bits: u32, s32 y f32 toman dos registros, el alto primero (ABCD); los \"cdab\", el bajo primero.	32 位元型別：u32、s32、f32 佔兩個暫存器，高位在前（ABCD）；帶 cdab 字尾的型別低位在前。
+ESCALA (VALOR = CRUDO x ESCALA)	比例換算（實際值 = 原始值 × 係數）
+otra…	其他…
+ACCESO	存取許可權
+sólo lectura	只讀
+lectura y escritura	讀寫
+CUANDO LA APP HACE DE ESCLAVO	應用模擬從站時
+mín	最小值
+máx	最大值
+empieza en	初始值
+fijo se queda en el valor inicial; seno y rampa van de mín a máx en un minuto; deriva camina al azar entre los dos; contador sube máx por hora; alterna cambia cada pocos segundos; azar salta una vez por segundo.	fijo：保持初始值；seno 和 rampa：一分鐘內在最小值與最大值之間按正弦或斜坡變化；deriva：在範圍內隨機漂移；contador：每小時增加 max；alterna：每隔幾秒切換；azar：每秒隨機跳變。
+Borrar este punto	刪除此資料點
+Maestro	師父
+Monitor	監視器
+Tráfico	交通
+Cableado	電纜
+maestro	主站
+monitor	監視器
+Cancelar	取消
+Aplicar	應用
+Velocidad (baudios)	速率（鮑率）
+Equipo Modbus TCP (dirección:puerto)	Modbus TCP 裝置（位址:連接埠）
+Conexión	連線
+PUERTO	港口
+Un puerto con pin DE maneja el transceptor RS485 solo; usb0 es un adaptador USB-RS485 enchufado al host USB.	帶 DE 接腳的埠會自動控制 RS485 收發器；usb0 對應 USB 主機介面上的 USB-RS485 介面卡。
+VELOCIDAD	速度
+FORMATO	格式
+El estándar pide 8E1; muchos equipos vienen en 8N1 o 8N2. Si no contesta, en Maestro está \"Buscar velocidad\".	標準要求 8E1；許多裝置預設 8N1 或 8N2。若沒有回應，可使用“主站”中的“搜尋鮑率”。
+EQUIPO	團隊
+tocá para poner la dirección	點選設定地址
+Por TCP la app es sólo maestro, por ahora.	TCP 模式目前僅支援主站。
+ESPERA DE LA RESPUESTA (MAESTRO)	回應超時（主站）
+SILENCIO ANTES DE CADA PEDIDO	每次請求前的靜默間隔
+Algunos equipos (la Riden, varios medidores) dejan de contestar si los pedidos llegan pegados.	請求過於密集時，部分裝置（如 Riden 和某些儀表）會停止回應。
+abriendo… (%s)	正在開啟…（%s）
+cerrado · rol: %s	已關閉 · 角色：%s
+Cerrar	關閉
+Abrir	開啟連線
+Tráfico en pausa	流量顯示已暫停
+Tráfico sigue	流量顯示已繼續
+No hay memoria para el banco Modbus	記憶體不足，無法啟動 Modbus 測試臺

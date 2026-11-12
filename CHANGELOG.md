@@ -1,5 +1,281 @@
 # Changelog
 
+## 0.26.0 — 2026-11-12
+
+Ethernet, for a board that has the module.
+
+- **Ethernet over a W5500 module on the header's SPI port** (`spi.a`, chip
+  select on GPIO49), wired as in `docs/img/bench-w5500.svg`. It is off
+  until it is switched on in Settings, Redes, Ethernet, or in the portal's
+  "Wi-Fi y Ethernet" page: a board without the module loses nothing, and
+  one with Ethernet on and no module says so and goes on. The driver is
+  ESP-IDF's, over P4OS's own SPI service and polling, so it takes no pin
+  of its own. `docs/MODULES.md` has the wiring and `docs/plan/ETHERNET.md`
+  what was measured.
+- **The wire is a network like the Wi-Fi.** With both up the board goes
+  out by the wire and the portal answers on either; pulling the cable
+  hands the way out back to the Wi-Fi at once. The board boots and works
+  with the Wi-Fi off, and no longer restarts for lack of Wi-Fi while the
+  wire is up. The status bar shows a cable when the way out is the wire.
+- **Settings, "Redes"** takes the place of "Wi-Fi": where the board goes
+  out and each connection with its state, and the Wi-Fi's page inside it
+  as before.
+- **Ethernet never keeps the SPI port from a tool.** Sensors on the port
+  share it. An app that opens it (Bus, EEPROM, a radio) pauses Ethernet,
+  says so on the screen, and Ethernet comes back by itself eight seconds
+  after the app lets go. Bus and EEPROM warn before.
+- **A wired network is trusted by a switch on the board**, off until
+  someone turns it on (`docs/SECURITY.md`). Each connection to the portal,
+  SSH and the Flasher's bridge is now judged by the interface it came in
+  by: a trusted Wi-Fi no longer vouches for the wire, nor the other way.
+- **In the simulator**, a fake Ethernet: `P4_SIM_ETH=1`, or `nolink` for
+  the module with no cable.
+
+Measured on the board: link at 100 Mbit/s full duplex and an address in
+about a second; a download from the portal at 0.5 MB/s with the SPI clock
+at 8 MHz and 0.89 MB/s at 40 MHz (0.25 MB/s over the same board's Wi-Fi
+that day); 12.7 KB of internal RAM while it is on; thirteen hours with the
+link never dropping.
+
+Not tried on the board yet: a sensor sharing the port with Ethernet, the
+Wi-Fi switched on but unable to connect while the wire is up, and the
+landscape layout of the new Settings pages.
+
+## 0.25.2 — 2026-11-11
+
+A fix every board with many apps wants, and the start of two pieces of
+hardware.
+
+- **Preferences were not being kept on a board with many apps, in silence.**
+  The 24 KB NVS partition holds 630 entries, and the apps' settings and
+  scores filled them (422 keys on the board it was found on): every change
+  of every preference failed, the system's own among them, and so did new
+  Bluetooth bonds, which share it. The preferences now have 256 KB of their
+  own (8064 entries) at the start of a partition nothing used, reached with
+  the partition table every board already has: it arrives over the air. The
+  first boot moves every key (422 in 0.35 s) and a later one trims the old
+  store. A preference that cannot be kept says so in the log, and the
+  backup of the preferences no longer stops at 256 keys. `docs/BUILDING.md`
+  has the layout and what going back to an older firmware keeps.
+- **An auxiliary board for the header** (`hw/aux-board/`, plan in
+  `docs/plan/PCB.md`): a first schematic in two variants, through-hole and
+  SMD, written as a list of parts and nets that KiCad checks, and a first
+  placement on the P4's outline with every pin named on the silkscreen.
+  Drafts: nothing is routed and nothing was built.
+- **Ethernet, the plan and the first test** (`docs/plan/ETHERNET.md`): an
+  optional W5500 module on `spi.a`. Wired to the header as in
+  `docs/img/bench-w5500.svg`, the chip answers from Bus. The driver is not
+  in this version.
+
+## 0.25.1 — 2026-11-10
+
+The 40-pin header gets one pin map, and everything follows it.
+
+- **The pinout** (`docs/img/pinout.svg`, drawn by `tools/pinout_diagram.py`)
+  is the reference for the header, in the README's hardware section and in
+  `docs/MODULES.md`: the default ports, the pins each app starts with and
+  the ones suggested for what has no default.
+- **GPIO46, 47 and 48 are plain 3.3 V pins.** They hang from the VO4 LDO and
+  the system asked to measure them before use: 3.25 V measured on the
+  board, so the warnings are gone from Bus, Modules, Settings, LED Strips
+  and the portal.
+- **CAN starts on GPIO46 and GPIO47** (it was GPIO28 and 29: the infrared
+  receiver's pin and the RS485 port's DE). A board that already chose its
+  pins keeps them.
+- **1-Wire in Bus starts on GPIO34** (it was GPIO28), and LED Strips
+  suggests GPIO48. The examples in the documents say `port gpio.ow pin=34`.
+- **The bench drawings** of PWM, infrared, the LED strip and CAN are on the
+  pins of the map; each says on which pins it was tried on the board.
+- **The case** (`case/`): the printed enclosure of the photos, a remix of a
+  public-domain one, with the two USB host sockets on its back.
+- The plan of an auxiliary board for the header is in `docs/plan/PCB.md`
+  (Spanish).
+
+- **Luces:** "Pares" selected fixtures 1, 3, 5... (the odd ones: it counted
+  from 0); now Pares is 2, 4, 6... and Impares 1, 3, 5..., on the board and
+  on the portal page. The app's own title and its fades (0.5 s) translate.
+- The README has captures of Modbus, DMX and Luces, and the Riden panel's
+  capture is Equipos'.
+
+## 0.25.0 — 2026-11-09
+
+RS485 on the header, tried on a bench with an ESP32 and two automatic
+"RS485 to TTL" modules on a twisted pair (`tools/rs485_test`,
+`docs/img/bench-rs485.svg`).
+
+- **Modbus, a tester on the card** (`apps/modbus`, in place of the
+  firmware's old Modbus app):
+  - a **master**: any function, once or live, values in seven formats, a
+    tap writes; "Buscar unidades" asks units 1-247 and "Buscar velocidad"
+    tries eight speeds and four formats, and finds the format too, by the
+    line's parity and framing errors;
+  - a **slave** with tables the user edits, values that move by
+    themselves and faults on demand (silent, slow, broken CRC, busy,
+    failure); it also serves **Modbus TCP**;
+  - a **monitor** that only listens, a row per unit with its answers,
+    silences, exceptions and delays, and the bytes with line errors;
+  - a **TCP → RTU gateway** in the master, for a PC program or a SCADA;
+  - **device profiles**: a CSV per device (unit, speed, format, named
+    points with type, scale, unit and access); the master reads it and
+    shows each value by name, the slave plays the device. Six examples
+    (the bench's ESP32 drive, a multisensor, an energy meter, a temperature
+    and humidity sensor, a solar inverter, a battery BMS);
+  - every frame in hex and in words, the wiring drawn with the port's
+    pins, and a **portal page** that drives the app and edits, uploads and
+    downloads profiles, and imports Home Assistant and ESPHome YAML maps.
+- **Equipos.** The Riden supply and the DOMCOM gateway left the Modbus app
+  for an app of their own (`apps/equipos`); the Banco keeps its Fuente.
+- **DMX512** (`aos_io_dmx_*`): sending with the BREAK made by inverting
+  TX, receiving with an interrupt of its own that times the BREAK and MAB
+  on the pin, and **RDM** requests between DMX packets
+  (`aos_io_dmx_rdm`). The **DMX** app (`apps/dmx`):
+  - a test console (512 faders, a chase to find channels, a ramp, a
+    rainbow, the packet's shape);
+  - a fixture the board plays, drawn live;
+  - an analyzer: rate, slots, start code, BREAK and MAB as measured, bad
+    packets, a map of the 512 channels;
+  - **Red**: the board as an **Art-Net or sACN node**, one universe from
+    the network out on RS485, ArtPoll answered;
+  - **RDM**: the fixtures on the line found by discovery, what they are,
+    their address and label set, identify;
+  - the XLR wiring.
+- **Luces, a lighting console** (`apps/luces`): fixtures by name, twelve
+  built-in types and more as CSV, a patch in four universes, a programmer
+  for the selected fixtures (intensity, colour, strobe, a pan/tilt pad),
+  groups, effects, three test modes (one fixture at a time, red-green-
+  blue-white, a slow breath), scenes with their own fade and sample ones,
+  a chase with tap tempo, master and Blackout. Universe 1 goes out on
+  RS485 and every universe as **Art-Net**. Its portal page is a second
+  console for a phone.
+- **The bench's ESP32** (`tools/rs485_test/esp32`) plays a Modbus slave (a
+  made-up drive) or master with faults of its own, a DMX console, and a
+  DMX light on a strip of 8 WS2812B pixels that also answers RDM.
+- **For apps:** `aos_io_uart_errors` (a UART's parity and framing errors,
+  BREAKs and lost bytes), a TCP server (`aos_hal_tcp_listen`/`accept`) and
+  UDP with multicast (`aos_hal_udp_open`/`recv`/`send`). An RS485 port
+  hands its bytes over 3 character times after the line goes quiet
+  instead of 10.
+- **Translations:** every catalog checked again in English and German; the
+  portal pages of Modbus and Luces now translate the names in their
+  tables, and Cotiz the names of its rates.
+- It was not the portal: taps sent from the Mac seemed lost after reading
+  the serial channel, but they were requests with a 5 s limit waiting on
+  `p4os.local`'s IPv6 lookup, which the board does not answer (`curl -4`
+  answers in tens of ms).
+
+## 0.24.0 — 2026-11-08
+
+- **SSH: a console on the board.** `ssh p4os.local` opens a shell with
+  the card's files (`ls`, `cd`, `cat`, `head`, `tail`, `cp`, `mv`, `rm`,
+  `mkdir`, `df`), the log (`log -f`, `log -p` for the previous boot), the
+  tasks (`top`, `ps`), the memory (`free`), the network (`ip`) and the apps
+  (`apps`, `open`, `home`); `ssh p4os.local log -n 50` runs one command.
+  Line editing, history and Tab like a terminal expects. It is P4OS's own
+  server (curve25519-sha256, an Ed25519 host key, AES-GCM on the P4's AES
+  engine, strict KEX), switched on in Settings, Portal web, and it follows
+  the portal's rules: open where the portal is, the portal's password or a
+  key where it asks for one, closed where it is closed. A new key asks on
+  the board's screen, with its fingerprint. `docs/SSH.md`. Asked for by
+  Pocho ([Pocho Labs](https://www.pocholabs.com.ar)) at Home Assistant's
+  Community Day in Buenos Aires.
+- **SSH the other way: the SSH app.** A terminal on the board into a Mac,
+  a Raspberry Pi or any SSH server: saved computers, known_hosts with the
+  fingerprint shown the first time and a red warning when it changes, the
+  board's own Ed25519 key and a padlock that installs it in the computer's
+  authorized_keys, password or keyboard-interactive otherwise (never
+  kept). An xterm with 256 colours, the alternate screen and 1000 lines of
+  scrollback; a keyboard with Esc, Tab, Ctrl, Alt, arrows and F1-F12, or a
+  USB one. `apps/ssh/README.md`. The server learnt
+  chacha20-poly1305@openssh.com for it, and the firmware now lends the apps
+  Monocypher and the SSH wire helpers.
+- **You can see where you are typing.** The cursor of every text field
+  was drawn in LVGL's light-theme text colour, almost black on the dark
+  fields, and could not be seen. A theme of P4OS's own on top of LVGL's
+  now gives every field a blinking cursor in the accent colour, a ring in
+  the accent colour around the field being edited, and dimmer example text
+  (placeholders) so it does not read as typed. The field of an open
+  keyboard keeps the ring while the form behind it is touched or
+  scrolled, and loses it when the keyboard closes. It reaches the apps on
+  the card too, with no new build of them (`components/aos_ui/aos_textfield.c`).
+- **Search.** A swipe down from the middle of the home screen, as on a
+  phone, opens the system's search: the apps by name, the pages of
+  Settings by name and a few words each, a sum typed in (copied with a
+  tap), the notes by title and text, and the card's files by name. A tap
+  opens the app, Settings on that page, Notes on that note or Files in that
+  folder; ✓ opens the first. Notes and files are a walk of the card on a
+  thread with caps, nothing indexed beforehand; accents and case do not
+  matter. Notes needs its new build to open on a note
+  (`components/aos_ui/aos_search.c`).
+- **An eye in password fields, and backspace by words.** A password field
+  being edited shows an eye at its right end: a tap shows what was typed,
+  another hides it, and closing the keyboard hides it again (and it is
+  still not copied). Backspace held deletes eight letters and then whole
+  words.
+- **Copy and paste.** Hold a text field for a bubble: Seleccionar, Todo,
+  Pegar, and with something selected Cortar and Copiar (not in a password
+  field). A double tap selects a word; with something selected, the space
+  bar's trackpad moves its end, a key typed replaces it and backspace
+  deletes it. A USB keyboard does Ctrl or Cmd + C, X, V, A and Shift +
+  arrows. The clipboard is the system's, for the apps too
+  (`aos_ui_clip_set/get`), and the portal's Pantalla page has a box to send
+  text into the field open on the board, or bring the board's clipboard to
+  the computer (`/api/clip`; `components/aos_ui/aos_textsel.c`).
+- **The keyboard writes Spanish and moves the cursor.** Every on-screen
+  keyboard of the system and of the card's apps (no new build of them):
+  an ñ key beside the l; hold a key for its variants in a bubble (á à ä â,
+  é, í, ó, ú ü, ñ, ç, ¿, ¡, —, …, €), slide onto one and let go. Shift as
+  on a phone: one tap for one capital, two quick taps lock it (the key
+  reads ABC). The space bar is a trackpad: drag along it, or hold it and
+  drag, and the cursor moves by letters, and by lines in a text of several
+  lines. Keys type when the finger lifts, so sliding off one cancels it,
+  and letters no longer repeat while held (`components/aos_ui/aos_keyboard.c`).
+- **CAS no longer goes missing after an update.** After a firmware update
+  the board opens every app on the card once to describe it, and CAS
+  (5.3 MB of code, about 11 MB of PSRAM at once) could land on a moment
+  without a block that big and was left off the home screen: 14 MB were
+  free, but the largest block was 9.4 MB, split by the wallpaper photos
+  (1.8 MB each). An app that runs out of memory there is tried again at the
+  end with the photos let go (they are decoded again on the way home and
+  when the screen locks), and if it still does not fit, the description
+  the previous firmware saved puts it on the home screen anyway; its code
+  loads when it is opened. The log now says the PSRAM free and its largest
+  block for every app opened.
+- **The free PSRAM in one piece.** The wallpaper photos (1.8 MB each) lay
+  wherever the decoder had put them, at boot in the middle of the PSRAM,
+  and the 14 MB free were two pieces of 6.4 and 7.5 MB. Each photo now has
+  a slot of its own taken as the shell starts, right after the screen's
+  frame buffers, and is copied into it; and they are decoded once the
+  boot's scan of the card's apps is over, so the decoder's own buffers do
+  not leave holes among what the boot keeps. The lock screen's photo stays
+  decoded behind an app (it used to be let go and decoded again on
+  locking); an app that needs every megabyte still has them let go. The
+  lock screen's photo is kept at half size (460 KB) and stretched, and when
+  it is the same photo as the home screen's it takes nothing of its own:
+  the photos went from 3.6 MB to 2.3 MB, or 1.8 MB with the same photo.
+  `free -m` in the SSH console shows the PSRAM's big blocks by address.
+- **Two apps in the background, not three.** Beside the one in front, two
+  apps stay hidden; one more closes the least recently used (never one with
+  something running). And a card app that does not fit when opened closes
+  the hidden idle apps, lets the wallpaper photos go and tries again,
+  instead of failing.
+- **The games' memory.** Monster Hop loads its menu's map with about 4 MB
+  instead of 9.7 (it was left without it on the board): the map is
+  unpacked a stretch at a time straight into the picture. Turbo opens with
+  1.5 MB less at its peak (the stage's backdrop unpacked straight into
+  colour and alpha, the player's car coloured a view at a time), and Golf
+  holds 0.9 MB less outside its 3D view (that view's two small buffers only
+  while it draws). Nothing changes on screen. And a game in front (full
+  screen, the screen kept on: the games, Video, Cameras) gets the
+  wallpaper photos' 2.3 MB while it runs; they come back when it closes,
+  into the same place. A Monster Hop level had left 11 KB free with them.
+- **CAN: a library of .dbc files and an OBD-II scanner.** The Signals tab
+  reads any `.dbc` in the card's `can/dbc` (chosen on the board or on the
+  portal page), whole and without a line limit, with value names and plain
+  and extended multiplexing. A new OBD tab asks mode 01 of SAE J1979 and
+  shows the PIDs the car knows. Tried on a real bus: the P4 and an ESP32
+  playing a car (`tools/can_test`), each with an SN65HVD230, at
+  500 kbit/s ([apps/can/README.md](apps/can/README.md)).
+
 ## 0.23.2 — 2026-11-06
 
 - **Ten TCP connections for the apps, not six.** `aos_tcp` (the cameras'

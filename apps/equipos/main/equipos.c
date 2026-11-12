@@ -1,7 +1,8 @@
 /*
- * P4OS - Modbus: a master for the bench, over aos_modbus.c.
+ * P4OS - Equipos: the bench's own Modbus devices, as panels.
  *
- * Three tabs:
+ * Two tabs, taken out of the old Modbus app when that one became a generic
+ * Modbus tester (apps/modbus):
  *
  *   Riden     the RD60xx power supply (RTU, 115200, unit 1) as a panel: the
  *             output live, big; the setpoints, each write read back because
@@ -11,15 +12,19 @@
  *             map is the one measured on the real unit (riden-psu/README.md).
  *   Gateway   a DOMCOM gateway over Modbus TCP: sensors, relays, aux
  *             modules, dimmers, magnetic sensors (its README's map).
- *   Explorar  any slave, RTU or TCP: a function, an address and a count,
- *             the values in the format you choose, live if you want, and any
- *             holding register or coil written with a tap.
  *
- * One worker thread owns the link and does all the talking; the screen
- * only reads what it left and queues writes. Leaving the app gives the port
- * back after a moment (a turn of the screen does not drop it).
+ * The talking is the firmware's Modbus master (aos_modbus.c). One worker
+ * thread owns the link and does all of it; the screen only reads what it
+ * left and queues writes. The thread lives with the app and is stopped in
+ * destroy(): the code it runs goes away with the .so.
+ *
+ * The Riden's link is kept in the preferences mb_rd_port, mb_rd_baud and
+ * mb_rd_unit, which the firmware's Riden service (aos_riden.c, the Banco
+ * and its logger) reads too: one place to say where the supply is.
  */
-#include "aos_apps.h"
+#include "aos_app.h"
+#include "aos_icon_ops.h"
+#include "aos_riden.h"
 #include "aos_modbus.h"
 #include "aos_i18n.h"
 #include "aos_theme.h"
@@ -35,18 +40,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define OWNER      "Modbus"
+#define OWNER      "Equipos"
 #define C_AMBER    lv_color_hex(0xF59E0B)
 #define C_TEAL     lv_color_hex(0x10B981)
 
-enum { TAB_RIDEN, TAB_GW, TAB_EXP, TAB_COUNT };
-static const char *const TAB_NAME[TAB_COUNT] = { "Riden", "Gateway", N_("Explorar") };
-static const char *const TAB_GLYPH[TAB_COUNT] = { AOS_SYM_LIGHTNING_BOLT, AOS_SYM_LAN, AOS_SYM_MAGNIFY };
+enum { TAB_RIDEN, TAB_GW, TAB_COUNT };
+static const char *const TAB_NAME[TAB_COUNT] = { "Riden", "Gateway" };
+static const char *const TAB_GLYPH[TAB_COUNT] = { AOS_SYM_LIGHTNING_BOLT, AOS_SYM_LAN };
 
-enum { PLAN_NONE, PLAN_RIDEN, PLAN_GW, PLAN_EXP };
-enum { FMT_U16, FMT_S16, FMT_HEX, FMT_U32, FMT_S32, FMT_FLOAT, FMT_COUNT };
-static const char *const FMT_NAME[FMT_COUNT] = { "U16", "S16", "HEX", "U32", "S32", "Float" };
-static const char *const FC_NAME[5] = { "", "Coils", N_("Entradas"), "Holding", "Input" };
+enum { PLAN_NONE, PLAN_RIDEN, PLAN_GW };
 
 /* -------------------------------------------------------------------------- */
 /* The worker                                                                  */
@@ -57,14 +59,12 @@ typedef struct { uint8_t fc; uint16_t addr, n; uint16_t v[4]; char what[40]; } w
 static struct {
     void *mx;
     bool started;
+    volatile bool stop, done;   /* destroy() asks, the thread says it went */
     /* what the screen wants */
     int plan;
     uint32_t plan_ms;               /* the screen keeps this fresh while it is open */
     aos_mb_link_t want;
     uint32_t want_gen;
-    int ex_fc;
-    uint16_t ex_addr, ex_n;
-    bool ex_live, ex_once;
     wreq_t q[8];
     int qn;
     /* what the worker found */
@@ -76,17 +76,10 @@ static struct {
     bool rd_id_ok, rd_fast_ok, rd_slow_ok, rd_pre_ok;
     uint16_t gw_in[25], gw_coil[24], gw_hr[4], gw_di[2];
     bool gw_ok;
-    uint16_t ex_val[125];
-    int ex_rc, ex_got_fc;
-    uint16_t ex_got_addr, ex_got_n;
-    uint32_t ex_seq;
     char wmsg[96];
     bool wbad;
     uint32_t wseq;
 } W;
-/* Not initialised in place, so that it is .bss and goes to PSRAM (psram.lf). */
-__attribute__((constructor)) static void W_defaults(void) { W.ex_fc = 3; W.ex_n = 10; }
-
 static void w_lock(void) { aos_hal_mutex_lock(W.mx); }
 static void w_unlock(void) { aos_hal_mutex_unlock(W.mx); }
 
@@ -118,7 +111,7 @@ static void worker(void *arg)
     aos_mb_t *m = NULL;
     uint32_t gen = 0, t_fast = 0, t_slow = 0, t_ex = 0;
     int plan_linked = PLAN_NONE;
-    for (;;) {
+    while (!W.stop) {
         w_lock();
         int plan = W.plan;
         bool stale = (uint32_t)aos_hal_uptime_ms() - W.plan_ms > 2000;     /* the app went away */
@@ -192,37 +185,32 @@ static void worker(void *arg)
                 w_lock(); W.gw_ok = ok; w_unlock();
                 io_fail |= !ok;
             }
-        } else if (plan == PLAN_EXP) {
-            w_lock();
-            bool go = W.ex_once || (W.ex_live && now - t_ex >= 500);
-            int fc = W.ex_fc;
-            uint16_t a = W.ex_addr, n = W.ex_n;
-            W.ex_once = false;
-            w_unlock();
-            if (go) {
-                t_ex = now;
-                uint16_t tmp[125];
-                int rc = aos_mb_read(m, fc, a, n, tmp);
-                w_lock();
-                W.ex_rc = rc;
-                if (!rc) { memcpy(W.ex_val, tmp, n * sizeof *tmp); W.ex_got_fc = fc; W.ex_got_addr = a; W.ex_got_n = n; }
-                aos_mb_stats(m, &W.st);
-                W.ex_seq++;
-                W.seq++;
-                w_unlock();
-                io_fail |= rc == AOS_MB_E_IO;
-            }
         }
         if (io_fail && W.err[0] && strstr(W.err, aos_mb_strerror(AOS_MB_E_IO))) { aos_mb_close(m); m = NULL; }
         aos_hal_sleep_ms(15);
     }
+    if (m) aos_mb_close(m);
+    W.linked = false;
+    W.done = true;
 }
 
 static void w_start(void)
 {
     if (W.started) return;
-    W.mx = aos_hal_mutex_create();
-    W.started = aos_hal_thread_start("modbus", worker, NULL, 6144, 4);
+    if (!W.mx) W.mx = aos_hal_mutex_create();
+    W.stop = W.done = false;
+    W.plan = PLAN_NONE;
+    W.started = aos_hal_thread_start("equipos", worker, NULL, 6144, 4);
+}
+
+/* The thread runs code of this .so: it has to be gone before the app is. */
+static void w_stop(void)
+{
+    if (!W.started) return;
+    W.stop = true;
+    for (int i = 0; i < 300 && !W.done; i++) aos_hal_sleep_ms(10);
+    if (!W.done) aos_hal_log("equipos", "the worker did not stop in 3 s");
+    W.started = false;
 }
 
 static void w_plan(int plan, const aos_mb_link_t *link)
@@ -262,8 +250,6 @@ static struct {
     char gw_host[64];
     int gw_port;
     uint8_t gw_unit;
-    aos_mb_link_t ex;
-    int ex_fmt;
     bool loaded;
     float p_hist[120];
     int p_n;
@@ -280,23 +266,7 @@ static void settings_load(void)
     if (!aos_hal_pref_get_str("mb_gw_host", S.gw_host, sizeof S.gw_host)) S.gw_host[0] = 0;
     S.gw_port = aos_hal_pref_get_i32("mb_gw_port", &v) ? v : 502;
     S.gw_unit = aos_hal_pref_get_i32("mb_gw_unit", &v) ? (uint8_t)v : 1;
-    S.ex.transport = aos_hal_pref_get_i32("mb_ex_tr", &v) ? v : AOS_MB_RTU;
-    if (!aos_hal_pref_get_str("mb_ex_port", S.ex.port, sizeof S.ex.port)) snprintf(S.ex.port, sizeof S.ex.port, "uart.a");
-    S.ex.baud = aos_hal_pref_get_i32("mb_ex_baud", &v) ? (uint32_t)v : 9600;
-    S.ex.parity = aos_hal_pref_get_i32("mb_ex_par", &v) && (v == 'E' || v == 'O') ? (char)v : 'N';
-    S.ex.stop_bits = aos_hal_pref_get_i32("mb_ex_stop", &v) && v == 2 ? 2 : 1;
-    if (!aos_hal_pref_get_str("mb_ex_host", S.ex.host, sizeof S.ex.host)) S.ex.host[0] = 0;
-    S.ex.tcp_port = aos_hal_pref_get_i32("mb_ex_tport", &v) ? v : 502;
-    S.ex.unit = aos_hal_pref_get_i32("mb_ex_unit", &v) ? (uint8_t)v : 1;
-    S.ex_fmt = aos_hal_pref_get_i32("mb_ex_fmt", &v) ? v : FMT_U16;
-    if (aos_hal_pref_get_i32("mb_tab", &v)) S.tab = v;
-    int32_t fc = 3, a = 0, n = 10;
-    aos_hal_pref_get_i32("mb_ex_fc", &fc);
-    aos_hal_pref_get_i32("mb_ex_addr", &a);
-    aos_hal_pref_get_i32("mb_ex_n", &n);
-    W.ex_fc = (int)fc;
-    W.ex_addr = (uint16_t)a;
-    W.ex_n = (uint16_t)n;
+    if (aos_hal_pref_get_i32("eq_tab", &v) && v >= 0 && v < TAB_COUNT) S.tab = v;
 }
 
 static void settings_save(void)
@@ -307,19 +277,8 @@ static void settings_save(void)
     aos_hal_pref_set_str("mb_gw_host", S.gw_host);
     aos_hal_pref_set_i32("mb_gw_port", S.gw_port);
     aos_hal_pref_set_i32("mb_gw_unit", S.gw_unit);
-    aos_hal_pref_set_i32("mb_ex_tr", S.ex.transport);
-    aos_hal_pref_set_str("mb_ex_port", S.ex.port);
-    aos_hal_pref_set_i32("mb_ex_baud", (int32_t)S.ex.baud);
-    aos_hal_pref_set_i32("mb_ex_par", S.ex.parity);
-    aos_hal_pref_set_i32("mb_ex_stop", S.ex.stop_bits);
-    aos_hal_pref_set_str("mb_ex_host", S.ex.host);
-    aos_hal_pref_set_i32("mb_ex_tport", S.ex.tcp_port);
-    aos_hal_pref_set_i32("mb_ex_unit", S.ex.unit);
-    aos_hal_pref_set_i32("mb_ex_fmt", S.ex_fmt);
-    aos_hal_pref_set_i32("mb_ex_fc", W.ex_fc);
-    aos_hal_pref_set_i32("mb_ex_addr", W.ex_addr);
-    aos_hal_pref_set_i32("mb_ex_n", W.ex_n);
-    aos_hal_pref_set_i32("mb_tab", S.tab);
+    aos_hal_pref_set_i32("eq_tab", S.tab);
+    aos_riden_reload();         /* the Banco's service follows the link */
 }
 
 static aos_mb_link_t link_for_tab(void)
@@ -333,13 +292,11 @@ static aos_mb_link_t link_for_tab(void)
         l.gap_ms = 20;              /* the Riden stops answering without it */
         l.timeout_ms = 300;
         l.retries = 3;
-    } else if (S.tab == TAB_GW) {
+    } else {
         l.transport = AOS_MB_TCP;
         snprintf(l.host, sizeof l.host, "%s", S.gw_host);
         l.tcp_port = S.gw_port;
         l.unit = S.gw_unit;
-    } else {
-        l = S.ex;
     }
     return l;
 }
@@ -353,7 +310,7 @@ static struct {
     lv_timer_t *timer;
     int32_t W, H;
     bool land;
-    uint32_t seen, wseen, exseen;
+    uint32_t seen, wseen;
     /* Riden */
     lv_obj_t *rd_v, *rd_i, *rd_p, *rd_mode, *rd_out, *rd_out_l, *rd_vset, *rd_iset, *rd_cap, *rd_info[6], *rd_chart, *rd_model;
     lv_chart_series_t *rd_ser;
@@ -361,8 +318,6 @@ static struct {
     /* Gateway */
     lv_obj_t *gw_sens[10], *gw_relay[8], *gw_dim[4], *gw_dim_l[4], *gw_mag[2];
     bool gw_drag;
-    /* Explorer */
-    lv_obj_t *ex_list, *ex_msg;
     /* the keypad */
     char kp_text[16];
     lv_obj_t *kp_value, *ta, *kb;
@@ -457,6 +412,9 @@ static lv_obj_t *section(lv_obj_t *parent, const char *text)
     lv_obj_set_style_pad_top(t, 6, 0);
     return t;
 }
+
+/* lround() is not among the firmware's exports */
+static long rnd(double v) { return (long)(v < 0 ? v - 0.5 : v + 0.5); }
 
 /* 12.34 -> "12,34" */
 static void fmt_num(char *out, size_t n, double v, int dec)
@@ -625,8 +583,7 @@ static const uint32_t BAUDS[] = { 9600, 19200, 38400, 57600, 115200 };
 static void port_cb(lv_event_t *e)
 {
     const char *name = lv_event_get_user_data(e);
-    char *dst = S.tab == TAB_RIDEN ? S.rd_port : S.ex.port;
-    snprintf(dst, 16, "%s", name);
+    snprintf(S.rd_port, sizeof S.rd_port, "%s", name);
     settings_save();
     build_page();
 }
@@ -634,7 +591,7 @@ static void port_cb(lv_event_t *e)
 static void baud_cb(lv_event_t *e)
 {
     uint32_t b = BAUDS[(int)(intptr_t)lv_event_get_user_data(e)];
-    if (S.tab == TAB_RIDEN) S.rd_baud = b; else S.ex.baud = b;
+    S.rd_baud = b;
     settings_save();
     build_page();
 }
@@ -642,7 +599,7 @@ static void baud_cb(lv_event_t *e)
 static void unit_done(double v)
 {
     uint8_t u = v < 1 ? 1 : v > 247 ? 247 : (uint8_t)v;
-    if (S.tab == TAB_RIDEN) S.rd_unit = u; else if (S.tab == TAB_GW) S.gw_unit = u; else S.ex.unit = u;
+    if (S.tab == TAB_RIDEN) S.rd_unit = u; else S.gw_unit = u;
     settings_save();
     build_page();
 }
@@ -660,8 +617,8 @@ static void host_done(const char *h)
     int port = 502;
     char *c = strrchr(host, ':');
     if (c) { *c = 0; port = atoi(c + 1) > 0 ? atoi(c + 1) : 502; }
-    if (S.tab == TAB_GW) { snprintf(S.gw_host, sizeof S.gw_host, "%s", host); S.gw_port = port; }
-    else { snprintf(S.ex.host, sizeof S.ex.host, "%s", host); S.ex.tcp_port = port; }
+    snprintf(S.gw_host, sizeof S.gw_host, "%s", host);
+    S.gw_port = port;
     settings_save();
     build_page();
 }
@@ -674,39 +631,13 @@ static void host_cb(lv_event_t *e)
     text_entry(_("Equipo Modbus TCP (dirección:puerto)"), v, host_done);
 }
 
-/* 8N1, 8E1, 8O1, 8N2: what meters and PLCs actually use */
-static const struct { char par; uint8_t stop; const char *name; } FORMATS[] = {
-    { 'N', 1, "8N1" }, { 'E', 1, "8E1" }, { 'O', 1, "8O1" }, { 'N', 2, "8N2" },
-};
-
-static void format_cb(lv_event_t *e)
-{
-    int i = (int)(intptr_t)lv_event_get_user_data(e);
-    S.ex.parity = FORMATS[i].par;
-    S.ex.stop_bits = FORMATS[i].stop;
-    settings_save();
-    build_page();
-}
-
-static void transport_cb(lv_event_t *e)
-{
-    S.ex.transport = (int)(intptr_t)lv_event_get_user_data(e);
-    settings_save();
-    build_page();
-}
-
-static void connection_card(lv_obj_t *parent, int32_t w, bool can_tcp)
+static void connection_card(lv_obj_t *parent, int32_t w)
 {
     aos_mb_link_t l = link_for_tab();
     lv_obj_t *c = card(parent, w, LV_SIZE_CONTENT);
     lv_obj_set_style_pad_all(c, 18, 0);
     lv_obj_set_flex_flow(c, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_pad_row(c, 12, 0);
-    if (can_tcp) {
-        lv_obj_t *r = chips_row(c, w - 36);
-        chip(r, "RTU", l.transport == AOS_MB_RTU, transport_cb, (void *)AOS_MB_RTU);
-        chip(r, "TCP", l.transport == AOS_MB_TCP, transport_cb, (void *)AOS_MB_TCP);
-    }
     lv_obj_t *r = chips_row(c, w - 36);
     if (l.transport == AOS_MB_RTU) {
         for (int i = 0; i < aos_io_port_count(); i++) {
@@ -725,13 +656,6 @@ static void connection_card(lv_obj_t *parent, int32_t w, bool can_tcp)
         char t[24];
         snprintf(t, sizeof t, "%s %u", _("Unidad"), l.unit ? l.unit : 1);
         chip(r2, t, false, unit_cb, NULL);
-        if (S.tab == TAB_EXP) {             /* the Riden is 8N1, full stop */
-            lv_obj_t *r3 = chips_row(c, w - 36);
-            char par = l.parity ? l.parity : 'N';
-            int stop = l.stop_bits ? l.stop_bits : 1;
-            for (size_t i = 0; i < sizeof FORMATS / sizeof FORMATS[0]; i++)
-                chip(r3, FORMATS[i].name, FORMATS[i].par == par && FORMATS[i].stop == stop, format_cb, (void *)(intptr_t)i);
-        }
     } else {
         char t[96];
         snprintf(t, sizeof t, "%s", l.host[0] ? l.host : _("tocá para poner la dirección"));
@@ -755,7 +679,7 @@ static double rd_iscale(void) { return W.rd_id_ok && W.rd_id[0] / 10 == 6006 ? 1
 
 static void rd_vset_done(double v)
 {
-    uint16_t r = (uint16_t)lround(v * 100);
+    uint16_t r = (uint16_t)rnd(v * 100);
     char what[40];
     fmt_num(what, sizeof what, v, 2);
     strcat(what, " V");
@@ -764,7 +688,7 @@ static void rd_vset_done(double v)
 
 static void rd_iset_done(double v)
 {
-    uint16_t r = (uint16_t)lround(v * rd_iscale());
+    uint16_t r = (uint16_t)rnd(v * rd_iscale());
     char what[40];
     fmt_num(what, sizeof what, v, rd_iscale() > 100 ? 3 : 2);
     strcat(what, " A");
@@ -885,7 +809,7 @@ static void rd_chart_push(void)
     double p = ((uint32_t)W.rd_fast[8] << 16 | W.rd_fast[9]) / 100.0;
     w_unlock();
     if (!ok) return;
-    lv_chart_set_next_value(U.rd_chart, U.rd_ser, (int32_t)lround(p * 10));
+    lv_chart_set_next_value(U.rd_chart, U.rd_ser, (int32_t)rnd(p * 10));
     /* scale to what is there */
     int32_t mx = 10;
     int32_t *y = lv_chart_get_series_y_array(U.rd_chart, U.rd_ser);
@@ -1003,7 +927,7 @@ static void build_riden(lv_obj_t *parent, int32_t ch)
     lv_obj_set_style_line_width(U.rd_chart, 4, LV_PART_ITEMS);
     U.rd_ser = lv_chart_add_series(U.rd_chart, C_AMBER, LV_CHART_AXIS_PRIMARY_Y);
     lv_chart_set_all_values(U.rd_chart, U.rd_ser, LV_CHART_POINT_NONE);
-    for (int i = 0; i < S.p_n; i++) lv_chart_set_next_value(U.rd_chart, U.rd_ser, (int32_t)lround(S.p_hist[i] * 10));
+    for (int i = 0; i < S.p_n; i++) lv_chart_set_next_value(U.rd_chart, U.rd_ser, (int32_t)rnd(S.p_hist[i] * 10));
 
     section(right, _("PRESETS: TOCÁ UNO PARA CARGARLO"));
     lv_obj_t *pr = chips_row(right, rw);
@@ -1013,7 +937,7 @@ static void build_riden(lv_obj_t *parent, int32_t ch)
         U.rd_pre[m - 1] = chip(pr, t, false, rd_pre_cb, (void *)(intptr_t)m);
     }
     section(right, _("CONEXIÓN"));
-    connection_card(right, rw, false);
+    connection_card(right, rw);
     caption(right, _("La fuente habla por su puerto TTL a 115200 (3,3 V): TX, RX y GND al puerto elegido. Cada valor que se escribe se vuelve a leer, porque la Riden rechaza en silencio lo que no le gusta."), rw);
     rd_refresh();
 }
@@ -1108,7 +1032,7 @@ static void build_gw(lv_obj_t *parent, int32_t ch)
     lv_obj_t *col = column(parent, w, ch);
     lv_obj_t *head = box(col, w, 88);
     lv_obj_align(aos_label(head, "Gateway DOMCOM", aos_font_large, AOS_C_TEXT), LV_ALIGN_LEFT_MID, 4, 0);
-    connection_card(col, w, false);
+    connection_card(col, w);
     if (!S.gw_host[0]) {
         caption(col, _("Poné la dirección del gateway (el puerto Modbus TCP es 502 salvo que lo hayas cambiado)."), w);
         return;
@@ -1184,196 +1108,6 @@ static void build_gw(lv_obj_t *parent, int32_t ch)
 }
 
 /* -------------------------------------------------------------------------- */
-/* Explorar                                                                    */
-/* -------------------------------------------------------------------------- */
-
-static void ex_fc_cb(lv_event_t *e)
-{
-    w_lock();
-    W.ex_fc = (int)(intptr_t)lv_event_get_user_data(e);
-    W.ex_once = true;
-    w_unlock();
-    settings_save();
-    build_page();
-}
-
-static void ex_fmt_cb(lv_event_t *e)
-{
-    S.ex_fmt = (int)(intptr_t)lv_event_get_user_data(e);
-    settings_save();
-    build_page();
-}
-
-static void ex_addr_done(double v) { w_lock(); W.ex_addr = (uint16_t)(v < 0 ? 0 : v > 65535 ? 65535 : v); W.ex_once = true; w_unlock(); settings_save(); build_page(); }
-static void ex_n_done(double v)
-{
-    int max = W.ex_fc <= 2 ? 2000 : 125;
-    w_lock(); W.ex_n = (uint16_t)(v < 1 ? 1 : v > max ? max : v); W.ex_once = true; w_unlock();
-    settings_save();
-    build_page();
-}
-static void ex_addr_cb(lv_event_t *e) { keypad(_("Dirección inicial"), W.ex_addr, 0, "", ex_addr_done); }
-static void ex_n_cb(lv_event_t *e) { keypad(_("Cantidad"), W.ex_n, 0, "", ex_n_done); }
-static void ex_read_cb(lv_event_t *e) { w_lock(); W.ex_once = true; w_unlock(); }
-
-static void ex_live_cb(lv_event_t *e)
-{
-    w_lock();
-    W.ex_live = lv_obj_has_state(lv_event_get_target(e), LV_STATE_CHECKED);
-    w_unlock();
-}
-
-static uint16_t s_ex_wr_addr;
-
-static void ex_write_done(double v)
-{
-    uint16_t r = (uint16_t)(int32_t)lround(v);
-    char what[32];
-    snprintf(what, sizeof what, "reg %u", s_ex_wr_addr);
-    w_write(6, s_ex_wr_addr, 1, &r, what);
-    w_lock(); W.ex_once = true; w_unlock();
-}
-
-static void ex_row_cb(lv_event_t *e)
-{
-    int i = (int)(intptr_t)lv_event_get_user_data(e);
-    w_lock();
-    int fc = W.ex_got_fc;
-    uint16_t a = (uint16_t)(W.ex_got_addr + i), v = W.ex_val[i];
-    w_unlock();
-    if (fc == 1) {
-        uint16_t on = v ? 0 : 1;
-        char what[24];
-        snprintf(what, sizeof what, "coil %u", a);
-        w_write(5, a, 1, &on, what);
-        w_lock(); W.ex_once = true; w_unlock();
-    } else if (fc == 3) {
-        s_ex_wr_addr = a;
-        char t[40];
-        snprintf(t, sizeof t, _("Escribir el registro %u"), a);
-        keypad(t, v, 0, "", ex_write_done);
-    }
-}
-
-static void ex_format(int fmt, const uint16_t *v, int i, int n, char *out, size_t len)
-{
-    switch (fmt) {
-    case FMT_S16: snprintf(out, len, "%d", (int16_t)v[i]); break;
-    case FMT_HEX: snprintf(out, len, "0x%04X", v[i]); break;
-    case FMT_U32: case FMT_S32: case FMT_FLOAT: {
-        if (i + 1 >= n) { snprintf(out, len, "·"); break; }
-        uint32_t w = (uint32_t)v[i] << 16 | v[i + 1];        /* big-endian word order, the usual */
-        if (fmt == FMT_U32) snprintf(out, len, "%lu", (unsigned long)w);
-        else if (fmt == FMT_S32) snprintf(out, len, "%ld", (long)(int32_t)w);
-        else { float f; memcpy(&f, &w, 4); snprintf(out, len, "%g", (double)f); }
-        break;
-    }
-    default: snprintf(out, len, "%u", v[i]); break;
-    }
-}
-
-static void ex_refresh(void)
-{
-    if (!U.ex_list) return;
-    w_lock();
-    int rc = W.ex_rc, fc = W.ex_got_fc;
-    uint16_t a0 = W.ex_got_addr, n = W.ex_got_n, v[125];
-    memcpy(v, W.ex_val, sizeof v);
-    uint32_t seq = W.ex_seq;
-    w_unlock();
-    if (U.ex_msg) {
-        if (!seq) lv_label_set_text(U.ex_msg, _("Tocá Leer."));
-        else if (rc) lv_label_set_text(U.ex_msg, aos_mb_strerror(rc));
-        else lv_label_set_text_fmt(U.ex_msg, _("%u valores desde %u"), n, a0);
-        lv_obj_set_style_text_color(U.ex_msg, rc ? AOS_C_ORANGE : AOS_C_DIM, 0);
-    }
-    lv_obj_clean(U.ex_list);
-    if (!seq || rc) return;
-    bool bits = fc <= 2, wide = !bits && S.ex_fmt >= FMT_U32;
-    int32_t w = lv_obj_get_width(U.ex_list);
-    int cols = bits ? (U.land ? 8 : 4) : (U.land ? 4 : 2);
-    int32_t gap = 10, cw = (w - (cols - 1) * gap) / cols;
-    int shown = 0;
-    for (int i = 0; i < n && shown < 125; i += wide ? 2 : 1, shown++) {
-        lv_obj_t *c = card(U.ex_list, cw, 72);
-        lv_obj_set_style_pad_hor(c, 16, 0);
-        bool writable = fc == 1 || fc == 3;
-        if (writable) {
-            lv_obj_add_flag(c, LV_OBJ_FLAG_CLICKABLE);
-            lv_obj_set_style_bg_color(c, AOS_C_CARD2, LV_STATE_PRESSED);
-            lv_obj_add_event_cb(c, ex_row_cb, LV_EVENT_CLICKED, (void *)(intptr_t)i);
-        }
-        lv_obj_t *al = lv_label_create(c);
-        lv_obj_set_style_text_font(al, &aos_mono_18, 0);
-        lv_obj_set_style_text_color(al, C_AMBER, 0);
-        lv_label_set_text_fmt(al, "%u", a0 + i);
-        lv_obj_align(al, LV_ALIGN_LEFT_MID, 0, 0);
-        char t[32];
-        if (bits) snprintf(t, sizeof t, "%s", v[i] ? "1" : "0");
-        else ex_format(S.ex_fmt, v, i, n, t, sizeof t);
-        lv_obj_t *vl = lv_label_create(c);
-        lv_obj_set_style_text_font(vl, &aos_mono_22, 0);
-        lv_obj_set_style_text_color(vl, bits && v[i] ? AOS_C_GREEN : AOS_C_TEXT, 0);
-        lv_label_set_text(vl, t);
-        lv_obj_align(vl, LV_ALIGN_RIGHT_MID, 0, 0);
-    }
-}
-
-static void build_exp(lv_obj_t *parent, int32_t ch)
-{
-    int32_t w = U.W - 2 * AOS_UI_PAD;
-    lv_obj_t *left, *right;
-    int32_t lw = w, rw = w;
-    if (U.land) {
-        lw = 520;
-        rw = w - lw - AOS_UI_PAD;
-        left = column(parent, lw, ch);
-        right = column(parent, rw, ch);
-        lv_obj_set_x(right, lw + AOS_UI_PAD);
-    } else {
-        left = right = column(parent, w, ch);
-    }
-    lv_obj_t *head = box(left, lw, 88);
-    lv_obj_align(aos_label(head, _("Explorar"), aos_font_large, AOS_C_TEXT), LV_ALIGN_LEFT_MID, 4, 0);
-    connection_card(left, lw, true);
-    section(left, _("PEDIDO"));
-    lv_obj_t *c = card(left, lw, LV_SIZE_CONTENT);
-    lv_obj_set_style_pad_all(c, 18, 0);
-    lv_obj_set_flex_flow(c, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(c, 12, 0);
-    lv_obj_t *r = chips_row(c, lw - 36);
-    for (int fc = 1; fc <= 4; fc++) chip(r, aos_tr(FC_NAME[fc]), W.ex_fc == fc, ex_fc_cb, (void *)(intptr_t)fc);
-    lv_obj_t *r2 = chips_row(c, lw - 36);
-    char t[32];
-    snprintf(t, sizeof t, "%s %u", _("Desde"), W.ex_addr);
-    chip(r2, t, false, ex_addr_cb, NULL);
-    snprintf(t, sizeof t, "%s %u", _("Cantidad"), W.ex_n);
-    chip(r2, t, false, ex_n_cb, NULL);
-    if (W.ex_fc >= 3) {
-        lv_obj_t *r3 = chips_row(c, lw - 36);
-        for (int f = 0; f < FMT_COUNT; f++) chip(r3, FMT_NAME[f], S.ex_fmt == f, ex_fmt_cb, (void *)(intptr_t)f);
-    }
-    lv_obj_t *r4 = box(c, lw - 36, 80);
-    lv_obj_set_flex_flow(r4, LV_FLEX_FLOW_ROW);
-    lv_obj_set_flex_align(r4, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
-    lv_obj_set_style_pad_column(r4, 16, 0);
-    pill(r4, AOS_SYM_RESTART, _("Leer"), C_TEAL, ex_read_cb, NULL);
-    aos_label(r4, _("En vivo"), aos_font_body, AOS_C_TEXT);
-    lv_obj_t *sw = lv_switch_create(r4);
-    lv_obj_set_size(sw, 96, 52);
-    lv_obj_set_style_bg_color(sw, C_TEAL, LV_PART_INDICATOR | LV_STATE_CHECKED);
-    lv_obj_set_state(sw, LV_STATE_CHECKED, W.ex_live);
-    lv_obj_add_event_cb(sw, ex_live_cb, LV_EVENT_VALUE_CHANGED, NULL);
-    if (W.ex_fc == 1 || W.ex_fc == 3) caption(left, W.ex_fc == 1 ? _("Tocá una coil para invertirla.") : _("Tocá un registro para escribirlo (FC 06)."), lw);
-    section(right, _("RESPUESTA"));
-    U.ex_msg = aos_label(right, "", aos_font_small, AOS_C_DIM);
-    U.ex_list = box(right, rw, LV_SIZE_CONTENT);
-    lv_obj_set_flex_flow(U.ex_list, LV_FLEX_FLOW_ROW_WRAP);
-    lv_obj_set_style_pad_gap(U.ex_list, 10, 0);
-    ex_refresh();
-}
-
-/* -------------------------------------------------------------------------- */
 /* Pages                                                                       */
 /* -------------------------------------------------------------------------- */
 
@@ -1381,7 +1115,7 @@ static void build_page(void)
 {
     kp_close();
     lv_obj_clean(U.content);
-    U.status = U.rd_v = U.rd_chart = U.ex_list = U.ex_msg = NULL;
+    U.status = U.rd_v = U.rd_chart = NULL;
     memset(U.gw_sens, 0, sizeof U.gw_sens);
     for (int i = 0; i < TAB_COUNT; i++) {
         lv_color_t c = i == S.tab ? C_TEAL : AOS_C_DIM;
@@ -1390,11 +1124,10 @@ static void build_page(void)
     }
     aos_mb_link_t l = link_for_tab();
     bool no_host = l.transport == AOS_MB_TCP && !l.host[0];      /* nothing to connect to yet */
-    w_plan(no_host ? PLAN_NONE : S.tab == TAB_RIDEN ? PLAN_RIDEN : S.tab == TAB_GW ? PLAN_GW : PLAN_EXP, &l);
+    w_plan(no_host ? PLAN_NONE : S.tab == TAB_RIDEN ? PLAN_RIDEN : PLAN_GW, &l);
     int32_t ch = lv_obj_get_height(U.content);
     if (S.tab == TAB_RIDEN) build_riden(U.content, ch);
-    else if (S.tab == TAB_GW) build_gw(U.content, ch);
-    else build_exp(U.content, ch);
+    else build_gw(U.content, ch);
 }
 
 static void tab_cb(lv_event_t *e)
@@ -1411,7 +1144,7 @@ static void timer_cb(lv_timer_t *t)
     /* keep the plan alive; it lapses two seconds after the app goes */
     w_lock();
     W.plan_ms = (uint32_t)aos_hal_uptime_ms();
-    uint32_t seq = W.seq, wseq = W.wseq, exseq = W.ex_seq;
+    uint32_t seq = W.seq, wseq = W.wseq;
     char wmsg[96];
     bool wbad = W.wbad;
     snprintf(wmsg, sizeof wmsg, "%s", W.wmsg);
@@ -1426,7 +1159,6 @@ static void timer_cb(lv_timer_t *t)
         if (S.tab == TAB_RIDEN) rd_refresh();
         else if (S.tab == TAB_GW) gw_refresh();
     }
-    if (exseq != U.exseen && S.tab == TAB_EXP) { U.exseen = exseq; ex_refresh(); }
     if (S.tab == TAB_RIDEN && n % 2 == 0) {
         rd_chart_push();
         w_lock();
@@ -1439,11 +1171,12 @@ static void timer_cb(lv_timer_t *t)
     }
 }
 
-static void *create(aos_app_t *self, lv_obj_t *root)
+static void build_screen(lv_obj_t *root)
 {
-    w_start();
-    settings_load();
+    lv_obj_clean(root);
+    lv_timer_t *timer = U.timer;
     memset(&U, 0, sizeof U);
+    U.timer = timer;
     U.root = root;
     U.W = lv_obj_get_width(root);
     U.H = lv_obj_get_height(root);
@@ -1469,30 +1202,73 @@ static void *create(aos_app_t *self, lv_obj_t *root)
         U.tabs[i] = t;
     }
     build_page();
+}
+
+static void *create(aos_app_t *self, lv_obj_t *root)
+{
+    (void)self;
+    settings_load();
+    w_start();
+    U.timer = NULL;
+    build_screen(root);
     U.timer = lv_timer_create(timer_cb, 125, NULL);
     return &U;
 }
 
 static void destroy(aos_app_t *self, void *inst)
 {
+    (void)self;
+    (void)inst;
     if (U.timer) lv_timer_delete(U.timer);
     memset(&U, 0, sizeof U);
+    w_stop();
+}
+
+static bool resize(aos_app_t *self, void *inst, lv_obj_t *root)
+{
+    (void)self;
+    (void)inst;
+    build_screen(root);
+    return true;
 }
 
 static bool back(aos_app_t *self, void *inst)
 {
+    (void)self;
+    (void)inst;
     if (U.overlay) { kp_close(); return true; }
     return false;
 }
 
-void aos_app_modbus_get(aos_app_t *app)
+/* A bench supply: a box with its display and two terminals. */
+static const uint8_t EQ_ICON[] = {
+    AIC_HEADER,
+    AIC_RECT(AIC_CENTER,   0,   0, 70, 50,  8,         AIC_C_TEXT, 255),   /* the case */
+    AIC_RECT(AIC_CENTER, -12,  -8, 36, 20,  3,         AIC_C_LIT(0x0B3D2E), 255),   /* the display */
+    AIC_RECT(AIC_CENTER, -12,  -8, 28,  6,  2,         AIC_C_GREEN, 255),
+    AIC_RECT(AIC_CENTER,  22,  -8, 12, 12,  AIC_CIRCLE, AIC_C_DIM, 255),  /* the knob */
+    AIC_RECT(AIC_CENTER, -18,  14, 10, 10,  AIC_CIRCLE, AIC_C_RED, 255),  /* + */
+    AIC_RECT(AIC_CENTER,  -2,  14, 10, 10,  AIC_CIRCLE, AIC_C_BG, 255),   /* - */
+    AIC_RECT(AIC_CENTER,  20,  14, 16,  6,  3,         AIC_C_GREEN, 255),  /* on */
+    AIC_END
+};
+
+static bool init(aos_app_t *app)
 {
-    *app = (aos_app_t){
-        .desc = {
-            .id = "aos.modbus", .name = "Modbus", .icon = AOS_SYM_LAN,
-            .color_a = 0x10B981, .color_b = 0x047857,
-            .order = 520,
-        },
-        .create = create, .destroy = destroy, .back = back,
-    };
+    app->desc.id       = "aos.equipos";
+    app->desc.name     = "Equipos";
+    app->desc.icon     = AOS_SYM_LIGHTNING_BOLT;
+    app->desc.icon_vec = AOS_ICON_NONE;
+    app->desc.color_a  = 0xF59E0B;
+    app->desc.color_b  = 0x92400E;
+    app->desc.order    = 521;
+    aos_icon_set_ops(app, EQ_ICON, sizeof EQ_ICON);
+
+    app->create  = create;
+    app->destroy = destroy;
+    app->resize  = resize;
+    app->back    = back;
+    return true;
 }
+
+AOS_APP_ENTRY(init);

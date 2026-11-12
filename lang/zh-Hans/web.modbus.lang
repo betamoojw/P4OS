@@ -1,0 +1,125 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-key-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Importado de ESPHome	已从 ESPHome 导入
+Importado de Home Assistant	已从 Home Assistant 导入
+%s entradas sin traer	已跳过 %s 项
+01 Coils	01 线圈
+02 Entradas	02 离散输入
+03 Holding	03 保持寄存器
+04 Input	04 输入寄存器
+05 Coil	05 线圈
+06 Registro	06 寄存器
+15 Coils	15 多个线圈
+16 Registros	16 多个寄存器
+08 Eco	08 回显
+17 Id	17 标识
+43 Identificación	43 设备识别
+Normal	正常
+Mudo	沉默
+Lento	慢速
+CRC malo	CRC 错误
+Ocupado (06)	忙（06）
+Falla (04)	故障（04）
+Maestro	师父
+Esclavo	从站
+Monitor	监视器
+La app Modbus no está abierta en la placa (%s)	开发板上的 Modbus 应用未打开（%s）
+valores (escrituras)	写入值
+Unidad	单位
+Función	功能
+Desde	来源
+Cantidad	数量
+Valores	数值
+Enviar	发送
+En vivo	实时
+Buscar unidades	搜索站号
+Buscar velocidad	搜索波特率
+Detener	停止
+Borrar cuentas	清空计数
+Pasarela Modbus TCP → RTU	Modbus TCP → RTU 网关
+Atender clientes TCP	为 TCP 客户端提供服务
+Puerto	港口
+Aplicar	应用
+Un programa de la PC (Modbus Poll, un SCADA, Home Assistant) pide por la red a la placa, y ella le pregunta al equipo por el bus. Si el equipo no contesta, el cliente recibe la excepción 0B.	电脑程序（Modbus Poll、SCADA、Home Assistant）通过网络向开发板请求数据，开发板再查询总线设备。设备无响应时，客户端收到异常码 0B。
+Falla	故障
+Demora (ms)	延迟（毫秒）
+Valores que se mueven	动态数值
+Tráfico	交通
+Pausa	已暂停
+Sólo errores	只有错误
+Borrar	删除
+Velocidad	速度
+Formato	格式化
+Espera (ms)	超时（毫秒）
+Silencio (ms)	静默间隔（毫秒）
+Aplicar conexión	应用连接设置
+Abierta en la placa	在开发板上打开
+Abrir la app en la placa	在板上打开应用程序
+Con el perfil "%s" la app lo lee entero: los valores están en la pestaña Perfiles.	使用配置“%s”时，应用会读取其中的全部数据，数值显示在“设备配置”页。
+Pasar a pedido a mano	切换为手动请求
+Todavía no hay respuesta.	尚无响应。
+OK · %s ms	成功 · %s 毫秒
+%s pedidos · %s respuestas · %s sin respuesta · %s CRC · %s excepciones · promedio %s ms, máximo %s ms	%s 次请求 · %s 次响应 · %s 次无响应 · %s 次 CRC 错误 · %s 次异常 · 平均 %s 毫秒，最大 %s 毫秒
+Herramienta en curso: %s de %s	工具运行中：%s / %s
+Lo marcado contestó sin errores de línea: ése es el formato. Los otros contestaron con bytes de paridad o de parada malos.	高亮项响应正常且无线路错误，因此是正确格式。其他项存在奇偶校验或停止位错误。
+La velocidad es segura; el formato no salió claro (contestaron varios sin errores, o todos con errores). El manual del equipo dice cuál (el estándar pide 8E1).	波特率已确定，但格式尚不明确（多个格式均无错误，或全部存在错误）。请查阅设备手册；标准要求使用 8E1。
+Apagada.	已关闭。
+Cliente: %s · %s pedidos, %s contestados, %s sin respuesta	客户端：%s · %s 次请求，%s 次响应，%s 次无响应
+ninguno	无
+Modbus TCP en el puerto %s · cliente: %s	Modbus TCP 端口 %s · 客户端：%s
+%s tramas oídas · %s para esta unidad · %s para otras · %s broadcast · %s CRC malos · %s excepciones	已监听 %s 帧 · 本站 %s 帧 · 其他站 %s 帧 · 广播 %s 帧 · CRC 错误 %s 帧 · 异常 %s 次
+Último pedido:	上次请求：
+%s tramas · %s bytes · %s con CRC malo · %s bytes de ruido · %s bytes con error de línea	%s 帧 · %s 字节 · CRC 错误 %s 帧 · 噪声 %s 字节 · 线路错误 %s 字节
+Pedidos	请求
+Respuestas	响应
+Sin respuesta	无响应
+Excepciones	异常
+Demora	延迟
+Último	最近一次
+abriendo…	正在打开…
+cerrado	关闭
+Cerrar	关闭
+Abrir	打开连接
+La app Modbus no está abierta en la placa.	开发板上的 Modbus 应用未打开。
+contestó en %s ms	%s 毫秒后响应
+Modbus	Modbus
+Perfiles	设备配置
+No hay perfiles todavía. La app escribe cuatro de ejemplo la primera vez que se abre.	尚无配置。首次打开应用时会生成四个示例。
+Nuevo	新的
+Subir .csv o importar YAML	上传 .csv 或导入 YAML
+Un perfil dice qué tiene un equipo Modbus y dónde. En Maestro la app lo lee entero; en Esclavo hace de ese equipo.	配置描述 Modbus 设备的数据及地址。“主站”读取全部数据，“从站”模拟该设备。
+Importar: un YAML de Home Assistant (modbus:) o de ESPHome (modbus_controller) se vuelve un perfil con sus registros, tipos, escalas y unidades.	导入：将 Home Assistant（modbus:）或 ESPHome（modbus_controller）的 YAML 转换为配置，包含寄存器、类型、比例系数和单位。
+Hay cambios sin guardar. ¿Descartarlos?	存在未保存的更改，是否放弃？
+%s líneas sin entender	有 %s 行无法识别
+Elegí un perfil de la lista, o hacé uno nuevo.	请从列表中选择配置，或创建新配置。
+Quitar	移除
+Nombre	名称
+Nota	备注
+Esclavo (unidad)	从站（站号）
+Leerlo cada (ms)	读取周期（毫秒）
+Tabla	表
+Dirección	地址
+Tipo	类型
+Escala	比例系数
+Acceso	访问权限
+Mín	最小值
+Máx	最大值
+Simulación	模拟方式
+Inicial	初始值
+En la placa	开发板当前值
+Agregar punto	添加数据点
+Guardar	保存
+Usar en la placa	在开发板上使用
+Descargar	下载
+Duplicar	创建副本
+Tablas: coil, di (entradas), hr (holding), ir (input). Tipos de 32 bits: el registro alto primero; los "cdab", el bajo primero. Valor = crudo × escala. La simulación es para cuando la app hace de esclavo: se mueve entre mín y máx (contador: sube máx por hora). La columna "En la placa" muestra lo que la app lee o hace ahora, si está abierta con este perfil.	数据表：coil（线圈）、di（离散输入）、hr（保持寄存器）、ir（输入寄存器）。32 位类型默认高位寄存器在前，带 cdab 后缀的类型低位在前。实际值 = 原始值 × 比例系数。模拟方式用于应用作为从站时，在最小值与最大值之间改变数值（contador 每小时增加 max）。“开发板当前值”列显示应用使用此配置时正在读取或模拟的数值。
+Valor %s	数值 %s
+Guardado: la app lo vuelve a leer sola	已保存，应用会自动重新读取
+La placa usa %s	开发板正在使用 %s
+Nombre del perfil nuevo	新配置名称
+Nombre de la copia	副本名称
+¿Borrar %s de la tarjeta? No se puede deshacer.	从存储卡删除 %s？此操作无法撤销。
+%s no parece un perfil: no tiene puntos	%s 似乎不是有效配置，其中没有数据点
+Importados %s puntos: revisalos y guardá	已导入 %s 个数据点，请检查后保存
+Subido	已上传
+Control	控制

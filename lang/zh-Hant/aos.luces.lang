@@ -1,0 +1,115 @@
+# Offline Traditional Chinese catalogue; reviewed terms: ../zh-Hant-key-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Escenario	舞臺
+Escenas	場景
+Patch	燈具設定
+Salida	輸出
+Cancelar	取消
+Aplicar	應用
+no se pudo abrir %s (¿lo tiene otra app?)	無法開啟 %s (有沒有其他應用程式使用它?)
+saliendo por %s · %.0f paquetes/s%s%s	透過 %s 傳送 · %.0f 包/秒%s%s
+salida cerrada (%s)%s	輸出已關閉（%s）%s
+Luces	燈光
+Rojo	紅色
+Verde	綠色
+Azul	藍色
+Arcoíris	彩虹
+Pares e impares	奇數和偶數
+Naranja	橙色
+Ámbar	琥珀色
+Amarillo	黃色
+Cian	青色
+Violeta	紫色
+Magenta	洋紅色
+Cálido	暖色
+Blanco	白色
+Sin strobe	無頻閃
+Lento	慢速
+Medio	平均值
+Rápido	快速
+Ninguno	無
+Ola	波浪
+Destellos	閃閃發光
+Recorrido	逐燈點亮
+Colores	顏色
+Respirar	呼吸
+elegí aparatos antes de guardar un grupo	請先選擇燈具，再儲存分組
+Grupo %d	分組 %d
+Nombre del grupo (con los aparatos elegidos)	分組名稱（包含所選燈具）
+Borrar el grupo (los aparatos quedan)	刪除分組（保留燈具）
+Todos	全部
+Pares	偶數
+Impares	奇數
++ Grupo	+ 分組
+No hay aparatos: agregalos en Patch.	沒有燈具，請在“燈具設定”中新增。
+Intensidad	亮度
+Color	顏色
+Posición (pan y tilt)	位置（水平和俯仰）
+Al centro	居中
+Efectos y pruebas	效果和測試
+Velocidad	速度
+El efecto corre sobre los aparatos elegidos al tocarlo (todos, si no hay ninguno elegido), encima de la escena.	效果會應用於輕點時所選的燈具，併疊加到目前場景上；未選擇燈具時應用於全部燈具。
+Pruebas: Recorrido prende un aparato por vez en blanco (cuál es cuál; uno fuera de turno tiene la dirección mal). Colores pasa todos por rojo, verde, azul y blanco (uno de otro color tiene los canales en otro orden que su tipo). Respirar sube y baja la intensidad despacio (escalones o parpadeo abajo son la curva del aparato).	測試：“逐燈點亮”依次將燈具點亮為白色，用於識別燈具；順序錯誤表示地址有誤。“顏色”讓所有燈具依次顯示紅、綠、藍、白；顏色不一致表示通道順序與燈具型別不符。“呼吸”緩慢改變亮度，低亮度時的跳變或閃爍反映了燈具的調光曲線。
+Baja la intensidad de todo lo que sale, sin tocar las escenas. Blackout, arriba, apaga todo de golpe.	調整所有輸出的亮度，不修改場景。上方的“全黑”可立即關閉全部燈光。
+%d elegidos	已選 %d 條
+ninguno elegido: todos	未選擇：應用於全部
+Corte	切換
+Mitad	半程漸變
+Todo fundido	全程漸變
+Escena %d	場景 %d
+Nombre de la escena	場景名稱
+SU FUNDIDO AL LLAMARLA	呼叫場景時的漸變
+%u,%u s	%u.%u 秒
+Volver a grabar con lo que hay ahora	用目前效果重新儲存
+Cambiar el nombre	重新命名
+Borrar	刪除
+Tiempo (golpes por minuto)	節奏（每分鐘拍數）
+Guardar lo que hay	儲存目前效果
+Escenas de muestra	示例場景
+FUNDIDO DE LAS ESCENAS NUEVAS (CADA UNA GUARDA EL SUYO)	新場景的漸變（各場景獨立儲存）
+ESCENAS · MANTENÉ UNA PARA GRABARLA O BORRARLA	場景 · 長按以重新儲存或刪除
+Todavía no hay escenas. Armá un look en Escenario (intensidad, color, posición) y guardalo acá.	尚無場景。請在“舞臺”中設定亮度、顏色和位置，再到此處儲存。
+corte	直接切換
+SECUENCIA: UNA ESCENA TRAS OTRA, AL TIEMPO	追逐：按節拍依次播放場景
+Andar	執行
+Hacen falta al menos dos escenas distintas: con una sola, la secuencia llama siempre a la misma. \"Escenas de muestra\" agrega cinco.	至少需要兩個不同的場景；只有一個時，追逐會反覆呼叫同一場景。“示例場景”可新增五個場景。
+Pasa por todas las escenas en orden, una por golpe. Tap: tocalo al ritmo de la música, tres o cuatro veces. Corte, mitad o todo fundido: cuánto de cada paso es fundido.	按順序播放所有場景，每拍一個。可隨音樂輕點節拍按鈕三到四次。直接切換、半程漸變和全程漸變決定每一步中漸變所佔的比例。
+Parar	停止
+Agregar aparatos	新增燈具
+TIPO	型別
+CUÁNTOS	數量
+UNIVERSO (EL 1 SALE POR RS485; LOS DEMÁS, SÓLO POR ART-NET)	域（1 透過 RS485 輸出，其餘僅透過 Art-Net）
+Desde la dirección %d, uno tras otro, %u canales cada uno.	從地址 %d 起依次排列，每個佔用 %u 通道。
+No quedan canales libres para ese tipo.	沒有足夠的空閒通道容納此型別。
+Agregar	新增
+Nombre del aparato	燈具名稱
+Dirección DMX (1 a 512)	DMX 地址（1 至 512）
+Nombre	名稱
+Dirección %u	地址 %u
+UNIVERSO	域
+Canales %u a %u: 	通道 %u 至 %u：
+Se pisa con otro aparato o se pasa del canal 512.	與其他燈具重疊，或超過第 512 通道。
+Sacar del patch	從設定中移除
+faltan tipos: esos aparatos quedaron como dimmer	缺少型別定義：這些燈具暫按調光器處理
+%d aparatos, %d canales de 512	%d 個燈具，已用 %d / 512 通道
+TIPOS DE APARATO	燈具型別
+incluido	內建
+Volver a leer los tipos de la tarjeta	重新讀取儲存卡上的型別
+Un tipo nuevo es un archivo .csv en %s/aparatos, con una línea nombre y una línea canales (ahí hay un ejemplo). Desde el portal también se pueden escribir.	新型別儲存在 %s/aparatos 下的 .csv 檔案中，包含 nombre 和 canales 兩行（目錄中有示例）。也可透過網頁管理建立。
+Universo Art-Net del U1 (0 a 32767)	U1 的 Art-Net 域號（0 至 32767）
+Dirección IP del nodo Art-Net	Art-Net 節點 IP 地址
+PUERTO	港口
+Mandar por la red	透過網路傳送
+A toda la red	傳送到整個網路
+A un nodo…	傳送到指定節點…
+U1 = universo %u	U1 = 域 %u
+Cada universo con algún aparato sale 40 veces por segundo como Art-Net (UDP 6454): a toda la red, o a la IP de un nodo. U1 lleva el universo elegido, U2 el siguiente, y así. Para un nodo Art-Net a DMX, consolas y programas de la PC.	包含燈具的各個域每秒透過 Art-Net（UDP 6454）傳送 40 次，可發往整個網路或指定節點 IP。U1 使用選定的域號，U2 使用下一個，以此類推。可連線 Art-Net 轉 DMX 節點、控制台和電腦軟體。
+LOS 512 CANALES COMO SALEN (OSCUROS: SIN APARATO)	512 個輸出通道（暗色表示未分配燈具）
+La salida arranca cerrada cada vez que se abre la app: ▶ arriba la abre. Sigue saliendo con la app en segundo plano. 40 paquetes por segundo, 512 canales, BREAK de 176 µs. Para ver qué llega del otro lado, la app DMX en Analizador.	每次開啟應用時，輸出預設關閉；輕點上方 ▶ 開啟。應用在背景也會繼續執行。每秒傳送 40 包，共 512 通道，BREAK 為 176 µs。可用 DMX 應用的“分析儀”檢查另一端收到的內容。
+Canal %d: %u	通道 %d：%u
+fijo	固定
+sin aparato	未分配燈具
+\nSaliendo por %s: %.1f paquetes/s, %lu mandados.	\n透過 %s 傳送：%.1f 包/秒，已傳送 %lu 包。
+\nSalida cerrada (%s).	\n輸出已關閉（%s）。
+Apagado.	已關閉。
+%lu paquetes mandados a %s	已傳送 %lu 包到 %s

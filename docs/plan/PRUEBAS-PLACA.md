@@ -37,6 +37,226 @@ se prueba.
 ### Pendientes, en resumen
 
 Sin probar en la placa (2026-10-07, firmware `2611062` en adelante):
+- [ ] **CAS después de una actualización y dos apps de fondo** (2026-11-08).
+      `52a367b` instalado el 2026-11-08: el reintento tampoco entró y la
+      caché vieja no tenía a CAS. Medido: 14 MB libres y el bloque mayor de
+      9,4 MB en todo el escaneo (9,2 MB en el inicio ya arrancada; 15 MB con
+      una app al frente, sin la foto del bloqueo). Las fotos de fondo
+      parten la PSRAM: el commit siguiente las suelta antes de reintentar.
+      `f249946` instalado el 2026-11-08: soltó las fotos (libre 14,0 -> 15,9
+      MB) y el bloque mayor siguió en 9,4 MB: no son las fotos. Lo que parte
+      la PSRAM es otra cosa: `free -m` en la consola SSH y el registro del
+      fallo dan ahora el mapa de bloques grandes. `8ac8459` instalado el
+      2026-11-08: **CAS entró en el escaneo** (bloque mayor 7,2 MB, pero
+      dos libres de 6,4 y 7,5 MB: uno para el archivo y otro para el
+      código) y quedó en la caché. `free -m` en el inicio: los tres
+      framebuffers (3 x 1800 KB) al principio, y las dos fotos de fondo
+      (1824 KB cada una) en +7607 KB y +15815 KB, partiendo la PSRAM libre
+      en 6,4 y 7,5 MB. Falta: que las fotos no queden en el medio.
+      `fc39250` instalado el 2026-11-08: CAS falló al principio (bloque
+      mayor 6,5 MB), se soltaron las fotos, el reintento entró (11 MB) y
+      quedó en la caché: el respaldo anda. Pero las ranuras quedaron en
+      +9,0 y +12,7 MB: las fotos se decodificaban durante el arranque y los
+      búferes del decodificador dejaban huecos. El commit siguiente reserva
+      las ranuras al empezar `aos_ui_init` y decodifica después del escaneo.
+      **`88f5081` instalado el 2026-11-08: resuelto.** `free -m`: los
+      framebuffers en +148 KB, las dos fotos en +5937 y +7761 KB, y la
+      PSRAM libre en **un solo bloque de 14080 KB** (antes 6,4 + 7,5 MB).
+      CAS entró a la primera en el escaneo (bloque mayor 14080 KB) y quedó
+      en la caché. El escaneo empezó a los 3,0 s (antes 6,4 s; sin ver
+      todavía si es por las fotos o por el Wi-Fi). Falta mirar a mano las
+      fotos (inicio, bloqueo, acostada, álbum).
+      **Fotos más chicas** (2026-11-08): el bloqueo a media
+      resolución estirada, y la misma foto en inicio y bloqueo compartida.
+      **`2d3c8de` instalado el 2026-11-08:** `free -m` con la foto del
+      inicio en 1824 KB y la del bloqueo en 456 KB (fotos distintas), y la
+      PSRAM libre en un bloque de **15425 KB** (antes 14080). CAS entró a
+      la primera. Falta mirar a mano: `free -m` con las fotos en 1824 + 460 KB (o sólo 1824
+      con la misma foto); el bloqueo se ve bien (algo más blando) parado y
+      acostado; con la misma foto, el bloqueo un poco más oscuro que el
+      inicio; cambiar una foto desde Fotos o Ajustes pasa de compartida a
+      propia y al revés; el álbum sigue cambiando de foto.
+      **Ranuras para las fotos** (2026-11-08): tras instalar,
+      `free -m` tiene que mostrar las dos fotos al lado de los framebuffers
+      y un solo bloque libre grande (~14 MB); la foto del inicio y la del
+      bloqueo se ven como antes, también acostada y con un álbum en el
+      bloqueo; bloquear con una app al frente muestra la foto al instante.
+      Tras la OTA de `64fbdb0` CAS faltó en el inicio: el
+      escaneo lo abrió con la PSRAM partida (`5553904 B of code: no PSRAM
+      block`; el mínimo libre del arranque fue 7,6 MB). En la placa: tras la
+      OTA, CAS en el inicio (o la línea `registered from an older cache
+      record`), y las líneas `opening X | PSRAM: free ... largest ...` del
+      escaneo para ver quién parte la PSRAM; abrir CAS. Con cuatro apps
+      abiertas seguidas, la más vieja sin nada andando se cierra (`more than
+      3 apps alive`). Mila y Monster Hop: el usuario dice que andaban mal
+      por la PSRAM; falta ver cómo, con el registro.
+- [x] **El buscador** (2026-11-08, `aos_search.c`). **Probado por el
+      usuario el 2026-11-08:** "brillo" abrió Ajustes en Pantalla, "CAS"
+      la app, un MP3 por su nombre lo abrió en Archivos; "bastante rápido
+      todo", sin llegar a ver el "Buscando en la tarjeta…". Falta: una nota
+      por su texto. **Instalado el
+      2026-11-08:** `notas.so` nuevo (`NORESTART=1 install_apps.sh`), el
+      firmware `68a67c9` por OTA e `install_lang.sh en de`; arrancó y se
+      confirmó sin errores, Notas registrada, el idioma con 5828 cadenas. Probado
+      en el simulador con ASan: el gesto lo abre; "comp" y "leche" hallan la
+      nota Compras con su línea; "aju" la app Ajustes y `ajustes.txt`;
+      "2*(3+4)" da 14; tocar "Wi-Fi" abre Ajustes en Wi-Fi, la nota abre
+      Notas en ella, la carpeta abre Archivos ahí. En la placa (con el
+      `notas.so` nuevo): el gesto sin pelearse con el cambio de página,
+      cuánto tarda en recorrer la tarjeta de verdad, y en inglés.
+- [ ] **Ojito en las contraseñas y borrar por palabras** (2026-11-08).
+      **Instalado el 2026-11-08** (firmware `b7b774d`, por OTA): arrancó y
+      se confirmó, sin errores. Probado en el simulador con ASan: el ojo en la contraseña
+      de MQTT muestra y oculta; el borrar mantenido pasó de letras a
+      palabras. En la placa: el ojo en la contraseña de la app SSH, de
+      MQTT y del Wi-Fi; que al cerrar el teclado vuelva a ocultarse; que
+      mostrada no se pueda copiar; el borrar mantenido.
+- [x] **Copiar y pegar** (2026-11-08, `aos_textsel.c`). **Probado por el
+      usuario el 2026-11-08: anda, también desde el portapapeles del
+      portal.** **Instalado el
+      2026-11-08** (firmware `6537d8a` por OTA, y `install_lang.sh en de`):
+      arrancó y se confirmó, sin errores; el idioma pasó de 5817 a 5820
+      cadenas; `GET /api/clip` responde.
+      Probado en el simulador con ASan: doble toque selecciona la palabra
+      y abre el globo; Copiar llega a `/api/clip`; mantener un campo vacío
+      ofrece Pegar y pega; la barra agranda la selección y una tecla la
+      reemplaza; `POST /api/clip {"paste":true}` escribe en el campo
+      abierto. En la placa: lo mismo con el dedo, en SSH y en Módulos; un
+      campo de contraseña no ofrece Copiar; Ctrl+C/V con un teclado USB;
+      el recuadro Portapapeles de la página Pantalla del portal (también
+      "Traer de la placa"); y el globo en inglés tras `install_lang.sh`.
+- [x] **El teclado: ñ, acentos, mayúsculas y la barra como trackpad**
+      (2026-11-08, `aos_keyboard.c`). **Instalado el 2026-11-08**
+      (firmware `2b19dbc`, por OTA): arrancó y se confirmó, sin errores en
+      el registro, 206 KB de RAM interna y 16 MB de PSRAM libres en un
+      bloque. **Probado por el usuario el 2026-11-08: "me gusta".** Lo que
+      se pidió probar, en la app
+      SSH, Módulos (editar `modules.txt`) y un teclado de una app de la
+      tarjeta (Impresoras, VNC): la ñ; mantener a, e, i, o, u, n, c, ?, !
+      abre el globo y deslizar elige; un toque de la flecha da una
+      mayúscula, dos toques la dejan fija (ABC); arrastrar la barra mueve
+      el cursor, y en `modules.txt` también de línea; un toque de la barra
+      escribe el espacio. Que ninguna app con teclado haya quedado rara.
+- [ ] **Los juegos de la 0.24.0 en la placa** (2026-11-08, los `.so` del
+      borrador de la release, firmware `68a67c9`). **Golf:** menú con 4,7 MB
+      libres (antes 216 KB), el juego en 10,6 MB. **Turbo:** etapa 0
+      cargada con 4,3 MB libres (antes 2,4). **Monster Hop:** el menú con su
+      mapa; el nivel 1-1 carga (`level 0 ok in 693 ms, art 6180 KB`) pero
+      deja **11 KB** de PSRAM: `worker: no memory for the split helper on
+      core 1` en cada cuadro (un núcleo, 15 fps), y la captura y el SSH no
+      responden mientras se juega; volviendo al inicio la memoria vuelve.
+      **Con `ee576bb` (las fotos de fondo se sueltan detrás de un juego):**
+      Monster Hop abre con 17,8 MB libres (16,0 antes; la foto del bloqueo
+      es la misma del inicio, así que se suelta sólo una), el nivel 1-1
+      carga en 0,9 s y corre en los dos núcleos a 22 fps (15 antes), sin
+      el error del ayudante. Su caché de arte toma lo que haya (7,6 MB esta
+      vez), así que la captura sigue sin salir durante el nivel. Al volver:
+      `wallpaper photos back`, la foto del inicio en el mismo lugar
+      (+5976 KB) y la PSRAM libre en 11,9 + 2,9 MB.
+      Después de Monster Hop y Turbo el bloque libre mayor quedó en 8,8 y
+      4,4 MB con 15 MB libres: lo que guardan las apps escondidas sigue
+      partiendo la PSRAM (pendiente en `HANDOFF-SISTEMA.md`). Ideas: soltar
+      las fotos de fondo detrás de un juego a pantalla completa (+2,3 MB) y
+      que Monster Hop baje el arte de un nivel.
+- [ ] **Mila y Monster Hop con la PSRAM en un bloque** (2026-11-08, firmware
+      `88f5081`, abiertas por SSH con permiso del usuario). **Mila:** abre
+      con 12 MB libres de corrido, pero `pack MISSING, 0 worlds`: en la
+      tarjeta está sólo `mila_p4.pak` (7.500.000 B, la primera parte) y su
+      índice llega a 16.914.956 B; faltan `mila_p4.pak.1` y `.2`
+      (`apps/mila/build/`). No es la PSRAM. **Monster Hop:** el paquete
+      abre, pero `map: the sheet did not load (PSRAM free 7913860 B)`: el
+      menú queda sin el mapa de fondo. El mapa pide 2,4 MB comprimidos más
+      5,9 MB descomprimidos a la vez (8,4 MB), con el juego ya ocupando
+      ~9,2 MB en el menú: ~17,6 MB contra 14 libres. Es de presupuesto, no
+      de fragmentación; se arregla en la app (decodificar el mapa por filas
+      sin el bloque de 5,9 MB), o soltando las fotos de fondo detrás de un
+      juego (+3,6 MB, justo).
+      **Después, el mismo día:** subidas `mila_p4.pak.1` y `.2` (la primera
+      parte de la tarjeta coincidía con `apps/mila/build/`): Mila abre sus
+      5 mundos, la casita a 14-43 fps con 8,5 MB de PSRAM. Los 12 `.pak`
+      de la tarjeta coinciden en tamaño con los de la Mac. Abiertas una
+      por una (PSRAM libre con la app al frente, de 14 MB al abrir):
+      Golf anda, el juego ocupa 11,5 MB y la PSRAM libre llegó a **216 KB**
+      en el menú; Pinball anda, mínima de **214 KB**; Turbo anda (etapa 0
+      cargada), 1,3 MB libres; Notas e Infrarrojo andan (quedaron
+      escondidas, Infrarrojo con algo andando). Todas devuelven su PSRAM al
+      cerrarse. Pero al volver al inicio, con Notas (196 KB) e Infrarrojo
+      (293 KB) escondidas, la PSRAM quedó con 13 MB libres y el bloque
+      mayor de **3,9 MB**: lo que guardan las apps escondidas cayó en el
+      medio de lo que dejaron los juegos.
+      **Los juegos, más livianos** (2026-11-08, sesión de apps, medido en
+      el simulador; **sin instalar**). PSRAM del juego por encima del
+      inicio, pico / quieto, antes y después; en el simulador cada pico se
+      toma después de cada reserva grande, sin la ventana de la Mac:
+      - **Monster Hop** (`03053be`): el mapa se descomprime por tramos
+        (ventana de 256 KB) directo a su imagen, sin los 2,4 + 5,9 MB de
+        antes. Cargarlo pide ~4 MB en vez de ~9,7 sobre lo que el juego ya
+        tiene (6,1 MB medidos en la placa). Pico al abrir **16,3 → 13,8
+        MB**; quieto en el menú 13,5 (igual). El mapa sale idéntico byte
+        por byte y vuelve al salir de un nivel (`menus back ... map ok`).
+      - **Golf** (`d16cc7c`): los dos búferes de la vista 3D a un cuarto
+        de resolución (0,9 MB) se reservan sólo mientras se dibuja.
+        Quieto (menú, mapa, vuelo) **12,3 → 11,4 MB**; pico al dibujar la
+        vista 3D 12,3-12,4 → 12,1; al abrir con el menú dibujado de cero
+        12,7 → 11,3. La imagen del menú que se guarda en la tarjeta es
+        idéntica byte por byte. En la placa, de 15,4 MB: ~2,4 MB libres en
+        el menú (eran 216 KB de 14) y ~1,7 MB durante cada vista 3D (una
+        fracción de segundo por golpe).
+      - **Turbo** (`d2a9926`): los sprites se descomprimen directo en sus
+        planos de color y alfa (el fondo de la etapa, 1,9 MB, estaba dos
+        veces), y el auto del jugador se pinta de a una vista (antes, las
+        siete en crudo, 1,3 MB, al lado de las pintadas). Pico al abrir
+        **16,1 → 14,6 MB**; quieto en el menú 14,4 (igual); el menú se ve
+        igual pixel por pixel. En la placa, de 15,4 MB: ~2,6 MB libres en
+        el menú y ya no baja de ahí al cargar. La carrera usa ~2,5 MB más
+        que el menú (los autos del tráfico y el auto pintado), y eso no
+        cambió.
+      - **Pinball**: sin cambios. Mesa cargada 14,2 / 14,0 MB. No hay nada
+        duplicado: el cuadro (1,8 MB, se copia al panel sólo lo que
+        cambia) y su profundidad (1,5), la imagen de la mesa (1,5) y su
+        profundidad (1,5), luces, blancos y paletas (~2,8) y el sonido
+        (0,6) se usan en cada cuadro; las tarjetas del carrusel ya se
+        sueltan antes de cargar la mesa. Bajarlo es profundidad de 8 bits
+        o descomprimir en cada cuadro: calidad o fps. En la placa, ~1,5
+        MB libres de 15,4.
+      Falta en la placa, después de instalar `monsterhop`, `golf` y
+      `turbo`: el mapa de Monster Hop en el menú (sin `the sheet did not
+      load`); la línea `golf: menu ... psram free` del menú; una carrera
+      de Turbo; y **un nivel de Monster Hop**: en el simulador un nivel
+      ocupa ~19 MB con dos cuadros (arte 7,6 MB, el anillo del mundo 4,9 y
+      los cuadros 3,6), más que los 15,4 MB libres. Si la placa dice
+      `level N FAILED`, eso es lo próximo.
+- [ ] **Cursor y campo activo** (2026-11-08, `aos_textfield.c`).
+      **Instalado el 2026-11-08** (firmware `64fbdb0`, por OTA; arrancó y
+      se confirmó, 212 KB de RAM interna libre). Falta que el usuario lo
+      mire. En la placa: el cursor de acento titila en el editor de la
+      app SSH y en el de `modules.txt` (Módulos, Puertos, Editar); el
+      anillo marca el campo del teclado abierto, sigue al tocar el fondo y
+      se va al cerrar el teclado; tocar el texto pone el cursor ahí. Que el
+      cambio de color de acento en Ajustes los recolore.
+- [ ] **App SSH (cliente)** (2026-11-07, `apps/ssh/README.md`).
+      **2026-11-08:** el usuario entró a una Raspberry Pi de casa y corrió
+      `htop` (la captura está en el README, `docs/img/app-ssh-htop.png`).
+      Instalada
+      el 2026-11-07 con el firmware `65c8642` (por OTA; la app necesita
+      sus símbolos nuevos): la placa la carga y la registra. Falta todo lo
+      de usarla, que hace el usuario contra su Mac y su Raspberry Pi: la
+      huella la primera vez, la contraseña (en la Mac por
+      keyboard-interactive), el candado que instala la clave y entrar
+      después sin contraseña, `vim`/`htop`, el teclado USB, girar la
+      pantalla con una sesión abierta.
+- [ ] **SSH** (2026-11-07, `docs/SSH.md`). **Instalado el 2026-11-07**
+      (firmware `e88852f`, por OTA): el usuario entró desde la Mac por la
+      red de casa (abierta, sin contraseña), la huella la mostró ssh, `ls`
+      en columnas, y lo probó a mano: "genial". Falta lo de abajo con
+      números. En la placa: prenderlo en Ajustes, Portal web; `ssh p4os.local` desde
+      la Mac (la huella que muestra ssh tiene que ser la de Ajustes); `ls`,
+      `top`, `log -f`, `free` (la RAM interna libre no debería moverse con
+      una sesión abierta); `ssh p4os.local cat /apps/<algo>.pak | shasum`
+      contra el archivo, y cuánto tarda; con contraseña y "también en casa",
+      la contraseña y una clave nueva aprobada en la pantalla (y que no
+      aparezca con la placa bloqueada hasta desbloquearla); quitar la
+      clave en Ajustes corta la sesión; apagar SSH deja de escuchar.
 - [x] **BLE** (`apps/ble`, docs/BLUETOOTH.md "The apps' scanner"). **Instalada
       el 2026-10-07** (firmware `0973f16`, por OTA). Medido: escanea (10-12
       equipos reales, ~9 paquetes/s al 30 %, ~16 al 100 %, ninguno perdido);
@@ -137,8 +357,8 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       del host USB), y que siga sonando bloqueada y con otra app adelante.
 - [x] **Apps del taller** (los cableados en `docs/img/bench-*.svg`, que arma
       `tools/bench_diagrams.py`: PWM, IR, tira WS2812B y 24LC;
-      instaladas el 2026-10-05, probadas en la placa salvo el CAN con
-      transceptores, que sigue abajo como pendiente): EEPROM con una 24LC256 en i2c.ext (pines 15/17,
+      instaladas el 2026-10-05, probadas en la placa; el CAN con
+      transceptores, recién el 2026-11-07, más abajo): EEPROM con una 24LC256 en i2c.ext (pines 15/17,
       pull-ups de 4,7 kΩ): detectada en 0x50 y el tamaño medido
       escribiendo da 24LC256 (2026-10-05); leída entera y guardada como
       versión, editada, escrita y verificada, restaurada a la original y
@@ -159,8 +379,8 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       un texto de la pila sin `text_local`; aprender anduvo: un botón del
       control del monitor quedó como Samsung, dirección 0x0707, comando 7,
       y se volvió a mandar, y el monitor subió el volumen; con la base de
-      SmartIR, "subir volumen" desde el listado también anduvo); CAN con los
-      transceptores SN65HVD230 cuando lleguen (la autoprueba ya anduvo);
+      SmartIR, "subir volumen" desde el listado también anduvo); CAN, la
+      autoprueba en un pin (el bus con transceptores, más abajo);
       Visor VNC contra una computadora (**anduvo el 2026-10-05** con una
       MacBook Air y dos monitores, Compartir pantalla con contraseña VNC,
       RFB 3.889, ZRLE: login escrito con la burbuja del teclado, mouse y
@@ -174,8 +394,138 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       que los toques parecen no hacer nada; una tecla la despierta);
       Dibujo con el dedo y el mouse USB (**probado por el usuario en la
       placa, funciona bien**, confirmado el 2026-10-09).
-- [ ] CAN con dos transceptores SN65HVD230 (o parecidos) entre la placa y
-      otro nodo: la autoprueba ya anduvo; falta el bus de verdad.
+- [x] CAN con dos transceptores SN65HVD230 entre la placa y otro nodo
+      (**anduvo el 2026-11-07**): la P4 y un ESP32 DevKit que hace de auto
+      (`tools/can_test/auto_esp32`), cableados como
+      `docs/img/bench-can.svg`, 60,3 Ω entre CANH y CANL. A 500 kbit/s en
+      Normal, unas 162 tramas por segundo (4 % del bus), sin errores ni
+      pérdidas en 25 000 tramas; Por id y Señales con las RPM y las
+      temperaturas del auto (fotos en `apps/can/README.md`). En el camino:
+      la P4 sola en Normal queda en *passive* con el TEC en 128, como dice
+      la norma; la autoprueba con TX y RX en dos pines prueba los cables y
+      el transceptor (así aparecieron dos cables mal puestos); el ESP32 con
+      la P4 en Solo escucha llegó a bus off sólo con errores de ACK.
+- [ ] CAN, lo que queda del bus de verdad (cuando haga falta): la pestaña
+      OBD contra el auto del ESP32 grabado con el firmware de `9471b0b`
+      (dos unidades, 18 PIDs) y contra un auto de verdad (sólo leer); el
+      bus off y su recuperación con fallas a propósito (CANL suelto, sin
+      terminación, velocidades distintas: el ESP32 cambia con 1/2/5/m);
+      la carga medida contra el Rigol; un bus cargado (el driver encola
+      64 tramas); cuánto tarda en leerse un `.dbc` grande de la tarjeta; y
+      grabar y abrir el CSV en SavvyCAN.
+- [x] **La noche del 2026-11-09: RS485, DMX y Luces nuevos** (**anduvo en
+      la placa el 2026-11-09 a la mañana**, con el OK del usuario: OTA
+      confirmada, las tres apps y los idiomas, el ESP32 grabado por `usb0`
+      y verificado). Lo probado:
+      - **RDM** con los módulos automáticos: la búsqueda encontró al ESP32
+        (UID 7FF0:E90AEBA8, "Tira del banco", canales 1-24) con 0
+        respuestas malas; Identificar on y off; la dirección a 25 y de
+        vuelta a 1 (el ESP32 pasó a leer 25-27). El DMX siguió a 40
+        paquetes/s con 0 malos mientras tanto.
+      - **Nodo Art-Net:** desde la Mac a la IP de la placa, universo 0, 35
+        paquetes/s por Wi-Fi; el arcoíris de la Mac llegó a la tira del
+        ESP32 por RS485.
+      - **Buscar velocidad** con el ESP32 en 19200 8E1: 8E1 limpio y
+        primero; 8N1 con 3 bytes errados, 8O1 con 7, 8N2 con 3.
+      - **Pasarela** en el puerto 502: desde la Mac, lecturas del variador
+        del ESP32, una escritura releída, 0B para las unidades 2 y 9.
+      - **Luces con Art-Net** a la IP de la Mac, base 7: llegó el universo
+        7, ~40 paquetes/s.
+      - Visto en el camino y arreglado: en inglés, el texto del nodo
+        ("Receive from the network and send it out as DMX") empujaba el
+        interruptor fuera de la pantalla; ahora el texto se parte en dos
+        líneas (lo mismo en Luces y en la pasarela de Modbus).
+      Falta: sACN y el ArtPoll desde una consola de verdad, el esclavo por
+      TCP en la placa, el importador de YAML y los perfiles nuevos en la
+      página, el RDM contra un aparato comercial. Lo pedido era, en orden:
+      1. Firmware nuevo por OTA (`tools/ota.sh`): `aos_io_uart_errors`,
+         `aos_io_dmx_rdm`, `aos_hal_tcp_listen`/`accept`,
+         `aos_hal_udp_*`. Las apps nuevas usan esos símbolos: sin el
+         firmware no cargan.
+      2. Las apps `modbus`, `dmx` y `luces` y los idiomas en/de
+         (`tools/install_apps.sh p4os.local modbus dmx luces`,
+         `tools/install_lang.sh p4os.local en de`).
+      3. El ESP32 del banco con RDM (`tools/rs485_test/esp32/build`, por
+         el Programador de la P4 por `usb0`, como la otra vez).
+      A probar:
+      - **RDM:** el ESP32 en el rol de luz, la app DMX en la pestaña RDM:
+        Buscar lo encuentra (UID 7FF0 y el final de su MAC), Identificar
+        hace parpadear la tira en blanco, una dirección nueva corre los
+        pixeles. Medir si la respuesta llega a tiempo con los módulos
+        automáticos (el ESP32 contesta 200 µs después del pedido).
+      - **Nodo Art-Net:** la pestaña Red en Art-Net universo 0; desde la
+        Mac, un emisor Art-Net a la IP de la placa (o Luces en el
+        simulador con Art-Net a esa IP): la tira del ESP32 sigue lo que
+        llega. sACN igual, por multicast.
+      - **Luces con Art-Net:** a la IP de la Mac (no a toda la red: puede
+        haber equipos del usuario), escuchado con un receptor UDP.
+      - **Modbus:** Buscar velocidad con el ESP32 en 19200 8E1 (ahora tiene
+        que marcar 8E1 limpio); el monitor contando errores de línea con el
+        ESP32 en otro formato; la pasarela en el puerto 502 con un cliente
+        Modbus TCP desde la Mac pidiendo al ESP32 esclavo; el esclavo por
+        TCP; los dos perfiles nuevos y el importador de YAML en la página.
+- [x] **DMX con el ESP32 de `tools/rs485_test`** (**anduvo el 2026-11-09**
+      con los módulos automáticos: 40 paquetes/s en las dos direcciones,
+      512 canales, 0 malos, BREAK medido 176-177 µs; el MAB sale de 33-50
+      µs aunque se pidan 16, dentro de norma; `apps/dmx/README.md`). La
+      tira con el arcoíris de la Consola anduvo (foto en
+      `docs/img/bench-dmx-photo.jpg`). Falta Aparato con el ESP32 de
+      consola, el Rigol, y paquetes malos mientras se escribe la flash.
+- [x] **Luces con la tira del ESP32** (`apps/luces`, 2026-11-09; **anduvo**
+      con las escenas de muestra en `uart.a`, video en
+      `docs/img/luces-strip.gif`). Falta: el
+      tap, Blackout y master con la tira, la página del portal desde el
+      celular, y la salida con la app en segundo plano. Lo pedido: el
+      primer show son los 8 pixeles RGB en 1-24 y un PAR en 25. A probar:
+      elegir pixeles y darles color, efectos, dos escenas y la secuencia
+      con tap, Blackout y master; lo mismo desde la página del portal en
+      el celular; y que siga saliendo con la app en segundo plano.
+      El primer intento (2026-11-09): la secuencia no cambiaba nada porque
+      había una sola escena, oscura, y la salida estaba en `uart.b` (el
+      banco está en `uart.a`). Desde entonces: "Escenas de muestra", un
+      aviso con menos de dos escenas, y los modos de prueba Recorrido,
+      Colores y Respirar.
+      Lo pedido antes: Firmware nuevo (`aos_io_dmx_*`), `dmx.so`, y el ESP32
+      con los roles DMX y la tira de 8 WS2812B en IO18. A probar: si los
+      módulos automáticos andan a 250 000 baudios con el BREAK (si no, uno
+      con DE); la Consola de la P4 contra el ESP32 de luz (el arcoíris en
+      la tira, el recorrido pixel por pixel); el ESP32 de consola contra
+      Analizador (40 paquetes/s, 512 canales, BREAK ~176 µs y MAB ~16 µs
+      medidos) y Aparato; los BREAK y MAB que mide cada lado contra el
+      Rigol; paquetes malos mientras se escribe la flash.
+- [x] **RS485 y Modbus con el ESP32 de `tools/rs485_test`** (**anduvo el
+      2026-11-09**, foto y detalle en `apps/modbus/README.md`, "On the
+      board"): maestro con el perfil del variador (Marcha desde la placa,
+      14 ms de demora), las fallas del ESP32 en cada punto, 08/17/43,
+      Buscar velocidad (la velocidad sí, el formato no: la paridad no se
+      ve en la respuesta), la P4 de esclava con cada falla vista del otro
+      lado, y el monitor. Queda: instalar el `modbus.so` con el rótulo
+      "sin respuesta" que se borra al leer bien (ya compilado), Equipos con
+      la Riden, y la página del portal en la placa. Visto en el camino, del
+      portal y no de la app: después de un `GET /api/serial/lines` los
+      `POST /api/touch` se pierden un rato (los toques de verdad no se
+      probaron así); y desde la Mac `p4os.local` tarda 5 s en resolver por
+      IPv6 (`curl -4` contesta en 30 ms). Lo pedido antes: Cableado como
+      `docs/img/bench-rs485.svg`: la P4 en `uart.a` (TX 30, RX 31, DE 29) y
+      el ESP32 en IO17/IO4, dos módulos automáticos "RS485 to TTL" (sin DE,
+      con su 120 Ω) alimentados con 3,3 V (60 Ω entre A y B con todo
+      apagado); TX a TXD y RX a RXD, o al revés si el LED TXD no parpadea. Hace falta el
+      firmware nuevo (sin la Modbus integrada, y el RS485 que entrega a 3
+      caracteres) y las apps `modbus` y `equipos` instaladas. A probar:
+      que el módulo automático dé vuelta la línea a tiempo a cada
+      velocidad (el ESP32 esclavo contesta a Maestro, de 1200 a 115200);
+      Buscar unidades y Buscar velocidad (cambiando la del ESP32 con `b` y
+      `f`); `05 Coil` 0 encendida y `04 Input` en vivo (la velocidad sube
+      por la rampa); las cuatro fallas del ESP32 (`x`) en las cuentas y en
+      Tráfico; el ESP32 de maestro contra Esclavo, con cada falla de la
+      app vista del otro lado; Monitor con el ESP32 de maestro; las
+      demoras que muestra Tráfico contra el Rigol; A y B invertidos (nadie
+      contesta, nada se rompe); sin terminación a 115200. Y que Equipos
+      siga hablando con la Riden y que el Banco la siga viendo. **Perfiles**:
+      `variador-esp32.csv` en Maestro contra el ESP32 esclavo (la marcha
+      con un toque en "Marcha", la velocidad subiendo), el multisensor en
+      Esclavo con el ESP32 de maestro, y la página Modbus del portal
+      (editar, subir, bajar, "Usar en la placa", la columna en vivo).
 - [x] Red, pestaña Wi-Fi fluida (2026-10-06, `5362893`): los gráficos de
       canales y el nivel en vivo se dibujaban en cada cuadro del scroll;
       ahora se pintan una vez en una imagen en PSRAM cuando cambian los

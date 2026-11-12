@@ -1,0 +1,117 @@
+# Offline Traditional Chinese catalogue; reviewed terms: ../zh-Hant-key-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Consola	控制台
+Aparato	裝置
+Analizador	分析儀
+Red	網路
+Cableado	電纜
+Cancelar	取消
+Aplicar	應用
+no se pudo abrir %s (¿lo tiene otra app?)	無法開啟 %s (有沒有其他應用程式使用它?)
+cerrado	關閉
+mandando · %u canales · %.0f paquetes/s	傳送中 · %u 通道 · %.0f 包/秒
+recibiendo · %u canales · %.0f paquetes/s	接收中 · %u 通道 · %.0f 包/秒
+escuchando · sin señal	監聽中 · 無訊號
+Cerrar	關閉
+Abrir	開啟連線
+Puerto	港口
+DMX necesita un puerto UART del header con un transceptor RS485. Un puerto con DE lo deja arriba para mandar y abajo para escuchar.	DMX 需要使用擴充介面上的 UART 埠並連線 RS485 收發器。帶 DE 接腳的埠在傳送時拉高 DE，監聽時拉低。
+no se pudo escuchar el puerto %u	無法監聽埠 %u
+Buscando…	正在搜尋…
+Buscando… %d encontrados	正在搜尋…已找到 %d 個
+Leyendo %d de %d…	正在讀取第 %d 個，共 %d 個…
+%d aparatos RDM	%d 個 RDM 燈具
+Ningún aparato contestó RDM.	沒有燈具回應 RDM。
+Hecho.	完成。
+El aparato no lo acepta (NACK).	燈具拒絕了請求（NACK）。
+El aparato no contestó.	燈具未回應。
+Ir al canal	跳轉到通道
+Todos los canales a	將所有通道設為
+Canales %d a %d	通道 %d 至 %d
+Ir a…	跳轉到…
+Todo a 0	全部設為 0
+Todo a 255	全部設為 255
+Todo a…	全部設為…
+PATRONES	測試模式
+Quieto	現在還在
+Recorrer canal por canal	逐通道追逐
+Rampa en todos	所有通道漸變
+Arcoíris en 8 pixeles RGB	8 個 RGB 畫素彩虹
+Recorrer prende un canal por vez a 255, tres por segundo: para encontrar qué canal mueve qué. El arcoíris va en los canales 1 a 24 (ocho pixeles RGB, como la tira del ESP32 del banco).	追逐模式每秒依次點亮三個通道，亮度為 255，用於確認各通道的作用。彩虹使用 1 至 24 通道，對應八個 RGB 畫素（如測試臺 ESP32 的燈條）。
+EL PAQUETE	資料包
+%u canales	%u 個通道
+%u por segundo	每秒 %u 個
+El estándar pide BREAK de 88 µs o más y MAB de 8 µs o más; 176 y 16 es lo de casi todas las consolas. Con los límites y con paquetes cortos se ve si un aparato los aguanta.	標準要求 BREAK 至少 88 µs，MAB 至少 8 µs；大多數控制台使用 176 和 16 µs。透過極限時序和短資料包可測試燈具的容忍能力。
+Dimmer (1 canal)	調光器（1 通道）
+Intensidad	亮度
+RGB (3 canales)	RGB（3 通道）
+Rojo	紅色
+Verde	綠色
+Azul	藍色
+RGBW (4 canales)	RGBW（4 通道）
+Blanco	白色
+PAR de 7 canales	7 通道 PAR 燈
+Dimmer	調光
+Strobe	頻閃
+Macro	宏
+Velocidad	速度
+Cabeza móvil (6 canales)	搖頭燈（6 通道）
+Pan	麵包
+Tilt	俯仰
+Barra de 8 pixeles (24 canales)	8 畫素燈條（24 通道）
+Abrí la conexión para escuchar.	請開啟連線以開始監聽。
+Sin señal: nadie manda DMX.	無訊號：沒有裝置傳送 DMX。
+La consola manda %d canales: este aparato necesita hasta el %d.	控制台傳送了 %d 個通道，此燈具需要讀到第 %d 通道。
+Recibiendo: canales %d a %d.	接收中：通道 %d 至 %d。
+Pixel	畫素
+Dirección de inicio (1-512)	起始地址（1–512）
+Dirección	地址
+La placa hace de aparato: escucha el bus y dibuja lo que haría uno de estos con esa dirección. Sirve para ver si una consola manda, y qué manda en cada canal.	開發板模擬燈具：監聽匯流排，並根據指定地址的資料繪製燈具效果。可用於檢查控制台是否傳送資料，以及各通道的內容。
+hay señal	有訊號
+sin señal	無訊號
+niveles	準位
+texto	文字
+Estado	狀態
+Paquetes/s	包/秒
+Canales	頻道
+Código de inicio	起始碼
+Paquetes	封包
+Malos	錯誤包
+Otros códigos	其他起始碼
+BREAK cortos	過短的 BREAK
+LOS 512 CANALES (NARANJA: SE MUEVEN)	512 個通道（橙色表示變化中）
+BREAK y MAB medidos en el pin, con unos pocos µs de error. Un BREAK de menos de 88 µs o un MAB de menos de 8 son de una consola fuera de norma: muchos aparatos parpadean o ignoran esos paquetes. Malos: con error de trama o cortados. Tocá el mapa para ver esos canales en números.	BREAK 和 MAB 在接腳上測量，誤差為幾微秒。BREAK 小於 88 µs 或 MAB 小於 8 µs 表示控制台不符合標準，可能導致燈具閃爍或忽略資料包。“錯誤包”表示幀錯誤或資料截斷。輕點通道圖可檢視數值。
+Universo sACN (1 a 63999)	sACN 域號（1 至 63999）
+Universo Art-Net (0 a 32767)	Art-Net 域號（0 至 32767）
+Apagado: prendelo para que la placa reciba de la red.	目前已關閉；開啟後，開發板將接收網路資料。
+Esperando %s del universo %u en %s…	正在 %s 等待域 %u 的資料，地址 %s…
+%.0f paquetes/s de %s · %lu en total · el último hace %lu ms · %lu de otros universos · %lu ArtPoll contestados%s	%.0f 包/秒，來自 %s · 共 %lu 包 · 上次接收於 %lu 毫秒前 · 其他域 %lu 包 · 已回應 %lu 次 ArtPoll%s
+ · SIN DATOS (la salida mantiene lo último)	 · 無資料（輸出保持最後的準位）
+Recibir de la red y sacarlo por DMX	接收網路資料並輸出 DMX
+Universo	域
+LOS PRIMEROS 32 CANALES COMO SALEN	前 32 個輸出通道
+La placa hace de nodo: lo que una consola, un programa de la PC o Luces en otra placa mandan por la red para ese universo sale por el puerto RS485 como DMX. Art-Net por UDP 6454 (contesta el ArtPoll, así la consola la ve en su lista de nodos); sACN por multicast 239.255.x.y, puerto 5568. Si la red deja de mandar, la salida mantiene lo último. Sigue andando con la app en segundo plano.	開發板作為節點，將控制台、電腦軟體或另一塊開發板上的“燈光”應用發往此域的網路資料，透過 RS485 輸出為 DMX。Art-Net 使用 UDP 6454，並回應 ArtPoll 以便控制台發現節點；sACN 使用 239.255.x.y 多播，埠為 5568。網路停止傳送時，輸出保持最後的準位。應用在背景也會繼續執行。
+Abriendo el puerto: tocá Buscar otra vez.	正在開啟埠，請再次輕點“搜尋”。
+Dirección DMX nueva (1 a 512)	新的 DMX 地址（1 至 512）
+Nombre del aparato (DEVICE_LABEL)	燈具名稱（DEVICE_LABEL）
+(sin nombre)	（未命名）
+Canales %u a %u (%u canales)	通道 %u 至 %u（共 %u 通道）
+No contestó DEVICE_INFO.	未回應 DEVICE_INFO。
+Dejar de identificar	停止識別
+Identificar	識別燈具
+Nombre	名稱
+Tocá Buscar: la app pregunta en la línea quién habla RDM.	輕點“搜尋”，應用將查詢線路上支援 RDM 的裝置。
+ · %lu pedidos, %lu respuestas, %lu choques en la búsqueda, %lu respuestas malas	 · %lu 次請求，%lu 次回應，搜尋時發生 %lu 次衝突，%lu 次無效回應
+Buscar aparatos	搜尋燈具
+RDM va por el mismo par que DMX: entre paquete y paquete la placa pregunta y el aparato contesta. La búsqueda encuentra a cada uno por su UID sin conocerlo (partiendo el espacio en dos cuando contestan varios a la vez); después se le puede cambiar la dirección y el nombre o pedirle que se muestre. Sólo los aparatos con RDM contestan, y un splitter DMX común corta la vuelta.	RDM 與 DMX 使用同一對線：開發板在資料包間隙發出請求，燈具回覆。搜尋無需預先知道 UID；多個裝置同時回應時，透過二分範圍逐個發現。隨後可修改地址和名稱，或讓燈具亮起以便識別。只有支援 RDM 的燈具才會回應，普通 DMX 分配器會阻斷返回訊號。
+LOS CONECTORES (DE FRENTE, LADO HEMBRA)	聯結器（母座正檢視）
+XLR de 3 (lo común)	3 針 XLR（常用）
+XLR de 5 (el estándar)	5 針 XLR（標準）
+1: masa o malla. 2 (azul): D−, al B− del módulo. 3 (ámbar): D+, al A+. 4 y 5 no se usan.	1：地線或遮蔽層。2（藍色）：D−，接模組 B−。3（琥珀色）：D+，接 A+。4 和 5 不使用。
+LO QUE HAY QUE SABER	使用須知
+En cadena: consola → DMX IN del aparato 1 → su DMX OUT → aparato 2… El último lleva un terminador de 120 Ω entre los pines 2 y 3. Sin él, las luces parpadean o tiemblan.	串聯連線：控制台 → 燈具 1 的 DMX IN → DMX OUT → 燈具 2… 最後一個燈具的 2、3 號針腳之間應接 120 Ω 終端電阻，否則可能閃爍或抖動。
+Nunca un cable en Y: para ramificar se usa un splitter DMX. Hasta 32 aparatos por tramo.	不要使用 Y 型線分支，應使用 DMX 分配器。每條線路最多連線 32 個燈具。
+Cable de 110-120 Ω (cable DMX o de datos), no de micrófono: en tramos cortos anda igual, en tramos largos da errores.	使用 110–120 Ω 的 DMX 或資料線，不要使用麥克風線；後者短距離可能可用，長距離容易出錯。
+Algunos equipos baratos traen D+ y D− al revés. Si un aparato no responde, probá invertir los pines 2 y 3.	部分低價裝置的 D+ 與 D− 接反。若燈具無回應，可嘗試交換 2、3 號針腳。
+A 250 000 baudios, un módulo RS485 automático puede no llegar: si los paquetes salen malos, un módulo con pin DE (MAX3485, SP3485) resuelve.	在 250000 鮑率下，自動收發 RS485 模組可能跟不上。若資料包出錯，可改用帶 DE 接腳的模組（MAX3485、SP3485）。
+Cada aparato tiene una dirección de inicio y una cantidad de canales según su modo; dos aparatos con la misma dirección hacen lo mismo.	每個燈具都有起始地址，所佔通道數取決於模式；兩個燈具使用相同地址時會執行相同動作。

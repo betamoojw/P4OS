@@ -8,7 +8,7 @@ class NetworkTime(unittest.TestCase):
     def test_start_failure_retry_reconnect_and_manual_request(self):
         source = (ROOT / 'components/aos_hal/aos_net_p4.c').read_text(encoding='utf-8')
         services = source[source.index('static void time_synced('):source.index('static esp_netif_t *s_ap_netif;')]
-        request = source[source.index('bool aos_hal_net_sync_time('):source.index('void aos_hal_net_low_latency(')]
+        request = source[source.index('bool aos_hal_net_sync_time('):source.index('void aos_hal_net_wired_set(')]
         cfg = (ROOT / 'sdkconfig.defaults').read_text(encoding='utf-8')
         count = int(re.search(r'^CONFIG_LWIP_SNTP_MAX_SERVERS=(\d+)$', cfg, re.M)[1])
         self.assertGreaterEqual(count, 3)
@@ -25,8 +25,9 @@ typedef struct {bool wait_for_sync,start;void (*sync_cb)(struct timeval*);int nu
 #define ESP_NETIF_SNTP_DEFAULT_CONFIG_MULTIPLE(n,list) {.start=true,.wait_for_sync=true,.num_of_servers=n,.servers=list}
 #define ESP_LOGI(...) ((void)0)
 #define ESP_LOGW(...) ((void)0)
-static bool s_sntp;
+static bool s_sntp,s_wired;
 static int s_state,init_error,start_error,queue_error,init_calls,start_calls,mdns_calls,queued,bad;
+static int aos_hal_net_state(void){return s_wired ? AOS_NET_CONNECTED : s_state;}
 static int eq(const char *a,const char *b){while(*a && *a==*b){a++;b++;}return *a==*b;}
 static int esp_netif_sntp_init(const esp_sntp_config_t *c){
     init_calls++;
@@ -59,6 +60,13 @@ int test_main(void){
     if(start_calls!=before+1 || init_calls!=2) return 9;
     s_state=0;time_request(NULL,AOS_NET_TIME_EVENT,0,NULL);
     if(start_calls!=before+1 || bad) return 10;
+    /* Ethernet alone may request and complete a queued sync, even with Wi-Fi off. */
+    s_wired=true;
+    if(!aos_hal_net_sync_time() || start_calls!=before+1) return 11;
+    time_request(NULL,AOS_NET_TIME_EVENT,0,NULL);
+    if(start_calls!=before+2 || init_calls!=2) return 12;
+    s_wired=false;time_request(NULL,AOS_NET_TIME_EVENT,0,NULL);
+    if(start_calls!=before+2 || aos_hal_net_sync_time() || bad) return 13;
     return 0;
 }
 '''

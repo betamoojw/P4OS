@@ -15,12 +15,14 @@
  * (read_wrap): a drag that starts on an edge and goes the right way is taken
  * from the app (lv_indev_wait_release, so nothing under the finger clicks)
  * and drives the shell instead. Bottom edge up: home, or the switcher if
- * the finger rests. Left edge right: back. Top edge down: notifications on
+ * the finger rests. Left edge right: back. Down from the middle of the home
+ * screen: the search (aos_search.c). Top edge down: notifications on
  * the left half, the control centre on the right half.
  *
  * Apps keep AmoledOS's life cycle. What P4OS adds is multitasking: leaving
  * an app with AOS_APP_FLAG_KEEP or BACKGROUND hides it instead of destroying
- * it (up to AOS_UI_ALIVE_MAX of them; the least recently used goes first).
+ * it (up to AOS_UI_ALIVE_MAX of them, the one in front and two hidden; the
+ * least recently used goes first).
  * Watch apps have neither flag and are destroyed on leaving, exactly as on
  * the watch, because some of them only stop their timers in destroy().
  *
@@ -39,10 +41,12 @@
  * holds its pins and stays; RF stays while it plays.
  */
 #include "aos_ui.h"
+#include "aos_eth.h"
 #include "aos_internal.h"
 #include "aos_access.h"
 #include "aos_lock.h"
 #include "aos_pair_ui.h"
+#include "aos_sshkey_ui.h"
 #include "aos_hal.h"
 #include "aos_theme.h"
 #include "aos_i18n.h"
@@ -356,6 +360,7 @@ static void refit_app(aos_app_t *app)
 
 static void relayout_all(void)
 {
+    aos_search_close();             /* laid out for the other shape */
     geo_update();
     lv_obj_t *layers[] = { s_wall, s_home, s_appl };
     for (int i = 0; i < 3; i++) {
@@ -370,6 +375,7 @@ static void relayout_all(void)
     if (s_cur) refit_app(s_cur);
     aos_lock_layout();
     aos_pair_ui_layout();
+    aos_sshkey_ui_layout();
     aos_wall_photo_relayout();
 }
 
@@ -423,11 +429,10 @@ static void home_hide_done(lv_anim_t *a)
 {
     if (!s_cur) return;
     lv_obj_add_flag(s_home, LV_OBJ_FLAG_HIDDEN);
-    /* nobody sees the lock screen's photo behind an app: 1.8 MB of PSRAM
-     * back to it, decoded again as the screen goes dark and locks. The
-     * home screen's stays: decoded again on the way home it showed the
-     * gradient for a second and a half (2026-10-25); an app that needs it
-     * all says so (aos_ui_wall_photo_spare) */
+    /* nobody sees the lock screen's photo behind an app: a decode on its
+     * way is dropped; one already in its PSRAM slot stays (aos_wallpaper.c:
+     * the slots keep the free PSRAM in one piece). The home screen's stays
+     * too; an app that needs it all says so (aos_ui_wall_photo_spare) */
     if (!aos_lock_is_locked()) aos_wall_photo_want(AOS_WALL_LOCK, false);
     lv_obj_set_style_bg_color(s_appl, lv_obj_get_style_bg_color(s_cur->root, 0), 0);
     lv_obj_set_style_bg_opa(s_appl, LV_OPA_COVER, 0);
@@ -691,6 +696,7 @@ bool aos_ui_start_hidden(const char *id)
 
 void aos_ui_boot_start_run(void)
 {
+    aos_wall_photo_start();         /* after the scan: aos_wallpaper.c says why */
     if (aos_ui_safe_mode()) return;
     char l[BOOT_MAX];
     aos_ui_boot_start_ids(l, sizeof l);
@@ -702,6 +708,15 @@ void aos_ui_boot_start_run(void)
     }
 }
 
+/* A game: full screen, the screen kept on, not kept in the background. It
+ * gets the wallpaper photos' memory while it runs (aos_wallpaper.c). */
+static bool is_game(const aos_app_t *app)
+{
+    uint32_t f = app->desc.flags;
+    return (f & AOS_APP_FLAG_FULLSCREEN) && (f & AOS_APP_FLAG_KEEP_AWAKE) &&
+           !(f & (AOS_APP_FLAG_KEEP | AOS_APP_FLAG_BACKGROUND));
+}
+
 static void leave_current(bool destroy_now)
 {
     aos_app_t *app = s_cur;
@@ -710,6 +725,7 @@ static void leave_current(bool destroy_now)
     if (app->hide && app->running) app->hide(app, app->inst);
     if (destroy_now || !keepable(app) || !keep_on_leaving(app)) destroy_app(app);
     else if (app->root) lv_obj_add_flag(app->root, LV_OBJ_FLAG_HIDDEN);
+    if (is_game(app) && !app->running) aos_wall_photo_for_game(false);
     aos_hal_app_context_set(NULL);
     aos_hal_audio_foreground(NULL);
     aos_hal_display_refresh_request(0);     /* a rate it asked for was its own */
@@ -726,6 +742,7 @@ bool aos_ui_open(const char *id)
     }
     aos_panel_close();
     aos_switcher_close();
+    aos_search_close();
     if (aos_home_editing()) aos_home_edit(false);
     if (s_cur == app) return true;
 
@@ -758,6 +775,7 @@ bool aos_ui_open(const char *id)
         lv_obj_remove_flag(app->root, LV_OBJ_FLAG_SCROLLABLE);
         place_root(app);
         lv_obj_update_layout(app->root);
+        if (is_game(app)) aos_wall_photo_for_game(true);
         trim_for_memory();
         s_psram_at_create_kb[slot_of_app(app)] = psram_free_kb();
         s_creates++;
@@ -800,6 +818,32 @@ static bool s_safe_mode;
 void aos_ui_set_safe_mode(bool on) { s_safe_mode = on; }
 bool aos_ui_safe_mode(void) { return s_safe_mode; }
 
+int aos_ui_make_room(void)
+{
+    int n = 0;
+    /* also when it is still being decoded: that one is dropped as it comes */
+    if (!aos_lock_is_locked() && aos_wall_photo_release(AOS_WALL_LOCK)) n++;
+    if (aos_wall_photo_release(AOS_WALL_HOME)) n++;
+    if (n) aos_hal_log("ui", "the wallpaper photos let go: another app needs their memory");
+    for (int i = 0; i < AOS_MAX_APPS; i++) {
+        aos_app_t *a = &s_apps[i];
+        if (!s_used[i] || !a->running || a == s_cur) continue;
+        /* a root on the screen: the app being created right now */
+        if (a->root && !lv_obj_has_flag(a->root, LV_OBJ_FLAG_HIDDEN)) continue;
+        const char *why = busy_why(a, false);
+        if (why) continue;
+        aos_hal_log("ui", "closing %s: another app needs its memory", a->desc.id);
+        destroy_app(a);
+        n++;
+    }
+    return n;
+}
+
+void aos_ui_room_back(void)
+{
+    if (!s_cur) aos_wall_photo_want(AOS_WALL_HOME, true);
+}
+
 void aos_ui_close_others(void)
 {
     for (int i = 0; i < AOS_MAX_APPS; i++)
@@ -808,6 +852,7 @@ void aos_ui_close_others(void)
 
 void aos_ui_home(void)
 {
+    aos_search_close();
     aos_panel_close();
     aos_switcher_close();
     aos_app_t *app = s_cur;
@@ -833,6 +878,7 @@ void aos_ui_home(void)
 void aos_ui_back(void)
 {
     if (aos_pair_ui_visible()) { aos_pair_ui_cancel(); return; }     /* a Bluetooth code waiting: Back is a no */
+    if (aos_sshkey_ui_visible()) { aos_sshkey_ui_cancel(); return; } /* an SSH key asking: the same */
     if (aos_panel_close() || aos_switcher_close()) return;
     if (s_cur) {
         if (s_cur->back && s_cur->back(s_cur, s_cur->inst)) return;
@@ -882,7 +928,7 @@ void aos_ui_toast(const char *text, uint32_t ms) { aos_toast_show(text, ms); }
 /* System gestures                                                             */
 /* -------------------------------------------------------------------------- */
 
-typedef enum { G_NONE = 0, G_HOME, G_BACK, G_NOTIF, G_CONTROL, G_DEAD } gkind_t;
+typedef enum { G_NONE = 0, G_HOME, G_BACK, G_NOTIF, G_CONTROL, G_SEARCH, G_DEAD } gkind_t;
 
 static struct {
     bool     down;
@@ -947,6 +993,7 @@ static void gesture_begin(int32_t x, int32_t y)
     if (y >= s_geo.h - EDGE_BOTTOM) g.kind = G_HOME;
     else if (y <= s_geo.bar_h) g.kind = x < s_geo.w / 2 ? G_NOTIF : G_CONTROL;
     else if (x <= EDGE_LEFT && s_cur && !(s_cur->desc.flags & AOS_APP_FLAG_NO_SWIPE)) g.kind = G_BACK;
+    else if (!s_cur && !aos_search_is_open() && aos_home_idle()) g.kind = G_SEARCH;
     else g.kind = G_DEAD;
 }
 
@@ -1002,6 +1049,8 @@ static void gesture_move(int32_t x, int32_t y)
         case G_BACK:    go = dx > CAPTURE_PX && dx > LV_ABS(dy); break;
         case G_NOTIF:
         case G_CONTROL: go = dy > CAPTURE_PX && dy > LV_ABS(dx); break;
+        /* steeper than the others: a sideways page turn must stay the home's */
+        case G_SEARCH:  go = dy > CAPTURE_PX * 2 && dy > 2 * LV_ABS(dx); break;
         default: break;
         }
         if (go) {
@@ -1027,6 +1076,10 @@ static void gesture_move(int32_t x, int32_t y)
         break;
     case G_NOTIF:   aos_panel_drag(AOS_PANEL_NOTIF, y - g.y0); break;
     case G_CONTROL: aos_panel_drag(AOS_PANEL_CONTROL, y - g.y0); break;
+    case G_SEARCH:
+        aos_search_open();
+        g.kind = G_DEAD;                /* the rest of this drag is nobody's */
+        break;
     default: break;
     }
 }
@@ -1047,9 +1100,10 @@ static void gesture_end(void)
     case G_HOME: {
         int32_t up = g.y0 - g.y;
         if (!s_cur) {
-            /* on the home screen the bottom edge closes a folder or the edit
-             * mode, or goes back to the first page */
-            aos_home_back();
+            /* on the home screen the bottom edge closes the search, a folder
+             * or the edit mode, or goes back to the first page */
+            if (aos_search_is_open()) aos_search_close();
+            else aos_home_back();
         } else if (up > s_geo.h / 7 || g.vy < -12) {
             if (s_cur && s_cur->root) {
                 lv_obj_set_style_opa(s_cur->root, LV_OPA_COVER, 0);
@@ -1411,6 +1465,7 @@ void aos_ui_tick(void)
     aos_banner_tick();
     aos_lock_tick();
     aos_pair_ui_tick();
+    aos_sshkey_ui_tick();
     aos_access_tick();              /* mDNS by the portal's rules; once a second inside */
     aos_hwkbd_tick();               /* a USB keyboard on the host types into the open keyboard */
     aos_hwmouse_tick();             /* and a USB mouse points */
@@ -1552,6 +1607,10 @@ static void ui_button_cb(aos_button_t button, aos_button_action_t action)
         if (aos_hal_lock(300)) { aos_pair_ui_cancel(); aos_hal_unlock(); }
         return;
     }
+    if (action == AOS_BUTTON_CLICK && aos_sshkey_ui_visible()) {
+        if (aos_hal_lock(300)) { aos_sshkey_ui_cancel(); aos_hal_unlock(); }
+        return;
+    }
     if (aos_lock_is_locked()) used = action != AOS_BUTTON_LONG;     /* locked: only the screenshot */
     else if (aos_hal_lock(300)) {
         if (s_cur && s_cur->running && s_cur->button) used = s_cur->button(s_cur, s_cur->inst, (int)action);
@@ -1569,8 +1628,24 @@ static void ui_button_cb(aos_button_t button, aos_button_action_t action)
     }
 }
 
+/* Ethernet stops while an app has its SPI port and comes back by itself (aos_eth.h): the screen
+ * says both, so that a bench tool opening the port is never a network that went away unexplained.
+ * It runs in the thread that opened or closed the port, which may or may not be LVGL's. */
+static void eth_pause_notice(bool paused, const char *port, const char *by)
+{
+    char t[96];
+    if (paused) snprintf(t, sizeof t, _("Ethernet en pausa: %s lo usa %s"), port, by);
+    else snprintf(t, sizeof t, "%s", _("Ethernet volvió"));
+    if (aos_hal_lock(200)) {
+        aos_toast_show(t, 3500);
+        aos_hal_unlock();
+    }
+}
+
 void aos_ui_init(void)
 {
+    aos_eth_on_pause(eth_pause_notice);
+    aos_wall_photo_reserve();       /* before anything else of the shell's (aos_wallpaper.c) */
     aos_hal_set_button_cb(ui_button_cb);
     aos_theme_init();
     aos_i18n_init();

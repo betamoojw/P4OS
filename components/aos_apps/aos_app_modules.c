@@ -278,9 +278,8 @@ static const char *pin_note(int pin)
     case 30: return _("BOOT: strapping, con pull-up de 4,7K");
     case 32: return _("ADC2 canal 0");
     case 34: return _("ADC2 canal 1");
-    case 35: return _("Dominio VO4: medí la tensión antes de usarlo");
     case 36: return _("ADC2 canal 2, comparador");
-    case 37: case 39: return _("Dominio VO4");
+    case 35: case 37: case 39: return _("Dominio VO4");
     case 38: return _("ADC2 canal 3, comparador");
     default: return "";
     }
@@ -367,7 +366,7 @@ static int pin_class(const aos_io_pin_t *p)
     if (p->flags & AOS_PIN_RESERVED) return K_RSV;
     if (p->flags & AOS_PIN_BOARD) return K_BOARD;
     if (port_of(p->gpio, NULL)) return K_PORT;
-    if (p->flags & (AOS_PIN_STRAPPING | AOS_PIN_VO4 | AOS_PIN_USB_JTAG)) return K_CARE;
+    if (p->flags & (AOS_PIN_STRAPPING | AOS_PIN_USB_JTAG)) return K_CARE;
     if (p->flags & AOS_PIN_ADC) return K_ADC;
     return K_FREE;
 }
@@ -1133,7 +1132,7 @@ static void form_build(void)
     if (F.cat == AOS_SENSOR_CAT_OTHER) chip(r, "RS485", F.kind == F_RS485, f_kind_cb, (void *)(intptr_t)F_RS485);
     bool rs = F.kind == F_RS485;
     const aos_sensor_chip_t *c = rs ? NULL : aos_sensor_chip_at(F.kind);
-    caption(sh, rs ? _("Un transceptor RS485 (MAX485 o uno automático) para Modbus RTU; el DE va en el pin de del puerto.")
+    caption(sh, rs ? _("Un transceptor RS485 de 3,3 V (MAX3485, SP3485 o uno automático) para Modbus RTU o DMX; el DE va en el pin de del puerto.")
                    : chip_what(c->id), iw);
 
     const aos_io_port_t *pts[AOS_IO_PORT_MAX];

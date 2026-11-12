@@ -1,0 +1,165 @@
+/*
+ * P4OS - DMX: what the app's files share.
+ *
+ * A bench tool for DMX512 on RS485, on the firmware's aos_io_dmx_* (the
+ * BREAK, the timing and the interrupt that receives are the firmware's).
+ * Four tabs:
+ *
+ *   Consola     the app sends: 512 faders a page of 16, all to a level,
+ *               patterns (a chase channel by channel, a ramp, a rainbow on
+ *               eight RGB pixels), and the packet's shape (slots, BREAK,
+ *               MAB, rate) to try what a fixture puts up with
+ *   Aparato     the app is a fixture: an address and a kind (dimmer, RGB,
+ *               RGBW, a 7-channel PAR, a moving head, a bar of 8 pixels),
+ *               and what it would do drawn, with its channels
+ *   Analizador  the app listens: rate, slots, start code, BREAK and MAB as
+ *               measured, bad packets, and the 512 channels as a map, the
+ *               ones moving lit
+ *   Red         the board as a node: Art-Net or sACN for one universe from
+ *               the network goes out as DMX (dx_net.c)
+ *   RDM         the fixtures on the line that speak RDM: find them, read
+ *               what they are, set their address and label, make them
+ *               show themselves (dx_rdm.c)
+ *   Cableado    XLR, the terminator, what not to do
+ *
+ * No thread of its own: sending and receiving run in the firmware, and the
+ * app's timer reads the stats and writes the universe. The link opens
+ * closed: sending on somebody's rig is the user's call.
+ */
+#pragma once
+
+#include "lvgl.h"
+#include "aos_io.h"
+
+#include <stdbool.h>
+#include <stdint.h>
+
+#define DX_TEAL  lv_color_hex(0x7C3AED)
+#define DX_AMBER lv_color_hex(0xF59E0B)
+
+enum { DX_TAB_CONSOLE = 0, DX_TAB_FIXTURE, DX_TAB_ANALYZER, DX_TAB_NET, DX_TAB_RDM, DX_TAB_WIRE, DX_TAB_COUNT };
+enum { DX_RDM_DISCOVER = 0, DX_RDM_IDENTIFY, DX_RDM_ADDRESS, DX_RDM_LABEL };
+#define DX_RDM_MAX 16
+
+typedef struct {
+    uint8_t  uid[6];
+    bool     ok;                /* DEVICE_INFO came */
+    uint16_t addr, footprint, model_id;
+    bool     identify;
+    char     label[33], model[33], maker[33];
+} dx_rdm_dev_t;
+enum { DX_NET_ARTNET = 0, DX_NET_SACN };
+enum { DX_PAT_NONE = 0, DX_PAT_CHASE, DX_PAT_RAMP, DX_PAT_RAINBOW, DX_PAT_COUNT };
+enum { DX_FX_DIMMER = 0, DX_FX_RGB, DX_FX_RGBW, DX_FX_PAR7, DX_FX_HEAD, DX_FX_BAR8, DX_FX_COUNT };
+
+typedef struct {
+    /* the link */
+    char port[16];
+    bool want_open;
+    aos_io_dmx_t *h;
+    aos_dmx_dir_t dir;          /* of h */
+    char err[80];
+    aos_dmx_cfg_t cfg;          /* what the console sends */
+    /* console */
+    uint8_t uni[513];           /* [0] start code, [1..512] the levels */
+    int page;                   /* 16 channels a page */
+    int pattern;
+    uint32_t pat_t0;
+    /* fixture */
+    int fx_kind;
+    int fx_addr;
+    /* what came */
+    uint8_t rx[513];
+    int rx_slots;
+    aos_dmx_stats_t st;
+    uint8_t prev[513];
+    uint32_t chg_ms[513];
+    int an_page;                /* 32 channels shown as numbers */
+    /* the node (dx_net.c): its thread writes these, the timer reads them */
+    bool net_on;
+    int net_proto;              /* DX_NET_* */
+    uint16_t net_univ;          /* Art-Net port-address, or sACN universe */
+    uint8_t net_uni[513];
+    uint16_t net_slots;
+    volatile uint32_t net_packets, net_other, net_polls, net_ms;
+    char net_from[24];
+    bool net_fresh;
+    char net_err[64];
+    /* RDM (dx_rdm.c): its thread writes these */
+    dx_rdm_dev_t rdm_dev[DX_RDM_MAX];
+    volatile int rdm_n;
+    char rdm_msg[96];
+    volatile uint32_t rdm_req, rdm_ans, rdm_bad, rdm_coll, rdm_seq;
+    int rdm_act, rdm_act_dev, rdm_act_val;
+    char rdm_act_text[33];
+} dx_state_t;
+
+typedef struct {
+    lv_obj_t *root, *content, *tabs[DX_TAB_COUNT], *overlay;
+    lv_obj_t *bar_port, *bar_state, *bar_btn;
+    lv_timer_t *timer;
+    int32_t W, H;
+    bool land;
+    int tab;
+    /* console */
+    lv_obj_t *fader[16], *fader_v[16], *page_l;
+    /* fixture */
+    lv_obj_t *fx_draw, *fx_list, *fx_state;
+    /* analyzer */
+    lv_obj_t *an_stats, *an_map, *an_nums, *an_page_l;
+    /* network */
+    lv_obj_t *net_stats, *net_nums;
+    /* RDM */
+    lv_obj_t *rdm_msg, *rdm_list;
+    uint32_t rdm_seen;
+    lv_obj_t *ta;
+    /* keypad */
+    char kp_text[16];
+    lv_obj_t *kp_value;
+    void (*kp_done)(int v);
+    bool kp_fresh;
+} dx_ui_t;
+
+extern dx_state_t DX;
+extern dx_ui_t DXU;
+
+/* dmx.c */
+lv_obj_t *dx_box(lv_obj_t *parent, int32_t w, int32_t h);
+lv_obj_t *dx_card(lv_obj_t *parent, int32_t w, int32_t h);
+lv_obj_t *dx_column(lv_obj_t *parent, int32_t w, int32_t h);
+lv_obj_t *dx_pill(lv_obj_t *parent, const char *glyph, const char *text, lv_color_t bg, lv_event_cb_t cb, void *ud);
+lv_obj_t *dx_chip(lv_obj_t *parent, const char *text, bool on, lv_event_cb_t cb, void *ud);
+lv_obj_t *dx_chips_row(lv_obj_t *parent, int32_t w);
+lv_obj_t *dx_caption(lv_obj_t *parent, const char *text, int32_t w);
+lv_obj_t *dx_section(lv_obj_t *parent, const char *text);
+void      dx_keypad(const char *title, int value, void (*done)(int v));
+void      dx_text(const char *title, const char *value, void (*done)(const char *v));
+void      dx_overlay_close(void);
+void      dx_rebuild(void);
+void      dx_save(void);
+void      dx_send_universe(void);
+
+/* dx_tabs.c */
+void dx_console_build(lv_obj_t *parent, int32_t ch);
+void dx_console_tick(void);
+void dx_fixture_build(lv_obj_t *parent, int32_t ch);
+void dx_fixture_refresh(void);
+void dx_analyzer_build(lv_obj_t *parent, int32_t ch);
+void dx_analyzer_refresh(void);
+void dx_wire_build(lv_obj_t *parent, int32_t ch);
+void dx_net_build(lv_obj_t *parent, int32_t ch);
+void dx_net_refresh(void);
+void dx_rdm_build(lv_obj_t *parent, int32_t ch);
+void dx_rdm_refresh(void);
+
+/* dx_rdm.c */
+bool dx_rdm_start(int job);     /* DX_RDM_*: false while one runs or the link is not sending */
+void dx_rdm_stop(void);
+bool dx_rdm_busy(void);
+
+/* dx_net.c */
+void dx_net_start(void);
+void dx_net_stop(void);
+bool dx_net_take(void);         /* the newest levels into DX.uni; true when new ones came */
+const char *dx_fx_name(int kind);
+int dx_fx_slots(int kind);

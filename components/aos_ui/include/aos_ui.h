@@ -24,8 +24,12 @@ extern "C" {
 #define AOS_BUILTIN_RESERVE 32
 
 /* Apps kept alive at once when the person switches between them (each keeps
- * its LVGL tree; the least recently used is closed when one more opens). */
-#define AOS_UI_ALIVE_MAX    4
+ * its LVGL tree; the least recently used is closed when one more opens): the
+ * one in front and two hidden. It was four until 2026-11-08; the user asked
+ * for two in the background, since what they hold is PSRAM the big apps
+ * (CAS, Mila, Monster Hop) need. One with something running is never
+ * closed for this. */
+#define AOS_UI_ALIVE_MAX    3
 
 /* Starts the shell on LVGL's active screen and registers the built-in apps. */
 void aos_ui_init(void);
@@ -117,8 +121,28 @@ void        aos_ui_boot_start_run(void);
  * does too. Up to four apps at once: false when the bar is full. From any
  * thread: the bar draws it at its next tick, within 200 ms. */
 bool        aos_ui_status_icon_set(const char *app_id, const char *glyph, uint32_t rgb);
+/* The system's clipboard (aos_textsel.c): plain UTF-8 text, up to 16 KB,
+ * shared by every text field (hold one: Cortar, Copiar, Pegar), the apps
+ * and the portal (/api/clip). set(NULL or "") empties it. get copies it
+ * into out (cut to size, always ended) and returns its whole length; get
+ * (NULL, 0) only asks. paste_here types it into the field being edited,
+ * the one of the keyboard shown; false: there is none, or nothing to
+ * paste. From LVGL's task or with the UI's lock. */
+void        aos_ui_clip_set(const char *text);
+size_t      aos_ui_clip_get(char *out, size_t size);
+bool        aos_ui_clip_paste_here(void);
 /* The live apps (in front or hidden), most recent first. */
 int         aos_ui_alive(aos_app_t **out, int max);
+/* Room in PSRAM for a card app that did not fit (aos_dynapp.c): closes the
+ * hidden apps that have nothing running (not the one in front, nor one
+ * being created) and lets go of the wallpaper photos (1.8 MB each, and the
+ * lock screen's sits in the middle of the PSRAM: 2026-11-08, CAS needs a
+ * block of 5.5 MB beside its 5.3 MB file). The lock screen's photo is
+ * decoded again when the screen locks, the home screen's on the way home;
+ * aos_ui_room_back() asks for the home one at once (the boot's scan).
+ * Returns how many things were let go. With the UI's lock. */
+int         aos_ui_make_room(void);
+void        aos_ui_room_back(void);
 void        aos_ui_close_others(void);     /* ends every app but the one in front (USB disk mode) */
 void        aos_ui_set_safe_mode(bool on); /* main.c: this boot is the BOOT button's safe mode */
 /* Settings, Developer (aos_devtools.c): overlays and the log's level, kept as

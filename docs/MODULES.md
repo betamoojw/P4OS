@@ -55,6 +55,34 @@ pins that sit together:
   when you have to. P4OS never autodetects on it, and it refuses the
   board's own addresses.
 
+## Suggested pins
+
+The whole header, with the ports and these pins, is one drawing:
+
+![The 40-pin header: the default ports, the pins the apps start with and the suggested ones](img/pinout.svg)
+
+Infrared, CAN, 1-Wire, LED strips and PWM take any free GPIO. These are
+the ones that leave every default port (`i2c.ext`, `uart.a`, `uart.b`,
+`spi.a`) and the two USB host ports alone, and what the apps and the
+drawings on this page use:
+
+| For | GPIO (pin) | Who sets it | Beside it |
+|---|---|---|---|
+| Infrared receiver | 28 (16) | the Infrarrojo app starts there | 3V3 on pin 18 |
+| Infrared LED | 32 (31) | the Infrarrojo app starts there | GND on pin 33 |
+| CAN TX, RX | 46 (35), 47 (37) | the CAN app starts there | GND on pin 33 |
+| 1-Wire | 34 (28) | Bus starts there; `port gpio.ow pin=34` | GND on pin 26 |
+| A LED strip | 48 (39) | suggested in LED Strips | GND on pin 40, 5 V on pins 1 and 3 |
+| One PWM output, a servo | 48 (39), then 34 (28) | suggested | |
+| More PWM outputs | 46, 47 if CAN is not in use; or a PCA9685 on `i2c.ext` | suggested | |
+
+GPIO34 is a strapping pin (the JTAG source). The chip looks at it at reset
+only if the JTAG_SEL_ENABLE eFuse was burnt, which it is not out of the
+box, and a pull-up there, as 1-Wire has, selects what is already the
+default. GPIO46, 47 and 48 are fed by the VO4 LDO, the microSD's: 3.3 V
+signals like the rest (3.25 V measured on GPIO48 on 2026-11-10 with the
+card in; GPIO46 and 47 measured too), not a supply for anything.
+
 ## Supported sensors
 
 The full list is [SENSORS.md](SENSORS.md): temperature and humidity,
@@ -76,7 +104,7 @@ they came in (2026-10-15 to 10-18), with what each driver does.
 | INA226 | bus voltage, shunt voltage, current, power | 0x40 to 0x4F | manufacturer id 0x5449 ("TI") at 0xFE | `module ina226 i2c.ext addr=0x40 shunt=100` |
 | ADS1115 | four single-ended voltages, A0 to A3 | 0x48 to 0x4B | threshold registers at 0x8000/0x7FFF | `module ads1115 i2c.ext addr=0x48 gain=4096` |
 | MAX6675 (SPI) | a type K thermocouple, 0 to 1023.75 °C | its CS | cannot be: declared only | `module max6675 spi.a`, `module horno spi.a chip=max6675 cs=48` |
-| DS18B20 (1-Wire; also DS18S20, DS1822, MAX31850) | temperature | its ROM, on a GPIO port | the bus is declared, its sensors found by a search | `port gpio.ow pin=28` and `module ds18b20 gpio.ow` |
+| DS18B20 (1-Wire; also DS18S20, DS1822, MAX31850) | temperature | its ROM, on a GPIO port | the bus is declared, its sensors found by a search | `port gpio.ow pin=34` and `module ds18b20 gpio.ow` |
 
 ### Units
 
@@ -168,7 +196,7 @@ The UIs scale them for a bench: mV, mA and mW below 1. The value keys are:
   from Módulos it was read every second with no error, and a lighter at the
   tip took it from 26 to 63 °C in 15 s.
 - **DS18B20 and its family on 1-Wire (2026-10-18):**
-  - A bus is a GPIO port (`port gpio.ow pin=28`) with a module line on it
+  - A bus is a GPIO port (`port gpio.ow pin=34`) with a module line on it
     (`module ds18b20 gpio.ow`). A GPIO port without one is never driven:
     the pin may hold a relay, and a reset pulse would click it.
   - Every sensor a search finds on the bus is read. Its name is the
@@ -454,6 +482,48 @@ port's, those of its modules, or none. Then:
 The tab claims pins as `Bus SPI`, not `Bus`. A pin the GPIO tab holds is
 then refused, not taken over.
 
+## Ethernet (a W5500 on `spi.a`, since 0.26.0)
+
+A "W5500 Lite" module (HW-884, 3.3 V only, about 200 mA) on the SPI port
+gives the board a wired network. It is optional and off until it is
+switched on: Settings, Redes, Ethernet, or the portal's "Wi-Fi y Ethernet"
+page.
+
+![The W5500 Lite on the header](img/bench-w5500.svg)
+
+| Module | Header | GPIO |
+|---|---|---|
+| V (either) | pin 18, 3V3 | |
+| G / GND | pin 33 or 40 | |
+| SCK | pin 38 | 52 |
+| MO (MOSI) | pin 34 | 50 |
+| MI (MISO) | pin 36 | 51 |
+| CS | pin 32 | 49 |
+| RST, INT, NC | not connected | |
+
+- **No interrupt pin:** the driver polls every 10 ms (`aos_eth_p4.c`, over
+  `aos_io_spi_*`: ESP-IDF's W5500 driver with a custom SPI layer, so the
+  port stays the pin arbiter's, owner "Ethernet").
+- **The clock** is 8 MHz by default and chosen in the same page, up to
+  40 MHz. With loose wires on the bench it ran clean at 40 MHz; a download
+  went from 0.5 MB/s at 8 MHz to 0.89 MB/s at 40 MHz.
+- **Sharing the port.** A sensor declared on `spi.a` shares it with
+  Ethernet, each with its own CS. An app that opens the port (Bus, EEPROM)
+  pauses Ethernet, which the screen says, and Ethernet comes back eight
+  seconds after the last one closes it. Nothing an app does on SPI is
+  refused because Ethernet is on.
+- **Which network is used:** the wire when it has a link and an address,
+  then the Wi-Fi, then the USB cable. Both can be up; the portal answers
+  on either.
+- **Trust:** a wired network opens the portal without a password only
+  after "La red por cable: de confianza" is switched on at the board
+  (`docs/SECURITY.md`).
+- **In the simulator:** `P4_SIM_ETH=1` (a cable and an address) or
+  `P4_SIM_ETH=nolink`.
+
+`docs/plan/ETHERNET.md` (Spanish) has the phases, everything measured and
+what is next.
+
 ## 1-Wire
 
 `aos_io_ow_*` opens a 1-Wire bus on any usable GPIO of the header, with an
@@ -489,6 +559,9 @@ sends it from a frame in PSRAM, refilled by its ISR; there is no DMA,
 because its buffer would be internal RAM.
 
 ![A WS2812B strip on the header](img/bench-ws2812.svg)
+
+The drawing is on GPIO48, the pin suggested for a strip since the pin map
+of 2026-11-10; the test below was on GPIO4, which is `uart.b`'s RX.
 
 Tried on the board on 2026-10-05: a strip of 12 WS2812B on GPIO4, its data
 straight from the 3.3 V pin with no level shifter, powered from the
@@ -566,14 +639,16 @@ sensor service went on reading the same I2C port meanwhile.
 <img src="img/photo-pwm-pca9685-centre.jpg" width="240" alt="The PWM app with five servos at 90 degrees">
 
 
-**Wiring for a bench test of PWM** (what was tried on the board): two
-LEDs at two frequencies, a servo at 50 Hz on its own 5 V, and the analog
-level through its RC filter, with a meter on it.
+**Wiring for a bench test of PWM:** two LEDs at two frequencies, a servo
+at 50 Hz on its own 5 V, and the analog level through its RC filter, with
+a meter on it. The drawing uses the pins the pin map of 2026-11-10 leaves
+free (GPIO34, 46, 47 and 48); the test below was the same circuit on
+GPIO28, 29, 30 and 32, as the photo shows.
 
 ![PWM on the header: two LEDs, a servo and an analog level](img/bench-pwm.svg)
 
-Tried on the board on 2026-10-05, wired as drawn on a breadboard, all
-four channels at once from the PWM app:
+Tried on the board on 2026-10-05 on a breadboard, all four channels at
+once from the PWM app:
 
 | Channel | Asked | What the hardware gives |
 |---|---|---|
@@ -585,13 +660,15 @@ four channels at once from the PWM app:
 <img src="img/bench-pwm-photo.jpg" width="360" alt="The bench: the board, the breadboard with the LED, the RC filter and the meter reading 1.313 V">
 
 **Wiring for a bench test of infrared:** a demodulating receiver on
-GPIO5 (not GPIO21/22, which the I2C service scans by itself) and an IR LED
-driven through an NPN transistor from 5 V.
+GPIO28 (not GPIO21/22, which the I2C service scans by itself) and an IR
+LED on GPIO32, driven through an NPN transistor from 5 V. Those are the
+pins the Infrarrojo app starts with.
 
 ![Infrared on the header: a receiver and an IR LED through a transistor](img/bench-ir.svg)
 
-Tried on the board on 2026-10-05 with the Infrarrojo app, wired as drawn
-(receiver on GPIO5, the LED's transistor on GPIO31): a monitor's remote
+Tried on the board on 2026-10-05 with the Infrarrojo app, the same
+circuit on other pins (receiver on GPIO5, the LED's transistor on
+GPIO31): a monitor's remote
 learned as Samsung, address 0x0707, command 7, sent back, and the monitor
 turned its volume up; "volume up" from SmartIR's code library worked too.
 
@@ -609,7 +686,21 @@ SN65HVD230, on a twisted pair:
 
 Wired as drawn on 2026-11-07: 60.3 Ω between CANH and CANL with
 everything off, the two boards' 120 Ω (the SMD marked 121) in parallel.
-The frames on it are still to be tried.
+The same day the ESP32 car of `tools/can_test` and the CAN app talked at
+500 kbit/s: about 162 frames a second, no errors in 25000 frames
+(apps/can/README.md, with photos). On the way:
+
+- **The P4 alone on the bus, in Normal,** goes error passive (TEC 128) and
+  stays there, retrying: nobody acknowledges, and the standard stops the
+  count for a passive node with only ACK errors. Seen on the board.
+- **Self test with TX and RX on two pins** (28 and 29) sends each bit
+  through the transceiver and back without needing an ACK: the test for
+  the four wires and the transceiver. Here two of the wires were wrong;
+  every frame was then a bit error, which goes bus off in Normal too.
+- **The ESP32 with the P4 in Solo escucha** got no ACK in 10753 tries and
+  went bus off, not passive: its few bit and stuff errors do not add up
+  to that, so the classic ESP32 may count ACK errors past 128. Not looked
+  into further.
 
 **The clock of the LEDC.** All its timers share one clock, and the
 backlight's (set up by the BSP) is the crystal. Asking for the 80 MHz PLL
@@ -651,6 +742,112 @@ one 39CE0FF3 both times it was written.
 The simulator emulates the three families (`sim/eeprom_sim.c`): 24xx on I2C
 (`P4_SIM_EEPROM`, a 24LC256 at 0x50 by default), 25xx on SPI (a 25LC640 on
 CS GPIO46) and a 93xx clocked on GPIOs (`P4_SIM_93C`).
+
+## RS485
+
+Since 2026-11-08. RS485 is a UART with a transceiver: `aos_io_uart_open`
+with `rs485 = true` on a port that has a `de=` pin puts the UART in
+half-duplex RS485 mode, and the UART raises DE itself while it transmits
+(`uart.a` in the default profile: TX 30, RX 31, DE 29). A port without DE
+works with an automatic transceiver (no DE pin), and `usb0`/`usb1` with a
+USB-RS485 adapter on the USB host. On the board an RS485 port hands its
+bytes over 3 character times after the line goes quiet (the driver's
+default is 10), which is what lets an app split Modbus frames and time
+answers close to the wire.
+
+**The transceiver has to be a 3.3 V one** (MAX3485, SP3485, THVD1420, a
+3.3 V "TTL to RS485" module): the common MAX485 is a 5 V part and, fed from
+5 V, puts 5 V on the header's RX. DE and /RE tied together go to the DE
+pin. 120 Ω at the two ends of the bus only.
+
+The bench's bus is the P4 and an ESP32 DevKit, each with an automatic
+"RS485 to TTL" module (TXD, RXD, VCC, GND, a 120 Ω on board; no DE) fed
+from 3.3 V, on a twisted pair (`tools/rs485_test`, which plays a Modbus
+slave or master):
+
+![RS485 on the header: the P4 and an ESP32, each with an automatic RS485 module, on one twisted pair](img/bench-rs485.svg)
+
+The apps: **Modbus** (`apps/modbus`: master, slave with faults on demand,
+and a monitor that listens without driving the line) and **Equipos**
+(`apps/equipos`: the Riden and the DOMCOM gateway). DMX512 and the rest of
+what RS485 carries: `docs/plan/RS485.md`.
+
+**On the board** (2026-11-09, `apps/modbus/README.md` "On the board"):
+the P4 and the ESP32 with two automatic modules talked at 9600 8N1 for
+thousands of requests with no error but those played on purpose, both
+ways (the P4 as master and as slave) and with the P4 listening as
+monitor. Two things learnt: the modules need nothing but TX, RX, 3.3 V and
+GND, TXD to TX as named; and a UART does not drop a byte with a parity
+error, so a slave answers with a good CRC whatever the parity: the speed
+can be found by trying, the format cannot without counting parity errors.
+
+**The line's errors** (2026-11-09): `aos_io_uart_errors(u, &e, clear)`
+counts, since the port opened or the last clear, the bytes with a bad
+parity, the bytes with a bad stop bit (framing), the BREAKs and the bytes
+lost to a full buffer, from the UART driver's event queue (drained on every
+read; ~450 bytes of internal RAM an open UART, the driver's own
+xQueueCreate). A byte with an error still reaches `aos_io_uart_read`. The
+Modbus app's Buscar velocidad uses it to tell the format, and its monitor
+to count bad bytes. In the simulator `P4_SIM_UART_A_FORMAT=8E1` says what
+format the far end talks, and a different one counts errors as a UART
+would.
+
+**In the simulator** a pty stands for the bus: `tools/fake_modbus.py`
+plays slaves, a master, or a busy bus on one, and `P4_SIM_UART_A=<pty>`
+puts it on `uart.a`. `P4_SIM_UART_A=/dev/cu.usbserial-…` puts a real
+USB-RS485 adapter there instead, so the simulator talks to the ESP32 too.
+
+## DMX512
+
+Since 2026-11-09. `aos_io_dmx_*` (`aos_io.h`) puts DMX on a UART port of
+`modules.txt` through an RS485 transceiver: 250000 baud 8N2, a BREAK, a
+MAB, a start code and up to 512 slots. The shared part is
+`components/aos_io/aos_io_dmx.c` (it claims the port's TX, RX and DE for
+the owner and keeps the universe), the board's `aos_io_dmx_p4.c`, the
+simulator's `sim/io_dmx_sim.c`.
+
+- **Sending:** ESP-IDF's UART driver and a task that, every period (25 ms
+  by default), waits for the last packet to be out, holds TX low for the
+  BREAK by inverting the line, lets it go for the MAB, and queues the
+  start code and the slots. DE stays high while it is open: DMX goes one
+  way. Slots, BREAK (88-2000 µs), MAB (8-1000 µs), period and start code
+  are settable.
+- **Receiving:** not the driver, whose ring buffer would hand the last bytes
+  of one packet (still in the FIFO when the BREAK is detected) to the next.
+  An interrupt of its own takes every byte as it comes (FIFO threshold 1:
+  about 22700 interrupts a second at full rate, a few per cent of a core)
+  and closes the packet at each BREAK, dropping the BREAK's own NUL. It
+  then times the BREAK and the MAB on the RX pin: the BREAK is detected
+  about 10 bit times (40 µs) after it starts, so its length is that plus
+  the time until the line rises, and the MAB the time until it falls
+  again; the polling gives up after 3 ms. Not IRAM: while the flash is
+  busy a packet or two may come out short and count as bad.
+- **What a reader gets:** the last whole packet (start code and slots) and
+  the stats: packets, bad ones (framing error or too long), other start
+  codes, short BREAK/MAB, the rate, the BREAK and MAB as measured, the age
+  of the last packet.
+- **In the simulator** one bus for all: what an app sends, a receiver
+  gets; with nobody sending, a console plays a show (`apps/dmx/README.md`).
+- **RDM** (2026-11-09): `aos_io_dmx_rdm(d, req, len, out, max, timeout_ms)`
+  on a port open to send. The sending task takes the request between two
+  DMX packets: BREAK and MAB as for DMX, the bytes, the wait for the last
+  stop bit; then DE goes low (when the port has one), what the RX pin
+  picked up is thrown away and the answer is read from the driver (in SEND
+  it has the RX pin too, with its pull-up): the first byte within the
+  timeout (2 ms by the standard, 3 by default), the rest until 2 ms of
+  silence. A normal answer's BREAK arrives as zero bytes, dropped; a
+  discovery answer has no BREAK. Call it from a thread: it waits up to a
+  DMX period plus the answer. In the simulator two make-believe fixtures
+  answer (the bench ESP32's responder, `tools/rs485_test/esp32/main/
+  rdm_resp.c`).
+
+The app is **DMX** (`apps/dmx`); the bench's ESP32 plays a console and a
+light with a pixel strip (`tools/rs485_test`). **On the board** on
+2026-11-09, with the automatic modules of the Modbus bench: 40 packets a
+second both ways, 512 slots, no bad packet, the BREAK measured as sent
+(176-177 µs) on both sides. The MAB comes out longer than asked (16 µs
+asked, 33-50 µs on the wire: the time until the UART's first start bit),
+which the standard allows.
 
 ## Not done yet
 

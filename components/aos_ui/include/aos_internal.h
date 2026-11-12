@@ -32,10 +32,15 @@ void aos_screenrec_toggle(void);
 bool aos_screenrec_on(void);
 
 /* ---- the wallpaper's photos (aos_wallpaper.c) ---- */
+void aos_wall_photo_reserve(void);  /* first thing: the photos' PSRAM slots, at the bottom */
 void aos_wall_photo_init(void);
+void aos_wall_photo_start(void);    /* the boot is over: decode them */
 void aos_wall_photo_relayout(void);
 const lv_image_dsc_t *aos_wall_photo_dsc(int which);     /* NULL: the gradient */
 void aos_wall_photo_want(int which, bool want);           /* let it go / decode it again */
+bool aos_wall_photo_release(int which);                   /* let it go, its PSRAM slot too */
+void aos_wall_photo_for_game(bool game);                  /* a game opens: both go; it closed: back */
+uint8_t aos_wall_photo_lock_dim(void);                    /* black over the lock's photo when it is the home's */
 uint32_t aos_wall_photo_tint(int which);                  /* 0xRRGGBB, 0 before the first decode */
 bool aos_wall_photo_next(void);                           /* locking: the album's next photo */
 
@@ -45,6 +50,11 @@ void aos_home_rebuild(void);             /* the model or the orientation changed
 bool aos_home_back(void);                /* closes a folder / leaves edit mode   */
 void aos_home_edit(bool on);
 bool aos_home_editing(void);
+bool aos_home_idle(void);                /* no edit mode, folder or widget sheet open */
+/* aos_search.c: the system's search, a swipe down on the home screen */
+void aos_search_open(void);
+void aos_search_close(void);
+bool aos_search_is_open(void);
 void aos_home_badges_refresh(void);
 /* The on-screen rectangle of an app's icon (for the zoom out); false if the
  * app is not visible on the current page. */
@@ -89,6 +99,19 @@ void aos_np_command(aos_media_cmd_t cmd);   /* PLAY_PAUSE, NEXT, PREV to the one
 void aos_banner_create(lv_obj_t *layer);
 void aos_banner_layout(void);
 void aos_banner_tick(void);              /* polls aos_hal_notif_* for new ones */
+void aos_textfield_init(void);           /* aos_textfield.c: the cursor and the ring of the field being edited */
+void aos_textfield_accent(void);         /* the accent changed: recolour them */
+void aos_keyboard_init(void);            /* aos_keyboard.c: the Spanish maps, once */
+void aos_keyboard_attach(lv_obj_t *kb);  /* each lv_keyboard, from the theme */
+lv_obj_t *aos_textfield_active(void);    /* the field of the keyboard shown, or NULL */
+bool aos_textfield_is_password(lv_obj_t *ta);  /* hidden or shown by its eye */
+/* aos_textsel.c: selecting text in a field, and the clipboard */
+void aos_textsel_attach(lv_obj_t *ta);   /* each lv_textarea, from the theme */
+bool aos_textsel_has(lv_obj_t *ta);      /* something selected in it */
+void aos_textsel_clear(void);
+bool aos_textsel_delete(lv_obj_t *ta);   /* delete what is selected; false: nothing was */
+void aos_textsel_extend(lv_obj_t *ta, int dx, int dy);  /* move the selection's end */
+void aos_textsel_key(lv_obj_t *ta, char k);             /* 'c', 'x', 'v', 'a' */
 void aos_hwkbd_tick(void);               /* a USB keyboard types into the open keyboard (aos_hwkbd.c) */
 void aos_hwkbd_app_gone(const char *id); /* the app closes: its key handler goes */
 void aos_hwmouse_tick(void);             /* a USB mouse points on the screen (aos_hwmouse.c) */
@@ -120,6 +143,7 @@ typedef void (*aos_wedit_done_t)(aos_wedit_action_t action, int w, int h, const 
 void        aos_wedit_add(void (*picked)(const char *type));
 void        aos_wedit_config(const char *type, int w, int h, const char *arg, aos_wedit_done_t done);
 bool        aos_wedit_close(void);                  /* true if a sheet was open */
+bool        aos_wedit_open(void);
 const char *aos_wedit_glyph(const char *type);      /* the described glyph, or a generic one */
 
 #ifdef __cplusplus

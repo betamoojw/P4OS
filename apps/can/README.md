@@ -6,8 +6,8 @@ to 8 bytes), 25 kbit/s to 1 Mbit/s, through `aos_io_can_*`
 (`components/aos_io/include/aos_io.h`, `docs/MODULES.md`, "PWM, an analog
 level, infrared and CAN").
 
-- **Connection:** TX and RX pins (the header's usable GPIOs, with the owner
-  of the taken ones), speed (125k, 250k, 500k, 1M or any other in kbit/s,
+- **Connection:** TX and RX pins (GPIO46 and GPIO47 until you choose: any
+  usable GPIO of the header, with the owner of the taken ones), speed (125k, 250k, 500k, 1M or any other in kbit/s,
   83.3 say), mode and the controller's filter (id and mask, 11 or 29 bits).
   The state of the controller (active, warning, passive, bus off), its
   error counters, frames a second and the bus load are always in view; bus
@@ -196,8 +196,9 @@ node in the self test hears only itself. The car answers OBD-II mode 01
 (`sim/io_signal_sim.c`): the engine on 7E8 / 18DAF110 with 19 PIDs (65 has
 no formula on purpose, to show the bytes), the gearbox on 7E9 / 18DAF118
 with 01 and 0D. To try the scanner: Conexión, Normal, Conectar, then OBD,
-Preguntar. The ESP32 car of `tools/can_test/auto_esp32` answers 00, 05, 0C,
-0D and 11 on the real bus.
+Preguntar. The ESP32 car of `tools/can_test/auto_esp32` answers the same
+way on the real bus: the engine on 7E8 with 18 PIDs and the maps up to A0,
+the gearbox on 7E9 (`tools/can_test/README.md`).
 
 Tried in the simulator on 2026-11-07: opendbc's vw_mqb.dbc and tesla_can.dbc
 and nberlette's OBD2.dbc read with the counts a separate parser gives;
@@ -207,7 +208,11 @@ page taken by the board.
 
 On the board, with no transceiver, Autoprueba on one pin. The real bus, the
 P4 and an ESP32 each with an SN65HVD230, is wired as in
-`docs/img/bench-can.svg`.
+`docs/img/bench-can.svg`. That bench was on GPIO28 and GPIO29, the app's
+first default; since 2026-11-10 it starts on GPIO46 and GPIO47 (pins 35
+and 37), which leaves GPIO29 to the RS485 port's DE and GPIO28 to the
+infrared receiver, and the drawing shows those. A real bus on the new
+pins is still to be tried.
 
 ### On a real bus (2026-11-07)
 
@@ -234,4 +239,4 @@ What the board has still to confirm: the bus-off recovery and the error
 counters with faults on the bus, the load estimate against a scope, a busy
 bus (this one is 4 %; the driver's queue is 64 frames), how long a big
 `.dbc` takes to read from the card, and the OBD tab against the ESP32 car
-(which answers 00, 05, 0C, 0D and 11) and a real one.
+(its firmware of 9471b0b, with the two units) and a real one.

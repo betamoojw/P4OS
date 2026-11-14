@@ -520,6 +520,56 @@ page.
   (`docs/SECURITY.md`).
 - **In the simulator:** `P4_SIM_ETH=1` (a cable and an address) or
   `P4_SIM_ETH=nolink`.
+- **A tester for the port it is plugged into** (since 0.27): Red,
+  the Cable tab. The link, what the DHCP server gave, which switch and
+  which of its ports this is when the switch says so (LLDP or CDP), a test
+  of the gateway, a name and the internet, and the board's interfaces. For
+  apps of the card: `aos_eth_dhcp()`, `aos_eth_listen()` and
+  `aos_eth_neighbor()` in `aos_eth.h`, `aos_hal_netif_list()` in
+  `aos_hal.h`. In the simulator the switch is made up
+  (`P4_SIM_ETH=cdp`, `=quiet`).
+- **Finding a device of unknown address** (since 0.27): Red, the
+  Equipo tab. Plugged straight into the board's Ethernet, a device shows
+  with the address and the name it gave as it started (ARP, DHCP, mDNS,
+  NetBIOS, SSDP, WS-Discovery), and a sweep by ARP of the networks devices
+  come set to finds the one that says nothing. For apps of the card:
+  `aos_eth_stations()` and `aos_eth_arp_ask()`. In the simulator,
+  `P4_SIM_ETH=device` is a cable straight to a made-up camera. A tap on a
+  device opens it: everything it said, a ping, and "Ponerme en su red",
+  which gives the wire an address next to the device's
+  (`aos_eth_bench()`); "Repartir direcciones" makes the board a DHCP
+  server for whatever is plugged in. In both the Wi-Fi stays the board's
+  way out, and a restart undoes them. "Prender los servicios" starts three
+  small servers on the wire's address only: TFTP (the files of the card's
+  `banco` folder, read only), NTP (the board's time) and syslog (the
+  device's log, its last lines on the screen). "Compartir el Wi-Fi" is
+  "Repartir direcciones" plus a way out to the internet through the
+  board's Wi-Fi (NAT), for a device with none of its own. The device's
+  page also says who made its network card, looked up by the MAC in the
+  IEEE's register when it is on the card as `/redes/oui.txt` (the file the
+  portal's sweeps use), and scans its ports 1 to 1024, as Hosts does.
+- **The board's own Wi-Fi network going out by the wire** (since 0.27):
+  Settings, Redes, Wi-Fi, "Compartir la salida" under the access point. Whoever joins the board's network goes out by where the
+  board does, the wire or the house's Wi-Fi, through the same NAT
+  (`aos_hal_net_ap_share_set()`). Off until it is turned on at the board,
+  and kept. One translation at a time: while "Compartir el Wi-Fi" is on,
+  the own network waits.
+- **Looking at the traffic** (since 0.27): Red, Cable, "Capturar
+  a la tarjeta" keeps every frame that reaches the port in a pcap file in
+  the card's `/redes` folder, for Wireshark, and says what a network
+  should not have: two DHCP servers, an address claimed by two stations, a
+  broadcast storm. In the simulator, `P4_SIM_ETH=storm` has all three.
+- **The wire against the Wi-Fi** (since 0.27): Red, Cable.
+  "Comparar" pings the gateway ten times by each and shows them side by
+  side; "Medir velocidad" listens on TCP 5001 and counts what
+  `iperf -c <address>` (iperf 2) sends from a computer, by the interface
+  that address belongs to. It takes streams only from networks the portal
+  opens to with no password.
+- **The lookout** (since 0.27): Red, Vigía. A list of the
+  bench's devices, kept in the card's `/redes/vigia.txt`, each looked at
+  every ten seconds (a ping, or a TCP port) while the tab is open, and
+  woken by Wake-on-LAN once its MAC is known. Needs no Ethernet: it works
+  over the Wi-Fi too.
 
 `docs/plan/ETHERNET.md` (Spanish) has the phases, everything measured and
 what is next.

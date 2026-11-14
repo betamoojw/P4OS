@@ -204,7 +204,7 @@ Ajustes	Einstellungen
 Detener	Stopp
 
 #: components\aos_ui\aos_panels.c:354
-#: components\aos_apps\aos_app_settings.c:1261
+#: components\aos_apps\aos_app_settings.c:1278
 Inicio	Home
 
 #: components\aos_ui\aos_panels.c:355
@@ -224,8 +224,8 @@ Sin notificaciones	Keine Mitteilungen
 Borrar todo	Alle löschen
 
 #: components\aos_ui\aos_panels.c:501
-#: components\aos_apps\aos_app_net.c:541
-#: components\aos_apps\aos_app_net.c:1381
+#: components\aos_apps\aos_app_net.c:595
+#: components\aos_apps\aos_app_net.c:1449
 #: components\aos_apps\_pending\aos_app_settings.c:3037
 ahora	jetzt
 
@@ -237,12 +237,12 @@ Aceptar	Akzeptieren
 
 #: components\aos_ui\aos_panels.c:551
 #: components\aos_apps\aos_app_settings.c:879
-#: components\aos_apps\aos_app_settings.c:1174
+#: components\aos_apps\aos_app_settings.c:1191
 Horizontal	Querformat
 
 #: components\aos_ui\aos_panels.c:551
 #: components\aos_apps\aos_app_settings.c:879
-#: components\aos_apps\aos_app_settings.c:1173
+#: components\aos_apps\aos_app_settings.c:1190
 Vertical	Hochformat
 
 #: components\aos_ui\aos_panels.c:555
@@ -268,7 +268,7 @@ Redes	Netzwerke
 #: components\aos_ui\aos_search.c:207
 #: components\aos_apps\aos_app_settings.c:62
 #: components\aos_apps\aos_app_settings.c:790
-#: components\aos_apps\aos_app_settings.c:1134
+#: components\aos_apps\aos_app_settings.c:1151
 Wi-Fi	WLAN
 
 #: components\aos_ui\aos_search.c:209
@@ -580,7 +580,7 @@ Presencia	Anwesenheit
 #: components\aos_ui\aos_sensor_text.c:52
 #: components\aos_apps\aos_app_ha.c:897
 #: components\aos_apps\aos_app_settings.c:322
-#: components\aos_apps\aos_app_settings.c:1786
+#: components\aos_apps\aos_app_settings.c:1803
 Estado	Status
 
 #: components\aos_ui\aos_sensor_text.c:53
@@ -620,7 +620,7 @@ Quieto	Ruhend
 
 #: components\aos_ui\aos_sensor_text.c:58
 #: components\aos_apps\aos_app_elec.c:604
-#: components\aos_apps\aos_app_settings.c:2150
+#: components\aos_apps\aos_app_settings.c:2167
 Blanco	Weiß
 
 #: components\aos_ui\aos_sensor_text.c:58
@@ -633,7 +633,7 @@ VOC crudo	VOC roh
 NOx crudo	NOx roh
 
 #: components\aos_ui\aos_sensor_text.c:59
-#: components\aos_apps\aos_app_settings.c:1142
+#: components\aos_apps\aos_app_settings.c:1159
 #: components\aos_apps\aos_app_sysmon.c:1219
 Señal	Signal
 
@@ -856,7 +856,7 @@ Acelerómetro y giróscopo	Beschleunigungssensor und Gyroskop
 
 #: components\aos_ui\aos_sensor_text.c:212
 #: components\aos_ui\aos_sensor_text.c:212
-#: components\aos_apps\aos_app_settings.c:2286
+#: components\aos_apps\aos_app_settings.c:2303
 Acelerómetro	Beschl.-Sensor
 
 #: components\aos_ui\aos_sensor_text.c:213
@@ -1032,7 +1032,7 @@ Distancia y presencia	Entfernung und Anwesenheit
 
 #: components\aos_ui\aos_sensor_text.c:272
 #: components\aos_apps\aos_app_ha.c:984
-#: components\aos_apps\aos_app_settings.c:1482
+#: components\aos_apps\aos_app_settings.c:1499
 Otros	Andere
 
 #: components\aos_ui\aos_sshkey_ui.c:87
@@ -1160,11 +1160,11 @@ La hora y la fecha, grandes.	Uhrzeit und Datum, groß.
 Chico	Klein
 
 #: components\aos_ui\aos_widget_edit.c:42
-#: components\aos_apps\aos_app_settings.c:2148
+#: components\aos_apps\aos_app_settings.c:2165
 Mediano	Mittel
 
 #: components\aos_ui\aos_widget_edit.c:42
-#: components\aos_apps\aos_app_settings.c:2148
+#: components\aos_apps\aos_app_settings.c:2165
 Grande	Groß
 
 #: components\aos_ui\aos_widget_edit.c:266
@@ -1231,6 +1231,7 @@ sin configurar	ohne Setup
 apagada	aus
 
 #: components\aos_apps\aos_app_bench.c:290
+#: components\aos_apps\aos_app_net.c:2559
 buscando…	sucht…
 
 #: components\aos_apps\aos_app_bench.c:290
@@ -1276,7 +1277,7 @@ Tope %s V: la entrada es de %s V y la fuente no eleva.	Max. %s V: Eingang hat %s
 #: components\aos_apps\aos_app_bench.c:439
 #: components\aos_apps\aos_app_mqtt.c:1949
 #: components\aos_apps\aos_app_settings.c:341
-#: components\aos_apps\aos_app_settings.c:1779
+#: components\aos_apps\aos_app_settings.c:1796
 ninguna	keine
 
 #: components\aos_apps\aos_app_bench.c:550
@@ -1369,7 +1370,7 @@ Un valor que el equipo no tiene en ese momento (fuente desenchufada, canal apaga
 
 #: components\aos_apps\aos_app_bus.c:74
 #: components\aos_apps\aos_app_modules.c:341
-#: components\aos_apps\aos_app_settings.c:1352
+#: components\aos_apps\aos_app_settings.c:1369
 #: components\aos_ssh\aos_ssh_cmds.c:795
 libre	frei
 
@@ -1392,7 +1393,7 @@ Respondieron %d direcciones   %s	%d Adressen antworteten   %s
 DISPOSITIVOS	GERÄTE
 
 #: components\aos_apps\aos_app_bus.c:449
-#: components\aos_apps\aos_app_settings.c:1841
+#: components\aos_apps\aos_app_settings.c:1858
 #: components\aos_apps\aos_app_sysmon.c:321
 desconocido	unbekannt
 
@@ -1403,8 +1404,8 @@ Nadie respondió. ¿Pull-ups en SDA y SCL? ¿El módulo tiene 3V3?	Keine Antwort
 Tocá Escanear.	Scannen antippen.
 
 #: components\aos_apps\aos_app_bus.c:495
-#: components\aos_apps\aos_app_net.c:1507
-#: components\aos_apps\aos_app_net.c:1588
+#: components\aos_apps\aos_app_net.c:1575
+#: components\aos_apps\aos_app_net.c:1656
 Escanear	Scannen
 
 #: components\aos_apps\aos_app_bus.c:519
@@ -1590,7 +1591,7 @@ reservado	reserviert
 
 #: components\aos_apps\aos_app_bus.c:1509
 #: components\aos_apps\aos_app_modules.c:342
-#: components\aos_apps\aos_app_settings.c:1353
+#: components\aos_apps\aos_app_settings.c:1370
 de la placa	Platine
 
 #: components\aos_apps\aos_app_bus.c:1540
@@ -2060,7 +2061,7 @@ Borrar	Löschen
 #: components\aos_apps\aos_app_clock.c:539
 #: components\aos_apps\aos_app_macropad.c:2494
 #: components\aos_apps\aos_app_modules.c:864
-#: components\aos_apps\aos_app_settings.c:2367
+#: components\aos_apps\aos_app_settings.c:2384
 Guardar	Speichern
 
 #: components\aos_apps\aos_app_clock.c:585
@@ -2618,7 +2619,7 @@ Hoy %02d:%02d	Heute %02d:%02d
 Ayer %02d:%02d	Gestern %02d:%02d
 
 #: components\aos_apps\aos_app_files.c:335
-#: components\aos_apps\aos_app_settings.c:1808
+#: components\aos_apps\aos_app_settings.c:1825
 Imagen	Bild
 
 #: components\aos_apps\aos_app_files.c:336
@@ -2637,7 +2638,7 @@ Datos o configuración	Daten oder Konfig.
 
 #: components\aos_apps\aos_app_files.c:340
 #: components\aos_apps\aos_app_files.c:2685
-#: components\aos_apps\aos_app_settings.c:2264
+#: components\aos_apps\aos_app_settings.c:2281
 Firmware	Firmware
 
 #: components\aos_apps\aos_app_files.c:341
@@ -2678,15 +2679,15 @@ En /icons están los íconos de las apps.	In /icons liegen die App-Symbole.
 
 #: components\aos_apps\aos_app_files.c:692
 #: components\aos_apps\aos_app_macropad.c:2521
-#: components\aos_apps\aos_app_settings.c:1112
-#: components\aos_apps\aos_app_sysmon.c:48
+#: components\aos_apps\aos_app_net.c:2232
+#: components\aos_apps\aos_app_net.c:2604
 Nombre	Name
 
 #: components\aos_apps\aos_app_files.c:692
 Fecha	Datum
 
 #: components\aos_apps\aos_app_files.c:692
-#: components\aos_apps\aos_app_settings.c:1684
+#: components\aos_apps\aos_app_settings.c:1701
 #: components\aos_apps\aos_app_sysmon.c:1230
 Tipo	Typ
 
@@ -3236,7 +3237,7 @@ Programa borrado	Programm gelöscht
 Flash borrada	Flash gelöscht
 
 #: components\aos_apps\aos_app_flasher.c:182
-#: components\aos_apps\aos_app_settings.c:1884
+#: components\aos_apps\aos_app_settings.c:1901
 #: components\aos_flasher\aos_flasher_avr.c:866
 #: components\aos_flasher\aos_flasher_stm32.c:391
 No se pudo borrar	Konnte nicht gelöscht werden
@@ -3324,13 +3325,13 @@ Sin EN/BOOT en modules.txt: poné la placa en modo descarga a mano	Kein EN/BOOT 
 
 #: components\aos_apps\aos_app_flasher.c:403
 #: components\aos_apps\aos_app_flasher.c:472
-#: components\aos_apps\aos_app_settings.c:1764
+#: components\aos_apps\aos_app_settings.c:1781
 No se pudo empezar	Start fehlgeschlagen
 
 #: components\aos_apps\aos_app_flasher.c:510
 #: components\aos_apps\aos_app_settings.c:570
-#: components\aos_apps\aos_app_settings.c:1590
-#: components\aos_apps\aos_app_settings.c:1602
+#: components\aos_apps\aos_app_settings.c:1607
+#: components\aos_apps\aos_app_settings.c:1619
 La tarjeta la tiene la computadora (modo Disco)	Der Computer hat die Karte (Laufwerksmodus)
 
 #: components\aos_apps\aos_app_flasher.c:550
@@ -3554,7 +3555,7 @@ RESTANTE	RESTZEIT
 ARCHIVOS	DATEIEN
 
 #: components\aos_apps\aos_app_flasher.c:1212
-#: components\aos_apps\aos_app_settings.c:2735
+#: components\aos_apps\aos_app_settings.c:2752
 REGISTRO	PROTOKOLL
 
 #: components\aos_apps\aos_app_flasher.c:1249
@@ -3654,7 +3655,7 @@ Cerrando…	Schließt…
 #: components\aos_apps\aos_app_ha.c:205
 #: components\aos_apps\aos_app_ha.c:206
 #: components\aos_apps\aos_app_ha.c:231
-#: components\aos_apps\aos_app_net.c:1192
+#: components\aos_apps\aos_app_net.c:1260
 Abierta	Offen
 
 #: components\aos_apps\aos_app_ha.c:206
@@ -3747,7 +3748,7 @@ hace %u h  ·  ahora	vor %u h  ·  jetzt
 7 días	7 Tage
 
 #: components\aos_apps\aos_app_ha.c:752
-#: components\aos_apps\aos_app_settings.c:2248
+#: components\aos_apps\aos_app_settings.c:2265
 Ahora	Jetzt
 
 #: components\aos_apps\aos_app_ha.c:776
@@ -3811,13 +3812,14 @@ Conectado	Verbunden
 
 #: components\aos_apps\aos_app_ha.c:883
 #: components\aos_apps\aos_app_mqtt.c:382
-#: components\aos_apps\aos_app_net.c:1531
+#: components\aos_apps\aos_app_net.c:1599
 #: components\aos_apps\aos_app_sysmon.c:1088
 Sin conexión	Keine Verbindung
 
 #: components\aos_apps\aos_app_ha.c:894
+#: components\aos_apps\aos_app_net.c:2200
 #: components\aos_apps\aos_app_settings.c:845
-#: components\aos_apps\aos_app_settings.c:1140
+#: components\aos_apps\aos_app_settings.c:1157
 Dirección	Adresse
 
 #: components\aos_apps\aos_app_ha.c:894
@@ -3827,7 +3829,7 @@ tocá para escribirla	zum Eingeben tippen
 Token	Token
 
 #: components\aos_apps\aos_app_ha.c:895
-#: components\aos_apps\aos_app_settings.c:1924
+#: components\aos_apps\aos_app_settings.c:1941
 guardado	gespeichert
 
 #: components\aos_apps\aos_app_ha.c:895
@@ -3846,7 +3848,7 @@ El token se crea en Home Assistant: tu perfil > Seguridad > Tokens de acceso de 
 #: components\aos_apps\aos_app_ha.c:941
 #: components\aos_apps\aos_app_mqtt.c:46
 #: components\aos_apps\aos_app_mqtt.c:1912
-#: components\aos_apps\aos_app_settings.c:1916
+#: components\aos_apps\aos_app_settings.c:1933
 Conexión	Verbindung
 
 #: components\aos_apps\aos_app_ha.c:1047
@@ -4447,10 +4449,11 @@ ninguno: el botón no muestra estado	keiner: die Taste zeigt keinen Status
 Retenido	Retained
 
 #: components\aos_apps\aos_app_macropad.c:2455
+#: components\aos_apps\aos_app_net.c:2150
 Probando…	Teste…
 
 #: components\aos_apps\aos_app_macropad.c:2462
-#: components\aos_apps\aos_app_settings.c:1883
+#: components\aos_apps\aos_app_settings.c:1900
 Tocá otra vez para borrarlo	Zum Löschen erneut tippen
 
 #: components\aos_apps\aos_app_macropad.c:2492
@@ -4635,7 +4638,7 @@ en un puerto	in einem Port
 tomado	belegt
 
 #: components\aos_apps\aos_app_modules.c:342
-#: components\aos_apps\aos_app_settings.c:1352
+#: components\aos_apps\aos_app_settings.c:1369
 con cuidado	mit Vorsicht
 
 #: components\aos_apps\aos_app_modules.c:381
@@ -4882,7 +4885,7 @@ no dice qué es	keine Angabe
 Estos chips no tienen cómo decir qué son sin que alguien les escriba: agregalos a modules.txt si son lo que parecen.	Diese Chips können nicht sagen, was sie sind, ohne dass man sie beschreibt: in modules.txt eintragen, wenn sie das sind, wonach sie aussehen.
 
 #: components\aos_apps\aos_app_modules.c:1631
-#: components\aos_apps\aos_app_settings.c:1152
+#: components\aos_apps\aos_app_settings.c:1169
 Buscar de nuevo	Erneut suchen
 
 #: components\aos_apps\aos_app_modules.c:1645
@@ -5038,7 +5041,7 @@ Retenido: el broker lo guarda y se lo da a cada uno que se suscriba después. Un
 QoS 1 espera la confirmación del broker (PUBACK) y reintenta si no llega.	QoS 1 wartet auf die Bestätigung des Brokers (PUBACK) und wiederholt, wenn sie ausbleibt.
 
 #: components\aos_apps\aos_app_mqtt.c:1675
-#: components\aos_apps\aos_app_net.c:694
+#: components\aos_apps\aos_app_net.c:748
 RECIENTES	ZULETZT
 
 #: components\aos_apps\aos_app_mqtt.c:1678
@@ -5059,7 +5062,7 @@ sin usuario	kein Benutzer
 
 #: components\aos_apps\aos_app_mqtt.c:1802
 #: components\aos_apps\aos_app_mqtt.c:1949
-#: components\aos_apps\aos_app_settings.c:1113
+#: components\aos_apps\aos_app_settings.c:1122
 Contraseña	Passwort
 
 #: components\aos_apps\aos_app_mqtt.c:1802
@@ -5102,8 +5105,8 @@ BROKER	BROKER
 Servidor	Server
 
 #: components\aos_apps\aos_app_mqtt.c:1948
-#: components\aos_apps\aos_app_settings.c:1908
-#: components\aos_apps\aos_app_settings.c:1922
+#: components\aos_apps\aos_app_settings.c:1925
+#: components\aos_apps\aos_app_settings.c:1939
 ninguno	keiner
 
 #: components\aos_apps\aos_app_mqtt.c:1952
@@ -5218,274 +5221,803 @@ Copiá archivos .mp3 o .wav a la carpeta %s	MP3- oder WAV-Dateien in den Ordner 
 #: components\aos_apps\aos_app_music.c:1132
 REPRODUCIENDO DESDE	WIEDERGABE AUS
 
-#: components\aos_apps\aos_app_net.c:410
+#: components\aos_apps\aos_app_net.c:59
+Hosts	Hosts
+
+#: components\aos_apps\aos_app_net.c:59
+Cable	Kabel
+
+#: components\aos_apps\aos_app_net.c:59
+#: components\aos_apps\aos_app_net.c:2232
+Equipo	Gerät
+
+#: components\aos_apps\aos_app_net.c:59
+Vigía	Wache
+
+#: components\aos_apps\aos_app_net.c:464
 Un nombre (homeassistant.local, google.com) o una dirección (192.168.1.10).	Ein Name (homeassistant.local, google.com) oder eine Adresse (192.168.1.10).
 
-#: components\aos_apps\aos_app_net.c:443
-#: components\aos_apps\aos_app_net.c:452
+#: components\aos_apps\aos_app_net.c:497
+#: components\aos_apps\aos_app_net.c:506
 Equipo a medir	Zielgerät
 
-#: components\aos_apps\aos_app_net.c:540
-#: components\aos_apps\aos_app_net.c:1380
+#: components\aos_apps\aos_app_net.c:594
+#: components\aos_apps\aos_app_net.c:1448
 hace 2 min	vor 2 Min.
 
-#: components\aos_apps\aos_app_net.c:543
+#: components\aos_apps\aos_app_net.c:597
 Tocá Empezar para medir	Zum Messen Start antippen
 
-#: components\aos_apps\aos_app_net.c:596
-#: components\aos_apps\aos_app_net.c:685
+#: components\aos_apps\aos_app_net.c:650
+#: components\aos_apps\aos_app_net.c:739
 #: components\aos_apps\_pending\aos_app_pomodoro.c:376
 Empezar	Start
 
-#: components\aos_apps\aos_app_net.c:600
+#: components\aos_apps\aos_app_net.c:654
 Tocá para elegir un equipo	Gerät wählen
 
-#: components\aos_apps\aos_app_net.c:611
+#: components\aos_apps\aos_app_net.c:665
 %s · DNS en %u ms	%s · DNS in %u ms
 
-#: components\aos_apps\aos_app_net.c:614
+#: components\aos_apps\aos_app_net.c:668
 sin ICMP: mide conectar por TCP al puerto 80	kein ICMP: misst TCP-Verbindung zu Port 80
 
-#: components\aos_apps\aos_app_net.c:619
+#: components\aos_apps\aos_app_net.c:673
 buscando la dirección…	suche die Adresse…
 
-#: components\aos_apps\aos_app_net.c:624
+#: components\aos_apps\aos_app_net.c:678
 Desde %s, un ping por segundo	Von %s, ein Ping pro Sekunde
 
-#: components\aos_apps\aos_app_net.c:636
+#: components\aos_apps\aos_app_net.c:690
 esperando la primera respuesta	warte auf die erste Antwort
 
-#: components\aos_apps\aos_app_net.c:636
+#: components\aos_apps\aos_app_net.c:690
 sin medir	nicht gemessen
 
-#: components\aos_apps\aos_app_net.c:637
+#: components\aos_apps\aos_app_net.c:691
 la última se perdió · %u enviados	letzter verloren · %u gesendet
 
-#: components\aos_apps\aos_app_net.c:638
+#: components\aos_apps\aos_app_net.c:692
 TTL %d · %u enviados	TTL %d · %u gesendet
 
-#: components\aos_apps\aos_app_net.c:639
+#: components\aos_apps\aos_app_net.c:693
 %u enviados	%u gesendet
 
-#: components\aos_apps\aos_app_net.c:666
+#: components\aos_apps\aos_app_net.c:720
 Latencia y pérdida hacia un equipo · estás en %s	Latenz und Verlust zu einem Gerät · du bist %s
 
-#: components\aos_apps\aos_app_net.c:706
+#: components\aos_apps\aos_app_net.c:760
 mínimo	Minimum
 
-#: components\aos_apps\aos_app_net.c:706
+#: components\aos_apps\aos_app_net.c:760
 promedio	Mittel
 
-#: components\aos_apps\aos_app_net.c:706
+#: components\aos_apps\aos_app_net.c:760
 máximo	Maximum
 
-#: components\aos_apps\aos_app_net.c:730
+#: components\aos_apps\aos_app_net.c:784
 LATENCIA, UNA BARRA POR PING	LATENZ, EIN BALKEN PRO PING
 
-#: components\aos_apps\aos_app_net.c:737
+#: components\aos_apps\aos_app_net.c:791
 Pérdida	Verlust
 
-#: components\aos_apps\aos_app_net.c:737
+#: components\aos_apps\aos_app_net.c:791
 Respondidos	Beantwortet
 
-#: components\aos_apps\aos_app_net.c:747
+#: components\aos_apps\aos_app_net.c:801
 El jitter es cuánto cambia la latencia de un ping al siguiente, en promedio. La línea punteada del gráfico es el promedio.	Jitter ist, wie stark sich die Latenz von einem Ping zum nächsten im Mittel ändert. Die gestrichelte Linie im Diagramm ist der Mittelwert.
 
-#: components\aos_apps\aos_app_net.c:862
+#: components\aos_apps\aos_app_net.c:916
+#: components\aos_apps\aos_app_net.c:2479
 Ya hay otro escaneo de puertos en marcha	Es läuft schon ein anderer Portscan
 
-#: components\aos_apps\aos_app_net.c:950
+#: components\aos_apps\aos_app_net.c:1016
 Buscando equipos…	Suche Geräte…
 
-#: components\aos_apps\aos_app_net.c:950
+#: components\aos_apps\aos_app_net.c:1016
 Todavía no se buscó	Noch nicht gesucht
 
-#: components\aos_apps\aos_app_net.c:978
-#: components\aos_apps\aos_app_net.c:1150
+#: components\aos_apps\aos_app_net.c:1044
+#: components\aos_apps\aos_app_net.c:1218
 Buscar equipos	Geräte suchen
 
-#: components\aos_apps\aos_app_net.c:980
+#: components\aos_apps\aos_app_net.c:1046
 %s · %d encontrado	%s · %d gefunden
 
-#: components\aos_apps\aos_app_net.c:980
+#: components\aos_apps\aos_app_net.c:1046
 %s · %d encontrados	%s · %d gefunden
 
-#: components\aos_apps\aos_app_net.c:981
+#: components\aos_apps\aos_app_net.c:1047
 Los equipos de tu red y lo que tienen abierto	Die Geräte in deinem Netz und was sie offen haben
 
-#: components\aos_apps\aos_app_net.c:984
+#: components\aos_apps\aos_app_net.c:1050
 Ping a todas las direcciones	Ping an alle Adressen
 
-#: components\aos_apps\aos_app_net.c:984
+#: components\aos_apps\aos_app_net.c:1050
 Probando los puertos conocidos	Teste die bekannten Ports
 
-#: components\aos_apps\aos_app_net.c:984
+#: components\aos_apps\aos_app_net.c:1050
 Buscando los nombres (mDNS)	Suche die Namen (mDNS)
 
-#: components\aos_apps\aos_app_net.c:997
+#: components\aos_apps\aos_app_net.c:1063
 Listo en %s: %d equipo%s	Fertig in %s: %d Gerät%s
 
-#: components\aos_apps\aos_app_net.c:997
+#: components\aos_apps\aos_app_net.c:1063
 Listo en %s: %d equipos%s	Fertig in %s: %d Geräte%s
 
-#: components\aos_apps\aos_app_net.c:998
+#: components\aos_apps\aos_app_net.c:1064
 , también los que no responden ping	, auch die ohne Ping-Antwort
 
-#: components\aos_apps\aos_app_net.c:999
+#: components\aos_apps\aos_app_net.c:1065
 sin ICMP: sólo por TCP	kein ICMP: nur per TCP
 
-#: components\aos_apps\aos_app_net.c:1003
+#: components\aos_apps\aos_app_net.c:1069
 Detenido: quedan los que se encontraron hasta ahí	Gestoppt: die bisher gefundenen bleiben
 
-#: components\aos_apps\aos_app_net.c:1003
+#: components\aos_apps\aos_app_net.c:1069
 Rápido: los que responden ping. Completo: también los que no, tarda cerca de un minuto.	Schnell: die auf Ping antworten. Komplett: auch die anderen, dauert etwa eine Minute.
 
-#: components\aos_apps\aos_app_net.c:1030
-#: components\aos_apps\aos_app_net.c:1102
+#: components\aos_apps\aos_app_net.c:1096
+#: components\aos_apps\aos_app_net.c:1168
+#: components\aos_apps\aos_app_net.c:2496
+#: components\aos_apps\aos_app_net.c:2614
 Puertos 1-1024	Ports 1-1024
 
-#: components\aos_apps\aos_app_net.c:1033
+#: components\aos_apps\aos_app_net.c:1099
 Prueba del 1 al 1024 y los altos de siempre (1883, 8123, 6053, 8080...).	Testet 1 bis 1024 und die üblichen hohen (1883, 8123, 6053, 8080...).
 
-#: components\aos_apps\aos_app_net.c:1037
+#: components\aos_apps\aos_app_net.c:1103
+#: components\aos_apps\aos_app_net.c:2503
 %d/%d · %d abiertos · %s	%d/%d · %d offen · %s
 
-#: components\aos_apps\aos_app_net.c:1039
+#: components\aos_apps\aos_app_net.c:1105
+#: components\aos_apps\aos_app_net.c:2505
 Detenido en %d/%d · %d abiertos	Gestoppt bei %d/%d · %d offen
 
-#: components\aos_apps\aos_app_net.c:1040
+#: components\aos_apps\aos_app_net.c:1106
+#: components\aos_apps\aos_app_net.c:2506
 %d abiertos de %d, en %s%s	%d von %d offen, in %s%s
 
-#: components\aos_apps\aos_app_net.c:1041
+#: components\aos_apps\aos_app_net.c:1107
+#: components\aos_apps\aos_app_net.c:2507
  · no contestó nada: puede tener un firewall	 · keine Antwort: evtl. eine Firewall
 
-#: components\aos_apps\aos_app_net.c:1088
+#: components\aos_apps\aos_app_net.c:1154
 Respondió el ping en %s ms	Ping beantwortet in %s ms
 
-#: components\aos_apps\aos_app_net.c:1089
+#: components\aos_apps\aos_app_net.c:1155
 No responde el ping; contestó por ARP	Keine Ping-Antwort; antwortete per ARP
 
-#: components\aos_apps\aos_app_net.c:1090
+#: components\aos_apps\aos_app_net.c:1156
 No responde el ping; contestó por TCP	Keine Ping-Antwort; antwortete per TCP
 
-#: components\aos_apps\aos_app_net.c:1105
+#: components\aos_apps\aos_app_net.c:1170
+#: components\aos_apps\aos_app_net.c:2613
+Vigilar	Beobachten
+
+#: components\aos_apps\aos_app_net.c:1173
 PUERTOS CONOCIDOS	BEKANNTE PORTS
 
-#: components\aos_apps\aos_app_net.c:1109
+#: components\aos_apps\aos_app_net.c:1177
 TODOS LOS PUERTOS	ALLE PORTS
 
-#: components\aos_apps\aos_app_net.c:1129
+#: components\aos_apps\aos_app_net.c:1197
 ANUNCIA POR mDNS	MELDET PER mDNS
 
-#: components\aos_apps\aos_app_net.c:1151
+#: components\aos_apps\aos_app_net.c:1219
 Rápido	Schnell
 
-#: components\aos_apps\aos_app_net.c:1152
+#: components\aos_apps\aos_app_net.c:1220
 Completo	Komplett
 
-#: components\aos_apps\aos_app_net.c:1156
+#: components\aos_apps\aos_app_net.c:1224
 Simulador: barre 127.0.0.1, o el rango que diga la variable P4_SIM_NET_SCAN.	Simulator: scannt 127.0.0.1 oder den Bereich aus der Variable P4_SIM_NET_SCAN.
 
-#: components\aos_apps\aos_app_net.c:1169
+#: components\aos_apps\aos_app_net.c:1237
 Tocá un equipo para ver todos sus puertos	Gerät antippen, um alle Ports zu sehen
 
-#: components\aos_apps\aos_app_net.c:1209
+#: components\aos_apps\aos_app_net.c:1277
 Excelente	Sehr gut
 
-#: components\aos_apps\aos_app_net.c:1209
+#: components\aos_apps\aos_app_net.c:1277
 Buena	Gut
 
-#: components\aos_apps\aos_app_net.c:1209
+#: components\aos_apps\aos_app_net.c:1277
 Regular	Mäßig
 
-#: components\aos_apps\aos_app_net.c:1209
+#: components\aos_apps\aos_app_net.c:1277
 Débil	Schwach
 
-#: components\aos_apps\aos_app_net.c:1209
+#: components\aos_apps\aos_app_net.c:1277
 Muy débil	Sehr schwach
 
-#: components\aos_apps\aos_app_net.c:1327
+#: components\aos_apps\aos_app_net.c:1395
 (oculta)	(versteckt)
 
-#: components\aos_apps\aos_app_net.c:1347
+#: components\aos_apps\aos_app_net.c:1415
 Nada en esta banda	Nichts in diesem Band
 
-#: components\aos_apps\aos_app_net.c:1347
-#: components\aos_apps\aos_app_net.c:1483
-#: components\aos_apps\aos_app_net.c:1507
-#: components\aos_apps\aos_app_net.c:1515
+#: components\aos_apps\aos_app_net.c:1415
+#: components\aos_apps\aos_app_net.c:1551
+#: components\aos_apps\aos_app_net.c:1575
+#: components\aos_apps\aos_app_net.c:1583
 Escaneando…	Scanne…
 
-#: components\aos_apps\aos_app_net.c:1468
-#: components\aos_apps\aos_app_net.c:1519
+#: components\aos_apps\aos_app_net.c:1536
+#: components\aos_apps\aos_app_net.c:1587
 (red oculta)	(verstecktes Netz)
 
-#: components\aos_apps\aos_app_net.c:1472
+#: components\aos_apps\aos_app_net.c:1540
 canal %u · %u MHz · %s · %s	Kanal %u · %u MHz · %s · %s
 
-#: components\aos_apps\aos_app_net.c:1508
+#: components\aos_apps\aos_app_net.c:1576
 El escaneo falló: ¿está prendida la radio?	Scan fehlgeschlagen: ist die Funkeinheit an?
 
-#: components\aos_apps\aos_app_net.c:1513
+#: components\aos_apps\aos_app_net.c:1581
 %d puntos de acceso (%d en 2,4 GHz, %d en 5 GHz) · hace %u s	%d Access Points (%d auf 2,4 GHz, %d auf 5 GHz) · vor %u s
 
-#: components\aos_apps\aos_app_net.c:1526
+#: components\aos_apps\aos_app_net.c:1594
 canal %u · %u MHz · %s · %02X:%02X:%02X:%02X:%02X:%02X	Kanal %u · %u MHz · %s · %02X:%02X:%02X:%02X:%02X:%02X
 
-#: components\aos_apps\aos_app_net.c:1529
+#: components\aos_apps\aos_app_net.c:1597
 Conectado a %s · %s	Verbunden mit %s · %s
 
-#: components\aos_apps\aos_app_net.c:1537
+#: components\aos_apps\aos_app_net.c:1605
 La placa no está asociada a ninguna red	Die Platine ist mit keinem Netz verbunden
 
-#: components\aos_apps\aos_app_net.c:1538
+#: components\aos_apps\aos_app_net.c:1606
 Las redes de alrededor y sus canales	Die Netze in der Nähe und ihre Kanäle
 
-#: components\aos_apps\aos_app_net.c:1591
+#: components\aos_apps\aos_app_net.c:1659
 CANALES 2,4 GHz	KANÄLE 2,4 GHz
 
-#: components\aos_apps\aos_app_net.c:1594
+#: components\aos_apps\aos_app_net.c:1662
 CANALES 5 GHz	KANÄLE 5 GHz
 
-#: components\aos_apps\aos_app_net.c:1599
-#: components\aos_apps\aos_app_settings.c:1149
+#: components\aos_apps\aos_app_net.c:1667
+#: components\aos_apps\aos_app_settings.c:1166
 REDES	NETZE
 
-#: components\aos_apps\aos_app_net.c:1604
+#: components\aos_apps\aos_app_net.c:1672
 Simulador: las redes son de ejemplo; en la placa las escanea el ESP32-C6, que sólo tiene 2,4 GHz.	Simulator: die Netze sind Beispiele; auf der Platine scannt sie der ESP32-C6, der nur 2,4 GHz hat.
 
-#: components\aos_apps\aos_app_net.c:1642
+#: components\aos_apps\aos_app_net.c:1710
 Todos (%d)	Alle (%d)
 
-#: components\aos_apps\aos_app_net.c:1694
+#: components\aos_apps\aos_app_net.c:1762
 Preguntando en la red…	Frage das Netz…
 
-#: components\aos_apps\aos_app_net.c:1694
+#: components\aos_apps\aos_app_net.c:1762
 Nadie anunció nada	Niemand hat etwas gemeldet
 
-#: components\aos_apps\aos_app_net.c:1712
+#: components\aos_apps\aos_app_net.c:1780
 Preguntando…	Frage…
 
-#: components\aos_apps\aos_app_net.c:1712
-#: components\aos_apps\aos_app_net.c:1739
+#: components\aos_apps\aos_app_net.c:1780
+#: components\aos_apps\aos_app_net.c:1807
 Buscar servicios	Dienste suchen
 
-#: components\aos_apps\aos_app_net.c:1719
+#: components\aos_apps\aos_app_net.c:1787
 %d servicios, respondieron en %s	%d Dienste, Antwort in %s
 
-#: components\aos_apps\aos_app_net.c:1720
+#: components\aos_apps\aos_app_net.c:1788
 Preguntando por 15 tipos de servicio a la vez…	Frage 15 Diensttypen gleichzeitig ab…
 
-#: components\aos_apps\aos_app_net.c:1736
+#: components\aos_apps\aos_app_net.c:1804
 Quién anuncia qué en la red (.local)	Wer was im Netz meldet (.local)
 
-#: components\aos_apps\aos_app_net.c:1741
+#: components\aos_apps\aos_app_net.c:1809
 TIPOS	TYPEN
 
-#: components\aos_apps\aos_app_net.c:1744
+#: components\aos_apps\aos_app_net.c:1812
 Simulador: son servicios de ejemplo; en la placa se le pregunta a la red de verdad.	Simulator: das sind Beispieldienste; auf der Platine wird das echte Netz gefragt.
 
-#: components\aos_apps\aos_app_net.c:1802
+#: components\aos_apps\aos_app_net.c:1856
+%u días	%u Tage
+
+#: components\aos_apps\aos_app_net.c:1866
+Ethernet está apagado: se prende en Ajustes, Redes	Ethernet ist aus: Einschalten unter Einstellungen, Netzwerke
+
+#: components\aos_apps\aos_app_net.c:1868
+En pausa: %s está usando el puerto SPI	Pausiert: %s benutzt den SPI-Port
+
+#: components\aos_apps\aos_app_net.c:1870
+El módulo no arrancó	Das Modul ist nicht gestartet
+
+#: components\aos_apps\aos_app_net.c:1871
+Sin cable, o con nadie del otro lado	Kein Kabel oder niemand am anderen Ende
+
+#: components\aos_apps\aos_app_net.c:1873
+%d Mbit/s, dúplex completo	%d Mbit/s, Vollduplex
+
+#: components\aos_apps\aos_app_net.c:1873
+%d Mbit/s, medio dúplex	%d Mbit/s, Halbduplex
+
+#: components\aos_apps\aos_app_net.c:1882
+Cable USB	USB-Kabel
+
+#: components\aos_apps\aos_app_net.c:1883
+#: components\aos_apps\aos_app_settings.c:793
+Red propia	Eigenes Netz
+
+#: components\aos_apps\aos_app_net.c:1927
+Midiendo…	Messe…
+
+#: components\aos_apps\aos_app_net.c:1927
+#: components\aos_apps\aos_app_net.c:2218
+Comparar	Vergleichen
+
+#: components\aos_apps\aos_app_net.c:1931
+esperando su turno…	wartet auf seinen Durchgang…
+
+#: components\aos_apps\aos_app_net.c:1932
+la puerta de enlace no respondió a %d pings	das Gateway hat auf %d Pings nicht geantwortet
+
+#: components\aos_apps\aos_app_net.c:1937
+%s ms (%s a %s), perdidos %d de %d	%s ms (%s bis %s), verloren %d von %d
+
+#: components\aos_apps\aos_app_net.c:1942
+Para compararlos hace falta que el cable y el Wi-Fi estén los dos arriba, cada uno con su dirección	Zum Vergleich müssen Kabel und WLAN beide aktiv sein, jedes mit seiner Adresse
+
+#: components\aos_apps\aos_app_net.c:1943
+Diez pings a la puerta de enlace por el cable y diez por el Wi-Fi, desde el mismo lugar	Zehn Pings zum Gateway über das Kabel und zehn über das WLAN, vom selben Ort
+
+#: components\aos_apps\aos_app_net.c:1948
+Dejar de medir	Messung beenden
+
+#: components\aos_apps\aos_app_net.c:1948
+#: components\aos_apps\aos_app_net.c:2223
+Medir velocidad	Geschwindigkeit messen
+
+#: components\aos_apps\aos_app_net.c:1951
+Llegando por %s: %s Mbit/s	Eingang über %s: %s Mbit/s
+
+#: components\aos_apps\aos_app_net.c:1961
+Se rechazó a %s: no viene de una red donde el portal abre sin contraseña	%s wurde abgewiesen: nicht aus einem Netz, in dem das Portal ohne Passwort öffnet
+
+#: components\aos_apps\aos_app_net.c:1962
+Esperando en el puerto 5001. En la computadora, con iperf 2: iperf -c %s mide el cable, iperf -c %s el Wi-Fi	Warte auf Port 5001. Am Computer, mit iperf 2: iperf -c %s misst das Kabel, iperf -c %s das WLAN
+
+#: components\aos_apps\aos_app_net.c:1965
+Cuenta lo que una computadora le manda a la placa por cada conexión: la velocidad del camino entre las dos. La computadora usa iperf 2 (no iperf3)	Zählt, was ein Computer über jede Verbindung an die Platine sendet: die Geschwindigkeit des Wegs zwischen beiden. Der Computer nutzt iperf 2 (nicht iperf3)
+
+#: components\aos_apps\aos_app_net.c:1972
+%s Mbit/s: %s en %u s	%s Mbit/s: %s in %u s
+
+#: components\aos_apps\aos_app_net.c:1985
+La captura no empezó	Die Aufzeichnung ist nicht gestartet
+
+#: components\aos_apps\aos_app_net.c:2004
+Detener la captura	Aufzeichnung anhalten
+
+#: components\aos_apps\aos_app_net.c:2004
+#: components\aos_apps\aos_app_net.c:2245
+Capturar a la tarjeta	Auf die Karte aufzeichnen
+
+#: components\aos_apps\aos_app_net.c:2007
+Capturando en %s: %u tramas, %s, %s	Zeichne auf in %s: %u Frames, %s, %s
+
+#: components\aos_apps\aos_app_net.c:2009
+Guardado en la carpeta de barridos como %s: %u tramas, %s	Im Ordner der Scans gespeichert als %s: %u Frames, %s
+
+#: components\aos_apps\aos_app_net.c:2010
+Guarda en la tarjeta todo lo que llega a esta boca, para abrirlo con Wireshark. En un switch es lo que va para todos y para la placa; en un puerto espejo, todo.	Speichert alles, was an diesem Port ankommt, auf der Karte, zum Öffnen mit Wireshark. An einem Switch ist das der Verkehr an alle und an die Platine; an einem Mirror-Port alles.
+
+#: components\aos_apps\aos_app_net.c:2017
+%u; %u por segundo ahora, %u en el peor	%u; jetzt %u pro Sekunde, höchstens %u
+
+#: components\aos_apps\aos_app_net.c:2030
+Hay %d servidores DHCP contestando: %s y %s. En una red tiene que haber uno solo	Es antworten %d DHCP-Server: %s und %s. In einem Netz darf es nur einen geben
+
+#: components\aos_apps\aos_app_net.c:2035
+La dirección %s la reclaman dos equipos: %02X:%02X:%02X:%02X:%02X:%02X y %02X:%02X:%02X:%02X:%02X:%02X	Die Adresse %s wird von zwei Geräten beansprucht: %02X:%02X:%02X:%02X:%02X:%02X und %02X:%02X:%02X:%02X:%02X:%02X
+
+#: components\aos_apps\aos_app_net.c:2042
+Tormenta de difusión: cientos de tramas por segundo para todos, durante varios segundos	Broadcast-Sturm: Hunderte Frames pro Sekunde an alle, über mehrere Sekunden
+
+#: components\aos_apps\aos_app_net.c:2046
+Se perdieron tramas: llegaron más rápido de lo que la tarjeta las toma	Frames gingen verloren: Sie kamen schneller, als die Karte sie aufnimmt
+
+#: components\aos_apps\aos_app_net.c:2049
+Nada raro hasta ahora: un solo servidor DHCP o ninguno, ninguna dirección repetida, sin tormenta	Bisher nichts Auffälliges: ein DHCP-Server oder keiner, keine doppelte Adresse, kein Sturm
+
+#: components\aos_apps\aos_app_net.c:2071
+sin dirección	keine Adresse
+
+#: components\aos_apps\aos_app_net.c:2073
+salida	Ausgang
+
+#: components\aos_apps\aos_app_net.c:2075
+Ninguna interfaz de red arriba	Keine Netzwerkschnittstelle aktiv
+
+#: components\aos_apps\aos_app_net.c:2090
+esperando al DHCP…	warte auf DHCP…
+
+#: components\aos_apps\aos_app_net.c:2101
+%s, dada hace %s	%s, vor %s vergeben
+
+#: components\aos_apps\aos_app_net.c:2116
+Sin enlace no hay a quién escuchar	Ohne Verbindung gibt es niemanden zum Zuhören
+
+#: components\aos_apps\aos_app_net.c:2119
+Se anunció por %s hace %s	Hat sich per %s vor %s gemeldet
+
+#: components\aos_apps\aos_app_net.c:2122
+Escuchando el anuncio del switch… %u s. Un switch gestionable lo manda cada 30 s (LLDP) o cada 60 (CDP)	Warte auf die Meldung des Switches… %u s. Ein verwaltbarer Switch sendet sie alle 30 s (LLDP) oder alle 60 (CDP)
+
+#: components\aos_apps\aos_app_net.c:2126
+Nada en %u s: este switch no se anuncia. No es gestionable, o tiene LLDP apagado	Nichts in %u s: Dieser Switch meldet sich nicht. Er ist nicht verwaltbar, oder LLDP ist aus
+
+#: components\aos_apps\aos_app_net.c:2136
+la boca da alimentación	der Port liefert Strom
+
+#: components\aos_apps\aos_app_net.c:2136
+la boca no da alimentación	der Port liefert keinen Strom
+
+#: components\aos_apps\aos_app_net.c:2150
+#: components\aos_apps\aos_app_net.c:2210
+Probar la salida	Ausgang testen
+
+#: components\aos_apps\aos_app_net.c:2156
+#: components\aos_apps\aos_app_net.c:2163
+#: components\aos_apps\aos_app_net.c:2171
+probando…	teste…
+
+#: components\aos_apps\aos_app_net.c:2159
+responde en %s ms	antwortet in %s ms
+
+#: components\aos_apps\aos_app_net.c:2161
+no responde al ping	antwortet nicht auf den Ping
+
+#: components\aos_apps\aos_app_net.c:2161
+no hay puerta de enlace	kein Gateway vorhanden
+
+#: components\aos_apps\aos_app_net.c:2165
+%s resuelve en %u ms	%s wird in %u ms aufgelöst
+
+#: components\aos_apps\aos_app_net.c:2168
+no resuelve ninguno de los tres nombres de prueba	keiner der drei Testnamen wird aufgelöst
+
+#: components\aos_apps\aos_app_net.c:2174
+%s responde en %s ms	%s antwortet in %s ms
+
+#: components\aos_apps\aos_app_net.c:2177
+%s no responde	%s antwortet nicht
+
+#: components\aos_apps\aos_app_net.c:2195
+La boca de red a la que está enchufado el Ethernet	Der Netzwerkanschluss, an dem das Ethernet steckt
+
+#: components\aos_apps\aos_app_net.c:2201
+#: components\aos_apps\aos_app_sysmon.c:1219
+Máscara	Maske
+
+#: components\aos_apps\aos_app_net.c:2202
+#: components\aos_apps\aos_app_net.c:2211
+#: components\aos_apps\aos_app_settings.c:846
+#: components\aos_apps\aos_app_sysmon.c:1219
+Puerta de enlace	Gateway
+
+#: components\aos_apps\aos_app_net.c:2204
+Servidor DHCP	DHCP-Server
+
+#: components\aos_apps\aos_app_net.c:2205
+Concesión	Lease
+
+#: components\aos_apps\aos_app_net.c:2207
+SALIDA	AUSGANG
+
+#: components\aos_apps\aos_app_net.c:2212
+Nombres	Namen
+
+#: components\aos_apps\aos_app_net.c:2215
+CABLE CONTRA WI-FI	KABEL GEGEN WLAN
+
+#: components\aos_apps\aos_app_net.c:2225
+Por el cable	Über das Kabel
+
+#: components\aos_apps\aos_app_net.c:2226
+Por el Wi-Fi	Über das WLAN
+
+#: components\aos_apps\aos_app_net.c:2232
+Boca	Port
+
+#: components\aos_apps\aos_app_net.c:2232
+Descripción	Beschreibung
+
+#: components\aos_apps\aos_app_net.c:2232
+Gestión	Verwaltung
+
+#: components\aos_apps\aos_app_net.c:2235
+INTERFACES	SCHNITTSTELLEN
+
+#: components\aos_apps\aos_app_net.c:2241
+TRÁFICO	VERKEHR
+
+#: components\aos_apps\aos_app_net.c:2246
+Para todos	An alle
+
+#: components\aos_apps\aos_app_net.c:2247
+Por protocolo	Nach Protokoll
+
+#: components\aos_apps\aos_app_net.c:2254
+Simulador: el switch y las respuestas de la prueba son de ejemplo.	Simulator: Der Switch und die Testergebnisse sind Beispiele.
+
+#: components\aos_apps\aos_app_net.c:2288
+otro tráfico	anderer Verkehr
+
+#: components\aos_apps\aos_app_net.c:2310
+La placa está en la red del equipo, como %s	Die Platine ist im Netz des Geräts, als %s
+
+#: components\aos_apps\aos_app_net.c:2311
+Red de banco: la placa es %s y reparte direcciones	Werkbank-Netz: Die Platine ist %s und vergibt Adressen
+
+#: components\aos_apps\aos_app_net.c:2312
+Comparte el Wi-Fi: la placa es %s, reparte direcciones y da salida a internet	Teilt das WLAN: Die Platine ist %s, vergibt Adressen und bietet einen Internetzugang
+
+#: components\aos_apps\aos_app_net.c:2313
+El cable es un cliente más de la red: lo normal	Das Kabel ist ein gewöhnlicher Client im Netz: der Normalfall
+
+#: components\aos_apps\aos_app_net.c:2321
+El Ethernet no arrancó de esa forma	Ethernet ist so nicht gestartet
+
+#: components\aos_apps\aos_app_net.c:2347
+Apagar los servicios	Dienste ausschalten
+
+#: components\aos_apps\aos_app_net.c:2347
+#: components\aos_apps\aos_app_net.c:2759
+Prender los servicios	Dienste einschalten
+
+#: components\aos_apps\aos_app_net.c:2348
+Atienden en %s, sólo por el cable	Erreichbar unter %s, nur über das Kabel
+
+#: components\aos_apps\aos_app_net.c:2350
+Apagados. Le dan archivos y la hora a un equipo y reciben su registro, sólo por el cable	Aus. Sie geben einem Gerät Dateien und die Uhrzeit und nehmen sein Log entgegen, nur über das Kabel
+
+#: components\aos_apps\aos_app_net.c:2352
+dando %s: %d %%	sende %s: %d %%
+
+#: components\aos_apps\aos_app_net.c:2354
+%u dados, %u fallidos; el último pedido: %s	%u gesendet, %u fehlgeschlagen; zuletzt angefragt: %s
+
+#: components\aos_apps\aos_app_net.c:2355
+da los archivos de la carpeta banco de la tarjeta	liefert die Dateien aus dem Ordner banco der Karte
+
+#: components\aos_apps\aos_app_net.c:2357
+la placa no tiene la hora puesta: avisa que no la sabe	die Uhr der Platine ist nicht gestellt: Sie meldet, dass sie die Zeit nicht kennt
+
+#: components\aos_apps\aos_app_net.c:2358
+%u respuestas	%u Antworten
+
+#: components\aos_apps\aos_app_net.c:2360
+%u líneas	%u Zeilen
+
+#: components\aos_apps\aos_app_net.c:2376
+La placa no está en ningún Wi-Fi: no hay conexión que compartir	Die Platine ist in keinem WLAN: keine Verbindung zum Teilen
+
+#: components\aos_apps\aos_app_net.c:2406
+#: components\aos_apps\aos_app_net.c:2797
+Ya está en la lista del vigía, o la lista está llena	Schon in der Liste der Wache, oder die Liste ist voll
+
+#: components\aos_apps\aos_app_net.c:2414
+#: components\aos_apps\aos_app_net.c:2472
+Todavía no se sabe su dirección	Seine Adresse ist noch nicht bekannt
+
+#: components\aos_apps\aos_app_net.c:2440
+ARP: dijo qué dirección tiene, o preguntó por otra	ARP: Es hat seine Adresse genannt oder nach einer anderen gefragt
+
+#: components\aos_apps\aos_app_net.c:2441
+mDNS: se anuncia o busca a otros por nombres .local	mDNS: Es meldet sich oder sucht andere über .local-Namen
+
+#: components\aos_apps\aos_app_net.c:2442
+SSDP: se anuncia por UPnP, como los routers, las teles y muchas cámaras	SSDP: Es meldet sich per UPnP, wie Router, Fernseher und viele Kameras
+
+#: components\aos_apps\aos_app_net.c:2443
+NetBIOS: nombres de red de Windows	NetBIOS: Windows-Netzwerknamen
+
+#: components\aos_apps\aos_app_net.c:2444
+LLMNR: busca nombres en la red local, como hace Windows	LLMNR: Es sucht Namen im lokalen Netz, wie Windows
+
+#: components\aos_apps\aos_app_net.c:2445
+WS-Discovery: como se anuncian las cámaras ONVIF y las impresoras	WS-Discovery: So melden sich ONVIF-Kameras und Drucker
+
+#: components\aos_apps\aos_app_net.c:2446
+LLDP, CDP o spanning tree: lo que dicen los switches	LLDP, CDP oder Spanning Tree: was Switches senden
+
+#: components\aos_apps\aos_app_net.c:2447
+IPv6: también habla IPv6	IPv6: Es spricht auch IPv6
+
+#: components\aos_apps\aos_app_net.c:2448
+Otro tráfico dirigido a todos	Anderer Verkehr an alle
+
+#: components\aos_apps\aos_app_net.c:2451
+DHCP: pidió una dirección, y quería la %s	DHCP: Es hat eine Adresse angefragt und wollte %s
+
+#: components\aos_apps\aos_app_net.c:2452
+DHCP: pidió una dirección	DHCP: Es hat eine Adresse angefragt
+
+#: components\aos_apps\aos_app_net.c:2458
+Su descripción UPnP está en %s	Seine UPnP-Beschreibung liegt unter %s
+
+#: components\aos_apps\aos_app_net.c:2499
+Qué puertos tiene abiertos. La placa tiene que poder llegarle: en la misma red, o después de ponerse en la suya.	Welche Ports es offen hat. Das Board muss es erreichen können: im selben Netz, oder nachdem es sich in dessen Netz gestellt hat.
+
+#: components\aos_apps\aos_app_net.c:2532
+Ya no está en la lista	Nicht mehr in der Liste
+
+#: components\aos_apps\aos_app_net.c:2538
+#: components\aos_apps\aos_app_net.c:2648
+sin dirección todavía	noch keine Adresse
+
+#: components\aos_apps\aos_app_net.c:2540
+ (privada: la eligió el equipo, no su fabricante)	 (privat: vom Gerät gewählt, nicht vom Hersteller)
+
+#: components\aos_apps\aos_app_net.c:2544
+#: components\aos_apps\aos_app_settings.c:2306
+sí	ja
+
+#: components\aos_apps\aos_app_net.c:2544
+no, o todavía no se le preguntó	nein, oder noch nicht gefragt
+
+#: components\aos_apps\aos_app_net.c:2546
+hace %s	vor %s
+
+#: components\aos_apps\aos_app_net.c:2549
+%u tramas en %s	%u Frames in %s
+
+#: components\aos_apps\aos_app_net.c:2561
+no está en el registro	nicht im Register
+
+#: components\aos_apps\aos_app_net.c:2562
+para verlo, poné oui.txt (el registro de la IEEE) en /redes de la tarjeta	dafür oui.txt (das Register der IEEE) in /redes auf der Karte ablegen
+
+#: components\aos_apps\aos_app_net.c:2577
+#: components\aos_apps\aos_app_net.c:2681
+Volver a lo normal	Zurück zum Normalfall
+
+#: components\aos_apps\aos_app_net.c:2581
+#: components\aos_apps\aos_app_net.c:2611
+Ponerme en su red	In sein Netz wechseln
+
+#: components\aos_apps\aos_app_net.c:2582
+La placa toma una dirección al lado de la suya en el cable, para llegarle: ping, y las apps que hablan con equipos. Mientras tanto el cable no es la salida de la placa, sigue el Wi-Fi. Se deshace acá o reiniciando.	Die Platine nimmt am Kabel eine Adresse neben der des Geräts, um es zu erreichen: Ping und die Apps, die mit Geräten sprechen. Solange ist das Kabel nicht der Ausgang der Platine, das bleibt das WLAN. Hier oder per Neustart rückgängig.
+
+#: components\aos_apps\aos_app_net.c:2586
+Está en la misma red que el cable de la placa: se le llega sin cambiar nada.	Es ist im selben Netz wie das Kabel der Platine: ohne Änderung erreichbar.
+
+#: components\aos_apps\aos_app_net.c:2587
+Todavía no dijo qué dirección tiene. Buscalo en las redes de fábrica.	Es hat seine Adresse noch nicht genannt. In den Werksnetzen suchen.
+
+#: components\aos_apps\aos_app_net.c:2604
+Dice ser	Gibt sich aus als
+
+#: components\aos_apps\aos_app_net.c:2604
+Contestó al ARP	Auf ARP geantwortet
+
+#: components\aos_apps\aos_app_net.c:2604
+Se lo oyó	Zuletzt gehört
+
+#: components\aos_apps\aos_app_net.c:2604
+En total	Insgesamt
+
+#: components\aos_apps\aos_app_net.c:2605
+#: components\aos_apps\aos_app_sysmon.c:1230
+Fabricante	Hersteller
+
+#: components\aos_apps\aos_app_net.c:2607
+ACCIONES	AKTIONEN
+
+#: components\aos_apps\aos_app_net.c:2621
+LO QUE DIJO	WAS ES GESAGT HAT
+
+#: components\aos_apps\aos_app_net.c:2637
+Todavía no habló nadie. Enchufá el equipo directo al Ethernet de la placa y prendelo: lo que dice al arrancar aparece acá. Si no dice nada, buscalo en las redes de fábrica.	Noch hat niemand gesprochen. Das Gerät direkt an das Ethernet der Platine anschließen und einschalten: Was es beim Start sagt, erscheint hier. Sagt es nichts, in den Werksnetzen suchen.
+
+#: components\aos_apps\aos_app_net.c:2650
+contestó	hat geantwortet
+
+#: components\aos_apps\aos_app_net.c:2657
+Se lo oyó por %s	Gehört über %s
+
+#: components\aos_apps\aos_app_net.c:2660
+Pidió una dirección por DHCP: quería la %s	Hat per DHCP eine Adresse angefragt: gewünscht war %s
+
+#: components\aos_apps\aos_app_net.c:2661
+Pidió una dirección por DHCP	Hat per DHCP eine Adresse angefragt
+
+#: components\aos_apps\aos_app_net.c:2665
+Dice ser: %s	Gibt sich aus als: %s
+
+#: components\aos_apps\aos_app_net.c:2681
+#: components\aos_apps\aos_app_net.c:2750
+Repartir direcciones	Adressen vergeben
+
+#: components\aos_apps\aos_app_net.c:2706
+#: components\aos_apps\aos_app_net.c:2731
+Buscar en redes de fábrica	In den Werksnetzen suchen
+
+#: components\aos_apps\aos_app_net.c:2709
+Preguntando en %s: %d de %d	Frage in %s: %d von %d
+
+#: components\aos_apps\aos_app_net.c:2710
+Preguntó por %d direcciones	%d Adressen abgefragt
+
+#: components\aos_apps\aos_app_net.c:2711
+Pregunta por ARP por unas cinco mil direcciones en un cuarto de minuto. Es para un equipo enchufado directo, no para una red con gente	Fragt per ARP rund fünftausend Adressen in einer Viertelminute ab. Gedacht für ein direkt angeschlossenes Gerät, nicht für ein Netz mit Nutzern
+
+#: components\aos_apps\aos_app_net.c:2725
+Enchufado directo, de dirección desconocida	Direkt angeschlossen, Adresse unbekannt
+
+#: components\aos_apps\aos_app_net.c:2736
+EN ESTE CABLE	AN DIESEM KABEL
+
+#: components\aos_apps\aos_app_net.c:2742
+Simulador: los equipos son de ejemplo.	Simulator: Die Geräte sind Beispiele.
+
+#: components\aos_apps\aos_app_net.c:2744
+RED DE BANCO	WERKBANK-NETZ
+
+#: components\aos_apps\aos_app_net.c:2751
+Para un equipo que espera que le den dirección: la placa se la da por DHCP. Mientras tanto el cable no es la salida de la placa, sigue el Wi-Fi. Tocá un equipo de la lista para ver más y para ponerte en su red.	Für ein Gerät, das auf eine Adresse wartet: Die Platine vergibt sie per DHCP. Solange ist das Kabel nicht der Ausgang der Platine, das bleibt das WLAN. Ein Gerät in der Liste antippen, um mehr zu sehen und in sein Netz zu wechseln.
+
+#: components\aos_apps\aos_app_net.c:2753
+Compartir el Wi-Fi	WLAN teilen
+
+#: components\aos_apps\aos_app_net.c:2754
+Lo mismo, y además lo que enchufes sale a internet por el Wi-Fi de la placa: para un equipo sin Wi-Fi propio. Ese equipo llega también a los demás de tu red, como cualquiera que esté en tu Wi-Fi.	Dasselbe, und zusätzlich geht das angeschlossene Gerät über das WLAN der Platine ins Internet: für ein Gerät ohne eigenes WLAN. Es erreicht auch die anderen Geräte in deinem Netz, wie alles in deinem WLAN.
+
+#: components\aos_apps\aos_app_net.c:2755
+SERVICIOS DE BANCO	WERKBANK-DIENSTE
+
+#: components\aos_apps\aos_app_net.c:2761
+Hora (NTP)	Uhrzeit (NTP)
+
+#: components\aos_apps\aos_app_net.c:2779
+Se mandó el paquete para despertarlo. Si tiene Wake-on-LAN, prende en unos segundos	Das Weckpaket wurde gesendet. Mit Wake-on-LAN startet es in wenigen Sekunden
+
+#: components\aos_apps\aos_app_net.c:2780
+No se pudo mandar: no se sabe su MAC, o no hay red	Senden nicht möglich: MAC unbekannt oder kein Netz
+
+#: components\aos_apps\aos_app_net.c:2801
+Dirección o nombre del equipo	Adresse oder Name des Geräts
+
+#: components\aos_apps\aos_app_net.c:2825
+La lista está vacía. Agregá un equipo por su dirección o su nombre, o desde Hosts o Equipo con el botón Vigilar.	Die Liste ist leer. Ein Gerät per Adresse oder Name hinzufügen, oder aus Hosts oder Gerät mit der Taste Beobachten.
+
+#: components\aos_apps\aos_app_net.c:2834
+mirando…	prüfe…
+
+#: components\aos_apps\aos_app_net.c:2835
+prendido, %s ms	an, %s ms
+
+#: components\aos_apps\aos_app_net.c:2836
+no responde	keine Antwort
+
+#: components\aos_apps\aos_app_net.c:2837
+no responde hace %s	keine Antwort seit %s
+
+#: components\aos_apps\aos_app_net.c:2839
+#: components\aos_apps\aos_app_settings.c:1369
+puerto	Port
+
+#: components\aos_apps\aos_app_net.c:2843
+Despertar	Aufwecken
+
+#: components\aos_apps\aos_app_net.c:2844
+Quitar	Entfernen
+
+#: components\aos_apps\aos_app_net.c:2856
+Los equipos del taller: cuáles están prendidos	Die Geräte der Werkstatt: welche an sind
+
+#: components\aos_apps\aos_app_net.c:2859
+Agregar un equipo	Gerät hinzufügen
+
+#: components\aos_apps\aos_app_net.c:2860
+Los mira cada diez segundos con un ping; con equipo:puerto, prueba ese puerto. Para despertar uno hace falta su MAC, que se aprende sola la primera vez que se lo ve prendido en la misma red, y que el equipo tenga Wake-on-LAN habilitado.	Prüft sie alle zehn Sekunden per Ping; mit Gerät:Port wird dieser Port geprüft. Zum Aufwecken wird die MAC gebraucht, die beim ersten Mal von selbst gelernt wird, wenn das Gerät im selben Netz an ist, und Wake-on-LAN muss am Gerät aktiviert sein.
+
+#: components\aos_apps\aos_app_net.c:2866
+Simulador: no se mira ni se despierta a nadie; los estados son de ejemplo.	Simulator: Niemand wird geprüft oder geweckt; die Zustände sind Beispiele.
+
+#: components\aos_apps\aos_app_net.c:2923
 No hay memoria para abrir Red	Zu wenig Speicher, um Netzwerk zu öffnen
 
 #: components\aos_apps\aos_app_photos.c:684
@@ -5546,7 +6078,7 @@ Copiá fotos .jpg o .png a la carpeta %s	JPG- oder PNG-Fotos in den Ordner %s ko
 nada	keins
 
 #: components\aos_apps\aos_app_serial.c:364
-#: components\aos_apps\aos_app_settings.c:2670
+#: components\aos_apps\aos_app_settings.c:2687
 grabando	nimmt auf
 
 #: components\aos_apps\aos_app_serial.c:366
@@ -5800,7 +6332,7 @@ Sonda en %s: SWCLK al TX, SWDIO al RX	Sonde an %s: SWCLK an TX, SWDIO an RX
 Mejor expulsar la tarjeta en la computadora antes	Besser die Karte zuerst am Computer auswerfen
 
 #: components\aos_apps\aos_app_settings.c:692
-#: components\aos_apps\aos_app_settings.c:1893
+#: components\aos_apps\aos_app_settings.c:1910
 AHORA	JETZT
 
 #: components\aos_apps\aos_app_settings.c:695
@@ -5897,9 +6429,9 @@ SALIDA A INTERNET	WEG INS INTERNET
 Por cable	Per Kabel
 
 #: components\aos_apps\aos_app_settings.c:786
-#: components\aos_apps\aos_app_settings.c:2492
-#: components\aos_apps\aos_app_settings.c:2525
-#: components\aos_apps\aos_app_settings.c:2723
+#: components\aos_apps\aos_app_settings.c:2509
+#: components\aos_apps\aos_app_settings.c:2542
+#: components\aos_apps\aos_app_settings.c:2740
 Ninguna	Keine
 
 #: components\aos_apps\aos_app_settings.c:787
@@ -5911,11 +6443,8 @@ CONEXIONES	VERBINDUNGEN
 
 #: components\aos_apps\aos_app_settings.c:790
 #: components\aos_apps\aos_app_settings.c:871
-#: components\aos_apps\aos_app_settings.c:1137
+#: components\aos_apps\aos_app_settings.c:1154
 Sin conectar	Nicht verbunden
-
-#: components\aos_apps\aos_app_settings.c:793
-Red propia	Eigenes Netz
 
 #: components\aos_apps\aos_app_settings.c:830
 Red por cable con un módulo W5500 en el puerto spi.a del conector de 40 pines. Apagado, no usa el puerto.	Kabelnetz über ein W5500-Modul am Port spi.a der 40-poligen Leiste. Ausgeschaltet belegt es den Port nicht.
@@ -5946,10 +6475,6 @@ medio dúplex	Halbduplex
 #: components\aos_apps\aos_app_settings.c:844
 Enlace	Verbindung
 
-#: components\aos_apps\aos_app_settings.c:846
-#: components\aos_apps\aos_app_sysmon.c:1219
-Puerta de enlace	Gateway
-
 #: components\aos_apps\aos_app_settings.c:852
 RELOJ DEL SPI	SPI-TAKT
 
@@ -5960,7 +6485,7 @@ Con cables sueltos, 8 MHz. Con el módulo en una placa, hasta 40: más reloj es 
 EN EL PORTAL	IM PORTAL
 
 #: components\aos_apps\aos_app_settings.c:860
-#: components\aos_apps\aos_app_settings.c:2508
+#: components\aos_apps\aos_app_settings.c:2525
 De confianza	Vertrauenswürdig
 
 #: components\aos_apps\aos_app_settings.c:861
@@ -5982,7 +6507,7 @@ Editar inicio	Home bearbeiten
 En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	Im Bearbeitungsmodus fügt „+ Widget“ die Uhr, die Sensoren, Home Assistant und mehr zum Startbildschirm hinzu; ein Widget antippen, um Größe und Inhalt zu wählen oder es zu entfernen.
 
 #: components\aos_apps\aos_app_settings.c:894
-#: components\aos_apps\aos_app_settings.c:2276
+#: components\aos_apps\aos_app_settings.c:2293
 sin tarjeta	keine Karte
 
 #: components\aos_apps\aos_app_settings.c:908
@@ -5992,7 +6517,7 @@ modo seguro	abgesicherter Modus
 hubo un cuelgue	es gab einen Hänger
 
 #: components\aos_apps\aos_app_settings.c:916
-#: components\aos_apps\aos_app_settings.c:2768
+#: components\aos_apps\aos_app_settings.c:2785
 Reiniciar la placa	Platine neu starten
 
 #: components\aos_apps\aos_app_settings.c:1029
@@ -6010,966 +6535,972 @@ La búsqueda falló	Suche fehlgeschlagen
 #: components\aos_apps\aos_app_settings.c:1057
 No se encontraron redes	Keine Netzwerke gefunden
 
-#: components\aos_apps\aos_app_settings.c:1073
+#: components\aos_apps\aos_app_settings.c:1075
 La radio está ocupada: probá de nuevo en un momento	Das Funkmodul ist beschäftigt: gleich nochmal versuchen
 
-#: components\aos_apps\aos_app_settings.c:1081
+#: components\aos_apps\aos_app_settings.c:1090
 Tocá otra vez: los conectados se caen	Nochmals tippen: Verbundene fliegen raus
 
-#: components\aos_apps\aos_app_settings.c:1102
+#: components\aos_apps\aos_app_settings.c:1111
 RED PROPIA	EIGENES NETZ
 
-#: components\aos_apps\aos_app_settings.c:1105
+#: components\aos_apps\aos_app_settings.c:1114
 #: components\aos_apps\aos_app_sysmon.c:1220
 Punto de acceso	Access Point
 
-#: components\aos_apps\aos_app_settings.c:1107
+#: components\aos_apps\aos_app_settings.c:1116
 Levantándolo…	Wird gestartet…
 
-#: components\aos_apps\aos_app_settings.c:1108
+#: components\aos_apps\aos_app_settings.c:1117
 La placa arma su propia red Wi-Fi, para conectarte desde el teléfono donde no hay otra. Queda prendida al reiniciar.	Die Platine baut ihr eigenes WLAN auf, um sich vom Telefon aus zu verbinden, wo es kein anderes gibt. Es bleibt nach einem Neustart an.
 
-#: components\aos_apps\aos_app_settings.c:1116
+#: components\aos_apps\aos_app_settings.c:1125
 Portal	Portal
 
-#: components\aos_apps\aos_app_settings.c:1118
+#: components\aos_apps\aos_app_settings.c:1127
 Conectados	Verbunden
 
-#: components\aos_apps\aos_app_settings.c:1119
-#: components\aos_apps\aos_app_settings.c:2530
+#: components\aos_apps\aos_app_settings.c:1128
+Compartir la salida	Internetzugang teilen
+
+#: components\aos_apps\aos_app_settings.c:1129
+#: components\aos_apps\aos_app_settings.c:2547
 Cambiar la contraseña	Passwort ändern
 
-#: components\aos_apps\aos_app_settings.c:1126
+#: components\aos_apps\aos_app_settings.c:1136
 1. Unite a la red de la placa con la cámara del teléfono.	1. Mit der Telefonkamera dem Netz der Platine beitreten.
 
-#: components\aos_apps\aos_app_settings.c:1127
+#: components\aos_apps\aos_app_settings.c:1137
 2. Después abrí el portal.	2. Dann das Portal öffnen.
 
-#: components\aos_apps\aos_app_settings.c:1128
+#: components\aos_apps\aos_app_settings.c:1139
 Mientras está prendida, la placa deja de buscar la red de casa (si ya estaba conectada, sigue). El teléfono puede avisar que esta red no tiene internet: es así, quedate conectado igual.	Solange es an ist, sucht die Platine nicht nach dem Heimnetz (war sie schon verbunden, bleibt sie es). Das Telefon meldet vielleicht, dass dieses Netz kein Internet hat: Das stimmt, trotzdem verbunden bleiben.
 
-#: components\aos_apps\aos_app_settings.c:1138
-#: components\aos_apps\aos_app_net.c:1859  (nombre de app)
-Red	Netzwerk
+#: components\aos_apps\aos_app_settings.c:1141
+Compartir la salida: ahora no, porque el cable está compartiendo el Wi-Fi (Red, Cable). Una cosa a la vez.	Internetzugang teilen: jetzt nicht, weil das Kabel gerade das WLAN teilt (Netz, Kabel). Eins nach dem anderen.
+
+#: components\aos_apps\aos_app_settings.c:1143
+Compartir la salida: los que se unen a esta red salen por donde sale la placa (el cable, o el Wi-Fi de casa) y llegan a los equipos de esa red. Dale la contraseña sólo a quien dejarías enchufarse ahí.	Internetzugang teilen: Wer diesem Netz beitritt, geht dort hinaus, wo das Board hinausgeht (Kabel oder Heim-WLAN), und erreicht die Geräte in jenem Netz. Das Passwort nur an Leute geben, die sich dort auch einstecken dürften.
 
 #: components\aos_apps\aos_app_settings.c:1145
-Olvidar esta red	Netzwerk vergessen
+Compartir la salida: la placa no tiene por dónde salir ahora. Enchufá el cable (Redes, Ethernet): con esta red prendida la placa no busca el Wi-Fi de casa.	Internetzugang teilen: Das Board hat gerade keinen Weg nach draußen. Kabel einstecken (Netze, Ethernet): Solange dieses Netz an ist, sucht das Board das Heim-WLAN nicht.
 
 #: components\aos_apps\aos_app_settings.c:1155
-La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.	Die P4 verbindet sich über den ESP32-C6 der Platine: nur 2,4 GHz.
+#: components\aos_apps\aos_app_net.c:2982  (nombre de app)
+Red	Netzwerk
+
+#: components\aos_apps\aos_app_settings.c:1162
+Olvidar esta red	Netzwerk vergessen
 
 #: components\aos_apps\aos_app_settings.c:1172
+La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.	Die P4 verbindet sich über den ESP32-C6 der Platine: nur 2,4 GHz.
+
+#: components\aos_apps\aos_app_settings.c:1189
 ORIENTACIÓN	AUSRICHTUNG
 
-#: components\aos_apps\aos_app_settings.c:1175
+#: components\aos_apps\aos_app_settings.c:1192
 La placa no tiene acelerómetro: la orientación se elige acá o en el Centro de control. Las apps que sólo tienen sentido de una forma giran la pantalla mientras están abiertas.	Die Platine hat keinen Beschleunigungssensor: Die Ausrichtung wird hier oder im Kontrollzentrum gewählt. Apps, die nur in einer Lage Sinn ergeben, drehen den Bildschirm, solange sie offen sind.
 
-#: components\aos_apps\aos_app_settings.c:1176
+#: components\aos_apps\aos_app_settings.c:1193
 BRILLO	HELLIGKEIT
 
-#: components\aos_apps\aos_app_settings.c:1180
+#: components\aos_apps\aos_app_settings.c:1197
 APAGAR LA PANTALLA	BILDSCHIRM AUS
 
-#: components\aos_apps\aos_app_settings.c:1182
+#: components\aos_apps\aos_app_settings.c:1199
 Nunca	Nie
 
-#: components\aos_apps\aos_app_settings.c:1182
+#: components\aos_apps\aos_app_settings.c:1199
 1 minuto	1 Minute
 
-#: components\aos_apps\aos_app_settings.c:1182
+#: components\aos_apps\aos_app_settings.c:1199
 2 minutos	2 Minuten
 
-#: components\aos_apps\aos_app_settings.c:1182
+#: components\aos_apps\aos_app_settings.c:1199
 5 minutos	5 Minuten
 
-#: components\aos_apps\aos_app_settings.c:1183
+#: components\aos_apps\aos_app_settings.c:1200
 10 minutos	10 Minuten
 
-#: components\aos_apps\aos_app_settings.c:1183
+#: components\aos_apps\aos_app_settings.c:1200
 30 minutos	30 Minuten
 
-#: components\aos_apps\aos_app_settings.c:1187
+#: components\aos_apps\aos_app_settings.c:1204
 Sin tocarla, la pantalla se atenúa diez segundos antes y después se apaga; un toque la despierta. Los juegos, el video y las apps que lo piden la mantienen encendida mientras están al frente.	Ohne Berührung wird der Bildschirm zehn Sekunden vorher gedimmt und dann ausgeschaltet; eine Berührung weckt ihn. Spiele, Video und Apps, die es verlangen, halten ihn an, solange sie im Vordergrund sind.
 
-#: components\aos_apps\aos_app_settings.c:1204
+#: components\aos_apps\aos_app_settings.c:1221
 VOLUMEN	LAUTSTÄRKE
 
-#: components\aos_apps\aos_app_settings.c:1207
+#: components\aos_apps\aos_app_settings.c:1224
 Probar el parlante	Lautsprecher testen
 
-#: components\aos_apps\aos_app_settings.c:1208
+#: components\aos_apps\aos_app_settings.c:1225
 SONIDOS DEL SISTEMA	SYSTEMTÖNE
 
-#: components\aos_apps\aos_app_settings.c:1209
+#: components\aos_apps\aos_app_settings.c:1226
 Sonidos del sistema	Systemtöne
 
-#: components\aos_apps\aos_app_settings.c:1210
+#: components\aos_apps\aos_app_settings.c:1227
 Clic del teclado	Tastaturklick
 
-#: components\aos_apps\aos_app_settings.c:1211
+#: components\aos_apps\aos_app_settings.c:1228
 Al bloquear y desbloquear, las notificaciones, las capturas y la grabación de pantalla. Se apagan también con la campana del Centro de control.	Beim Sperren und Entsperren, bei Mitteilungen, Bildschirmfotos und Bildschirmaufnahmen. Die Glocke im Kontrollzentrum schaltet sie ebenfalls aus.
 
-#: components\aos_apps\aos_app_settings.c:1257
+#: components\aos_apps\aos_app_settings.c:1274
 El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El degradado queda debajo de la foto, si elegís una.	Der mit der Uhr ändert sich mit der Tageszeit: Nacht, Morgen, Tag und Abend. Der Verlauf bleibt unter dem Foto, wenn du eines wählst.
 
-#: components\aos_apps\aos_app_settings.c:1260
+#: components\aos_apps\aos_app_settings.c:1277
 FOTO	FOTO
 
-#: components\aos_apps\aos_app_settings.c:1269
+#: components\aos_apps\aos_app_settings.c:1286
 %s, rotando	%s, wechselnd
 
-#: components\aos_apps\aos_app_settings.c:1270
+#: components\aos_apps\aos_app_settings.c:1287
 Sin foto	Kein Foto
 
-#: components\aos_apps\aos_app_settings.c:1272
+#: components\aos_apps\aos_app_settings.c:1289
 Dejar la foto de ahora	Das aktuelle Foto behalten
 
-#: components\aos_apps\aos_app_settings.c:1273
+#: components\aos_apps\aos_app_settings.c:1290
 Quitar la foto	Foto entfernen
 
-#: components\aos_apps\aos_app_settings.c:1275
+#: components\aos_apps\aos_app_settings.c:1292
 Elegí la foto en Fotos: abrila y tocá la paleta de arriba a la derecha. Para la pantalla de bloqueo puede ser toda la carpeta: muestra otra foto cada vez que se bloquea.	Das Foto in Fotos wählen: öffnen und oben rechts auf die Palette tippen. Für den Sperrbildschirm kann es der ganze Ordner sein: Bei jedem Sperren erscheint ein anderes Foto.
 
-#: components\aos_apps\aos_app_settings.c:1278
+#: components\aos_apps\aos_app_settings.c:1295
 COLOR DE ACENTO	AKZENTFARBE
 
-#: components\aos_apps\aos_app_settings.c:1352
-puerto	Port
-
-#: components\aos_apps\aos_app_settings.c:1352
+#: components\aos_apps\aos_app_settings.c:1369
 en uso	belegt
 
-#: components\aos_apps\aos_app_settings.c:1357
+#: components\aos_apps\aos_app_settings.c:1374
 El conector de 40 pines de atrás. Cada pin dice qué puerto de modules.txt lo usa, o quién lo tiene tomado ahora.	Die 40-polige Leiste auf der Rückseite. Jeder Pin zeigt, welcher Port aus modules.txt ihn nutzt oder wer ihn gerade belegt.
 
-#: components\aos_apps\aos_app_settings.c:1399
+#: components\aos_apps\aos_app_settings.c:1416
 PUERTOS (modules.txt)	PORTS (modules.txt)
 
-#: components\aos_apps\aos_app_settings.c:1419
+#: components\aos_apps\aos_app_settings.c:1436
 MÓDULOS	MODULE
 
-#: components\aos_apps\aos_app_settings.c:1481
+#: components\aos_apps\aos_app_settings.c:1498
 Apps y sus datos	Apps und ihre Daten
 
-#: components\aos_apps\aos_app_settings.c:1481
+#: components\aos_apps\aos_app_settings.c:1498
 Videos	Videos
 
-#: components\aos_apps\aos_app_settings.c:1482
+#: components\aos_apps\aos_app_settings.c:1499
 #: apps/mapas  (nombre de app)
 Mapas	Karten
 
-#: components\aos_apps\aos_app_settings.c:1482
+#: components\aos_apps\aos_app_settings.c:1499
 Grabaciones	Aufnahmen
 
-#: components\aos_apps\aos_app_settings.c:1591
+#: components\aos_apps\aos_app_settings.c:1608
 Esperá a que termine de contar	Warte, bis das Zählen fertig ist
 
-#: components\aos_apps\aos_app_settings.c:1592
+#: components\aos_apps\aos_app_settings.c:1609
 Tocá otra vez para expulsarla	Nochmals tippen zum Auswerfen
 
-#: components\aos_apps\aos_app_settings.c:1594
+#: components\aos_apps\aos_app_settings.c:1611
 Ya podés sacar la tarjeta	Du kannst die Karte jetzt entnehmen
 
-#: components\aos_apps\aos_app_settings.c:1595
+#: components\aos_apps\aos_app_settings.c:1612
 No se pudo expulsar la tarjeta	Die Karte konnte nicht ausgeworfen werden
 
-#: components\aos_apps\aos_app_settings.c:1603
+#: components\aos_apps\aos_app_settings.c:1620
 Tarjeta montada	Karte eingebunden
 
-#: components\aos_apps\aos_app_settings.c:1604
+#: components\aos_apps\aos_app_settings.c:1621
 No hay tarjeta, o no se pudo leer	Keine Karte, oder sie ließ sich nicht lesen
 
-#: components\aos_apps\aos_app_settings.c:1617
+#: components\aos_apps\aos_app_settings.c:1634
 en la computadora	am Computer
 
-#: components\aos_apps\aos_app_settings.c:1617
+#: components\aos_apps\aos_app_settings.c:1634
 no hay	keine
 
-#: components\aos_apps\aos_app_settings.c:1619
+#: components\aos_apps\aos_app_settings.c:1636
 Montar la tarjeta	Karte einbinden
 
-#: components\aos_apps\aos_app_settings.c:1620
+#: components\aos_apps\aos_app_settings.c:1637
 Con una microSD puesta, montala acá. En modo Disco del USB la tiene la computadora: vuelve sola al expulsarla allá.	Mit eingelegter microSD hier einbinden. Im USB-Laufwerksmodus hat sie der Computer: Nach dem Auswerfen dort kommt sie von selbst zurück.
 
-#: components\aos_apps\aos_app_settings.c:1633
+#: components\aos_apps\aos_app_settings.c:1650
 %s usados de %s	%s von %s belegt
-
-#: components\aos_apps\aos_app_settings.c:1670
-#: components\aos_apps\aos_app_sysmon.c:1230
-Libre	Frei
-
-#: components\aos_apps\aos_app_settings.c:1672
-Contando lo que hay en la tarjeta…	Zähle, was auf der Karte ist…
-
-#: components\aos_apps\aos_app_settings.c:1674
-%u archivos.	%u Dateien.
-
-#: components\aos_apps\aos_app_settings.c:1677
-No se pudo recorrer la tarjeta.	Die Karte konnte nicht durchsucht werden.
-
-#: components\aos_apps\aos_app_settings.c:1682
-LA TARJETA	DIE KARTE
-
-#: components\aos_apps\aos_app_settings.c:1685
-Modelo	Modell
 
 #: components\aos_apps\aos_app_settings.c:1687
 #: components\aos_apps\aos_app_sysmon.c:1230
-Capacidad	Kapazität
+Libre	Frei
 
 #: components\aos_apps\aos_app_settings.c:1689
+Contando lo que hay en la tarjeta…	Zähle, was auf der Karte ist…
+
+#: components\aos_apps\aos_app_settings.c:1691
+%u archivos.	%u Dateien.
+
+#: components\aos_apps\aos_app_settings.c:1694
+No se pudo recorrer la tarjeta.	Die Karte konnte nicht durchsucht werden.
+
+#: components\aos_apps\aos_app_settings.c:1699
+LA TARJETA	DIE KARTE
+
+#: components\aos_apps\aos_app_settings.c:1702
+Modelo	Modell
+
+#: components\aos_apps\aos_app_settings.c:1704
+#: components\aos_apps\aos_app_sysmon.c:1230
+Capacidad	Kapazität
+
+#: components\aos_apps\aos_app_settings.c:1706
 %u MHz, %d bits	%u MHz, %d Bit
 
-#: components\aos_apps\aos_app_settings.c:1690
+#: components\aos_apps\aos_app_settings.c:1707
 #: components\aos_apps\aos_app_sysmon.c:1230
 #: components\aos_apps\aos_macropad.c:176
 #: components\aos_apps\aos_app_bus.c:1963  (nombre de app)
 Bus	Bus
 
-#: components\aos_apps\aos_app_settings.c:1694
+#: components\aos_apps\aos_app_settings.c:1711
 Fabricada	Hergestellt
 
-#: components\aos_apps\aos_app_settings.c:1698
+#: components\aos_apps\aos_app_settings.c:1715
 Expulsar la tarjeta	Karte auswerfen
 
-#: components\aos_apps\aos_app_settings.c:1699
+#: components\aos_apps\aos_app_settings.c:1716
 Expulsala antes de sacarla: se cierran las otras apps, y las de la tarjeta no abren hasta que se monte de nuevo. Para copiar archivos desde la computadora, el modo Disco del USB.	Vor dem Entnehmen auswerfen: Die anderen Apps werden geschlossen, und die Apps der Karte öffnen erst, wenn sie wieder eingebunden ist. Zum Kopieren vom Computer gibt es den USB-Laufwerksmodus.
 
-#: components\aos_apps\aos_app_settings.c:1708
+#: components\aos_apps\aos_app_settings.c:1725
 Tocá otra vez para reiniciar con esa	Nochmals tippen, um damit neu zu starten
 
-#: components\aos_apps\aos_app_settings.c:1711
+#: components\aos_apps\aos_app_settings.c:1728
 La otra ranura no tiene una imagen entera	Der andere Slot enthält kein vollständiges Image
 
-#: components\aos_apps\aos_app_settings.c:1714
+#: components\aos_apps\aos_app_settings.c:1731
 Reiniciando con la versión anterior…	Neustart mit der vorherigen Version…
 
-#: components\aos_apps\aos_app_settings.c:1721
+#: components\aos_apps\aos_app_settings.c:1738
 anduvo: se puede volver	lief: Zurück ist möglich
 
-#: components\aos_apps\aos_app_settings.c:1722
+#: components\aos_apps\aos_app_settings.c:1739
 sin probar	ungetestet
 
-#: components\aos_apps\aos_app_settings.c:1723
-#: components\aos_apps\aos_app_settings.c:1801
+#: components\aos_apps\aos_app_settings.c:1740
+#: components\aos_apps\aos_app_settings.c:1818
 a prueba	auf Probe
 
-#: components\aos_apps\aos_app_settings.c:1724
+#: components\aos_apps\aos_app_settings.c:1741
 marcada como mala	als fehlerhaft markiert
 
-#: components\aos_apps\aos_app_settings.c:1725
+#: components\aos_apps\aos_app_settings.c:1742
 a medio instalar	halb installiert
 
-#: components\aos_apps\aos_app_settings.c:1746
+#: components\aos_apps\aos_app_settings.c:1763
 mandando… %u %%	wird gesendet… %u %%
 
-#: components\aos_apps\aos_app_settings.c:1748
+#: components\aos_apps\aos_app_settings.c:1765
 listo: reiniciando	fertig: Neustart
 
-#: components\aos_apps\aos_app_settings.c:1760
+#: components\aos_apps\aos_app_settings.c:1777
 Tocá otra vez: sin Wi-Fi un minuto y reinicia	Nochmal tippen: eine Minute kein WLAN, dann Neustart
 
-#: components\aos_apps\aos_app_settings.c:1772
+#: components\aos_apps\aos_app_settings.c:1789
 LA RADIO (ESP32-C6)	DAS FUNKMODUL (ESP32-C6)
 
-#: components\aos_apps\aos_app_settings.c:1774
+#: components\aos_apps\aos_app_settings.c:1791
 En el C6	Auf dem C6
 
-#: components\aos_apps\aos_app_settings.c:1774
-#: components\aos_apps\aos_app_settings.c:1914
+#: components\aos_apps\aos_app_settings.c:1791
+#: components\aos_apps\aos_app_settings.c:1931
 todavía no arrancó	noch nicht gestartet
 
-#: components\aos_apps\aos_app_settings.c:1774
+#: components\aos_apps\aos_app_settings.c:1791
 de fábrica (sin versión)	ab Werk (ohne Version)
 
-#: components\aos_apps\aos_app_settings.c:1779
-#: components\aos_apps\aos_app_settings.c:1783
+#: components\aos_apps\aos_app_settings.c:1796
+#: components\aos_apps\aos_app_settings.c:1800
 En la tarjeta	Auf der Karte
 
-#: components\aos_apps\aos_app_settings.c:1780
+#: components\aos_apps\aos_app_settings.c:1797
 Una versión nueva del firmware del C6 se copia a /firmware/c6.bin de la tarjeta (portal o tools/install_c6.sh) y se instala desde acá.	Eine neue C6-Firmware kommt nach /firmware/c6.bin auf der Karte (Portal oder tools/install_c6.sh) und wird von hier installiert.
 
-#: components\aos_apps\aos_app_settings.c:1789
+#: components\aos_apps\aos_app_settings.c:1806
 Instalar en el C6	Auf dem C6 installieren
 
-#: components\aos_apps\aos_app_settings.c:1790
+#: components\aos_apps\aos_app_settings.c:1807
 El C6 la escribe en su otra ranura y la revisa antes de cambiar. Mientras tanto no hay Wi-Fi, y al terminar la placa se reinicia.	Der C6 schreibt sie in seinen anderen Slot und prüft sie vor dem Wechsel. Solange gibt es kein WLAN, und am Ende startet die Platine neu.
 
-#: components\aos_apps\aos_app_settings.c:1797
+#: components\aos_apps\aos_app_settings.c:1814
 LA QUE CORRE	LÄUFT GERADE
 
-#: components\aos_apps\aos_app_settings.c:1798
-#: components\aos_apps\aos_app_settings.c:1810
+#: components\aos_apps\aos_app_settings.c:1815
+#: components\aos_apps\aos_app_settings.c:1827
 #: components\aos_apps\aos_app_sysmon.c:1235
 Versión	Version
 
-#: components\aos_apps\aos_app_settings.c:1799
-#: components\aos_apps\aos_app_settings.c:1811
+#: components\aos_apps\aos_app_settings.c:1816
+#: components\aos_apps\aos_app_settings.c:1828
 Compilada	Erstellt
 
-#: components\aos_apps\aos_app_settings.c:1800
-#: components\aos_apps\aos_app_settings.c:1807
-#: components\aos_apps\aos_app_settings.c:1812
+#: components\aos_apps\aos_app_settings.c:1817
+#: components\aos_apps\aos_app_settings.c:1824
+#: components\aos_apps\aos_app_settings.c:1829
 Ranura	Slot
 
-#: components\aos_apps\aos_app_settings.c:1801
+#: components\aos_apps\aos_app_settings.c:1818
 confirmada	bestätigt
 
-#: components\aos_apps\aos_app_settings.c:1803
+#: components\aos_apps\aos_app_settings.c:1820
 LA ANTERIOR	DIE VORHERIGE
 
-#: components\aos_apps\aos_app_settings.c:1805
+#: components\aos_apps\aos_app_settings.c:1822
 No se pudo leer la otra ranura	Der andere Slot ließ sich nicht lesen
 
-#: components\aos_apps\aos_app_settings.c:1815
+#: components\aos_apps\aos_app_settings.c:1832
 Volver a esta versión	Zu dieser Version zurück
 
-#: components\aos_apps\aos_app_settings.c:1817
+#: components\aos_apps\aos_app_settings.c:1834
 Las versiones nuevas llegan por el portal (Firmware) o con tools/ota.sh, y se escriben en la otra ranura. Arrancan a prueba: si la placa se reinicia antes de confirmarla, a los 30 s, vuelve sola a la anterior.	Neue Versionen kommen über das Portal (Firmware) oder tools/ota.sh und werden in den anderen Slot geschrieben. Sie starten auf Probe: Startet die Platine vor der Bestätigung nach 30 s neu, kehrt sie von selbst zur vorherigen zurück.
 
-#: components\aos_apps\aos_app_settings.c:1827
+#: components\aos_apps\aos_app_settings.c:1844
 #: components\aos_apps\aos_app_sysmon.c:307
 al encender	beim Einschalten
 
-#: components\aos_apps\aos_app_settings.c:1828
+#: components\aos_apps\aos_app_settings.c:1845
 #: components\aos_apps\aos_app_sysmon.c:308
 por software	per Software
 
-#: components\aos_apps\aos_app_settings.c:1829
+#: components\aos_apps\aos_app_settings.c:1846
 #: components\aos_apps\aos_app_sysmon.c:309
 por un error (pánico)	durch Fehler (Panic)
 
-#: components\aos_apps\aos_app_settings.c:1830
+#: components\aos_apps\aos_app_settings.c:1847
 #: components\aos_apps\aos_app_sysmon.c:310
 watchdog de interrupciones	Interrupt-Watchdog
 
-#: components\aos_apps\aos_app_settings.c:1831
+#: components\aos_apps\aos_app_settings.c:1848
 #: components\aos_apps\aos_app_sysmon.c:311
 watchdog de tareas	Task-Watchdog
 
-#: components\aos_apps\aos_app_settings.c:1832
+#: components\aos_apps\aos_app_settings.c:1849
 #: components\aos_apps\aos_app_sysmon.c:312
 watchdog	Watchdog
 
-#: components\aos_apps\aos_app_settings.c:1833
+#: components\aos_apps\aos_app_settings.c:1850
 #: components\aos_apps\aos_app_sysmon.c:313
 caída de tensión	Unterspannung
 
-#: components\aos_apps\aos_app_settings.c:1834
+#: components\aos_apps\aos_app_settings.c:1851
 #: components\aos_apps\aos_app_sysmon.c:314
 al salir del sueño profundo	nach Tiefschlaf
 
-#: components\aos_apps\aos_app_settings.c:1835
+#: components\aos_apps\aos_app_settings.c:1852
 #: components\aos_apps\aos_app_sysmon.c:315
 botón de reset	Reset-Taste
 
-#: components\aos_apps\aos_app_settings.c:1836
+#: components\aos_apps\aos_app_settings.c:1853
 #: components\aos_apps\aos_app_sysmon.c:316
 por el USB	über USB
 
-#: components\aos_apps\aos_app_settings.c:1837
+#: components\aos_apps\aos_app_settings.c:1854
 #: components\aos_apps\aos_app_sysmon.c:317
 por JTAG	über JTAG
 
-#: components\aos_apps\aos_app_settings.c:1838
+#: components\aos_apps\aos_app_settings.c:1855
 #: components\aos_apps\aos_app_sysmon.c:318
 error de eFuse	eFuse-Fehler
 
-#: components\aos_apps\aos_app_settings.c:1839
+#: components\aos_apps\aos_app_settings.c:1856
 #: components\aos_apps\aos_app_sysmon.c:319
 pico en la alimentación	Spannungsspitze
 
-#: components\aos_apps\aos_app_settings.c:1840
+#: components\aos_apps\aos_app_settings.c:1857
 #: components\aos_apps\aos_app_sysmon.c:320
 CPU trabada	CPU blockiert
 
-#: components\aos_apps\aos_app_settings.c:1863
+#: components\aos_apps\aos_app_settings.c:1880
 %u KB (mínimo %u)	%u KB (minimal %u)
 
-#: components\aos_apps\aos_app_settings.c:1884
+#: components\aos_apps\aos_app_settings.c:1901
 Volcado borrado	Abbild gelöscht
 
-#: components\aos_apps\aos_app_settings.c:1894
+#: components\aos_apps\aos_app_settings.c:1911
 Temperatura del chip	Chiptemperatur
 
-#: components\aos_apps\aos_app_settings.c:1895
+#: components\aos_apps\aos_app_settings.c:1912
 CPU (núcleos 0 · 1)	CPU (Kerne 0 · 1)
 
-#: components\aos_apps\aos_app_settings.c:1896
-#: components\aos_apps\aos_app_settings.c:2271
+#: components\aos_apps\aos_app_settings.c:1913
+#: components\aos_apps\aos_app_settings.c:2288
 Interna libre	Intern frei
 
-#: components\aos_apps\aos_app_settings.c:1897
-#: components\aos_apps\aos_app_settings.c:2273
-#: components\aos_apps\aos_app_settings.c:2703
+#: components\aos_apps\aos_app_settings.c:1914
+#: components\aos_apps\aos_app_settings.c:2290
+#: components\aos_apps\aos_app_settings.c:2720
 PSRAM libre	PSRAM frei
 
-#: components\aos_apps\aos_app_settings.c:1898
-#: components\aos_apps\aos_app_settings.c:2280
+#: components\aos_apps\aos_app_settings.c:1915
+#: components\aos_apps\aos_app_settings.c:2297
 #: components\aos_apps\aos_app_sysmon.c:605
 #: components\aos_apps\aos_app_sysmon.c:1236
 Encendida hace	Laufzeit
 
-#: components\aos_apps\aos_app_settings.c:1901
+#: components\aos_apps\aos_app_settings.c:1918
 ESTE ARRANQUE	DIESER START
 
-#: components\aos_apps\aos_app_settings.c:1903
+#: components\aos_apps\aos_app_settings.c:1920
 Motivo del reinicio	Grund des Neustarts
 
-#: components\aos_apps\aos_app_settings.c:1904
+#: components\aos_apps\aos_app_settings.c:1921
 Modo seguro	Abgesicherter Modus
 
-#: components\aos_apps\aos_app_settings.c:1904
+#: components\aos_apps\aos_app_settings.c:1921
 sí: sin las apps de la tarjeta	ja: ohne die Apps der Karte
 
-#: components\aos_apps\aos_app_settings.c:1904
-#: components\aos_apps\aos_app_settings.c:2289
+#: components\aos_apps\aos_app_settings.c:1921
+#: components\aos_apps\aos_app_settings.c:2306
 no	nein
 
-#: components\aos_apps\aos_app_settings.c:1909
+#: components\aos_apps\aos_app_settings.c:1926
 Reinicios por cuelgue	Neustarts nach Hängern
 
-#: components\aos_apps\aos_app_settings.c:1910
+#: components\aos_apps\aos_app_settings.c:1927
 Se arrancó con BOOT apretado: sin las apps de la tarjeta y con los ajustes de pantalla de fábrica. Reiniciá para volver a la normalidad.	Mit gedrückter BOOT-Taste gestartet: ohne die Apps der Karte und mit den Werkseinstellungen der Anzeige. Neu starten, um zum Normalbetrieb zurückzukehren.
 
-#: components\aos_apps\aos_app_settings.c:1912
+#: components\aos_apps\aos_app_settings.c:1929
 RADIO (ESP32-C6)	FUNK (ESP32-C6)
 
-#: components\aos_apps\aos_app_settings.c:1914
+#: components\aos_apps\aos_app_settings.c:1931
 Firmware del C6	C6-Firmware
 
-#: components\aos_apps\aos_app_settings.c:1914
+#: components\aos_apps\aos_app_settings.c:1931
 no la informa (firmware viejo)	meldet sie nicht (alte Firmware)
 
-#: components\aos_apps\aos_app_settings.c:1917
+#: components\aos_apps\aos_app_settings.c:1934
 El Wi-Fi lo hace el ESP32-C6 de la placa; el P4 le habla por SDIO. Esta es la versión del firmware que corre en el C6.	Das WLAN macht der ESP32-C6 der Platine; der P4 spricht über SDIO mit ihm. Das ist die Firmware-Version, die auf dem C6 läuft.
 
-#: components\aos_apps\aos_app_settings.c:1919
+#: components\aos_apps\aos_app_settings.c:1936
 ÚLTIMO CUELGUE	LETZTER ABSTURZ
 
-#: components\aos_apps\aos_app_settings.c:1922
-#: components\aos_apps\aos_app_settings.c:1924
+#: components\aos_apps\aos_app_settings.c:1939
+#: components\aos_apps\aos_app_settings.c:1941
 Volcado	Abbild
 
-#: components\aos_apps\aos_app_settings.c:1924
+#: components\aos_apps\aos_app_settings.c:1941
 dañado	beschädigt
 
-#: components\aos_apps\aos_app_settings.c:1925
+#: components\aos_apps\aos_app_settings.c:1942
 Tarea	Task
 
-#: components\aos_apps\aos_app_settings.c:1928
+#: components\aos_apps\aos_app_settings.c:1945
 Firmware (ELF)	Firmware (ELF)
 
-#: components\aos_apps\aos_app_settings.c:1929
+#: components\aos_apps\aos_app_settings.c:1946
 Borrar el volcado	Abbild löschen
 
-#: components\aos_apps\aos_app_settings.c:1930
+#: components\aos_apps\aos_app_settings.c:1947
 El volcado se baja desde el portal (Firmware, Último cuelgue) o con tools/coredump.sh, y se lee con la ELF de esa compilación.	Das Abbild lädt man über das Portal (Firmware, Letzter Absturz) oder mit tools/coredump.sh herunter und liest es mit der ELF dieses Builds.
 
-#: components\aos_apps\aos_app_settings.c:1934
+#: components\aos_apps\aos_app_settings.c:1951
 Abrir el Monitor	Monitor öffnen
 
-#: components\aos_apps\aos_app_settings.c:1994
+#: components\aos_apps\aos_app_settings.c:2011
 No coinciden: empezá de nuevo	Stimmt nicht überein: von vorn
 
-#: components\aos_apps\aos_app_settings.c:2003
+#: components\aos_apps\aos_app_settings.c:2020
 Código guardado	Code gespeichert
 
-#: components\aos_apps\aos_app_settings.c:2012
+#: components\aos_apps\aos_app_settings.c:2029
 Repetí el código nuevo	Neuen Code wiederholen
 
-#: components\aos_apps\aos_app_settings.c:2020
+#: components\aos_apps\aos_app_settings.c:2037
 Elegí el código nuevo	Neuen Code wählen
 
-#: components\aos_apps\aos_app_settings.c:2027
-#: components\aos_apps\aos_app_settings.c:2140
+#: components\aos_apps\aos_app_settings.c:2044
+#: components\aos_apps\aos_app_settings.c:2157
 Sin código	Kein Code
 
-#: components\aos_apps\aos_app_settings.c:2049
+#: components\aos_apps\aos_app_settings.c:2066
 Ingresá el código actual	Aktuellen Code eingeben
 
-#: components\aos_apps\aos_app_settings.c:2127
+#: components\aos_apps\aos_app_settings.c:2144
 La hora, los mensajes y la música sobre el fondo de pantalla; deslizá hacia arriba para entrar. Aparece al arrancar y cuando la pantalla estuvo apagada el tiempo que elijas.	Uhrzeit, Nachrichten und Musik über dem Hintergrund; nach oben wischen zum Öffnen. Er erscheint beim Start und wenn der Bildschirm so lange aus war, wie du wählst.
 
-#: components\aos_apps\aos_app_settings.c:2130
+#: components\aos_apps\aos_app_settings.c:2147
 BLOQUEAR	SPERREN
 
-#: components\aos_apps\aos_app_settings.c:2132
+#: components\aos_apps\aos_app_settings.c:2149
 Al apagarse la pantalla	Wenn der Bildschirm ausgeht
 
-#: components\aos_apps\aos_app_settings.c:2132
+#: components\aos_apps\aos_app_settings.c:2149
 1 minuto después	1 Minute danach
 
-#: components\aos_apps\aos_app_settings.c:2132
+#: components\aos_apps\aos_app_settings.c:2149
 5 minutos después	5 Minuten danach
 
-#: components\aos_apps\aos_app_settings.c:2133
+#: components\aos_apps\aos_app_settings.c:2150
 15 minutos después	15 Minuten danach
 
-#: components\aos_apps\aos_app_settings.c:2133
+#: components\aos_apps\aos_app_settings.c:2150
 1 hora después	1 Stunde danach
 
-#: components\aos_apps\aos_app_settings.c:2137
+#: components\aos_apps\aos_app_settings.c:2154
 Cuánto tiempo apagada antes de bloquearse. Cuándo se apaga la pantalla se elige en Pantalla.	Wie lange er aus ist, bevor er sperrt. Wann der Bildschirm ausgeht, wird unter Anzeige gewählt.
 
-#: components\aos_apps\aos_app_settings.c:2139
+#: components\aos_apps\aos_app_settings.c:2156
 CÓDIGO	CODE
 
-#: components\aos_apps\aos_app_settings.c:2141
+#: components\aos_apps\aos_app_settings.c:2158
 Código de 4 dígitos	4-stelliger Code
 
-#: components\aos_apps\aos_app_settings.c:2142
+#: components\aos_apps\aos_app_settings.c:2159
 Código de 6 dígitos	6-stelliger Code
 
-#: components\aos_apps\aos_app_settings.c:2143
+#: components\aos_apps\aos_app_settings.c:2160
 Cambiar el código	Code ändern
 
-#: components\aos_apps\aos_app_settings.c:2144
+#: components\aos_apps\aos_app_settings.c:2161
 Modo seguro: el código no se pide, así que podés quitarlo o cambiarlo sin saberlo.	Abgesicherter Modus: Der Code wird nicht abgefragt, du kannst ihn also entfernen oder ändern, ohne ihn zu kennen.
 
-#: components\aos_apps\aos_app_settings.c:2145
+#: components\aos_apps\aos_app_settings.c:2162
 ¿Te olvidaste el código? Reiniciá con BOOT apretado (modo seguro): ahí no se pide, y lo quitás desde acá. Después de 5 intentos mal, espera 30 s, y más cada vez.	Code vergessen? Mit gedrückter BOOT-Taste neu starten (abgesicherter Modus): Dort wird er nicht abgefragt, und du entfernst ihn hier. Nach 5 Fehlversuchen wartet er 30 s, danach jedes Mal länger.
 
-#: components\aos_apps\aos_app_settings.c:2147
+#: components\aos_apps\aos_app_settings.c:2164
 #: components\aos_apps\_pending\aos_app_settings.c:2272
 RELOJ	UHR
 
-#: components\aos_apps\aos_app_settings.c:2149
+#: components\aos_apps\aos_app_settings.c:2166
 Arriba	Oben
 
-#: components\aos_apps\aos_app_settings.c:2149
+#: components\aos_apps\aos_app_settings.c:2166
 Al medio	In der Mitte
 
-#: components\aos_apps\aos_app_settings.c:2150
+#: components\aos_apps\aos_app_settings.c:2167
 Color de acento	Akzentfarbe
 
-#: components\aos_apps\aos_app_settings.c:2150
+#: components\aos_apps\aos_app_settings.c:2167
 Tomado de la foto	Aus dem Foto
 
-#: components\aos_apps\aos_app_settings.c:2159
+#: components\aos_apps\aos_app_settings.c:2176
 El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.	Die Farbe des Fotos ist die des Sperrbildschirmfotos, aufgehellt; ohne Foto bleibt die Uhr weiß.
 
-#: components\aos_apps\aos_app_settings.c:2161
+#: components\aos_apps\aos_app_settings.c:2178
 QUÉ SE MUESTRA	WAS ANGEZEIGT WIRD
 
-#: components\aos_apps\aos_app_settings.c:2162
+#: components\aos_apps\aos_app_settings.c:2179
 #: components\aos_apps\_pending\aos_app_settings.c:1649
 Mensajes	Nachrichten
 
-#: components\aos_apps\aos_app_settings.c:2164
+#: components\aos_apps\aos_app_settings.c:2181
 Ocultar el texto con código	Text mit Code verbergen
 
-#: components\aos_apps\aos_app_settings.c:2165
+#: components\aos_apps\aos_app_settings.c:2182
 Los mensajes son las notificaciones: hoy las de las apps, y las del teléfono por Bluetooth y las de Home Assistant cuando lleguen. Con código y el texto oculto, se ve de qué app son pero no qué dicen.	Die Nachrichten sind die Benachrichtigungen: heute die der Apps, später die des Telefons über Bluetooth und die von Home Assistant. Mit Code und verborgenem Text sieht man, von welcher App sie sind, aber nicht, was sie sagen.
 
-#: components\aos_apps\aos_app_settings.c:2168
+#: components\aos_apps\aos_app_settings.c:2185
 Bloquear ahora	Jetzt sperren
 
-#: components\aos_apps\aos_app_settings.c:2176
+#: components\aos_apps\aos_app_settings.c:2193
 PORTAL WEB	WEBPORTAL
 
-#: components\aos_apps\aos_app_settings.c:2178
+#: components\aos_apps\aos_app_settings.c:2195
 En la red	Im Netzwerk
 
-#: components\aos_apps\aos_app_settings.c:2184
+#: components\aos_apps\aos_app_settings.c:2201
 Por Wi-Fi	Über WLAN
 
-#: components\aos_apps\aos_app_settings.c:2188
+#: components\aos_apps\aos_app_settings.c:2205
 Por su red propia	Über ihr eigenes Netz
 
-#: components\aos_apps\aos_app_settings.c:2191
+#: components\aos_apps\aos_app_settings.c:2208
 Por el cable USB	Über das USB-Kabel
 
-#: components\aos_apps\aos_app_settings.c:2193
+#: components\aos_apps\aos_app_settings.c:2210
 Sin Wi-Fi no hay código QR: el teléfono tiene que estar en la misma red que la placa, o en la red propia de la placa (Ajustes, Wi-Fi).	Ohne WLAN kein QR-Code: Das Telefon muss im selben Netz wie die Platine sein oder im eigenen Netz der Platine (Einstellungen, WLAN).
 
-#: components\aos_apps\aos_app_settings.c:2197
+#: components\aos_apps\aos_app_settings.c:2214
 Escaneálo con el teléfono para abrir el portal.	Mit dem Telefon scannen, um das Portal zu öffnen.
 
-#: components\aos_apps\aos_app_settings.c:2215
+#: components\aos_apps\aos_app_settings.c:2232
 Cambiar el idioma cierra las apps abiertas.	Ein Sprachwechsel schließt offene Apps.
 
-#: components\aos_apps\aos_app_settings.c:2219
+#: components\aos_apps\aos_app_settings.c:2236
 Shanghái (UTC+8)	Shanghai (UTC+8)
 
-#: components\aos_apps\aos_app_settings.c:2219
+#: components\aos_apps\aos_app_settings.c:2236
 Taipéi (UTC+8)	Taipeh (UTC+8)
 
-#: components\aos_apps\aos_app_settings.c:2220
+#: components\aos_apps\aos_app_settings.c:2237
 Hong Kong (UTC+8)	Hongkong (UTC+8)
 
-#: components\aos_apps\aos_app_settings.c:2221
+#: components\aos_apps\aos_app_settings.c:2238
 Buenos Aires (UTC−3)	Buenos Aires (UTC−3)
 
-#: components\aos_apps\aos_app_settings.c:2221
+#: components\aos_apps\aos_app_settings.c:2238
 Santiago (UTC−4/−3)	Santiago (UTC−4/−3)
 
-#: components\aos_apps\aos_app_settings.c:2222
+#: components\aos_apps\aos_app_settings.c:2239
 São Paulo (UTC−3)	São Paulo (UTC−3)
 
-#: components\aos_apps\aos_app_settings.c:2222
+#: components\aos_apps\aos_app_settings.c:2239
 Ciudad de México (UTC−6)	Mexiko-Stadt (UTC−6)
 
-#: components\aos_apps\aos_app_settings.c:2223
+#: components\aos_apps\aos_app_settings.c:2240
 Nueva York (UTC−5/−4)	New York (UTC−5/−4)
 
-#: components\aos_apps\aos_app_settings.c:2223
+#: components\aos_apps\aos_app_settings.c:2240
 Madrid (UTC+1/+2)	Madrid (UTC+1/+2)
 
-#: components\aos_apps\aos_app_settings.c:2224
+#: components\aos_apps\aos_app_settings.c:2241
 Londres (UTC+0/+1)	London (UTC+0/+1)
 
-#: components\aos_apps\aos_app_settings.c:2236
+#: components\aos_apps\aos_app_settings.c:2253
 Sólo a-z, 0-9 y guiones	Nur a-z, 0-9 und Bindestriche
 
-#: components\aos_apps\aos_app_settings.c:2239
-#: components\aos_apps\aos_app_settings.c:2265
+#: components\aos_apps\aos_app_settings.c:2256
+#: components\aos_apps\aos_app_settings.c:2282
 Nombre en la red	Name im Netzwerk
 
-#: components\aos_apps\aos_app_settings.c:2248
+#: components\aos_apps\aos_app_settings.c:2265
 sin hora (esperando la red)	keine Zeit (warte auf Netzwerk)
 
-#: components\aos_apps\aos_app_settings.c:2249
+#: components\aos_apps\aos_app_settings.c:2266
 ZONA HORARIA	ZEITZONE
 
-#: components\aos_apps\aos_app_settings.c:2256
+#: components\aos_apps\aos_app_settings.c:2273
 La hora llega por la red (SNTP). La placa no tiene reloj con pila todavía.	Die Zeit kommt aus dem Netzwerk (SNTP). Die Platine hat noch keine gepufferte Uhr.
 
-#: components\aos_apps\aos_app_settings.c:2263
+#: components\aos_apps\aos_app_settings.c:2280
 #: components\aos_apps\_pending\aos_app_settings.c:3301
 Placa	Platine
 
-#: components\aos_apps\aos_app_settings.c:2267
+#: components\aos_apps\aos_app_settings.c:2284
 #: components\aos_apps\_pending\aos_app_settings.c:3262
 MEMORIA	SPEICHER
 
-#: components\aos_apps\aos_app_settings.c:2277
+#: components\aos_apps\aos_app_settings.c:2294
 microSD libre	microSD frei
 
-#: components\aos_apps\aos_app_settings.c:2281
+#: components\aos_apps\aos_app_settings.c:2298
 QUÉ HAY	AUSSTATTUNG
 
-#: components\aos_apps\aos_app_settings.c:2283
+#: components\aos_apps\aos_app_settings.c:2300
 Micrófono	Mikrofon
 
-#: components\aos_apps\aos_app_settings.c:2284
+#: components\aos_apps\aos_app_settings.c:2301
 Parlante	Lautsprecher
 
-#: components\aos_apps\aos_app_settings.c:2284
+#: components\aos_apps\aos_app_settings.c:2301
 Audio full dúplex	Vollduplex-Audio
 
-#: components\aos_apps\aos_app_settings.c:2285
+#: components\aos_apps\aos_app_settings.c:2302
 Conector de expansión	Erweiterungsleiste
 
-#: components\aos_apps\aos_app_settings.c:2286
+#: components\aos_apps\aos_app_settings.c:2303
 #: components\aos_apps\_pending\aos_app_settings.c:1787
 Batería	Akku
 
-#: components\aos_apps\aos_app_settings.c:2286
+#: components\aos_apps\aos_app_settings.c:2303
 Cámara	Kamera
 
-#: components\aos_apps\aos_app_settings.c:2289
-sí	ja
-
-#: components\aos_apps\aos_app_settings.c:2331
+#: components\aos_apps\aos_app_settings.c:2348
 abierto	offen
 
-#: components\aos_apps\aos_app_settings.c:2331
+#: components\aos_apps\aos_app_settings.c:2348
 con contraseña	mit Passwort
 
-#: components\aos_apps\aos_app_settings.c:2331
+#: components\aos_apps\aos_app_settings.c:2348
 cerrado acá	hier geschlossen
 
-#: components\aos_apps\aos_app_settings.c:2348
-#: components\aos_apps\aos_app_settings.c:2391
-#: components\aos_apps\aos_app_settings.c:2441
+#: components\aos_apps\aos_app_settings.c:2365
+#: components\aos_apps\aos_app_settings.c:2408
+#: components\aos_apps\aos_app_settings.c:2458
 Tocá otra vez para quitarla	Nochmals tippen zum Entfernen
 
-#: components\aos_apps\aos_app_settings.c:2357
+#: components\aos_apps\aos_app_settings.c:2374
 No coinciden: la contraseña no cambió	Stimmen nicht überein: Passwort unverändert
 
-#: components\aos_apps\aos_app_settings.c:2358
+#: components\aos_apps\aos_app_settings.c:2375
 Contraseña guardada: los navegadores vuelven a entrar	Passwort gespeichert: Browser müssen sich neu anmelden
 
-#: components\aos_apps\aos_app_settings.c:2367
+#: components\aos_apps\aos_app_settings.c:2384
 Repetí la contraseña	Passwort wiederholen
 
-#: components\aos_apps\aos_app_settings.c:2373
+#: components\aos_apps\aos_app_settings.c:2390
 Tiene que tener 6 caracteres o más	Mindestens 6 Zeichen
 
-#: components\aos_apps\aos_app_settings.c:2385
+#: components\aos_apps\aos_app_settings.c:2402
 La contraseña nueva del portal	Neues Passwort für das Portal
 
-#: components\aos_apps\aos_app_settings.c:2385
+#: components\aos_apps\aos_app_settings.c:2402
 Una contraseña para el portal	Ein Passwort für das Portal
 
-#: components\aos_apps\aos_app_settings.c:2386
+#: components\aos_apps\aos_app_settings.c:2403
 #: components\aos_apps\aos_macropad.c:163
 Siguiente	Weiter
 
-#: components\aos_apps\aos_app_settings.c:2401
+#: components\aos_apps\aos_app_settings.c:2418
 Tocá otra vez: el token de ahora deja de andar	Nochmals tippen: das aktuelle Token wird ungültig
 
-#: components\aos_apps\aos_app_settings.c:2408
+#: components\aos_apps\aos_app_settings.c:2425
 Tocá otra vez para cerrarlas	Nochmals tippen zum Beenden
 
-#: components\aos_apps\aos_app_settings.c:2410
+#: components\aos_apps\aos_app_settings.c:2427
 Sesiones cerradas	Sitzungen beendet
 
-#: components\aos_apps\aos_app_settings.c:2422
+#: components\aos_apps\aos_app_settings.c:2439
 Tocá otra vez: habrá que volver a instalarla	Nochmals tippen: sie muss neu installiert werden
 
-#: components\aos_apps\aos_app_settings.c:2424
+#: components\aos_apps\aos_app_settings.c:2441
 Se hace uno nuevo al reiniciar	Beim nächsten Neustart wird ein neues erstellt
 
-#: components\aos_apps\aos_app_settings.c:2448
+#: components\aos_apps\aos_app_settings.c:2465
 Tocá otra vez: ssh va a avisar que la placa cambió	Nochmal tippen: ssh wird melden, dass sich die Platine geändert hat
 
-#: components\aos_apps\aos_app_settings.c:2450
+#: components\aos_apps\aos_app_settings.c:2467
 La placa tiene una clave nueva	Die Platine hat einen neuen Schlüssel
 
-#: components\aos_apps\aos_app_settings.c:2468
+#: components\aos_apps\aos_app_settings.c:2485
 SSH (puerto 22)	SSH (Port 22)
 
-#: components\aos_apps\aos_app_settings.c:2471
+#: components\aos_apps\aos_app_settings.c:2488
 Clave nueva de la placa	Neuer Schlüssel für die Platine
 
-#: components\aos_apps\aos_app_settings.c:2478
+#: components\aos_apps\aos_app_settings.c:2495
 Una consola de la placa desde la Mac: ssh p4os.local. Sigue las reglas de arriba: donde el portal está abierto entra cualquiera, donde pide la contraseña entra con ella o con una clave de la lista, y donde está cerrado no entra nadie. Lo de arriba es la huella de la placa: ssh la muestra la primera vez.	Eine Konsole der Platine vom Computer aus: ssh p4os.local. Es gelten die Regeln oben: wo das Portal offen ist, kommt jeder hinein, wo es das Passwort verlangt, mit diesem oder einem Schlüssel aus der Liste, und wo es geschlossen ist, niemand. Oben steht der Fingerabdruck der Platine: ssh zeigt ihn beim ersten Mal.
 
-#: components\aos_apps\aos_app_settings.c:2482
+#: components\aos_apps\aos_app_settings.c:2499
 CLAVES QUE PUEDEN ENTRAR	SCHLÜSSEL MIT ZUGANG
 
-#: components\aos_apps\aos_app_settings.c:2488
-#: components\aos_apps\aos_app_settings.c:2526
+#: components\aos_apps\aos_app_settings.c:2505
+#: components\aos_apps\aos_app_settings.c:2543
 quitar	entfernen
 
-#: components\aos_apps\aos_app_settings.c:2493
+#: components\aos_apps\aos_app_settings.c:2510
 Una clave que no está en la lista pide permiso acá, en la pantalla, con su huella: compará con la que da ssh-keygen -lf en la Mac. Quitar una cierra las sesiones de SSH abiertas.	Ein Schlüssel, der nicht in der Liste steht, bittet hier auf dem Bildschirm um Erlaubnis, mit seinem Fingerabdruck: vergleiche ihn mit der Ausgabe von ssh-keygen -lf auf dem Computer. Wird einer entfernt, schließen sich die offenen SSH-Sitzungen.
 
-#: components\aos_apps\aos_app_settings.c:2507
+#: components\aos_apps\aos_app_settings.c:2524
 LA RED POR CABLE	DAS KABELNETZ
 
-#: components\aos_apps\aos_app_settings.c:2510
+#: components\aos_apps\aos_app_settings.c:2527
 De confianza: por cable el portal está abierto.	Vertrauenswürdig: über das Kabel ist das Portal offen.
 
-#: components\aos_apps\aos_app_settings.c:2511
+#: components\aos_apps\aos_app_settings.c:2528
 Por cable el portal se porta como en una red que no es de confianza. Una red por cable no tiene nombre para reconocerla: prendelo sólo donde confiás en todo lo que está enchufado.	Über das Kabel verhält sich das Portal wie in einem nicht vertrauenswürdigen Netz. Ein Kabelnetz hat keinen Namen, an dem man es erkennt: nur dort einschalten, wo du allem Angeschlossenen vertraust.
 
-#: components\aos_apps\aos_app_settings.c:2514
+#: components\aos_apps\aos_app_settings.c:2531
 ESTA RED	DIESES NETZ
 
-#: components\aos_apps\aos_app_settings.c:2517
+#: components\aos_apps\aos_app_settings.c:2534
 De confianza: en esta red el portal está abierto.	Vertrauenswürdig: in diesem Netz ist das Portal offen.
 
-#: components\aos_apps\aos_app_settings.c:2518
+#: components\aos_apps\aos_app_settings.c:2535
 En esta red el portal pide la contraseña.	In diesem Netz verlangt das Portal das Passwort.
 
-#: components\aos_apps\aos_app_settings.c:2519
+#: components\aos_apps\aos_app_settings.c:2536
 En esta red el portal está cerrado y la placa no anuncia su nombre. Se entra por la red propia de la placa o por el cable USB.	In diesem Netz ist das Portal geschlossen und die Platine gibt ihren Namen nicht bekannt. Erreichbar über das eigene Netz der Platine oder das USB-Kabel.
 
-#: components\aos_apps\aos_app_settings.c:2524
+#: components\aos_apps\aos_app_settings.c:2541
 REDES DE CONFIANZA	VERTRAUENSWÜRDIGE NETZE
 
-#: components\aos_apps\aos_app_settings.c:2527
+#: components\aos_apps\aos_app_settings.c:2544
 En una red de confianza el portal se abre como siempre. En cualquier otra, la placa no anuncia su nombre y el portal queda cerrado, o pide la contraseña si así se elige abajo.	In einem vertrauenswürdigen Netz öffnet sich das Portal wie immer. In jedem anderen gibt die Platine ihren Namen nicht bekannt und das Portal bleibt geschlossen oder verlangt das Passwort, wenn unten so gewählt.
 
-#: components\aos_apps\aos_app_settings.c:2529
+#: components\aos_apps\aos_app_settings.c:2546
 CONTRASEÑA	PASSWORT
 
-#: components\aos_apps\aos_app_settings.c:2530
+#: components\aos_apps\aos_app_settings.c:2547
 Poner una contraseña	Passwort festlegen
 
-#: components\aos_apps\aos_app_settings.c:2531
+#: components\aos_apps\aos_app_settings.c:2548
 Quitar la contraseña	Passwort entfernen
 
-#: components\aos_apps\aos_app_settings.c:2534
+#: components\aos_apps\aos_app_settings.c:2551
 PEDIRLA	ABFRAGEN
 
-#: components\aos_apps\aos_app_settings.c:2535
+#: components\aos_apps\aos_app_settings.c:2552
 Sólo fuera de casa	Nur außer Haus
 
-#: components\aos_apps\aos_app_settings.c:2536
+#: components\aos_apps\aos_app_settings.c:2553
 También en casa y en la red de la placa	Auch zu Hause und im Netz der Platine
 
-#: components\aos_apps\aos_app_settings.c:2537
+#: components\aos_apps\aos_app_settings.c:2554
 EN REDES QUE NO SON DE CONFIANZA	IN NICHT VERTRAUENSWÜRDIGEN NETZEN
 
-#: components\aos_apps\aos_app_settings.c:2538
+#: components\aos_apps\aos_app_settings.c:2555
 Portal cerrado	Portal geschlossen
 
-#: components\aos_apps\aos_app_settings.c:2539
+#: components\aos_apps\aos_app_settings.c:2556
 Abierto con la contraseña	Mit Passwort offen
 
-#: components\aos_apps\aos_app_settings.c:2541
+#: components\aos_apps\aos_app_settings.c:2558
 El cable USB entra siempre, sin contraseña: quien tiene el cable tiene la placa. La contraseña y estas reglas se cambian sólo acá, nunca desde el portal.	Über das USB-Kabel geht es immer ohne Passwort: wer das Kabel hat, hat die Platine. Passwort und Regeln werden nur hier geändert, nie im Portal.
 
-#: components\aos_apps\aos_app_settings.c:2544
+#: components\aos_apps\aos_app_settings.c:2561
 HTTPS (puerto 443)	HTTPS (Port 443)
 
-#: components\aos_apps\aos_app_settings.c:2547
+#: components\aos_apps\aos_app_settings.c:2564
 Autoridad nueva	Neue Zertifizierungsstelle
 
-#: components\aos_apps\aos_app_settings.c:2548
+#: components\aos_apps\aos_app_settings.c:2565
 Reiniciar para aplicarlo	Neu starten zum Anwenden
 
-#: components\aos_apps\aos_app_settings.c:2555
+#: components\aos_apps\aos_app_settings.c:2572
 Con HTTPS, lo que viaja va cifrado, la contraseña incluida, y fuera de casa el portal manda del HTTP al HTTPS. La placa tiene su propia autoridad: se baja desde el portal (Ajustes, Seguridad) y se instala una vez como confiable en la Mac o el iPhone, y el navegador deja de avisar. Lo de arriba es su huella SHA-256, para compararla. Se aplica al reiniciar.	Mit HTTPS wird alles verschlüsselt übertragen, auch das Passwort, und außer Haus leitet das Portal von HTTP auf HTTPS um. Die Platine hat ihre eigene Zertifizierungsstelle: im Portal herunterladen (Einstellungen, Sicherheit) und einmal auf dem Mac oder iPhone als vertrauenswürdig installieren, dann warnt der Browser nicht mehr. Oben steht ihr SHA-256-Fingerabdruck zum Vergleichen. Gilt ab dem nächsten Neustart.
 
-#: components\aos_apps\aos_app_settings.c:2560
+#: components\aos_apps\aos_app_settings.c:2577
 SESIONES Y SCRIPTS	SITZUNGEN UND SKRIPTE
 
-#: components\aos_apps\aos_app_settings.c:2562
+#: components\aos_apps\aos_app_settings.c:2579
 Navegadores con sesión	Angemeldete Browser
 
-#: components\aos_apps\aos_app_settings.c:2563
+#: components\aos_apps\aos_app_settings.c:2580
 Cerrar todas las sesiones	Alle Sitzungen beenden
 
-#: components\aos_apps\aos_app_settings.c:2564
+#: components\aos_apps\aos_app_settings.c:2581
 Token nuevo para scripts	Neues Token für Skripte
 
-#: components\aos_apps\aos_app_settings.c:2567
+#: components\aos_apps\aos_app_settings.c:2584
 El token reemplaza a la contraseña en los scripts de tools/ (cabecera Authorization: Bearer). Se le pasa así: P4OS_TOKEN=<token> tools/ota.sh p4os.local	Das Token ersetzt das Passwort in den Skripten unter tools/ (Header Authorization: Bearer). So übergeben: P4OS_TOKEN=<token> tools/ota.sh p4os.local
 
-#: components\aos_apps\aos_app_settings.c:2611
+#: components\aos_apps\aos_app_settings.c:2628
 Tocá otra vez para volver a lo de fábrica	Nochmals tippen, um die Werkseinstellungen herzustellen
 
-#: components\aos_apps\aos_app_settings.c:2622
+#: components\aos_apps\aos_app_settings.c:2639
 Tocá otra vez para reiniciar	Nochmals tippen zum Neustarten
 
-#: components\aos_apps\aos_app_settings.c:2631
+#: components\aos_apps\aos_app_settings.c:2648
 Tocá otra vez para reiniciar en modo seguro	Nochmals tippen für einen Neustart im abgesicherten Modus
 
-#: components\aos_apps\aos_app_settings.c:2649
+#: components\aos_apps\aos_app_settings.c:2666
 Tocá otra vez para cerrarla	Zum Schließen noch einmal tippen
 
-#: components\aos_apps\aos_app_settings.c:2657
+#: components\aos_apps\aos_app_settings.c:2674
 Tocá otra vez para sacarla	Noch einmal tippen zum Entfernen
 
-#: components\aos_apps\aos_app_settings.c:2665
+#: components\aos_apps\aos_app_settings.c:2682
 en segundo plano	im Hintergrund
 
-#: components\aos_apps\aos_app_settings.c:2666
+#: components\aos_apps\aos_app_settings.c:2683
 trabajando	arbeitet
 
-#: components\aos_apps\aos_app_settings.c:2667
+#: components\aos_apps\aos_app_settings.c:2684
 usa pines del header	nutzt Header-Pins
 
-#: components\aos_apps\aos_app_settings.c:2668
+#: components\aos_apps\aos_app_settings.c:2685
 sonando	spielt ab
 
-#: components\aos_apps\aos_app_settings.c:2669
+#: components\aos_apps\aos_app_settings.c:2686
 con el micrófono	nutzt das Mikrofon
 
-#: components\aos_apps\aos_app_settings.c:2676
+#: components\aos_apps\aos_app_settings.c:2693
 APPS EN SEGUNDO PLANO	APPS IM HINTERGRUND
 
-#: components\aos_apps\aos_app_settings.c:2678
+#: components\aos_apps\aos_app_settings.c:2695
 Automático (de fábrica)	Automatisch (Standard)
 
-#: components\aos_apps\aos_app_settings.c:2679
+#: components\aos_apps\aos_app_settings.c:2696
 Cerrar al salir	Beim Verlassen schließen
 
-#: components\aos_apps\aos_app_settings.c:2680
+#: components\aos_apps\aos_app_settings.c:2697
 Mantener abiertas	Geöffnet lassen
 
-#: components\aos_apps\aos_app_settings.c:2681
+#: components\aos_apps\aos_app_settings.c:2698
 Al salir de una app, Automático la cierra si ocupa 1 MB de PSRAM o más y no tiene nada andando; Cerrar al salir la cierra si no tiene nada andando; Mantener abiertas la deja, como antes. Andando es usar pines del header, sonar, el micrófono, grabar o trabajar en segundo plano. Con menos de 8 MB de PSRAM libre se cierran también las escondidas que no tienen nada andando.	Beim Verlassen einer App schließt Automatisch sie, wenn sie 1 MB PSRAM oder mehr belegt und nichts läuft; Beim Verlassen schließen schließt sie, wenn nichts läuft; Geöffnet lassen behält sie wie bisher. Laufen heißt: Header-Pins nutzen, Ton abspielen, das Mikrofon, aufnehmen oder im Hintergrund arbeiten. Unter 8 MB freiem PSRAM werden auch versteckte Apps ohne laufende Aufgabe geschlossen.
 
-#: components\aos_apps\aos_app_settings.c:2683
+#: components\aos_apps\aos_app_settings.c:2700
 ABIERTAS AHORA	JETZT GEÖFFNET
 
-#: components\aos_apps\aos_app_settings.c:2698
+#: components\aos_apps\aos_app_settings.c:2715
 Ninguna, fuera de Ajustes	Keine außer Einstellungen
 
-#: components\aos_apps\aos_app_settings.c:2704
+#: components\aos_apps\aos_app_settings.c:2721
 Lo que ocupa cada una se mide al salir de ella. Tocar una la cierra.	Was jede belegt, wird beim Verlassen gemessen. Antippen schließt sie.
 
-#: components\aos_apps\aos_app_settings.c:2707
+#: components\aos_apps\aos_app_settings.c:2724
 ARRANCAN CON LA PLACA	STARTEN MIT DER PLATINE
 
-#: components\aos_apps\aos_app_settings.c:2717
+#: components\aos_apps\aos_app_settings.c:2734
 no está en la tarjeta	nicht auf der Karte
 
-#: components\aos_apps\aos_app_settings.c:2724
+#: components\aos_apps\aos_app_settings.c:2741
 Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.	Apps, die es verlangen (etwa ein Datenlogger), starten versteckt, wenn die Platine eingeschaltet wird, als hättest du sie geöffnet und verlassen. Antippen nimmt eine von der Liste.
 
-#: components\aos_apps\aos_app_settings.c:2730
+#: components\aos_apps\aos_app_settings.c:2747
 EN PANTALLA	AUF DEM BILDSCHIRM
 
-#: components\aos_apps\aos_app_settings.c:2731
+#: components\aos_apps\aos_app_settings.c:2748
 Mostrar los toques	Berührungen anzeigen
 
-#: components\aos_apps\aos_app_settings.c:2732
+#: components\aos_apps\aos_app_settings.c:2749
 Mostrar los fps	FPS anzeigen
 
-#: components\aos_apps\aos_app_settings.c:2733
+#: components\aos_apps\aos_app_settings.c:2750
 Un círculo bajo cada dedo que informa el táctil (hasta dos), y los cuadros por segundo que llegan a la pantalla, arriba a la derecha. Quedan prendidos después de reiniciar.	Ein Kreis unter jedem Finger, den der Touchscreen meldet (bis zu zwei), und die Bilder pro Sekunde, die den Bildschirm erreichen, oben rechts. Bleiben nach einem Neustart an.
 
-#: components\aos_apps\aos_app_settings.c:2737
+#: components\aos_apps\aos_app_settings.c:2754
 Sólo errores	Nur Fehler
 
-#: components\aos_apps\aos_app_settings.c:2738
+#: components\aos_apps\aos_app_settings.c:2755
 Errores y avisos	Fehler und Warnungen
 
-#: components\aos_apps\aos_app_settings.c:2739
+#: components\aos_apps\aos_app_settings.c:2756
 Todo (de fábrica)	Alles (Werkseinstellung)
 
-#: components\aos_apps\aos_app_settings.c:2740
+#: components\aos_apps\aos_app_settings.c:2757
 Lo que llega al Registro del portal y a la consola serie. Este firmware no trae los mensajes de depuración.	Was im Protokoll des Portals und auf der seriellen Konsole ankommt. Diese Firmware enthält keine Debug-Meldungen.
 
-#: components\aos_apps\aos_app_settings.c:2742
+#: components\aos_apps\aos_app_settings.c:2759
 DÓNDE DIBUJA LVGL	WO LVGL ZEICHNET
 
-#: components\aos_apps\aos_app_settings.c:2744
+#: components\aos_apps\aos_app_settings.c:2761
 Dos búferes en PSRAM (de fábrica)	Zwei Puffer im PSRAM (Werkseinstellung)
 
-#: components\aos_apps\aos_app_settings.c:2745
+#: components\aos_apps\aos_app_settings.c:2762
 Uno en PSRAM	Einer im PSRAM
 
-#: components\aos_apps\aos_app_settings.c:2746
+#: components\aos_apps\aos_app_settings.c:2763
 Dos en RAM interna	Zwei im internen RAM
 
-#: components\aos_apps\aos_app_settings.c:2747
+#: components\aos_apps\aos_app_settings.c:2764
 Uno en RAM interna	Einer im internen RAM
 
-#: components\aos_apps\aos_app_settings.c:2748
+#: components\aos_apps\aos_app_settings.c:2765
 FILAS POR BÚFER	ZEILEN PRO PUFFER
 
-#: components\aos_apps\aos_app_settings.c:2751
+#: components\aos_apps\aos_app_settings.c:2768
 128 (de fábrica)	128 (Werkseinstellung)
 
-#: components\aos_apps\aos_app_settings.c:2753
+#: components\aos_apps\aos_app_settings.c:2770
 Medido en la placa: la pantalla entera se redibuja en 67 ms con dos internos de 56 filas, 67 ms con dos en PSRAM de 128 y 60 ms con 320; pero 320 filas le dejan poca PSRAM a Monster Hop. En RAM interna, si no alcanza, usa menos filas o vuelve a la PSRAM.	Auf der Platine gemessen: Der ganze Bildschirm wird in 67 ms mit zwei internen Puffern zu 56 Zeilen neu gezeichnet, in 67 ms mit zwei im PSRAM zu 128 und in 60 ms mit 320; aber 320 Zeilen lassen Monster Hop wenig PSRAM. Reicht das interne RAM nicht, nimmt es weniger Zeilen oder wieder den PSRAM.
 
-#: components\aos_apps\aos_app_settings.c:2754
+#: components\aos_apps\aos_app_settings.c:2771
 PANTALLA Y COPIAS	BILDSCHIRM UND KOPIEN
 
-#: components\aos_apps\aos_app_settings.c:2756
+#: components\aos_apps\aos_app_settings.c:2773
 Tres búferes del panel (de fábrica)	Drei Panel-Puffer (Werkseinstellung)
 
-#: components\aos_apps\aos_app_settings.c:2757
+#: components\aos_apps\aos_app_settings.c:2774
 Uno solo	Nur einer
 
-#: components\aos_apps\aos_app_settings.c:2758
+#: components\aos_apps\aos_app_settings.c:2775
 Copias con el PPA	Kopien mit dem PPA
 
-#: components\aos_apps\aos_app_settings.c:2759
+#: components\aos_apps\aos_app_settings.c:2776
 Bandas de los juegos en PSRAM	Spielstreifen im PSRAM
 
-#: components\aos_apps\aos_app_settings.c:2760
+#: components\aos_apps\aos_app_settings.c:2777
 Con un solo búfer del panel, las apps que dibujan la pantalla entera (los juegos) no tienen el suyo. Sin el PPA, las copias las hace la CPU. Las bandas en PSRAM hacen a Monster Hop acostado la mitad de rápido: están para medir.	Mit nur einem Panel-Puffer haben die Apps, die den ganzen Bildschirm zeichnen (die Spiele), keinen eigenen. Ohne PPA kopiert die CPU. Streifen im PSRAM machen Monster Hop im Querformat halb so schnell: sie sind zum Messen da.
 
-#: components\aos_apps\aos_app_settings.c:2763
+#: components\aos_apps\aos_app_settings.c:2780
 Volver a lo de fábrica	Werkseinstellungen herstellen
 
-#: components\aos_apps\aos_app_settings.c:2765
+#: components\aos_apps\aos_app_settings.c:2782
 Estos se leen al arrancar: hay que reiniciar. Si un ajuste no deja arrancar, el tercer arranque fallido seguido vuelve solo a lo de fábrica.	Diese werden beim Start gelesen: ein Neustart ist nötig. Verhindert eine Einstellung den Start, stellt der dritte fehlgeschlagene Start in Folge die Werkseinstellungen von selbst her.
 
-#: components\aos_apps\aos_app_settings.c:2769
+#: components\aos_apps\aos_app_settings.c:2786
 Reiniciar en modo seguro	Im abgesicherten Modus neu starten
 
-#: components\aos_apps\aos_app_settings.c:2770
+#: components\aos_apps\aos_app_settings.c:2787
 El modo seguro arranca sin las apps de la tarjeta, con el dibujo de fábrica y el USB quieto, como con BOOT apretado al encender. El reinicio siguiente vuelve a la normalidad.	Der abgesicherte Modus startet ohne die Apps der Karte, mit den Werkseinstellungen fürs Zeichnen und ruhendem USB, wie mit gedrückter BOOT-Taste beim Einschalten. Der nächste Neustart kehrt zum Normalbetrieb zurück.
 
 #: components\aos_apps\aos_app_soon.c:31
@@ -7237,9 +7768,6 @@ Sin tarjeta	Keine Karte
 IP	IP
 
 #: components\aos_apps\aos_app_sysmon.c:1219
-Máscara	Maske
-
-#: components\aos_apps\aos_app_sysmon.c:1219
 DNS	DNS
 
 #: components\aos_apps\aos_app_sysmon.c:1219
@@ -7259,9 +7787,6 @@ Tráfico	Datenverkehr
 
 #: components\aos_apps\aos_app_sysmon.c:1226
 TARJETA	KARTE
-
-#: components\aos_apps\aos_app_sysmon.c:1230
-Fabricante	Hersteller
 
 #: components\aos_apps\aos_app_sysmon.c:1233
 FIRMWARE	FIRMWARE
@@ -7696,86 +8221,102 @@ El broker dejó de contestar	Der Broker antwortet nicht mehr
 #: components\aos_apps\aos_mqtt.c:1316
 Se perdió la conexión con el broker	Verbindung zum Broker verloren
 
-#: components\aos_apps\aos_nettools.c:432
+#: components\aos_apps\aos_nettools.c:447
 No se encontró ese nombre	Name nicht gefunden
 
-#: components\aos_apps\aos_nettools.c:511
-#: components\aos_apps\aos_nettools.c:687
-#: components\aos_apps\aos_nettools.c:1240
-#: components\aos_apps\aos_nettools.c:1375
+#: components\aos_apps\aos_nettools.c:526
+#: components\aos_apps\aos_nettools.c:702
+#: components\aos_apps\aos_nettools.c:1255
+#: components\aos_apps\aos_nettools.c:1390
 No hay memoria para empezar	Nicht genug Speicher zum Starten
 
-#: components\aos_apps\aos_nettools.c:539
+#: components\aos_apps\aos_nettools.c:554
 Páginas web	Webseiten
 
-#: components\aos_apps\aos_nettools.c:544
+#: components\aos_apps\aos_nettools.c:559
 Impresoras	Drucker
 
-#: components\aos_apps\aos_nettools.c:545
+#: components\aos_apps\aos_nettools.c:560
 Impresoras (LPD)	Drucker (LPD)
 
-#: components\aos_apps\aos_nettools.c:546
+#: components\aos_apps\aos_nettools.c:561
 Cámaras RTSP	RTSP-Kameras
 
-#: components\aos_apps\aos_nettools.c:547
-#: components\aos_apps\aos_nettools.c:579
+#: components\aos_apps\aos_nettools.c:562
+#: components\aos_apps\aos_nettools.c:594
 Carpetas compartidas	Freigegebene Ordner
 
-#: components\aos_apps\aos_nettools.c:549
+#: components\aos_apps\aos_nettools.c:564
 Arduino OTA	Arduino OTA
 
-#: components\aos_apps\aos_nettools.c:550
+#: components\aos_apps\aos_nettools.c:565
 Computadoras	Computer
 
-#: components\aos_apps\aos_nettools.c:568
+#: components\aos_apps\aos_nettools.c:583
 Este P4OS	Dieses P4OS
 
-#: components\aos_apps\aos_nettools.c:571
+#: components\aos_apps\aos_nettools.c:586
 Rigol (SCPI)	Rigol (SCPI)
 
-#: components\aos_apps\aos_nettools.c:572
+#: components\aos_apps\aos_nettools.c:587
 Cámara RTSP	RTSP-Kamera
 
-#: components\aos_apps\aos_nettools.c:574
+#: components\aos_apps\aos_nettools.c:589
 Broker MQTT	MQTT-Broker
 
-#: components\aos_apps\aos_nettools.c:576
-#: components\aos_apps\aos_nettools.c:600
+#: components\aos_apps\aos_nettools.c:591
+#: components\aos_apps\aos_nettools.c:615
 Impresora	Drucker
 
-#: components\aos_apps\aos_nettools.c:580
+#: components\aos_apps\aos_nettools.c:595
 Servidor Linux	Linux-Server
 
-#: components\aos_apps\aos_nettools.c:580
+#: components\aos_apps\aos_nettools.c:595
 Equipo con SSH	Gerät mit SSH
 
-#: components\aos_apps\aos_nettools.c:581
+#: components\aos_apps\aos_nettools.c:596
 Equipo con página web	Gerät mit Webseite
 
-#: components\aos_apps\aos_nettools.c:582
+#: components\aos_apps\aos_nettools.c:597
 Sólo responde al ping	Antwortet nur auf Ping
 
-#: components\aos_apps\aos_nettools.c:582
+#: components\aos_apps\aos_nettools.c:597
 Sin puertos conocidos	Keine bekannten Ports
 
-#: components\aos_apps\aos_nettools.c:583
+#: components\aos_apps\aos_nettools.c:598
 Equipo de red	Netzwerkgerät
 
-#: components\aos_apps\aos_nettools.c:644
+#: components\aos_apps\aos_nettools.c:659
 mDNS no está andando: ¿hay red?	mDNS läuft nicht: gibt es ein Netzwerk?
 
-#: components\aos_apps\aos_nettools.c:815
+#: components\aos_apps\aos_nettools.c:830
 P4_SIM_NET_SCAN no es un rango válido (a.b.c.d/24 a /32)	P4_SIM_NET_SCAN ist kein gültiger Bereich (a.b.c.d/24 bis /32)
 
-#: components\aos_apps\aos_nettools.c:829
+#: components\aos_apps\aos_nettools.c:844
 Sin conexión a la red WiFi	Keine Verbindung zum WLAN
 
-#: components\aos_apps\aos_nettools.c:1038
+#: components\aos_apps\aos_nettools.c:1053
 No hay memoria para el barrido	Nicht genug Speicher für den Scan
 
-#: components\aos_apps\aos_nettools.c:1110
-#: components\aos_apps\aos_nettools.c:1339
+#: components\aos_apps\aos_nettools.c:1125
+#: components\aos_apps\aos_nettools.c:1354
 Sin sockets libres: probá de nuevo en un rato	Keine freien Sockets: später nochmal versuchen
+
+#: components\aos_apps\aos_nettools.c:1915
+No se pudieron abrir los puertos en el cable	Die Ports am Kabel konnten nicht geöffnet werden
+
+#: components\aos_apps\aos_nettools.c:1934
+El cable cambió de dirección	Die Adresse des Kabels hat sich geändert
+
+#: components\aos_apps\aos_nettools.c:1967
+No hay tarjeta de la que dar archivos	Keine Karte vorhanden, von der Dateien geliefert werden können
+
+#: components\aos_apps\aos_nettools.c:1967
+El cable no tiene dirección	Das Kabel hat keine Adresse
+
+#: components\aos_apps\aos_nettools.c:2167
+#: components\aos_apps\aos_nettools.c:2169
+No se pudo abrir el puerto 5001	Port 5001 konnte nicht geöffnet werden
 
 #: components\aos_apps\aos_riden.c:88
 unidad	Unit
@@ -9351,19 +9892,19 @@ Por la consola de U-Boot sólo se lee: no se graba ni se borra	Über die U-Boot-
 #: components\aos_flasher\aos_flasher_uboot.c:930
 Queda frenado en \"%s\": reset en la Terminal, o su corriente, lo arranca	Bleibt bei \"%s\" angehalten: reset im Terminal oder Strom startet es
 
-#: components\aos_hal\aos_net_p4.c:492
+#: components\aos_hal\aos_net_p4.c:665
 no se pudo abrir la imagen	das Image konnte nicht geöffnet werden
 
-#: components\aos_hal\aos_net_p4.c:498
+#: components\aos_hal\aos_net_p4.c:671
 el C6 no aceptó empezar	der C6 hat den Start abgelehnt
 
-#: components\aos_hal\aos_net_p4.c:505
+#: components\aos_hal\aos_net_p4.c:678
 se cortó al mandar la imagen	die Verbindung brach beim Senden des Images ab
 
-#: components\aos_hal\aos_net_p4.c:511
+#: components\aos_hal\aos_net_p4.c:684
 el C6 rechazó la imagen	der C6 hat das Image abgelehnt
 
-#: components\aos_hal\aos_net_p4.c:519
+#: components\aos_hal\aos_net_p4.c:692
 el C6 no activó la imagen	der C6 hat das Image nicht aktiviert
 
 #: components\aos_portal\aos_portal.c:358

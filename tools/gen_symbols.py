@@ -17,6 +17,7 @@ With --libs you can widen or narrow which libraries are exported.
 import argparse
 import os
 import re
+import shutil
 import subprocess
 import sys
 
@@ -226,9 +227,9 @@ def find_nm(target="esp32p4"):
     names = (("riscv32-esp-elf-nm",) if target.startswith("esp32p") or target.startswith("esp32c")
              else ("xtensa-esp32s3-elf-nm", "xtensa-esp-elf-nm"))
     for candidate in names:
-        path = subprocess.run(["which", candidate], capture_output=True, text=True)
-        if path.returncode == 0:
-            return path.stdout.strip()
+        path = shutil.which(candidate)
+        if path:
+            return path
     # last resort: look inside the toolchain's installation
     tools = os.path.expanduser("~/.espressif/tools")
     for base, _dirs, files in os.walk(tools):

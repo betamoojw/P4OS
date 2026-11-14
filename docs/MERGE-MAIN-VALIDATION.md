@@ -84,3 +84,27 @@
 最终固件日志：`build/merge-main-20261112-firmware-verified.log`；应用日志：`build/merge-main-20261112-apps.log` 和 `build/merge-main-20261112-apps-final-check.log`。兼容性报告在 `build/apps-abi101/rev3_x/report-selected.json`。
 
 验证镜像在合并提交前构建，版本为 `v0.15.0-219-g7972bdd-dirty`；应用 SHA-256 为 `664a15b45330027bedba6a8fcfb37bb346a76cebaa9d31420ea48f0b44d4393a`，ELF SHA-256 为 `302800528e3927716d2505c61bca1ab60fc32abe8ead0c4c3960940bdb6143e1`。打包字库的 SHA-256 仍为 `c957559d3da940ca81caea0b256c06ff92e2df919a9e2896aac174eb8f679a6b`。提交不会自动改变这些镜像的版本标识。
+
+## 2026-11-14 合入远程 main
+
+合入源为 `origin/main` 的 `18cbaa0a881ea18564326a97de93fc4314286a0c`，合入前 `dev` 为 `5481de9`。获取远程状态后确认本地与远程 `dev` 一致，本次引入 23 个上游提交，主要包括有线网络诊断、设备发现与监测、网络共享及辅助板设计更新。
+
+冲突及兼容性处理：
+
+- 解决三个冲突文件：英语、德语系统目录按键合并，保留双方条目，再从最终目录重新生成内嵌语言 C 文件。
+- 网络页面的 `Cable`、`Hosts` 标签纳入翻译提取。每种中文补齐 169 个新条目并保存审校覆盖表，使用简繁各自的本地用语。四种语言的系统目录各有 3,288 个条目；每种中文仍有 87 份目录，其中 57 份原生应用目录。板载 Flash 字库和分区布局不变，无需 SD 卡。
+- 修复上游扩大以太网状态结构造成的 ABI 101 越界风险：旧二进制入口 `aos_eth_info` 只写原来的 204 字节；当前头文件通过内联函数将缓冲区长度传给新增的 `aos_eth_info_read`，读取含新增字段的 216 字节结构。P4 和模拟器后端均按调用方长度复制，未来扩展字段补零；通过函数指针调用同样传递正确长度。
+- 重新生成动态应用符号表，并将符号生成工具查找编译器的方式改为 Python 的跨平台接口，修复 Windows 上缺少 `which` 命令时无法运行的问题。
+- 更新构建说明：旧目录需开启 `CONFIG_LWIP_IP_FORWARD=y` 和 `CONFIG_LWIP_IPV4_NAPT=y`。本机验证配置已同步；W5500、压缩字体、三个 SNTP 服务器和 USB vendor 接口配置保持开启。网络共享仍须由用户开启，lwIP 转发限制已实际链接到固件。
+
+验证范围：
+
+- 30 项 Python 回归与 22 项网页测试通过，共 52 项。新增测试实际执行 P4/模拟器的以太网状态读取代码，检查旧缓冲区边界、新字段、小缓冲区、空指针及函数指针；转发测试检查共享关闭和不同共享接口。首次运行时测试夹具缺少 `libgcc`，修正后相应测试通过。
+- ESP-IDF 5.5.5 完整编译 `lcd10_1/rev3_x`，更新符号表后再次链接成功。最终 `p4os.bin` 为 7,768,288 字节，应用分区剩余约 7%；镜像校验有效，芯片范围为 P4 v3.0–v3.99。仅有既有的 LVGL/stb_image 及 `screen_off_cb` 未使用警告。
+- 从实际 ELF 读取动态应用解析表：原有 3,654 个导出均保留，最终为 3,725 个导出。旧版及当前以太网头文件的两个 ABI 101 样例均编译成功，并通过最终固件的导入符号检查。
+- 本次上游未改动动态应用源码。现有 11 个应用（`can`、`dmx`、`eeprom`、`equipos`、`golf`、`luces`、`modbus`、`monsterhop`、`notas`、`ssh`、`turbo`）针对最终 `lcd10_1/rev3_x` ELF 通过 ABI 101、导入符号、LVGL 配置及指令集检查。本次仅检查这些已有二进制，未重新构建应用，也未重新编译另外七种板型/硅配置组合。
+- 未烧录设备，未进行新增网络功能的实机验证；四种板型、横竖屏触摸、网络校时和简繁中文的自动化回归均通过。
+
+本地记录：`build/merge-main-20261114-python-tests.log`、`build/merge-main-20261114-ethernet-abi-tests.log`、`build/merge-main-20261114-forwarding-final-tests.log`、`build/merge-main-20261114-web-tests.log`、`build/merge-main-20261114-symbols.log`、`build/merge-main-20261114-firmware.log`、`build/merge-main-20261114-firmware-final.log`、`build/merge-main-20261114-image-info.log`。导出及应用检查结果为 `build/merge-main-20261114-exports-report.json`、`build/merge-main-20261114-apps-check.log`、`build/merge-main-20261114-apps-report.json`。这些构建产物和日志不纳入 Git。
+
+验证镜像在合并提交前构建，版本为 `v0.15.0-322-g5481de9-dirty`；应用 SHA-256 为 `4de2bab1f0062d588f0fd30eb409af605503d7b06b9c917017ec3b41c935673e`，ELF SHA-256 为 `d315d8de310f1f8d19ef0045c24840db4de31743dd3508571f6baaff4732d6af`。打包字库的 SHA-256 仍为 `c957559d3da940ca81caea0b256c06ff92e2df919a9e2896aac174eb8f679a6b`。提交不会自动更新镜像的版本标识。

@@ -2705,6 +2705,36 @@ void aos_hal_net_wired_set(bool up, const char *ip)
 }
 bool        aos_hal_net_wired(void)     { return s_wired; }
 const char *aos_hal_net_wired_ip(void)  { return s_wired_ip; }
+
+/* The simulator's interfaces: its made-up Wi-Fi, and the made-up wire when it is up (P4_SIM_ETH). */
+int aos_hal_netif_list(aos_netif_t *out, int max)
+{
+    int n = 0;
+    bool wired = s_wired_ip[0] != 0;
+    if (n < max) {
+        aos_netif_t *o = &out[n++];
+        memset(o, 0, sizeof *o);
+        snprintf(o->name, sizeof o->name, "st1");
+        snprintf(o->kind, sizeof o->kind, "wifi");
+        snprintf(o->ip, sizeof o->ip, "127.0.0.1");
+        snprintf(o->mask, sizeof o->mask, "255.0.0.0");
+        o->up = true;
+        o->way_out = !wired;
+        memcpy(o->mac, "\x02\x50\x34\x4F\x53\x00", 6);
+    }
+    if (wired && n < max) {
+        aos_netif_t *o = &out[n++];
+        memset(o, 0, sizeof *o);
+        snprintf(o->name, sizeof o->name, "en2");
+        snprintf(o->kind, sizeof o->kind, "ethernet");
+        snprintf(o->ip, sizeof o->ip, "%s", s_wired_ip);
+        snprintf(o->mask, sizeof o->mask, "255.255.255.0");
+        snprintf(o->gw, sizeof o->gw, "10.0.0.1");
+        o->up = o->way_out = true;
+        memcpy(o->mac, "\x02\x50\x34\x4F\x53\x01", 6);
+    }
+    return n;
+}
 bool        aos_hal_net_sync_time(void) { return true; }
 
 /* Network onboarding of 27/08: the firmware gained stored credentials and a
@@ -2827,6 +2857,15 @@ bool aos_hal_net_ap_active(void)
 }
 const char *aos_hal_net_ap_ip(void)     { return "192.168.4.1"; }
 int aos_hal_net_ap_clients(void) { return s_net_ap ? 1 : 0; }
+/* The own network sharing the way out: the switch is kept as on the board, and nothing is forwarded. */
+void aos_hal_net_ap_share_set(bool on) { aos_hal_pref_set_i32("ap_share", on ? 1 : 0); }
+bool aos_hal_net_ap_share(void)
+{
+    int32_t v = 0;
+    aos_hal_pref_get_i32("ap_share", &v);
+    return v != 0;
+}
+bool aos_hal_net_ap_sharing(void) { return s_net_ap && aos_hal_net_ap_share(); }
 const char *aos_hal_net_coprocessor_fw(void) { return "sim"; }
 
 const char *aos_hal_net_ap_ssid(void)

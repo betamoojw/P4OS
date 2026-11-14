@@ -4,7 +4,7 @@
  * Simbolos que el firmware le presta a las apps dinamicas.
  * Librerias: lvgl__lvgl, lvgl_port_lib, aos_hal, aos_ui, aos_apps, aos_board, aos_fonts, aos_usb, aos_io, monocypher, aos_ssh
  * Mas 188 funciones de libc/libm agregadas a mano.
- * Total: 3620 simbolos.
+ * Total: 3691 simbolos.
  */
 
 #include <stddef.h>
@@ -12,6 +12,7 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wbuiltin-declaration-mismatch"
+extern int AOS_NET_TIME_EVENT;
 extern int NT_KNOWN_N;
 extern int NT_KNOWN_PORTS;
 extern int NT_MDNS_NTYPES;
@@ -106,7 +107,30 @@ extern int aos_banner_create;
 extern int aos_banner_layout;
 extern int aos_banner_tick;
 extern int aos_banner_up;
+extern int aos_board_dpi_config;
+extern int aos_board_panel_new;
+extern int aos_board_touch_new;
 extern int aos_button;
+extern int aos_cjk_12;
+extern int aos_cjk_14;
+extern int aos_cjk_144;
+extern int aos_cjk_16;
+extern int aos_cjk_18;
+extern int aos_cjk_20;
+extern int aos_cjk_22;
+extern int aos_cjk_24;
+extern int aos_cjk_26;
+extern int aos_cjk_28;
+extern int aos_cjk_30;
+extern int aos_cjk_32;
+extern int aos_cjk_36;
+extern int aos_cjk_40;
+extern int aos_cjk_48;
+extern int aos_cjk_64;
+extern int aos_cjk_72;
+extern int aos_cjk_96;
+extern int aos_cjk_init;
+extern int aos_cjk_language;
 extern int aos_claude_history;
 extern int aos_claude_login_code;
 extern int aos_claude_login_url;
@@ -128,12 +152,31 @@ extern int aos_emoji_font;
 extern int aos_emoji_init;
 extern int aos_emoji_match;
 extern int aos_emoji_ready;
+extern int aos_eth_arp_ask;
+extern int aos_eth_bench;
 extern int aos_eth_boot;
+extern int aos_eth_capture_info;
+extern int aos_eth_capture_start;
+extern int aos_eth_capture_stop;
+extern int aos_eth_dhcp;
 extern int aos_eth_enable;
 extern int aos_eth_info;
+extern int aos_eth_info_read;
+extern int aos_eth_listen;
+extern int aos_eth_neighbor;
 extern int aos_eth_on_pause;
+extern int aos_eth_parse_announce;
+extern int aos_eth_pcap_header;
+extern int aos_eth_pcap_record;
 extern int aos_eth_port_free;
 extern int aos_eth_set_clock;
+extern int aos_eth_station_clear;
+extern int aos_eth_station_list;
+extern int aos_eth_station_note;
+extern int aos_eth_stations;
+extern int aos_eth_watch_get;
+extern int aos_eth_watch_note;
+extern int aos_eth_watch_reset;
 extern int aos_eth_yield;
 extern int aos_flash_call;
 extern int aos_flashop_init;
@@ -396,6 +439,9 @@ extern int aos_hal_net_ap_ip;
 extern int aos_hal_net_ap_pass;
 extern int aos_hal_net_ap_pass_mode;
 extern int aos_hal_net_ap_set_config;
+extern int aos_hal_net_ap_share;
+extern int aos_hal_net_ap_share_set;
+extern int aos_hal_net_ap_sharing;
 extern int aos_hal_net_ap_ssid;
 extern int aos_hal_net_ap_start;
 extern int aos_hal_net_ap_stop;
@@ -418,6 +464,9 @@ extern int aos_hal_net_rssi;
 extern int aos_hal_net_scan;
 extern int aos_hal_net_scan_ex;
 extern int aos_hal_net_set_credentials;
+extern int aos_hal_net_share_off;
+extern int aos_hal_net_share_on;
+extern int aos_hal_net_sharing;
 extern int aos_hal_net_ssid;
 extern int aos_hal_net_state;
 extern int aos_hal_net_sync_time;
@@ -428,6 +477,7 @@ extern int aos_hal_net_wifi_state;
 extern int aos_hal_net_wired;
 extern int aos_hal_net_wired_ip;
 extern int aos_hal_net_wired_set;
+extern int aos_hal_netif_list;
 extern int aos_hal_night_info;
 extern int aos_hal_night_sleep_enable;
 extern int aos_hal_night_sleep_enabled;
@@ -941,6 +991,7 @@ extern int aos_io_uart_set_baud;
 extern int aos_io_uart_set_format;
 extern int aos_io_uart_write;
 extern int aos_io_validate;
+extern int aos_ip4_canforward;
 extern int aos_jpeg_probe_picture;
 extern int aos_keyboard_attach;
 extern int aos_keyboard_init;
@@ -3521,12 +3572,24 @@ extern int music_cover_request;
 extern int music_cover_take;
 extern int music_folder_cover;
 extern int namelist_has;
+extern int nt_bench;
+extern int nt_bench_start;
+extern int nt_bench_stop;
 extern int nt_big_calloc;
+extern int nt_cable;
+extern int nt_cable_start;
+extern int nt_compare;
+extern int nt_compare_start;
+extern int nt_find;
+extern int nt_find_start;
+extern int nt_find_stop;
 extern int nt_guess;
 extern int nt_init;
 extern int nt_ip_str;
 extern int nt_keepalive;
 extern int nt_lock;
+extern int nt_maker;
+extern int nt_maker_ask;
 extern int nt_mdns;
 extern int nt_mdns_start;
 extern int nt_mdns_type_index;
@@ -3540,7 +3603,15 @@ extern int nt_ports_stop;
 extern int nt_scan;
 extern int nt_scan_start;
 extern int nt_scan_stop;
+extern int nt_speed;
+extern int nt_speed_start;
+extern int nt_speed_stop;
 extern int nt_unlock;
+extern int nt_wake;
+extern int nt_watch;
+extern int nt_watch_add;
+extern int nt_watch_remove;
+extern int nt_watch_run;
 extern int nt_wifi;
 extern int nt_wifi_run;
 extern int nt_wifi_scan;
@@ -3635,6 +3706,7 @@ extern int write;
 #pragma GCC diagnostic pop
 
 const struct esp_elfsym aos_symbol_table[] = {
+    ESP_ELFSYM_EXPORT(AOS_NET_TIME_EVENT),
     ESP_ELFSYM_EXPORT(NT_KNOWN_N),
     ESP_ELFSYM_EXPORT(NT_KNOWN_PORTS),
     ESP_ELFSYM_EXPORT(NT_MDNS_NTYPES),
@@ -3729,7 +3801,30 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_banner_layout),
     ESP_ELFSYM_EXPORT(aos_banner_tick),
     ESP_ELFSYM_EXPORT(aos_banner_up),
+    ESP_ELFSYM_EXPORT(aos_board_dpi_config),
+    ESP_ELFSYM_EXPORT(aos_board_panel_new),
+    ESP_ELFSYM_EXPORT(aos_board_touch_new),
     ESP_ELFSYM_EXPORT(aos_button),
+    ESP_ELFSYM_EXPORT(aos_cjk_12),
+    ESP_ELFSYM_EXPORT(aos_cjk_14),
+    ESP_ELFSYM_EXPORT(aos_cjk_144),
+    ESP_ELFSYM_EXPORT(aos_cjk_16),
+    ESP_ELFSYM_EXPORT(aos_cjk_18),
+    ESP_ELFSYM_EXPORT(aos_cjk_20),
+    ESP_ELFSYM_EXPORT(aos_cjk_22),
+    ESP_ELFSYM_EXPORT(aos_cjk_24),
+    ESP_ELFSYM_EXPORT(aos_cjk_26),
+    ESP_ELFSYM_EXPORT(aos_cjk_28),
+    ESP_ELFSYM_EXPORT(aos_cjk_30),
+    ESP_ELFSYM_EXPORT(aos_cjk_32),
+    ESP_ELFSYM_EXPORT(aos_cjk_36),
+    ESP_ELFSYM_EXPORT(aos_cjk_40),
+    ESP_ELFSYM_EXPORT(aos_cjk_48),
+    ESP_ELFSYM_EXPORT(aos_cjk_64),
+    ESP_ELFSYM_EXPORT(aos_cjk_72),
+    ESP_ELFSYM_EXPORT(aos_cjk_96),
+    ESP_ELFSYM_EXPORT(aos_cjk_init),
+    ESP_ELFSYM_EXPORT(aos_cjk_language),
     ESP_ELFSYM_EXPORT(aos_claude_history),
     ESP_ELFSYM_EXPORT(aos_claude_login_code),
     ESP_ELFSYM_EXPORT(aos_claude_login_url),
@@ -3751,12 +3846,31 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_emoji_init),
     ESP_ELFSYM_EXPORT(aos_emoji_match),
     ESP_ELFSYM_EXPORT(aos_emoji_ready),
+    ESP_ELFSYM_EXPORT(aos_eth_arp_ask),
+    ESP_ELFSYM_EXPORT(aos_eth_bench),
     ESP_ELFSYM_EXPORT(aos_eth_boot),
+    ESP_ELFSYM_EXPORT(aos_eth_capture_info),
+    ESP_ELFSYM_EXPORT(aos_eth_capture_start),
+    ESP_ELFSYM_EXPORT(aos_eth_capture_stop),
+    ESP_ELFSYM_EXPORT(aos_eth_dhcp),
     ESP_ELFSYM_EXPORT(aos_eth_enable),
     ESP_ELFSYM_EXPORT(aos_eth_info),
+    ESP_ELFSYM_EXPORT(aos_eth_info_read),
+    ESP_ELFSYM_EXPORT(aos_eth_listen),
+    ESP_ELFSYM_EXPORT(aos_eth_neighbor),
     ESP_ELFSYM_EXPORT(aos_eth_on_pause),
+    ESP_ELFSYM_EXPORT(aos_eth_parse_announce),
+    ESP_ELFSYM_EXPORT(aos_eth_pcap_header),
+    ESP_ELFSYM_EXPORT(aos_eth_pcap_record),
     ESP_ELFSYM_EXPORT(aos_eth_port_free),
     ESP_ELFSYM_EXPORT(aos_eth_set_clock),
+    ESP_ELFSYM_EXPORT(aos_eth_station_clear),
+    ESP_ELFSYM_EXPORT(aos_eth_station_list),
+    ESP_ELFSYM_EXPORT(aos_eth_station_note),
+    ESP_ELFSYM_EXPORT(aos_eth_stations),
+    ESP_ELFSYM_EXPORT(aos_eth_watch_get),
+    ESP_ELFSYM_EXPORT(aos_eth_watch_note),
+    ESP_ELFSYM_EXPORT(aos_eth_watch_reset),
     ESP_ELFSYM_EXPORT(aos_eth_yield),
     ESP_ELFSYM_EXPORT(aos_flash_call),
     ESP_ELFSYM_EXPORT(aos_flashop_init),
@@ -4019,6 +4133,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_net_ap_pass),
     ESP_ELFSYM_EXPORT(aos_hal_net_ap_pass_mode),
     ESP_ELFSYM_EXPORT(aos_hal_net_ap_set_config),
+    ESP_ELFSYM_EXPORT(aos_hal_net_ap_share),
+    ESP_ELFSYM_EXPORT(aos_hal_net_ap_share_set),
+    ESP_ELFSYM_EXPORT(aos_hal_net_ap_sharing),
     ESP_ELFSYM_EXPORT(aos_hal_net_ap_ssid),
     ESP_ELFSYM_EXPORT(aos_hal_net_ap_start),
     ESP_ELFSYM_EXPORT(aos_hal_net_ap_stop),
@@ -4041,6 +4158,9 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_net_scan),
     ESP_ELFSYM_EXPORT(aos_hal_net_scan_ex),
     ESP_ELFSYM_EXPORT(aos_hal_net_set_credentials),
+    ESP_ELFSYM_EXPORT(aos_hal_net_share_off),
+    ESP_ELFSYM_EXPORT(aos_hal_net_share_on),
+    ESP_ELFSYM_EXPORT(aos_hal_net_sharing),
     ESP_ELFSYM_EXPORT(aos_hal_net_ssid),
     ESP_ELFSYM_EXPORT(aos_hal_net_state),
     ESP_ELFSYM_EXPORT(aos_hal_net_sync_time),
@@ -4051,6 +4171,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_hal_net_wired),
     ESP_ELFSYM_EXPORT(aos_hal_net_wired_ip),
     ESP_ELFSYM_EXPORT(aos_hal_net_wired_set),
+    ESP_ELFSYM_EXPORT(aos_hal_netif_list),
     ESP_ELFSYM_EXPORT(aos_hal_night_info),
     ESP_ELFSYM_EXPORT(aos_hal_night_sleep_enable),
     ESP_ELFSYM_EXPORT(aos_hal_night_sleep_enabled),
@@ -4564,6 +4685,7 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(aos_io_uart_set_format),
     ESP_ELFSYM_EXPORT(aos_io_uart_write),
     ESP_ELFSYM_EXPORT(aos_io_validate),
+    ESP_ELFSYM_EXPORT(aos_ip4_canforward),
     ESP_ELFSYM_EXPORT(aos_jpeg_probe_picture),
     ESP_ELFSYM_EXPORT(aos_keyboard_attach),
     ESP_ELFSYM_EXPORT(aos_keyboard_init),
@@ -7144,12 +7266,24 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(music_cover_take),
     ESP_ELFSYM_EXPORT(music_folder_cover),
     ESP_ELFSYM_EXPORT(namelist_has),
+    ESP_ELFSYM_EXPORT(nt_bench),
+    ESP_ELFSYM_EXPORT(nt_bench_start),
+    ESP_ELFSYM_EXPORT(nt_bench_stop),
     ESP_ELFSYM_EXPORT(nt_big_calloc),
+    ESP_ELFSYM_EXPORT(nt_cable),
+    ESP_ELFSYM_EXPORT(nt_cable_start),
+    ESP_ELFSYM_EXPORT(nt_compare),
+    ESP_ELFSYM_EXPORT(nt_compare_start),
+    ESP_ELFSYM_EXPORT(nt_find),
+    ESP_ELFSYM_EXPORT(nt_find_start),
+    ESP_ELFSYM_EXPORT(nt_find_stop),
     ESP_ELFSYM_EXPORT(nt_guess),
     ESP_ELFSYM_EXPORT(nt_init),
     ESP_ELFSYM_EXPORT(nt_ip_str),
     ESP_ELFSYM_EXPORT(nt_keepalive),
     ESP_ELFSYM_EXPORT(nt_lock),
+    ESP_ELFSYM_EXPORT(nt_maker),
+    ESP_ELFSYM_EXPORT(nt_maker_ask),
     ESP_ELFSYM_EXPORT(nt_mdns),
     ESP_ELFSYM_EXPORT(nt_mdns_start),
     ESP_ELFSYM_EXPORT(nt_mdns_type_index),
@@ -7163,7 +7297,15 @@ const struct esp_elfsym aos_symbol_table[] = {
     ESP_ELFSYM_EXPORT(nt_scan),
     ESP_ELFSYM_EXPORT(nt_scan_start),
     ESP_ELFSYM_EXPORT(nt_scan_stop),
+    ESP_ELFSYM_EXPORT(nt_speed),
+    ESP_ELFSYM_EXPORT(nt_speed_start),
+    ESP_ELFSYM_EXPORT(nt_speed_stop),
     ESP_ELFSYM_EXPORT(nt_unlock),
+    ESP_ELFSYM_EXPORT(nt_wake),
+    ESP_ELFSYM_EXPORT(nt_watch),
+    ESP_ELFSYM_EXPORT(nt_watch_add),
+    ESP_ELFSYM_EXPORT(nt_watch_remove),
+    ESP_ELFSYM_EXPORT(nt_watch_run),
     ESP_ELFSYM_EXPORT(nt_wifi),
     ESP_ELFSYM_EXPORT(nt_wifi_run),
     ESP_ELFSYM_EXPORT(nt_wifi_scan),

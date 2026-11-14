@@ -47,6 +47,32 @@ depends on where it came in (`components/aos_ui/aos_access.c`):
   switch, "La red por cable: de confianza", in the same page and off until
   someone turns it on at the board. The page shows it only when Ethernet is
   switched on.
+- **The bench network follows the wire's switch.** Red, Equipo can make the
+  wire a network for a device plugged straight into it, with an address
+  set by hand or with the board giving addresses out (`aos_eth_bench`).
+  Whatever comes in by that address is the wire's, and is trusted only
+  with "La red por cable: de confianza" on; off, that device finds the
+  portal and SSH closed, as on any network that is not home.
+- **The board does not pass traffic between its networks,** the house's
+  Wi-Fi, the wire, the USB cable and its own access point, with one
+  exception that is switched on at the board: Red, Equipo, "Compartir el
+  Wi-Fi" gives a device plugged into the bench network a way out through
+  the board's Wi-Fi (NAT). While it is on, that device reaches the
+  internet and the other devices of the house's network, as anything on
+  that Wi-Fi does. The firmware is built able to forward (it has to be,
+  for this), and a hook inside the network stack refuses every packet
+  that is not part of that sharing (`aos_ip4_canforward`). A restart
+  switches it off.
+- **The same, the other way round, for the board's own network.**
+  Settings, Redes, Wi-Fi, "Compartir la salida" lets whoever joins the
+  board's access point go out by where the board goes out, the wire or the
+  house's Wi-Fi. It is off until someone turns it on at the board, it is
+  not in the portal, and it stays on across restarts, as the access point
+  does. With it on, the access point's password is all that stands
+  between a stranger and the networks the board is on: they reach those
+  networks' devices as anything plugged in there does. The portal's own
+  rules do not change with it: a request from the access point is still
+  judged as one from the access point.
 - **Each connection is judged by the interface it came in by.** With the
   Wi-Fi on a trusted network and the wire on another, a request that comes
   in by the wire is the wire's, whatever the Wi-Fi is on, and the other way
@@ -179,6 +205,10 @@ host key is Ed25519, kept in preferences like the HTTPS authority's.
   quantum computer. `docs/SSH.md` says how to quiet the warning.
 - **The card is readable by whoever holds it.** The cameras' passwords in
   `/cameras.txt`, for one, are in clear.
+- **Red's speed measure is a raw socket too** (TCP 5001, only while
+  "Medir velocidad" is on and Red is open): it follows the bridge's rule
+  below, a stream is kept only where the portal opens without a password,
+  and it only counts and throws away what it is sent.
 - **The Programador's bridge is a raw socket** (TCP 4000 and 4001, only
   while it is open, which is done on the board or from the portal): a
   socket cannot log in, so a connection is kept only where the portal

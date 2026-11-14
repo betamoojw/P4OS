@@ -41,17 +41,13 @@ ETH = (W - ETH_PIN1 - 6.35, 88.76)                      # the module's edge on t
 ETH_BOX = (ETH[0] + 6.35 + ETH_PIN1 - ETH_LEN, ETH[1] - ETH_WID / 2, ETH[0] + 6.35 + ETH_PIN1, ETH[1] + ETH_WID / 2)
 LOW = ("R", "U")                                        # what may go under it, by its reference: a TO-92 "Q" may not
 
-SIDE_X = 14.8                           # the column of small headers beside the 2x20
-POWER_ROW = PIN1[1] - 2.54 * 8          # the row of the header's pin 18, +3V3
-SPARE_ROW = PIN1[1] - 2.54 * 14         # the row of pin 30, GPIO35
-
 # ref -> (x, y, degrees): the middle of the part, mm from the top left corner. Laid out on the
 # larger of each part's two packages, so both variants share it; build() refuses an overlap.
 AT = {
     # i2c, down the left edge above the header, and what serves it
     "J5": (3, 12.2, 0), "J6": (3, 23.6, 0), "J7": (3, 35, 0), "J8": (3, 46.4, 0),
     "R4": (17.5, 9, 0), "R5": (17.5, 12.5, 0), "JP2": (26.5, 10.6, 0),
-    "Q3": (13.5, 20, 0), "Q4": (13.5, 26.8, 0), "R6": (24, 20, 0), "R7": (24, 26, 0),
+    "Q3": (13.5, 19.6, 0), "Q4": (13.5, 26.0, 0), "R6": (24, 20, 0), "R7": (24, 26, 0),
     "JP3": (15, 44, 90), "JP4": (15, 48.5, 90),
     # infrared, looking out of the top edge
     "U3": (32, 4, 180), "D1": (42, 4, 0), "R13": (36, 9.5, 0), "C8": (34.5, 16.5, 0), "JP13": (42.6, 15.5, 90),
@@ -60,8 +56,12 @@ AT = {
     # 1-wire and the strip, on the right edge
     "J15": (58.5, 38, 90), "R17": (43, 29, 0), "JP15": (44, 34.8, 90),
     "J16": (58.5, 58, 90), "R18": (45, 50.8, 0), "C9": (45.5, 44.5, 0),
-    # the two bulk capacitors that found no room beside what they feed (a draft)
-    "C1": (22.5, 33.5, 0), "C11": (32.4, 36, 0),
+    # two bulk capacitors beside the header, in the band where the routing trial found the tracks
+    # crowd: two holes each there, where three headers had twelve. The 5 V one is next to its switch
+    # (Q1), the 3.3 V one level with the header's own 3.3 V pin 18.
+    "C1": (16.2, 98.5, 0), "C11": (16.2, 82.5, 0),
+    # 5 V, 3.3 V and the GPIO nothing else carries: three headers above the 2x20, out of that band
+    "J20": (14.0, 34.2, 0), "J21": (23.0, 34.2, 0), "J22": (32.0, 34.2, 0),
     # the ports, in the middle
     "J14": (27, 47.5, 90), "JP16": (36.5, 47.5, 0),
     "J9": (23, 64.9, 0), "J13": (30.3, 63.6, 0), "J11": (37.6, 67.4, 0), "J12": (44.9, 64.9, 0),
@@ -76,11 +76,8 @@ AT = {
     "U4": (40.5, 84.5, 0), "U5": (42.5, 100.3, 0),
     "F1": (57.5, 74.3, 0), "F2": (57.5, 69.7, 0),       # the two fuses, between the terminal and the module
     "C3": (13, 111, 0), "C4": (60.5, 106.1, 90),
-    "JP1": (33.5, 26.5, 90), "C2": (32.6, 81.4, 0),
+    "JP1": (37.5, 21.8, 90), "C2": (32.6, 81.4, 0),
     "J3": (27.5, 111.2, 0), "J4": (47.5, 111.2, 0),
-    # beside the header, in one column: 5 V, 3.3 V and the GPIO nothing else carries. POWER_ROW
-    # puts a 3.3 V pin level with the header's pin 18, and the GPIO's with pin 30, for a straight track
-    "J20": (SIDE_X, 99.24, 0), "J21": (SIDE_X, POWER_ROW - 1.27, 0), "J22": (SIDE_X, SPARE_ROW + 1.27, 0),
 }
 # the Qwiic socket, its mouth to the left edge; and three parts whose smaller package leaves its
 # reference or a pad under a neighbour's lettering
@@ -236,7 +233,7 @@ def holes_svg(board, path, grow=0.0):
 
 # The tracks' widths, mm. Between two pads of a 2.54 mm header there are 0.84 mm: a 0.4 mm track
 # passes with 0.22 mm to each side, over the 0.2 mm the default rules ask for.
-SIGNAL, POWER = 0.3, 0.4
+SIGNAL, POWER = 0.25, 0.4
 SUPPLY = ("GND", "+5V", "+3V3")
 
 
@@ -252,26 +249,41 @@ def track(board, net, layer, points, width):
 
 
 def route(board, net):
-    """The tracks a script can lay without choosing anything: the header's pins that go to the small
-    headers beside it, and a ground plane on each face. Returns how many tracks.
+    """What a script can lay without choosing anything, around the 2x20 header. Returns how many tracks.
 
-    A pin of the header's outer row has the inner row's pin in the way, so its track goes round
-    through the gap to the next row."""
-    pads = {r: {p.GetNumber(): xy(p.GetPosition()) for p in board.FindFootprintByReference(r).Pads()}
-            for r in ("J1", "J21", "J22")}
-    half = 1.27
-    # +3V3: pin 18 straight across on the back to the header's nearer 3.3 V pin, and on to the other
-    (x1, y1), (x2, y2), (x3, y3) = pads["J1"]["18"], pads["J21"]["3"], pads["J21"]["2"]
-    track(board, net("+3V3"), pcbnew.B_Cu, [(x1, y1), (x2, y2), (x3, y3)], 0.8)
-    # GPIO35: pin 30 straight across on the front
-    track(board, net("GPIO35_BOOT"), pcbnew.F_Cu, [pads["J1"]["30"], pads["J22"]["2"]], SIGNAL)
-    # GPIO38 and GPIO37: pins 9 and 7, each round its neighbour and up the lane between the header's
-    # lettering and the column; the lower pin takes the outer lane, so the two never cross
-    for pin, to, lane_x in (("9", "3", 9.6), ("7", "4", 10.8)):
-        (x1, y1), (x2, y2) = pads["J1"][pin], pads["J22"][to]
-        track(board, net(gen.HEADER[int(pin)]), pcbnew.F_Cu,
-              [(x1, y1), (x1 + half, y1 - half), (lane_x - half, y1 - half), (lane_x, y1 - 2 * half),
-               (lane_x, y2 + half), (lane_x + half, y2), (x2, y2)], SIGNAL)
+    A trial of the routing (autoroute.py) showed the header is where the board is tight: a track of
+    another net through one of its gaps shuts a pin of the outer row in, and tracks on the back
+    there cut its ground pins off the plane. So:
+
+    - every pin that is not ground leaves on the front to a column just right of the header: the
+      inner row straight, the outer row through the gap above its own row;
+    - under the header the back takes no track and no via: the ground pins reach the back plane by
+      the strip each side of the two rows;
+    - a ground plane on each face."""
+    pads = {p.GetNumber(): xy(p.GetPosition()) for p in board.FindFootprintByReference("J1").Pads()}
+    out_x = pads["2"][0] + 1.905        # six steps of the router's grid, which starts on pin 1
+    for n in range(1, 41):
+        name = gen.HEADER[n]
+        if name == "GND":
+            continue
+        x, y = pads[str(n)]
+        points = [(x, y), (x + 1.27, y - 1.27), (out_x, y - 1.27)] if n % 2 else [(x, y), (out_x, y)]
+        track(board, net(name), pcbnew.F_Cu, points, POWER if name in SUPPLY else SIGNAL)
+    area = pcbnew.ZONE(board)
+    area.SetIsRuleArea(True)
+    area.SetZoneName("back under the header: ground only")
+    area.SetLayer(pcbnew.B_Cu)
+    area.SetDoNotAllowTracks(True)
+    area.SetDoNotAllowVias(True)
+    area.SetDoNotAllowPads(False)
+    area.SetDoNotAllowFootprints(False)
+    area.SetDoNotAllowZoneFills(False)
+    outline = area.Outline()
+    outline.NewOutline()
+    x1, y0, y1 = pads["2"][0] + 2.4, pads["39"][1] - 2.4, pads["1"][1] + 2.4
+    for x, y in ((0, y0), (x1, y0), (x1, y1), (0, y1)):
+        outline.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+    board.Add(area)
     for layer in (pcbnew.F_Cu, pcbnew.B_Cu):
         zone = pcbnew.ZONE(board)
         zone.SetLayer(layer)
@@ -285,7 +297,7 @@ def route(board, net):
         zone.SetMinThickness(pcbnew.FromMM(0.25))
         zone.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL)
         zone.SetThermalReliefGap(pcbnew.FromMM(0.3))
-        zone.SetThermalReliefSpokeWidth(pcbnew.FromMM(0.5))
+        zone.SetThermalReliefSpokeWidth(pcbnew.FromMM(0.8))    # four of them carry a ground pin's current
         zone.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
         board.Add(zone)                     # left unfilled: KiCad fills it on opening (B), and drc() on a copy
     return len(board.GetTracks())
@@ -394,6 +406,8 @@ def build(variant):
             for k, line in enumerate(reversed(NAME.get(part.ref, []))):
                 if cx < 6:                  # against the left edge: its name stands beside its pins' names
                     text(board, line, 9.3, cy, 90, 0.9)
+                elif part.ref in ("J20", "J21", "J22"):     # no room above them: the name stands to their left
+                    text(board, line, pcbnew.ToMM(bb.GetLeft()) - 0.9, cy, 90, 0.9)
                 else:
                     text(board, line, cx, top - 0.9 - 1.3 * k, 0, 0.9)
             if part.ref in BRIDGE:

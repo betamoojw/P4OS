@@ -1557,6 +1557,36 @@ bool aos_hal_net_wired(void);
 aos_net_state_t aos_hal_net_wifi_state(void);
 const char *aos_hal_net_wifi_ip(void);
 const char *aos_hal_net_wired_ip(void);
+/* Every network interface the board has right now, for the tools that want
+ * more than "is there a network": the Wi-Fi, the wire, the USB cable, the
+ * board's own access point. Returns how many it wrote, at most max. */
+typedef struct {
+    char    name[8];            /* as the stack calls it: "st1", "en2" */
+    char    kind[12];           /* "wifi", "ethernet", "usb", "ap"; else the stack's key for it */
+    bool    up;                 /* it has a link and an address */
+    bool    way_out;            /* the one the board goes out by: the default route */
+    char    ip[16], mask[16], gw[16];
+    uint8_t mac[6];
+} aos_netif_t;
+int aos_hal_netif_list(aos_netif_t *out, int max);
+/* Sharing the board's way out with the network on one interface: what comes
+ * from that network goes out by whatever the board itself goes out by, its
+ * address translated (NAT), and its DHCP server offers the board's own DNS
+ * servers. 'netif' is the platform's handle of an interface that gives
+ * addresses out (an esp_netif_t). One at a time; off, the board forwards
+ * nothing between its networks. false: not on this platform, or it failed. */
+bool aos_hal_net_share_on(void *netif);
+void aos_hal_net_share_off(void);
+bool aos_hal_net_sharing(void);
+/* The same for the board's own Wi-Fi network (aos_hal_net_ap_start): whoever
+ * joins it goes out by where the board goes out, the wire or the Wi-Fi it is
+ * joined to. A switch that is kept ("ap_share"), off until someone turns it
+ * on, and applied while the access point is up. A network shared with
+ * aos_hal_net_share_on() goes first: there is one translation at a time, and
+ * the own network gets its turn back when that one ends. */
+void aos_hal_net_ap_share_set(bool on);
+bool aos_hal_net_ap_share(void);        /* the switch */
+bool aos_hal_net_ap_sharing(void);      /* doing it right now */
 /* mDNS on the wire: quiet on a wired network that is not trusted, as
  * aos_hal_net_mdns_visible() does on a Wi-Fi that is not home. */
 void aos_hal_net_mdns_visible_wired(bool on);

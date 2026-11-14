@@ -33,6 +33,15 @@ boards within the same silicon profile. Match the app package to the firmware:
 On Windows, use `python tools/build_apps.py --profile rev3_x` in an activated
 ESP-IDF terminal. Build the CAS engine first as described in its README.
 
+The Ethernet status API preserves existing ABI 101 binaries: the exported
+`aos_eth_info` entry point writes only the original 204-byte structure prefix.
+Current headers provide an inline `aos_eth_info()` that calls
+`aos_eth_info_read(out, sizeof *out)` for the expanded status, including mode
+and traffic counters. Use the header instead of declaring this function by
+hand. The sized API limits the copy to the caller's buffer and zeroes any
+unknown trailing fields; it is also exported for newly compiled apps. An
+older firmware without that symbol rejects such an app at load time.
+
 To install, copy `apps/*/build/$PROFILE/*.so` into `/apps` on the card (the portal's
 `PUT /api/fs/put?path=/apps/<name>.so`, or the card in the computer) and
 restart: the card is scanned at boot.

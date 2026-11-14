@@ -30,6 +30,14 @@ need `CONFIG_LV_USE_FONT_COMPRESSED=y`: a build directory from before that
 draws big text as noise. Delete the directory's `sdkconfig` (or set the line
 by hand) once.
 
+The wired-network tools also require `CONFIG_ETH_USE_SPI_ETHERNET=y` and
+`CONFIG_ETH_SPI_ETHERNET_W5500=y`; connection sharing requires
+`CONFIG_LWIP_IP_FORWARD=y` and `CONFIG_LWIP_IPV4_NAPT=y`. Set these in older
+build directories before reconfiguring: changed defaults do not override
+their cached values. The project installs an lwIP forwarding hook, so
+compiling NAT support does not enable sharing by itself; sharing remains
+off until enabled on the device.
+
 ## Flashing
 
     tools/build_fw.sh rev1_3 -p /dev/cu.wchusbserial<id> -b 460800 app-flash

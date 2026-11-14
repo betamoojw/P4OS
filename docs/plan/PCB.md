@@ -52,7 +52,7 @@ dibujar el esquemático: nada de esto se armó ni se midió.
 
 | Bloque | GPIO (pin) | Conector | Notas |
 |---|---|---|---|
-| Header | todos | tira de pines 2×20 de 2,54 hacia abajo; al lado, tres tiras de 4: 5 V conmutados y masa, 3,3 V y masa, y GPIO 35, 38 y 37 con masa | El de la placa es un zócalo hembra, así que la tira va del lado de abajo y espejada. No hay zócalo de paso con los cuarenta pines (sacado el 2026-11-11): cada pin sale por su conector, y los tres que no tenían ninguno van a la tira de GPIO. La serigrafía nombra los cuarenta pines al lado de sus soldaduras |
+| Header | todos | tira de pines 2×20 de 2,54 hacia abajo; arriba de ella, tres tiras de 4: 5 V conmutados y masa, 3,3 V y masa, y GPIO 35, 38 y 37 con masa | El de la placa es un zócalo hembra, así que la tira va del lado de abajo y espejada. No hay zócalo de paso con los cuarenta pines (sacado el 2026-11-11): cada pin sale por su conector, y los tres que no tenían ninguno van a la tira de GPIO. La serigrafía nombra los cuarenta pines al lado de sus soldaduras |
 | 5 V conmutado | pines 1 y 3 | — | Llave habilitada por 3V3; un fusible rearmable por USB |
 | USB host "2.0" | USBD_N/P (25, 27) | USB-A hembra | High Speed: par diferencial de 90 Ω, corto y sin vías; protección ESD |
 | USB host "1.1" | 24, 25 (21, 23) | USB-A hembra | Full Speed |
@@ -179,7 +179,9 @@ Falta saber, y el modelo no lo dice:
    (`fit-test-th-print.svg`): los cuatro agujeros y el header calzan en la
    P4. Los zócalos del W5500 estaban 5 mm demasiado afuera y se corrieron
    (`ETH_PIN1` en `place.py`, 7,5 mm del borde del módulo a la primera
-   pata); falta volver a probarlos con el módulo puesto.
+   pata). **Vueltos a probar esa noche con el módulo puesto en una segunda
+   placa de plástico: entra, el RJ45 sale por el borde y la placa del
+   módulo no sobresale.**
 2. Decidir si el Ethernet de la PCBA va integrado o en zócalo.
 3. El esquemático: la casera está empezada (`hw/aux-board/gen.py`); falta
    revisarla pieza por pieza, el zócalo del módulo W5500 cuando se sepa cuál
@@ -191,3 +193,19 @@ Falta saber, y el modelo no lo dice:
 5. Trazado, DRC, y el pedido. El trazado a mano empieza con la ubicación
    congelada: `place.py` arma la placa de cero cada vez y pisa lo dibujado
    en KiCad.
+   **Prueba de trazado, 2026-11-12** (`hw/aux-board/autoroute.py`, un
+   ruteador propio que corre en medio minuto sobre la placa generada): las
+   dos variantes se rutean enteras en dos capas, sin errores de separación.
+   Lo que mostró: el header 2×20 es el cuello de botella (la fila de afuera
+   sólo sale por los huecos de la de adentro), y por eso `place.py` ahora
+   saca cada pin a una columna al lado y deja la cara de atrás bajo el
+   header sólo para masa; la masa hay que cuidarla (en la casera cuatro
+   pads quedaron aislados de los planos); los dos pares USB hay que
+   trazarlos a mano, primero y sin vías; y la franja entre el header y las
+   tiras del medio es donde se amontona todo. Las placas de prueba
+   (`trial-*.kicad_pcb`) no van a git ni a fábrica. **Por eso las tres
+   tiras chicas (5 V, 3,3 V, GPIO) se mudaron ese día arriba del header**,
+   entre los I2C y el SPI, y en la franja quedaron dos capacitores; con eso
+   el ruteador unió todo al primer intento. **Alimentación y masa no van
+   finas** (pedido del usuario): 0,8 mm como mínimo hasta esas tiras y
+   donde entre, 0,5 mm sólo en un paso que no dé para más.

@@ -3119,3 +3119,172 @@ DMX	DMX
 Equipos	设备
 Luces	灯光
 SSH	SSH
+Hosts	主机
+Cable	有线
+Equipo	设备
+Vigía	设备监测
+Vigilar	加入监测
+%u días	%u 天
+Ethernet está apagado: se prende en Ajustes, Redes	以太网已关闭，请在“设置 → 网络”中开启
+En pausa: %s está usando el puerto SPI	已暂停：%s 正在使用 SPI 端口
+El módulo no arrancó	模块启动失败
+Sin cable, o con nadie del otro lado	网线未连接，或另一端没有设备
+%d Mbit/s, dúplex completo	%d Mbit/s，全双工
+%d Mbit/s, medio dúplex	%d Mbit/s，半双工
+Cable USB	USB 线缆
+Midiendo…	正在测量…
+Comparar	对比
+esperando su turno…	正在等待…
+la puerta de enlace no respondió a %d pings	网关未响应 %d 次 ping
+%s ms (%s a %s), perdidos %d de %d	%s 毫秒（%s 至 %s），丢失 %d / %d 包
+Para compararlos hace falta que el cable y el Wi-Fi estén los dos arriba, cada uno con su dirección	对比前，有线网络和 Wi-Fi 都需要连接并获取地址
+Diez pings a la puerta de enlace por el cable y diez por el Wi-Fi, desde el mismo lugar	从当前位置分别通过有线网络和 Wi-Fi，向网关各发送十次 ping
+Dejar de medir	停止测速
+Medir velocidad	测量速度
+Llegando por %s: %s Mbit/s	通过 %s 接收：%s Mbit/s
+Se rechazó a %s: no viene de una red donde el portal abre sin contraseña	已拒绝 %s：其来源网络不允许免密码访问网页管理
+Esperando en el puerto 5001. En la computadora, con iperf 2: iperf -c %s mide el cable, iperf -c %s el Wi-Fi	正在端口 5001 等待。在电脑上使用 iperf 2：iperf -c %s 测量有线网络，iperf -c %s 测量 Wi-Fi
+Cuenta lo que una computadora le manda a la placa por cada conexión: la velocidad del camino entre las dos. La computadora usa iperf 2 (no iperf3)	统计电脑通过各个连接向开发板发送的数据，测量两者之间的传输速度。电脑需使用 iperf 2（不支持 iperf3）
+%s Mbit/s: %s en %u s	%s Mbit/s：%s，用时 %u 秒
+La captura no empezó	抓包启动失败
+Detener la captura	停止抓包
+Capturar a la tarjeta	抓包并保存到存储卡
+Capturando en %s: %u tramas, %s, %s	正在保存到 %s：%u 帧，%s，%s
+Guardado en la carpeta de barridos como %s: %u tramas, %s	已保存到扫描记录目录，文件为 %s：%u 帧，%s
+Guarda en la tarjeta todo lo que llega a esta boca, para abrirlo con Wireshark. En un switch es lo que va para todos y para la placa; en un puerto espejo, todo.	将此端口收到的所有数据保存到存储卡，可用 Wireshark 打开。普通交换机端口只能收到广播和发给开发板的数据；镜像端口可收到被镜像的全部流量。
+%u; %u por segundo ahora, %u en el peor	%u；当前每秒 %u，峰值每秒 %u
+Hay %d servidores DHCP contestando: %s y %s. En una red tiene que haber uno solo	有 %d 个 DHCP 服务器响应：%s 和 %s。此网络应只保留一个
+La dirección %s la reclaman dos equipos: %02X:%02X:%02X:%02X:%02X:%02X y %02X:%02X:%02X:%02X:%02X:%02X	两个设备声明使用地址 %s：%02X:%02X:%02X:%02X:%02X:%02X 和 %02X:%02X:%02X:%02X:%02X:%02X
+Tormenta de difusión: cientos de tramas por segundo para todos, durante varios segundos	广播风暴：连续数秒内，每秒出现数百个广播帧
+Se perdieron tramas: llegaron más rápido de lo que la tarjeta las toma	有帧丢失：接收速度超过了存储卡的写入速度
+Nada raro hasta ahora: un solo servidor DHCP o ninguno, ninguna dirección repetida, sin tormenta	暂未发现异常：至多一个 DHCP 服务器，无重复地址，无广播风暴
+sin dirección	无地址
+salida	网络出口
+Ninguna interfaz de red arriba	没有已启用的网络接口
+esperando al DHCP…	正在等待 DHCP…
+%s, dada hace %s	%s，获取于 %s 前
+Sin enlace no hay a quién escuchar	链路未连接，无法监听
+Se anunció por %s hace %s	通过 %s 发布通告，距今 %s
+Escuchando el anuncio del switch… %u s. Un switch gestionable lo manda cada 30 s (LLDP) o cada 60 (CDP)	正在监听交换机通告… %u 秒。可管理交换机通常每 30 秒发送 LLDP，每 60 秒发送 CDP
+Nada en %u s: este switch no se anuncia. No es gestionable, o tiene LLDP apagado	%u 秒内未收到通告：此交换机可能不支持管理，或已关闭 LLDP
+la boca da alimentación	端口提供供电
+la boca no da alimentación	端口不提供供电
+Probar la salida	测试网络出口
+probando…	正在测试…
+responde en %s ms	%s 毫秒内响应
+no responde al ping	未响应 ping
+no hay puerta de enlace	没有网关
+%s resuelve en %u ms	%s 解析用时 %u 毫秒
+no resuelve ninguno de los tres nombres de prueba	三个测试域名均无法解析
+%s responde en %s ms	%s 在 %s 毫秒内响应
+%s no responde	%s 未响应
+La boca de red a la que está enchufado el Ethernet	以太网所连接的网络端口
+Servidor DHCP	DHCP 服务器
+Concesión	租约
+SALIDA	网络出口
+Nombres	域名解析
+CABLE CONTRA WI-FI	有线网络与 WI-FI 对比
+Por el cable	通过有线网络
+Por el Wi-Fi	通过 Wi-Fi
+Boca	端口
+Descripción	描述
+Gestión	管理
+INTERFACES	网络接口
+TRÁFICO	流量
+Para todos	广播
+Por protocolo	按协议
+Simulador: el switch y las respuestas de la prueba son de ejemplo.	模拟器：交换机信息和测试响应均为示例。
+otro tráfico	其他流量
+La placa está en la red del equipo, como %s	开发板已加入设备所在网络，地址为 %s
+Red de banco: la placa es %s y reparte direcciones	测试网络：开发板地址为 %s，并分配地址
+Comparte el Wi-Fi: la placa es %s, reparte direcciones y da salida a internet	正在共享 Wi-Fi：开发板地址为 %s，并提供地址分配和互联网出口
+El cable es un cliente más de la red: lo normal	有线接口作为普通网络客户端运行
+El Ethernet no arrancó de esa forma	以太网未能以此模式启动
+Apagar los servicios	关闭服务
+Prender los servicios	开启服务
+Atienden en %s, sólo por el cable	正在 %s 提供服务，仅限有线接口
+Apagados. Le dan archivos y la hora a un equipo y reciben su registro, sólo por el cable	已关闭。可向设备提供文件和时间，并接收日志，仅限有线接口
+dando %s: %d %%	正在传送 %s：%d %%
+%u dados, %u fallidos; el último pedido: %s	成功 %u 次，失败 %u 次；最近请求的文件：%s
+da los archivos de la carpeta banco de la tarjeta	提供存储卡 banco 文件夹中的文件
+la placa no tiene la hora puesta: avisa que no la sabe	开发板时钟未设置，将报告时间未知
+%u respuestas	%u 次响应
+%u líneas	%u 行
+La placa no está en ningún Wi-Fi: no hay conexión que compartir	开发板未连接 Wi-Fi，无法共享连接
+Ya está en la lista del vigía, o la lista está llena	设备已在监测列表中，或列表已满
+Todavía no se sabe su dirección	尚不知道其地址
+ARP: dijo qué dirección tiene, o preguntó por otra	ARP：声明自身地址，或查询其他地址
+mDNS: se anuncia o busca a otros por nombres .local	mDNS：通过 .local 名称发布或查找设备
+SSDP: se anuncia por UPnP, como los routers, las teles y muchas cámaras	SSDP：通过 UPnP 发布设备信息，常见于路由器、电视和摄像头
+NetBIOS: nombres de red de Windows	NetBIOS：Windows 网络名称
+LLMNR: busca nombres en la red local, como hace Windows	LLMNR：在本地网络中查询名称，Windows 等系统会使用
+WS-Discovery: como se anuncian las cámaras ONVIF y las impresoras	WS-Discovery：ONVIF 摄像头和打印机用于发布设备信息
+LLDP, CDP o spanning tree: lo que dicen los switches	LLDP、CDP 或生成树：交换机发送的信息
+IPv6: también habla IPv6	IPv6：也支持 IPv6 通信
+Otro tráfico dirigido a todos	其他广播流量
+DHCP: pidió una dirección, y quería la %s	DHCP：请求分配地址，期望地址为 %s
+DHCP: pidió una dirección	DHCP：请求分配地址
+Su descripción UPnP está en %s	UPnP 描述地址为 %s
+Qué puertos tiene abiertos. La placa tiene que poder llegarle: en la misma red, o después de ponerse en la suya.	检查设备开放的端口。开发板必须能够访问设备：处于同一网络，或先加入设备所在网络。
+Ya no está en la lista	已不在列表中
+sin dirección todavía	尚无地址
+ (privada: la eligió el equipo, no su fabricante)	（私有地址：由设备自行选择，并非厂商分配）
+no, o todavía no se le preguntó	没有，或尚未查询
+hace %s	%s 前
+%u tramas en %s	%u 帧，用时 %s
+no está en el registro	登记表中未找到
+para verlo, poné oui.txt (el registro de la IEEE) en /redes de la tarjeta	要查看厂商，请将 oui.txt（IEEE 登记表）放入存储卡的 /redes 目录
+Volver a lo normal	恢复普通模式
+Ponerme en su red	加入设备网络
+La placa toma una dirección al lado de la suya en el cable, para llegarle: ping, y las apps que hablan con equipos. Mientras tanto el cable no es la salida de la placa, sigue el Wi-Fi. Se deshace acá o reiniciando.	开发板会在有线接口上设置与设备同网段的地址，以便 ping 或通过应用访问设备。此时有线接口不作为开发板的网络出口，仍由 Wi-Fi 提供出口。可在此处恢复，也可重启恢复。
+Está en la misma red que el cable de la placa: se le llega sin cambiar nada.	设备与开发板有线接口处于同一网段，可直接访问。
+Todavía no dijo qué dirección tiene. Buscalo en las redes de fábrica.	设备尚未声明地址，请尝试搜索出厂默认网段。
+Dice ser	声明的身份
+Contestó al ARP	ARP 响应
+Se lo oyó	最近收到数据
+En total	总计
+ACCIONES	操作
+LO QUE DIJO	设备通告
+Todavía no habló nadie. Enchufá el equipo directo al Ethernet de la placa y prendelo: lo que dice al arrancar aparece acá. Si no dice nada, buscalo en las redes de fábrica.	尚未收到设备数据。请将设备直接连接到开发板的以太网接口并开机，启动时发送的信息会显示在此处。若仍无数据，请搜索出厂默认网段。
+contestó	已响应
+Se lo oyó por %s	通过 %s 发现
+Pidió una dirección por DHCP: quería la %s	通过 DHCP 请求地址，期望地址为 %s
+Pidió una dirección por DHCP	通过 DHCP 请求地址
+Dice ser: %s	声明的身份：%s
+Repartir direcciones	分配地址
+Buscar en redes de fábrica	搜索出厂默认网段
+Preguntando en %s: %d de %d	正在查询 %s：%d / %d
+Preguntó por %d direcciones	已查询 %d 个地址
+Pregunta por ARP por unas cinco mil direcciones en un cuarto de minuto. Es para un equipo enchufado directo, no para una red con gente	约十五秒内通过 ARP 查询五千个地址。用于直接连接的设备，不适用于有其他用户的网络
+Enchufado directo, de dirección desconocida	直接连接，地址未知
+EN ESTE CABLE	此有线接口上的设备
+Simulador: los equipos son de ejemplo.	模拟器：设备信息均为示例。
+RED DE BANCO	测试网络
+Para un equipo que espera que le den dirección: la placa se la da por DHCP. Mientras tanto el cable no es la salida de la placa, sigue el Wi-Fi. Tocá un equipo de la lista para ver más y para ponerte en su red.	适用于等待分配地址的设备：开发板通过 DHCP 为其分配地址。此时有线接口不作为开发板的网络出口，仍由 Wi-Fi 提供出口。轻点列表中的设备可查看详情并加入其网络。
+Compartir el Wi-Fi	共享 Wi-Fi
+Lo mismo, y además lo que enchufes sale a internet por el Wi-Fi de la placa: para un equipo sin Wi-Fi propio. Ese equipo llega también a los demás de tu red, como cualquiera que esté en tu Wi-Fi.	在分配地址的同时，让连接的设备通过开发板的 Wi-Fi 上网，适用于没有 Wi-Fi 的设备。与其他 Wi-Fi 客户端一样，该设备也能访问您网络中的其他设备。
+SERVICIOS DE BANCO	测试服务
+Hora (NTP)	时间（NTP）
+Se mandó el paquete para despertarlo. Si tiene Wake-on-LAN, prende en unos segundos	已发送唤醒包。若设备支持 Wake-on-LAN，将在几秒内启动
+No se pudo mandar: no se sabe su MAC, o no hay red	发送失败：未知 MAC 地址，或没有网络连接
+Dirección o nombre del equipo	设备地址或名称
+La lista está vacía. Agregá un equipo por su dirección o su nombre, o desde Hosts o Equipo con el botón Vigilar.	列表为空。可通过地址或名称添加设备，也可在“主机”或“设备”中轻点“加入监测”。
+mirando…	正在检查…
+prendido, %s ms	在线，%s 毫秒
+no responde	无响应
+no responde hace %s	已持续 %s 无响应
+Despertar	唤醒
+Quitar	移除
+Los equipos del taller: cuáles están prendidos	测试设备的在线状态
+Agregar un equipo	添加设备
+Los mira cada diez segundos con un ping; con equipo:puerto, prueba ese puerto. Para despertar uno hace falta su MAC, que se aprende sola la primera vez que se lo ve prendido en la misma red, y que el equipo tenga Wake-on-LAN habilitado.	每十秒发送一次 ping；填写“设备:端口”时则检查指定端口。唤醒需要 MAC 地址，设备首次在同一网络中在线时会自动学习，同时设备需开启 Wake-on-LAN。
+Simulador: no se mira ni se despierta a nadie; los estados son de ejemplo.	模拟器：不会查询或唤醒真实设备，状态均为示例。
+Compartir la salida	共享网络出口
+Compartir la salida: ahora no, porque el cable está compartiendo el Wi-Fi (Red, Cable). Una cosa a la vez.	暂不能共享网络出口：有线接口正在共享 Wi-Fi（网络 → 有线）。一次只能共享给一个网络。
+Compartir la salida: los que se unen a esta red salen por donde sale la placa (el cable, o el Wi-Fi de casa) y llegan a los equipos de esa red. Dale la contraseña sólo a quien dejarías enchufarse ahí.	共享网络出口：加入此热点的设备将通过开发板当前的连接（有线网络或家庭 Wi-Fi）联网，并可访问该网络中的设备。请仅向您信任的用户提供密码。
+Compartir la salida: la placa no tiene por dónde salir ahora. Enchufá el cable (Redes, Ethernet): con esta red prendida la placa no busca el Wi-Fi de casa.	无法共享网络出口：开发板当前没有可用出口。请连接网线（网络 → 以太网）；此热点开启时，开发板不会搜索家庭 Wi-Fi。
+No se pudieron abrir los puertos en el cable	无法在有线接口上打开服务端口
+El cable cambió de dirección	有线接口地址已更改
+No hay tarjeta de la que dar archivos	没有可提供文件的存储卡
+El cable no tiene dirección	有线接口尚无地址
+No se pudo abrir el puerto 5001	无法打开端口 5001

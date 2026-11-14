@@ -146,6 +146,186 @@ void nt_wifi_run(void);         /* starts the sampler (2 Hz) if it is not runnin
 bool nt_wifi_scan(void);        /* one scan; false if one is under way */
 const nt_wifi_t *nt_wifi(void);             /* under nt_lock() */
 
+/* ---- the cable test: is there a way out by this network ---- */
+
+/* The names asked for, until one resolves: the three reserved for examples.
+ * One alone is not a test: on the bench where this was first tried the
+ * provider's resolver answered "no such name" for example.com and resolved
+ * everything else. */
+#define NT_CABLE_NAMES { "example.com", "example.org", "example.net" }
+#define NT_CABLE_FAR  "1.1.1.1"         /* pinged when no name resolves, to tell a dead DNS from a dead line */
+
+typedef struct {
+    int      state;             /* NT_BUSY while it runs, NT_DONE with the answers below */
+    int      step;              /* 1 the gateway, 2 the name, 3 out there */
+    char     gw[16];
+    float    gw_ms;             /* the best of three; < 0: it did not answer */
+    bool     dns_ok;
+    uint32_t dns_ms;            /* what the one that resolved took */
+    char     name[24];          /* the name that resolved */
+    char     far[16];           /* what was pinged out there: the name's address, or NT_CABLE_FAR */
+    float    far_ms;            /* < 0: no answer */
+    uint32_t seq;
+} nt_cable_t;
+
+/* One run: three pings to the gateway, the names, three pings out. It goes
+ * out by whichever interface the board is using, the wire when it is up. */
+bool nt_cable_start(const char *gw);
+const nt_cable_t *nt_cable(void);       /* under nt_lock() */
+
+/* ---- finding a device on the wire: asking the usual factory networks ---- */
+
+typedef struct {
+    int      state;             /* NT_BUSY while it asks */
+    int      done, total;       /* addresses asked */
+    char     now[20];           /* the network being asked: "192.168.88.x" */
+    uint32_t seq;
+} nt_find_t;
+
+/* Asks by ARP for every address of the networks devices come set to from the
+ * factory, about five thousand in a quarter of a minute. Whoever has one
+ * answers, whatever network the board is on, and shows in
+ * aos_eth_stations(). It floods the wire with questions: for a device
+ * plugged straight in, not for a network with people on it. */
+bool nt_find_start(void);
+void nt_find_stop(void);
+const nt_find_t *nt_find(void);         /* under nt_lock() */
+
+/* ---- the bench network's services: files, the time, and what the device says ---- */
+
+#define NT_SYSLOG_LINES 16
+#define NT_SYSLOG_LEN   112
+
+typedef struct {
+    int      state;             /* NT_BUSY while they run */
+    char     err[72];           /* why they are not running, in Spanish */
+    char     ip[16];            /* the address they answer on: the wire's */
+    char     dir[64];           /* the card folder TFTP gives files from */
+    uint32_t tftp_files;        /* files given whole */
+    uint32_t tftp_failed;       /* asked for and not found, or cut short */
+    char     tftp_last[48];     /* the last one asked for */
+    int      tftp_pct;          /* of the one going out now; -1 none */
+    uint32_t ntp_answers;
+    uint32_t syslog_total;
+    char     syslog[NT_SYSLOG_LINES][NT_SYSLOG_LEN];    /* the last ones, oldest first */
+    int      syslog_n;
+    uint32_t seq;
+} nt_bench_t;
+
+/* Three small servers on the wire's address, for a device plugged into it:
+ *   TFTP    gives it files from the card's "banco" folder: how a router, a
+ *           camera or a board in its boot loader takes a firmware. Reading
+ *           only; a file is asked for by its name, with no folders.
+ *   NTP     gives it the board's time, with no internet.
+ *   syslog  takes what it logs to the network and shows the last lines.
+ * They answer on the wire only, never on the Wi-Fi, and stop when Red is
+ * closed. false, with err: the wire has no address. */
+bool nt_bench_start(void);
+void nt_bench_stop(void);
+const nt_bench_t *nt_bench(void);       /* under nt_lock() */
+
+/* ---- measuring a link: the wire against the Wi-Fi ---- */
+
+typedef struct {
+    char  kind[12];             /* "ethernet" or "wifi" */
+    char  ip[16], gw[16];       /* the interface's address, and the gateway it pinged */
+    int   sent, got;
+    float avg_ms, min_ms, max_ms;
+} nt_side_t;
+
+typedef struct {
+    int       state;            /* NT_BUSY while it pings */
+    int       n;                /* sides measured or being measured: 0 to 2 */
+    nt_side_t side[2];
+    uint32_t  seq;
+} nt_compare_t;
+
+/* Ten pings to the gateway by each of the two, the wire and the Wi-Fi, each
+ * from that interface's own address so that it goes out by it. */
+bool nt_compare_start(void);
+const nt_compare_t *nt_compare(void);   /* under nt_lock() */
+
+#define NT_SPEED_PORT 5001              /* iperf's own */
+
+typedef struct {
+    char     kind[12];          /* the interface the stream came in by; "" none yet */
+    char     local[16];
+    float    mbps;
+    uint32_t kbytes;
+    uint32_t secs;
+} nt_speed_run_t;
+
+typedef struct {
+    int      state;             /* NT_BUSY while it listens */
+    char     err[64];
+    bool     busy;              /* a stream is coming in right now */
+    float    now_mbps;          /* over the last half second */
+    char     now_kind[12];
+    char     refused[16];       /* who was turned away: not from a network the portal is open to */
+    nt_speed_run_t last[2];     /* the last stream by the wire, and by anything else */
+    uint32_t seq;
+} nt_speed_t;
+
+/* Listens on TCP 5001 and counts what is sent to it: "iperf -c <address>"
+ * (iperf 2) from a computer measures the way from it to the board, and the
+ * address tells by which interface. A raw socket cannot log in, so it takes
+ * streams only where the portal opens without a password. */
+bool nt_speed_start(void);
+void nt_speed_stop(void);
+const nt_speed_t *nt_speed(void);       /* under nt_lock() */
+
+/* ---- the lookout: the bench's devices, who is on, and waking them ---- */
+
+#define NT_WATCH_MAX 16
+
+typedef struct {
+    char     name[24];
+    char     host[40];          /* an address or a name */
+    char     mac[18];           /* "AA:BB:CC:DD:EE:FF", for waking it; "" not known yet */
+    uint16_t port;              /* 0: it is pinged; else that TCP port is tried */
+    int      up;                /* -1 not looked at yet, 0 no answer, 1 it answers */
+    float    ms;
+    uint32_t since_ms;          /* uptime when it changed to what it is */
+} nt_watched_t;
+
+typedef struct {
+    int          n;
+    nt_watched_t d[NT_WATCH_MAX];
+    uint32_t     rounds;        /* times the whole list was looked at */
+    uint32_t     seq;
+} nt_watch_t;
+
+/* The list is a text file in the card's folder of surveys, vigia.txt, a line
+ * a device: name, host, MAC and port between tabs. nt_watch_run() reads it
+ * the first time, and keeps the lookout looking, every ten seconds, for as
+ * long as it goes on being called. */
+void nt_watch_run(void);
+const nt_watch_t *nt_watch(void);       /* under nt_lock(), after nt_watch_run() */
+/* false: the list is full, or that host is on it already. mac may be "". */
+bool nt_watch_add(const char *name, const char *host, const char *mac, uint16_t port);
+void nt_watch_remove(int i);
+/* Wake-on-LAN: the "magic packet" with its MAC, to everyone on every network
+ * the board is on. false: its MAC is not known. The device has to have
+ * Wake-on-LAN switched on, and be on a network the board is on. */
+bool nt_wake(int i);
+
+/* ---- who made a network card: the IEEE's register, from the card ---- */
+
+typedef struct {
+    int      state;             /* NT_BUSY while the file is read, NT_DONE with the answer */
+    uint8_t  mac[3];            /* the prefix asked for */
+    bool     file;              /* the register is on the card */
+    char     name[48];          /* the maker; "" not in the register */
+    uint32_t seq;
+} nt_maker_t;
+
+/* Looks a MAC's first three bytes up in /redes/oui.txt, the file the
+ * portal's sweeps use too: the IEEE's own oui.txt ("AA-BB-CC   (hex)   Name")
+ * or a line "AA:BB:CC<tab>Name" each. Megabytes of text, read in a thread of
+ * its own; asking again for the prefix already known reads nothing. */
+void nt_maker_ask(const uint8_t *mac);
+const nt_maker_t *nt_maker(void);       /* under nt_lock() */
+
 /* ---- mDNS ---- */
 
 #define NT_MAX_SVC 64

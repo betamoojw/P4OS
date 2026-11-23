@@ -14,13 +14,19 @@ An iPhone-style operating system for the
 
 It has a home screen with pages, folders and a dock, a control centre and
 notifications, and a lock screen with an optional code, and it runs in
-portrait or landscape. There are twenty-three built-in apps and forty-six more on
-the microSD, loaded as shared objects:
+portrait or landscape. There are twenty-three built-in apps and, since
+0.30, a **Store** that installs more than sixty others on the microSD,
+loaded as shared objects:
 
-- **Games:** twenty-four, among them Mila (a Sokoban with a black cat in
+- **A store of its own:** the board lists, installs and updates its apps
+  from a catalogue published with each release, and fetches its own next
+  firmware. Other people's repositories can be added beside the official
+  one.
+
+- **Games:** twenty-five, among them Mila (a Sokoban with a black cat in
   Blender 3D), Monster Hop, a racing game, golf, a robot RPG, a 3D pinball
-  with six tables, a pipes game with six liquids, Doom at 35 fps and Duke
-  Nukem 3D; and an emulator of
+  with six tables, a tower defense over ten worlds, a pipes game with six
+  liquids, Doom at 35 fps and Duke Nukem 3D; and an emulator of
   fourteen consoles, the Game Boy Advance and the Neo Geo at full speed.
 - **Tools:** notes with task lists, a street map with offline zones,
   internet radio, IP cameras, video, a 3D viewer, a tuner, a drawing app,
@@ -51,9 +57,10 @@ the microSD, loaded as shared objects:
   lighting console for a phone), a bench supply and scope, an EEPROM reader and writer, a PWM and
   servo generator with an analog level (and sixteen more servos on a
   PCA9685), a learning
-  infrared remote with SmartIR's codes, and a CAN bus analyser. Each one
-  was tried on the bench with real parts, wiring diagrams and photos
-  included.
+  infrared remote with SmartIR's codes, a CAN bus analyser, and a logic
+  analyser with ten protocol decoders for the 24 MHz USB boxes or an
+  ESP32 with its own firmware. Each one was tried on the bench with real
+  parts, wiring diagrams and photos included.
 - **A software radio:** an RTL-SDR stick on the USB host gives a live
   spectrum and waterfall, broadcast FM in stereo, AM for the airband and
   narrow FM for hams and PMR, and the 433/868 MHz remotes and weather
@@ -77,6 +84,40 @@ of the apps came from there, redrawn for a screen five times larger.
 
 <p align="center"><em>The captures come from the simulator, which draws the
 same pixels as the board.</em></p>
+
+## Getting started
+
+A new board needs a cable once, and nothing after that.
+
+1. **Flash it.** `esptool.py --chip esp32p4 chip_id` says which silicon the
+   board has; download `p4os-rev1_3-full.zip` (chip v1.x) or
+   `p4os-rev3_x-full.zip` (v3.x) from the
+   [latest release](https://github.com/charliejgallo/P4OS/releases/latest),
+   unpack it and, from inside the folder,
+   `esptool.py --chip esp32p4 -p <port> write_flash @flash_args`.
+2. **Put a microSD in**, formatted as FAT32. An empty one is fine.
+3. **Join the Wi-Fi** in Settings → Networks, and pick the language.
+4. **Open the Store** and get the apps you want. They install and open
+   with no restart; a game's art comes in packs, the extra ones chosen on
+   its page.
+5. **Later versions arrive by themselves:** the Store updates the apps,
+   and Settings → Update fetches the next firmware from GitHub, checks it
+   and installs it on a tap.
+
+| The Store | An app's page | Its description and extras | Settings, Update |
+|---|---|---|---|
+| <img src="docs/img/app-store.png" width="170"> | <img src="docs/img/app-store-app.jpg" width="170"> | <img src="docs/img/app-store-extras.jpg" width="170"> | <img src="docs/img/app-update.png" width="170"> |
+
+[docs/INSTALL.md](docs/INSTALL.md) is the whole of it, step by step: a new
+board from nothing, a board coming from 0.2x, and adding apps.
+[docs/STORE.md](docs/STORE.md) is the Store itself: what it checks, other
+people's sources and what adding one means, and what a catalogue is made
+of.
+
+**Coming from 0.2x?** Update the firmware once more the old way (the
+portal's Firmware page, with `p4os-<rev>.bin`). Nothing has to be copied to
+the card: the apps that are there go on working, and Store → Installed
+offers to take them over so they update from then on.
 
 <p align="center">
   <img src="docs/img/photo-modules-bme280.jpg" width="300" alt="The board reading a BME280 on the rear header, in Modules">
@@ -454,7 +495,10 @@ The whole header, pin by pin, is under [The hardware](#the-40-pin-header).
   BOOT0 and NRST on the same lines an ESP32 uses. And it lends its port to
   the computer: esptool over `rfc2217://p4os.local:4000`, avrdude over
   `net:p4os.local:4001`; or becomes its CMSIS-DAP debug probe on the OTG
-  connector, for OpenOCD, pyOCD and probe-rs.
+  connector, for OpenOCD, pyOCD and probe-rs. Its list of firmware on the
+  card (since 0.28) takes 160, sorted by name, by the last added or by the
+  last flashed, with a search, and says "versión nueva" when a folder or
+  file is not what was last flashed under that name, by its content.
 - **Modbus** (on the card since 0.25.0): a tester for Modbus RTU on RS485.
   A master (any function, once or live; find the units on a bus, and its
   speed and format, the format by the line's parity and framing errors),
@@ -581,6 +625,52 @@ and moving its address, and Art-Net from a Mac coming out as DMX.
 </p>
 <p align="center">
   <img src="docs/img/bench-rs485.svg" width="560" alt="Wiring: the P4 and an ESP32, each with an automatic RS485 module, on one twisted pair, and the strip on the ESP32">
+</p>
+
+### Lógica, a logic analyser
+
+Since 0.28, on the card. Eight channels, captures of millions of samples
+in PSRAM, a trigger on levels and edges, and ten decoders: UART, I2C,
+SPI, 1-Wire (with the DS18B20's temperature), CAN, WS2812, NEC infrared,
+DMX512, Modbus RTU and a parallel bus. A table of the packets, a
+measurement of a channel between two cursors (frequency, duty, the high
+and low times), and sigrok sessions (`.sr`) on the card that PulseView
+opens, and the other way round. Its portal page has the big view, the
+decoders and an export to `.sr`, VCD and CSV.
+
+It samples with what is plugged into the board's USB host:
+
+- **The "Logic Analyzer 24MHz 8CH" boxes** (a Cypress FX2, sold as Saleae
+  Logic clones) and the other FX2 boards sigrok knows: up to 24 MHz,
+  streamed into PSRAM. The app loads them sigrok's open firmware,
+  fx2lafw, which goes on the card (the portal's page takes the
+  `.tar.gz` as it comes).
+- **An ESP32-C3, S3 or C6 with the app's own firmware** (`apps/logica/firmware`),
+  flashed from the board's Programador, speaking SUMP over its USB:
+  5 MHz on a C3 or a C6, measured by the firmware on its own capture loop;
+  the C6 holds 401k samples, the C3 155k.
+  PulseView and sigrok-cli use it too.
+- Anything else that speaks **SUMP**, on USB serial or a header UART, and a
+  **demo** with made-up signals for every decoder.
+
+| UART on the board (FX2) | Packets | Demo | Decoders | Measure |
+|---|---|---|---|---|
+| <img src="docs/img/app-logica-uart.png" width="150"> | <img src="docs/img/app-logica-table.png" width="150"> | <img src="docs/img/app-logica-demo.png" width="150"> | <img src="docs/img/app-logica-decoders.png" width="150"> | <img src="docs/img/app-logica-measure.png" width="150"> |
+
+<p align="center"><img src="docs/img/web-logica.jpg" width="600" alt="Lógica's page in the portal: the demo's eight channels and six decoders, 1-Wire bytes and a Modbus answer"></p>
+
+On the board, with the user's FX2 clone and an ESP32-C3 Super Mini: every
+FX2 rate up to 24 MHz with no sample lost; the header's self test on
+GPIO34 measured (its PWM at 998.1 Hz, an infrared carrier at 37.995 kHz,
+four CAN frames decoded exactly); and a real UART line at 115200 from the
+board's own `uart.b`, all 107 characters decoded from the first, on the
+FX2 at 4 MHz and on the C3 at 5 MHz. [apps/logica/README.md](apps/logica/README.md)
+has what was measured and what the board's USB host needed.
+
+<p align="center">
+  <img src="docs/img/bench-logica-fx2.jpg" width="300" alt="The 24 MHz 8 channel analyser on the board's back cover, plugged into the USB host, its CH1 and ground on the 40-pin header">
+  <img src="docs/img/bench-logica-c3.jpg" width="300" alt="An ESP32-C3 Super Mini with the app's firmware on the board's USB host, its GPIO0 wired to the header's GPIO34">
+  <img src="docs/img/bench-logica-c6.jpg" width="300" alt="An ESP32-C6 board with the app's firmware on the USB host: 401.4k samples at 5 MHz, the self test's PWM on D0">
 </p>
 
 ### Datalog
@@ -798,9 +888,45 @@ its module; Snes9x's and the Mega Drive's Z80 forbid commercial use
 ([THIRD-PARTY.md](THIRD-PARTY.md)). The screenshots are of free homebrew
 games in the simulator.
 
+### The Store
+
+The apps of the card are not copied by hand any more (since 0.30). The
+Store reads a catalogue published with each release, and from it the board
+installs an app, its art packs, its page in the portal and its
+translations, updates it while it runs, and removes it.
+
+- **A page for each app:** what it is in a few paragraphs, three or four
+  pictures, tags worked out from its code (3D, joystick, sound, the
+  network, the languages it speaks, what it needs on the header or the
+  USB), and its extras, pack by pack.
+- **Checked before it lands:** every package against the size and the
+  SHA-256 of the catalogue, where it may write, and whether this firmware
+  can run it, function by function, without loading it. An app that makes
+  the board fall while it loads is set aside at the next start.
+- **What was on the card stays:** apps copied by hand are listed as such
+  and taken over when they are the catalogue's; a build of your own is
+  left alone.
+- **Other sources:** somebody else's repository beside the official one,
+  added at the board after a warning that an app runs with every
+  permission of the system; and a single package, a `.p4app`, from Files
+  or the portal.
+- **The firmware too:** Settings → Update finds the next release, and
+  installs it on a tap, on trial like any update.
+- **And what the system reads from the card:** the web portal's
+  translations, the colour emoji and the C6's firmware are under the
+  Store's System chip, one Get each.
+- **From a computer:** the portal's Store page does the same.
+
+[docs/STORE.md](docs/STORE.md) has the rest, and what was measured.
+
+| By origin | An app from another source |
+|---|---|
+| <img src="docs/img/app-store-source.png" width="200"> | <img src="docs/img/app-store-third.jpg" width="200"> |
+
 ### Apps from the card
 
-These are `.so` files that the firmware loads at boot. Their code runs
+These are `.so` files that the Store puts in the card's `/apps` and the
+firmware loads: at boot, or the moment one is installed. Their code runs
 straight from PSRAM (on the P4, data and instructions share its addresses),
 and their art comes in packs.
 
@@ -819,6 +945,63 @@ and their art comes in packs.
 | Flappy | Dice | Doom | Duke Nukem 3D |
 |---|---|---|---|
 | <img src="docs/img/app-flappy.png" width="125"> | <img src="docs/img/app-dice.png" width="125"> | <img src="docs/img/land-doom.jpg" width="250"> | <img src="docs/img/land-duke3d.jpg" width="250"> |
+
+| Board games | Sudoku | Solitaire | Stocks | Flights |
+|---|---|---|---|---|
+| <img src="docs/img/app-mesa.jpg" width="125"> | <img src="docs/img/app-sudoku.jpg" width="125"> | <img src="docs/img/app-solitario-win.jpg" width="125"> | <img src="docs/img/app-bolsa-chart.png" width="125"> | <img src="docs/img/app-vuelos.jpg" width="125"> |
+
+- **Board games** ([apps/mesa/README.md](apps/mesa/README.md)): chess with
+  eight levels, PGN and a clock, draughts (ours on 8×8 with the flying
+  king, and the international game), reversi, four in a row, ludo for two
+  to four and backgammon, against the board or face to face with the board
+  lying between two players. The sets are modelled in Blender; wood comes
+  with the app, marble, glass and metal are optional packs, and a game can
+  be added later as a module and a pack.
+- **Sudoku** ([apps/sudoku/README.md](apps/sudoku/README.md)): each level
+  is the hardest technique a board asks for, not how many numbers it
+  gives; hints show the technique instead of the number. 6×6, Killer,
+  Diagonal and a daily challenge; finishing pays coins that buy themes.
+- **Solitaire** ([apps/solitario/README.md](apps/solitario/README.md)):
+  Klondike, Spider, FreeCell, Pyramid, TriPeaks, Golf, Yukon and Klondike
+  with the Spanish deck; a solver keeps every deal winnable if you want,
+  standard and Vegas scoring, felts and backs won with achievements, and
+  the cards bounce off the foundations at the end.
+- **Stocks** ([apps/bolsa/README.md](apps/bolsa/README.md)): lists of
+  shares, indices, currencies and crypto, and line, area or candle charts
+  with volume, moving averages and RSI; the Argentine dollar and country
+  risk without a key, shares with a free key typed in the portal. Delayed
+  data, and no advice.
+- **Flights** ([apps/vuelos/README.md](apps/vuelos/README.md)): the aircraft
+  around a place on Mapas' map, each turned by its track and coloured by
+  its altitude, from airplanes.live, adsb.lol, the OpenSky Network or an
+  ADS-B receiver of your own; the airports come from OurAirports.
+
+| Air Hockey | Translator | Office | Studio |
+|---|---|---|---|
+| <img src="docs/img/app-hockey-neon.jpg" width="125"> | <img src="docs/img/app-traductor.png" width="125"> | <img src="docs/img/app-oficina.png" width="125"> | <img src="docs/img/app-estudio.png" width="125"> |
+
+- **Air Hockey** ([apps/hockey/README.md](apps/hockey/README.md)): upright,
+  against the board at four levels or two at once, a finger each in their
+  half; the bar table comes with it, neon and ice are optional packs.
+- **Translator** ([apps/traductor/README.md](apps/traductor/README.md)):
+  text translated **on the board, with no network**, by small neural
+  models from Firefox Translations in optional language packs (Spanish,
+  Portuguese, Italian, French and German, each with English), plus a
+  dictionary for single words; online, MyMemory or a LibreTranslate of
+  your own.
+- **Office** ([apps/oficina/README.md](apps/oficina/README.md)): edits
+  docx and odt documents, xlsx, ods and csv spreadsheets with formulas, and
+  texts, code and logs of any size, saving without touching what it does
+  not understand; reads PDF (as text set to the screen, or its pages drawn
+  as they print), pptx and odp slides with a presenting mode, the Office
+  97-2003 binaries, RTF, EPUB, mail and more, and walks ZIP and TAR as
+  folders; writes PDF. The Files app opens documents in it.
+- **Studio** ([apps/estudio/README.md](apps/estudio/README.md)): a
+  synthesizer of three parts, a drum machine and a sequencer, played with
+  several fingers on a keyboard, a grid locked to a scale or eight pads;
+  patterns chained into a song, MIDI in and out, and WAV and MIDI export.
+  It plays on the board's output for playing live: 14 to 18 ms from a key
+  to the speaker.
 
 Doom is doomgeneric, with OPL2 music, and Duke Nukem 3D is Chocolate Duke3D,
 with the Sound Blaster's FM music; both on the board, from the shareware
@@ -850,6 +1033,65 @@ ball waits.
   through the game's own camera (the picture, its depth, the lamps, the
   toys' frames), so the ball goes behind ramps and toys; a new table is a
   module and a pack, no new code. 60-70 fps on the board.
+
+### Bastión
+
+A tower defense, upright ([apps/bastion/README.md](apps/bastion/README.md)):
+a fort in space, waves of aliens on a road, and towers on the pads beside
+it. Ten worlds of three sectors each, the third with a boss.
+
+| The campaign | Selene Crater, on the board | Magma Sea | Nebula Rings | The laboratory |
+|---|---|---|---|---|
+| <img src="docs/img/app-bastion-campaign.jpg" width="125"> | <img src="docs/img/app-bastion-luna.jpg" width="125"> | <img src="docs/img/app-bastion-magma.jpg" width="125"> | <img src="docs/img/app-bastion-nebula.jpg" width="125"> | <img src="docs/img/app-bastion-lab.jpg" width="125"> |
+
+- **Fourteen towers of three tiers:** a rotary cannon, shells, a laser
+  that grows on its target, homing missiles, chain lightning, cold, fire,
+  a railgun through the whole line, a plasma mortar, a hangar of drones,
+  an EMP, a gravity well that throws them back, an amplifier for the
+  towers around it and a refinery that pays. Between waves nothing moves:
+  build, upgrade and sell at leisure, then call the next one.
+- **Twelve aliens and three bosses**, each asking for another answer:
+  armour, fliers that cut the road's corners, dividers, shields that come
+  back, healers, the cloaked, the ones that silence towers.
+- **What stays:** a battle pays cores, and the laboratory turns them into
+  new towers, each tower's mastery, eight technologies and three powers
+  (an orbital strike, a cryo bomb, a repair). Experience makes the rank.
+  A USB gamepad plays it all.
+- **Three modes:** the campaign; waves without end with twice the life, to
+  see how far one gets, a record a world; and a free mode with everything
+  unlocked. The difficulty is the purse: more credits, or fewer.
+- **A gallery** of cards, unlocked as the player meets each alien, tower
+  and world: its portrait (the aliens walk), its numbers, a line about it.
+- **How it is made:** everything is modelled by code in Blender and
+  rendered ahead, a picture with the depth of its pixels a world and
+  sheets of sprites for what stands on it, so an alien walks behind a
+  rock. The board draws again only the 16-pixel tiles whose content
+  changed, straight into the panel's free buffer, half on each core, and
+  flips: 62 fps on the board with forty aliens on the road. A bot plays
+  the whole campaign to set each sector's difficulty.
+
+### Metegol
+
+Table football in 3D, lying down ([apps/metegol/README.md](apps/metegol/README.md)):
+one against the board, or two on the same screen, each the owner of the
+half with their goal. A finger slides the rods, a tap kicks with the one
+nearest the ball, holding raises the figures.
+
+| A match in Buenos Aires | The goal | Choosing the teams | Tokyo |
+|---|---|---|---|
+| <img src="docs/img/app-metegol.jpg" width="250"> | <img src="docs/img/app-metegol-gol.jpg" width="250"> | <img src="docs/img/app-metegol-equipos.jpg" width="250"> | <img src="docs/img/app-metegol-tokio.jpg" width="250"> |
+
+- **Teams:** sixteen national teams with their flags, and twelve clubs of
+  Argentine football in their colours and shirt designs, with no crests;
+  names and colours are changed in the portal.
+- **Ten stadiums,** each known by its building and its city; two come with
+  the game and eight are optional packs.
+- **Matches** by time, two halves of one to ten minutes, or to the first to
+  3, 5, 7 or 10 goals, and every goal has its replay. The board plays at
+  four levels, tuned against a person playing it on the board itself.
+- **How it is made:** the table, the figures and the stadiums are modelled
+  by code in Blender; the figures are rendered once and coloured by the
+  app for each team. The physics runs at 240 Hz; 60 fps on the board.
 
 ### Caños
 
@@ -1004,7 +1246,8 @@ colours where `htop` and `vim` run, and a keyboard with Esc, Tab, Ctrl,
 Alt, the arrows and F1-F12 (or a USB one). **The board's console:**
 `ssh p4os.local` opens a shell with the card's files, the log, the tasks
 and the memory (`free -m` maps the PSRAM's big blocks), under the portal's
-own rules ([docs/SSH.md](docs/SSH.md)).
+own rules, and since 0.31 `sftp` and `scp` reach the card's files through
+the same door ([docs/SSH.md](docs/SSH.md)).
 
 <p align="center">
   <img src="docs/img/app-ssh-htop.png" width="230" alt="htop on a Raspberry Pi 4, over SSH from the board">
@@ -1030,7 +1273,7 @@ own rules ([docs/SSH.md](docs/SSH.md)).
 The pages are Networks (the way out, Wi-Fi with the access point,
 Ethernet), Bluetooth, USB (each mode
 explained), Web portal (trusted networks, the password), Display, Lock screen, Sound, Wallpaper, Expansion, Storage,
-Language, Date and time, Update, Diagnostics, About and Developer.
+Language, Date and time, Update, Backup, Diagnostics, About and Developer.
 
 - **Networks** (Redes): where the board goes out, by wire or by Wi-Fi, and
   each connection with its state. Wi-Fi keeps the networks and the board's
@@ -1043,7 +1286,14 @@ Language, Date and time, Update, Diagnostics, About and Developer.
 - **Sound:** the volume, the system sounds and the keyboard click.
 - **Wallpaper:** the gradients, the photos and the accent colour.
 - **Storage:** what fills the card by kind of file, and eject.
-- **Update:** both slots, and going back.
+- **Update:** the next version from GitHub, downloaded, checked and
+  installed on a tap (since 0.30); both slots, and going back.
+- **Backup:** the preferences, the list of apps and the home screen's
+  order in one file on the card, plain or sealed with a passphrase, and
+  back. A copy a day and one before each firmware by itself, the card's
+  data folders to a pendrive, the sealed ones to a server of your own by
+  SFTP once a week, and a new board that offers the backup on its card
+  ([docs/BACKUP.md](docs/BACKUP.md)).
 - **Diagnostics:** chip temperature, CPU, memory, the reset reason, safe mode,
   the hang watchdog's restarts, the C6's firmware, and the crash dump.
 - **About:** the portal's addresses, with a QR code for the phone.
@@ -1064,7 +1314,8 @@ Language, Date and time, Update, Diagnostics, About and Developer.
 
 **Emoji.** Every emoji of Unicode, in colour, in any text the phone sends:
 Google's Noto set, 4012 of them with skin tones, flags and ZWJ sequences,
-from a pack on the card ([docs/EMOJI.md](docs/EMOJI.md)).
+from a pack on the card that the Store installs (System, Colour emoji;
+[docs/EMOJI.md](docs/EMOJI.md)).
 
 **Languages.** The interface is written in Spanish and includes English,
 German, Simplified Chinese and Traditional Chinese. System and native-app
@@ -1181,6 +1432,33 @@ A pseudo-locale is available for testing layouts.
   of nine minutes (4540 frames, none lost) opened as a valid pcap, the
   wire against the Wi-Fi (10 ms to the gateway against 26), and the
   lookout.
+- Lógica (0.28) with a "24MHz 8CH" FX2 clone on the USB host: 1 to 24 MHz
+  with no sample lost, triggers on a level and on an edge, the header's
+  self test measured and decoded (PWM, infrared, CAN), and a real UART
+  line at 115200, every character from the first. The same line on an
+  ESP32-C3 with the app's firmware, flashed from the Programador.
+- The Programador's list (0.28): sorted three ways, searched, and a
+  "versión nueva" for a firmware rebuilt after its last flash.
+
+- The Store (0.30), against a test release on GitHub and against a test
+  server on the local network: the catalogue of 58 apps read in a few
+  seconds, apps installed, updated and removed with no restart, a
+  download picked up after the board was restarted in the middle of it, a
+  `.so` broken on purpose set aside after two falls, a second source
+  added at the board and its apps beside the official ones (and the one
+  named like an official app left out), a loose package from Files, and
+  the pictures and descriptions of an app's page.
+- The firmware from the Store's catalogue (0.30): found in Settings,
+  downloaded and checked (16 s for 7 MB), written to the other slot
+  (41 s), restarted into on trial and confirmed, twice in a row, from a
+  test server; and from a pre-release on GitHub, over HTTPS: the catalogue
+  in 4 s, an app in 5 s, and the firmware downloaded, checked and written
+  in 64 s.
+- The parts of the system from the Store (0.30), on a card that already
+  had them copied by hand: the two languages downloaded and replaced in
+  3 s each, the 16 MB emoji pack recognised by its bytes with nothing
+  downloaded, and the C6's firmware, which was another build, replaced
+  by the release's.
 
 **Waiting for hardware on the bench:**
 
@@ -1209,6 +1487,9 @@ A pseudo-locale is available for testing layouts.
 
 **Not done yet:**
 
+- **The Store:** publishing an app from outside this repository has no
+  kit yet, and a download with the Wi-Fi cut in the middle of it was not
+  tried (a restart in the middle was).
 - **RF:** FSK signals, a CC1101 module on the header as a second receiver
   and transmitter, and ADS-B.
 - **ESP-NOW:** esp_hosted does not carry it (3.0.9 neither), so the two-device games of
@@ -1291,14 +1572,20 @@ ffmpeg`) and LVGL 9.5.0 in `sim/lvgl`. The firmware build has to have
 run once first, because it fetches the components whose headers the
 simulator shares.
 
-Each push builds both firmware profiles, every app, the C6's firmware and
-the emoji and Notes packs on GitHub Actions. The releases carry all of it
-with a full-flash bundle, the apps' portal pages and the language packs;
-only the games' art packs are attached by hand.
+Each push builds both firmware profiles, the apps, the C6's firmware and
+the emoji and Notes packs on GitHub Actions; the apps in six shares at
+once, and none again from the same sources
+([docs/BUILDING.md](docs/BUILDING.md), "The CI"). A release carries all of it
+with a full-flash bundle, and what the Store reads: the catalogue
+(`p4os-store.ndjson`), a package for each app (`<app>.p4app`) and their
+pictures. `apps.zip`, `web.zip` and `lang.zip` still go out for whoever
+fills a card by hand. Only the games' art packs are attached by hand.
 
 ### The card
 
     /apps/        <app>.so and <app>_p4.pak (the art packs, Notes' fonts)
+    /apps/.store/ the Store's own: the catalogues, a receipt for each app
+                  it installed, downloads in hand, the pictures it showed
     /web/         <app>.js — the apps' own pages in the portal
     /lang/        en/, de/ — the language packs
     /fonts/       emoji.pak — the colour emoji
@@ -1348,9 +1635,12 @@ Where something is a guess, it says so.
 
 | | |
 |---|---|
-| [BUILDING.md](docs/BUILDING.md) | building, flashing, OTA, crash dumps, the watchdogs |
+| [INSTALL.md](docs/INSTALL.md) | a new board from nothing, updating from 0.2x, adding apps, the firmware from GitHub |
+| [BACKUP.md](docs/BACKUP.md) | backups: what one holds, plain and sealed, the copies the board makes by itself, a pendrive, a server by SFTP, restoring, the file's format, the portal's calls |
+| [STORE.md](docs/STORE.md) | the Store: what it does and checks, other people's sources, a catalogue's format, the portal's calls, what was measured |
+| [BUILDING.md](docs/BUILDING.md) | building, flashing, OTA, crash dumps, the watchdogs, the CI and how a release is made |
 | [MEMORY.md](docs/MEMORY.md) | internal RAM vs PSRAM, the panel's three frame buffers, PSRAM bandwidth, the audit |
-| [APPS-P4.md](docs/APPS-P4.md) | writing and installing `.so` apps, drawing a frame, measured fps |
+| [APPS-P4.md](docs/APPS-P4.md) | writing `.so` apps, what one says of itself for the Store, drawing a frame, measured fps |
 | [USB.md](docs/USB.md) | the OTG port's modes, descriptors and measurements |
 | [BLUETOOTH.md](docs/BLUETOOTH.md) | the phone (ANCS), the keyboard mode (HID over GATT), the portal's API |
 | [C6.md](docs/C6.md) | the ESP32-C6's firmware: versions, updating it from the P4, throughput, recovery through J7 |
@@ -1358,9 +1648,11 @@ Where something is a guess, it says so.
 | [MODULES.md](docs/MODULES.md) | the 40-pin header, `modules.txt`, I2C, SPI and GPIO from apps, Ethernet and the tools for the wire |
 | [apps/emulador/README.md](apps/emulador/README.md) | the emulator: the consoles, the card's folders, the modules, what was measured |
 | [apps/pinball/README.md](apps/pinball/README.md) | the pinball: the tables, the rules, adding a table, rendering and packing, what was measured |
+| [apps/bastion/README.md](apps/bastion/README.md) | Bastión: the towers and the aliens, how a frame is composed, the Blender scripts, the bot that sets the difficulty, what was measured |
 | [apps/canos/README.md](apps/canos/README.md) | Caños: the modes, the generator, the six liquids and how they are drawn, what was measured |
 | [apps/datalog/README.md](apps/datalog/README.md) | the data logger: a line's choices, the CSV, the alarms, logging in the background |
 | [apps/rf/README.md](apps/rf/README.md) | the software radio: receivers, the signal chain, what was measured, the decoders and their tests |
+| [apps/logica/README.md](apps/logica/README.md) | the logic analyser: the FX2 boxes and fx2lafw, the ESP32 firmware and its speed, the decoders, what was measured |
 | [PORTAL-PAGES.md](docs/PORTAL-PAGES.md) | an app's own page in the web portal, from the card, with no firmware |
 | [SECURITY.md](docs/SECURITY.md) | who may use the portal: trusted networks, the password, the token, and what is not covered |
 | [GAMEPAD.md](docs/GAMEPAD.md) | a USB gamepad in the games: the buttons, game by game, and `aos_pad.h` |
@@ -1381,8 +1673,13 @@ unofficial), and Home Assistant is its owners'. The consoles the Emulador
 plays are their makers' (Nintendo, Sega, SNK, NEC, Atari, Coleco), and the
 app is not affiliated with any of them. 3D Pinball Space Cadet is
 Microsoft's, and the machines the Pinball 3D tables take ideas from are
-their makers'; its tables, art and sounds are all its own. The other
-products named in the apps belong to their owners too.
+their makers'; its tables, art and sounds are all its own. Firefox is Mozilla's, and
+Excel and Word are Microsoft's; Oficina reads and writes their file formats
+and is not affiliated with Microsoft. The football
+clubs and national teams named in Metegol are their own; the app uses their
+names and colours only, with no crests, and is not affiliated with or
+endorsed by any of them, their leagues or federations. The other products
+named in the apps belong to their owners too.
 
 Python® is a registered trademark of the Python Software Foundation; the
 Python app uses the name to say what it runs, and is not affiliated with or
@@ -1411,12 +1708,13 @@ idioma de la tarjeta, la de la placa y la del portal web. Los documentos del pla
 
 | | |
 |---|---|
-| Qué hace | inicio con carpetas, pantalla de bloqueo con código, fotos de fondo para el inicio y el bloqueo, grabación de pantalla en MP4, 22 apps propias y 50 de la tarjeta (juegos, un pinball 3D de seis mesas, un juego de caños con seis líquidos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR (que puede compartir la salida de la placa), Ethernet optativo con un módulo W5500 y herramientas para la red por cable (probador de boca, encontrar un equipo de dirección desconocida, captura para Wireshark, vigía con Wake-on-LAN), Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, SSH en los dos sentidos (una consola de la placa y un terminal a otras máquinas), un teclado con ñ y acentos, copiar y pegar (también desde la computadora por el portal), un buscador que se abre deslizando hacia abajo en el inicio, y taller con I2C, SPI, 1-Wire, GPIO, CAN, tiras LED direccionables y RS485: Modbus (maestro, esclavo, monitor, perfiles de equipos y pasarela TCP), DMX con RDM y nodo Art-Net/sACN, y una consola de luces que también se maneja desde el celular |
-| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave, dos cámaras IP (un timbre H.264 directo a la pantalla y una MJPEG), la grabación de pantalla en MP4 por el codificador H.264 del P4, SSH desde la Mac y hacia una Raspberry Pi, un bus CAN real con un ESP32, el teclado, copiar y pegar y el buscador, y RS485 con un ESP32 y dos módulos automáticos: Modbus en las dos direcciones, DMX con una tira de pixeles, RDM y Art-Net desde la Mac, y Ethernet con un módulo W5500 (enlace a 100 Mbit/s, noches enteras sin cortes, el probador de boca, la lista de equipos, una captura de nueve minutos sin pérdidas y el vigía) |
+| Qué hace | inicio con carpetas, pantalla de bloqueo con código, fotos de fondo para el inicio y el bloqueo, grabación de pantalla en MP4, 22 apps propias y más de 60 de la tarjeta (juegos, un pinball 3D de seis mesas, un metegol 3D de uno o dos jugadores, un hockey de mesa, juegos de mesa en 3D (ajedrez, damas, ludo, backgammon...), sudoku, solitarios, un juego de caños con seis líquidos, Doom y Duke Nukem 3D, un emulador de catorce consolas, notas, mapas, radio, video, Lua, Python (MicroPython, con consola, red y apps propias), una calculadora algebraica con gráficos y geometría, un registrador de datos de los sensores del header, una radio definida por software con RTL-SDR, un analizador de Bluetooth LE, la bolsa con gráficos de velas, un radar de vuelos, un traductor que anda sin red con paquetes de idioma, planillas xlsx y ods), portal web con las páginas que trae cada app, USB como teclado, mouse, joystick, MIDI, red o disco, red Wi-Fi propia con QR (que puede compartir la salida de la placa), Ethernet optativo con un módulo W5500 y herramientas para la red por cable (probador de boca, encontrar un equipo de dirección desconocida, captura para Wireshark, vigía con Wake-on-LAN), Bluetooth con el iPhone (notificaciones con emojis en color, su música y atender o rechazar llamadas) y como teclado y mouse inalámbrico de una computadora, el firmware del C6 actualizable desde la placa, SSH en los dos sentidos (una consola de la placa y un terminal a otras máquinas), un teclado con ñ y acentos, copiar y pegar (también desde la computadora por el portal), un buscador que se abre deslizando hacia abajo en el inicio, y taller con I2C, SPI, 1-Wire, GPIO, CAN, tiras LED direccionables y RS485: Modbus (maestro, esclavo, monitor, perfiles de equipos y pasarela TCP), DMX con RDM y nodo Art-Net/sACN, y una consola de luces que también se maneja desde el celular; y un analizador lógico (Lógica) con diez decodificadores, para las cajitas USB de 24 MHz y 8 canales o un ESP32 con su firmware propio, que se graba desde el Programador |
+| Qué se probó | Wi-Fi y red propia, portal, OTA con vuelta atrás, USB contra una Mac, tarjeta, sonido, juegos y casi todas las herramientas, el emulador (GBA y Neo Geo a 60 cuadros, el táctil con varios dedos a la vez), el botón BOOT, un BME280 por I2C, SPI en lazo a 40 MHz, una termocupla MAX6675 y un DS18B20 registrados por Datalog en segundo plano, el C6 actualizado a esp_hosted 3.0.9 y vuelta al de fábrica sin cables, Bluetooth con un iPhone y una MacBook a la vez (notificaciones, música y llamadas), los barridos de red con las MAC, y el host USB con pendrive, teclado, mouse, joystick en los juegos, webcam, placa de sonido y adaptadores serie, RF con una RTL-SDR (2,4 Msps sin pérdidas, FM escuchada en el parlante), BLE escuchando con el iPhone y la Mac conectados y leyendo un termómetro Xiaomi cifrado con su clave, dos cámaras IP (un timbre H.264 directo a la pantalla y una MJPEG), la grabación de pantalla en MP4 por el codificador H.264 del P4, SSH desde la Mac y hacia una Raspberry Pi, un bus CAN real con un ESP32, el teclado, copiar y pegar y el buscador, y RS485 con un ESP32 y dos módulos automáticos: Modbus en las dos direcciones, DMX con una tira de pixeles, RDM y Art-Net desde la Mac, y Ethernet con un módulo W5500 (enlace a 100 Mbit/s, noches enteras sin cortes, el probador de boca, la lista de equipos, una captura de nueve minutos sin pérdidas y el vigía), y Lógica con un FX2 clonado y un ESP32-C3: hasta 24 MHz sin perder muestras, la prueba del header decodificada y una línea UART real leída entera |
 | Qué falta | probar en la placa el RC522, RF con un sensor de 433 MHz y con tráfico real de AM y FM angosta, encontrar por qué se cortó la red durante dos OTA, y con una computadora por cable: la red de banco, sus servicios y compartir la conexión en los dos sentidos |
 | El conector de 40 pines | el dibujo de referencia de todos los pines, con los puertos, los pines con que arranca cada app y los sugeridos, está en [The 40-pin header](#the-40-pin-header); la carcasa impresa, en [case/](case) |
 | Cómo se compila | ESP-IDF 5.5, `tools/build_fw.sh rev1_3`, `tools/build_apps.sh` |
-| Cómo se instala | la primera vez por el CH340; después `tools/ota.sh p4os.local` o el portal |
+| Cómo se instala | la primera vez por el CH340, con la imagen completa de la release; se pone una microSD en FAT32 (puede estar vacía), se conecta al Wi-Fi y las apps se bajan desde la **Tienda** de la placa. Después las apps se actualizan desde la Tienda y el firmware desde Ajustes → Actualización, que lo baja de GitHub. Paso a paso, y cómo venir desde 0.2x: [docs/INSTALL.md](docs/INSTALL.md) |
+| La Tienda | desde la 0.30: lista, instala, actualiza y quita las apps desde un catálogo publicado con cada release, con sus packs de arte, su página del portal y sus idiomas; admite fuentes de terceros (se agregan sólo en la placa, con un aviso) y paquetes sueltos `.p4app`. [docs/STORE.md](docs/STORE.md) |
 
 ### 中文支持 / 中文支援
 

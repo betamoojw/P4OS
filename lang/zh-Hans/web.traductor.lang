@@ -1,0 +1,54 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Automático	自动
+La placa cuando hay paquete de idioma; si no, tu servidor, y si no hay, MyMemory.	优先使用开发板上的语言包，否则使用自有服务器；未配置服务器时使用 MyMemory。
+En la placa	在开发板上
+Sin red: sólo los pares de los paquetes de idioma de la tarjeta.	离线模式仅支持存储卡上语言包所含的语言对。
+Servidor propio	自有服务器
+Un LibreTranslate en tu red (una computadora o una Raspberry).	局域网中的 LibreTranslate 服务，可运行在电脑或树莓派上。
+En línea	在线
+MyMemory: gratis y sin cuenta, 5000 caracteres por día; con un correo, 50 000.	MyMemory 无需账户，每天可免费翻译 5,000 个字符，填写邮箱后增至 50,000 个字符。
+Español	西班牙语
+Inglés	英语
+Portugués	葡萄牙语
+Italiano	意大利语
+Francés	法语
+Alemán	德语
+Catalán	加泰罗尼亚语
+Neerlandés	荷兰语
+Japonés	日语
+Chino	中文
+Ruso	俄语
+Traductor	翻译器
+Cargando…	正在加载…
+Guardado: la placa lo toma en unos segundos	在几秒钟内,板子会接收它.
+Sólo si tu servidor la pide	仅在服务器要求时填写
+nombre@ejemplo.com	name@example.com
+Escribí la dirección del servidor	请输入服务器地址
+Probando…	测试.
+Anda: %d idiomas.	连接正常，支持 %d 种语言。
+El navegador no llegó (puede ser el CORS del servidor); la placa quizás sí.	浏览器无法连接，可能受服务器 CORS 设置影响。开发板仍可能可以访问。
+Motor	翻译引擎
+Servidor propio (LibreTranslate)	自有服务器（LibreTranslate）
+Dirección	地址
+Clave	密钥
+Probar desde el navegador	从浏览器测试
+MyMemory	MyMemory
+Correo (opcional): sube el límite diario de 5000 a 50 000 caracteres	邮箱（可选）：将每日额度从 5,000 个字符提高到 50,000 个字符
+Lo que se traduce en línea viaja al servicio, que puede guardarlo. Sin red, en la placa, no sale de la tarjeta.	在线翻译内容会发送给服务提供方，对方可能保留内容。使用开发板离线翻译时，内容保留在存储卡内。
+No guardar el historial	不保留历史记录
+Guardar	保存
+Abrir en la placa	在板上开放
+Paquetes de idioma en la tarjeta	存储卡上的语言包
+Ninguno todavía.	尚无语言包。
+Se bajan desde la Tienda de la placa, en los extras del Traductor. Cada par trae los modelos de las dos direcciones (sin red, unos segundos por oración) y los diccionarios. Entre dos idiomas que no son el inglés, la placa traduce pasando por el inglés.	可在开发板商店的翻译器附加项目中获取。每个语言对包含双向模型和词典，离线翻译每句需几秒。两种非英语语言之间的翻译会通过英语中转。
+Favorito	收藏
+Copiar	复制
+Copiado	已复制
+Borrar	删除
+Historial	历史记录
+Todo (%d)	全部（%d）
+Favoritos (%d)	收藏（%d）
+Bajar como texto	下载为文本
+No hay favoritos.	暂无收藏。
+Todavía no hay traducciones.	暂无翻译记录。

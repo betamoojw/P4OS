@@ -1,0 +1,61 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Hockey de mesa	氣墊球
+Air hockey en 3D	3D 氣墊球
+Contra la placa	人機對戰
+Dos jugadores	雙人對戰
+Ajustes	設定
+Falta el paquete del juego: bajalo de la Tienda	缺少遊戲資源包，請從應用程式商店下載
+fácil	簡單
+normal	中等
+difícil	困難
+crack	王牌
+Mesa: %s	球桌：%s
+Por tiempo	限時賽
+A goles	進球賽
+%d minutos	%d 分鐘
+El primero a %d	先得 %d 分獲勝
+Más mesas: bajalas de la Tienda	更多球桌可從應用程式商店下載
+La placa juega en	電腦對手難度
+Cada uno juega con un dedo en su mitad	兩名玩家各用一根手指在自己的半場操控
+¡A jugar!	開始！
+Dificultad	難度
+Paleta	擊球器
+chica	小
+mediana	中
+grande	大
+Disco	球盤
+lento	慢
+rápido	快
+Sonido	聲音
+no	關
+sí	開
+Ruido del aire	氣流聲
+¡GOL!	進球！
+REPETICIÓN	重播
+FINAL	比賽結束
+GOL DE ORO	金球決勝
+Mové la paleta con el dedo	用手指移動擊球器
+Jugador 1	玩家 1
+Vos	你
+Jugador 2	玩家 2
+La placa	電腦
+GANÓ EL JUGADOR 1	玩家 1 獲勝
+¡GANASTE!	你贏了！
+GANÓ EL JUGADOR 2	玩家 2 獲勝
+GANÓ LA PLACA	電腦獲勝
+Sonido: sí	聲音：開
+Sonido: no	聲音：關
+Pausa	暫停
+Seguir	繼續
+Empezar de nuevo	重新開始
+Salir al menú	返回選單
+Empate	平局
+¡Ganaste!	你贏了！
+Ganó la placa	電腦獲勝
+¡Ganó el jugador 1!	玩家 1 獲勝！
+¡Ganó el jugador 2!	玩家 2 獲勝！
+Revancha	再賽一場
+Menú	選單
+Prendiendo el aire...	氣墊球桌啟動中…
+No se pudo cargar la mesa	無法載入球桌

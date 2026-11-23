@@ -1,0 +1,24 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Oficina	辦公
+Soltá acá los documentos para subirlos a esta carpeta, o tocá para elegirlos	將檔案拖到此處上傳到當前資料夾，或點選選擇
+Subiendo %s: %s	正在上傳 %s：%s
+No se pudo subir %s: %s	無法上傳 %s：%s
+Subido	已上傳
+%s archivos subidos	已上傳 %s 個檔案
+Cerrar	關閉
+Cargando…	正在載入…
+(el principio)	（開頭）
+Bajar	下載
+Carpeta	資料夾
+¿Borrar «%s»? No se puede deshacer.	刪除“%s”？此操作無法撤銷。
+Borrado	已刪除
+Borrar	刪除
+No hay archivos en esta carpeta.	此資料夾中沒有檔案。
+Abiertos hace poco en la placa	開發板最近開啟的檔案
+Nombre de la carpeta nueva	新資料夾名稱
+Los documentos de la tarjeta. La app Oficina abre y edita documentos (docx, odt), planillas (xlsx, ods, csv) y textos; los demás formatos llegan en las próximas versiones.	記憶卡上的檔案。辦公應用可開啟和編輯檔案（docx、odt）、電子表格（xlsx、ods、csv）及文字，其他格式將在後續版本中支援。
+Documentos	檔案
+Carpeta nueva	新建資料夾
+Abierta en la placa	已在開發板上開啟
+Abrir la app en la placa	在板上開啟應用程式

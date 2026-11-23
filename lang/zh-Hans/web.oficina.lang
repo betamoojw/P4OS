@@ -1,0 +1,24 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Oficina	办公
+Soltá acá los documentos para subirlos a esta carpeta, o tocá para elegirlos	将文档拖到此处上传到当前文件夹，或点击选择
+Subiendo %s: %s	正在上传 %s：%s
+No se pudo subir %s: %s	无法上传 %s：%s
+Subido	已上传
+%s archivos subidos	已上传 %s 个文件
+Cerrar	关闭
+Cargando…	正在加载…
+(el principio)	（开头）
+Bajar	下载
+Carpeta	文件夹
+¿Borrar «%s»? No se puede deshacer.	删除“%s”？此操作无法撤销。
+Borrado	已删除
+Borrar	删除
+No hay archivos en esta carpeta.	此文件夹中没有文件。
+Abiertos hace poco en la placa	开发板最近打开的文档
+Nombre de la carpeta nueva	新文件夹名称
+Los documentos de la tarjeta. La app Oficina abre y edita documentos (docx, odt), planillas (xlsx, ods, csv) y textos; los demás formatos llegan en las próximas versiones.	存储卡上的文档。办公应用可打开和编辑文档（docx、odt）、电子表格（xlsx、ods、csv）及文本，其他格式将在后续版本中支持。
+Documentos	文档
+Carpeta nueva	新建文件夹
+Abierta en la placa	已在开发板上打开
+Abrir la app en la placa	在板上打开应用程序

@@ -1,0 +1,117 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+%s superó %s: ahora %s	%s 已漲破 %s，現價 %s
+%s bajó de %s: ahora %s	%s 已跌破 %s，現價 %s
+Datos con demora · Fuente: %s · No es un consejo de inversión	資料有延遲 · 來源：%s · 不構成投資建議
+Datos con demora · No es un consejo de inversión	資料有延遲 · 不構成投資建議
+Mías	自選
+Argentina	阿根廷
+EE. UU.	美國
+Cripto	加密貨幣
+Índices	指數
+Cargando…	正在載入…
+MM	均線
+%s  A %s  Mx %s  Mn %s  C %s	%s  開 %s  高 %s  低 %s  收 %s
+   vol. %s	   成交量 %s
+5D	5天
+1M	1月
+6M	6月
+1A	1年
+5A	5年
+Máx	全部
+Línea	折線圖
+Área	面積圖
+Velas	K線圖
+hoy	今天
+Dato del %s · %s · consultado %s	%s 的價格 · %s · 獲取於 %s
+Dato del %s · %s · de la tarjeta	%s 的價格 · %s · 來自記憶卡
+Necesita una clave de un proveedor: se carga en la página del portal	需要資料服務商的金鑰，請在管理網頁中填寫
+Consultando %s…	正在查詢 %s…
+puntos básicos	基點
+ (avisado)	（已提醒）
+Sin avisos de precio	暫無價格提醒
+Para ver el gráfico de acciones e índices hace falta la clave gratis de un proveedor (Stooq, Twelve Data o Alpha Vantage), que se escribe en la página Bolsa del portal.	檢視股票和指數圖表需要資料服務商的免費金鑰（Stooq、Twelve Data 或 Alpha Vantage），請在管理網頁的「股票」頁面填寫。
+%s no da datos de a minutos: probá 5D o más.	%s 不提供分鐘資料，請選擇 5 天或更長時間。
+Sin clave, CoinGecko da hasta un año.	未提供金鑰時，CoinGecko 最多提供一年的資料。
+Velas: esta fuente da sólo cierres en este rango	K線：此來源在所選時間範圍內僅提供收盤價
+Elegí hasta dos para ver todo en % desde el comienzo del rango.	最多選擇兩個標的，按相對所選時間範圍起點的漲跌幅（%）顯示。
+Hasta dos a la vez	一次最多比較兩個
+Comparar %s	比較 %s
+Si sube a %s	漲至 %s 時
+Si baja a %s	跌至 %s 時
+ · ya avisó	 · 已提醒
+Todavía no hay avisos para este símbolo.	此程式碼尚無價格提醒。
+Si sube a	漲至
+Si baja a	跌至
+Escribí un precio	請輸入價格
+Hay demasiados avisos	提醒數量過多
+Aviso guardado: avisa mientras la app esté abierta, aunque esté atrás	提醒已儲存，應用程式開啟期間會生效，包括在背景執行時
+Avisos de %s	%s 的提醒
+Avisa con un mensaje y un pitido cuando el precio cruza el valor, mientras la app esté abierta (aunque esté atrás). También se cargan en el portal.	應用程式開啟期間（包括背景執行時），價格越過設定值就會顯示訊息併發出提示音。也可在管理網頁設定。
+Vol	量
+Comparar	比較
+Apertura	開盤價
+Máximo	最高價
+Mínimo	最低價
+Cierre anterior	前收盤價
+Volumen	成交量
+Rango de 52 semanas	52 周價格區間
+sin clave	未設定金鑰
+error	錯誤
+Necesita una clave: portal	需要金鑰，請在管理網頁設定
+Sumar un símbolo	新增程式碼
+Lista vacía: tocá para sumar un símbolo	清單為空，點選新增程式碼
+Bolsa	股票
+Sin conexión · lo último, %s	離線 · 最近資料 %s
+Sin conexión	離線
+Actualizando…	正在更新…
+Acciones e índices: cargá una clave en la página del portal	股票和指數：請在管理網頁填寫金鑰
+Actualizado %s	更新於 %s
+%s ya está en la lista	%s 已在清單中
+Sumado a %s	已新增到 %s
+La lista está llena	清單已滿
+índice	指數
+Sumar «%s» tal cual	按原樣新增「%s」
+Buscando…	正在搜尋…
+Tocá ✓ en el teclado para buscar acciones en %s y monedas en CoinGecko.	點選鍵盤上的 ✓，在 %s 搜尋股票，並在 CoinGecko 搜尋加密貨幣。
+Tocá ✓ en el teclado para buscar monedas en CoinGecko. Para buscar acciones por nombre, cargá una clave en la página del portal; si sabés el símbolo, escribilo.	點選鍵盤上的 ✓ 在 CoinGecko 搜尋加密貨幣。按名稱搜尋股票前，請在管理網頁填寫金鑰；若已知股票程式碼，可直接輸入。
+El proveedor pidió esperar un minuto	資料服務商要求等待一分鐘
+No se pudo buscar	搜尋失敗
+Sumar a %s	新增到 %s
+Nombre o símbolo	名稱或程式碼
+%s rechazó la clave	%s 拒絕了此金鑰
+%s pidió esperar	%s 要求稍後重試
+clave rechazada	金鑰被拒絕
+límite del plan gratis	已達到免費方案限制
+no conoce el símbolo	未知程式碼
+no está en el plan	目前方案不包含此項目
+sin datos	暫無資料
+respuesta rara	回應異常
+sin respuesta	未收到回應
+%s: sin conexión (%d)	%s：未連線（%d）
+recién	剛剛
+hace %d min	%d 分鐘前
+hace %d h	%d 小時前
+hace %d días	%d 天前
+%s B	%s 兆
+%s mil M	%s 十億
+%s M	%s 百萬
+%s mil	%s 千
+Oficial	官方
+Dólar oficial	官方美元匯率
+Blue	平行市場
+Dólar blue	平行市場美元（Blue）
+MEP	MEP
+Dólar MEP (bolsa)	MEP 美元（證券市場）
+CCL	CCL
+Dólar contado con liqui	CCL 美元（跨境證券結算）
+Dólar cripto	加密貨幣美元
+Mayorista	批發
+Dólar mayorista	批發市場美元
+Euro en pesos	歐元兌阿根廷比索
+Real en pesos	巴西雷亞爾兌阿根廷比索
+Peso chileno en pesos	智利比索兌阿根廷比索
+Peso uruguayo en pesos	烏拉圭比索兌阿根廷比索
+Riesgo	風險
+Riesgo país	國家風險
+Bolsa de Buenos Aires	布宜諾斯艾利斯證券交易所

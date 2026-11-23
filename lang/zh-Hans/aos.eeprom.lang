@@ -120,6 +120,7 @@ MEMORIA	记忆
 CONEXIÓN	连接
 del puerto	港口的
 modo	模式
+Ethernet usa este puerto: al leer o grabar se pone en pausa y la red por cable se corta. Vuelve solo unos segundos después.	以太网正在使用此端口；读写会暂停以太网并断开有线连接，几秒后会自动恢复。
 x8 (ORG a GND)	x8 (ORG到 GND)
 x16 (ORG a 3V3)	x16 (ORG到3V3)
 DETECTAR	检测
@@ -270,4 +271,3 @@ leída	阅读
 No se pudo leer	我读不懂.
 borrada	删除
 No se pudo escribir	我不能写
-Ethernet usa este puerto: al leer o grabar se pone en pausa y la red por cable se corta. Vuelve solo unos segundos después.	以太网正在使用此端口；读写会暂停以太网并断开有线连接，几秒后会自动恢复。

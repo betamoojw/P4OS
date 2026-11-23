@@ -848,6 +848,22 @@ int  aos_hal_mic_level(void);
 bool aos_hal_spk_open(uint32_t sample_rate);        /* mono, 16-bit */
 int  aos_hal_spk_write(const int16_t *pcm, int n);  /* samples accepted */
 int  aos_hal_spk_queued(void);
+/* The same stream, for an app that is played: an instrument, a drum pad.
+ * P4OS: the output is rebuilt with a short buffer while it is open (10 ms
+ * from the app's queue to the speaker, where the usual one is 40), at the
+ * cost of the margin that makes music safe: 6 ms of the output not running
+ * are a click. So it is for an app that has the speaker to itself; with
+ * music mixed under it, or while the microphone records, the stream opens
+ * the usual way. Opening and closing it are tens of milliseconds of silence.
+ * aos_hal_spk_latency_ms() says which one there is now: what is between a
+ * sample the mixer takes and the speaker, at most, without the app's own
+ * queue. Keep a queue of two of the mixer's blocks (4 ms) or more. */
+bool aos_hal_spk_open_low(uint32_t sample_rate);
+int  aos_hal_spk_latency_ms(void);
+/* How many of the mixer's blocks found the app's ring short since the app
+ * first wrote to this stream: each one is a gap that is heard. For an app
+ * to size its queue by what happens and not by guessing. */
+int  aos_hal_spk_dry(void);
 bool aos_hal_spk_is_open(void);
 void aos_hal_spk_close(void);
 
@@ -1802,8 +1818,12 @@ typedef enum {
 
 /* Fires the GET and returns straight away. Returns an identifier > 0, or < 0
  * if there is no network, no free slots or the URL is no good (neither http://
- * nor https://). max_bytes is the ceiling of the body that is kept (allocated
- * in PSRAM). */
+ * nor https://). max_bytes is the ceiling of the body that is kept: one longer
+ * is cut there. The buffer is in PSRAM and grows with what arrives, so a
+ * generous ceiling costs nothing by itself; up to 0.31.0 the whole of it was
+ * set aside, in one piece, before asking (-3 when it was not there), and an
+ * app that is to run on that firmware names a ceiling near what it expects.
+ * A body that outgrows the memory there is fails with AOS_HTTP_ERR_MEM. */
 int aos_hal_http_get(const char *url, int max_bytes);
 
 /* --------------------------------------------------------------------------
@@ -2023,6 +2043,13 @@ bool aos_hal_usb_midi_ready(void);          /* KEYS mode and the computer took t
 bool aos_hal_usb_midi_note(int note, int velocity, bool on);   /* 0..127; channel 1 */
 bool aos_hal_usb_midi_cc(int control, int value);              /* 0..127 */
 bool aos_hal_usb_midi_bend(int value);                         /* -8192..8191 */
+/* Any MIDI message but a system exclusive, as it is: a channel message on
+ * any channel (0x80..0xEF) or a system one (0xF1..0xF3, 0xF6, the clock
+ * 0xF8, Start 0xFA, Continue 0xFB, Stop 0xFC, 0xFE, 0xFF). d1 and d2 are
+ * taken as the message needs them (none for the clock). false when the
+ * computer is not there, or for a status that is not a message's. Since
+ * 0.32.0: what Estudio sends the computer its parts, drums and clock with. */
+bool aos_hal_usb_midi_send(int status, int d1, int d2);
 bool aos_hal_usb_card_away(void);       /* DISK mode and the computer holds the card */
 
 /* ---- USB, P4OS additions (the Macro pad; aos_usb_p4.c, sim/usb_sim.c) ----

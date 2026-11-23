@@ -1,4 +1,4 @@
-# Offline Traditional Chinese catalogue; reviewed terms: ../zh-Hant-key-overrides.json
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
 # Spanish keys and printf/escape tokens are preserved.
 La fuente no aceptó %s	電源沒有接受 %s
 modelo	模型

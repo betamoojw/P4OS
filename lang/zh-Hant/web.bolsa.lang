@@ -1,0 +1,72 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Oficial	官方
+Dólar oficial	官方美元匯率
+Blue	藍美元
+Dólar blue	藍美元匯率
+MEP	MEP
+Dólar MEP (bolsa)	MEP 美元匯率（證券市場）
+CCL	CCL
+Dólar contado con liqui	CCL 美元匯率（境外結算）
+Cripto	加密貨幣
+Dólar cripto	加密貨幣美元匯率
+Mayorista	批發匯率
+Dólar mayorista	批發美元匯率
+Euro en pesos	歐元兌比索
+Real en pesos	巴西雷亞爾兌比索
+Peso chileno en pesos	智利比索兌阿根廷比索
+Peso uruguayo en pesos	烏拉圭比索兌阿根廷比索
+Riesgo	風險
+Riesgo país	國家風險
+Mías	我的
+Argentina	阿根廷
+EE. UU.	美國
+Índices	指數
+8 consultas por minuto y 800 por día. Cotizaciones con las 52 semanas, gráficos del día (cada 5 minutos) y diarios.	每分鐘 8 次、每天 800 次請求。提供 52 周行情、日內圖表（每 5 分鐘）及日線圖。
+Históricos diarios con apertura, máximo, mínimo y volumen; índices. La clave se saca en su página, en la descarga de datos.	提供含開盤價、最高價、最低價和成交量的每日曆史資料，以及指數資料。可在網站的資料下載頁面獲取金鑰。
+25 consultas por día: cotizaciones, los últimos 100 días y semanales.	每天 25 次請求，提供行情、最近 100 天及周線資料。
+Sólo cotizaciones (sus gráficos son de pago): sirve junto con otro para los históricos.	僅提供行情，圖表需付費。可搭配其他服務獲取歷史資料。
+Bolsa	股票
+Cargando…	正在載入…
+Guardar	儲存
+Guardar cambios	儲存更改
+Subir	上移
+Bajar	下移
+Sacar	移除
+Símbolo: NANDU, YERBA.BA, ^MERV, USD.BLUE, cg:bitcoin…	程式碼：NANDU、YERBA.BA、^MERV、USD.BLUE、cg:bitcoin…
+Ya está en la lista	已在清單中
+La lista está llena (30)	清單已滿（30 項）
+¿Borrar la lista %s?	刪除清單 %s？
+Borrar lista	刪除清單
+Sumar	新增
+Nueva	新建
+Agregar una lista	新增清單
+sin clave	無金鑰
+sacar una clave gratis	獲取免費金鑰
+Ver	顯示
+Ocultar	隱藏
+Automático (el primero con clave)	自動（首個已設定金鑰的服務）
+Proveedor preferido para acciones	首選股票資料服務
+Actualizar las cotizaciones cada (minutos)	行情重新整理間隔（分鐘）
+si sube a %s	漲至 %s 時
+si baja a %s	跌至 %s 時
+ya avisó	已提醒
+ahora %s	當前 %s
+Rearmar	重新啟用
+Borrar	刪除
+si sube a	漲至
+si baja a	跌至
+precio	價格
+Elegí un símbolo y escribí un precio	選擇程式碼並輸入價格
+Agregar aviso	新增提醒
+Guardado: la placa lo toma en unos segundos	在幾秒鐘內,板子會接收它.
+Todavía no hay configuración: abrí Bolsa en la placa una vez y volvé.	尚無設定，請先在開發板上開啟一次“股票”，然後返回此頁。
+Datos con demora. La app muestra cotizaciones y gráficos; no es un consejo de inversión.	資料有延遲。本應用提供行情和圖表，不構成投資建議。
+Listas	列表
+Acciones de EE. UU. con su símbolo (NANDU), de Buenos Aires con .BA (YERBA.BA), índices con ^ (^MERV), monedas como cg:bitcoin. El dólar, las monedas, el riesgo país y la cripto andan sin clave.	美股使用股票程式碼（NANDU），布宜諾斯艾利斯股票加 .BA（YERBA.BA），指數加 ^（^MERV），加密貨幣使用 cg:bitcoin 等格式。美元、其他貨幣、國家風險和加密貨幣資料無需金鑰。
+Claves de los proveedores	資料服務金鑰
+Las acciones y los índices necesitan la clave gratis de al menos uno. Se guardan sólo en la tarjeta de la placa, en /data/bolsa/bolsa.txt.	股票和指數至少需要一個服務的免費金鑰。金鑰僅儲存在開發板的記憶卡上，路徑為 /data/bolsa/bolsa.txt。
+Avisos de precio	價格提醒
+La placa avisa con un mensaje y un pitido cuando el precio cruza el valor, mientras la app esté abierta (aunque esté atrás).	當價格越過設定值時，開發板顯示訊息併發出提示音。應用需保持開啟，可在後臺執行。
+Abierta en la placa	已在開發板上開啟
+Abrir Bolsa en la placa	在開發板上開啟“股票”

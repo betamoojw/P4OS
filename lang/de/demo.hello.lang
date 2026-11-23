@@ -5,8 +5,8 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/hello_app/main/hello_app.c:71
+#: apps\hello_app\main\hello_app.c:71
 Hola desde un .so	Hallo aus einem .so
 
-#: apps/hello_app/main/hello_app.c:82
+#: apps\hello_app\main\hello_app.c:82
 tocar para sumar	tippen zum Zählen

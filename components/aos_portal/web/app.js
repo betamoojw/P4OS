@@ -64,8 +64,8 @@ async function loadCatalog(file) {
   if (file !== '_portal.lang' && LANG === code) for (const [key, value] of catalog) LEGACY_TR.set(key, value);
 }
 /* the menu that index.html brings, translated where it stands */
-const NAV_NAMES = [N_('Pantalla'), N_('Inicio'), N_('Wi-Fi'), N_('Red'), N_('Terminal'), N_('Programador'), N_('Banco'),
-  N_('Macro pad'), N_('Expansión'), N_('Archivos'), N_('Ajustes'), N_('Firmware'), N_('Registro')];
+const NAV_NAMES = [N_('Pantalla'), N_('Inicio'), N_('Tienda'), N_('Wi-Fi y Ethernet'), N_('Red'), N_('Terminal'), N_('Programador'), N_('Banco'),
+  N_('Macro pad'), N_('Expansión'), N_('Archivos'), N_('Ajustes'), N_('Respaldo'), N_('Firmware'), N_('Registro')];
 async function setLang(code) {
   TR.clear(); PAGE_TR.clear(); LEGACY_TR.clear();
   LANG = validLanguage(code) ? code : 'es';
@@ -623,7 +623,18 @@ const JOB_DONE = { read: N_('Volcado guardado'), erase: N_('Flash borrada'), con
 /* "/sdcard/firmware/volcados/x.bin" -> "/firmware/volcados/x.bin", as the card's API names it */
 const cardPath = p => { const i = p.indexOf('/firmware/'); return i >= 0 ? p.slice(i) : p; };
 const dumpLink = (p, text) => h('a', { href: '/api/fs/get?attachment=1&path=' + encodeURIComponent(cardPath(p)) }, text);
-let flashT, flashSel = '', flashPort = 'uart.b', flashLog = 0, flashFam = 'esp';
+let flashT, flashSel = '', flashPort = 'uart.b', flashLog = 0, flashFam = 'esp', flashQuery = '', flashSeq = -1;
+/* the list's order, kept in this browser: by name, the newest on the card
+ * first, the last written to a board first */
+const FLASH_SORTS = [['name', N_('Por nombre')], ['newest', N_('Agregados recientes')], ['flashed', N_('Grabados recientes')]];
+let flashSort = (() => { try { return localStorage.getItem('p4os.flashSort') || 'name'; } catch { return 'name'; } })();
+const flashOrder = list => {
+  const q = flashQuery.trim().toLowerCase();
+  const out = q ? list.filter(x => [x.name, x.app, x.version, x.chip_label].some(v => (v || '').toLowerCase().includes(q))) : list.slice();
+  if (flashSort === 'newest') out.sort((a, b) => (b.mtime || 0) - (a.mtime || 0));
+  else if (flashSort === 'flashed') out.sort((a, b) => (b.flashed_rank || 0) - (a.flashed_rank || 0));
+  return out;   /* 'name': as the board sends them (projects, files, dumps, by name); sort() keeps ties in place */
+};
 const fmtMs = ms => { const s = Math.round(ms / 1000); return s < 60 ? s + ' s' : Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
 
 async function uploadFolder(files, bar) {
@@ -700,14 +711,18 @@ async function pageProgramador() {
   };
   const load = async force => {
     let st;
-    try { st = await api('flash'); } catch { return; }
+    try { st = await api('flash' + (force ? '?scan=1' : '')); } catch { return; }
+    /* a job that ended may have written one: read the list again */
+    if (flashSeq >= 0 && st.seq !== flashSeq && !force) { flashSeq = st.seq; return load(true); }
+    flashSeq = st.seq;
     last = st;
     if (!portSel.options.length || force) {
       put(portSel, st.ports.map(p => h('option', { value: p.name, selected: p.name === flashPort },
         p.name + (p.desc ? ' · ' + p.desc + ' · ' + tr('EN/BOOT por RTS/DTR') : p.lines ? ' · ' + tr('con EN/BOOT') : ' · ' + tr('sin EN/BOOT')) + (p.holder ? ' · ' + tr('lo tiene %s', p.holder) : ''))));
     }
     const c = st.family === flashFam ? st.chip : null;
-    const sources = st.sources.filter(x => !x.families || x.families.includes(flashFam));
+    const all = st.sources.filter(x => !x.families || x.families.includes(flashFam));
+    const sources = flashOrder(all);
     put(target,
       h('div', { class: 'row' }, h('div', { class: 'grow' }, tr('Tipo de placa')), famSel),
       row(tr('Placa'), c ? `${c.name} ${c.revision || ''}` : tr('sin detectar'), c ? '' : 'muted'),
@@ -727,10 +742,11 @@ async function pageProgramador() {
         h('button', { class: 'btn', disabled: st.busy, onclick: openConsole }, tr('Consola RTT')),
         h('button', { class: 'btn', disabled: st.busy, onclick: openProbe, title: 'openocd -f interface/cmsis-dap.cfg · pyocd · probe-rs' }, tr('Sonda para la computadora'))) : null);
     /* firmware on the card; redrawn only when it changes */
-    const sig = JSON.stringify(sources.map(x => x.path + x.total)) + flashSel + st.busy + flashFam;
+    const sig = JSON.stringify(sources.map(x => x.path + x.total + ':' + x.flashed_rank)) + flashSel + st.busy + flashFam + flashSort + flashQuery;
     if (sig !== lastSources || force) {
       lastSources = sig;
       if (!flashSel && sources.length) flashSel = sources[0].path;
+      const when = t => t > 1600000000 ? new Date(t * 1000).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
       put(srcs, sources.length ? sources.map(x => {
         const on = x.path === flashSel, other = c && x.chip && c.name.toLowerCase().replace(/-/g, '') !== x.chip.toLowerCase();
         return h('div', { class: 'row click' + (on ? ' sel' : ''), style: on ? 'background:var(--card2)' : '', onclick: () => { flashSel = x.path; load(true); } },
@@ -738,10 +754,13 @@ async function pageProgramador() {
           h('div', { class: 'grow' }, h('div', {}, x.name, x.version ? h('span', { class: 'muted small' }, '  ' + x.version) : null,
               x.dump ? h('span', { class: 'small', onclick: e => e.stopPropagation() }, '  ', dumpLink(x.path, tr('bajar'))) : null),
             h('div', { class: 'small ' + (other ? 'warn' : 'muted') }, (x.dump ? tr('Volcado') + ' · ' : '') + (x.chip ? (other ? tr('para %s', x.chip_label || x.chip.toUpperCase()) : (x.chip_label || x.chip.toUpperCase())) : tr('chip desconocido')) + ' · ' +
-              (x.files.length === 1 ? tr('1 archivo') : tr('%s archivos', x.files.length)) + ' · ' + fmtBytes(x.total)),
+              (x.files.length === 1 ? tr('1 archivo') : tr('%s archivos', x.files.length)) + ' · ' + fmtBytes(x.total) +
+              (flashSort === 'newest' && when(x.mtime) ? ' · ' + tr('copiado %s', when(x.mtime)) : '') +
+              (x.flashed_rank ? ' · ' + (when(x.flashed) ? tr('grabado %s', when(x.flashed)) : tr('ya grabado')) : ''),
+              x.changed ? h('span', { class: 'pill', style: 'margin-left:6px;background:var(--orange);color:#000' }, tr('versión nueva')) : null),
             on ? h('div', { class: 'small muted', style: 'font-family:ui-monospace,Menlo,monospace;margin-top:6px' },
               x.files.map(f => h('div', {}, f.offset + '  ' + f.name + '  (' + fmtBytes(f.size) + ')'))) : null));
-      }) : [h('div', { class: 'row muted' }, flashFam === 'swd' || flashFam === 'stm32' ? tr('No hay firmware en /firmware. Subí el .hex, .elf, .uf2 o .bin de tu firmware.') : flashFam === 'avr' ? tr('No hay firmware en /firmware. Subí el .hex de tu sketch (Sketch, Exportar binario compilado en el IDE de Arduino).')
+      }) : all.length ? [h('div', { class: 'row muted' }, tr('Ninguno con "%s"', flashQuery))] : [h('div', { class: 'row muted' }, flashFam === 'swd' || flashFam === 'stm32' ? tr('No hay firmware en /firmware. Subí el .hex, .elf, .uf2 o .bin de tu firmware.') : flashFam === 'avr' ? tr('No hay firmware en /firmware. Subí el .hex de tu sketch (Sketch, Exportar binario compilado en el IDE de Arduino).')
         : tr('No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.'))]);
     }
     /* the job */
@@ -779,7 +798,14 @@ async function pageProgramador() {
         h('p', { class: 'note' }, tr('Un Arduino: EN va a su RESET, y el TX de uno de 5 V llega al RX de la placa por un divisor (1 kΩ y 2 kΩ) o un adaptador de niveles. Por USB, nada.')),
         h('p', { class: 'note' }, tr('SWD: el TX del puerto es SWCLK, el RX es SWDIO y EN es NRST (opcional), con GND común.')),
         h('p', { class: 'note' }, tr('STM32 por serie: TX al PA10, RX al PA9, EN al NRST y BOOT al BOOT0.'))),
-      h('div', {}, h('h2', { style: 'margin-top:0' }, tr('Firmware en la tarjeta')), srcs,
+      h('div', {}, h('h2', { style: 'margin-top:0' }, tr('Firmware en la tarjeta')),
+        h('div', { class: 'btns', style: 'margin-bottom:8px' },
+          h('select', { onchange: e => { flashSort = e.target.value; try { localStorage.setItem('p4os.flashSort', flashSort); } catch { /* private window */ } load(); } },
+            FLASH_SORTS.map(([v, n]) => h('option', { value: v, selected: v === flashSort }, tr(n)))),
+          h('input', { type: 'search', placeholder: tr('Buscar por nombre'), value: flashQuery, style: 'flex:1;min-width:8em',
+            oninput: e => { flashQuery = e.target.value; load(); } }),
+          h('button', { class: 'btn', title: tr('Leer la tarjeta otra vez'), onclick: () => load(true) }, '↻')),
+        srcs,
         h('div', { class: 'btns', style: 'margin-top:12px' }, startBtn,
           h('button', { class: 'btn', onclick: () => pickDir.click() }, tr('Subir carpeta de build…')), pickDir,
           h('button', { class: 'btn', onclick: () => pickBin.click() }, tr('Subir un archivo…')), pickBin), bar)),
@@ -986,6 +1012,38 @@ async function pageFirmware() {
     }
     msg.textContent = tr('La placa no contestó en un minuto y medio: mirala.');
   }
+  // from GitHub: what the official catalogue of the store offers for this board
+  const gh = h('div', { class: 'card pad' }), ghBar = h('div', { class: 'prog', style: 'margin:12px 0 6px;display:none' }, h('div')), ghMsg = h('div', { class: 'note' });
+  let ghTimer = 0;
+  const FWWHY = { network: N_('No se pudo bajar: revisá la red.'), not_there: N_('No está en el servidor.'), clock: N_('La placa todavía no tiene la hora de la red.'),
+                  server: N_('No se pudo verificar el servidor.'), card: N_('No se pudo escribir en la tarjeta: ¿está llena?'),
+                  package: N_('La imagen no es la publicada: no se escribió nada.'), flash: N_('No se pudo escribir la otra ranura.'),
+                  up_to_date: N_('Ya es la versión que corre.'), not_listed: N_('El catálogo no ofrece firmware para esta placa.') };
+  async function ghDraw() {
+    if (!document.body.contains(gh)) return;
+    let s;
+    try { s = await api('store'); } catch { return; }
+    const f = s.fw || {}, mine = s.busy && s.job && s.job.what === 'firmware', j = s.job || {};
+    ghBar.style.display = mine ? '' : 'none';
+    ghBar.firstChild.style.width = mine && j.total ? (j.got * 100 / j.total).toFixed(1) + '%' : '0%';
+    ghMsg.textContent = mine ? (j.step === 'writing' ? tr('Escribiendo la otra ranura: %s de %s…', fmtBytes(j.got), fmtBytes(j.total))
+                                                     : tr('Bajando %s: %s de %s…', f.ver || '', fmtBytes(j.got), fmtBytes(j.total || f.size || 0)))
+      : f.ready ? tr('%s está en la otra ranura. Arranca a prueba al reiniciar.', f.ver)
+      : s.last && /^firmware/.test(s.last) && !s.last_ok && s.last_kind !== 'cancelled' ? tr(FWWHY[s.last_kind] || N_('Algo salió mal.')) + ' (' + s.last + ')' : '';
+    ghMsg.style.color = !mine && !f.ready && ghMsg.textContent ? 'var(--orange)' : '';
+    put(gh,
+      row(tr('En GitHub'), !f.ver ? tr('el catálogo no ofrece firmware para esta placa (%s)', f.profile || '?')
+        : f.newer ? tr('%s — %s, para %s', f.ver, fmtBytes(f.size), f.profile) : tr('%s: la placa está al día', f.ver), f.newer && !f.ready ? 'warn' : ''),
+      h('div', { class: 'note' }, tr('La placa lo baja de la última release publicada, lo verifica entero contra el tamaño y el SHA-256 del catálogo antes de escribir nada, y lo deja en la otra ranura. No se reinicia sola.')),
+      h('div', { class: 'btns', style: 'margin-top:10px' },
+        h('button', { class: 'btn', disabled: s.busy, onclick: async () => { await post('store/refresh', {}).catch(e => toast(e.message, true)); ghPoll(500); } }, tr('Buscar de nuevo')),
+        f.newer && !f.ready ? h('button', { class: 'btn pri', disabled: s.busy, onclick: async () => { await post('store/firmware', {}).catch(e => toast(e.message, true)); ghPoll(300); } }, tr('Bajar e instalar %s', f.ver)) : null,
+        mine ? h('button', { class: 'btn red', onclick: async () => { await post('store/cancel', {}).catch(() => {}); ghPoll(300); } }, tr('Cancelar')) : null,
+        f.ready ? h('button', { class: 'btn pri', onclick: () => restartInto() }, tr('Reiniciar con el firmware nuevo')) : null),
+      ghBar, ghMsg);
+    ghPoll(s.busy ? 700 : 5000);
+  }
+  function ghPoll(ms) { clearTimeout(ghTimer); ghTimer = setTimeout(ghDraw, ms); }
   const o = st.other || {};
   const otaState = state => tr(({ valid: N_('confirmada'), invalid: N_('marcada como mala'), aborted: N_('a medio instalar'), new: N_('nueva'), pending: N_('a prueba'), undefined: N_('estado desconocido') })[state] || state || '');
   put(main, h('h1', {}, tr('Firmware')),
@@ -993,6 +1051,7 @@ async function pageFirmware() {
       row(tr('Versión'), st.version), row(tr('Compilado'), (st.built || '') + ' ' + (st.time || '')), row('IDF', st.idf || ''), st.elf ? row('ELF', st.elf) : null,
       row(tr('Ranura'), st.running + (st.trial ? ' (' + tr('a prueba') + ')' : ''), st.trial ? 'warn' : ''),
       row(tr('La otra ranura'), o.slot ? o.slot + (o.version ? ' — ' + o.version + ', ' + (o.built || '') + (o.elf ? ', ELF ' + o.elf : '') + (o.state ? ' (' + otaState(o.state) + ')' : '') : ' — ' + tr('vacía')) : '—')),
+    h('h2', {}, tr('Desde GitHub')), gh,
     h('h2', {}, tr('Actualizar por Wi-Fi')),
     h('div', { class: 'card pad' },
       h('div', { class: 'note' }, tr('Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.', firmwarePath(st))),
@@ -1014,6 +1073,7 @@ async function pageFirmware() {
           h('button', { class: 'btn red', onclick: async () => { if (!confirm(tr('¿Borrar el volcado?'))) return; await post('coredump/erase').catch(e => toast(e.message, true)); pageFirmware(); } }, tr('Borrar')),
           h('button', { class: 'btn', onclick: () => { location.hash = '#registro'; } }, tr('Ver el registro')))]
       : h('div', { class: 'note' }, tr('No hay: la placa no se colgó desde que se borró el último.'))));
+  ghDraw();
 }
 
 /* ---- Banco ---- */
@@ -3160,7 +3220,355 @@ function pageRed() {
   return () => { gone = true; clearInterval(timer); };
 }
 
-const PAGES = { pantalla: pagePantalla, inicio: pageInicio, wifi: pageWifi, red: pageRed, ha: pageHa, terminal: pageTerminal, programador: pageProgramador, banco: pageBanco, claude: pageClaude, mqtt: pageMqtt, macropad: pageMacropad, expansion: pageExpansion, archivos: pageArchivos, ajustes: pageAjustes, firmware: pageFirmware, registro: pageRegistro };
+/* ---- Tienda (docs/plan/TIENDA.md): the store's service from the browser.
+ * GET /api/store is its state and GET /api/store/catalog the catalogue as it
+ * was downloaded, one app a line; every POST queues a job on the board and
+ * this asks again until it is done. Sources are added on the board only. */
+function pageTienda() {
+  let gone = false, timer = 0, st = null, cat = [], head = null, filter = '', from = '', text = '', jobs = -1;
+  const L = o => (o && (o[LANG] || (LANG === 'es' ? o.es : o.en) || o.es)) || '';
+  const top = h('div', { class: 'card pad' }), list = h('div', {});
+  const bar = h('div', { class: 'prog' }, h('div')), msg = h('div', { class: 'note' });
+  const icons = new Map();
+  function icon(e, S) {
+    const key = e.file + '@' + S;
+    if (icons.has(key)) return icons.get(key);
+    const dpr = Math.min(3, window.devicePixelRatio || 1), c = document.createElement('canvas');
+    c.width = c.height = Math.round(S * dpr);
+    const ctx = c.getContext('2d');
+    ctx.scale(dpr, dpr);
+    let bytes = null;
+    if (e.icon) try { bytes = Uint8Array.from(atob(e.icon), ch => ch.charCodeAt(0)); } catch {}
+    inDrawIcon(ctx, { id: e.id, name: L(e.name), color_a: (e.colors || [])[0], color_b: (e.colors || [])[1],
+                      text: e.glyph && /^[\x20-\x7e]+$/.test(e.glyph) ? e.glyph : '' }, bytes, S);
+    const url = c.toDataURL();
+    icons.set(key, url);
+    return url;
+  }
+  const act = async (what, body) => {
+    try { st = await post('store/' + what, body); draw(); poll(400); }
+    catch (e) { toast(e.message, true); }
+  };
+  const FEAT = { '3d': '3D', packs: N_('Arte en packs'), pad: 'Joystick', landscape: N_('Acostada'), portrait: N_('De pie'),
+                 sound: N_('Sonido'), net: N_('Usa la red'), bt: 'Bluetooth', portal: N_('Página en el portal') };
+  const WHY = { network: N_('No se pudo bajar: revisá la red.'), not_there: N_('No está en el servidor.'), clock: N_('La placa todavía no tiene la hora de la red.'),
+                server: N_('No se pudo verificar el servidor.'), card: N_('No se pudo escribir en la tarjeta: ¿está llena?'),
+                package: N_('El paquete no es el publicado, o está dañado.'), rules: N_('El paquete quiere escribir donde no le corresponde.'),
+                firmware: N_('Necesita un P4OS más nuevo.'), catalog: N_('El catálogo no se puede leer.'), source: N_('Esa fuente no se puede usar.'),
+                memory: N_('No alcanzó la memoria.'), not_listed: N_('No está en el catálogo.'), in_store: N_('Esa app es de la Tienda: se instala y se quita desde ahí.'),
+                not_store: N_('No la instaló la Tienda.'), flash: N_('No se pudo escribir la otra ranura.'),
+                up_to_date: N_('Ya es la versión que corre.'), other: N_('Algo salió mal.') };
+  const STATE = { installed: N_('Instalada'), update: N_('Hay una versión nueva'), by_hand: N_('Copiada a mano'),
+                  set_aside: N_('Apartada: hizo caer la placa al cargarse'), absent: '' };
+  function card(e, a) {
+    const packs = e.packs || [], need = packs.filter(p => p.need).reduce((n, p) => n + p.size, 0);
+    const mine = st.busy && st.job && st.job.file === e.file;
+    const on = a.state === 'installed' || a.state === 'update';
+    const extras = packs.filter(p => !p.need);
+    const picks = extras.map(p => h('label', { class: 'small', style: 'display:block;margin-top:4px' },
+      h('input', { type: 'checkbox', value: p.file }), ' ', L(p.name), ' · ', fmtBytes(p.size)));
+    const chosen = () => picks.map(l => l.firstChild).filter(i => i.checked).map(i => i.value).join(',') || 'need';
+    const verb = a.state === 'update' ? tr('Actualizar') : a.state === 'absent' || (e.sys && a.state === 'by_hand') ? tr('Instalar') : tr('Reinstalar');
+    // on the card and in no catalogue: a package handed in, or a .so copied by hand
+    const local = a.src < 0;
+    const about = !local ? L(e.about) : a.origin === 'hand' ? tr('Copiada a mano a la tarjeta: la Tienda no la maneja.')
+      : e.from ? tr('Instalada de %s, que ya no está entre las fuentes.', e.from) : tr('Instalada desde un paquete (.p4app): no está en ningún catálogo.');
+    return h('div', { class: 'card pad', style: 'margin-bottom:10px' },
+      h('div', { style: 'display:flex;gap:14px;align-items:flex-start' },
+        h('img', { src: icon(e, 56), width: 56, height: 56, style: 'border-radius:13px;flex:none' }),
+        h('div', { class: 'grow' },
+          h('div', {}, h('b', {}, L(e.name)), ' ', e.ver && e.ver !== 'local' ? h('span', { class: 'pill' }, e.ver) : null, ' ',
+            a.src > 0 ? h('span', { class: 'pill', style: 'color:var(--orange)' }, ((st.sources || [])[a.src] || {}).name || tr('de terceros')) : null,
+            a.origin === 'package' ? h('span', { class: 'pill', style: 'color:var(--orange)' }, tr('Paquete suelto')) : null, ' ',
+            a.state !== 'absent' && a.origin !== 'package' ? h('span', { class: 'pill', style: a.state === 'update' || a.state === 'set_aside' ? 'color:var(--orange)' : '' }, tr(STATE[a.state])) : null),
+          h('div', { class: 'small muted', style: 'margin:4px 0' }, about),
+          !local && L(e.desc) ? h('details', { style: 'margin:4px 0' }, h('summary', { class: 'small' }, tr('Leer más')),
+            L(e.desc).split(/\n\s*\n/).map(par => h('p', { class: 'small muted', style: 'margin:6px 0' }, par))) : null,
+          h('div', { class: 'small muted' }, fmtBytes(e.pkg.installed || e.pkg.size) + (need ? ' + ' + fmtBytes(need) + ' ' + tr('de packs') : '') +
+            (a.fits ? '' : ' · ' + tr('necesita P4OS %s', e.fw_min))),
+          h('div', { style: 'margin-top:6px;display:flex;gap:6px;flex-wrap:wrap' },
+            (e.feat || []).filter(f => FEAT[f]).map(f => h('span', { class: 'pill' }, tr(FEAT[f]))),
+            (e.langs || []).length > 1 ? h('span', { class: 'pill' }, e.langs.map(l => l.toUpperCase()).join(' · ')) : null),
+          (e.shots || []).length ? h('div', { style: 'margin-top:8px;display:flex;gap:8px;overflow-x:auto' },
+            e.shots.map(sh => { const u = /^https?:/.test(sh.url) ? sh.url : (e._base || '') + sh.url;
+              return h('a', { href: u, target: '_blank', rel: 'noopener' }, h('img', { src: u, loading: 'lazy', height: 150,
+                width: Math.round(150 * sh.w / sh.h), style: 'border-radius:8px;display:block' })); })) : null,
+          e.user_files ? h('div', { class: 'small', style: 'color:var(--orange);margin-top:4px' }, L(e.user_files)) : null,
+          extras.length ? h('details', { style: 'margin-top:6px' }, h('summary', { class: 'small' }, tr('%s extras', extras.length)), picks) : null),
+        h('div', { class: 'btns', style: 'flex-direction:column;align-items:stretch' },
+          local ? null : h('button', { class: 'btn' + (a.state === 'update' || a.state === 'absent' ? ' pri' : ''), disabled: mine || !a.fits,
+            onclick: () => act('install', { file: e.file, packs: chosen() }) }, mine ? '…' : verb),
+          (on || a.state === 'set_aside') && !e.sys ? h('button', { class: 'btn red', disabled: mine,
+            onclick: () => { if (confirm(tr('¿Quitar %s de la placa? Lo que la app guardó queda en la tarjeta.', L(e.name)))) act('remove', { file: e.file }); } }, tr('Quitar')) : null,
+          (a.state === 'installed' || a.state === 'by_hand') && e.id ? h('button', { class: 'btn', onclick: () => post('open?id=' + encodeURIComponent(e.id)).catch(x => toast(x.message, true)) }, tr('Abrir')) : null)));
+  }
+  function draw() {
+    if (gone || !st) return;
+    const by = new Map(st.apps.map(a => [a.file, a]));
+    const ups = st.apps.filter(a => a.state === 'update').length, hand = st.apps.filter(a => a.state === 'by_hand').length,
+          ours = st.apps.filter(a => a.state === 'by_hand' && a.src >= 0).length;
+    const j = st.job;
+    bar.style.display = st.busy ? '' : 'none';
+    bar.firstChild.style.width = st.busy && j.total ? (j.got * 100 / j.total).toFixed(1) + '%' : '0%';
+    msg.textContent = st.busy ? tr('En curso: %s %s (%s)', j.what, j.file, j.step || '…') + (j.queued ? ' +' + j.queued : '')
+                              : st.last ? (st.last_ok ? tr('Lo último: %s', st.last)
+                                  : st.last_kind === 'cancelled' ? tr('Cancelado.') : tr(WHY[st.last_kind] || WHY.other) + ' (' + st.last + ')') : '';
+    msg.style.color = !st.busy && st.last && !st.last_ok ? 'var(--orange)' : '';
+    const ask = h('input', { type: 'text', placeholder: 'https://github.com/…/…', style: 'flex:1;min-width:180px' });
+    const side = h('input', { type: 'file', accept: '.p4app', style: 'display:none', onchange: async e => {
+      const f = e.target.files[0];
+      if (!f) return;
+      try {
+        const r = await fetch('/api/store/sideload', { method: 'POST', body: f });
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || r.statusText);
+        st = j; draw(); poll(400);
+      } catch (x) { toast(x.message, true); }
+    } });
+    put(top,
+      (st.sources || []).length > 1
+        ? st.sources.map((sr, i) => row(i ? tr('Fuente agregada') : tr('Fuente'), (sr.name || sr.url) + (sr.release ? ' · ' + sr.release : '') + ' · ' + tr('apps: %s', sr.apps)))
+        : row(tr('Fuente'), st.source ? st.source + ' · ' + st.release : tr('todavía sin catálogo')),
+      h('div', { class: 'small mono muted', style: 'word-break:break-all;margin:6px 0' }, st.url),
+      ups ? row(tr('Actualizaciones'), String(ups), 'warn') : null,
+      h('div', { class: 'btns', style: 'margin-top:10px' },
+        h('button', { class: 'btn', disabled: st.busy, onclick: () => act('refresh', {}) }, tr('Buscar de nuevo')),
+        ours ? h('button', { class: 'btn', disabled: st.busy, title: tr('Un recibo para las que son las del catálogo: no cambia ninguna app'),
+                             onclick: () => act('adopt', {}) }, tr('Que la Tienda maneje las %s copiadas a mano', ours)) : null,
+        ours ? h('button', { class: 'btn', disabled: st.busy, title: tr('Las que no son iguales a las del catálogo: baja la de la Tienda para cada una. Lo que guardaron y sus packs quedan.'),
+                             onclick: () => { if (confirm(tr('¿Reemplazar las %s apps copiadas a mano por las de la Tienda?', ours))) act('replace', {}); } }, tr('Reemplazarlas por las de la Tienda')) : null,
+        h('button', { class: 'btn', disabled: st.busy, title: tr('Un paquete que no está en ningún catálogo'), onclick: () => side.click() }, tr('Instalar un .p4app…')), side,
+        st.busy ? h('button', { class: 'btn red', onclick: () => act('cancel', {}) }, tr('Cancelar')) : null),
+      bar, msg,
+      h('div', { class: 'note', style: 'margin-top:8px' }, tr('Las fuentes de apps se agregan sólo en la placa. Desde acá se puede proponer una, para aceptarla en su pantalla:')),
+      st.proposed ? h('div', { class: 'small', style: 'color:var(--orange);margin-top:4px' }, tr('Propuesta, esperando en la placa (Tienda, Fuentes): %s', st.proposed)) : null,
+      h('div', { class: 'btns', style: 'margin-top:6px' }, ask,
+        h('button', { class: 'btn', onclick: async () => { if (!ask.value.trim()) return; try { st = await post('store/propose', { url: ask.value.trim() }); ask.value = ''; draw(); toast(tr('Propuesta: ahora aceptala en la placa (Tienda, Fuentes)')); } catch (x) { toast(x.message, true); } } }, tr('Proponer'))));
+    const cats = (head && head.cats) || [];
+    // the apps of the newest release that brought any
+    const fresh = st.apps.some(a => a.new);
+    if (filter === '*' && !fresh) filter = '';
+    // by where it comes from, once there is more than the official source to tell apart
+    const loose = st.apps.some(a => a.origin === 'package'), nsrc = (st.sources || []).length;
+    if ((from === 'p' && !loose) || (from === 'h' && !hand) || (/^\d+$/.test(from) && +from >= nsrc)) from = '';
+    const org = nsrc > 1 || loose || hand ? h('select', { onchange: e => { from = e.target.value; draw(); } },
+      h('option', { value: '' }, tr('Cualquier origen')),
+      (st.sources || []).map((sr, i) => h('option', { value: String(i), selected: from === String(i) }, sr.name || sr.url)),
+      loose ? h('option', { value: 'p', selected: from === 'p' }, tr('Paquetes sueltos')) : null,
+      hand ? h('option', { value: 'h', selected: from === 'h' }, tr('Copiadas a mano'))  : null) : null;
+    const sel = h('select', { onchange: e => { filter = e.target.value; draw(); } },
+      h('option', { value: '' }, tr('Todo')), h('option', { value: '+', selected: filter === '+' }, tr('Instaladas')),
+      ups ? h('option', { value: '!', selected: filter === '!' }, tr('Actualizaciones')) : null,
+      fresh ? h('option', { value: '*', selected: filter === '*' }, tr('Nuevas')) : null,
+      cats.map(c => h('option', { value: c.id, selected: filter === c.id }, L(c.name))));
+    const q = h('input', { type: 'search', placeholder: tr('Buscar'), value: text, oninput: e => { text = e.target.value.toLowerCase(); drawList(by); } });
+    put(list, h('div', { class: 'btns', style: 'margin:14px 0 10px' }, sel, org, q), h('div', { id: 'tdl' }));
+    drawList(by);
+  }
+  function drawList(by) {
+    const box = $('#tdl', list);
+    if (!box) return;
+    const rows = cat.filter(e => by.has(e.file)).filter(e => {
+      const a = by.get(e.file);
+      if (from === 'p' && a.origin !== 'package') return false;
+      if (from === 'h' && a.state !== 'by_hand') return false;
+      if (/^\d+$/.test(from) && a.src !== +from) return false;
+      if (filter === '+' && a.state === 'absent') return false;
+      if (filter === '!' && a.state !== 'update') return false;
+      if (filter === '*' && !a.new) return false;
+      if (filter && filter !== '+' && filter !== '!' && filter !== '*' && e.cat !== filter) return false;
+      return !text || (L(e.name) + ' ' + L(e.about) + ' ' + L(e.desc) + ' ' + e.file).toLowerCase().includes(text);
+    });
+    put(box, rows.length ? rows.map(e => card(e, by.get(e.file))) : h('div', { class: 'card pad muted' }, cat.length ? tr('Nada por acá') : tr('Todavía no hay catálogo: "Buscar de nuevo" lo trae.')));
+  }
+  async function load() {
+    st = await api('store');
+    if (st.jobs_done !== jobs || !cat.length) {
+      jobs = st.jobs_done;
+      try {
+        const r = await fetch('/api/store/catalog');
+        const lines = r.ok ? (await r.text()).split('\n').filter(l => l.trim()).map(l => JSON.parse(l)) : [];
+        // a line with "source" opens a source: the apps after it are its own, and
+        // their pictures are under its base; the first one is the official source
+        head = null;
+        cat = [];
+        let base = '';
+        for (const l of lines) {
+          if (l.source) {
+            base = l.base || '';
+            if (!head) head = { ...l, cats: [...(l.cats || [])] };
+            else for (const c of l.cats || []) if (!head.cats.some(x => x.id === c.id)) head.cats.push(c);
+          } else if (l.file) cat.push({ ...l, _base: l.local ? '' : base });
+        }
+      } catch { cat = []; }
+      draw();
+    } else if (st.busy) {
+      bar.firstChild.style.width = st.job.total ? (st.job.got * 100 / st.job.total).toFixed(1) + '%' : '0%';
+      msg.textContent = tr('En curso: %s %s (%s)', st.job.what, st.job.file, st.job.step || '…') + (st.job.queued ? ' +' + st.job.queued : '');
+    }
+  }
+  function poll(ms) {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      if (gone) return;
+      const was = st && st.busy;
+      try { await load(); } catch {}
+      if (was && st && !st.busy) draw();
+      poll(st && st.busy ? 500 : 4000);
+    }, ms);
+  }
+  put(main, h('h1', {}, tr('Tienda')), top, list);
+  load().then(draw).catch(e => put(top, tr('No se pudo leer: %s', e.message)));
+  poll(1000);
+  return () => { gone = true; clearTimeout(timer); };
+}
+
+/* ---- Respaldo: what the board holds and cannot fetch again, in one file ---- */
+function pageRespaldo() {
+  let gone = false, timer = 0, st = null, missing = null, missingOf = '', seen = -1;
+  const top = h('div', { class: 'card pad' }), list = h('div', {}), msg = h('div', { class: 'note', style: 'margin-top:8px' });
+  const WHY = { card: N_('No hay tarjeta, o no se pudo escribir en ella.'), not_found: N_('Ese respaldo no está en la tarjeta.'),
+                not_one: N_('El archivo no es un respaldo, o está dañado.'), passphrase: N_('Está cifrado, y esa no es su frase.'),
+                newer: N_('Lo hizo un P4OS más nuevo que este: actualizá primero.'), memory: N_('No alcanzó la memoria.'),
+                busy: N_('Ya hay uno en curso.'), drive: N_('No hay pendrive, o no se pudo escribir en él.'),
+                setup: N_('Falta elegir el servidor, aceptar su clave o la frase de las copias automáticas: en la placa, Ajustes, Respaldo.'),
+                server: N_('El servidor no contesta, o dijo que no.'), hostkey: N_('El servidor muestra otra clave que la aceptada: no se mandó nada.'),
+                login: N_('El servidor no deja entrar la clave de la placa: ¿está en su authorized_keys?'), other: N_('Algo salió mal.') };
+  const when = b => b.made ? new Date(b.made * 1000).toLocaleString(LOCALE) : tr('sin fecha');
+  // the server the sealed copies go to (SFTP): set at the board, read here, with the board's key to copy
+  const srvCard = () => {
+    const s = st.server;
+    if (!s) return null;
+    const where = s.host ? s.user + '@' + s.host + (s.port !== 22 ? ':' + s.port : '') + ' · ' + s.dir : tr('sin elegir');
+    return h('div', { style: 'margin-top:18px' },
+      h('h3', {}, tr('Servidor propio (SFTP)')),
+      h('div', { class: 'card pad' },
+        h('div', {}, h('b', {}, where), ' ',
+          s.pinned ? h('span', { class: 'pill', style: 'color:var(--green)' }, tr('clave aceptada')) : s.host ? h('span', { class: 'pill', style: 'color:var(--orange)' }, tr('falta aceptar su clave en la placa')) : null,
+          s.pinned ? h('span', { class: 'pill' }, s.on ? tr('una copia por semana') : tr('sólo a mano')) : null),
+        s.pinned ? h('div', { class: 'small mono muted', style: 'margin-top:4px;word-break:break-all' }, s.fp) : null,
+        s.seen && s.seen !== s.fp ? h('div', { class: 'small', style: 'margin-top:4px;word-break:break-all' },
+          tr('La última prueba vio %s', s.seen) + (s.seen_in ? '' : ' · ' + tr('y todavía no deja entrar a la placa'))) : null,
+        s.last ? h('div', { class: 'small muted', style: 'margin-top:4px' }, tr('Última copia: %s', new Date(s.last * 1000).toLocaleString(LOCALE))) : null,
+        s.host && st.auto && !st.auto.sealed ? h('div', { class: 'note', style: 'color:var(--orange);margin-top:6px' },
+          tr('Falta elegir una frase para las copias automáticas, en la placa (Ajustes, Respaldo, «Cifrarlas con una frase…»): hasta entonces no sube nada.')) : null,
+        h('div', { class: 'note', style: 'margin-top:8px' }, tr('A un NAS o una computadora con SSH van los respaldos cifrados, y sólo esos. El servidor, aceptar su clave y la copia semanal se eligen en la placa: Ajustes, Respaldo. La placa entra con su clave, sin contraseña: esta línea va en el ~/.ssh/authorized_keys del usuario del servidor.')),
+        s.key_line ? h('div', { class: 'small mono', style: 'margin-top:6px;word-break:break-all;user-select:all' }, s.key_line) : null,
+        h('div', { class: 'btns', style: 'margin-top:8px' },
+          s.key_line ? h('button', { class: 'btn', onclick: () => navigator.clipboard.writeText(s.key_line).then(() => toast(tr('Copiada'))).catch(() => toast(tr('No se pudo copiar: seleccioná la línea'), true)) }, tr('Copiar la clave de la placa')) : null,
+          s.host ? h('button', { class: 'btn', disabled: st.busy, onclick: () => act('backup/server', { do: 'look' }) }, tr('Probar la conexión')) : null,
+          s.pinned ? h('button', { class: 'btn pri', disabled: st.busy || !(st.auto && st.auto.sealed), onclick: () => act('backup/server', { do: 'send' }) }, tr('Subir ahora')) : null)));
+  };
+  const act = async (what, body) => {
+    try { st = await post(what, body); draw(); poll(300); }
+    catch (e) { toast(e.message, true); }
+  };
+  async function restore(b) {
+    let pass = '';
+    if (b.sealed) {
+      pass = prompt(tr('Este respaldo está cifrado. Su frase:')) || '';
+      if (!pass) return;
+    }
+    if (!confirm(tr('¿Restaurar el respaldo del %s? Escribe sus %s ajustes sobre los de ahora; lo que hay se guarda antes en un respaldo propio.', when(b), b.prefs))) return;
+    missing = null;
+    act('backup/restore', { name: b.name, pass });
+  }
+  function card(b) {
+    return h('div', { class: 'card pad', style: 'margin-bottom:10px' },
+      h('div', { style: 'display:flex;gap:14px;align-items:flex-start' },
+        h('div', { class: 'grow' },
+          h('div', {}, h('b', {}, when(b)), ' ',
+            b.sealed ? h('span', { class: 'pill', style: 'color:var(--green)' }, tr('cifrado')) : h('span', { class: 'pill' }, tr('sin credenciales')),
+            b.before ? h('span', { class: 'pill', style: 'color:var(--orange)' }, tr('de antes de restaurar')) : null,
+            b.why === 'daily' ? h('span', { class: 'pill' }, tr('del día')) : null,
+            b.why === 'firmware' ? h('span', { class: 'pill' }, tr('de antes de actualizar')) : null),
+          h('div', { class: 'small muted', style: 'margin:4px 0' },
+            tr('%s ajustes · %s apps en su lista · %s · P4OS %s', b.prefs, b.apps, fmtBytes(b.size), b.fw) + (b.board ? ' · ' + b.board : '')),
+          !b.sealed && b.left_out ? h('div', { class: 'small muted' }, tr('No lleva %s ajustes que parecen credenciales.', b.left_out)) : null,
+          h('div', { class: 'small mono muted', style: 'word-break:break-all' }, b.name)),
+        h('div', { class: 'btns', style: 'flex-direction:column;align-items:stretch' },
+          h('a', { class: 'btn', href: '/api/fs/get?path=' + encodeURIComponent('/backups/' + b.name) + '&attachment=1', download: b.name }, tr('Bajar')),
+          h('button', { class: 'btn', disabled: st.busy, onclick: () => restore(b) }, tr('Restaurar')),
+          h('button', { class: 'btn red', disabled: st.busy, onclick: () => { if (confirm(tr('¿Borrar este respaldo de la tarjeta?'))) act('backup/delete', { name: b.name }); } }, tr('Borrar')))));
+  }
+  function draw() {
+    if (gone || !st) return;
+    const pass = h('input', { type: 'password', placeholder: tr('Frase para cifrarlo (opcional)'), autocomplete: 'new-password', style: 'flex:1;min-width:200px' });
+    const up = h('input', { type: 'file', accept: '.p4bak', style: 'display:none', onchange: async e => {
+      const f = e.target.files[0];
+      if (!f) return;
+      if (!/^[A-Za-z0-9_.-]+\.p4bak$/.test(f.name)) { toast(tr('El archivo tiene que llamarse algo.p4bak, sin espacios'), true); return; }
+      try {
+        const r = await fetch('/api/fs/put?path=' + encodeURIComponent('/backups/' + f.name), { method: 'PUT', body: f });
+        if (!r.ok) throw new Error(r.statusText);
+        toast(tr('Subido: ahora se puede restaurar'));
+        await load(); draw();
+      } catch (x) { toast(x.message, true); }
+    } });
+    const restored = !st.busy && st.last_ok && st.last_job === 'restore';
+    const driveJob = j => j === 'to_drive' || j === 'from_drive';
+    const srvJob = j => j === 'look' || j === 'send';
+    msg.textContent = st.busy ? (srvJob(st.job) ? tr('Conectando con el servidor…')
+                                 : driveJob(st.job) ? tr('Copiando: %s archivos, %s…', st.files, fmtBytes(st.kbytes * 1024))
+                                 : st.job === 'restore' ? tr('Restaurando…') : tr('Respaldando…'))
+      : !st.last ? ''
+      : !st.last_ok ? tr(WHY[st.last_kind] || WHY.other) + ' (' + st.last + ')'
+      : restored ? tr('Restaurado: %s ajustes escritos. La mayoría vale recién después de reiniciar.', st.written)
+      : driveJob(st.last_job) ? tr('Copiados: %s archivos, %s.', st.files, fmtBytes(st.kbytes * 1024))
+      : srvJob(st.last_job) ? tr('El servidor: %s', st.last)
+      : tr('Hecho: %s', st.last_name);
+    msg.style.color = !st.busy && st.last && !st.last_ok ? 'var(--orange)' : '';
+    put(top,
+      h('div', { class: 'note' }, tr('Un respaldo guarda en un archivo de la tarjeta los ajustes de la placa y de sus apps, la lista de apps que instaló la Tienda y el orden del inicio. Las apps no se copian: la Tienda las vuelve a bajar de esa lista.')),
+      h('div', { class: 'note', style: 'margin-top:6px' }, tr('Sin frase, el archivo se puede leer y no lleva lo que parece una credencial (contraseñas, tokens, claves). Con una frase lleva todo, cifrado: sin ella no hay forma de abrirlo.')),
+      st.auto ? h('div', { class: 'note', style: 'margin-top:6px' }, !st.auto.on ? tr('Las copias automáticas están apagadas (Ajustes, Respaldo, en la placa).')
+        : st.auto.sealed ? tr('La placa guarda sola una copia por día si algo cambió, y otra antes de instalar un firmware: cifradas con la frase que se eligió en la placa. Quedan las cinco últimas.')
+        : tr('La placa guarda sola una copia por día si algo cambió, y otra antes de instalar un firmware: sin credenciales, hasta que se les elija una frase en Ajustes, Respaldo. Quedan las cinco últimas.')) : null,
+      !st.card ? h('div', { class: 'note', style: 'color:var(--orange);margin-top:6px' }, tr('No hay tarjeta: no hay dónde guardarlo.')) : null,
+      h('div', { class: 'btns', style: 'margin-top:10px' }, pass,
+        h('button', { class: 'btn pri', disabled: st.busy || !st.card, onclick: () => act('backup', { pass: pass.value }) }, tr('Respaldar ahora')),
+        h('button', { class: 'btn', disabled: st.busy || !st.card, onclick: () => up.click() }, tr('Traer un respaldo…')), up,
+        st.drive ? h('button', { class: 'btn', disabled: st.busy || !st.card, title: tr('Los respaldos y las carpetas elegidas en la placa, a p4os-backup en el pendrive.'),
+          onclick: () => act('backup/drive', {}) }, tr('Copiar al pendrive')) : null),
+      msg,
+      st.restart ? h('div', { class: 'btns', style: 'margin-top:8px' },
+        h('button', { class: 'btn pri', onclick: async () => { if (confirm(tr('¿Reiniciar la placa?'))) { await post('restart').catch(() => {}); toast(tr('Reiniciando…')); } } }, tr('Reiniciar la placa'))) : null,
+      missing && missing.length ? h('div', { style: 'margin-top:10px' },
+        h('div', { class: 'note' }, tr('Ese respaldo lista %s apps que no están en la tarjeta: %s', missing.length, missing.map(a => a.file).join(', '))),
+        h('div', { class: 'btns', style: 'margin-top:6px' },
+          h('button', { class: 'btn', onclick: async () => {
+            try { const r = await post('backup/apps', { name: missingOf }); toast(tr('Pedidas a la Tienda: %s', r.asked)); missing = null; draw(); }
+            catch (x) { toast(x.message, true); } } }, tr('Pedirle a la Tienda que las instale')))) : null);
+    put(list, h('h2', {}, tr('En la tarjeta')),
+      st.backups.length ? st.backups.map(card) : h('div', { class: 'card pad muted' }, tr('Todavía no hay ninguno.')),
+      srvCard());
+  }
+  async function load() {
+    st = await api('backup');
+    // the apps a restored backup lists and the card lacks: asked once it went in
+    if (!st.busy && st.last_ok && st.last_job === 'restore' && seen !== st.jobs_done) {
+      seen = st.jobs_done;
+      missingOf = st.last_name;
+      try { missing = (await api('backup/apps?name=' + encodeURIComponent(st.last_name))).apps; } catch { missing = null; }
+    }
+  }
+  function poll(ms) {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      if (gone) return;
+      const was = st && st.busy;
+      try { await load(); } catch {}
+      if (was || (st && st.busy)) draw();
+      poll(st && st.busy ? 400 : 5000);
+    }, ms);
+  }
+  put(main, h('h1', {}, tr('Respaldo')), top, list);
+  load().then(draw).catch(e => put(top, tr('No se pudo leer: %s', e.message)));
+  poll(1000);
+  return () => { gone = true; clearTimeout(timer); };
+}
+
+const PAGES = { pantalla: pagePantalla, inicio: pageInicio, tienda: pageTienda, wifi: pageWifi, red: pageRed, ha: pageHa, terminal: pageTerminal, programador: pageProgramador, banco: pageBanco, claude: pageClaude, mqtt: pageMqtt, macropad: pageMacropad, expansion: pageExpansion, archivos: pageArchivos, ajustes: pageAjustes, respaldo: pageRespaldo, firmware: pageFirmware, registro: pageRegistro };
 
 /* ---- the apps' own pages (docs/PORTAL-PAGES.md) ----
  * An app brings its page in apps/<x>/web/<x>.js; tools/install_apps.sh puts

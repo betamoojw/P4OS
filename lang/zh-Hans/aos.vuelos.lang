@@ -1,0 +1,92 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+en tierra	在地面
+emergencia	紧急情况
+falla de radio	无线电故障
+interferencia ilícita	非法干扰
+Atención	警报
+Pasa encima	经过上空
+Militar	军用
+de fuselaje ancho	宽体飞机
+regional	支线飞机
+liviano	轻型飞机
+helicóptero	直升机
+planeador	滑翔机
+globo	气球
+dron	无人机
+vehículo	地面车辆
+de línea	民航客机
+Buscando la ruta...	正在查询航线…
+Ruta desconocida	未知航线
+N	北
+NE	东北
+E	东
+SE	东南
+S	南
+SO	西南
+O	西
+NO	西北
+Altitud	高度
+Velocidad	速度
+Vel. vertical	垂直速度
+Rumbo	航迹方向
+Squawk	应答机代码
+Distancia	距离
+Squawk de emergencia	紧急情况应答机代码
+Squawk de falla de radio	无线电故障应答机代码
+Squawk de interferencia ilícita	非法干扰应答机代码
+visto hace %u s · %06X%s	%u 秒前观测到 · %06X%s
+ · militar	 · 军用
+Sin conexión	未连接
+Falta la dirección del receptor	未设置接收器地址
+Cupo de pedidos agotado	请求额度已用完
+Esperando la hora	正在等待校时
+Respuesta inesperada	响应异常
+Acceso rechazado	访问被拒绝
+Sin memoria	内存不足
+Sin respuesta	未收到响应
+Error %d	错误 %d
+Buscando aviones...	正在搜索飞机…
+1 avión	1 架飞机
+%d aviones	%d 架飞机
+No hay aviones en el radio elegido.	所选半径内没有飞机。
+Por altitud	按高度
+Por distancia	按距离
+Aviones	飞机
+sí	是
+no	否
+receptor propio	自建接收器
+métricas	公制
+de aviación	航空单位
+Cada 5 s. Uso no comercial.	每 5 秒更新，仅限非商业用途。
+Cada %d s: %d pedidos por día.	每 %d 秒更新，每天 %d 次请求。
+Cada %d s, con tu cliente de la API.	每 %d 秒更新，使用您的 API 客户端。
+Cada %d s, sin cuenta.	每 %d 秒更新，无需账号。
+La dirección se escribe en la página del portal.	请在管理网页填写地址。
+Fuente	来源
+Radio	半径
+Estelas	航迹
+Unidades	单位
+Nombres en el mapa	在地图上显示名称
+Origen y destino	出发地和目的地
+Un avión pasa encima	飞机经过上空
+Emergencias	紧急情况
+Militares	军用飞机
+Sonido de los avisos	提醒声音
+Datos	数据
+Mapa	地图
+Avisos	提醒
+A menos de %s y %d ft	距离小于 %s，高度低于 %d ft
+Según adsbdb, por el número de vuelo	由 adsbdb 按航班号提供
+Squawk 7500, 7600 o 7700	应答机代码 7500、7600 或 7700
+Si la fuente lo dice	依据数据源标记
+Lugar	地点
+Lugar elegido	所选地点
+Usar el centro del mapa	使用地图中心
+Ciudad de Clima	使用“天气”中的城市
+Una pulsación larga en el mapa también elige el lugar. La dirección del receptor, las claves de los servicios y un lugar por su nombre se escriben en la página Vuelos del portal.	长按地图也可选择地点。接收器地址、服务密钥和地点名称可在管理网页的“航班”页面填写。
+Mapa: OpenFreeMap, OpenMapTiles, OpenStreetMap. Aeropuertos: OurAirports.	地图：OpenFreeMap、OpenMapTiles、OpenStreetMap。机场：OurAirports。
+Última lectura:	最近读取：
+aeropuertos en la tarjeta	存储卡上的机场数据
+Ajustes	设置
+El lugar pasa a	地点已更改为

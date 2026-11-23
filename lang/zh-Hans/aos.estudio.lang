@@ -1,0 +1,218 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+demasiadas muestras	采样数量过多
+no se pudo abrir	无法打开
+no es un WAV	不是 WAV 文件
+formato de WAV que no se lee (PCM o float)	不支持此 WAV 格式（需为 PCM 或浮点格式）
+está vacío	内容为空
+no hay más lugar para muestras	没有更多空间存放采样
+sin memoria	内存不足
+Sustractivo	减法合成
+FM	FM
+Seno	正弦波
+Triáng.	三角波
+Sierra	锯齿波
+Cuadr.	方波
+Ruido	噪声
+Azar	随机
+Altura	音高
+Filtro	滤波器
+Volumen	音量
+Ancho	宽度
+Poli	复音
+Mono	单音
+Motor	引擎
+Onda	波形
+Octava	八度
+Ancho del pulso	脉冲宽度
+Semitonos	半音
+Fino	微调
+Nivel	电平
+Tipo	类型
+Corte	截止频率
+Resonancia	共振
+Envolvente	包络
+Seguir la nota	随键跟踪
+Por velocidad	随力度变化
+Ataque	起音
+Caída	衰减
+Sostén	延音
+Relajación	释音
+Velocidad	力度
+Destino	目标
+Profundidad	深度
+Glide	滑音
+Voces	复音数
+Relación	比率
+Índice	调制指数
+Índice por env. 2	包络 2 调制指数
+Realimentación	反馈
+Bombo	底鼓
+Bombo largo	长底鼓
+Redoblante	军鼓
+Aplauso	拍手
+Hi-hat cerrado	闭镲
+Hi-hat abierto	开镲
+Tom grave	低音嗵鼓
+Tom agudo	高音嗵鼓
+Platillo	镲片
+Cencerro	牛铃
+Clave	响棒
+Aro	边击
+Shaker	沙锤
+Básico	基础
+Bajo redondo	圆润贝斯
+Bajo ácido	酸性贝斯
+Lead sierra	锯齿主音
+Lead cuadrado	方波主音
+Pad cálido	温暖铺底
+Cuerdas	弦乐
+Pluck	拨弦
+Órgano	管风琴
+Bronces	铜管
+Sub grave	超低音
+Campana FM	FM 钟声
+Piano eléctrico	电钢琴
+Bajo FM	FM 贝斯
+BOM	底鼓
+808	808
+RED	军鼓
+APL	拍手
+HHC	闭镲
+HHA	开镲
+TG	低嗵
+TA	高嗵
+PLA	镲片
+CEN	牛铃
+CLV	响棒
+ARO	边击
+SHK	沙锤
+abierto	开启
+Listo	完成
+¿Seguro?	确定吗？
+Proyecto	工程
+Tocar	演奏
+Ritmo	鼓组
+Notas	音符
+Sonido	音色
+Mezcla	混音
+Canción	歌曲
+Prueba de carga: cinco segundos, el resultado va al registro	负载测试持续五秒，结果将写入日志
+Mayor	大调
+Menor	小调
+Pentatónica	五声音阶
+Pentat. menor	小调五声音阶
+Blues	布鲁斯
+Dórica	多利亚调式
+Arriba	上行
+Abajo	下行
+Ida y vuelta	往返
+Al azar	随机
+Como se toca	按演奏顺序
+Teclado	琴键
+Grilla	网格
+Pads	打击垫
+Suave	轻
+Medio	中
+Fuerte	重
+Arpegio	琶音
+Sostener	保持
+Sonido de la pista	音轨音色
+Muestras de la tarjeta (estudio/muestras)	存储卡上的采样（estudio/muestras）
+No hay WAV todavía. Se suben desde la página del Estudio en el portal.	暂无 WAV 文件，请从管理网页的“音乐工作室”页面上传。
+Silenciar	静音
+Afinación	调音
+Swing	摇摆
+Pasos	步数
+Probab.	概率
+Prob.	概率
+Vel.	力度
+Esta parte ya tiene todas las notas que entran	此声部的音符数量已达上限
+Borrar las notas de la parte %d en el patrón %c.	清除声部 %d 在乐句 %c 中的音符。
+Borrar	清除
+Patrón %c copiado	已复制乐句 %c
+Primero copiá un patrón	请先复制一个乐句
+Borrar todo el patrón %c.	清除整个乐句 %c。
+Vacía: agregá patrones abajo.	内容为空，请在下方添加乐句。
+Proyecto nuevo	新建工程
+Guardado	已保存
+Nombre del proyecto	工程名称
+No se pudo abrir	无法打开
+Borrado	已删除
+Borrar %s de la tarjeta. No se puede deshacer.	从存储卡删除 %s，此操作无法撤销。
+Abrir un proyecto	打开工程
+No hay proyectos en la tarjeta.	存储卡上没有工程。
+%d vueltas	循环 %d 次
+No se pudo empezar a exportar	无法开始导出
+Listo: estudio/export/%s	已完成：estudio/export/%s
+No se pudo exportar el MIDI	无法导出 MIDI
+A la compu: parte %d	发送到电脑：声部 %d
+A la compu: batería	发送到电脑：鼓组
+A la compu: todo	发送到电脑：全部
+Ningún aparato MIDI en el USB.	USB 上没有 MIDI 设备。
+Entrada:	输入：
+Listo: estudio/export/%s.wav	已完成：estudio/export/%s.wav
+La exportación no terminó	导出未完成
+Exportando… %d %% (tocá WAV para cortar)	正在导出… %d %%（点击 WAV 停止）
+Bloque de %d muestras (%d us): promedio %d us, pico %d us, %d %% del tiempo. Voces: %d. Faltas: %u. Cola: %d muestras.	每块 %d 个采样（%d us）：平均 %d us，峰值 %d us，占用时间 %d %%。复音数：%d。欠载：%u。队列：%d 个采样。
+Patrones	乐句
+Copiar	复制
+Pegar	粘贴
+Un patrón	单个乐句
+La canción	整首歌曲
+Tocá un casillero para cambiarle el patrón; mantenelo apretado para sacarlo.	点击格子可更换乐句，长按可移除。
+Nuevo	新建
+Abrir…	打开…
+Guardar como…	另存为…
+Se guarda solo en estudio/ de la tarjeta.	自动保存到存储卡的 estudio/ 目录。
+Exportar	导出
+Con La canción, la cadena entera; con Un patrón, el patrón elegido las vueltas que digas.	选择“整首歌曲”会导出完整乐句序列，选择“单个乐句”会按指定次数循环导出所选乐句。
+Sin salida	不输出
+Compu	电脑
+Aparato	设备
+Las dos	两者
+Salida	输出
+Reloj	时钟
+Entra por el canal 1 la parte elegida, por el 2 al 4 las partes 1 a 3 y por el 10 la batería. Al aparato salen las partes por 1 a 3, la batería por 10 y el reloj; a la compu, lo mismo, o una sola pista por el canal 1.	输入时，通道 1 演奏所选声部，通道 2 至 4 对应声部 1 至 3，通道 10 对应鼓组。向设备输出时，通道 1 至 3 输出各声部，通道 10 输出鼓组，并发送时钟。向电脑输出可采用相同方式，或通过通道 1 输出单条音轨。
+Audio	音频
+Baja	低
+Normal	正常
+Segura	稳妥
+Latencia (lo que espera en la cola)	延迟（队列中的等待时间）
+Voces del sintetizador	合成器复音数
+Prueba de carga	负载测试
+Envolvente 2: filtro y FM	包络 2：滤波器和 FM
+Envolvente 1: volumen	包络 1：音量
+No se pudo leer ese sonido	无法读取此音色
+Sonido guardado	音色已保存
+No se pudo guardar	无法保存
+Nombre del sonido	音色名称
+Sonidos	音色
+Guardar este sonido como…	将此音色另存为…
+De fábrica	出厂预设
+Míos (estudio/presets)	我的预设（estudio/presets）
+Todavía ninguno.	暂无内容。
+Probar	试听
+FM de dos operadores	双运算器 FM
+Oscilador 1	振荡器 1
+Oscilador 2	振荡器 2
+Voz	声部
+División	细分
+Audio: %d %% del tiempo · %d voces · faltas %u	音频：占用时间 %d %% · %d 复音 · 欠载 %u 次
+Batería	鼓组
+Distorsión	失真
+Al delay	发送至延迟
+A la reverb	发送至混响
+Delay	延迟
+Repeticiones	重复次数
+Brillo	明亮度
+Reverb	混响
+Tamaño	大小
+Apagado	阻尼
+Máster	主输出
+A la izquierda corta los agudos; a la derecha, los graves.	向左削减高频，向右削减低频。
+Metrónomo	节拍器
+Compás	拍号
+Cuenta un compás antes de grabar.	录制前预数一小节。
+El parlante está ocupado	扬声器正被占用
+Primer proyecto	第一个工程

@@ -1,4 +1,4 @@
-# Offline Traditional Chinese catalogue; reviewed terms: ../zh-Hant-key-overrides.json
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
 # Spanish keys and printf/escape tokens are preserved.
 no se pudo escuchar en el puerto %u (¿lo usa otro?)	無法監聽埠 %u（是否被其他程式佔用？）
 Modbus TCP, escuchando en el puerto %u	Modbus TCP 正在監聽埠 %u

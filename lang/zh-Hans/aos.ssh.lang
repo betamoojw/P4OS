@@ -1,4 +1,4 @@
-# Offline Chinese catalogue; reviewed terms: ../zh-key-overrides.json
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
 # Spanish keys and printf/escape tokens are preserved.
 No se pudo hacer la clave	无法生成密钥
 La clave de la placa	开发板密钥

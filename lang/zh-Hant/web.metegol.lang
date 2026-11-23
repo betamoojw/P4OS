@@ -1,0 +1,17 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Metegol	桌上足球
+Cargando…	正在載入…
+Guardar	儲存
+Nombre	名稱
+Bandera (trazos)	旗幟（條紋）
+Clubes	俱樂部
+Selecciones	國家隊
+Guardado: la placa los toma al volver al menú	已儲存，返回應用選單後開發板會讀取新設定
+¿Volver a los equipos de fábrica? Se pierden los cambios.	恢復出廠球隊？當前更改將丟失。
+Listo: la app los escribe de nuevo al abrirse	已完成，應用下次開啟時會重新寫入
+Metegol: los equipos	桌上足球：球隊
+Los nombres, las tres letras del marcador y los colores de cada camiseta. Sin escudos: el diseño y los colores alcanzan.	球隊名稱、計分板上的三字母縮寫和球衣顏色。使用圖案和顏色區分球隊，不使用隊徽。
+Abrir en la placa	在板上開放
+Volver a los de fábrica	恢復出廠球隊
+Todavía no hay equipos: abrí Metegol una vez en la placa.	尚無球隊，請先在開發板上開啟一次桌上足球。

@@ -5,50 +5,50 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/atasco/main/atasco.c:339
+#: apps\atasco\main\atasco.c:339
 Nivel %d	Level %d
 
-#: apps/atasco/main/atasco.c:342
+#: apps\atasco\main\atasco.c:342
 %d movimiento	%d Zug
 
-#: apps/atasco/main/atasco.c:342
+#: apps\atasco\main\atasco.c:342
 %d movimientos	%d Züge
 
-#: apps/atasco/main/atasco.c:437
+#: apps\atasco\main\atasco.c:437
 %d de %d completados	%d von %d geschafft
 
-#: apps/atasco/main/atasco.c:440
+#: apps\atasco\main\atasco.c:440
 Jugar de nuevo	Nochmal spielen
 
-#: apps/atasco/main/atasco.c:442
+#: apps\atasco\main\atasco.c:442
 Jugar nivel %d	Level %d spielen
 
-#: apps/atasco/main/atasco.c:499
+#: apps\atasco\main\atasco.c:499
 Estacionamiento despejado	Parkplatz geräumt
 
-#: apps/atasco/main/atasco.c:500
+#: apps\atasco\main\atasco.c:500
 Auto afuera	Auto ist raus
 
-#: apps/atasco/main/atasco.c:506
+#: apps\atasco\main\atasco.c:506
 Nivel %d completado en %d movimiento	Level %d in %d Zug geschafft
 
-#: apps/atasco/main/atasco.c:507
+#: apps\atasco\main\atasco.c:507
 Nivel %d completado en %d movimientos	Level %d in %d Zügen geschafft
 
-#: apps/atasco/main/atasco.c:855
+#: apps\atasco\main\atasco.c:855
 Atasco	Stau
 
-#: apps/atasco/main/atasco.c:858
+#: apps\atasco\main\atasco.c:858
 Sacá el auto rojo	Hol das rote Auto raus
 
-#: apps/atasco/main/atasco.c:1047
+#: apps\atasco\main\atasco.c:1047
 Deslizá los autos para sacar al rojo	Autos schieben, um das rote zu befreien
 
-#: apps/atasco/main/atasco.c:1053
+#: apps\atasco\main\atasco.c:1053
 Deshacer	Rückgängig
 
-#: apps/atasco/main/atasco.c:1094
+#: apps\atasco\main\atasco.c:1094
 Menú	Menü
 
-#: apps/atasco/main/atasco.c:1097
+#: apps\atasco\main\atasco.c:1097
 Siguiente	Weiter

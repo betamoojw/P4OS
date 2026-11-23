@@ -70,6 +70,8 @@
 #include "aos_portal_eth.h"
 #include "aos_portal_radio.h"
 #include "aos_portal_live.h"
+#include "aos_portal_store.h"
+#include "aos_portal_backup.h"
 #include "aos_portal_net.h"
 #include "aos_portal_access.h"
 #ifdef ESP_PLATFORM
@@ -1184,11 +1186,19 @@ static void api_flash(aos_httpd_req_t *r)
         cJSON_AddBoolToObject(p, "lines", true);
         cJSON_AddItemToArray(ports, p);
     }
-    static aos_flasher_source_t src[AOS_FLASHER_SOURCES_MAX] AOS_BSS_PSRAM;     /* 24 x ~1 KB: not on a 12 KB stack, nor in internal RAM */
+    static aos_flasher_source_t src[AOS_FLASHER_SOURCES_MAX] AOS_BSS_PSRAM;     /* 160 x ~1 KB: not on a 12 KB stack, nor in internal RAM */
     static void *src_mx;
+    static int n;
+    static uint64_t scanned_ms;
     if (!src_mx) src_mx = aos_hal_mutex_create();
     aos_hal_mutex_lock(src_mx);
-    int n = aos_flasher_scan(src, AOS_FLASHER_SOURCES_MAX);
+    /* the page asks every second: the card is read again every 5 s, or
+     * when it says so (scan=1: its button, a job that ended, an upload) */
+    uint64_t now = aos_hal_uptime_ms();
+    if (!scanned_ms || now - scanned_ms > 5000 || aos_httpd_query_int(r, "scan", 0)) {
+        n = aos_flasher_scan(src, AOS_FLASHER_SOURCES_MAX);
+        scanned_ms = now;
+    }
     cJSON *a = cJSON_AddArrayToObject(o, "sources");
     for (int i = 0; i < n; i++) {
         cJSON *e = cJSON_CreateObject();
@@ -1206,6 +1216,10 @@ static void api_flash(aos_httpd_req_t *r)
         cJSON_AddStringToObject(e, "app", src[i].app_name);
         cJSON_AddStringToObject(e, "version", src[i].app_version);
         cJSON_AddNumberToObject(e, "total", src[i].total);
+        cJSON_AddNumberToObject(e, "mtime", src[i].mtime);
+        cJSON_AddNumberToObject(e, "flashed", src[i].flashed);
+        cJSON_AddNumberToObject(e, "flashed_rank", src[i].flashed_rank);
+        cJSON_AddBoolToObject(e, "changed", src[i].changed);
         cJSON *fs = cJSON_AddArrayToObject(e, "files");
         for (int k = 0; k < src[i].nfiles; k++) {
             cJSON *f = cJSON_CreateObject();
@@ -1724,6 +1738,8 @@ static void handler(aos_httpd_req_t *r)
     else if (aos_portal_bench(r, m, p)) {}
     else if (aos_portal_radio(r, m, p)) {}
     else if (aos_portal_live(r, m, p)) {}
+    else if (aos_portal_store(r, m, p)) {}
+    else if (aos_portal_backup(r, m, p)) {}
     else if (aos_portal_net(r, m, p)) {}
     else if (aos_portal_eth(r, m, p)) {}
     else if (aos_portal_claude(r, m, p)) {}

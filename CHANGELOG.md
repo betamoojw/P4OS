@@ -1,5 +1,427 @@
 # Changelog
 
+## 0.32.1 — 2026-11-22
+
+One fix to the firmware; no app changed.
+
+- **"Get" tapped while an app's pictures were still coming failed.** The
+  Store's page downloads an app's four pictures as it opens, and they took
+  every download there is: the install could not start and said so, and
+  worked at the second tap. Seen on the board with Air Hockey and Office,
+  updating to 0.32.0. The Store now waits for a download to be free
+  (up to twenty seconds). `tests/store_fw_host` has the case: it fails
+  without the wait, as the board did, and passes with it.
+
+## 0.32.0 — 2026-11-22
+
+Four new apps: an office suite, a translator with no network, a studio to
+play live and air hockey. A board on 0.31.0 takes the firmware first
+(Settings → Update), then the apps (Store → Updates): Estudio and Vuelos
+with adsb.lol need this firmware.
+
+- **Four new apps in the Store**, from the card (Studio needs this
+  firmware; the other three, none):
+  - **Hockey de mesa** (Air Hockey): air hockey in 3D, upright, against the
+    board at four levels or two at once, a finger each in their half; the
+    puck's path is swept, so a fast mallet never lets it through. The bar
+    table comes with it; neon and ice are optional packs. 62 fps on the
+    board through a whole match.
+  - **Traductor** (Translator): translates text **with no network**, on the
+    board, with optional language packs (Spanish, Portuguese, Italian,
+    French and German, each paired with English, ~45-60 MB each): small
+    neural models from Firefox Translations run by the app's own engine,
+    and a dictionary for single words. Online, MyMemory or a
+    LibreTranslate of your own. On the board: a second for a short
+    sentence, 4.3 s for one of thirty words, 1.5 s more the first time;
+    all its memory back when it closes.
+  - **Oficina** (Office): documents, spreadsheets, presentations and
+    texts on the board.
+    - **Edits** docx and odt (headings, formatting, lists, tables,
+      pictures, footnotes), xlsx, ods and csv (over sixty formulas,
+      sorting, filters), and texts, code and logs of any size. Saving
+      rewrites only what was touched: what the app does not understand
+      stays byte for byte.
+    - **Reads** PDF (as text set to the screen, or its pages drawn as they
+      print, with RC4 and AES encryption), pptx and odp with a full-screen
+      presenting mode, the Office 97-2003 binaries (doc, xls, ppt), RTF,
+      HTML, EPUB, FB2, mail, Markdown, vCard, iCalendar, and the text of
+      Pages, Numbers and Keynote; walks ZIP, CBZ, TAR and GZ as folders.
+    - **Writes PDF** from a document, a sheet or a text.
+    - On the board: its 55 sample files open, a PDF page is drawn in 66 to
+      515 ms, and 9.5 to 14 MB of PSRAM stay free with a document open;
+      tried by hand by the user after that, and found right.
+
+  - **Estudio** (Studio): a synthesizer of three parts (two oscillators and
+    a filter, or two-operator FM), a drum machine of eight tracks and a
+    sequencer with a piano roll, played with several fingers; patterns
+    chained into a song, MIDI in and out, WAV and MIDI export. Played by
+    the user on the board, on the output for playing live (below): it
+    feels right.
+- **A stream for playing live** ([docs/APPS-P4.md](docs/APPS-P4.md)): an
+  app's sound went through 40 ms of buffers after its own queue, fine for
+  music and too much for an instrument. `aos_hal_spk_open_low()` makes the
+  board's output again with a short buffer while the stream is open: 10 ms.
+  The board's audio channel is made by the firmware now and not by the
+  BSP, which is what lets its buffer change. With `aos_hal_spk_dry()` to
+  count the gaps, and `GET /api/spk` to try it. In the simulator, what an
+  app plays is heard.
+- **The Store replaces every app copied by hand in one go.** "Let the
+  Store manage them" only takes the apps whose file is byte for byte the
+  catalogue's; a card filled from a build made at home was left with most
+  of its apps as "copied by hand", to be reinstalled one by one. Beside it
+  now, **Replace them with the Store's** (two taps; in the portal too)
+  installs the catalogue's over each one, in one job. What the apps saved
+  stays, their packs are not downloaded again, and the extras a person had
+  copied are kept as the app's when they are the catalogue's. On the
+  board: 39 apps in four and a half minutes, with no pack downloaded.
+- **Any MIDI message to the computer** (`aos_hal_usb_midi_send`): the
+  board as a MIDI device could send notes, controllers and bends on
+  channel 1 and nothing else. Now any channel message and the clock,
+  Start and Stop. Estudio sends the computer what it sends a device on
+  the host: its parts on channels 1 to 3, the drums on 10 and the clock;
+  one track on channel 1 is still there to choose.
+- **Files opens documents in Office.** With Office on the card, a tap on
+  a docx, odt, xlsx, ods, pptx, odp, doc, xls, ppt, pdf, rtf, epub and the
+  rest of what it reads opens it there, and so does a ZIP, a TAR or a GZ;
+  a text, a table or a data file keeps Files' own quick view on a tap and
+  gets "Open in Office" in its menu, to edit it. Without Office those
+  files are what they were, bytes, with a word on where the app is.
+- **A game played from the portal.** The portal's touches (the Screen
+  page, `POST /api/touch`) reached buttons and lists, and not the apps
+  that read the panel's fingers themselves: Air Hockey's mallet, Table
+  Football's rods, Studio's keys stayed still. With no finger on the
+  panel, the one the portal holds down is now theirs too, one at a time.
+- **A game no longer "keeps" the wallpaper's memory.** When a full-screen
+  app closed, the log said 1.9 MB of PSRAM had not come back: it compared
+  with a reading taken after the wallpaper's photos were let go for the
+  app, once they were back. What the photos lend is taken off now, so the
+  line means what it says.
+- **"New" in the Store.** A chip beside the kinds of app, on the board
+  and in the portal's page, with the apps of the newest release that
+  brought any; in the whole list they say "New" until installed. The
+  catalogue says in which release each app was first listed
+  ([docs/STORE.md](docs/STORE.md)); a firmware from before reads it as it
+  always did.
+- **Vuelos found no aircraft on the board.** It named 1.5 MB for each
+  reading's answer and 1.1 MB for each map tile, the firmware set that
+  aside in one piece before asking, and with the app's own buffers the
+  board never had such a piece: no request started, and the app went on
+  saying "Looking for aircraft" whichever source was chosen. It had only
+  been tried in the simulator. Two fixes:
+  - **The app** (from the Store, on 0.31.0 too) names a ceiling by the
+    radius, asks with less when the memory is not there, and says why
+    there are no aircraft: out of memory, no answer, or access refused by
+    that source.
+  - **The firmware's HTTP client** grows an answer's buffer with what
+    arrives (16 KB, doubling) instead of taking the whole ceiling first,
+    for every app ([docs/APPS-P4.md](docs/APPS-P4.md)). The simulator can
+    now be told how little memory there is (`P4_SIM_HTTP_ROOM`) and to
+    let no request out of the computer (`P4_SIM_HTTP_LOCAL`).
+  - **The HTTP client asks in HTTP/1.1.** With the memory fixed the
+    board's first request to adsb.lol came back 426, Upgrade Required: it
+    refuses HTTP/1.0, which is what the client had always spoken so that a
+    body ended where the connection closed. It sends "Connection: close"
+    now, takes chunked bodies apart as before, and knows an answer is whole
+    by its Content-Length or its last chunk, without waiting for a server
+    that does not close.
+  - **The Store's downloader and the radio ask in HTTP/1.1 too.** Both
+    already took chunked answers apart; a source of the Store or a station
+    that refuses HTTP/1.0 no longer fails. `tools/fake_radio.py` is a
+    station for the simulator that can refuse 1.0 and answer in chunks.
+  - **airplanes.live refusing is not the end.** It answers 403 to some
+    networks whatever is asked; Vuelos then asks adsb.lol in its place, at
+    adsb.lol's pace, and the bar names the source in use.
+- **An app updated from the Store, for the first time.** With developer
+  mode on and a test catalogue served from a computer (the published one
+  with Vuelos' line changed), the board offered one update, fetched the
+  package in 0.6 s and had it installed and loaded in 6 s; the file on the
+  card is the built one byte for byte.
+
+## 0.31.0 — 2026-11-22
+
+The first release a board fetches for itself: Store → Updates for the
+apps, Settings → Update for the firmware. Six new apps, backups, and files
+by SFTP.
+
+- **Six new apps in the Store**, from the card (no firmware needed):
+  - **Metegol** (Table Football): table football in 3D, lying down, one
+    against the board or two on one screen, half the screen each; sixteen
+    national teams and twelve Argentine clubs in their colours, with no
+    crests; ten stadiums, eight of them optional packs; by time or to N
+    goals, with the goal's replay. 60 fps on the board, and the board's
+    levels tuned against a person after the user played it.
+  - **Juegos de mesa** (Board games): chess (eight levels, PGN, a clock),
+    draughts (ours and the international game), reversi, four in a row,
+    ludo and backgammon, in 3D, against the board or face to face; the
+    marble, glass and metal sets are optional packs.
+  - **Sudoku**: levels set by the techniques a board needs, notes, hints
+    that explain, 6×6, Killer, Diagonal and the daily challenge; coins buy
+    fifteen themes.
+  - **Solitario** (Solitaire): Klondike, Spider, FreeCell, Pyramid,
+    TriPeaks, Golf, Yukon and one with the Spanish deck, solvable deals,
+    Vegas scoring, felts and backs won with achievements, and three ways
+    to celebrate a win.
+  - **Bolsa** (Stocks): shares, indices, the dollar, currencies and
+    crypto, with line, area and candle charts, lists and price alerts.
+  - **Vuelos** (Flights): the aircraft around a place, live on the map,
+    from a free ADS-B service or a receiver of your own, with the area's
+    airports.
+- **Backups** ([docs/BACKUP.md](docs/BACKUP.md)). Settings → Backup, and a
+  Backup page in the portal: the preferences of the system and of the
+  apps, the list of the apps the Store installed with their extras, and
+  the card's `menu.txt` and `modules.txt`, in one file on the card.
+  - **Plain, or sealed.** Without a passphrase it leaves out what looks
+    like a credential; with one everything goes in, under AES-256-GCM with
+    a key from PBKDF2. The board asks for the passphrase twice.
+  - **A secret an app keeps** is left out of a plain backup by its
+    preference's name: one with `pass`, `token`, `secret`, `key` or `priv`,
+    or that starts with `sec_` ([docs/APPS-P4.md](docs/APPS-P4.md)).
+  - **A restore can be undone:** what there was is kept first in a backup
+    of its own. A wrong passphrase, or a backup of a newer P4OS, is
+    refused before anything is touched.
+  - **The apps come back from the Store:** after a restore the screen
+    offers to ask it for the ones the card lacks, with their extras.
+  - The portal downloads a backup to the computer and brings one back.
+  - **Copies it makes by itself:** one a day when a preference changed,
+    and one before a firmware is installed; the card keeps the last five.
+    Plain until a passphrase is chosen for them at the board, sealed from
+    then on.
+  - **A new board with a backup on its card says so,** once, before
+    anything is set up by hand.
+  - **To a server of your own, by SFTP:** the sealed backups go once a
+    week to an SSH server you name (a NAS, a Raspberry), with the board's
+    key and no password; the server's key is accepted at the board, and
+    another one is refused. **Make a new key** puts another in the place
+    of the board's SSH key, which is the SSH app's too.
+  - **To a pendrive and back:** the backups and chosen folders of the
+    card, file by file, to a drive on the USB host; and onto a new card.
+  - `tools/backup.sh` keeps a backup, and chosen folders of the card, on a
+    computer.
+  - On the board: a plain backup in half a second and a sealed one in
+    four, with 427 preferences; a sealed one made and restored at the
+    screen; the day's copy made by itself; and three sealed backups sent
+    to a NAS running OpenSSH, byte for byte.
+- **SFTP and `scp` into the board** ([docs/SSH.md](docs/SSH.md)): the SSH
+  server gives the card's files to `sftp`, `scp` and a file manager, by
+  the console's rules and keys. `/` is the card and nothing above it.
+- **A preference longer than 127 characters was read as empty** when all of
+  them were listed (`aos_hal_pref_foreach`): a certificate, a list of the
+  Store's sources. Nothing used that list until the backups.
+- **The CI builds the apps in six shares at once and none again from the
+  same sources** ([docs/BUILDING.md](docs/BUILDING.md), "The CI"): a whole
+  run takes 21 minutes, where it took 108.
+
+## 0.30.0 — 2026-11-21
+
+**The Store.** The biggest change since the first release: the board gets
+its apps by itself, and its own next firmware. Copying `apps.zip` to the
+card is no longer the way to install anything ([docs/INSTALL.md](docs/INSTALL.md),
+[docs/STORE.md](docs/STORE.md)).
+
+- **The Store (Tienda), a built-in app.** It reads a catalogue published
+  with each release (`p4os-store.ndjson`) and lists every app of the card:
+  58 today, by kind. An app's page has a description of a few paragraphs,
+  three or four pictures, tags worked out from its code (3D, art packs,
+  joystick, sound, the network, Bluetooth, a page in the portal, the
+  languages it speaks, what it needs on the header or the USB), and its
+  extras.
+  - **Get, Update, Remove, with no restart.** A package is downloaded to a
+    folder of its own, checked, and only then put in place and loaded; an
+    update takes the old code out and the new one in while the board runs
+    (0.2 s). What an app saved on the card stays through both.
+  - **Art in packs.** What a game cannot start without comes with it; the
+    rest are extras chosen one by one: the worlds of Bastión, the tables
+    of the pinball. A pack already on the card is recognised by its
+    SHA-256 and not downloaded again.
+  - **A number on its icon** when installed apps have a newer package.
+  - **The portal has it too:** a Store page with a search box, the
+    pictures, install, remove, and a `.p4app` handed in from the computer.
+- **What a package is** (`<app>.p4app`): a zip without compression whose
+  paths are the card's (the `.so`, the modules it loads itself, its page
+  in the portal, its translations), made the same from the same files,
+  byte for byte, so its SHA-256 is its identity. One that did not change
+  keeps its version and its address from release to release.
+- **Checked before it lands:** the size and the SHA-256 of the catalogue;
+  only the paths a package may write, and none that another package
+  owns; the app interface's number and the firmware it asks for; and
+  every function the `.so` calls against the firmware's table, without
+  loading it (10 ms). A refused package leaves the card as it was.
+- **Quarantine.** An app that makes the board fall twice in a row while it
+  loads is set aside (`<app>.so.off`): the board starts without it and the
+  Store says so. Tested with a `.so` broken on purpose.
+- **What was already on the card.** Apps copied by hand are listed as
+  such, and "Let the Store manage them" gives a receipt to each one that
+  is byte for byte the catalogue's, without touching it. A `.so` nobody
+  lists and a package handed in as a file are in the list too, and a
+  second row of chips filters by origin.
+- **Other people's sources.** Up to five catalogues beside the official
+  one: `user/repository` on GitHub or any `https://` address. Added at the
+  board only, after looking at who the source says it is and a warning
+  that an app runs with every permission of the system; the portal can
+  only propose one, for the board to accept. A source cannot replace what
+  another lists, so the official apps are nobody else's to change.
+  Removing a source keeps or removes its apps. And a single `.p4app`
+  installs from Files or from the portal.
+- **Developer mode** (a switch in Store → Sources): `http://` sources on a
+  trusted network, and another catalogue in the place of the official one
+  from the portal, for a test server.
+- **The firmware from GitHub, in Settings → Update.** The official
+  catalogue says which firmware its release brings, an image for each
+  board profile. The board downloads it to the card, checks it whole
+  against the size and the SHA-256 of the catalogue before the flash is
+  touched, writes it to the other slot and waits for a tap to restart,
+  on trial like any update. About a minute. The portal's Firmware page
+  has the same. Never by itself; only from the official source; not
+  signed, as before ([docs/SECURITY.md](docs/SECURITY.md)).
+- **Failures said in the board's language,** each with the line for the
+  log under it: no network, not on the server, no time yet, the card is
+  full, not the package that was published, it needs a newer P4OS.
+- **A downloader for files** (`aos_fetch`): one GET that follows
+  redirects from host to host, writes to the card, picks up after a cut
+  with a `Range` request (also after a restart: the file is synced every
+  megabyte), and checks size and SHA-256 at the end. 0.38 MB/s from
+  GitHub.
+- **For app writers:** `apps/<app>/store.json` says what the code does
+  not (kind, a short and a long description in Spanish and English, the
+  pictures, which packs are needed), and `tools/gen_store.py` makes the
+  packages and the catalogue from the tree; the CI attaches them to every
+  release ([docs/APPS-P4.md](docs/APPS-P4.md), "In the store").
+  `tools/store_sample.py` and `tools/fake_github.py` make and serve a
+  made-up source to test with, and `tools/store_cli.py` is the same store
+  in Python.
+- **Pictures for every app:** the 58 published apps have three or four
+  captures in `docs/img`, and a long description each.
+- **The parts of the system, in the Store too** (its System chip): the
+  web portal's translations and the system's, English and German; the
+  colour emoji; and the C6's firmware, which Settings then installs. Each
+  is a list of files of a release, checked and moved to where the system
+  reads it (`store/system.json`); only the official source can offer
+  them. A file already on the card with the catalogue's bytes is taken
+  over without a download, and a newer emoji pack waits beside the one in
+  use until the next start. With them a new board needs no file copied by
+  hand. `apps.zip`, `web.zip` and `lang.zip` go on being attached to each
+  release for whoever fills a card by hand.
+
+Tests: `tests/fetch_host` (20 cases), `tests/store_host` (26) and
+`tests/store_fw_host` (70), the firmware's own service built for the Mac
+against a server that behaves like GitHub's downloads.
+
+## 0.29.0 — 2026-11-20
+
+Bastión, a tower defense in 3D. The firmware is 0.28.0's: what is new is on
+the card.
+
+- **Bastión, on the card** (`apps/bastion/README.md`). A fort in space,
+  waves of aliens on a road and towers on the pads beside it, upright. Ten
+  worlds of three sectors each, the third with a boss; fourteen towers of
+  three tiers, upgraded and sold between waves; twelve aliens and three
+  bosses, each asking for another answer (armour, fliers, dividers,
+  shields that come back, the cloaked, the ones that silence towers).
+  - **Everything is modelled by code in Blender and rendered ahead**
+    (`apps/bastion/tools/blender`): a picture with the depth of its pixels
+    a world, sheets of sprites for what stands on it, so an alien walks
+    behind a rock. The board draws again only the 16-pixel tiles whose
+    content changed, straight into the panel's free buffer, half on each
+    core, and flips; sprites are kept as runs, so the transparent half of
+    a cell costs neither memory nor time.
+  - **What stays:** a battle pays cores, and the laboratory turns them
+    into new towers, each tower's mastery, eight technologies and three
+    powers (an orbital strike, a cryo bomb, a repair). Experience makes
+    the rank.
+  - **Three modes:** the campaign; Supervivencia, waves without end with
+    twice the fort's life, a goal with its prize every twenty, a record a
+    world, and leaving when it suits; Libre, any sector with everything
+    unlocked. The difficulty is the purse: more credits, or fewer.
+  - **A gallery** of cards unlocked as the player meets each alien, tower
+    and world: its portrait (the aliens walk), its numbers, a line about
+    it.
+  - **Its difficulty is measured, not guessed:** a bot plays the whole
+    campaign (`apps/bastion/tools/harness.sh`) and sets how tough each of
+    the thirty sectors is.
+  - A USB gamepad plays it all; English and German; the sound is
+    synthesised. Its art is in packs that are not in the repository:
+    `bastion_p4.pak` in three parts and one `bastion_<world>_p4.pak` a
+    world, 39 MB in all, in `/apps` beside `bastion.so`.
+- **Lógica's firmware on an ESP32-C6** (`apps/logica/README.md`), flashed
+  from the board's Programador and wired as the C3 was: 5 MHz too, and
+  401408 samples against the C3's 155648. The self test's PWM read
+  998.38 Hz, and three UART lines at 115200 decoded from the first
+  character.
+- **The auxiliary board: GPIO48 by a jumper** (`hw/aux-board`), to the
+  strip as before or to the SPI header as a second chip select, for a
+  second chip on the port the Ethernet module shares. Still a draft.
+
+Tried on the board: Bastión installed and played by the user, the first
+four worlds of the campaign with their bosses and 49 waves without end.
+62 frames a second with up to some forty aliens on the road (3-8 ms of
+work a frame), 27 with 121 of them and 810 things in the frame's list;
+9-10 MB of PSRAM in a battle; a save from the first build read and kept
+by the last. Not played there yet: the goals every twenty waves and
+leaving from the pause, the free mode, the easy and hard purses, the
+gamepad, and the worlds after the fourth.
+
+## 0.28.0 — 2026-11-15
+
+A logic analyser, and a Programador that keeps track of what it wrote.
+
+- **Lógica, a logic analyser, on the card** (`apps/logica/README.md`).
+  Eight channels, captures of millions of samples in PSRAM, a trigger on
+  levels and edges with the samples before it kept, and ten decoders:
+  UART, I2C, SPI, 1-Wire (the DS18B20's temperature and CRC), CAN (CRC
+  and stuffing checked), WS2812, NEC infrared, DMX512, Modbus RTU and a
+  parallel bus. A table of the packets, a channel measured between two
+  cursors, and sigrok sessions on the card, saved and opened (PulseView's
+  too). It keeps waiting for a trigger with another app in front. Its
+  portal page has the big view, edits the decoders and exports `.sr`,
+  VCD and CSV.
+  - **The "Logic Analyzer 24MHz 8CH" boxes** (a Cypress FX2 sold as a
+    Saleae Logic clone) and the other FX2 boards sigrok lists, on the USB
+    host through the raw API: the app loads them sigrok's fx2lafw (GPL,
+    not shipped: it goes on the card, and the portal's page unpacks the
+    `.tar.gz` as it comes) and streams up to 24 MHz into PSRAM.
+  - **Its own firmware for an ESP32-C3, S3 or C6** (`apps/logica/firmware`,
+    ESP-IDF): a SUMP device on the chip's USB, eight GPIOs read in one
+    instruction by a loop with the interrupts off. At boot it measures its
+    own capture loop and offers that rate less 10 %: 5 MHz on a C3, with
+    155648 samples. Firmware 0.3: up to 0.2 it timed a lighter copy of the
+    loop and claimed 8.33 MHz, and the start after a trigger came out of
+    time. A command of its own (0xF0) adds edge triggers to SUMP's levels.
+    PulseView and sigrok-cli use it as an Openbench Logic Sniffer.
+  - Any other SUMP device on USB serial or a header UART, and a demo with
+    three scenes of made-up signals, every decoder set.
+- **The Programador's list of firmware on the card holds 160**, not 24
+  (cut before it was sorted, a new folder could miss the list). It sorts
+  by name, by the last added to the card or by the last flashed (the app
+  remembers it; the portal's page too, in the browser), and searches by
+  name, app, version or chip. Each line says when it was flashed, or
+  copied.
+- **"Versión nueva"**: every flash that ends well notes a CRC-32 of what
+  was written (`firmware/.grabados.txt`), and a firmware on the card that
+  is not that, under the same name, says so in orange in the app and
+  with a tag on the portal's page. By content, so the same build copied
+  again warns of nothing.
+- **`/api/flash`** keeps its scan of the card for 5 s (`?scan=1` reads it
+  again), with each source's `mtime`, `flashed`, `flashed_rank` and
+  `changed`.
+- **The auxiliary board's trial router** routes every net as if alone and
+  then negotiates the crossings: through-hole 67 vias and 2.9 m of track
+  where there were 136 and 3.6 m, and no clearance error in KiCad's
+  check. Still a draft.
+
+Tried on the board, with the user's FX2 clone and an ESP32-C3 Super Mini:
+the FX2 at 1, 4, 8, 12, 16 and 24 MHz, six captures in a row with no
+sample lost; triggers on a level and on an edge; the header's self test
+on GPIO34 measured and decoded (its PWM at 998.1 Hz, an infrared carrier
+at 37.995 kHz, four CAN frames exactly); and a real UART line at 115200
+from the board's `uart.b`, all 107 characters decoded from the first, on
+the FX2 at 4 MHz and on the C3 at 5 MHz (its PWM at 998.41 Hz too). The
+C3 firmware flashed from the Programador on `usb0`, and the Programador's
+"versión nueva" seen after flashing it again. What the board's USB host
+needed for the box (a cleared endpoint after the claim, a fresh device on
+a halted pipe, the host started again once it came back) is in the app's
+README. Not tried yet: the other decoders on real buses, and the firmware
+on an S3 or a C6.
+
 ## 0.27.0 — 2026-11-13
 
 The tools for a wired network, in the Red app, and Ethernet looked after.

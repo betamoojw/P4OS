@@ -1,0 +1,198 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Efectos: sí	音效：開
+Efectos: no	音效：關
+Música: sí	音樂：開
+Música: no	音樂：關
+Pausa	已暫停
+Supervivencia	生存模式
+Sector	戰區
+Libre	自由模式
+Seguir	繼續
+Empezar de nuevo	重新開始
+Próxima meta: oleada %d	下一目標：第 %d 波
+Retirarse y cobrar	撤退並結算獎勵
+Salir al mapa	返回地圖
+Fin de la supervivencia	生存挑戰結束
+¡Victoria!	勝利！
+El fuerte cayó	堡壘失守
+Oleadas aguantadas: %d	守住了 %d 波
+Vida del fuerte: %d de %d	堡壘生命：%d / %d
+Llegaste a la oleada %d de %d	抵達第 %d 波，共 %d 波
+¡Récord nuevo!	新紀錄！
+Tu récord en este mundo: %d	本世界紀錄：%d
+Bajas: %d	擊殺：%d
+El modo libre no da núcleos ni experiencia.	自由模式不獎勵核心或經驗。
+Bajas: %d    Núcleos: +%d    Experiencia: +%d	擊殺：%d    核心：+%d    經驗：+%d
+¡Subiste al rango %d! Tus torres pegan un 1 %% más.	升至 %d 級！所有防禦塔傷害提高 1%%。
+Gastá los núcleos en el laboratorio y volvé más fuerte.	在實驗室使用核心升級，再回來挑戰。
+Sector siguiente	下一戰區
+Mundo siguiente	下一個世界
+Laboratorio	實驗室
+Otra vez	再來一次
+Mapa	地圖
+No hay memoria para la batalla: cerrá otras apps y probá de nuevo	戰鬥所需記憶體不足，請關閉其他應用後重試
+No se pudo cargar el mundo	無法載入世界
+Desplegando defensas...	正在部署防線…
+Ametralladora	加特林機槍
+Barata y rápida. Floja contra las corazas.	造價低、射速快，但難以擊穿裝甲。
+Cañón	火砲
+Obuses que explotan. No llega a los que vuelan.	炮彈能造成範圍傷害，無法攻擊空中目標。
+Láser	鐳射塔
+Un rayo que quema más cuanto más dura sobre el mismo.	持續照射同一目標時，傷害會不斷提高。
+Misiles	導彈塔
+Persiguen de lejos. Lo mejor contra los que vuelan.	可從遠處追蹤目標，最適合對空。
+Tesla	特斯拉塔
+Un rayo que salta de uno a otro.	閃電可在多個敵人間跳躍。
+Criogénica	冰凍塔
+Frena a todos los que tiene cerca.	減緩附近所有敵人的移動速度。
+Lanzallamas	火焰噴射器
+Un chorro corto que deja ardiendo a la fila entera.	短距離噴火，可點燃整列敵人。
+Cañón de riel	電磁軌道砲
+Atraviesa a todos los de la línea. Lento y carísimo.	能貫穿一整列敵人，射速慢且造價高昂。
+Mortero de plasma	電漿迫擊砲
+Explosiones enormes muy lejos. Ciego de cerca.	遠距離爆炸威力巨大，近處是射擊死角。
+Hangar de drones	無人機機庫
+Drones que salen a buscar a los que se escapan.	無人機會追擊即將逃脫的敵人。
+Pulso EMP	電磁脈衝塔
+Paraliza a los de alrededor y les apaga los escudos.	眩暈附近所有敵人，並消除其護盾。
+Pozo de gravedad	重力井
+Los frena y cada tanto los tira para atrás.	減緩敵人移動速度，有時還能將其擊退。
+Amplificador	增幅塔
+Las torres vecinas pegan más y ven a los espectros.	提升附近防禦塔的傷害，並使其能發現幽靈。
+Refinería	精煉廠
+Da créditos al final de cada oleada.	每波結束後提供資金。
+Larva	幼蟲
+Corredor	疾行者
+Ácaro	小蟲
+Coraza	甲殼獸
+Avispa	黃蜂
+Divisor	分裂者
+Escudero	護盾兵
+Sanador	治療者
+Bruto	蠻獸
+Espectro	幽靈
+Saboteador	干擾者
+Portador	運輸蟲
+Reina	蟲后
+Titán	泰坦
+Mente	主宰
+Blindaje	裝甲
++3 de vida del fuerte por nivel	每級增加 3 點堡壘生命
+Financiación	起始資金
++10 % de créditos al empezar	初始資金增加 10 %
+Recompensas	賞金
++6 % de créditos por cada alien	每消滅一個外星生物，資金收益增加 6 %
+Munición	彈藥
++5 % de daño de todas las torres	所有防禦塔傷害增加 5 %
+Óptica	光學系統
++3 % de alcance de todas las torres	所有防禦塔射程增加 3 %
+Reciclaje	回收
++6 % al vender una torre	出售防禦塔的收益增加 6 %
+Interés	利息
++2 % de lo ahorrado al terminar cada oleada	每波結束後獲得存款的 2 %
+Puntería	精準射擊
++4 % de golpes críticos, que pegan el doble	暴擊率增加 4 %，暴擊造成雙倍傷害
+Ataque orbital	軌道打擊
+Un rayo del cielo donde toques.	從天而降的光束會擊中你點選的位置。
+Criobomba	冷凍炸彈
+Congela a todos unos segundos.	凍結所有敵人數秒。
+Reparación	修復
+Le devuelve vida al fuerte.	恢復堡壘的部分生命。
+El más común. Lento y blando: llegan de a muchos.	最常見的敵人，行動緩慢、生命值低，但數量很多。
+Rápido y frágil. Pasa de largo si nada dispara seguido.	速度快但脆弱，能衝過射速較慢的防禦塔。
+Diminuto y por docenas. Las explosiones y los rayos en cadena lo barren.	體形小，成群出動。爆炸和連鎖閃電可將其成片消滅。
+Su coraza le resta 7 a cada golpe. Hacen falta golpes fuertes, o fuego.	裝甲能抵消每次攻擊的 7 點傷害。請用重火力或火焰對付它。
+Vuela y corta las curvas del camino. Cañón, Lanzallamas, Riel y Mortero no le llegan.	會飛，能抄近路。火砲、火焰噴射器、電磁軌道砲和迫擊砲都打不到它。
+Al morir se parte en tres más chicos y más rápidos.	死後分裂成三隻更小、更快的敵人。
+Lleva un escudo que se recarga si lo dejan de golpear. El pulso EMP se lo apaga.	護盾在停止受擊後會恢復。電磁脈衝可將其消除。
+Cura a los que tiene alrededor. Conviene matarlo primero.	會治療附近的同伴，最好優先消滅。
+Mucha vida, algo de coraza, y le saca tres vidas al fuerte.	生命值高，帶有少量裝甲，突破防線會扣除堡壘 3 點生命。
+Se vuelve invisible de a ratos: sólo un Amplificador o un pulso EMP lo delatan.	會間歇隱身，只有增幅塔和電磁脈衝能讓它現形。
+Cada tanto apaga por dos segundos las torres que tiene cerca.	每隔一段時間會使附近的防禦塔停擺兩秒。
+Vuela, aguanta mucho y va soltando ácaros por el camino.	會飛，能承受大量傷害，沿途不斷投放小蟲。
+La madre de la colmena: va poniendo larvas mientras avanza.	蟲群之母，會沿途產下幼蟲。
+Coraza pesada, y sus pisotones apagan las torres cercanas.	身披重甲，跺腳時會使附近的防禦塔停擺。
+Un gran escudo, cura a los suyos y cada tanto salta hacia adelante.	擁有強力護盾，可治療同伴，有時還能向前瞬移。
+Cerrar	關閉
+Jefe	首領
+Vuela	飛行
+Camina	步行
+Vida	生命
+Velocidad	速度
+Escudo	護盾
+Recompensa	賞金
+Daño al fuerte	對堡壘傷害
+La vida es la de base: cada sector la multiplica.	這裡顯示基礎生命值，各戰區會乘以相應的倍率。
+Créditos por oleada	每波資金
+Daño de las vecinas	周邊塔傷害
+Daño	傷害
+Alcance	射程
+Cadencia	裝填時間
+Costo	造價
+Ataca	攻擊目標
+tierra y aire	地面與空中
+sólo tierra	僅地面
+no ataca	無
+Maestría	精通
+Los tres números son los tres niveles de la torre.	三個數值分別對應防禦塔的三個等級。
+Estrellas	星數
+Récord	紀錄
+Todavía no lo viste en batalla	你尚未在戰鬥中遇到它
+Se desbloquea en el laboratorio	可在實驗室解鎖
+Llegá a este mundo en la campaña	在戰役中抵達這個世界
+Aliens	外星生物
+Torres	防禦塔
+Mundos	世界
+Galería	圖鑑
+Oleada	波次
+¡OLEADA!	迎敵！
+Mejorar	升級
+Vender	出售
+Al máximo	已滿級
+Primero	最靠前
+Más fuerte	最強
+Más débil	最弱
+Más cercano	最近
+Bajas	擊殺
+Quedan	剩餘
+Tocá una plataforma para poner una torre	點選空地放置防禦塔
+Tocá de nuevo para construirla	再次點選即可建造
+Tocá dónde cae el rayo (o el botón otra vez: apunta solo)	點選落點，再點一次按鈕則自動瞄準
+Entre oleadas podés construir, mejorar y vender con calma	波次間隙可以慢慢建造、升級或出售防禦塔
+No alcanzan los créditos	資金不足
+¡JEFE!	首領來襲！
+Saboteada	受干擾
+por oleada	每波
+por segundo	每秒
+ÚLTIMA OLEADA	最後一波
+aire	空中
+tierra	地面
+amplificada	已增幅
+Oleada final	最終波次
+¡%d OLEADAS!	%d 波！
++%d núcleos   +%d créditos   +%d vidas	+%d 核心   +%d 資金   +%d 生命
+Voladores: no les llegan Cañón, Lanzallamas, Riel ni Mortero	下一波是飛行敵人，火砲、火焰噴射器、電磁軌道砲和迫擊砲無法對空
+Dificultad: fácil (más créditos)	難度：簡單（資金較多）
+Dificultad: difícil (menos créditos)	難度：困難（資金較少）
+Dificultad: normal	難度：普通
+El último fuerte entre ellos y nosotros	這是阻擋敵人的最後一座堡壘
+Falta bastion_p4.pak en la carpeta apps de la tarjeta.	記憶卡的 apps 資料夾缺少 bastion_p4.pak。
+No hay ningún mundo (bastion_<mundo>_p4.pak) en la tarjeta.	記憶卡上沒有世界資源包（bastion_<world>_p4.pak）。
+Rango	等級
+Jugar	開始遊戲
+Llegá a este mundo en la campaña para jugarlo acá	先在戰役中抵達這個世界，即可在此遊玩
+Ganá el sector anterior para abrir este	先贏得上一戰區即可解鎖
+Ganá el último sector del mundo anterior	請先贏得上一個世界的最後一個戰區
+El doble de vida y oleadas sin fin. Cada 20 hay premio, y te retirás cuando quieras.	敵方生命翻倍，攻勢無窮無盡。每守住 20 波可領獎，隨時可以撤退。
+Todas las torres y poderes, y el triple de créditos, para probar. No da núcleos.	可試用全部防禦塔和能力，初始資金為三倍，不獎勵核心。
+Récord: %d oleadas	紀錄：%d 波
+Sin récord todavía	暫無紀錄
+Nuevo	新
+Campaña	戰役
+Te faltan núcleos: se ganan en las batallas	核心不足，參加戰鬥可獲得核心
+Tecnología	科技
+Poderes	主動技能
++8 % de daño y -3 % de costo por nivel de maestría.	每級精通使傷害提高 8 %、造價降低 3 %。
+Desbloquear	解鎖
+Investigar	研究

@@ -67,10 +67,13 @@ static unsigned short framebuffer[AOS_PANEL_W * AOS_PANEL_H];
 #define aos_hal_screen_h() {h}
 #define aos_hal_display_get_rotation() {rotation}
 #include "gf_gfx.h"
+#include "jm_gfx.h"
 _Static_assert(AOS_PANEL_W == {width}, "host native stride");
 _Static_assert(AOS_PANEL_W * AOS_PANEL_H * 2 == {width * 1280 * 2}, "frame bytes");
 _Static_assert(GF_MAXPX == {width * 1280}, "golf canvas capacity");
-''', "-DAOS_DYNAMIC_APP=1", "-I" + str(ROOT / "apps/golf/main"))
+_Static_assert(JM_MAXPX == {width * 1280}, "board games canvas capacity");
+_Static_assert(JM_MAX_TILES == {((w+15)//16) * ((h+15)//16)}, "board games tile capacity");
+''', "-DAOS_DYNAMIC_APP=1", "-I" + str(ROOT / "apps/golf/main"), "-I" + str(ROOT / "apps/mesa/main"))
 
     def test_header_conversion(self):
         for board in (5, 7, 8, 101):

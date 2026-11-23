@@ -1,45 +1,144 @@
-# Localized interface; canonical rules and protocol names are retained.
+# amoledos-lang 1   es -> de
+# aos.truco.lang
+#
+# Una linea por cadena: el espanol, un TAB, la traduccion.
+# Los \n van escapados a proposito; el cargador los desescapa.
+# Una linea sin traducir (las dos mitades iguales) se ve en espanol.
+
+#: apps\truco\main\tr_cards.c:700
+#: apps\truco\main\truco.c:490
 NOS	WIR
+
+#: apps\truco\main\tr_cards.c:701
+#: apps\truco\main\truco.c:485
+#: apps\truco\main\truco.c:490
 ELLOS	GEGNER
+
+#: apps\truco\main\tr_cards.c:724
 MANO	VORHAND
+
+#: apps\truco\main\tr_cards.c:724
 PIE	NACHHAND
+
+#: apps\truco\main\truco.c:456
 REAL ENVIDO	REAL ENVIDO
+
+#: apps\truco\main\truco.c:457
 FALTA ENVIDO	FALTA ENVIDO
+
+#: apps\truco\main\truco.c:458
 VALE CUATRO	VALE CUATRO
+
+#: apps\truco\main\truco.c:459
 ME VOY AL MAZO	ICH PASSE
+
+#: apps\truco\main\truco.c:467
 ENVIDO	ENVIDO
+
+#: apps\truco\main\truco.c:468
 REAL	REAL
+
+#: apps\truco\main\truco.c:469
 FALTA	FALTA
+
+#: apps\truco\main\truco.c:470
+#: apps\truco\main\truco.c:1340
 TRUCO	TRUCO
+
+#: apps\truco\main\truco.c:471
 RE TRUCO	RE TRUCO
+
+#: apps\truco\main\truco.c:472
 VALE 4	VALE 4
+
+#: apps\truco\main\truco.c:473
 QUIERO	ANNEHMEN
+
+#: apps\truco\main\truco.c:474
 NO QUIERO	ABLEHNEN
+
+#: apps\truco\main\truco.c:475
 AL MAZO	PASSEN
+
+#: apps\truco\main\truco.c:484
 VOS	DU
+
+#: apps\truco\main\truco.c:499
 ESPERANDO A %s	WARTE AUF %s
+
+#: apps\truco\main\truco.c:604
 tengo %d	Ich habe %d
+
+#: apps\truco\main\truco.c:710
 ENVIDO NO QUERIDO: %d PARA %s	ENVIDO ABGELEHNT: %d FUER %s
+
+#: apps\truco\main\truco.c:713
 %d A %d: %d PARA %s	%d ZU %d: %d FUER %s
+
+#: apps\truco\main\truco.c:723
 LA MANO ES DE %s  (+%d)	%s GEWINNT DIE RUNDE  (+%d)
+
+#: apps\truco\main\truco.c:740
 %s LA PARTIDA  %d-%d	%s  %d-%d
+
+#: apps\truco\main\truco.c:741
 GANASTE	GEWONNEN
+
+#: apps\truco\main\truco.c:741
 PERDISTE	VERLOREN
+
+#: apps\truco\main\truco.c:848
+#: apps\truco\main\truco.c:910
 SE DESINCRONIZO	NICHT SYNCHRON
+
+#: apps\truco\main\truco.c:867
 SE PERDIO EL ENLACE	VERBINDUNG VERLOREN
+
+#: apps\truco\main\truco.c:888
 SE FUE %s	%s HAT VERLASSEN
+
+#: apps\truco\main\truco.c:1198
 NOS %d  -  ELLOS %d\nGANADAS %ld  -  PERDIDAS %ld	WIR %d  -  GEGNER %d\nSIEGE %ld  -  NIEDERLAGEN %ld
+
+#: apps\truco\main\truco.c:1208
 CONTRA LA MAQUINA	GEGEN DEN COMPUTER
+
+#: apps\truco\main\truco.c:1210
 A DOS: CONTRA %s	ZU ZWEIT: GEGEN %s
+
+#: apps\truco\main\truco.c:1213
+#: apps\truco\main\truco.c:1362
 A DOS JUGADORES	ZWEI SPIELER
+
+#: apps\truco\main\truco.c:1216
 Para jugar de a dos, emparejá los dos equipos en Enlace.	Um zu zweit zu spielen, kopple beide Geräte unter Verbindung.
+
+#: apps\truco\main\truco.c:1217
 Este equipo todavía no tiene el enlace por radio: por ahora se juega contra la máquina.	Dieses Gerät hat noch keine Funkverbindung; spiele vorerst gegen den Computer.
+
+#: apps\truco\main\truco.c:1358
 SEGUIR	WEITER
+
+#: apps\truco\main\truco.c:1360
 PARTIDA NUEVA	NEUES SPIEL
+
+#: apps\truco\main\truco.c:1365
 SALIR	BEENDEN
+
+#: apps\truco\main\truco.c:1419
 LA MAQUINA	DER COMPUTER
+
+#: apps\truco\main\truco.c:1671
 Sin memoria	Nicht genug Speicher
+
+#: apps\truco\main\truco.c:1715
 CONTRA QUIEN?	GEGNER WAEHLEN
+
+#: apps\truco\main\truco.c:1775
 Sin enlace: jugás contra la máquina	Keine Verbindung: Spiel gegen den Computer
+
+#: apps\truco\main\truco.c:1788
 BUSCANDO A %s	SUCHE NACH %s
+
+#: apps\truco\main\truco.c:1788
 LA PAREJA	PARTNER

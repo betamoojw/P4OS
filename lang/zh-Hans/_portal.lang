@@ -2,7 +2,8 @@
 # Spanish keys and printf/escape tokens are preserved.
 Pantalla	屏幕
 Inicio	主页
-Wi-Fi	Wi-Fi
+Tienda	应用商店
+Wi-Fi y Ethernet	Wi-Fi 与以太网
 Red	网络
 Terminal	终端
 Programador	烧录工具
@@ -11,6 +12,7 @@ Macro pad	宏键盘
 Expansión	扩展
 Archivos	文件
 Ajustes	设置
+Respaldo	备份
 Firmware	固件
 Registro	日志
 El idioma de la placa cambió. Recargá la página después de guardar los cambios.	设备语言已更改。请保存当前更改后刷新网页。
@@ -19,10 +21,21 @@ sin conexión	没有连接
 pantalla	屏幕
 En vivo	实时
 Abrir una app…	打开应用…
+Texto para la placa, o lo que copiaste en ella	输入要发送到开发板的文本，或读取板上复制的内容
+Quedó en el portapapeles: no hay un campo abierto en la placa	已保存到剪贴板；开发板上没有打开的输入框
+Escrito en la placa	已输入到开发板
+En el portapapeles de la placa	已复制到开发板剪贴板
+El portapapeles de la placa está vacío	开发板剪贴板为空
+Copiado también en esta computadora	也已复制到此电脑
+Escribir en la placa	输入到开发板
+Copiar en la placa	复制到开发板
+Traer de la placa	从开发板读取
+"Escribir" lo pega en el campo abierto en la placa; en la placa, mantené apretado un campo para Copiar o Pegar.	“输入”会将文本粘贴到开发板当前打开的输入框；在开发板上长按输入框可复制或粘贴。
 Atrás	返回
 Girar	旋转
 Guardar PNG	保存 PNG
 Un clic es un toque; arrastrar es deslizar. Desde el borde de abajo hacia arriba vas al inicio, como en la placa.	单击模拟轻触，拖动模拟滑动。从底部边缘向上滑动可返回主页，与设备上的操作一致。
+Portapapeles	剪贴板
 La placa	开发板
 Nombre	名称
 Placa	开发板
@@ -55,9 +68,25 @@ Buscando…	正在搜索…
 No se encontraron redes.	未找到网络。
 Nombre de la red (SSID)	网络名称（SSID）
 Buscar redes	扫描网络
+En pausa: %s usa el puerto	已暂停：%s 正在使用端口
+Sin módulo	未检测到模块
+Sin cable	网线未连接
+Sin dirección	尚未获取地址
+Enlace	链路
+dúplex completo	全双工
+medio dúplex	半双工
+Puerta de enlace	门口
+Puerto	港口
+Estás entrando por el cable: al apagar Ethernet esta página deja de contestar. ¿Apagarlo?	您正在通过有线网络访问；关闭以太网后，此页面将无法响应。是否关闭？
+El reloj nuevo se usa la próxima vez que arranque Ethernet	新时钟将在下次启动以太网时生效
+Apagar Ethernet	关闭以太网
+Prender Ethernet	开启以太网
+Reloj del SPI	SPI 时钟
+Wi-Fi	Wi-Fi
 Redes	网络
 Red oculta…	隐藏网络…
 La P4 se conecta por el ESP32-C6 de la placa: sólo 2,4 GHz.	P4 通过板载 ESP32-C6 连接网络，仅支持 2.4 GHz。
+Red por cable con un módulo W5500 en el puerto spi.a del conector de 40 pines. Con cable y Wi-Fi a la vez, la placa sale por el cable. Si la red por cable es de confianza se elige sólo en la placa (Ajustes, Portal web).	通过 40 针扩展接口的 spi.a 端口连接 W5500 模块，提供有线网络。有线网络和 Wi-Fi 同时连接时，优先使用有线网络。是否信任有线网络只能在开发板上设置（设置 → 网页管理）。
 pegá acá el token de larga duración	在此粘贴长期访问令牌
 Sin configurar	未配置
 Esperando el Wi-Fi	正在等待 Wi-Fi
@@ -144,6 +173,9 @@ Flash borrada	闪存已擦除
 Consola cerrada	控制台已关闭
 Puente cerrado	串口桥接已关闭
 Sonda cerrada	调试探针已关闭
+Por nombre	按名称
+Agregados recientes	最近添加
+Grabados recientes	最近烧录
 Subidos %s archivos a /firmware	已上传 %s 个文件到 /firmware
 STM32 (serie)	STM32（串口）
 toda	全部
@@ -176,6 +208,11 @@ para %s	适用于 %s
 chip desconocido	未知芯片
 1 archivo	1 个文件
 %s archivos	%s 个文件
+copiado %s	已复制 %s
+grabado %s	已烧录 %s
+ya grabado	曾经烧录
+versión nueva	新版本
+Ninguno con "%s"	没有包含“%s”的结果
 No hay firmware en /firmware. Subí el .hex, .elf, .uf2 o .bin de tu firmware.	/firmware 中没有固件。请上传固件的 .hex、.elf、.uf2 或 .bin 文件。
 No hay firmware en /firmware. Subí el .hex de tu sketch (Sketch, Exportar binario compilado en el IDE de Arduino).	/firmware 中没有固件。请上传程序的 .hex 文件（在 Arduino IDE 中选择“项目 > 导出已编译的二进制文件”）。
 No hay firmware en /firmware. Subí una carpeta de build de ESP-IDF o un .bin.	/firmware 中没有固件。请上传 ESP-IDF 的 build 目录或 .bin 文件。
@@ -197,6 +234,8 @@ Un Arduino: EN va a su RESET, y el TX de uno de 5 V llega al RX de la placa por 
 SWD: el TX del puerto es SWCLK, el RX es SWDIO y EN es NRST (opcional), con GND común.	SWD：端口 TX 接 SWCLK，RX 接 SWDIO，EN 接 NRST（可选），并共接 GND。
 STM32 por serie: TX al PA10, RX al PA9, EN al NRST y BOOT al BOOT0.	STM32 串口连接：TX 接 PA10，RX 接 PA9，EN 接 NRST，BOOT 接 BOOT0。
 Firmware en la tarjeta	存储卡中的固件
+Buscar por nombre	按名称搜索
+Leer la tarjeta otra vez	重新读取存储卡
 Subir carpeta de build…	上传构建目录…
 Subir un archivo…	上传文件…
 Grabación	烧录
@@ -255,6 +294,26 @@ Volvió al firmware anterior: el nuevo no arrancó. Mirá el registro del arranq
 Corriendo %s a prueba: se confirma a los 30 s…	正在试运行 %s，稳定运行 30 秒后确认…
 Confirmado: %s es el firmware ahora.	已确认：当前运行固件为 %s。
 La placa no contestó en un minuto y medio: mirala.	设备在 90 秒内未响应，请检查开发板。
+No se pudo bajar: revisá la red.	下载失败，请检查网络。
+No está en el servidor.	服务器上没有此文件。
+La placa todavía no tiene la hora de la red.	开发板尚未获取网络时间。
+No se pudo verificar el servidor.	无法验证服务器。
+No se pudo escribir en la tarjeta: ¿está llena?	无法写入存储卡，是否已满？
+La imagen no es la publicada: no se escribió nada.	镜像与发布版本不符，未写入任何内容。
+No se pudo escribir la otra ranura.	无法写入备用固件分区。
+Ya es la versión que corre.	当前已在运行此版本。
+El catálogo no ofrece firmware para esta placa.	软件目录中没有适用于此开发板的固件。
+Escribiendo la otra ranura: %s de %s…	正在写入备用分区：%s / %s…
+Bajando %s: %s de %s…	正在下载 %s：%s / %s…
+%s está en la otra ranura. Arranca a prueba al reiniciar.	%s 已写入备用分区，重启后将试运行。
+Algo salió mal.	发生错误。
+En GitHub	在 GitHub 上查看
+el catálogo no ofrece firmware para esta placa (%s)	软件目录中没有适用于此开发板的固件（%s）
+%s — %s, para %s	%s — %s，适用于 %s
+%s: la placa está al día	%s：开发板已是最新版本
+La placa lo baja de la última release publicada, lo verifica entero contra el tamaño y el SHA-256 del catálogo antes de escribir nada, y lo deja en la otra ranura. No se reinicia sola.	开发板从最新发布版本下载固件，完整校验大小及软件目录中的 SHA-256 后，再写入备用分区。完成后需手动重启。
+Buscar de nuevo	再一次搜索
+Bajar e instalar %s	下载并安装 %s
 confirmada	已确认
 marcada como mala	已标记为无效
 a medio instalar	安装未完成
@@ -266,6 +325,7 @@ Compilado	编译时间
 Ranura	固件分区
 La otra ranura	另一固件分区
 vacía	空
+Desde GitHub	从 GitHub 下载
 Actualizar por Wi-Fi	通过 Wi-Fi 更新
 Elegí %s. Se escribe en la otra ranura mientras sube; al reiniciar arranca a prueba y, si no llega a los 30 s, la placa vuelve sola al firmware de ahora. Desde la terminal: tools/ota.sh.	请选择 %s。上传时写入备用分区；重启后试运行，若未能稳定运行 30 秒，设备将自动回退到当前固件。命令行可使用 tools/ota.sh。
 Elegir el .bin…	选择 .bin 文件…
@@ -352,7 +412,6 @@ cliente %s	客户端 %s
 (guardada; escribí otra para cambiarla)	(保存;输入另一个字符来更换)
 sin contraseña	没有密码
 Conexión	连接
-Puerto	港口
 Usuario	用户
 ID de cliente (vacío: automático)	客户ID (空:自动)
 Suscripción (separá con comas)	订阅 (以逗号分开)
@@ -457,7 +516,6 @@ de la placa	开发板
 con cuidado	谨慎地
 reservado	已保留
 Buscando sensores…	寻找传感器...
-Buscar de nuevo	再一次搜索
 Agregar al texto	加入文本
 Se puede guardar, pero:	它可以保存,但:
 Bien: %s puertos y %s módulos	很好. %s 港口和 %s 模块
@@ -695,6 +753,133 @@ Barre la red de la placa (su /24): quién contesta, qué puertos tiene abiertos 
 %s encontrados: %s	%s 发现: %s
 Barrido guardado	扫除保存
 Relevamientos guardados	保存的调查
+Arte en packs	美术资源包
+Acostada	横屏
+De pie	竖屏
+Sonido	声音
+Usa la red	需要联网
+Página en el portal	管理网页
+El paquete no es el publicado, o está dañado.	安装包与发布版本不符，或已损坏。
+El paquete quiere escribir donde no le corresponde.	安装包试图写入不允许的位置。
+Necesita un P4OS más nuevo.	需要更新版本的 P4OS。
+El catálogo no se puede leer.	无法读取软件目录。
+Esa fuente no se puede usar.	无法使用此软件源。
+No alcanzó la memoria.	内存不足。
+No está en el catálogo.	软件目录中没有此项目。
+Esa app es de la Tienda: se instala y se quita desde ahí.	此应用由商店管理，请在商店中安装或移除。
+No la instaló la Tienda.	此应用并非通过商店安装。
+Instalada	已安装
+Hay una versión nueva	有新版本
+Copiada a mano	手动复制
+Apartada: hizo caer la placa al cargarse	已停用：加载时导致开发板崩溃
+Actualizar	更新
+Instalar	安装
+Reinstalar	重新安装
+Copiada a mano a la tarjeta: la Tienda no la maneja.	此应用是手动复制到存储卡的，不由商店管理。
+Instalada de %s, que ya no está entre las fuentes.	安装自 %s，该软件源已被移除。
+Instalada desde un paquete (.p4app): no está en ningún catálogo.	通过独立安装包（.p4app）安装，不属于任何软件目录。
+de terceros	第三方
+Paquete suelto	独立安装包
+Leer más	了解更多
+de packs	资源包
+necesita P4OS %s	需要 P4OS %s
+%s extras	%s 个附加项目
+¿Quitar %s de la placa? Lo que la app guardó queda en la tarjeta.	从开发板移除 %s？应用保存的数据将保留在存储卡上。
+Quitar	移除
+Abrir	打开
+En curso: %s %s (%s)	正在运行：%s %s（%s）
+Lo último: %s	上次：%s
+Cancelado.	已取消。
+Fuente agregada	添加的软件源
+Fuente	软件源
+apps: %s	应用：%s
+todavía sin catálogo	尚无软件目录
+Actualizaciones	更新
+Un recibo para las que son las del catálogo: no cambia ninguna app	为与软件目录一致的应用建立安装记录，不更改应用
+Que la Tienda maneje las %s copiadas a mano	将 %s 个手动复制的应用交由商店管理
+Las que no son iguales a las del catálogo: baja la de la Tienda para cada una. Lo que guardaron y sus packs quedan.	对于与软件目录不同的应用，将下载商店版本替换。应用保存的数据和资源包会保留。
+¿Reemplazar las %s apps copiadas a mano por las de la Tienda?	将 %s 个手动复制的应用替换为商店版本？
+Reemplazarlas por las de la Tienda	替换为商店版本
+Un paquete que no está en ningún catálogo	不属于任何软件目录的安装包
+Instalar un .p4app…	安装 .p4app…
+Las fuentes de apps se agregan sólo en la placa. Desde acá se puede proponer una, para aceptarla en su pantalla:	只能在开发板上添加软件源。在此提交后，请到开发板屏幕上确认：
+Propuesta, esperando en la placa (Tienda, Fuentes): %s	已提交，等待开发板确认（商店 → 软件源）：%s
+Propuesta: ahora aceptala en la placa (Tienda, Fuentes)	已提交，请到开发板确认（商店 → 软件源）
+Proponer	提交
+Cualquier origen	所有来源
+Paquetes sueltos	独立安装包
+Copiadas a mano	手动复制
+Todo	全部
+Instaladas	已安装
+Nuevas	新上架
+Buscar	搜索
+Nada por acá	暂无内容
+Todavía no hay catálogo: "Buscar de nuevo" lo trae.	尚无软件目录，点击“重新搜索”获取。
+No hay tarjeta, o no se pudo escribir en ella.	未插入存储卡，或无法写入。
+Ese respaldo no está en la tarjeta.	存储卡上没有此备份。
+El archivo no es un respaldo, o está dañado.	此文件不是备份，或已损坏。
+Está cifrado, y esa no es su frase.	此备份已加密，密码不正确。
+Lo hizo un P4OS más nuevo que este: actualizá primero.	此备份由更新版本的 P4OS 创建，请先更新。
+Ya hay uno en curso.	已有任务正在进行。
+No hay pendrive, o no se pudo escribir en él.	未插入 U 盘，或无法写入。
+Falta elegir el servidor, aceptar su clave o la frase de las copias automáticas: en la placa, Ajustes, Respaldo.	尚未配置服务器、确认服务器密钥或设置自动备份密码，请到开发板的“设置 → 备份”中完成配置。
+El servidor no contesta, o dijo que no.	服务器无响应，或拒绝了请求。
+El servidor muestra otra clave que la aceptada: no se mandó nada.	服务器密钥与已确认的密钥不一致，未发送任何数据。
+El servidor no deja entrar la clave de la placa: ¿está en su authorized_keys?	服务器不接受开发板的密钥，请确认是否已添加到 authorized_keys。
+sin elegir	尚未选择
+Servidor propio (SFTP)	自有服务器（SFTP）
+clave aceptada	密钥已确认
+falta aceptar su clave en la placa	尚需在开发板上确认服务器密钥
+una copia por semana	每周备份
+sólo a mano	仅手动备份
+La última prueba vio %s	上次连接发现 %s
+y todavía no deja entrar a la placa	服务器尚未允许开发板登录
+Última copia: %s	上次备份：%s
+Falta elegir una frase para las copias automáticas, en la placa (Ajustes, Respaldo, «Cifrarlas con una frase…»): hasta entonces no sube nada.	尚未设置自动备份密码。请在开发板的“设置 → 备份 → 设置备份加密密码…”中设置，完成后才能发送备份。
+A un NAS o una computadora con SSH van los respaldos cifrados, y sólo esos. El servidor, aceptar su clave y la copia semanal se eligen en la placa: Ajustes, Respaldo. La placa entra con su clave, sin contraseña: esta línea va en el ~/.ssh/authorized_keys del usuario del servidor.	仅将加密备份发送到支持 SSH 的 NAS 或电脑。请在开发板的“设置 → 备份”中配置服务器、确认密钥并设置每周备份。开发板使用密钥免密登录，请将下面这行添加到服务器用户的 ~/.ssh/authorized_keys 文件中。
+Copiada	已复制
+No se pudo copiar: seleccioná la línea	复制失败，请手动选中这行内容
+Copiar la clave de la placa	复制开发板密钥
+Probar la conexión	测试连接
+Subir ahora	立即发送
+Este respaldo está cifrado. Su frase:	此备份已加密，请输入密码：
+¿Restaurar el respaldo del %s? Escribe sus %s ajustes sobre los de ahora; lo que hay se guarda antes en un respaldo propio.	恢复 %s 的备份？将覆盖现有的 %s 项设置，覆盖前会自动备份当前设置。
+cifrado	已加密
+sin credenciales	不含凭据
+de antes de restaurar	恢复前的备份
+del día	当天的备份
+de antes de actualizar	更新前的备份
+%s ajustes · %s apps en su lista · %s · P4OS %s	%s 项设置 · 清单中有 %s 个应用 · %s · P4OS %s
+No lleva %s ajustes que parecen credenciales.	已排除 %s 项疑似凭据的设置。
+Restaurar	恢复
+¿Borrar este respaldo de la tarjeta?	从存储卡删除此备份？
+Frase para cifrarlo (opcional)	备份加密密码（可选）
+El archivo tiene que llamarse algo.p4bak, sin espacios	文件名必须以 .p4bak 结尾，且不能包含空格
+Subido: ahora se puede restaurar	上传成功，现在可以恢复
+Conectando con el servidor…	正在连接服务器…
+Copiando: %s archivos, %s…	正在复制：%s 个文件，%s…
+Restaurando…	正在恢复…
+Respaldando…	正在备份…
+Restaurado: %s ajustes escritos. La mayoría vale recién después de reiniciar.	恢复完成，已写入 %s 项设置。多数设置需要重启后生效。
+Copiados: %s archivos, %s.	复制完成：%s 个文件，%s。
+El servidor: %s	服务器：%s
+Hecho: %s	完成：%s
+Un respaldo guarda en un archivo de la tarjeta los ajustes de la placa y de sus apps, la lista de apps que instaló la Tienda y el orden del inicio. Las apps no se copian: la Tienda las vuelve a bajar de esa lista.	备份将开发板及应用的设置、商店安装的应用清单和主屏幕排列保存到存储卡上的文件中。恢复时，商店可根据清单重新下载应用。
+Sin frase, el archivo se puede leer y no lleva lo que parece una credencial (contraseñas, tokens, claves). Con una frase lleva todo, cifrado: sin ella no hay forma de abrirlo.	未设置密码时，备份文件可直接读取，并排除密码、令牌和密钥等凭据。设置密码后，会加密保存全部内容，打开备份必须使用该密码。
+Las copias automáticas están apagadas (Ajustes, Respaldo, en la placa).	自动备份已关闭，可在开发板的“设置 → 备份”中开启。
+La placa guarda sola una copia por día si algo cambió, y otra antes de instalar un firmware: cifradas con la frase que se eligió en la placa. Quedan las cinco últimas.	设置有变化时，开发板每天自动备份一次，并在安装固件前另存一份备份。备份使用在开发板上设置的密码加密，保留最近五份。
+La placa guarda sola una copia por día si algo cambió, y otra antes de instalar un firmware: sin credenciales, hasta que se les elija una frase en Ajustes, Respaldo. Quedan las cinco últimas.	设置有变化时，开发板每天自动备份一次，并在安装固件前另存一份备份。设置加密密码前，备份不包含凭据。保留最近五份，可在“设置 → 备份”中设置密码。
+No hay tarjeta: no hay dónde guardarlo.	未插入存储卡，无法保存备份。
+Respaldar ahora	立即备份
+Traer un respaldo…	导入备份…
+Los respaldos y las carpetas elegidas en la placa, a p4os-backup en el pendrive.	将备份和在开发板上选择的文件夹复制到 U 盘的 p4os-backup 目录。
+Copiar al pendrive	复制到 U 盘
+Reiniciar la placa	重启开发板
+Ese respaldo lista %s apps que no están en la tarjeta: %s	此备份清单中有 %s 个应用尚未安装到存储卡：%s
+Pedidas a la Tienda: %s	已向商店提交：%s
+Pedirle a la Tienda que las instale	让商店安装这些应用
+En la tarjeta	存储卡上的备份
+Todavía no hay ninguno.	尚无备份。
 registerPage: id y render	登记页面: id 和显示
 registerPage: "%s" es del portal	注册页面: "%s"属于门户
 La página falló: %s	页面失败: %s
@@ -705,29 +890,3 @@ Entrar	登录
 Se pone, se cambia o se quita en la placa: Ajustes, Portal web.	在板上设置,更改或删除:设置,网页门户.
 La autoridad HTTPS de la placa	设备的 HTTPS 证书颁发机构
 , para que el navegador confíe en ella.	所以浏览器信任它.
-Texto para la placa, o lo que copiaste en ella	输入要发送到开发板的文本，或读取板上复制的内容
-Quedó en el portapapeles: no hay un campo abierto en la placa	已保存到剪贴板；开发板上没有打开的输入框
-Escrito en la placa	已输入到开发板
-En el portapapeles de la placa	已复制到开发板剪贴板
-El portapapeles de la placa está vacío	开发板剪贴板为空
-Copiado también en esta computadora	也已复制到此电脑
-Escribir en la placa	输入到开发板
-Copiar en la placa	复制到开发板
-Traer de la placa	从开发板读取
-"Escribir" lo pega en el campo abierto en la placa; en la placa, mantené apretado un campo para Copiar o Pegar.	“输入”会将文本粘贴到开发板当前打开的输入框；在开发板上长按输入框可复制或粘贴。
-Portapapeles	剪贴板
-En pausa: %s usa el puerto	已暂停：%s 正在使用端口
-Sin módulo	未检测到模块
-Sin cable	网线未连接
-Sin dirección	尚未获取地址
-Enlace	链路
-dúplex completo	全双工
-medio dúplex	半双工
-Puerta de enlace	门口
-Estás entrando por el cable: al apagar Ethernet esta página deja de contestar. ¿Apagarlo?	您正在通过有线网络访问；关闭以太网后，此页面将无法响应。是否关闭？
-El reloj nuevo se usa la próxima vez que arranque Ethernet	新时钟将在下次启动以太网时生效
-Apagar Ethernet	关闭以太网
-Prender Ethernet	开启以太网
-Reloj del SPI	SPI 时钟
-Wi-Fi y Ethernet	Wi-Fi 与以太网
-Red por cable con un módulo W5500 en el puerto spi.a del conector de 40 pines. Con cable y Wi-Fi a la vez, la placa sale por el cable. Si la red por cable es de confianza se elige sólo en la placa (Ajustes, Portal web).	通过 40 针扩展接口的 spi.a 端口连接 W5500 模块，提供有线网络。有线网络和 Wi-Fi 同时连接时，优先使用有线网络。是否信任有线网络只能在开发板上设置（设置 → 网页管理）。

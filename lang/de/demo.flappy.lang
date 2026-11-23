@@ -5,21 +5,21 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/flappy/main/flappy.c:275
+#: apps\flappy\main\flappy.c:275
 Tocá para empezar\nRécord  %d	Zum Starten tippen\nRekord  %d
 
-#: apps/flappy/main/flappy.c:296
+#: apps\flappy\main\flappy.c:296
 ¡Nuevo récord!	Neuer Rekord!
 
-#: apps/flappy/main/flappy.c:298
+#: apps\flappy\main\flappy.c:298
 Récord  %d	Rekord  %d
 
-#: apps/flappy/main/flappy.c:300
+#: apps\flappy\main\flappy.c:300
 Perdiste	Verloren
 
-#: apps/flappy/main/flappy.c:433
-#: apps/flappy/main/flappy.c:686
+#: apps\flappy\main\flappy.c:433
+#: apps\flappy\main\flappy.c:686
 Pausa	Pause
 
-#: apps/flappy/main/flappy.c:686
+#: apps\flappy\main\flappy.c:686
 Tocá para reiniciar	Zum Neustart tippen

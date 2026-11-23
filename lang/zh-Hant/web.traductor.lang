@@ -1,0 +1,54 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Automático	自動
+La placa cuando hay paquete de idioma; si no, tu servidor, y si no hay, MyMemory.	優先使用開發板上的語言包，否則使用自有伺服器；未配置伺服器時使用 MyMemory。
+En la placa	在開發板上
+Sin red: sólo los pares de los paquetes de idioma de la tarjeta.	離線模式僅支援記憶卡上語言包所含的語言對。
+Servidor propio	自有伺服器
+Un LibreTranslate en tu red (una computadora o una Raspberry).	區域網中的 LibreTranslate 服務，可執行在電腦或樹莓派上。
+En línea	線上
+MyMemory: gratis y sin cuenta, 5000 caracteres por día; con un correo, 50 000.	MyMemory 無需賬戶，每天可免費翻譯 5,000 個字元，填寫郵箱後增至 50,000 個字元。
+Español	西班牙語
+Inglés	英語
+Portugués	葡萄牙語
+Italiano	義大利語
+Francés	法語
+Alemán	德語
+Catalán	加泰羅尼亞語
+Neerlandés	荷蘭語
+Japonés	日語
+Chino	中文
+Ruso	俄語
+Traductor	翻譯工具
+Cargando…	正在載入…
+Guardado: la placa lo toma en unos segundos	在幾秒鐘內,板子會接收它.
+Sólo si tu servidor la pide	僅在伺服器要求時填寫
+nombre@ejemplo.com	name@example.com
+Escribí la dirección del servidor	請輸入伺服器地址
+Probando…	測試.
+Anda: %d idiomas.	連線正常，支援 %d 種語言。
+El navegador no llegó (puede ser el CORS del servidor); la placa quizás sí.	瀏覽器無法連線，可能受伺服器 CORS 設定影響。開發板仍可能可以存取。
+Motor	翻譯引擎
+Servidor propio (LibreTranslate)	自有伺服器（LibreTranslate）
+Dirección	地址
+Clave	金鑰
+Probar desde el navegador	從瀏覽器測試
+MyMemory	MyMemory
+Correo (opcional): sube el límite diario de 5000 a 50 000 caracteres	郵箱（可選）：將每日額度從 5,000 個字元提高到 50,000 個字元
+Lo que se traduce en línea viaja al servicio, que puede guardarlo. Sin red, en la placa, no sale de la tarjeta.	線上翻譯內容會傳送給服務提供方，對方可能保留內容。使用開發板離線翻譯時，內容保留在記憶卡內。
+No guardar el historial	不保留歷史記錄
+Guardar	儲存
+Abrir en la placa	在板上開放
+Paquetes de idioma en la tarjeta	記憶卡上的語言包
+Ninguno todavía.	尚無語言包。
+Se bajan desde la Tienda de la placa, en los extras del Traductor. Cada par trae los modelos de las dos direcciones (sin red, unos segundos por oración) y los diccionarios. Entre dos idiomas que no son el inglés, la placa traduce pasando por el inglés.	可在開發板商店的翻譯器附加專案中獲取。每個語言對包含雙向模型和詞典，離線翻譯每句需幾秒。兩種非英語語言之間的翻譯會透過英語中轉。
+Favorito	收藏
+Copiar	複製
+Copiado	已複製
+Borrar	刪除
+Historial	歷史記錄
+Todo (%d)	全部（%d）
+Favoritos (%d)	收藏（%d）
+Bajar como texto	下載為文字
+No hay favoritos.	暫無收藏。
+Todavía no hay traducciones.	暫無翻譯記錄。

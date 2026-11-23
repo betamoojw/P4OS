@@ -31,6 +31,13 @@
  *                                 at boot (lvbuf, lvrows, fbs, blit_hw,
  *                                 bands_psram, draw_hw); no
  *                                 value erases one
+ *   GET  /api/spk?low=1&ms=3000&hz=440&queue=4   a tone through the app's
+ *                                 stream, the usual way or (low=1) on the bus
+ *                                 for playing live, with that many
+ *                                 milliseconds kept queued: how the bus was
+ *                                 (latency_ms) and how many of the mixer's
+ *                                 blocks found the ring short (dry). To try
+ *                                 on a board what an instrument app will get
  *   GET  /api/heap                the internal heap block by block: the big
  *                                 ones named after the task whose stack they
  *                                 are, the rest as a histogram by size
@@ -40,6 +47,7 @@
  * tools/ota.sh builds, uploads, restarts and checks that the slot changed.
  */
 #include "aos_portal_system.h"
+#include "aos_backup.h"
 #include "aos_i18n.h"
 #include "aos_hal.h"
 #include "aos_board.h"
@@ -121,10 +129,58 @@ static void api_ota_status(aos_httpd_req_t *r)
     send_cjson(r, 200, o);
 }
 
+/* A tone through the streaming speaker, written as an instrument would:
+ * a millisecond at a time, keeping 'queue' milliseconds waiting. */
+static void api_spk(aos_httpd_req_t *r)
+{
+    enum { RATE = 48000 };
+    bool low = aos_httpd_query_int(r, "low", 0) != 0;
+    long ms = aos_httpd_query_int(r, "ms", 2000), hz = aos_httpd_query_int(r, "hz", 440), queue = aos_httpd_query_int(r, "queue", 4);
+    if (ms < 100) ms = 100;
+    if (ms > 10000) ms = 10000;
+    if (hz < 50 || hz > 8000) hz = 440;
+    if (queue < 1) queue = 1;
+    if (queue > 200) queue = 200;
+    if (aos_hal_spk_is_open() || !(low ? aos_hal_spk_open_low(RATE) : aos_hal_spk_open(RATE))) {
+        send_err(r, 409, _("el parlante está en uso"));
+        return;
+    }
+    /* a square wave softened to a third of full scale: no table, no float */
+    int16_t buf[48];
+    uint32_t phase = 0, step = (uint32_t)(((uint64_t)hz << 32) / RATE);
+    long wrote = 0, total = ms * (RATE / 1000), want = queue * (RATE / 1000);
+    int lat_first = aos_hal_spk_latency_ms(), max_q = 0;
+    uint64_t t0 = aos_hal_uptime_ms();
+    while (wrote < total && aos_hal_uptime_ms() - t0 < (uint64_t)ms + 3000) {
+        int q = aos_hal_spk_queued();
+        if (q > max_q) max_q = q;
+        if (q >= want) { aos_hal_sleep_ms(1); continue; }
+        for (int i = 0; i < 48; i++) {
+            /* a triangle: gentler on the ear and on the amplifier than a square */
+            uint32_t ph = phase >> 16;
+            int32_t tri = ph < 32768 ? (int32_t)ph - 16384 : 49152 - (int32_t)ph;
+            buf[i] = (int16_t)(tri / 2);
+            phase += step;
+        }
+        wrote += aos_hal_spk_write(buf, 48);
+    }
+    int lat = aos_hal_spk_latency_ms(), dry = aos_hal_spk_dry();
+    aos_hal_sleep_ms((uint32_t)queue + 20);
+    aos_hal_spk_close();
+    char out[200];
+    snprintf(out, sizeof out, "{\"ok\":true,\"low\":%s,\"latency_ms_at_open\":%d,\"latency_ms\":%d,\"queue_ms\":%ld,\"max_queued\":%d,"
+             "\"dry\":%d,\"wrote\":%ld,\"took_ms\":%d}", low ? "true" : "false", lat_first, lat, queue, max_q, dry, wrote,
+             (int)(aos_hal_uptime_ms() - t0));
+    aos_httpd_send_json(r, 200, out);
+}
+
 static void api_ota_put(aos_httpd_req_t *r)
 {
     long len = aos_httpd_body_len(r);
     if (len <= 0) { send_err(r, 400, _("falta Content-Length")); return; }
+    /* what the board holds, kept on the card first when it changed since
+     * the last copy (components/aos_backup): half a second */
+    aos_backup_before_firmware();
     if (!aos_hal_ota_begin((size_t)len)) { send_err(r, 409, aos_hal_ota_error()); return; }
     char *buf = malloc(CHUNK);
     if (!buf) { aos_hal_ota_abort(); send_err(r, 500, _("sin memoria")); return; }
@@ -448,6 +504,7 @@ bool aos_portal_system(aos_httpd_req_t *r, const char *m, const char *p)
     else if (get && !strcmp(p, "display/bench")) api_display_bench(r);
     else if (get && !strcmp(p, "video")) api_video(r);
     else if (get && !strcmp(p, "screenrec")) api_screenrec(r);
+    else if (get && !strcmp(p, "spk")) api_spk(r);
     else if ((get || post) && !strcmp(p, "tune")) api_tune(r, post);
 #ifdef ESP_PLATFORM
     else if (get && !strcmp(p, "heap")) api_heap(r);

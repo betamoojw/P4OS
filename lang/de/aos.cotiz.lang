@@ -5,84 +5,84 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/cotiz/main/cotiz.c:241
+#: apps\cotiz\main\cotiz.c:241
 dólar	Dollar
 
-#: apps/cotiz/main/cotiz.c:241
+#: apps\cotiz\main\cotiz.c:241
 moneda	Währung
 
-#: apps/cotiz/main/cotiz.c:283
+#: apps\cotiz\main\cotiz.c:283
 compra %s	Ankauf %s
 
-#: apps/cotiz/main/cotiz.c:308
+#: apps\cotiz\main\cotiz.c:308
 actualizando…	aktualisiere…
 
-#: apps/cotiz/main/cotiz.c:312
+#: apps\cotiz\main\cotiz.c:312
 dolarapi.com  ·  al día	dolarapi.com  ·  aktuell
 
-#: apps/cotiz/main/cotiz.c:314
+#: apps\cotiz\main\cotiz.c:314
 la más vieja, %s	älteste, %s
 
-#: apps/cotiz/main/cotiz.c:319
-#: apps/cotiz/main/cotiz.c:498
+#: apps\cotiz\main\cotiz.c:319
+#: apps\cotiz\main\cotiz.c:498
 sin conexión	keine Verbindung
 
-#: apps/cotiz/main/cotiz.c:321
+#: apps\cotiz\main\cotiz.c:321
 esperando la hora de la red…	warte auf Netzwerkzeit…
 
-#: apps/cotiz/main/cotiz.c:323
+#: apps\cotiz\main\cotiz.c:323
 no pude verificar el servidor	Server nicht verifizierbar
 
-#: apps/cotiz/main/cotiz.c:325
+#: apps\cotiz\main\cotiz.c:325
 no se pudo consultar (%d)	Abfrage fehlgeschlagen (%d)
 
-#: apps/cotiz/main/cotiz.c:327
+#: apps\cotiz\main\cotiz.c:327
 tocá para actualizar  ·  elegí cuáles en el portal	zum Aktualisieren tippen  ·  Auswahl im Portal
 
-#: apps/cotiz/main/cotiz.c:522
+#: apps\cotiz\main\cotiz.c:522
 Cotizaciones	Kurse
 
-#: apps/cotiz/main/cz_api.c:23
+#: apps\cotiz\main\cz_api.c:23
 Oficial	Offiziell
 
-#: apps/cotiz/main/cz_api.c:24
+#: apps\cotiz\main\cz_api.c:24
 Blue	Blue
 
-#: apps/cotiz/main/cz_api.c:25
+#: apps\cotiz\main\cz_api.c:25
 Bolsa (MEP)	Börse (MEP)
 
-#: apps/cotiz/main/cz_api.c:26
+#: apps\cotiz\main\cz_api.c:26
 Contado c/liqui	Kassa mit Abwicklung (CCL)
 
-#: apps/cotiz/main/cz_api.c:27
+#: apps\cotiz\main\cz_api.c:27
 Mayorista	Großhandel
 
-#: apps/cotiz/main/cz_api.c:28
+#: apps\cotiz\main\cz_api.c:28
 Cripto	Krypto
 
-#: apps/cotiz/main/cz_api.c:29
+#: apps\cotiz\main\cz_api.c:29
 Tarjeta	Karte
 
-#: apps/cotiz/main/cz_api.c:30
+#: apps\cotiz\main\cz_api.c:30
 Euro	Euro
 
-#: apps/cotiz/main/cz_api.c:31
+#: apps\cotiz\main\cz_api.c:31
 Real	Brasil. Real
 
-#: apps/cotiz/main/cz_api.c:32
+#: apps\cotiz\main\cz_api.c:32
 Peso chileno	Chilen. Peso
 
-#: apps/cotiz/main/cz_api.c:33
+#: apps\cotiz\main\cz_api.c:33
 Peso uruguayo	Urug. Peso
 
-#: apps/cotiz/main/cz_api.c:275
+#: apps\cotiz\main\cz_api.c:275
 recien	gerade eben
 
-#: apps/cotiz/main/cz_api.c:277
+#: apps\cotiz\main\cz_api.c:277
 hace %d min	vor %d Min.
 
-#: apps/cotiz/main/cz_api.c:279
+#: apps\cotiz\main\cz_api.c:279
 hace %d h	vor %d h
 
-#: apps/cotiz/main/cz_api.c:281
+#: apps\cotiz\main\cz_api.c:281
 hace %d días	vor %d Tagen

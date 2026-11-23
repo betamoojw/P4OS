@@ -47,6 +47,7 @@
 #include "aos_lock.h"
 #include "aos_pair_ui.h"
 #include "aos_sshkey_ui.h"
+#include "aos_backup_ui.h"
 #include "aos_hal.h"
 #include "aos_theme.h"
 #include "aos_i18n.h"
@@ -200,6 +201,7 @@ void aos_ui_hold_home(bool hold)
 #define BG_LOW_KB       (8 * 1024)  /* below this much free PSRAM, hidden apps go */
 
 static uint32_t s_psram_at_create_kb[AOS_MAX_APPS];
+static uint32_t s_lent_kb[AOS_MAX_APPS];         /* what the wallpaper let go for it when it opened */
 static uint32_t s_held_kb[AOS_MAX_APPS];
 static bool s_busy[AOS_MAX_APPS];
 static const char *s_left_busy[AOS_MAX_APPS];     /* what it had running when it left */
@@ -242,7 +244,9 @@ static void closed_check_tick(void)
             s_closed_ms[i] = 0;
             continue;
         }
+        /* the wallpaper has its photos again by now: they were never the app's */
         uint32_t free_kb = psram_free_kb(), at = s_psram_at_create_kb[i];
+        at = at > s_lent_kb[i] ? at - s_lent_kb[i] : at;
         int32_t short_kb = (int32_t)at - (int32_t)free_kb;
         if (short_kb > 256) {
             aos_hal_log("ui", "%s closed, and %d KB of PSRAM did not come back (free %u KB, %u when it opened)",
@@ -376,6 +380,7 @@ static void relayout_all(void)
     aos_lock_layout();
     aos_pair_ui_layout();
     aos_sshkey_ui_layout();
+    aos_backup_ui_layout();
     aos_wall_photo_relayout();
 }
 
@@ -775,7 +780,16 @@ bool aos_ui_open(const char *id)
         lv_obj_remove_flag(app->root, LV_OBJ_FLAG_SCROLLABLE);
         place_root(app);
         lv_obj_update_layout(app->root);
+        /* What the wallpaper's photos lend a full-screen app is not the
+         * app's: they are back when it closes. closed_check_tick() takes
+         * it off the reading it compares with; without that every game
+         * "kept" the 1.9 MB of the photos (Air Hockey, Vuelos and Juegos de
+         * mesa on the board, 2026-11-22), and a real leak of that size
+         * would have looked the same. */
+        uint32_t before_kb = psram_free_kb();
         if (is_game(app)) aos_wall_photo_for_game(true);
+        uint32_t after_kb = psram_free_kb();
+        s_lent_kb[slot_of_app(app)] = after_kb > before_kb ? after_kb - before_kb : 0;
         trim_for_memory();
         s_psram_at_create_kb[slot_of_app(app)] = psram_free_kb();
         s_creates++;
@@ -953,6 +967,9 @@ static struct {
     bool started;       /* the first read reports the start point exactly */
 } s_inj;
 
+/* Portal input for apps polling the panel directly through aos_touch_points. */
+static volatile bool s_inj_down;
+static volatile int  s_inj_px, s_inj_py;
 static bool s_rotation_release;
 
 static void input_rotation_reset(void)
@@ -960,6 +977,7 @@ static void input_rotation_reset(void)
     /* A contact belongs to the layout where it started. Do not turn its
      * release into a click/swipe on the new layout, including remote drags. */
     s_inj.active = false;
+    s_inj_down = false;
     memset(&g, 0, sizeof g);
     s_last_swipe = LV_DIR_NONE;
     s_rotation_release = true;
@@ -1134,6 +1152,14 @@ static void gesture_end(void)
     }
 }
 
+bool aos_ui_injected_point(int *x, int *y)
+{
+    if (!s_inj_down) return false;
+    if (x) *x = s_inj_px;
+    if (y) *y = s_inj_py;
+    return true;
+}
+
 static void read_wrap(lv_indev_t *indev, lv_indev_data_t *d)
 {
     s_orig_read(indev, d);
@@ -1180,8 +1206,16 @@ static void read_wrap(lv_indev_t *indev, lv_indev_data_t *d)
     }
     if (s_wake_touch) {
         if (!pressed) s_wake_touch = false;
+        s_inj_down = false;
         d->state = LV_INDEV_STATE_RELEASED;
         return;
+    }
+    if (s_inj.active && pressed) {
+        s_inj_px = d->point.x;
+        s_inj_py = d->point.y;
+        s_inj_down = true;
+    } else {
+        s_inj_down = false;
     }
     if (pressed && !g.down) {
         s_presses++;
@@ -1466,6 +1500,7 @@ void aos_ui_tick(void)
     aos_lock_tick();
     aos_pair_ui_tick();
     aos_sshkey_ui_tick();
+    aos_backup_ui_tick();           /* a new board with a backup on its card: asked once */
     aos_access_tick();              /* mDNS by the portal's rules; once a second inside */
     aos_hwkbd_tick();               /* a USB keyboard on the host types into the open keyboard */
     aos_hwmouse_tick();             /* and a USB mouse points */
@@ -1609,6 +1644,10 @@ static void ui_button_cb(aos_button_t button, aos_button_action_t action)
     }
     if (action == AOS_BUTTON_CLICK && aos_sshkey_ui_visible()) {
         if (aos_hal_lock(300)) { aos_sshkey_ui_cancel(); aos_hal_unlock(); }
+        return;
+    }
+    if (action == AOS_BUTTON_CLICK && aos_backup_ui_visible()) {
+        if (aos_hal_lock(300)) { aos_backup_ui_cancel(); aos_hal_unlock(); }
         return;
     }
     if (aos_lock_is_locked()) used = action != AOS_BUTTON_LONG;     /* locked: only the screenshot */

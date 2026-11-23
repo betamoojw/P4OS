@@ -713,6 +713,12 @@ bool aos_hal_usb_midi_ready(void) { return aos_hal_usb_keys_ready(); }
 bool aos_hal_usb_midi_note(int note, int velocity, bool on) { if (!aos_hal_usb_keys_ready()) return false; printf("[hal] midi note %d %s vel %d\n", note, on ? "on" : "off", velocity); return true; }
 bool aos_hal_usb_midi_cc(int control, int value) { if (!aos_hal_usb_keys_ready()) return false; printf("[hal] midi cc %d %d\n", control, value); return true; }
 bool aos_hal_usb_midi_bend(int value) { if (!aos_hal_usb_keys_ready()) return false; printf("[hal] midi bend %d\n", value); return true; }
+bool aos_hal_usb_midi_send(int status, int d1, int d2)
+{
+    if (!aos_hal_usb_keys_ready() || status < 0x80 || status > 0xFF || status == 0xF0 || status == 0xF7) return false;
+    if (status != 0xF8) printf("[hal] midi send %02X %d %d\n", status, d1, d2);    /* the clock is 24 a quarter: not printed */
+    return true;
+}
 bool aos_hal_usb_card_away(void) { return s_usb_mode == AOS_HAL_USB_DISK; }
 /* a pretend computer; the probe's is a real client on its TCP port */
 bool aos_hal_usb_connected(void) { return s_usb_mode == AOS_HAL_USB_PROBE ? aos_hal_sim_probe_client() : s_usb_mode != AOS_HAL_USB_CONSOLE; }
@@ -743,7 +749,15 @@ bool aos_hal_sd_usage(uint64_t *total_bytes, uint64_t *free_bytes)
  * -------------------------------------------------------------------------- */
 #define PREF_LINE 2048
 
-static bool pref_lookup(const char *key, char *out, size_t out_len)
+/* One at a time: the file is read whole and written whole, into a buffer
+ * that is static, and the portal's threads and a module's own write while
+ * the screen does. Two at once left the file with one writer's key and
+ * little else (seen 2026-11-21: a look at a server and a GET of the portal
+ * both making the board's SSH key). */
+#include <pthread.h>
+static pthread_mutex_t s_prefs_mx = PTHREAD_MUTEX_INITIALIZER;
+
+static bool pref_lookup_(const char *key, char *out, size_t out_len)
 {
     FILE *file = fopen(PREFS_FILE, "r");
     if (!file) {
@@ -766,12 +780,20 @@ static bool pref_lookup(const char *key, char *out, size_t out_len)
     return found;
 }
 
+static bool pref_lookup(const char *key, char *out, size_t out_len)
+{
+    pthread_mutex_lock(&s_prefs_mx);
+    bool ok = pref_lookup_(key, out, out_len);
+    pthread_mutex_unlock(&s_prefs_mx);
+    return ok;
+}
+
 /* Enough lines for every app at once: Monster Hop alone keeps ~60 keys, and
  * with 64 lines the file was cut short on every save, silently dropping the
  * other apps' keys (the language among them). */
 #define PREFS_MAX_LINES 512
 
-static bool pref_store(const char *key, const char *value)
+static bool pref_store_(const char *key, const char *value)
 {
     static char lines[PREFS_MAX_LINES][PREF_LINE];
     int count = 0;
@@ -800,6 +822,14 @@ static bool pref_store(const char *key, const char *value)
     }
     fclose(file);
     return true;
+}
+
+static bool pref_store(const char *key, const char *value)
+{
+    pthread_mutex_lock(&s_prefs_mx);
+    bool ok = pref_store_(key, value);
+    pthread_mutex_unlock(&s_prefs_mx);
+    return ok;
 }
 
 /* The simulator's file keeps no types: a value that reads whole as a number
@@ -2690,7 +2720,27 @@ bool aos_hal_scan_status(aos_scan_status_t *out)
 
 aos_net_state_t aos_hal_net_state(void) { return AOS_NET_CONNECTED; }
 void aos_hal_net_low_latency(bool on) { (void)on; }   /* the desktop has no power save */
-const char *aos_hal_net_ssid(void)      { return "simulator"; }
+/* P4_SIM_PENDRIVE=1: a pendrive on the host, mounted at ./sim_usb (the folder is
+ * made if it is not there), for the backups' copy to a drive. */
+bool aos_hal_usb_host_info(aos_usb_host_info_t *out)
+{
+    memset(out, 0, sizeof *out);
+    if (!getenv("P4_SIM_PENDRIVE")) return false;
+    mkdir("sim_usb", 0775);
+    out->device = out->mounted = true;
+    out->bytes = 8ull << 30;
+    snprintf(out->product, sizeof out->product, "a folder of the Mac");
+    snprintf(out->path, sizeof out->path, "sim_usb");
+    return true;
+}
+
+/* P4_SIM_SSID=: a board that knows no network (a new one, for the backup's
+ * offer); P4_SIM_SSID=casa for another name. */
+const char *aos_hal_net_ssid(void)
+{
+    const char *v = getenv("P4_SIM_SSID");
+    return v ? v : "simulator";
+}
 int         aos_hal_net_rssi(void)      { return -54; }
 const char *aos_hal_net_ip(void)        { return "127.0.0.1"; }
 aos_net_state_t aos_hal_net_wifi_state(void) { return AOS_NET_CONNECTED; }
@@ -2938,16 +2988,37 @@ const char *aos_hal_board_name(void)       { return "SDL simulator"; }
  * board leaves it, so the error path IS testable on the desktop -which is the
  * half of the flow worth rehearsing anyway-. */
 
+/* P4_SIM_OTA=<file>: a make-believe other slot, to rehearse the way that
+ * ends well too (Settings' update from GitHub): the image is written to
+ * that file and nothing else happens. */
+static FILE *s_ota_file;
+
 bool aos_hal_ota_begin(size_t total_bytes)
 {
-    (void)total_bytes;
+    const char *path = getenv("P4_SIM_OTA");
+    if (path && path[0]) {
+        if (s_ota_file) fclose(s_ota_file);
+        s_ota_file = fopen(path, "wb");
+        printf("[hal] ota: %u bytes into %s\n", (unsigned)total_bytes, path);
+        return s_ota_file != NULL;
+    }
     printf("[hal] ota: there is no flash in the simulator\n");
     return false;
 }
 
-bool aos_hal_ota_write(const void *data, size_t len) { (void)data; (void)len; return false; }
-bool aos_hal_ota_end(void)   { return false; }
-void aos_hal_ota_abort(void) { }
+bool aos_hal_ota_write(const void *data, size_t len) { return s_ota_file && fwrite(data, 1, len, s_ota_file) == len; }
+bool aos_hal_ota_end(void)
+{
+    if (!s_ota_file) return false;
+    fclose(s_ota_file);
+    s_ota_file = NULL;
+    return true;
+}
+void aos_hal_ota_abort(void)
+{
+    if (s_ota_file) fclose(s_ota_file);
+    s_ota_file = NULL;
+}
 
 const char *aos_hal_ota_error(void)
 {
@@ -3000,7 +3071,13 @@ int aos_hal_hang_restarts(void) { return getenv("P4_SIM_HANG") ? atoi(getenv("P4
 static char s_app_ctx[48];
 void aos_hal_app_context_set(const char *app_id) { snprintf(s_app_ctx, sizeof s_app_ctx, "%s", app_id ? app_id : ""); }
 const char *aos_hal_app_context(void) { return s_app_ctx[0] ? s_app_ctx : NULL; }
-const char *aos_hal_firmware_version(void) { return "sim"; }
+/* P4_SIM_FW=v0.29.0: a version to be older or newer than what the store's
+ * catalogue offers (Settings' update from GitHub). */
+const char *aos_hal_firmware_version(void)
+{
+    const char *v = getenv("P4_SIM_FW");
+    return v && v[0] ? v : "sim";
+}
 
 void aos_hal_log(const char *tag, const char *fmt, ...)
 {
@@ -3389,13 +3466,67 @@ uint32_t aos_hal_link_rejoin_ms(void) { return 0; }
 
 int aos_hal_lvgl_core(void) { return -1; }
 
-/* The streaming speaker: the simulator swallows the samples. */
-static bool s_spk_open_sim;
-bool aos_hal_spk_open(uint32_t sample_rate) { (void)sample_rate; s_spk_open_sim = true; return true; }
-int  aos_hal_spk_write(const int16_t *pcm, int n) { (void)pcm; return s_spk_open_sim ? n : 0; }
-int  aos_hal_spk_queued(void) { return 0; }
+/* The streaming speaker: a sound device of SDL's in queue mode, at the rate
+ * the app asked for, so that what an app plays is heard here too and
+ * queued() behaves as the board's ring does (one second at most, and what
+ * is waiting counted for real). Until 2026-11-22 the samples were swallowed
+ * and queued() said 0: Golf and Chatarra were silent in the simulator, and
+ * Estudio opened SDL by itself to be tried at all. With no sound device
+ * (SDL_AUDIODRIVER=dummy, a machine without one) the samples are taken and
+ * dropped, as before. */
+static bool s_spk_open_sim, s_spk_low_sim;
+static SDL_AudioDeviceID s_spk_dev;
+static uint32_t s_spk_rate_sim;
+
+bool aos_hal_spk_open(uint32_t sample_rate)
+{
+    if (s_spk_open_sim) return true;
+    SDL_AudioSpec want = {0};
+    s_spk_rate_sim = sample_rate ? sample_rate : 16000;
+    want.freq = (int)s_spk_rate_sim;
+    want.format = AUDIO_S16SYS;
+    want.channels = 1;
+    want.samples = 256;
+    s_spk_dev = SDL_OpenAudioDevice(NULL, 0, &want, NULL, 0);
+    if (s_spk_dev) SDL_PauseAudioDevice(s_spk_dev, 0);
+    s_spk_open_sim = true;
+    return true;
+}
+
+/* The board makes its output again with a short buffer; here it is the same
+ * device, and the number says which the app asked for. */
+bool aos_hal_spk_open_low(uint32_t sample_rate)
+{
+    bool ok = aos_hal_spk_open(sample_rate);
+    s_spk_low_sim = ok;
+    return ok;
+}
+int aos_hal_spk_latency_ms(void) { return s_spk_low_sim ? 10 : 40; }
+int aos_hal_spk_dry(void) { return 0; }
+
+int aos_hal_spk_queued(void)
+{
+    return s_spk_open_sim && s_spk_dev ? (int)(SDL_GetQueuedAudioSize(s_spk_dev) / 2) : 0;
+}
+
+int aos_hal_spk_write(const int16_t *pcm, int n)
+{
+    if (!s_spk_open_sim || !pcm || n <= 0) return 0;
+    if (!s_spk_dev) return n;
+    int room = (int)s_spk_rate_sim - aos_hal_spk_queued();
+    if (n > room) n = room;
+    if (n > 0) SDL_QueueAudio(s_spk_dev, pcm, (Uint32)n * 2);
+    return n > 0 ? n : 0;
+}
+
 bool aos_hal_spk_is_open(void) { return s_spk_open_sim; }
-void aos_hal_spk_close(void) { s_spk_open_sim = false; }
+
+void aos_hal_spk_close(void)
+{
+    if (s_spk_dev) SDL_CloseAudioDevice(s_spk_dev);
+    s_spk_dev = 0;
+    s_spk_open_sim = s_spk_low_sim = false;
+}
 
 /* FTM needs a radio: the simulator has none. */
 bool aos_hal_ftm_supported(void) { return false; }

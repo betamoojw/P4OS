@@ -140,7 +140,7 @@ test('app catalogues cannot overwrite portal or another app translations', async
   assert.equal(ctx.pageTranslator('one')('Inicio'), 'Home');
 });
 test('app pages bind their scoped catalogues, including newly merged pages', () => {
-  for (const page of ['cartero', 'impresoras', 'can', 'luces', 'modbus']) {
+  for (const page of ['cartero', 'impresoras', 'can', 'luces', 'modbus', 'bolsa', 'estudio', 'logica', 'metegol', 'oficina', 'traductor', 'vuelos']) {
     const pageSource = fs.readFileSync(path.join(root, 'apps', page, 'web', `${page}.js`), 'utf8');
     assert.match(pageSource, new RegExp(`window\\.P4OS\\.forPage\\('${page}'\\)`));
   }

@@ -5,773 +5,773 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/monsterhop/main/mh_link.c:216
+#: apps\monsterhop\main\mh_link.c:216
 Buscando a	Suche
 
-#: apps/monsterhop/main/mh_link.c:217
+#: apps\monsterhop\main\mh_link.c:217
 está listo. Elige el nivel:	ist bereit. Wähle das Level:
 
-#: apps/monsterhop/main/mh_link.c:218
+#: apps\monsterhop\main\mh_link.c:218
 elige el nivel...	wählt das Level...
 
-#: apps/monsterhop/main/mh_link.c:225
+#: apps\monsterhop\main\mh_link.c:225
 El enlace no arrancó	Die Verbindung startete nicht
 
-#: apps/monsterhop/main/mh_link.c:288
+#: apps\monsterhop\main\mh_link.c:288
 Preparando la carrera...	Rennen wird vorbereitet...
 
-#: apps/monsterhop/main/mh_link.c:334
+#: apps\monsterhop\main\mh_link.c:334
 El otro reloj tiene otra versión de Monster Hop.	Die andere Uhr hat eine andere Version von Monster Hop.
 
-#: apps/monsterhop/main/mh_link.c:335
+#: apps\monsterhop\main\mh_link.c:335
 Actualiza los dos para jugar juntos.	Aktualisiere beide, um zusammen zu spielen.
 
-#: apps/monsterhop/main/mh_link.c:345
-#: apps/monsterhop/main/mh_link.c:415
-#: apps/monsterhop/main/mh_link.c:493
+#: apps\monsterhop\main\mh_link.c:345
+#: apps\monsterhop\main\mh_link.c:415
+#: apps\monsterhop\main\mh_link.c:493
 %s salió de la carrera	%s hat das Rennen verlassen
 
-#: apps/monsterhop/main/mh_link.c:431
-#: apps/monsterhop/main/mh_link.c:462
+#: apps\monsterhop\main\mh_link.c:431
+#: apps\monsterhop\main\mh_link.c:462
 Sin señal de %s	Kein Signal von %s
 
-#: apps/monsterhop/main/mh_link.c:452
+#: apps\monsterhop\main\mh_link.c:452
 Esperando a	Warte auf
 
-#: apps/monsterhop/main/mh_prog.c:155
+#: apps\monsterhop\main\mh_prog.c:155
 Primer paso	Erster Schritt
 
-#: apps/monsterhop/main/mh_prog.c:156
+#: apps\monsterhop\main\mh_prog.c:156
 Sin un rasguño	Ohne Kratzer
 
-#: apps/monsterhop/main/mh_prog.c:157
+#: apps\monsterhop\main\mh_prog.c:157
 Valiente	Mutig
 
-#: apps/monsterhop/main/mh_prog.c:158
+#: apps\monsterhop\main\mh_prog.c:158
 Rey del Pueblo Zombi	König der Zombiestadt
 
-#: apps/monsterhop/main/mh_prog.c:159
+#: apps\monsterhop\main\mh_prog.c:159
 Señor del Castillo	Herr der Burg
 
-#: apps/monsterhop/main/mh_prog.c:160
+#: apps\monsterhop\main\mh_prog.c:160
 Sultán del Desierto	Sultan der Wüste
 
-#: apps/monsterhop/main/mh_prog.c:161
+#: apps\monsterhop\main\mh_prog.c:161
 Guardián del Bosque	Hüter des Waldes
 
-#: apps/monsterhop/main/mh_prog.c:162
+#: apps\monsterhop\main\mh_prog.c:162
 Cazador de jefes	Bossjäger
 
-#: apps/monsterhop/main/mh_prog.c:163
+#: apps\monsterhop\main\mh_prog.c:163
 Álbum completo	Volles Album
 
-#: apps/monsterhop/main/mh_prog.c:164
+#: apps\monsterhop\main\mh_prog.c:164
 Llavero	Schlüsselbund
 
-#: apps/monsterhop/main/mh_prog.c:165
+#: apps\monsterhop\main\mh_prog.c:165
 Saltarín	Hüpfer
 
-#: apps/monsterhop/main/mh_prog.c:166
+#: apps\monsterhop\main\mh_prog.c:166
 A la moda	Modebewusst
 
-#: apps/monsterhop/main/mh_prog.c:167
+#: apps\monsterhop\main\mh_prog.c:167
 Mejor amigo	Bester Freund
 
-#: apps/monsterhop/main/mh_prog.c:168
+#: apps\monsterhop\main\mh_prog.c:168
 Todas las estrellas	Alle Sterne
 
-#: apps/monsterhop/main/mh_prog.c:169
+#: apps\monsterhop\main\mh_prog.c:169
 Domador del Valle	Talbändiger
 
-#: apps/monsterhop/main/mh_prog.c:170
+#: apps\monsterhop\main\mh_prog.c:170
 Capitán de la Bahía	Kapitän der Bucht
 
-#: apps/monsterhop/main/mh_prog.c:178
+#: apps\monsterhop\main\mh_prog.c:178
 Termina un nivel	Schaffe ein Level
 
-#: apps/monsterhop/main/mh_prog.c:179
+#: apps\monsterhop\main\mh_prog.c:179
 Termina un nivel sin perder una vida	Schaffe ein Level, ohne ein Leben zu verlieren
 
-#: apps/monsterhop/main/mh_prog.c:180
+#: apps\monsterhop\main\mh_prog.c:180
 Termina un nivel en Difícil	Schaffe ein Level auf Schwer
 
-#: apps/monsterhop/main/mh_prog.c:181
+#: apps\monsterhop\main\mh_prog.c:181
 Tres estrellas en todo el Pueblo Zombi	Drei Sterne in der ganzen Zombiestadt
 
-#: apps/monsterhop/main/mh_prog.c:182
+#: apps\monsterhop\main\mh_prog.c:182
 Tres estrellas en todo el Castillo Vampiro	Drei Sterne in der ganzen Vampirburg
 
-#: apps/monsterhop/main/mh_prog.c:183
+#: apps\monsterhop\main\mh_prog.c:183
 Tres estrellas en todo el Desierto de las Momias	Drei Sterne in der ganzen Mumienwüste
 
-#: apps/monsterhop/main/mh_prog.c:184
+#: apps\monsterhop\main\mh_prog.c:184
 Tres estrellas en todo el Bosque Lobizón	Drei Sterne im ganzen Werwolfwald
 
-#: apps/monsterhop/main/mh_prog.c:185
+#: apps\monsterhop\main\mh_prog.c:185
 Gana en todas las guaridas	Gewinne in jedem Versteck
 
-#: apps/monsterhop/main/mh_prog.c:188
+#: apps\monsterhop\main\mh_prog.c:188
 Encuentra las %d figuritas	Finde alle %d Sticker
 
-#: apps/monsterhop/main/mh_prog.c:191
+#: apps\monsterhop\main\mh_prog.c:191
 Junta 100 llaves	Sammle 100 Schlüssel
 
-#: apps/monsterhop/main/mh_prog.c:192
+#: apps\monsterhop\main\mh_prog.c:192
 Da 5000 saltos	Hüpfe 5000 Mal
 
-#: apps/monsterhop/main/mh_prog.c:193
+#: apps\monsterhop\main\mh_prog.c:193
 Compra 10 cosas en la tienda	Kaufe 10 Sachen im Laden
 
-#: apps/monsterhop/main/mh_prog.c:194
+#: apps\monsterhop\main\mh_prog.c:194
 Gana una carrera contra el otro reloj	Gewinne ein Rennen gegen die andere Uhr
 
-#: apps/monsterhop/main/mh_prog.c:197
+#: apps\monsterhop\main\mh_prog.c:197
 Las %d estrellas	Alle %d Sterne
 
-#: apps/monsterhop/main/mh_prog.c:200
+#: apps\monsterhop\main\mh_prog.c:200
 Tres estrellas en todo el Valle Perdido	Drei Sterne im ganzen Verlorenen Tal
 
-#: apps/monsterhop/main/mh_prog.c:201
+#: apps\monsterhop\main\mh_prog.c:201
 Tres estrellas en toda la Bahía Abisal	Drei Sterne in der ganzen Abgrundbucht
 
-#: apps/monsterhop/main/mh_shop.c:15
+#: apps\monsterhop\main\mh_shop.c:15
 Gorra roja	Rote Kappe
 
-#: apps/monsterhop/main/mh_shop.c:16
+#: apps\monsterhop\main\mh_shop.c:16
 Gorra azul	Blaue Kappe
 
-#: apps/monsterhop/main/mh_shop.c:17
+#: apps\monsterhop\main\mh_shop.c:17
 Gorra verde	Grüne Kappe
 
-#: apps/monsterhop/main/mh_shop.c:18
+#: apps\monsterhop\main\mh_shop.c:18
 Gorra al revés negra	Schwarze Kappe verkehrt
 
-#: apps/monsterhop/main/mh_shop.c:19
+#: apps\monsterhop\main\mh_shop.c:19
 Gorra al revés naranja	Orange Kappe verkehrt
 
-#: apps/monsterhop/main/mh_shop.c:20
+#: apps\monsterhop\main\mh_shop.c:20
 Gorro de lana violeta	Lila Mütze
 
-#: apps/monsterhop/main/mh_shop.c:21
+#: apps\monsterhop\main\mh_shop.c:21
 Gorro de lana menta	Mintgrüne Mütze
 
-#: apps/monsterhop/main/mh_shop.c:22
+#: apps\monsterhop\main\mh_shop.c:22
 Piluso caqui	Khaki Fischerhut
 
-#: apps/monsterhop/main/mh_shop.c:23
+#: apps\monsterhop\main\mh_shop.c:23
 Piluso rosa	Rosa Fischerhut
 
-#: apps/monsterhop/main/mh_shop.c:24
+#: apps\monsterhop\main\mh_shop.c:24
 Gorrito con hélice	Propellermütze
 
-#: apps/monsterhop/main/mh_shop.c:25
+#: apps\monsterhop\main\mh_shop.c:25
 Corona	Krone
 
-#: apps/monsterhop/main/mh_shop.c:28
+#: apps\monsterhop\main\mh_shop.c:28
 Rayas azules	Blaue Streifen
 
-#: apps/monsterhop/main/mh_shop.c:29
+#: apps\monsterhop\main\mh_shop.c:29
 Remera verde	Grünes T-Shirt
 
-#: apps/monsterhop/main/mh_shop.c:30
+#: apps\monsterhop\main\mh_shop.c:30
 Remera roja	Rotes T-Shirt
 
-#: apps/monsterhop/main/mh_shop.c:31
+#: apps\monsterhop\main\mh_shop.c:31
 Remera amarilla	Gelbes T-Shirt
 
-#: apps/monsterhop/main/mh_shop.c:32
+#: apps\monsterhop\main\mh_shop.c:32
 Rayas rosa	Rosa Streifen
 
-#: apps/monsterhop/main/mh_shop.c:33
+#: apps\monsterhop\main\mh_shop.c:33
 Violeta con estrella	Lila mit Stern
 
-#: apps/monsterhop/main/mh_shop.c:34
+#: apps\monsterhop\main\mh_shop.c:34
 Negra con luna	Schwarz mit Mond
 
-#: apps/monsterhop/main/mh_shop.c:35
-#: apps/monsterhop/main/mh_shop.c:73
+#: apps\monsterhop\main\mh_shop.c:35
+#: apps\monsterhop\main\mh_shop.c:73
 Calabaza	Kürbis
 
-#: apps/monsterhop/main/mh_shop.c:36
+#: apps\monsterhop\main\mh_shop.c:36
 Galaxia	Galaxie
 
-#: apps/monsterhop/main/mh_shop.c:39
+#: apps\monsterhop\main\mh_shop.c:39
 Mochila	Rucksack
 
-#: apps/monsterhop/main/mh_shop.c:40
+#: apps\monsterhop\main\mh_shop.c:40
 Capa de héroe	Heldenumhang
 
-#: apps/monsterhop/main/mh_shop.c:41
+#: apps\monsterhop\main\mh_shop.c:41
 Mochila cazafantasmas	Geisterjäger-Rucksack
 
-#: apps/monsterhop/main/mh_shop.c:42
+#: apps\monsterhop\main\mh_shop.c:42
 Alas de murciélago	Fledermausflügel
 
-#: apps/monsterhop/main/mh_shop.c:45
+#: apps\monsterhop\main\mh_shop.c:45
 Linterna	Taschenlampe
 
-#: apps/monsterhop/main/mh_shop.c:46
+#: apps\monsterhop\main\mh_shop.c:46
 Antorcha	Fackel
 
-#: apps/monsterhop/main/mh_shop.c:47
+#: apps\monsterhop\main\mh_shop.c:47
 Globo	Ballon
 
-#: apps/monsterhop/main/mh_shop.c:48
+#: apps\monsterhop\main\mh_shop.c:48
 Balde de golosinas	Süßigkeiteneimer
 
-#: apps/monsterhop/main/mh_shop.c:51
+#: apps\monsterhop\main\mh_shop.c:51
 Perrito	Hündchen
 
-#: apps/monsterhop/main/mh_shop.c:52
+#: apps\monsterhop\main\mh_shop.c:52
 Gatito negro	Schwarzes Kätzchen
 
-#: apps/monsterhop/main/mh_shop.c:53
+#: apps\monsterhop\main\mh_shop.c:53
 Murcielaguito	Fledermäuschen
 
-#: apps/monsterhop/main/mh_shop.c:56
+#: apps\monsterhop\main\mh_shop.c:56
 Chispas	Funken
 
-#: apps/monsterhop/main/mh_shop.c:57
+#: apps\monsterhop\main\mh_shop.c:57
 Huellas	Fußspuren
 
-#: apps/monsterhop/main/mh_shop.c:58
+#: apps\monsterhop\main\mh_shop.c:58
 Confeti	Konfetti
 
-#: apps/monsterhop/main/mh_shop.c:59
+#: apps\monsterhop\main\mh_shop.c:59
 Corazones	Herzen
 
-#: apps/monsterhop/main/mh_shop.c:62
+#: apps\monsterhop\main\mh_shop.c:62
 Piel muy clara	Sehr helle Haut
 
-#: apps/monsterhop/main/mh_shop.c:63
+#: apps\monsterhop\main\mh_shop.c:63
 Piel clara	Helle Haut
 
-#: apps/monsterhop/main/mh_shop.c:64
+#: apps\monsterhop\main\mh_shop.c:64
 Piel media	Mittlere Haut
 
-#: apps/monsterhop/main/mh_shop.c:65
+#: apps\monsterhop\main\mh_shop.c:65
 Piel trigueña	Olivfarbene Haut
 
-#: apps/monsterhop/main/mh_shop.c:66
+#: apps\monsterhop\main\mh_shop.c:66
 Piel morena	Braune Haut
 
-#: apps/monsterhop/main/mh_shop.c:67
+#: apps\monsterhop\main\mh_shop.c:67
 Piel oscura	Dunkle Haut
 
-#: apps/monsterhop/main/mh_shop.c:68
+#: apps\monsterhop\main\mh_shop.c:68
 Piel muy oscura	Sehr dunkle Haut
 
-#: apps/monsterhop/main/mh_shop.c:69
+#: apps\monsterhop\main\mh_shop.c:69
 Piel ébano	Ebenholzfarbene Haut
 
-#: apps/monsterhop/main/mh_shop.c:70
+#: apps\monsterhop\main\mh_shop.c:70
 Marciano	Marsmensch
 
-#: apps/monsterhop/main/mh_shop.c:71
+#: apps\monsterhop\main\mh_shop.c:71
 Fantasma	Geist
 
-#: apps/monsterhop/main/mh_shop.c:72
-#: apps/monsterhop/main/mh_ui.c:59
+#: apps\monsterhop\main\mh_shop.c:72
+#: apps\monsterhop\main\mh_ui.c:59
 Zombi	Zombie
 
-#: apps/monsterhop/main/mh_shop.c:74
+#: apps\monsterhop\main\mh_shop.c:74
 Robot	Roboter
 
-#: apps/monsterhop/main/mh_shop.c:75
+#: apps\monsterhop\main\mh_shop.c:75
 Lava	Lava
 
-#: apps/monsterhop/main/mh_shop.c:76
+#: apps\monsterhop\main\mh_shop.c:76
 Arcoíris	Regenbogen
 
-#: apps/monsterhop/main/mh_shop.c:79
+#: apps\monsterhop\main\mh_shop.c:79
 Pelo negro	Schwarze Haare
 
-#: apps/monsterhop/main/mh_shop.c:80
+#: apps\monsterhop\main\mh_shop.c:80
 Pelo castaño oscuro	Dunkelbraune Haare
 
-#: apps/monsterhop/main/mh_shop.c:81
+#: apps\monsterhop\main\mh_shop.c:81
 Pelo castaño	Braune Haare
 
-#: apps/monsterhop/main/mh_shop.c:82
+#: apps\monsterhop\main\mh_shop.c:82
 Pelo rubio	Blonde Haare
 
-#: apps/monsterhop/main/mh_shop.c:83
+#: apps\monsterhop\main\mh_shop.c:83
 Pelo colorado	Rote Haare
 
-#: apps/monsterhop/main/mh_shop.c:84
+#: apps\monsterhop\main\mh_shop.c:84
 Pelo azul	Blaue Haare
 
-#: apps/monsterhop/main/mh_shop.c:85
+#: apps\monsterhop\main\mh_shop.c:85
 Pelo rosa	Rosa Haare
 
-#: apps/monsterhop/main/mh_shop.c:86
+#: apps\monsterhop\main\mh_shop.c:86
 Pelo verde	Grüne Haare
 
-#: apps/monsterhop/main/mh_shop.c:120
+#: apps\monsterhop\main\mh_shop.c:120
 Gorras	Kappen
 
-#: apps/monsterhop/main/mh_shop.c:121
+#: apps\monsterhop\main\mh_shop.c:121
 Remeras	T-Shirts
 
-#: apps/monsterhop/main/mh_shop.c:122
+#: apps\monsterhop\main\mh_shop.c:122
 Espalda	Rücken
 
-#: apps/monsterhop/main/mh_shop.c:123
+#: apps\monsterhop\main\mh_shop.c:123
 En la mano	In der Hand
 
-#: apps/monsterhop/main/mh_shop.c:124
+#: apps\monsterhop\main\mh_shop.c:124
 Mascotas	Haustiere
 
-#: apps/monsterhop/main/mh_shop.c:125
+#: apps\monsterhop\main\mh_shop.c:125
 Estelas	Spuren
 
-#: apps/monsterhop/main/mh_shop.c:126
+#: apps\monsterhop\main\mh_shop.c:126
 Piel	Haut
 
-#: apps/monsterhop/main/mh_shop.c:127
+#: apps\monsterhop\main\mh_shop.c:127
 Pelo	Haare
 
-#: apps/monsterhop/main/mh_ui.c:60
+#: apps\monsterhop\main\mh_ui.c:60
 Perro zombi	Zombiehund
 
-#: apps/monsterhop/main/mh_ui.c:61
-#: apps/monsterhop/main/monsterhop.c:109
+#: apps\monsterhop\main\mh_ui.c:61
+#: apps\monsterhop\main\monsterhop.c:109
 Pueblo Zombi	Zombiestadt
 
-#: apps/monsterhop/main/mh_ui.c:62
+#: apps\monsterhop\main\mh_ui.c:62
 El Grandote	Der Koloss
 
-#: apps/monsterhop/main/mh_ui.c:63
+#: apps\monsterhop\main\mh_ui.c:63
 Vampiro	Vampir
 
-#: apps/monsterhop/main/mh_ui.c:64
+#: apps\monsterhop\main\mh_ui.c:64
 Armadura embrujada	Spukrüstung
 
-#: apps/monsterhop/main/mh_ui.c:65
+#: apps\monsterhop\main\mh_ui.c:65
 Murciélago	Fledermaus
 
-#: apps/monsterhop/main/mh_ui.c:66
+#: apps\monsterhop\main\mh_ui.c:66
 El Conde	Der Graf
 
-#: apps/monsterhop/main/mh_ui.c:67
+#: apps\monsterhop\main\mh_ui.c:67
 Momia	Mumie
 
-#: apps/monsterhop/main/mh_ui.c:68
+#: apps\monsterhop\main\mh_ui.c:68
 Escarabajo	Skarabäus
 
-#: apps/monsterhop/main/mh_ui.c:69
-#: apps/monsterhop/main/monsterhop.c:111
+#: apps\monsterhop\main\mh_ui.c:69
+#: apps\monsterhop\main\monsterhop.c:111
 Desierto de las Momias	Mumienwüste
 
-#: apps/monsterhop/main/mh_ui.c:70
+#: apps\monsterhop\main\mh_ui.c:70
 El Faraón	Der Pharao
 
-#: apps/monsterhop/main/mh_ui.c:71
+#: apps\monsterhop\main\mh_ui.c:71
 Hombre lobo	Werwolf
 
-#: apps/monsterhop/main/mh_ui.c:72
+#: apps\monsterhop\main\mh_ui.c:72
 Cuervo	Krähe
 
-#: apps/monsterhop/main/mh_ui.c:73
+#: apps\monsterhop\main\mh_ui.c:73
 Raptor	Raptor
 
-#: apps/monsterhop/main/mh_ui.c:74
+#: apps\monsterhop\main\mh_ui.c:74
 Pterodáctilo	Pterodaktylus
 
-#: apps/monsterhop/main/mh_ui.c:75
+#: apps\monsterhop\main\mh_ui.c:75
 Triceratops	Triceratops
 
-#: apps/monsterhop/main/mh_ui.c:76
+#: apps\monsterhop\main\mh_ui.c:76
 El T-Rex	Der T-Rex
 
-#: apps/monsterhop/main/mh_ui.c:77
+#: apps\monsterhop\main\mh_ui.c:77
 Cangrejo gigante	Riesenkrabbe
 
-#: apps/monsterhop/main/mh_ui.c:78
+#: apps\monsterhop\main\mh_ui.c:78
 Medusa	Qualle
 
-#: apps/monsterhop/main/mh_ui.c:79
+#: apps\monsterhop\main\mh_ui.c:79
 Hombre pez	Fischmensch
 
-#: apps/monsterhop/main/mh_ui.c:80
+#: apps\monsterhop\main\mh_ui.c:80
 El Kraken	Der Krake
 
-#: apps/monsterhop/main/mh_ui.c:81
-#: apps/monsterhop/main/monsterhop.c:112
+#: apps\monsterhop\main\mh_ui.c:81
+#: apps\monsterhop\main\monsterhop.c:112
 Bosque Lobizón	Werwolfwald
 
-#: apps/monsterhop/main/mh_ui.c:82
+#: apps\monsterhop\main\mh_ui.c:82
 El Alfa	Das Alphatier
 
-#: apps/monsterhop/main/mh_ui.c:603
+#: apps\monsterhop\main\mh_ui.c:603
 moneda	Münze
 
-#: apps/monsterhop/main/mh_ui.c:603
+#: apps\monsterhop\main\mh_ui.c:603
 monedas	Münzen
 
-#: apps/monsterhop/main/mh_ui.c:701
-#: apps/monsterhop/main/mh_ui.c:707
-#: apps/monsterhop/main/mh_ui.c:960
-#: apps/monsterhop/main/mh_ui.c:976
+#: apps\monsterhop\main\mh_ui.c:701
+#: apps\monsterhop\main\mh_ui.c:707
+#: apps\monsterhop\main\mh_ui.c:960
+#: apps\monsterhop\main\mh_ui.c:976
 Jugar	Spielen
 
-#: apps/monsterhop/main/mh_ui.c:702
-#: apps/monsterhop/main/mh_ui.c:708
-#: apps/monsterhop/main/mh_ui.c:1132
-#: apps/monsterhop/main/mh_ui.c:1141
+#: apps\monsterhop\main\mh_ui.c:702
+#: apps\monsterhop\main\mh_ui.c:708
+#: apps\monsterhop\main\mh_ui.c:1132
+#: apps\monsterhop\main\mh_ui.c:1141
 La casa de Tommy	Tommys Haus
 
-#: apps/monsterhop/main/mh_ui.c:770
+#: apps\monsterhop\main\mh_ui.c:770
 Hacen falta %d estrellas para abrir esta zona	Du brauchst %d Sterne für diese Zone
 
-#: apps/monsterhop/main/mh_ui.c:771
+#: apps\monsterhop\main\mh_ui.c:771
 Termina el nivel anterior	Schaffe zuerst das vorige Level
 
-#: apps/monsterhop/main/mh_ui.c:777
+#: apps\monsterhop\main\mh_ui.c:777
 Récord	Rekord
 
-#: apps/monsterhop/main/mh_ui.c:777
+#: apps\monsterhop\main\mh_ui.c:777
 Figurita	Sticker
 
-#: apps/monsterhop/main/mh_ui.c:778
+#: apps\monsterhop\main\mh_ui.c:778
 encontrada	gefunden
 
-#: apps/monsterhop/main/mh_ui.c:778
+#: apps\monsterhop\main\mh_ui.c:778
 escondida	versteckt
 
-#: apps/monsterhop/main/mh_ui.c:860
+#: apps\monsterhop\main\mh_ui.c:860
 Próximamente: una zona nueva	Demnächst: eine neue Zone
 
-#: apps/monsterhop/main/mh_ui.c:881
-#: apps/monsterhop/main/mh_ui.c:1553
+#: apps\monsterhop\main\mh_ui.c:881
+#: apps\monsterhop\main\mh_ui.c:1553
 Estrellas	Sterne
 
-#: apps/monsterhop/main/mh_ui.c:961
+#: apps\monsterhop\main\mh_ui.c:961
 Cerrar	Schließen
 
-#: apps/monsterhop/main/mh_ui.c:980
+#: apps\monsterhop\main\mh_ui.c:980
 Zonas	Zonen
 
-#: apps/monsterhop/main/mh_ui.c:1075
+#: apps\monsterhop\main\mh_ui.c:1075
 Faltan %d estrellas	Noch %d Sterne
 
-#: apps/monsterhop/main/mh_ui.c:1098
+#: apps\monsterhop\main\mh_ui.c:1098
 Primero aparea otro reloj en Enlace	Erst eine Uhr koppeln
 
-#: apps/monsterhop/main/mh_ui.c:1123
-#: apps/monsterhop/main/mh_ui.c:1379
+#: apps\monsterhop\main\mh_ui.c:1123
+#: apps\monsterhop\main\mh_ui.c:1379
 Guardarropas	Kleiderschrank
 
-#: apps/monsterhop/main/mh_ui.c:1123
-#: apps/monsterhop/main/mh_ui.c:1379
+#: apps\monsterhop\main\mh_ui.c:1123
+#: apps\monsterhop\main\mh_ui.c:1379
 Tienda	Laden
 
-#: apps/monsterhop/main/mh_ui.c:1123
+#: apps\monsterhop\main\mh_ui.c:1123
 Álbum	Album
 
-#: apps/monsterhop/main/mh_ui.c:1123
-#: apps/monsterhop/main/mh_ui.c:1478
+#: apps\monsterhop\main\mh_ui.c:1123
+#: apps\monsterhop\main\mh_ui.c:1478
 Trofeos	Trophäen
 
-#: apps/monsterhop/main/mh_ui.c:1123
-#: apps/monsterhop/main/mh_ui.c:1532
+#: apps\monsterhop\main\mh_ui.c:1123
+#: apps\monsterhop\main\mh_ui.c:1532
 Estadísticas	Statistik
 
-#: apps/monsterhop/main/mh_ui.c:1124
+#: apps\monsterhop\main\mh_ui.c:1124
 Jugar con un amigo	Mit Freunden spielen
 
-#: apps/monsterhop/main/mh_ui.c:1124
-#: apps/monsterhop/main/mh_ui.c:1608
+#: apps\monsterhop\main\mh_ui.c:1124
+#: apps\monsterhop\main\mh_ui.c:1608
 Ajustes	Einstellungen
 
-#: apps/monsterhop/main/mh_ui.c:1124
-#: apps/monsterhop/main/mh_ui.c:1754
-#: apps/monsterhop/main/mh_ui.c:1983
+#: apps\monsterhop\main\mh_ui.c:1124
+#: apps\monsterhop\main\mh_ui.c:1754
+#: apps\monsterhop\main\mh_ui.c:1983
 Al mapa	Zur Karte
 
-#: apps/monsterhop/main/mh_ui.c:1198
+#: apps\monsterhop\main\mh_ui.c:1198
 Comprar	Kaufen
 
-#: apps/monsterhop/main/mh_ui.c:1199
+#: apps\monsterhop\main\mh_ui.c:1199
 Sacárselo	Ausziehen
 
-#: apps/monsterhop/main/mh_ui.c:1199
+#: apps\monsterhop\main\mh_ui.c:1199
 Puesto	Angezogen
 
-#: apps/monsterhop/main/mh_ui.c:1200
+#: apps\monsterhop\main\mh_ui.c:1200
 Ponérselo	Anziehen
 
-#: apps/monsterhop/main/mh_ui.c:1214
+#: apps\monsterhop\main\mh_ui.c:1214
 Te faltan monedas	Nicht genug Münzen
 
-#: apps/monsterhop/main/mh_ui.c:1399
+#: apps\monsterhop\main\mh_ui.c:1399
 Escondida en %s	Versteckt in %s
 
-#: apps/monsterhop/main/mh_ui.c:1417
+#: apps\monsterhop\main\mh_ui.c:1417
 Álbum de figuritas	Stickeralbum
 
-#: apps/monsterhop/main/mh_ui.c:1553
+#: apps\monsterhop\main\mh_ui.c:1553
 Niveles terminados	Geschaffte Level
 
-#: apps/monsterhop/main/mh_ui.c:1554
+#: apps\monsterhop\main\mh_ui.c:1554
 Figuritas	Sticker
 
-#: apps/monsterhop/main/mh_ui.c:1554
+#: apps\monsterhop\main\mh_ui.c:1554
 Llaves juntadas	Gesammelte Schlüssel
 
-#: apps/monsterhop/main/mh_ui.c:1555
+#: apps\monsterhop\main\mh_ui.c:1555
 Monedas juntadas	Gesammelte Münzen
 
-#: apps/monsterhop/main/mh_ui.c:1555
+#: apps\monsterhop\main\mh_ui.c:1555
 Saltos	Sprünge
 
-#: apps/monsterhop/main/mh_ui.c:1556
+#: apps\monsterhop\main\mh_ui.c:1556
 Atrapado por monstruos	Von Monstern gefangen
 
-#: apps/monsterhop/main/mh_ui.c:1556
+#: apps\monsterhop\main\mh_ui.c:1556
 Al agua	Ins Wasser
 
-#: apps/monsterhop/main/mh_ui.c:1557
+#: apps\monsterhop\main\mh_ui.c:1557
 Caídas	Stürze
 
-#: apps/monsterhop/main/mh_ui.c:1557
+#: apps\monsterhop\main\mh_ui.c:1557
 Carreras ganadas	Gewonnene Rennen
 
-#: apps/monsterhop/main/mh_ui.c:1558
+#: apps\monsterhop\main\mh_ui.c:1558
 Tiempo jugado	Spielzeit
 
-#: apps/monsterhop/main/mh_ui.c:1614
+#: apps\monsterhop\main\mh_ui.c:1614
 Dificultad	Schwierigkeit
 
-#: apps/monsterhop/main/mh_ui.c:1615
+#: apps\monsterhop\main\mh_ui.c:1615
 Fácil	Leicht
 
-#: apps/monsterhop/main/mh_ui.c:1615
+#: apps\monsterhop\main\mh_ui.c:1615
 Normal	Normal
 
-#: apps/monsterhop/main/mh_ui.c:1615
+#: apps\monsterhop\main\mh_ui.c:1615
 Difícil	Schwer
 
-#: apps/monsterhop/main/mh_ui.c:1621
+#: apps\monsterhop\main\mh_ui.c:1621
 Fácil: 5 vidas y sin reloj. Normal: 3 vidas y reloj. Difícil: 1 vida y un poco menos de tiempo.	Leicht: 5 Leben, keine Uhr. Normal: 3 Leben mit Uhr. Schwer: 1 Leben und etwas weniger Zeit.
 
-#: apps/monsterhop/main/mh_ui.c:1624
+#: apps\monsterhop\main\mh_ui.c:1624
 Sonido	Ton
 
-#: apps/monsterhop/main/mh_ui.c:1626
+#: apps\monsterhop\main\mh_ui.c:1626
 Efectos	Effekte
 
-#: apps/monsterhop/main/mh_ui.c:1627
+#: apps\monsterhop\main\mh_ui.c:1627
 Música	Musik
 
-#: apps/monsterhop/main/mh_ui.c:1629
+#: apps\monsterhop\main\mh_ui.c:1629
 Controles	Steuerung
 
-#: apps/monsterhop/main/mh_ui.c:1630
+#: apps\monsterhop\main\mh_ui.c:1630
 Flechas en pantalla	Bildschirmpfeile
 
-#: apps/monsterhop/main/mh_ui.c:1631
+#: apps\monsterhop\main\mh_ui.c:1631
 Desliza el dedo para saltar, o toca para saltar hacia adelante. El botón dorado tira de las palancas, empuja cajas, abre cofres y, si no hay nada, da un súper salto.	Wischen zum Hüpfen oder tippen, um nach vorn zu hüpfen. Die goldene Taste zieht Hebel, schiebt Kisten, öffnet Truhen und macht sonst einen Supersprung.
 
-#: apps/monsterhop/main/mh_ui.c:1695
-#: apps/monsterhop/main/mh_ui.c:1700
+#: apps\monsterhop\main\mh_ui.c:1695
+#: apps\monsterhop\main\mh_ui.c:1700
 Cargando...	Lädt...
 
-#: apps/monsterhop/main/mh_ui.c:1714
-#: apps/monsterhop/main/mh_ui.c:1723
+#: apps\monsterhop\main\mh_ui.c:1714
+#: apps\monsterhop\main\mh_ui.c:1723
 Pausa	Pause
 
-#: apps/monsterhop/main/mh_ui.c:1738
-#: apps/monsterhop/main/mh_ui.c:1752
+#: apps\monsterhop\main\mh_ui.c:1738
+#: apps\monsterhop\main\mh_ui.c:1752
 Seguir	Weiter
 
-#: apps/monsterhop/main/mh_ui.c:1740
-#: apps/monsterhop/main/mh_ui.c:1982
+#: apps\monsterhop\main\mh_ui.c:1740
+#: apps\monsterhop\main\mh_ui.c:1982
 Reintentar	Nochmal
 
-#: apps/monsterhop/main/mh_ui.c:1741
+#: apps\monsterhop\main\mh_ui.c:1741
 Salir al mapa	Zur Karte
 
-#: apps/monsterhop/main/mh_ui.c:1759
+#: apps\monsterhop\main\mh_ui.c:1759
 Carrera de llaves	Schlüsselrennen
 
-#: apps/monsterhop/main/mh_ui.c:1765
+#: apps\monsterhop\main\mh_ui.c:1765
 Una llave, un punto. El primero en salir suma dos.	Ein Schlüssel, ein Punkt. Wer zuerst raus ist, bekommt zwei.
 
-#: apps/monsterhop/main/mh_ui.c:1767
+#: apps\monsterhop\main\mh_ui.c:1767
 ¡A correr!	Los geht's!
 
-#: apps/monsterhop/main/mh_ui.c:1768
+#: apps\monsterhop\main\mh_ui.c:1768
 Cancelar	Abbrechen
 
-#: apps/monsterhop/main/mh_ui.c:1850
+#: apps\monsterhop\main\mh_ui.c:1850
 Llaves	Schlüssel
 
-#: apps/monsterhop/main/mh_ui.c:1850
-#: apps/monsterhop/main/mh_ui.c:1952
-#: apps/monsterhop/main/mh_ui.c:1953
-#: apps/monsterhop/main/mh_ui.c:1975
+#: apps\monsterhop\main\mh_ui.c:1850
+#: apps\monsterhop\main\mh_ui.c:1952
+#: apps\monsterhop\main\mh_ui.c:1953
+#: apps\monsterhop\main\mh_ui.c:1975
 Monedas	Münzen
 
-#: apps/monsterhop/main/mh_ui.c:1851
+#: apps\monsterhop\main\mh_ui.c:1851
 Vidas	Leben
 
-#: apps/monsterhop/main/mh_ui.c:1855
-#: apps/monsterhop/main/mh_ui.c:1974
+#: apps\monsterhop\main\mh_ui.c:1855
+#: apps\monsterhop\main\mh_ui.c:1974
 Tiempo	Zeit
 
-#: apps/monsterhop/main/mh_ui.c:1930
+#: apps\monsterhop\main\mh_ui.c:1930
 Trofeo	Trophäe
 
-#: apps/monsterhop/main/mh_ui.c:1948
+#: apps\monsterhop\main\mh_ui.c:1948
 ¡Ganaste la carrera!	Du hast gewonnen!
 
-#: apps/monsterhop/main/mh_ui.c:1948
+#: apps\monsterhop\main\mh_ui.c:1948
 Perdiste la carrera	Du hast verloren
 
-#: apps/monsterhop/main/mh_ui.c:1949
+#: apps\monsterhop\main\mh_ui.c:1949
 Dejaste la carrera	Rennen verlassen
 
-#: apps/monsterhop/main/mh_ui.c:1953
+#: apps\monsterhop\main\mh_ui.c:1953
 Tú	Du
 
-#: apps/monsterhop/main/mh_ui.c:1958
+#: apps\monsterhop\main\mh_ui.c:1958
 Otra carrera	Noch ein Rennen
 
-#: apps/monsterhop/main/mh_ui.c:1966
+#: apps\monsterhop\main\mh_ui.c:1966
 ¡Nivel completo!	Level geschafft!
 
-#: apps/monsterhop/main/mh_ui.c:1966
+#: apps\monsterhop\main\mh_ui.c:1966
 Fin del juego	Spiel vorbei
 
-#: apps/monsterhop/main/mh_ui.c:1975
+#: apps\monsterhop\main\mh_ui.c:1975
   ¡récord!	  Rekord!
 
-#: apps/monsterhop/main/mh_ui.c:1975
+#: apps\monsterhop\main\mh_ui.c:1975
 Vidas perdidas	Verlorene Leben
 
-#: apps/monsterhop/main/mh_ui.c:1978
+#: apps\monsterhop\main\mh_ui.c:1978
 ¡Encontraste la figurita!	Du hast den Sticker gefunden!
 
-#: apps/monsterhop/main/mh_ui.c:1982
+#: apps\monsterhop\main\mh_ui.c:1982
 Siguiente nivel	Nächstes Level
 
-#: apps/monsterhop/main/monsterhop.c:78
+#: apps\monsterhop\main\monsterhop.c:78
 Calle Principal	Hauptstraße
 
-#: apps/monsterhop/main/monsterhop.c:79
+#: apps\monsterhop\main\monsterhop.c:79
 Las Cloacas	Die Kanäle
 
-#: apps/monsterhop/main/monsterhop.c:80
+#: apps\monsterhop\main\monsterhop.c:80
 El Desarmadero	Der Schrottplatz
 
-#: apps/monsterhop/main/monsterhop.c:81
+#: apps\monsterhop\main\monsterhop.c:81
 La Municipalidad	Das Rathaus
 
-#: apps/monsterhop/main/monsterhop.c:82
+#: apps\monsterhop\main\monsterhop.c:82
 El Foso	Der Burggraben
 
-#: apps/monsterhop/main/monsterhop.c:83
+#: apps\monsterhop\main\monsterhop.c:83
 El Gran Salón	Der große Saal
 
-#: apps/monsterhop/main/monsterhop.c:84
+#: apps\monsterhop\main\monsterhop.c:84
 La Torre del Reloj	Der Uhrturm
 
-#: apps/monsterhop/main/monsterhop.c:85
+#: apps\monsterhop\main\monsterhop.c:85
 La Cámara del Conde	Die Kammer des Grafen
 
-#: apps/monsterhop/main/monsterhop.c:86
+#: apps\monsterhop\main\monsterhop.c:86
 Mar de Dunas	Dünenmeer
 
-#: apps/monsterhop/main/monsterhop.c:87
+#: apps\monsterhop\main\monsterhop.c:87
 El Oasis	Die Oase
 
-#: apps/monsterhop/main/monsterhop.c:88
+#: apps\monsterhop\main\monsterhop.c:88
 Salas del Templo	Tempelhallen
 
-#: apps/monsterhop/main/monsterhop.c:89
+#: apps\monsterhop\main\monsterhop.c:89
 La Tumba del Faraón	Das Grab des Pharaos
 
-#: apps/monsterhop/main/monsterhop.c:90
+#: apps\monsterhop\main\monsterhop.c:90
 El Sendero	Der Pfad
 
-#: apps/monsterhop/main/monsterhop.c:91
+#: apps\monsterhop\main\monsterhop.c:91
 El Río Bravo	Der wilde Fluss
 
-#: apps/monsterhop/main/monsterhop.c:92
+#: apps\monsterhop\main\monsterhop.c:92
 El Viejo Molino	Die alte Mühle
 
-#: apps/monsterhop/main/monsterhop.c:93
+#: apps\monsterhop\main\monsterhop.c:93
 El Claro de la Luna	Die Mondlichtung
 
-#: apps/monsterhop/main/monsterhop.c:94
+#: apps\monsterhop\main\monsterhop.c:94
 La Selva Humeante	Der dampfende Dschungel
 
-#: apps/monsterhop/main/monsterhop.c:95
+#: apps\monsterhop\main\monsterhop.c:95
 Los Pozos de Brea	Die Teergruben
 
-#: apps/monsterhop/main/monsterhop.c:96
+#: apps\monsterhop\main\monsterhop.c:96
 El Río de Lava	Der Lavafluss
 
-#: apps/monsterhop/main/monsterhop.c:97
+#: apps\monsterhop\main\monsterhop.c:97
 La Carrera del T-Rex	Die T-Rex-Jagd
 
-#: apps/monsterhop/main/monsterhop.c:98
+#: apps\monsterhop\main\monsterhop.c:98
 El Muelle	Der Pier
 
-#: apps/monsterhop/main/monsterhop.c:99
+#: apps\monsterhop\main\monsterhop.c:99
 Marea Alta	Flut
 
-#: apps/monsterhop/main/monsterhop.c:100
+#: apps\monsterhop\main\monsterhop.c:100
 El Barco Hundido	Das Wrack
 
-#: apps/monsterhop/main/monsterhop.c:101
+#: apps\monsterhop\main\monsterhop.c:101
 La Guarida del Kraken	Der Hort des Kraken
 
-#: apps/monsterhop/main/monsterhop.c:102
+#: apps\monsterhop\main\monsterhop.c:102
 Campo de Prueba	Testfeld
 
-#: apps/monsterhop/main/monsterhop.c:110
+#: apps\monsterhop\main\monsterhop.c:110
 Castillo Vampiro	Vampirburg
 
-#: apps/monsterhop/main/monsterhop.c:113
+#: apps\monsterhop\main\monsterhop.c:113
 Valle Perdido	Verlorenes Tal
 
-#: apps/monsterhop/main/monsterhop.c:114
+#: apps\monsterhop\main\monsterhop.c:114
 Bahía Abisal	Abgrundbucht
 
-#: apps/monsterhop/main/monsterhop.c:805
+#: apps\monsterhop\main\monsterhop.c:805
 No hay memoria para girar la pantalla	Zu wenig Speicher zum Drehen des Bildschirms
 
-#: apps/monsterhop/main/monsterhop.c:862
+#: apps\monsterhop\main\monsterhop.c:862
 ¡Llave!	Schlüssel!
 
-#: apps/monsterhop/main/monsterhop.c:863
+#: apps\monsterhop\main\monsterhop.c:863
 ¡Se abrió la salida!	Der Ausgang ist offen!
 
-#: apps/monsterhop/main/monsterhop.c:864
+#: apps\monsterhop\main\monsterhop.c:864
 Punto de control	Kontrollpunkt
 
-#: apps/monsterhop/main/monsterhop.c:865
+#: apps\monsterhop\main\monsterhop.c:865
 ¡Sin tiempo!	Zeit um!
 
-#: apps/monsterhop/main/monsterhop.c:866
+#: apps\monsterhop\main\monsterhop.c:866
 ¿Listo?	Bereit?
 
-#: apps/monsterhop/main/monsterhop.c:867
+#: apps\monsterhop\main\monsterhop.c:867
 ¡Ya!	Los!
 
-#: apps/monsterhop/main/monsterhop.c:868
+#: apps\monsterhop\main\monsterhop.c:868
 ¡Una vida más!	Ein Leben mehr!
 
-#: apps/monsterhop/main/monsterhop.c:869
+#: apps\monsterhop\main\monsterhop.c:869
 +30 segundos	+30 Sekunden
 
-#: apps/monsterhop/main/monsterhop.c:870
+#: apps\monsterhop\main\monsterhop.c:870
 ¡Rápido!	Schnell!
 
-#: apps/monsterhop/main/monsterhop.c:1479
+#: apps\monsterhop\main\monsterhop.c:1479
 Falta monsterhop.pak en la tarjeta	monsterhop.pak fehlt auf der Karte
 
-#: apps/monsterhop/main/monsterhop.c:1608
+#: apps\monsterhop\main\monsterhop.c:1608
 No se pudo cargar el nivel	Das Level konnte nicht geladen werden

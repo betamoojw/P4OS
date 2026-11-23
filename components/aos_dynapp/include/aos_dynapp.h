@@ -41,6 +41,30 @@ void aos_dynapp_tick(void);
 /* Unloads an already registered dynamic app and takes it off the menu. */
 bool aos_dynapp_unload(const char *app_id);
 
+/* Every app of one .so (file name, without a path) off the menu and its code
+ * out of memory: what goes before replacing or deleting the file while the
+ * board runs. An app of it that is open is closed first. Returns how many
+ * apps it took off; aos_dynapp_load() puts the new file's back. */
+int aos_dynapp_unload_file(const char *filename);
+
+/* Would this .so load on this firmware? Reads the file at 'path' (a full
+ * path) without loading it or running any of it, and looks every symbol it
+ * needs up in the table the loader uses.
+ *   0    yes
+ *   >0   how many symbols this firmware does not have; their names go to
+ *        'missing', separated by spaces, as many as fit
+ *   -1   not a module for this board (or unreadable); 'missing' says why
+ *   -2   a module, with every symbol found, but not an app (it exports no
+ *        aos_app_abi/aos_app_init): right for an emulator's core
+ * The ABI number is inside the app's code and is checked when it loads. */
+int aos_dynapp_check(const char *path, char *missing, size_t missing_len);
+
+/* The module set aside at this start, or NULL: one that made the board fall
+ * twice in a row while it was loading is renamed to <file>.so.off before the
+ * scan, so the board comes up without it (aos_dynapp.c, "Quarantine").
+ * Installing it again puts a .so back; the .off is the store's to delete. */
+const char *aos_dynapp_set_aside(void);
+
 /* Whether the app with this id came from a .so on the card. The id does not
  * say it: twelve of the card's apps are "aos.something", like the built-in
  * ones, so only the table of loaded stubs knows. */

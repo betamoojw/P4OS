@@ -5,6 +5,96 @@ simulador, contra servidores falsos en la Mac. Este archivo junta, en un solo
 lugar, lo que **sólo la placa puede confirmar**, para ir tachando a medida que
 se prueba.
 
+## Pendientes al 2026-11-22, después de la 0.32.0
+
+La placa corre `v0.32.0`, la imagen del CI, con las 73 apps del catálogo
+manejadas por la Tienda. La 0.32.1 (un arreglo de la Tienda) salió después;
+la placa la toma desde Ajustes. Esto es todo lo que queda abierto de
+noviembre, junto; el detalle de cada cosa está en su sección, más abajo.
+De antes de noviembre quedan 69 renglones sin tachar desde "Pendientes,
+en resumen": no se revisaron en esta pasada.
+
+**La 0.32.1 (publicada el 2026-11-22, un solo arreglo):**
+
+- [ ] La Tienda espera una descarga libre: tocar "Obtener" apenas se abre
+      la ficha de una app, mientras bajan sus imágenes, y que instale al
+      primer toque. Probado en la Mac (`tests/store_fw_host` reproduce el
+      fallo de la placa sin el arreglo); en la placa falta verlo, y no es
+      fácil: con las 73 apps instaladas y sus imágenes ya en la tarjeta no
+      queda ficha que las baje.
+
+**Las cuatro apps de la 0.32.0:**
+
+- [ ] **Estudio:** mandar todo a una computadora por el puerto OTG, con un
+      programa que muestre los canales y el reloj; las faltas que muestra
+      Canción → Audio en Baja, Normal y Segura; la latencia de verdad, de
+      una tecla al parlante, con un micrófono.
+- [ ] **Hockey de mesa:** dos dedos a la vez, las mesas de neón y de
+      hielo, y ajustar los niveles contra una persona.
+- [ ] **Traductor:** el diccionario de una palabra, la página del portal,
+      el modo en línea contra `fake_translate.py`; los packs de francés y
+      alemán bajados en la placa (italiano, español y portugués ya están).
+- [ ] **Oficina:** abrir en la computadora una planilla y un documento
+      guardados en la placa; el teclado físico; y en `fuentes.pdf` la
+      línea de la fuente TrueType simbólica, que sale sin tildes y no se
+      comparó con la Mac.
+- [ ] **Vuelos:** el paso solo de airplanes.live a adsb.lol (visto en el
+      simulador).
+- [ ] El chip "Nuevas" visto en la pantalla.
+
+**Las de la 0.31.0:**
+
+- [ ] **Sudoku y Bolsa:** sin abrir en la placa; Bolsa contra los
+      servicios de verdad.
+- [ ] **Metegol:** de a dos y con joystick; y volver a mirar el aviso de
+      memoria al cerrarla, ahora que no cuenta las fotos del fondo.
+- [ ] **Juegos de mesa:** los fps del 3D, el motor de ajedrez en el nivel
+      más alto, y los cuatro juegos que no se jugaron.
+- [ ] Abrir algunas de las 39 apps reemplazadas por las de la Tienda y ver
+      que lo guardado sigue.
+
+**Respaldos:**
+
+- [ ] Restaurar uno que cambie algo a la vista, uno simple, y deshacer una
+      restauración.
+- [ ] La copia de antes de un firmware, con un ajuste cambiado; la del
+      otro día; la semanal al servidor, sola.
+- [ ] Un pendrive de verdad: copiar, sacar en medio, traer en una tarjeta
+      nueva.
+- [ ] `sftp p4os.local` y `scp` desde la Mac.
+- [ ] Con la flash borrada: el cartel que ofrece el respaldo de la
+      tarjeta. Sólo cuando el usuario lo diga.
+
+**La Tienda:**
+
+- [ ] Cortar el Wi-Fi en medio de una bajada.
+- [ ] Proponer una fuente desde el portal, quitar una fuente con sus apps
+      y sin ellas, quitar un paquete suelto, y una fuente de terceros de
+      verdad.
+- [ ] Instalar el firmware del C6 que baja la Tienda.
+
+**El audio:**
+
+- [ ] Con Música sonando y "Mezclar música y apps", y empezar a grabar
+      con la salida corta abierta.
+
+**Ideas anotadas, que no son pruebas:**
+
+- **El portal y los gestos.** Sus toques ya llegan a los botones y a los
+  juegos que leen los dedos (`aos_touch_points`), no al lector de gestos
+  del sistema (`aos_gesture_attach`): no se puede desplazar un mapa ni una
+  página de PDF, ni presentar diapositivas, desde el portal. Tampoco pega
+  texto en los campos de Oficina, que usa el teclado de Notas.
+- **Traductor:** pasando por el inglés recarga los dos modelos en cada
+  traducción (3,2 s de los 5 a 11); y el camino int8 sólo rinde con el
+  SIMD del núcleo, que no está escrito.
+- **Packs:** el de fuentes de Oficina se subió a mano y podría armarlo el
+  CI, como el de Notas; los de idioma del Traductor también tienen fuentes
+  bajables. Los de idioma viven en la release `v0.31.0`, que por eso no se
+  borra.
+- **El simulador:** un comando de guion para el teclado físico (`hwkey`),
+  pedido por Oficina.
+
 ## Estado al 2026-09-30 (lo de después, en los resúmenes de abajo)
 
 - **La placa corre P4OS entero:** rev 1.3 del chip, perfil `rev1_3`, firmware
@@ -33,6 +123,366 @@ se prueba.
   con arranque a prueba y vuelta sola a la imagen anterior; el registro del
   arranque anterior y el volcado del último cuelgue se leen desde el portal
   (`docs/BUILDING.md`).
+
+### La Tienda (0.30, 2026-11-20 y 21)
+
+El plan, con cada número, es `docs/plan/TIENDA.md`. En la placa, con el
+firmware de la rama `tienda` y contra una pre-release de prueba en GitHub
+y un servidor de prueba en la Mac:
+
+- [x] Bajar a archivo desde GitHub por TLS (0,38 MB/s), con sus dos
+      redirecciones; reiniciar en medio de una bajada y retomarla.
+- [x] El chequeo de símbolos sin cargar (10 ms) y sacar y poner el código
+      de una app en caliente (0,2 s).
+- [x] Un `.so` roto a propósito: apartado tras dos caídas.
+- [x] El servicio por la API: catálogo, instalar, actualizar, quitar.
+- [x] La app Tienda: la lista, la página de una app con sus imágenes y su
+      descripción, los extras (usuario).
+- [x] Una segunda fuente: mirarla, el aviso, agregarla, su app con
+      imagen, y la que se llama como una oficial, afuera (usuario).
+- [x] Un `.p4app` desde Archivos, y verlo en la Tienda como paquete suelto;
+      los filtros por origen (usuario).
+- [x] El firmware desde el catálogo: por la API, y entero desde Ajustes →
+      Actualización con los dos reinicios (usuario). 57 s del toque a
+      "lista".
+- [x] Las partes del sistema: los dos idiomas, los emojis reconocidos sin
+      bajar y el firmware del C6 reemplazado (usuario).
+- [x] Contra una release **publicada** de GitHub (la pre-release
+      `v0.30.0-tienda.4`): el catálogo con el firmware y las partes del
+      sistema en 4,1 s, una app reinstalada en 4,6 s, y el firmware bajado
+      por HTTPS y escrito en la otra ranura en 64 s.
+- [x] Reiniciar a ese firmware, el primero compilado por el CI que
+      arranca en la placa: a prueba, confirmado a los 32 s (usuario).
+- [x] Las imágenes de las apps desde un catálogo del CI (los cuatro tags
+      de prueba salieron sin ellas): con la 0.32.0 la placa las bajó al
+      abrir cada ficha (en el registro, `shots/hockey-1-…jpg` y las de
+      Estudio, 2 s cada una). Los tags de prueba `v0.30.0-tienda.1` a `.4`
+      y sus releases se borraron el 2026-11-22.
+- [ ] Cortar el Wi-Fi en medio de una bajada.
+- [ ] Confirmar que proponer una fuente desde el portal se recorrió en la
+      placa (en el simulador sí).
+- [ ] Quitar una fuente (con sus apps y sin ellas) y quitar un paquete
+      suelto.
+- [ ] Una fuente de terceros de verdad, en otro repositorio de GitHub.
+- [ ] Instalar el firmware del C6 que bajó la Tienda (Ajustes).
+
+### Respaldos (0.31, 2026-11-21)
+
+El plan y lo medido, en `docs/plan/RESPALDO.md` ("En la placa"). Con
+`v0.30.0-9-g40b9b5e`, por la API del portal:
+
+- [x] Un respaldo simple: 0,4 s, 419 preferencias y 8 afuera, 14 KB.
+- [x] Uno cifrado: 4 s, 427 preferencias, 19 KB; abierto en la Mac con la
+      misma frase y no con otra. Borrado de la tarjeta.
+- [x] Las 8 que deja afuera el simple son credenciales. **Se le escapó
+      una, `sshc_seed`** (la clave del cliente SSH): arreglado en el
+      código.
+- [x] El arreglo instalado (`v0.30.0-10-gcbd43ce`): un simple nuevo con 9
+      afuera y ninguna credencial; el de la primera prueba, borrado.
+- [x] Un respaldo cifrado hecho y restaurado desde Ajustes → Respaldo,
+      con la frase escrita en la pantalla: 427 preferencias escritas y el
+      `…-antes` cifrado con la misma frase.
+- [x] Reiniciada después de restaurar: arrancó normal, en la red y con
+      la Tienda leyendo su catálogo.
+- [ ] Restaurar uno que cambie algo a la vista (cambiar un ajuste después
+      del respaldo, restaurar, reiniciar y ver que volvió).
+- [ ] Restaurar uno simple, y deshacer una restauración con su `…-antes`.
+- [ ] Con la flash borrada: volver desde el archivo y que la Tienda
+      ofrezca reinstalar. Sólo cuando el usuario lo diga.
+
+### Respaldos, las copias solas, el pendrive y el servidor (0.31)
+
+Instalado el 2026-11-21, `v0.30.0-16-g021f337`.
+
+- [x] La copia del día, sola, a los 126 s de arrancar: 418 preferencias,
+      9 credenciales afuera, 14 KB. RAM interna libre: 209,2 KB.
+- [ ] Al otro día, con algo cambiado: otra. Sin cambios: ninguna.
+- [ ] Instalar un firmware después de cambiar un ajuste: la copia
+      `…-fw.p4bak` antes de escribir.
+- [ ] Ajustes → Respaldo → "Cifrarlas con una frase…": la primera copia
+      cifrada enseguida, y cuánto tarda.
+- [ ] `erase_flash`, grabar, arrancar con la tarjeta: el cartel "Hay un
+      respaldo en la tarjeta". Sólo cuando el usuario lo diga.
+- [ ] Un pendrive en el host USB: Ajustes → Respaldo → "Copiar al
+      pendrive", cuánto tarda, y la segunda vez que no copia nada.
+- [ ] Sacar el pendrive en medio de una copia: sin archivos a medias.
+- [ ] "Traer del pendrive" en una tarjeta nueva, y restaurar el respaldo
+      que vino: las notas y el inicio de la anterior.
+- [x] La etapa 4 instalada (`v0.30.0-21-gd2bc7d3`): confirmada, 209,1 KB
+      de RAM interna libres, la línea de la clave en el portal.
+- [x] "Hacer una clave nueva" instalado (`v0.30.0-23-g2cb14b8`).
+- [x] Tocado en la placa: la clave cambió (se ve en el portal) y es la
+      que quedó autorizada en el NAS.
+- [ ] `sftp p4os.local` y `scp` desde la Mac:
+      listar, bajar y subir un archivo grande, y cuánta RAM interna queda.
+- [x] Ajustes → Respaldo → Servidor propio, contra el NAS del usuario
+      (con su permiso, un usuario y una carpeta armados para eso): la
+      clave nueva de la placa, "Probar la conexión", "Aceptar esta clave",
+      la frase, "Subir ahora": tres respaldos cifrados byte por byte.
+- [x] El aviso de "falta la frase" instalado (`v0.30.0-26-gac10384`).
+- [ ] Verlo: con la frase puesta no aparece; "Probar la conexión" y
+      "Subir ahora" tienen que decir abajo cómo terminaron.
+- [ ] La copia de antes de un firmware: en cuatro instalaciones no hubo
+      ninguna, cada vez sin cambios desde la copia del día. Falta verla
+      una vez, cambiando un ajuste antes de instalar.
+- [ ] La copia semanal, sola, a la semana.
+
+### El audio para tocar en vivo (en `main`, 2026-11-22)
+
+Pedido de Estudio. El firmware arma ahora el canal I2S y los dos códecs
+(antes lo hacía el BSP), y eso toca **todo lo que suena**. Instalado con
+permiso (`v0.31.0-16-g66168c5`), probado por el portal:
+
+- [x] El audio arranca como antes: "I2S ok, ES8311 ok, ES7210 ok" en el
+      registro, los dos micrófonos habilitados. RAM interna libre: 209,1
+      KB, la de siempre.
+- [x] `GET /api/spk?low=0`: el tono por el camino de siempre, 40 ms, sin
+      un corte.
+- [x] `GET /api/spk?low=1&queue=4`: el mismo por el bus corto: **10 ms**,
+      sin un corte en 3 s. Con cola de 2 ms, tampoco; con 1 ms (menos de
+      un bloque del mezclador), todos los bloques cortos, como tiene que
+      ser. Rehacer la salida al abrir y al cerrar: unos 60 a 90 ms en
+      total, por lo que tardó cada prueba.
+- [x] Con la tarjeta y el Wi-Fi ocupados (15 MB leídos por el portal
+      mientras sonaba): cola de 4 ms y de 2 ms, ni un bloque corto en 4 s.
+- [x] **Con la cuenta del driver I2S sumada** (sus buffers que salieron
+      sin nada detrás: la salida misma atrasada), `v0.31.0-17-gabd0a8c`:
+      por el camino de siempre, 0 en 9 s. Por el corto, **5, siempre 5**:
+      con 0,5 s de tono, con 1, con 4 y con 9, con cola de 2, 4 u 8 ms,
+      con la placa libre o con la tarjeta y el Wi-Fi ocupados. No crece
+      con el tiempo: son del momento en que la salida se rehace al abrir
+      (el canal corre unos milisegundos antes de que haya qué escribir),
+      no cortes mientras suena. La cuenta que ve la app ya no los incluye
+      (arranca cuando el anillo volvió a llenarse): compila, sin instalar.
+- [x] Con el oído, por el usuario (2026-11-22): la música suena bien, la
+      radio también, y la Grabadora grabó un audio de prueba que se
+      escucha bien. Con eso entró a `main` (`420af9a`).
+- [x] **Estudio en la placa, con el bus corto:** instalada a mano el
+      2026-11-22 (rama `estudio-baja-latencia`: su rama sobre `main` y
+      tres cambios en `es_engine.c` para abrir con `aos_hal_spk_open_low`).
+      **Tocada por el usuario: "se siente bien".** Mirado después por el
+      portal, con la app abierta: ninguna caída, la pantalla sin un cuadro
+      tardío (17,4 ms el mayor intervalo), RAM interna libre 214 KB
+      (154 KB de mínima desde el arranque), y el hilo de audio de la app
+      con un cuarto de un núcleo.
+- [ ] Estudio: las faltas que muestra Canción → Audio con Baja (4 ms),
+      Normal (8) y Segura (20) tocando de verdad, y si hace ruido al
+      abrir y cerrar.
+- [ ] Con Música sonando y "Mezclar música y apps": el tono sale por el
+      camino de siempre (`latency_ms` 40) y la música no se corta.
+- [ ] Empezar a grabar con el bus corto abierto: la grabación sale entera
+      y el bus vuelve al de siempre.
+- [ ] La latencia de verdad, de una tecla al parlante: con un micrófono
+      aparte o un osciloscopio. La placa no la puede medir sola: sus
+      micrófonos sacan el bus corto. Por el código: 10 ms más la cola de
+      la app (2 a 4 ms), donde había 50 a 70.
+
+### Solitario, una partida entera en la placa (2026-11-22)
+
+Jugada por el usuario con `v0.31.0-3-gc47efcd`, la app instalada desde la
+Tienda. Mirado después por el portal: ninguna caída; la pantalla sin un
+cuadro tardío ni un corte en 242 000 cuadros (17,7 ms el mayor intervalo);
+`/data/solitario.dat` guardado (376 bytes). RAM interna libre con la app
+abierta: 204 KB.
+
+### La 0.31.0 desde la placa (publicada el 2026-11-22)
+
+La placa corre `v0.30.0-26-gac10384` y su catálogo guardado todavía es el
+de la 0.30.0: se pone al día al abrir la Tienda o Ajustes → Actualización.
+
+- [x] Ajustes → Actualización → Desde GitHub, por el usuario
+      (2026-11-22): ofreció la 0.31.0, la bajó (7 155 008 bytes en 27 s,
+      1,5 s de conexión y 0,6 s de verificación), la escribió en la otra
+      ranura, arrancó a prueba y quedó confirmada a los 30 s. **La primera
+      vez que una placa baja sola una release nueva**, y la primera imagen
+      de esta release que corre en una placa. RAM interna libre: 211,3 KB
+      (2 KB más que con la compilación de la Mac). La ranura anterior
+      conserva `v0.30.0-26-gac10384`.
+- [ ] La copia "de antes de actualizar": el paso corrió (el registro dice
+      `backup: auto: nothing changed since the last copy`, justo antes de
+      `ota: writing`) y no hizo copia porque nada había cambiado. Falta
+      verla una vez con un ajuste cambiado antes de instalar.
+- [x] Tienda con el catálogo de la 0.31.0: de actualizaciones, sólo los
+      dos idiomas del sistema, y ninguna app de las 58 de antes; las cinco
+      apps nuevas para obtener y Metegol como copiada a mano.
+- [x] Las dos actualizaciones de idioma, instaladas desde la Tienda por
+      el usuario (2026-11-22).
+- [x] **Sudoku, Solitario, Bolsa, Vuelos y Juegos de mesa, obtenidas
+      desde la Tienda por el usuario** (2026-11-22), y Metegol
+      reemplazada por la del catálogo. Revisado después por el portal:
+      las seis en la 0.31.0, con cada archivo como dice su recibo y cada
+      pack con el tamaño y el SHA-256 del catálogo publicado (23,7 MB
+      leídos de la tarjeta), los packs que necesitan en su lugar,
+      registradas en el inicio, y sin una línea de problema en el
+      registro. La Tienda: 69 instaladas, ninguna para actualizar,
+      ninguna por obtener. **El circuito completo de una app nueva**
+      (rama, `main`, CI, pack en una release, catálogo, tag, la placa que
+      la baja) **quedó cerrado con estas seis.**
+- [x] Solitario y Juegos de mesa, jugadas por el usuario (más abajo, en
+      "Las apps nuevas de noviembre").
+- [x] **Vuelos en la placa, contra adsb.lol** (2026-11-22): no traía
+      aviones con ninguna fuente. Tres causas, una detrás de otra: pedía
+      1,5 MB de un solo bloque para cada respuesta y con sus propios
+      buffers a la placa le quedan 1,7 MB (ningún pedido salía, y no lo
+      decía); adsb.lol contesta 426 a HTTP/1.0, que era lo que hablaba el
+      cliente del firmware; y airplanes.live contesta 403 a esta red. Con
+      el firmware `v0.31.0-27-g2745195` y la app nueva: 11 aviones, los
+      mismos 11 que da el servicio pedido desde la Mac 48 s después.
+- [x] **Una app actualizada por la Tienda** (2026-11-22): Vuelos, dos
+      veces, desde un catálogo de prueba servido de la Mac con el modo
+      desarrollo. 0,6 s de descarga, instalada y cargada en 6 s, byte por
+      byte. De vuelta en el catálogo oficial, Vuelos queda con
+      "Actualizar" (que sería volver a la publicada) hasta la 0.32.0.
+- [ ] Vuelos: el paso solo de airplanes.live a adsb.lol, en la placa
+      (visto en el simulador).
+- [ ] Sudoku y Bolsa, sin abrir todavía en la placa; Bolsa contra los
+      servicios de verdad.
+- [x] **"Que las maneje la Tienda" sólo tomó tres o cuatro** (2026-11-22,
+      dicho por el usuario): es lo esperado, las demás eran compilaciones
+      de la Mac y no los bytes del catálogo. **"Reemplazarlas por las de
+      la Tienda"** (`v0.31.0-3-gc47efcd`, pedido por el portal con su
+      permiso): **las 39 reemplazadas en 265 s, ninguna falló**, 6,8 s por
+      app en promedio (CAS 24 s, el emulador 18, Python 16; las demás,
+      menos de 10). Ningún pack bajado: la tarjeta quedó con 1,4 MB menos
+      libres, y los recibos tomaron como propios los extras que estaban
+      (las seis mesas del pinball, los once mundos de Bastión, los nueve
+      estadios de Metegol). RAM interna: 205,7 KB de mínima mientras
+      corría, 208,7 después. Quedan dos copiadas a mano, las que ningún
+      catálogo lista. De 23 instaladas por la Tienda a 62.
+- [ ] Abrir algunas de las reemplazadas y ver que lo guardado sigue
+      (puntajes, proyectos, notas).
+
+### La 0.32.0 desde la placa (publicada el 2026-11-22)
+
+- [x] Publicada, la Tienda de la placa (con `v0.31.0-49-ge594fae`) la ve
+      al refrescar: firmware 0.32.0 para bajar, cuatro apps nuevas, tres
+      actualizaciones (Vuelos, y los idiomas inglés y alemán del
+      sistema), y Estudio pidiendo el firmware nuevo.
+- [x] **La placa se actualizó sola a la 0.32.0** (2026-11-22, el
+      usuario, desde Ajustes y la Tienda): corre `v0.32.0`, la imagen del
+      CI, confirmada a los 30 s. La Tienda quedó con 73 apps suyas, sin
+      actualizaciones pendientes y con todas entrando en el firmware;
+      sólo dos `.so` propios siguen "a mano" (no están en el catálogo).
+- [x] **Las cuatro apps copiadas a mano pasaron a la Tienda** y Vuelos se
+      actualizó: los cinco `.so` de la tarjeta son los publicados
+      (SHA-256 contra el catálogo).
+- [x] **Un idioma del Traductor, solo:** el usuario bajó el italiano. La
+      Tienda trajo sus 7 partes (46,5 MB en 134 s, 350 KB/s) y ninguna de
+      francés ni de alemán; español y portugués, que estaban copiados a
+      mano y son los del catálogo, quedaron anotados sin bajarse de
+      nuevo. Las 7 partes leídas de la tarjeta son iguales a las armadas.
+- [x] Sin caídas en el registro de toda la actualización.
+- [ ] **Encontrado:** "Obtener" tocado mientras la página de la app baja
+      sus cuatro imágenes falla ("could not start the download (-2)") y
+      anda al segundo toque; pasó con Hockey y con Oficina. Corregido en
+      `main` para la próxima versión: la Tienda espera a que se libere una
+      descarga. Falta verlo en la placa.
+- [ ] El chip "Nuevas" visto en la pantalla (la Tienda lo informa; no hay
+      captura).
+
+### Hockey de mesa, Traductor y Oficina (2026-11-22, para la 0.32.0)
+
+En `main` desde el 2026-11-22, sin publicar; sólo probadas en el simulador.
+
+- [x] **Traductor: el motor sin red, medido en la placa** (2026-11-22,
+      `v0.31.0-27-g2745195`, manejada desde el portal). **1,1 s una
+      oración corta, 4,3 s una de treinta palabras** con los dos núcleos
+      (lo estimado era 0,4 y 1,8), más 1,5 s la primera vez por cargar el
+      modelo. Un núcleo, 6,6 s: los dos rinden 1,53x. int8 es más lento
+      que float (5,0 s). Inglés a español, 4,2 s. Con un modelo cargado
+      quedan 1,7 MB de PSRAM (una dirección por vez; el portal no puede
+      capturar la pantalla); al cerrar vuelve toda. Los números y el por
+      qué, en `apps/traductor/README.md`.
+- [x] **Traductor, pasando por el inglés** (2026-11-22): español a
+      portugués con el pack pt-en subido a la tarjeta (queda ahí). La
+      oración larga 11,2 s, la del mercado 7,9 s, la corta 5,3 s; 3,2 s de
+      cada una son cargar los dos modelos, que se cargan en cada
+      traducción porque en la PSRAM entra uno solo. Traduce bien. La
+      memoria vuelve toda al cerrar.
+- [x] **Los cinco packs de idioma, armados** (2026-11-22) en
+      `apps/traductor/build/` del worktree `tienda`, fuera de git: es 46,6
+      MB, pt 45,3, it 46,5, fr 59,7 y de 56,6 (254,8 MB, 37 partes).
+      Probados en la Mac con el motor de la app (`bench_nmt.sh`), una
+      oración en cada dirección de cada uno. **Sin publicar:** van a una
+      release antes del tag que los nombre, cuando toque la 0.32.0.
+- [ ] Traductor, lo que queda: el diccionario de una palabra, la página
+      del portal, y en línea contra `fake_translate.py`. Que la Tienda
+      ofrezca cada pack por separado se ve recién con los packs
+      publicados.
+- [x] **El firmware de la 0.32.0 en la placa** (2026-11-22,
+      `v0.31.0-49-ge594fae`, el de `main`): la radio con HTTP/1.1 (tres
+      emisoras guardadas, las tres suenan); la Tienda bajando el catálogo
+      con HTTP/1.1; **Archivos abre un docx en Oficina** con un toque; y
+      el aviso de memoria al cerrar un juego dice ahora "its PSRAM is
+      back" (Hockey: 13 884 KB libres, 13 938 al abrir), donde antes
+      decía que 1,9 MB no volvían.
+- [ ] De ese firmware queda: Estudio mandando todo a una computadora por
+      el puerto OTG (un programa que muestre los canales y el reloj), y el
+      chip "Nuevas", que se ve recién con el catálogo de la 0.32.0.
+- [x] **Hockey de mesa en la placa** (2026-11-22, `v0.31.0-34-g2c58fc4`,
+      la app y sus tres mesas subidas a mano): **61 fps**, 1,0 a 1,3 ms
+      por cuadro (dibujar 1,0), 4,9 MB de PSRAM, en la mesa del bar
+      esperando el saque. El partido no se pudo jugar desde el portal:
+      sus toques no llegaban a las apps que leen los dedos del panel
+      (`aos_touch_points_n`). Arreglado en el firmware el mismo día
+      (`aos_ui_injected_point`); en el simulador el portal ya mueve la
+      paleta y hay goles.
+- [x] **Hockey de mesa, un partido entero desde el portal** (2026-11-22,
+      `v0.31.0-35-g5e95c18`): 62 fps todo el partido, 2,7 a 7,1 ms por
+      cuadro con el disco en juego; la placa ganó 7 a 1 en nivel medio
+      contra un dedo arrastrado al azar, en 78 s. El usuario lo miró: "se
+      ve bien". La memoria volvió toda (15 009 KB libres antes, 14 945
+      después); el aviso de "1881 KB no volvieron" era del firmware, que
+      comparaba sin contar las fotos del fondo: corregido, sin instalar.
+- [ ] Hockey de mesa, lo que queda: los dos dedos a la vez a mano, las
+      otras dos mesas, y ajustar los niveles con el usuario, como Metegol.
+- [x] **Oficina, las siete fases, primera pasada en la placa**
+      (2026-11-22, `v0.31.0-35-g5e95c18`, desde el portal): los 55
+      archivos de ejemplo abren, sin caídas ni falta de memoria. Las
+      páginas de PDF dibujadas tardan 66 a 515 ms cada una y la app deja
+      entre 9,5 y 14 MB de PSRAM libres según el documento. Un docx
+      guardado como PDF en la placa se abre bien en la Mac. El detalle, en
+      `apps/oficina/PRUEBAS-PLACA.md`, sección 0.
+- [x] **Oficina, a mano** (2026-11-22, el usuario, con
+      `v0.31.0-49-ge594fae`): la probó en la pantalla después de la pasada
+      del portal y dijo "todo ok". No detalló qué recorrió; lo que el
+      portal no alcanzaba era desplazar y hacer zoom en las páginas de PDF,
+      presentar diapositivas, el pellizco, y editar y guardar.
+- [ ] Oficina, sin confirmar una por una: abrir en la computadora una
+      planilla y un documento guardados en la placa, y el teclado físico.
+
+### Las apps nuevas de noviembre (2026-11-21, publicadas en la 0.31.0)
+
+Seis apps de tarjeta en `main` desde el 2026-11-21 y en la Tienda desde la
+0.31.0: Sudoku, Solitario, Bolsa, Vuelos, Juegos de mesa y Metegol (los pedidos
+en `docs/internal/PEDIDOS-APPS-2026-11.md`). Estudio esperó a que el
+firmware bajara la latencia del parlante y entró a `main` el 2026-11-22,
+para la release siguiente.
+
+- [x] **Metegol en la placa** (`bca146d`, instalada con `install_apps.sh`):
+      Independiente contra Racing en Avellaneda, uno contra la placa en
+      normal, **60-61 fps** jugando (6-11 ms por cuadro), 38-47 en el gol y
+      su repetición; 12,8 MB de PSRAM con un estadio. La primera versión le
+      metía un gol cada diez segundos en normal; con la placa más lenta
+      (una demora antes de patear, un descanso después de cada patada,
+      menos fuerza y puntería) **el usuario la jugó: "se siente bien"**.
+- [ ] Metegol: al cerrarla el sistema dice que no volvieron ~3,9 MB de
+      PSRAM, con el asignador de la app en 0 KB (pedido en
+      `HANDOFF-NUEVAS-APPS.md`). Hasta la 0.32.0 ese aviso contaba como
+      de la app los 1,9 MB de las fotos del fondo (Hockey, Vuelos y Juegos
+      de mesa lo daban también, sin perder nada): con la 0.32.0 hay que
+      volver a mirarlo. Si sigue saliendo, son los 2 MB que no eran fotos.
+- [ ] Metegol de a dos en la misma pantalla, y con joystick.
+- [x] **Jugadas en la placa por el usuario** (2026-11-22, instaladas
+      desde la Tienda): **Solitario**, una partida entera; **Juegos de
+      mesa**, el cuatro en línea y una partida rápida de ajedrez. Sin
+      caídas ni cuadros tardíos en lo que mostró la placa después.
+- [ ] Sudoku y Bolsa: abrirlas en la placa (instaladas, sin probar;
+      Vuelos ya se probó, más arriba). En Juegos de mesa, medir los fps
+      del 3D y el tiempo del motor de ajedrez en el nivel más alto; las
+      damas, el reversi, el ludo y el backgammon.
+- [ ] Bolsa contra los servicios de verdad (en el simulador, sólo contra
+      su servidor falso).
 
 ### Pendientes, en resumen
 
@@ -616,6 +1066,15 @@ Hecho entre el 2026-10-04 y el 2026-10-05 (0.9.0):
       ruleta. La primera versión se quedaba sin PSRAM (una paleta sin
       dibujar y después colgado): arreglado cargando sólo en PSRAM y
       liberando las tarjetas del carrusel antes de la mesa.
+- [x] Bastión (2026-11-20, `ff2fee1`, firmware v0.27.0-10): instalada con
+      `install_apps.sh` (35,9 MB entre el `.so` y sus doce packs, 2 min) y
+      registrada sin errores. El primer sector del primer mundo jugado
+      entero por los toques del portal (ocho oleadas, 312 bajas, tres
+      estrellas): **62,5 fps** fijos con page flipping, 3-4 ms de trabajo
+      por cuadro entre oleadas y 8,4 ms con 43 aliens y nueve torres
+      (280 mosaicos, 184 cosas en la lista); 9,1 MB de PSRAM con las cuatro
+      torres del comienzo, 8,2 MB libres durante la batalla y 208 KB de RAM
+      interna. La interfaz en inglés, el guardado y el paso de sector, bien.
 - [ ] Sin Wi-Fi después de un reinicio por software (visto otra vez el
       2026-10-06, 1 vez en ~140 reinicios seguidos): la interfaz anda, el
       C6 no levanta la red, y no lo arreglan ni apagar y prender el Wi-Fi
@@ -1513,6 +1972,49 @@ laberinto, pong, radar, walkie, remoto y sensores.
       patas.
 - [x] esp-serial-flasher contra un ESP32 de verdad (por USB: 2026-10-05 y
       2026-10-27, el reloj AmoledOS leído y grabado entero).
+- [x] **La lista de firmware de la tarjeta** (2026-11-14/15, 0.28.0): la
+      carpeta nueva que no aparecía con el tope de 24 ahora sale (160),
+      los tres órdenes y la búsqueda en la placa y en el portal, y
+      "versión nueva" después de regrabar el firmware de Lógica para el C3
+      con otro contenido; con el CRC del contenido (`h:83d184af` en
+      `.grabados.txt`, el mismo que da la computadora) dejó de avisar al
+      grabar lo mismo.
+
+**Lógica** (el analizador lógico, 0.28.0; `apps/logica/README.md`)
+- [x] **El FX2 clonado ("Logic Analyzer 24MHz 8CH")** en el host USB, pines
+      25/27 (2026-11-14): fx2lafw subido desde el portal, de 1 a 24 MHz,
+      seis capturas seguidas sin perder muestras; disparo por nivel y por
+      flanco (CH1 suelto de masa a mano). **Lo que costó:** preguntarle la
+      versión al chip sin fx2lafw colgaba el host (ahora en la placa se
+      mira el nombre USB); el endpoint quedaba frenado por el toggle de
+      datos (`CLEAR_FEATURE` después del claim); un dispositivo que volvió
+      al bus con el host andando no recibía transferencias hasta reiniciar
+      el host (la app lo hace sola si el analizador está solo; pedido al
+      firmware anotado).
+- [x] **La prueba del header en GPIO34** (`/api/expansion/selftest?gpio=34`)
+      leída con el FX2: PWM a 998,1 Hz, la portadora del infrarrojo a
+      37,995 kHz y las cuatro tramas CAN decodificadas exactas.
+- [x] **El firmware propio en un ESP32-C3 Super Mini** (2026-11-14/15),
+      grabado desde el Programador por `usb0`: la 0.2 decía 8,33 MHz y
+      leía bien un PWM fijo (998,41 Hz), pero desfasaba el arranque
+      después del disparo (los primeros 15 caracteres de una UART); la
+      0.3 mide su propio lazo de captura y dice 5 MHz.
+- [x] **Una UART real** (2026-11-15): `uart.b` TX (pin 12) a 115200 desde
+      `/api/serial/send`, dos líneas con acentos. Con el C3 a 5 MHz y con
+      el FX2 a 4 MHz: los 107 caracteres desde el primero, sin errores de
+      trama. Salieron dos arreglos: un carácter pegado al anterior ya no
+      corta el paquete, y el FX2 no lee más allá del final de la captura
+      (pisaba el arranque: 16320 muestras planas).
+- [ ] Los otros decodificadores en buses reales (I2C, SPI, 1-Wire, WS2812,
+      DMX, Modbus): andan con la demo y con señales armadas.
+- [x] **El firmware en un C6** (2026-11-16), grabado desde el Programador
+      (`firmware/logica-esp32c6`): 5 MHz como el C3 (el mismo núcleo a
+      160 MHz; el lazo da 28-29 ciclos y la tasa se redondea a 100 MHz /
+      20), pero 401408 muestras contra 155648. PWM de la prueba a
+      998,38 Hz con una muestra de jitter, y tres líneas UART, 318
+      caracteres en 27 ms, sin errores.
+- [ ] El firmware en un S3 (compila; el que más promete, a 240 MHz y con
+      la captura en el segundo núcleo).
 
 **Modbus y Banco**
 - [ ] La Riden por TTL: los 20 ms entre pedidos y las escrituras que rechaza en
@@ -1737,6 +2239,44 @@ por el Registro del portal sin cable serie)
       bajaba a 38-45 con picos de 16 ms).
 - [ ] Jugar las seis mesas con joystick USB.
 - [ ] Ajustar la dificultad con jugadores de verdad (tiempo por bola, outlanes).
+
+**Bastión**
+- [x] Jugada por el usuario en la placa (2026-11-20): "el sonido anda bien,
+      la dificultad también" (los 37 efectos y los cinco temas son
+      sintetizados y hasta ahí sólo se habían revisado con números). Ganó
+      los tres sectores del primer mundo con el fuerte intacto (el jefe
+      incluido) y el primero del segundo con 4 vidas de 20 ("con los
+      voladores se complicó bastante"). Del registro, unos 40 minutos de
+      juego: nunca menos de 60,9 fps, el cuadro más pesado 11,8 ms (38
+      aliens, 385 mosaicos), 9,8 MB de PSRAM, ningún error.
+- [ ] Lo que salió de esa partida, hecho en el simulador e instalado en la
+      placa el mismo día (el `.so` nuevo registró bien; falta jugarlo ahí): los modos Supervivencia (oleadas sin fin, récord por mundo)
+      y Libre (todo desbloqueado), la dificultad (más o menos créditos),
+      el aviso de voladores antes de la oleada, y la Selva 1 y 2 un 10 %
+      más livianas. El guardado pasa a la versión 2 leyendo el de la 1.
+      Y del tercer mundo ("el Titán fue muy difícil y no soltaba monedas"):
+      los jefes pagan 15 créditos por cada vigésimo de vida que pierden y
+      100 al caer, en vez de 250 sólo al final. Y una galería con una ficha
+      por alien, torre y mundo, que se abre al conocerlos (retratos
+      grandes renderizados aparte; el pack común pasa a 15,9 MB).
+- [ ] Supervivencia jugada por el usuario hasta la oleada 23 ("¿hay algún
+      punto que me permita salir ganando?"): de ahí, en el simulador, una
+      meta cada 20 oleadas (núcleos, créditos, un cuarto de la vida del
+      fuerte y una estrella de tres) y "Retirarse y cobrar" en la pausa;
+      antes, salir al mapa perdía el récord y los núcleos. Instalado. Esa
+      partida terminó en la oleada 49 (4758 bajas); del registro: con 121
+      aliens y 810 cosas en la lista, 27 fps (36 ms por cuadro, 31 de
+      dibujo). Hasta unos cuarenta aliens sostiene los 60. La experiencia
+      de una partida sin fin pasó a un tercio (esa dio 6379).
+- [ ] Bastión con multitudes: bajar el dibujo de una oleada de más de
+      100 aliens (27 fps medidos).
+- [ ] Jugarla con joystick USB.
+- [ ] Los mundos del final: oleadas de 50 por grupo, jefes, y una batalla
+      con las catorce torres desbloqueadas (13,3 MB en el simulador, contra
+      ~17 MB libres al abrir la app).
+- [ ] La dificultad de los mundos del final con un jugador de verdad: la
+      mide un bot (`apps/bastion/tools/harness.sh -c`) y los primeros
+      sectores ya se jugaron bien.
 
 ## Pendientes anotados en la placa
 

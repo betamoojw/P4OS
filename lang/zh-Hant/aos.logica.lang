@@ -1,0 +1,218 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+UART: muestreo muy lento para la velocidad	UART：取樣率過低，無法解析此鮑率
+UART: no hay datos para medir la velocidad	UART：沒有可用於測量鮑率的資料
+ (adivinada)	（估算）
+DMX: hace falta muestrear a 1 MHz o más	DMX：取樣率需達到 1 MHz 或更高
+%d canales: %s	%d 個通道：%s
+leer bobinas	讀取線圈
+leer entradas	讀取輸入
+leer registros	讀取暫存器
+leer reg. de entrada	讀取輸入暫存器
+escribir bobina	寫入線圈
+escribir registro	寫入暫存器
+escribir bobinas	寫入多個線圈
+escribir registros	寫入多個暫存器
+leer/escribir registros	讀寫暫存器
+función	功能
+trama corta (%d bytes)	訊框過短（%d 位元組）
+Esclavo %u	從站 %u
+: excepción %u	：異常 %u
+: %u desde %u	：%u 個，起始位址 %u
+: %u en %u	：%u，位址 %u
+: %u desde %u, hecho	：%u 個，起始位址 %u，已完成
+ (CRC mal)	（CRC 錯誤）
+Modbus: muestreo muy lento o sin datos	Modbus：取樣率過低或沒有資料
+ sin respuesta	 無回應
+SPI modo %d, %d bits%s	SPI 模式 %d，%d 位元%s
+, LSB primero	，低位優先
+%d bits	%d 位元
+Reset sin presencia	已復位，未檢測到存在脈波
+ CRC mal	 CRC 錯誤
+ · %.2f °C (DS18B20), CRC %s	 · %.2f °C（DS18B20），CRC %s
+mal	錯誤
+1-Wire: hace falta muestrear a 200 kHz o más	1-Wire：取樣率需達到 200 kHz 或更高
+Presencia	存在脈波
+Nadie	無裝置
+CAN: muestreo muy lento para %u kbit/s	CAN：取樣率過低，無法解析 %u kbit/s
+Error de relleno	位填充錯誤
+Trama rota (relleno)	訊框損壞（位填充）
+ sin ACK	 無 ACK
+WS2812: hace falta muestrear a 4 MHz o más	WS2812：取樣率需達到 4 MHz 或更高
+%d LEDs: %s	%d 個 LED：%s
+Repetir	重複
+repetición	重複
+Inicio	起始
+trama NEC incompleta	NEC 訊框不完整
+NEC dirección %02X, comando %02X%s	NEC 位址 %02X，命令 %02X%s
+ (no cierra)	（校驗不符）
+NEC extendido, dirección %04X, comando %02X%s	擴充套件 NEC，位址 %04X，命令 %02X%s
+Paralelo, %d bits con reloj	平行，%d 位元，帶時脈
+Paralelo, %d bits	平行，%d 位元
+Paralelo	平行
+Reloj	時脈
+velocidad sola	自動估算速率
+SPI modo %d · %s	SPI 模式 %d · %s
+faltan canales	缺少通道
+Serie, I2C y SPI	序列、I2C 和 SPI
+1-Wire, CAN, LEDs, IR, DMX y Modbus	1-Wire、CAN、LED、紅外、DMX 和 Modbus
+Pulsos y un bus paralelo	脈波和平行匯流排
+No hay memoria para tantas muestras	記憶體不足，無法容納這麼多取樣
+Demo (señales de prueba)	示範（測試訊號）
+sin hardware: para aprender y probar los decodificadores	無需硬體，用於學習和試用解碼器
+No llegó ninguna muestra	未收到任何取樣
+%s muestras a %s: el analizador se frenó antes (el USB no dio abasto, probá una velocidad menor)	%s 個取樣，取樣率 %s：分析儀提前停止（USB 頻寬不足，請降低取樣率）
+%s muestras a %s, CON HUECOS: el USB perdió %u bytes (probá una velocidad menor)	%s 個取樣，取樣率 %s，資料有缺失：USB 丟失 %u 位元組（請降低取樣率）
+%s muestras a %s, detenida antes del disparo	%s 個取樣，取樣率 %s，在觸發前停止
+%s muestras a %s en %.1f s	%s 個取樣，取樣率 %s，用時 %.1f 秒
+No hay memoria libre para capturar	可用記憶體不足，無法擷取
+%u anotaciones, %u paquetes%s	%u 條標註，%u 個資料包%s
+ (no entró todo)	（未能容納全部內容）
+Abierta: %s muestras a %s	已開啟：%s 個取樣，取樣率 %s
+Guardada: %s	已儲存：%s
+SUMP: %s en %s	SUMP：%s，埠 %s
+Ningún puerto serie USB contestó SUMP	沒有 USB 序列埠回應 SUMP
+USB de 12 Mbit/s, hasta 1 MHz	12 Mbit/s USB，最高 1 MHz
+fx2lafw cargado · %s	fx2lafw 已載入 · %s
+se le carga fx2lafw · %s	將載入 fx2lafw · %s
+falta %.40s en la tarjeta	記憶卡上缺少 %.40s
+Falta %s en la carpeta logica/fx2lafw de la tarjeta	記憶卡的 logica/fx2lafw 資料夾中缺少 %s
+No se pudo leer el firmware	無法讀取韌體
+El archivo del firmware no parece fx2lafw	韌體檔案似乎不是 fx2lafw
+No hay memoria	記憶體不足
+El analizador está ocupado o se desenchufó	分析儀正被佔用或已拔出
+El analizador no aceptó el firmware	分析儀未接受韌體
+El analizador no volvió después de cargarle fx2lafw	載入 fx2lafw 後，分析儀未重新連線
+El analizador no contesta: desenchufalo y enchufalo otra vez	分析儀無回應，請拔出後重新插入
+Esa versión de fx2lafw no es compatible (hace falta la 1.x)	不支援此 fx2lafw 版本，需要 1.x
+No se pudo tomar el analizador	無法取得分析儀的使用權
+El analizador no puede muestrear a esa velocidad	分析儀不支援此取樣率
+El analizador no arrancó	分析儀未啟動
+Se desenchufó el analizador	分析儀已拔出
+El host USB no le acepta transferencias al analizador: apagá y prendé el host (Ajustes, USB)	USB 主機拒絕分析儀的資料傳輸，請在「設定 → USB」中關閉主機後重新開啟
+El analizador se frenó antes del disparo: el USB no dio abasto. Probá una velocidad menor	分析儀在觸發前停止：USB 頻寬不足，請降低取樣率
+El analizador no manda muestras	分析儀未傳送取樣
+No hay captura para guardar	沒有可儲存的擷取資料
+No se pudo escribir en la tarjeta	無法寫入記憶卡
+No se pudo escribir en la tarjeta (¿llena?)	無法寫入記憶卡（記憶卡已滿？）
+No se pudo abrir el archivo	無法開啟檔案
+No es una sesión de sigrok (.sr)	不是 sigrok 工作階段檔案（.sr）
+No se pudo leer el archivo	無法讀取檔案
+La sesión no tiene canales lógicos	此工作階段沒有邏輯通道
+La sesión está vacía	此工作階段為空
+La captura no entra en la memoria	擷取資料超出記憶體容量
+La sesión tiene %d canales: se ven los primeros 8	此工作階段有 %d 個通道，僅顯示前 8 個
+SUMP en %s · hasta %s, %s muestras	SUMP 位於 %s · 最高 %s，%s 個取樣
+SUMP en %s a %u · hasta %s, %s muestras	SUMP 位於 %s，鮑率 %u · 最高 %s，%s 個取樣
+No se pudo abrir el puerto serie	無法開啟序列埠
+El analizador SUMP no contesta	SUMP 分析儀無回應
+Detenida	已停止
+Se cortó el puerto serie	序列埠連線已斷開
+El analizador dejó de mandar muestras	分析儀已停止傳送取樣
+Ocupada: se decodifica con la próxima captura	正忙，將在下次擷取時解碼
+Preguntando a los puertos serie USB...	正在查詢 USB 序列埠…
+Nadie contestó SUMP en %s a %u	%s 在鮑率 %u 下沒有收到 SUMP 回應
+Analizador	分析儀
+Escena de la demo (pone sus decodificadores)	示範場景（同時設定解碼器）
+Buscar SUMP en USB	在 USB 上查詢 SUMP
+El host USB está apagado: prendelo en Ajustes, USB.	USB 主機已關閉，請在「設定 → USB」中開啟。
+Analizador USB de 24 MHz y 8 canales (Saleae Logic y sus clones, y las demás placas FX2): enchufalo al host USB de la placa (el puerto de alta velocidad llega a 24 MHz; el otro a 1 MHz; consultá los pines de tu modelo). La primera vez hay que copiar el firmware libre fx2lafw de sigrok a la carpeta logica/fx2lafw de la tarjeta (fx2lafw-saleae-logic.fw), o subirlo desde la página Lógica del portal.	24 MHz、8 通道 USB 邏輯分析儀（Saleae Logic 相容裝置及其他 FX2 開發板）：連接到開發板的 USB 主機介面。高速介面支援最高 24 MHz，另一個介面支援最高 1 MHz，介面位置請查閱目前板型的接腳圖。首次使用時，將 sigrok 的開源韌體 fx2lafw 複製到記憶卡的 logica/fx2lafw 目錄（fx2lafw-saleae-logic.fw），或從管理網頁的「邏輯」頁面上傳。
+SUMP: el firmware de la app para un ESP32-S3, C3 o C6 (carpeta firmware de la app), un Open Bench Logic Sniffer u otro compatible, por USB o por una UART del header. Sólo a 3,3 V.	SUMP：可透過 USB 或排針 UART 連接執行本應用程式韌體的 ESP32-S3、C3、C6（韌體位於應用程式的 firmware 資料夾）、Open Bench Logic Sniffer 或其他相容裝置。僅支援 3.3 V。
+Duración de la captura: %s	擷取時長：%s
+Muestreo	取樣
+Velocidad (al menos 4 veces la señal más rápida)	取樣率（至少為最快訊號頻率的 4 倍）
+Muestras (el analizador guarda hasta %s)	取樣數（分析儀最多容納 %s）
+Muestras (la memoria de la placa da hasta %s)	取樣數（開發板記憶體最多容納 %s）
+Antes del disparo	觸發前
+El FX2 manda todo en vivo: a 24 MHz son 24 MB/s por el USB. Si la captura sale con huecos, bajá la velocidad (12 MHz anda holgado).	FX2 實時傳輸全部資料，24 MHz 取樣率需要 24 MB/s 的 USB 頻寬。若擷取資料有缺失，請降低取樣率（12 MHz 可留出餘量）。
+Sube	上升緣
+Baja	下降緣
+Cambia	位準變化
+Disparo	觸發
+La captura arranca cuando se cumplen todas las condiciones juntas. X: no importa. Un analizador SUMP que no sea el de la app sólo entiende niveles: Sube espera el 1 y Baja el 0.	所有條件同時滿足時開始擷取。X 表示不限。除本應用程式配套韌體外，其他 SUMP 分析儀僅支援位準條件：「上升緣」等待 1，「下降緣」等待 0。
+Sin disparo	不使用觸發
+Nombre de D%d	D%d 的名稱
+Canales	通道
+Tocá un nombre para cambiarlo. Los nombres van con la captura cuando se guarda (PulseView los muestra).	點選名稱即可修改。名稱會與擷取資料一同儲存，PulseView 也會顯示這些名稱。
+Nombre	名稱
+Medir	測量
+Se ve	顯示
+Disparo en este canal	在此通道觸發
+Decodificadores	解碼器
+Tocá uno para elegir el protocolo, los canales y la velocidad. Se decodifica de nuevo al cerrar.	點選解碼器可選擇協議、通道和速率。關閉設定後會重新解碼。
+Decodificador %d	解碼器 %d
+Encendido	開啟
+Apagado	關閉
+Protocolo	協議
+ (optativo)	（可選）
+Sola	自動
+Velocidad (Sola: la adivina)	速率（選擇「自動」時會估算）
+Bits de datos	資料位元
+Ninguna	無
+Par	偶同位元
+Impar	奇同位元
+Paridad	同位元檢查
+Bits de parada	停止位元
+Normal	正常
+Invertida	反相
+Línea	訊號線
+Velocidad del bus	匯流排速率
+Modo (CPOL y CPHA)	模式（CPOL 和 CPHA）
+Bits por palabra	每字位元數
+MSB primero	高位優先
+LSB primero	低位優先
+Orden	位序
+Activo en 0	低電位有效
+Activo en 1	高電位有效
+0 (receptor)	0（接收器）
+1 (LED)	1（LED）
+Nivel con portadora	有載波時的位準
+Hexa	十六進位制
+Decimal	十進位制
+Binario	二進位制
+Valores en	數值格式
+Medí del lado del transceptor (RX del controlador), nunca CANH/CANL directo: 3,3 V como mucho.	請測量收發器的邏輯側（控制器的 RX），不要直接連接 CANH/CANL，電壓最高為 3.3 V。
+En RS485 medí la salida RO del transceptor, no las líneas A/B.	測量 RS485 時請連線收發器的 RO 輸出，不要直接連線 A/B 線。
+Tabla	表格
+Decodificando...	正在解碼…
+No hay paquetes: prendé un decodificador (Decodificar) y capturá.	暫無資料包，請在「解碼」中開啟一個解碼器，然後擷取。
+Todos	全部
+Anteriores	上一頁
+%u a %u de %u	%u 至 %u，共 %u
+Siguientes	下一頁
+Hubo más de lo que entra: el final de la captura no se decodificó.	資料量超出容量，擷取末尾的資料未被解碼。
+No hay captura	暫無擷取資料
+Entre los cursores A y B	遊標 A 與 B 之間
+Lo que se ve en pantalla	目前螢幕顯示範圍
+Tramo: %s, %u muestras\n	範圍：%s，%u 個取樣\n
+Flancos: %u de subida, %u de bajada\n	邊緣：%u 個上升緣，%u 個下降緣\n
+Frecuencia: %s (período %s)\n	頻率：%s（週期 %s）\n
+Ciclo de trabajo: %.1f %%\n	工作週期：%.1f %%\n
+En 1: mín %s, prom %s, máx %s\n	高電位：最短 %s，平均 %s，最長 %s\n
+En 0: mín %s, prom %s, máx %s\n	低電位：最短 %s，平均 %s，最長 %s\n
+En 1 el %.1f %% del tramo	高電位佔此範圍的 %.1f %%
+Canal	通道
+Con los dos cursores puestos se mide entre ellos (tocá la señal para ponerlos, mantené apretado para sacarlos); si no, lo que está en pantalla.	設定兩個遊標後，會測量它們之間的範圍；未設定時，測量螢幕顯示範圍。點選訊號可放置遊標，長按可移除。
+No hay tarjeta	未插入記憶卡
+Guardando...	正在儲存…
+Tocá otra vez para borrarla	再次點選以刪除
+Archivos	檔案
+No hay tarjeta.	未插入記憶卡。
+Guardar la captura	儲存擷取資料
+Todavía no hay capturas guardadas.	尚無已儲存的擷取資料。
+Se guardan como sesiones de sigrok (.sr): PulseView las abre, y la placa abre las de PulseView. Con un decodificador encendido va también la tabla en .csv. Están en la carpeta logica de la tarjeta y en la página Lógica del portal.	擷取資料儲存為 sigrok 工作階段檔案（.sr），可用 PulseView 開啟；開發板也可開啟 PulseView 的檔案。啟用解碼器時，會同時儲存 .csv 表格。檔案位於記憶卡的 logica 資料夾，也可在管理網頁的「邏輯」頁面檢視。
+No se pudo arrancar la captura	無法開始擷取
+sube	上升緣
+baja	下降緣
+cambia	位準變化
+Detener	停止
+Capturar	擷取
+Conectando con el analizador...	正在連線分析儀…
+Esperando el disparo (%d %% del búfer lleno)...	等待觸發（緩衝區已滿 %d %%）…
+Capturando: %d %%	正在擷取：%d %%
+Archivo: %d %%	檔案：%d %%
+ · A-B %s (%s)	 · A-B %s（%s）
+Decodificar	解碼
+Capturando...	正在擷取…
+Sin captura: elegí el analizador y tocá Capturar	暫無擷取資料，請選擇分析儀並點選「擷取」
+No hay memoria para la vista	記憶體不足，無法顯示畫面

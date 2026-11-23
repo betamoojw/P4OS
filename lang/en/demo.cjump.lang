@@ -5,126 +5,126 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/cjump/main/cj_skins.c:32
+#: apps\cjump\main\cj_skins.c:32
 Clásico	Classic
 
-#: apps/cjump/main/cj_skins.c:33
+#: apps\cjump\main\cj_skins.c:33
 Nerd	Nerd
 
-#: apps/cjump/main/cj_skins.c:34
+#: apps\cjump\main\cj_skins.c:34
 Café	Coffee
 
-#: apps/cjump/main/cj_skins.c:35
+#: apps\cjump\main\cj_skins.c:35
 Idea	Idea
 
-#: apps/cjump/main/cj_skins.c:36
+#: apps\cjump\main\cj_skins.c:36
 Auriculares	Headphones
 
-#: apps/cjump/main/cj_skins.c:37
+#: apps\cjump\main\cj_skins.c:37
 Obrero	Builder
 
-#: apps/cjump/main/cj_skins.c:38
+#: apps\cjump\main\cj_skins.c:38
 Dormilón	Sleepy
 
-#: apps/cjump/main/cj_skins.c:39
+#: apps\cjump\main\cj_skins.c:39
 Graduado	Graduate
 
-#: apps/cjump/main/cj_skins.c:40
+#: apps\cjump\main\cj_skins.c:40
 Hipnótico	Hypnotic
 
-#: apps/cjump/main/cj_skins.c:41
+#: apps\cjump\main\cj_skins.c:41
 Navegador	Browser
 
-#: apps/cjump/main/cj_skins.c:42
+#: apps\cjump\main\cj_skins.c:42
 Forzudo	Strong
 
-#: apps/cjump/main/cj_skins.c:43
+#: apps\cjump\main\cj_skins.c:43
 Mago	Wizard
 
-#: apps/cjump/main/cj_skins.c:44
+#: apps\cjump\main\cj_skins.c:44
 Ninja	Ninja
 
-#: apps/cjump/main/cj_skins.c:45
+#: apps\cjump\main\cj_skins.c:45
 Rey	King
 
-#: apps/cjump/main/cj_skins.c:46
+#: apps\cjump\main\cj_skins.c:46
 Astronauta	Astronaut
 
-#: apps/cjump/main/cj_skins.c:47
+#: apps\cjump\main\cj_skins.c:47
 Fiesta	Party
 
-#: apps/cjump/main/cjump.c:496
+#: apps\cjump\main\cjump.c:496
 SONIDO	SOUND
 
-#: apps/cjump/main/cjump.c:500
+#: apps\cjump\main\cjump.c:500
 Botones a los costados, o arrastrá el dedo	Buttons on the sides, or drag your finger
 
-#: apps/cjump/main/cjump.c:508
+#: apps\cjump\main\cjump.c:508
 Récord	Best
 
-#: apps/cjump/main/cjump.c:511
-#: apps/cjump/main/cjump.c:534
+#: apps\cjump\main\cjump.c:511
+#: apps\cjump\main\cjump.c:534
 Monedas	Coins
 
-#: apps/cjump/main/cjump.c:541
-#: apps/cjump/main/cjump.c:731
+#: apps\cjump\main\cjump.c:541
+#: apps\cjump\main\cjump.c:731
 monedas	coins
 
-#: apps/cjump/main/cjump.c:547
+#: apps\cjump\main\cjump.c:547
 Comprar	Buy
 
-#: apps/cjump/main/cjump.c:547
+#: apps\cjump\main\cjump.c:547
 No alcanza	Not enough
 
-#: apps/cjump/main/cjump.c:553
+#: apps\cjump\main\cjump.c:553
 Puesto	Wearing
 
-#: apps/cjump/main/cjump.c:556
+#: apps\cjump\main\cjump.c:556
 Comprado	Owned
 
-#: apps/cjump/main/cjump.c:558
+#: apps\cjump\main\cjump.c:558
 Ponerme este	Wear this
 
-#: apps/cjump/main/cjump.c:586
+#: apps\cjump\main\cjump.c:586
 Todavía no alcanza	Not enough coins yet
 
-#: apps/cjump/main/cjump.c:594
+#: apps\cjump\main\cjump.c:594
 Disfraz desbloqueado	Skin unlocked
 
-#: apps/cjump/main/cjump.c:723
+#: apps\cjump\main\cjump.c:723
 Nuevo récord	New best
 
-#: apps/cjump/main/cjump.c:724
+#: apps\cjump\main\cjump.c:724
 Se acabó	Game over
 
-#: apps/cjump/main/cjump.c:735
+#: apps\cjump\main\cjump.c:735
 Juntadas	Picked up
 
-#: apps/cjump/main/cjump.c:736
+#: apps\cjump\main\cjump.c:736
 por altura	for height
 
-#: apps/cjump/main/cjump.c:1062
+#: apps\cjump\main\cjump.c:1062
 Jugar	Play
 
-#: apps/cjump/main/cjump.c:1064
-#: apps/cjump/main/cjump.c:1083
+#: apps\cjump\main\cjump.c:1064
+#: apps\cjump\main\cjump.c:1083
 Tienda	Shop
 
-#: apps/cjump/main/cjump.c:1103
+#: apps\cjump\main\cjump.c:1103
 Deslizá para ver los demás	Swipe to see the others
 
-#: apps/cjump/main/cjump.c:1114
+#: apps\cjump\main\cjump.c:1114
 Pausa	Paused
 
-#: apps/cjump/main/cjump.c:1116
+#: apps\cjump\main\cjump.c:1116
 Seguir	Resume
 
-#: apps/cjump/main/cjump.c:1118
-#: apps/cjump/main/cjump.c:1138
+#: apps\cjump\main\cjump.c:1118
+#: apps\cjump\main\cjump.c:1138
 Menú	Menu
 
-#: apps/cjump/main/cjump.c:1120
+#: apps\cjump\main\cjump.c:1120
 Salir	Exit
 
-#: apps/cjump/main/cjump.c:1136
+#: apps\cjump\main\cjump.c:1136
 Otra vez	Again

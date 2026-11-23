@@ -1,0 +1,122 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Paralelo	並行
+Reloj	時鐘
+↑ sube	↑ 上升沿
+↓ baja	↓ 下降沿
+↕ cambia	↕ 跳變
+Lista	就緒
+Conectando con el analizador...	正在連線分析儀…
+Esperando el disparo...	正在等待觸發…
+Capturando...	正在擷取…
+Decodificando...	正在解碼…
+Archivo...	檔案…
+No es un zip	不是 ZIP 檔案
+No es una sesión de sigrok (.sr)	不是 sigrok 會話檔案（.sr）
+Lógica	邏輯
+%s antes	觸發前 %s
+Capturar	擷取
+Rueda o pellizco: zoom · arrastrar: moverse · clic: cursores A y B · doble clic: acercar · Esc: sacar los cursores	滾輪或雙指縮放 · 拖動平移 · 單擊設定游標 A 和 B · 雙擊放大 · Esc 移除游標
+Analizador	分析儀
+Preguntando a los puertos serie USB...	正在查詢 USB 串列埠…
+Buscar SUMP	查詢 SUMP
+Abierta en la placa	已在開發板上開啟
+Abrir en la placa	在板上開放
+repetir	重複
+Disparo (todas las condiciones juntas)	觸發（同時滿足所有條件）
+Sin disparo	無觸發
+Todo	全部
+Al disparo	定位到觸發點
+Sacar cursores	移除游標
+Decodificadores	解碼器
+Paquetes	封包
+Medir	測量
+Canales	通道
+Capturas	擷取記錄
+Firmware fx2lafw (analizadores FX2)	fx2lafw 韌體（FX2 分析儀）
+La app no está abierta en la placa: tocá "Abrir en la placa", o abrí un archivo.	開發板上尚未開啟此應用，請點選“在開發板上開啟”，或開啟檔案。
+Sin captura todavía.	尚無擷取記錄。
+muestra	取樣點
+La placa no mandó la captura	開發板未傳送擷取資料
+La captura vino cortada	接收到的擷取資料不完整
+Bajando la captura: %s	正在下載擷取資料：%s
+el host USB está apagado (Ajustes, USB)	USB 主機已關閉（設定 → USB）
+%s muestras	%s 個取樣點
+Detener	停止
+Archivo en la computadora	電腦上的檔案
+Captura de la placa	板塊截圖
+Volver a la placa	返回開發板
+Bajar .sr	下載 .sr
+Bajar VCD	下載 VCD
+CSV de lo visible	當前檢視的 CSV
+Demasiadas muestras: acercá la vista o poné los cursores	取樣點過多，請放大檢視或設定游標
+Cerrar	關閉
+Editar	編輯
+Los decodificadores corren en la placa: al aplicar, decodifica de nuevo la captura que tiene.	解碼器在開發板上執行，應用設定後會重新解碼擷取資料。
+Protocolo	協議
+ (optativo)	（可選）
+Velocidad	速率
+Sola (la adivina)	自動（估算）
+Bits de datos	資料位元
+Paridad	同位檢查位
+Ninguna	無
+Par	偶同位
+Impar	奇同位
+Bits de parada	停止位元
+Línea	訊號線
+Normal	正常
+Invertida	反相
+Velocidad del bus	匯流排速率
+Modo (CPOL y CPHA)	模式（CPOL 和 CPHA）
+Bits por palabra	每字位元數
+Orden	順序
+MSB primero	高位在前（MSB）
+LSB primero	低位在前（LSB）
+Activo en 0	低電平有效
+Activo en 1	高電平有效
+Nivel con portadora	有載波時的電平
+0 (receptor)	0（接收器）
+1 (LED)	1（LED）
+Valores en	數值格式
+Hexa	十六進位制
+Decimal	十進位制
+Binario	二進位制
+Aplicar	應用
+Los paquetes los arma la placa: abrí el archivo en la placa para decodificarlo.	封包由開發板生成，請在開發板上開啟檔案進行解碼。
+No hay paquetes: encendé un decodificador.	暫無封包，請啟用解碼器。
+Todos	全部
+Buscar	搜尋
+%s paquetes	%s 個封包
+Bajar CSV	下載 CSV
+No hay captura.	無擷取資料。
+entre los cursores A y B	游標 A 與 B 之間
+lo que se ve	當前檢視
+Tramo	跨度
+Flancos	邊沿數
+%s de subida, %s de bajada	%s 個上升沿，%s 個下降沿
+Frecuencia	頻率
+Ciclo de trabajo	工作週期
+En 1 (mín/prom/máx)	高電平（最小/平均/最大）
+En 0 (mín/prom/máx)	低電平（最小/平均/最大）
+En 1	高電平
+Subida	已上傳
+Guardar la captura de la placa	儲存開發板的擷取資料
+Ver un .sr de la computadora	檢視電腦上的 .sr 檔案
+Subir un .sr a la placa	將 .sr 檔案上傳到開發板
+Abriendo en la placa	正在開發板上開啟
+Ver acá	在這裡檢視
+Bajar	下載
+¿Borrar %s?	要刪除 %s 嗎？
+Borrar	刪除
+Todavía no hay capturas guardadas en la tarjeta.	記憶卡上尚無擷取記錄。
+Son sesiones de sigrok: PulseView las abre tal cual (Archivo, Abrir), y la placa abre las que guarda PulseView.	檔案採用 sigrok 會話格式，可直接在 PulseView 的“檔案 → 開啟”中讀取。開發板也能開啟 PulseView 儲存的檔案。
+No encontré ningún fx2lafw-*.fw ahí adentro	未找到 fx2lafw-*.fw 檔案
+%s archivos de firmware en la tarjeta	記憶卡上有 %s 個韌體檔案
+Los analizadores "24 MHz 8 canales" (clones del Saleae Logic, con un Cypress FX2LP) no tienen programa propio: la app les carga fx2lafw, el firmware libre de sigrok, cada vez que se enchufan. Bajá "sigrok-firmware-fx2lafw" (el .tar.gz de binarios) y subilo acá tal cual: la página saca los .fw y los pone en la carpeta logica/fx2lafw.	“24 MHz 8 通道”分析儀（使用 Cypress FX2LP 的 Saleae Logic 相容裝置）本身不儲存程式，每次插入時由應用載入 sigrok 的開源韌體 fx2lafw。下載“sigrok-firmware-fx2lafw”的二進位制 .tar.gz 檔案後直接上傳，網頁會提取 .fw 檔案並放入 logica/fx2lafw 資料夾。
+Subir el .tar.gz o los .fw	上傳 .tar.gz 或 .fw 檔案
+fx2lafw en sigrok.org	在 sigrok.org 檢視 fx2lafw
+Descargas	下載
+En la tarjeta: %s	記憶卡上：%s
+Todavía no hay firmware en la tarjeta.	記憶卡上尚無韌體。
+Conexión: el analizador va al host USB de la placa (Ajustes, USB): el puerto de alta velocidad llega a 24 MHz; el otro hasta 1 MHz. Consultá el diagrama de pines de tu modelo de placa. Medí señales de 3,3 V (de 5 V sólo si tu analizador dice que las aguanta) y uní su masa con la del circuito.	將分析儀連線到開發板的 USB 主機介面（設定 → USB）。高速介面支援最高 24 MHz，另一個介面支援最高 1 MHz。介面位置請查閱當前板型的接腳圖。測量 3.3 V 訊號，只有分析儀明確支援時才可測量 5 V。分析儀與被測電路必須共地。
+La app Lógica no está abierta en la placa.	開發板上尚未開啟邏輯分析儀。

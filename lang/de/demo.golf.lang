@@ -5,423 +5,423 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/golf/main/gf_game.c:314
+#: apps\golf\main\gf_game.c:314
 ¡Hoyo en uno!	Hole-in-one!
 
-#: apps/golf/main/gf_game.c:316
+#: apps\golf\main\gf_game.c:316
 ¡Albatros!	Albatros!
 
-#: apps/golf/main/gf_game.c:317
+#: apps\golf\main\gf_game.c:317
 ¡Águila!	Eagle!
 
-#: apps/golf/main/gf_game.c:318
+#: apps\golf\main\gf_game.c:318
 ¡Birdie!	Birdie!
 
-#: apps/golf/main/gf_game.c:319
-#: apps/golf/main/gf_play.c:247
-#: apps/golf/main/gf_play.c:565
-#: apps/golf/main/golf.c:735
+#: apps\golf\main\gf_game.c:319
+#: apps\golf\main\gf_play.c:247
+#: apps\golf\main\gf_play.c:565
+#: apps\golf\main\golf.c:736
 Par	Par
 
-#: apps/golf/main/gf_game.c:320
+#: apps\golf\main\gf_game.c:320
 Bogey	Bogey
 
-#: apps/golf/main/gf_game.c:321
+#: apps\golf\main\gf_game.c:321
 Doble bogey	Doppelbogey
 
-#: apps/golf/main/gf_game.c:322
+#: apps\golf\main\gf_game.c:322
 Triple bogey	Triplebogey
 
-#: apps/golf/main/gf_game.c:323
+#: apps\golf\main\gf_game.c:323
 ¡Increíble!	Unglaublich!
 
-#: apps/golf/main/gf_game.c:323
-#: apps/golf/main/gf_play.c:1231
-#: apps/golf/main/golf.c:733
+#: apps\golf\main\gf_game.c:323
+#: apps\golf\main\gf_play.c:1231
+#: apps\golf\main\golf.c:734
 Recogida	Aufgehoben
 
-#: apps/golf/main/gf_link.c:130
+#: apps\golf\main\gf_link.c:130
 Contra la otra placa	Gegen die andere Platine
 
-#: apps/golf/main/gf_link.c:137
+#: apps\golf\main\gf_link.c:137
 El enlace no arrancó	Die Verbindung startete nicht
 
-#: apps/golf/main/gf_link.c:157
+#: apps\golf\main\gf_link.c:157
 Esperando a	Warte auf
 
-#: apps/golf/main/gf_link.c:212
-#: apps/golf/main/gf_link.c:269
-#: apps/golf/main/gf_link.c:314
+#: apps\golf\main\gf_link.c:212
+#: apps\golf\main\gf_link.c:269
+#: apps\golf\main\gf_link.c:314
 %s salió del juego	%s hat das Spiel verlassen
 
-#: apps/golf/main/gf_link.c:281
+#: apps\golf\main\gf_link.c:281
 Sin señal de %s	Kein Signal von %s
 
-#: apps/golf/main/gf_outfit.c:13
+#: apps\golf\main\gf_outfit.c:13
 Polo blanco	Weißes Polo
 
-#: apps/golf/main/gf_outfit.c:14
+#: apps\golf\main\gf_outfit.c:14
 Polo azul marino	Marineblaues Polo
 
-#: apps/golf/main/gf_outfit.c:15
+#: apps\golf\main\gf_outfit.c:15
 Polo verde	Grünes Polo
 
-#: apps/golf/main/gf_outfit.c:16
+#: apps\golf\main\gf_outfit.c:16
 Polo amarillo	Gelbes Polo
 
-#: apps/golf/main/gf_outfit.c:17
+#: apps\golf\main\gf_outfit.c:17
 Polo rosa	Rosa Polo
 
-#: apps/golf/main/gf_outfit.c:18
+#: apps\golf\main\gf_outfit.c:18
 Rayas rojas	Rote Streifen
 
-#: apps/golf/main/gf_outfit.c:19
+#: apps\golf\main\gf_outfit.c:19
 Rayas lila	Lila Streifen
 
-#: apps/golf/main/gf_outfit.c:20
+#: apps\golf\main\gf_outfit.c:20
 Celeste y blanco	Himmelblau und weiß
 
-#: apps/golf/main/gf_outfit.c:21
+#: apps\golf\main\gf_outfit.c:21
 Naranja fuego	Feuerorange
 
-#: apps/golf/main/gf_outfit.c:22
+#: apps\golf\main\gf_outfit.c:22
 Negro y dorado	Schwarz und gold
 
-#: apps/golf/main/gf_outfit.c:26
+#: apps\golf\main\gf_outfit.c:26
 Pantalón caqui	Khakihose
 
-#: apps/golf/main/gf_outfit.c:27
+#: apps\golf\main\gf_outfit.c:27
 Pantalón blanco	Weiße Hose
 
-#: apps/golf/main/gf_outfit.c:28
+#: apps\golf\main\gf_outfit.c:28
 Pantalón azul	Blaue Hose
 
-#: apps/golf/main/gf_outfit.c:29
+#: apps\golf\main\gf_outfit.c:29
 Pantalón gris	Graue Hose
 
-#: apps/golf/main/gf_outfit.c:30
+#: apps\golf\main\gf_outfit.c:30
 Pantalón negro	Schwarze Hose
 
-#: apps/golf/main/gf_outfit.c:31
+#: apps\golf\main\gf_outfit.c:31
 Escocés rojo	Rotes Karo
 
-#: apps/golf/main/gf_outfit.c:32
+#: apps\golf\main\gf_outfit.c:32
 Escocés azul	Blaues Karo
 
-#: apps/golf/main/gf_outfit.c:36
+#: apps\golf\main\gf_outfit.c:36
 Sin gorro	Ohne Hut
 
-#: apps/golf/main/gf_outfit.c:37
+#: apps\golf\main\gf_outfit.c:37
 Gorra blanca	Weiße Kappe
 
-#: apps/golf/main/gf_outfit.c:38
+#: apps\golf\main\gf_outfit.c:38
 Gorra roja	Rote Kappe
 
-#: apps/golf/main/gf_outfit.c:39
+#: apps\golf\main\gf_outfit.c:39
 Visera azul	Blaues Visor
 
-#: apps/golf/main/gf_outfit.c:40
+#: apps\golf\main\gf_outfit.c:40
 Piluso	Fischerhut
 
-#: apps/golf/main/gf_outfit.c:41
+#: apps\golf\main\gf_outfit.c:41
 Gorro de lana	Bommelmütze
 
-#: apps/golf/main/gf_outfit.c:42
+#: apps\golf\main\gf_outfit.c:42
 Boina	Schiebermütze
 
-#: apps/golf/main/gf_outfit.c:43
+#: apps\golf\main\gf_outfit.c:43
 Sombrero de ala	Breitkrempiger Hut
 
-#: apps/golf/main/gf_outfit.c:44
+#: apps\golf\main\gf_outfit.c:44
 Gorra dorada	Goldene Kappe
 
-#: apps/golf/main/gf_outfit.c:48
+#: apps\golf\main\gf_outfit.c:48
 Zapatos blancos	Weiße Schuhe
 
-#: apps/golf/main/gf_outfit.c:49
+#: apps\golf\main\gf_outfit.c:49
 Negros y blancos	Schwarz und weiß
 
-#: apps/golf/main/gf_outfit.c:50
+#: apps\golf\main\gf_outfit.c:50
 Marrones clásicos	Klassisch braun
 
-#: apps/golf/main/gf_outfit.c:51
+#: apps\golf\main\gf_outfit.c:51
 Rojos	Rot
 
-#: apps/golf/main/gf_outfit.c:52
+#: apps\golf\main\gf_outfit.c:52
 Dorados	Golden
 
-#: apps/golf/main/gf_outfit.c:56
+#: apps\golf\main\gf_outfit.c:56
 Palos de acero	Stahlschläger
 
-#: apps/golf/main/gf_outfit.c:57
+#: apps\golf\main\gf_outfit.c:57
 Palos negros	Schwarze Schläger
 
-#: apps/golf/main/gf_outfit.c:58
+#: apps\golf\main\gf_outfit.c:58
 Palos azules	Blaue Schläger
 
-#: apps/golf/main/gf_outfit.c:59
+#: apps\golf\main\gf_outfit.c:59
 Palos dorados	Goldene Schläger
 
-#: apps/golf/main/gf_outfit.c:64
+#: apps\golf\main\gf_outfit.c:64
 Piel clara, pelo castaño	Hell, braunes Haar
 
-#: apps/golf/main/gf_outfit.c:65
+#: apps\golf\main\gf_outfit.c:65
 Piel clara, pelo rubio	Hell, blondes Haar
 
-#: apps/golf/main/gf_outfit.c:66
+#: apps\golf\main\gf_outfit.c:66
 Piel trigueña, pelo negro	Oliv, schwarzes Haar
 
-#: apps/golf/main/gf_outfit.c:67
+#: apps\golf\main\gf_outfit.c:67
 Piel morena, pelo negro	Dunkel, schwarzes Haar
 
-#: apps/golf/main/gf_outfit.c:68
+#: apps\golf\main\gf_outfit.c:68
 Piel clara, pelo colorado	Hell, rotes Haar
 
-#: apps/golf/main/gf_outfit.c:69
+#: apps\golf\main\gf_outfit.c:69
 Canoso	Graues Haar
 
-#: apps/golf/main/gf_outfit.c:77
+#: apps\golf\main\gf_outfit.c:77
 Remeras	Hemden
 
-#: apps/golf/main/gf_outfit.c:77
+#: apps\golf\main\gf_outfit.c:77
 Pantalones	Hosen
 
-#: apps/golf/main/gf_outfit.c:77
+#: apps\golf\main\gf_outfit.c:77
 Gorros	Hüte
 
-#: apps/golf/main/gf_outfit.c:77
+#: apps\golf\main\gf_outfit.c:77
 Zapatos	Schuhe
 
-#: apps/golf/main/gf_outfit.c:77
+#: apps\golf\main\gf_outfit.c:77
 Palos	Schläger
 
-#: apps/golf/main/gf_outfit.c:77
+#: apps\golf\main\gf_outfit.c:77
 Aspecto	Aussehen
 
-#: apps/golf/main/gf_play.c:108
+#: apps\golf\main\gf_play.c:108
 Rough	Rough
 
-#: apps/golf/main/gf_play.c:108
+#: apps\golf\main\gf_play.c:108
 Fairway	Fairway
 
-#: apps/golf/main/gf_play.c:108
+#: apps\golf\main\gf_play.c:108
 Primer corte	Semirough
 
-#: apps/golf/main/gf_play.c:109
+#: apps\golf\main\gf_play.c:109
 Salida	Abschlag
 
-#: apps/golf/main/gf_play.c:109
+#: apps\golf\main\gf_play.c:109
 Antegreen	Vorgrün
 
-#: apps/golf/main/gf_play.c:109
+#: apps\golf\main\gf_play.c:109
 Green	Grün
 
-#: apps/golf/main/gf_play.c:110
+#: apps\golf\main\gf_play.c:110
 Búnker	Bunker
 
-#: apps/golf/main/gf_play.c:110
+#: apps\golf\main\gf_play.c:110
 Agua	Wasser
 
-#: apps/golf/main/gf_play.c:110
+#: apps\golf\main\gf_play.c:110
 Camino	Weg
 
-#: apps/golf/main/gf_play.c:111
+#: apps\golf\main\gf_play.c:111
 Rough alto	Hohes Rough
 
-#: apps/golf/main/gf_play.c:111
+#: apps\golf\main\gf_play.c:111
 Bosque	Wald
 
-#: apps/golf/main/gf_play.c:111
+#: apps\golf\main\gf_play.c:111
 Arena y matas	Sandgebiet
 
-#: apps/golf/main/gf_play.c:112
+#: apps\golf\main\gf_play.c:112
 Fuera de límites	Aus
 
-#: apps/golf/main/gf_play.c:247
-#: apps/golf/main/gf_play.c:561
-#: apps/golf/main/golf.c:735
+#: apps\golf\main\gf_play.c:247
+#: apps\golf\main\gf_play.c:561
+#: apps\golf\main\golf.c:736
 Hoyo	Loch
 
-#: apps/golf/main/gf_play.c:251
+#: apps\golf\main\gf_play.c:251
 J	S
 
-#: apps/golf/main/gf_play.c:251
-#: apps/golf/main/gf_play.c:253
+#: apps\golf\main\gf_play.c:251
+#: apps\golf\main\gf_play.c:253
 Golpe	Schlag
 
-#: apps/golf/main/gf_play.c:263
+#: apps\golf\main\gf_play.c:263
 Putter	Putter
 
-#: apps/golf/main/gf_play.c:530
-#: apps/golf/main/gf_play.c:851
-#: apps/golf/main/golf.c:892
+#: apps\golf\main\gf_play.c:530
+#: apps\golf\main\gf_play.c:851
+#: apps\golf\main\golf.c:893
 Tocá: carga, potencia, precisión	Tippen: Schwung, Kraft, Genauigkeit
 
-#: apps/golf/main/gf_play.c:645
+#: apps\golf\main\gf_play.c:645
 Juega	Am Zug:
 
-#: apps/golf/main/gf_play.c:651
+#: apps\golf\main\gf_play.c:651
 Turno del jugador	Spieler am Zug:
 
-#: apps/golf/main/gf_play.c:1213
+#: apps\golf\main\gf_play.c:1213
 ¡Al agua! +1	Im Wasser! +1
 
-#: apps/golf/main/gf_play.c:1217
+#: apps\golf\main\gf_play.c:1217
 Fuera de límites +1	Aus +1
 
-#: apps/golf/main/gf_shop.c:198
-#: apps/golf/main/gf_shop.c:222
+#: apps\golf\main\gf_shop.c:198
+#: apps\golf\main\gf_shop.c:222
 Puesto	Getragen
 
-#: apps/golf/main/gf_shop.c:201
+#: apps\golf\main\gf_shop.c:201
 Tuyo	Deins
 
-#: apps/golf/main/gf_shop.c:225
+#: apps\golf\main\gf_shop.c:225
 Usar	Tragen
 
-#: apps/golf/main/gf_shop.c:228
+#: apps\golf\main\gf_shop.c:228
 Comprar	Kaufen
 
-#: apps/golf/main/gf_shop.c:253
-#: apps/golf/main/golf.c:966
+#: apps\golf\main\gf_shop.c:253
+#: apps\golf\main\golf.c:967
 Tienda	Shop
 
-#: apps/golf/main/golf.c:375
+#: apps\golf\main\golf.c:376
 Golpear	Schlagen
 
-#: apps/golf/main/golf.c:380
+#: apps\golf\main\golf.c:381
 Pegar	Putten
 
-#: apps/golf/main/golf.c:438
-#: apps/golf/main/golf.c:961
+#: apps\golf\main\golf.c:439
+#: apps\golf\main\golf.c:962
 Juego rápido	Schnelles Spiel
 
-#: apps/golf/main/golf.c:438
-#: apps/golf/main/golf.c:962
+#: apps\golf\main\golf.c:439
+#: apps\golf\main\golf.c:963
 Torneo	Turnier
 
-#: apps/golf/main/golf.c:438
-#: apps/golf/main/golf.c:963
+#: apps\golf\main\golf.c:439
+#: apps\golf\main\golf.c:964
 Práctica	Training
 
-#: apps/golf/main/golf.c:438
-#: apps/golf/main/golf.c:438
-#: apps/golf/main/golf.c:964
+#: apps\golf\main\golf.c:439
+#: apps\golf\main\golf.c:439
+#: apps\golf\main\golf.c:965
 Multijugador	Mehrspieler
 
-#: apps/golf/main/golf.c:440
+#: apps\golf\main\golf.c:441
 Fácil	Leicht
 
-#: apps/golf/main/golf.c:440
+#: apps\golf\main\golf.c:441
 Normal	Normal
 
-#: apps/golf/main/golf.c:440
+#: apps\golf\main\golf.c:441
 Profesional	Profi
 
-#: apps/golf/main/golf.c:442
+#: apps\golf\main\golf.c:443
 Poco viento, medidor lento, ves dónde cae	Wenig Wind, langsame Anzeige, du siehst, wo er landet
 
-#: apps/golf/main/golf.c:443
+#: apps\golf\main\golf.c:444
 Viento real, medidor ágil	Echter Wind, flinke Anzeige
 
-#: apps/golf/main/golf.c:444
+#: apps\golf\main\golf.c:445
 Viento fuerte, medidor rápido, sin ayudas	Starker Wind, schnelle Anzeige, keine Hilfen
 
-#: apps/golf/main/golf.c:541
+#: apps\golf\main\golf.c:542
 En esta placa, pasándola	Auf dieser Platine, reihum
 
-#: apps/golf/main/golf.c:545
+#: apps\golf\main\golf.c:546
 jugadores	Spieler
 
-#: apps/golf/main/golf.c:555
+#: apps\golf\main\golf.c:556
 Contra	Gegen
 
-#: apps/golf/main/golf.c:558
+#: apps\golf\main\golf.c:559
 Aparea otra placa en Enlace para jugar a distancia	Andere Platine in Verbindung koppeln, um aus der Ferne zu spielen
 
-#: apps/golf/main/golf.c:604
+#: apps\golf\main\golf.c:605
 Metros	Meter
 
-#: apps/golf/main/golf.c:604
+#: apps\golf\main\golf.c:605
 Yardas	Yards
 
-#: apps/golf/main/golf.c:605
+#: apps\golf\main\golf.c:606
 Sonido: sí	Ton: an
 
-#: apps/golf/main/golf.c:605
+#: apps\golf\main\golf.c:606
 Sonido: no	Ton: aus
 
-#: apps/golf/main/golf.c:703
-#: apps/golf/main/golf.c:704
+#: apps\golf\main\golf.c:704
+#: apps\golf\main\golf.c:705
 Vos	Du
 
-#: apps/golf/main/golf.c:705
+#: apps\golf\main\golf.c:706
 Jugador	Spieler
 
-#: apps/golf/main/golf.c:735
-#: apps/golf/main/golf.c:797
+#: apps\golf\main\golf.c:736
+#: apps\golf\main\golf.c:798
 golpes	Schläge
 
-#: apps/golf/main/golf.c:740
+#: apps\golf\main\golf.c:741
 Monedas	Münzen
 
-#: apps/golf/main/golf.c:786
+#: apps\golf\main\golf.c:787
 Terminaste	Platz
 
-#: apps/golf/main/golf.c:787
+#: apps\golf\main\golf.c:788
 ¡Campeón!	Champion!
 
-#: apps/golf/main/golf.c:790
+#: apps\golf\main\golf.c:791
 ¡Ganaste!	Gewonnen!
 
-#: apps/golf/main/golf.c:790
+#: apps\golf\main\golf.c:791
 Empate	Unentschieden
 
-#: apps/golf/main/golf.c:790
+#: apps\golf\main\golf.c:791
 Perdiste	Verloren
 
-#: apps/golf/main/golf.c:792
+#: apps\golf\main\golf.c:793
 ¡Nuevo récord!	Neuer Rekord!
 
-#: apps/golf/main/golf.c:792
+#: apps\golf\main\golf.c:793
 Fin de la vuelta	Runde beendet
 
-#: apps/golf/main/golf.c:802
+#: apps\golf\main\golf.c:803
 monedas	Münzen
 
-#: apps/golf/main/golf.c:802
+#: apps\golf\main\golf.c:803
 Total	Gesamt
 
-#: apps/golf/main/golf.c:1007
+#: apps\golf\main\golf.c:1008
 Ajustes	Einstellungen
 
-#: apps/golf/main/golf.c:1010
+#: apps\golf\main\golf.c:1011
 Distancias en	Entfernungen in
 
-#: apps/golf/main/golf.c:1013
+#: apps\golf\main\golf.c:1014
 Ganás monedas al jugar: más en torneo, en difícil y con birdies. Gastalas en la tienda.	Beim Spielen verdienst du Münzen: mehr im Turnier, auf schwierigeren Stufen und mit Birdies. Gib sie im Shop aus.
 
-#: apps/golf/main/golf.c:1083
+#: apps\golf\main\golf.c:1084
 Cargando	Wird geladen
 
-#: apps/golf/main/golf.c:1083
+#: apps\golf\main\golf.c:1084
 Preparando la cancha	Platz wird vorbereitet
 
-#: apps/golf/main/golf.c:1133
+#: apps\golf\main\golf.c:1134
 Pausa	Pause
 
-#: apps/golf/main/golf.c:1134
+#: apps\golf\main\golf.c:1135
 Seguir	Weiter
 
-#: apps/golf/main/golf.c:1135
-#: apps/golf/main/golf.c:1185
+#: apps\golf\main\golf.c:1136
+#: apps\golf\main\golf.c:1186
 Menú	Menü
 
-#: apps/golf/main/golf.c:1136
+#: apps\golf\main\golf.c:1137
 Salir	Beenden
 
-#: apps/golf/main/golf.c:1167
+#: apps\golf\main\golf.c:1168
 Continuar	Weiter
 
-#: apps/golf/main/golf.c:1184
+#: apps\golf\main\golf.c:1185
 Otra vez	Nochmal

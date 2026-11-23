@@ -1,4 +1,5 @@
-# Builds the firmware for both chip profiles and every app against it, the
+# Builds the firmware for both chip profiles and every app against it (and
+# each app's package for the Tienda, with the catalogue that lists them), the
 # ESP32-C6's firmware (c6/, docs/C6.md), the colour emoji pack
 # (docs/EMOJI.md) and the Notes app's fonts, on each push and pull request. A tag v* also makes a
 # release with them.
@@ -11,6 +12,12 @@
 # the latest published one, on GitHub's side (CARRIED_PACKS below, and
 # attach-packs.yml for a release already made): a 37 MB upload from home
 # stalls more often than it goes through.
+#
+# Not carried: the Translator's language packs (traductor_<x>_en_p4.pak, 37
+# parts, 245 MB). They are optional, a release would grow by that much every
+# time, and nothing needs them beside the catalogue, which names each pack
+# with the release it is in (store/packs.json): they stay in v0.31.0, where
+# they were uploaded. That release is not to be deleted while they are there.
 name: build
 
 on:
@@ -19,8 +26,8 @@ on:
     tags: ['v*']
   pull_request:
 
-# a new push to the same branch cancels the run still going: the apps take
-# ~45 minutes and only the last commit matters
+# a new push to the same branch cancels the run still going: only the last
+# commit matters
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
@@ -30,7 +37,7 @@ concurrency:
 env:
   NOT_IN_RELEASE: pato
   # carried over from the latest published release into each new one
-  CARRIED_PACKS: monsterhop_p4.pak turbo_p4.pak golf_p4.pak mila_p4.pak mila_p4.pak.1 mila_p4.pak.2 infrarrojo_p4.pak pinball_zombis_p4.pak pinball_robots_p4.pak pinball_jungla_p4.pak pinball_circo_p4.pak pinball_casino_p4.pak pinball_piratas_p4.pak
+  CARRIED_PACKS: monsterhop_p4.pak turbo_p4.pak golf_p4.pak mila_p4.pak mila_p4.pak.1 mila_p4.pak.2 infrarrojo_p4.pak pinball_zombis_p4.pak pinball_robots_p4.pak pinball_jungla_p4.pak pinball_circo_p4.pak pinball_casino_p4.pak pinball_piratas_p4.pak bastion_p4.pak bastion_p4.pak.1 bastion_p4.pak.2 bastion_luna_p4.pak bastion_selva_p4.pak bastion_magma_p4.pak bastion_hielo_p4.pak bastion_orbita_p4.pak bastion_cristal_p4.pak bastion_cienaga_p4.pak bastion_nebula_p4.pak bastion_colmena_p4.pak bastion_nucleo_p4.pak mesa_p4.pak mesa_marmol_p4.pak mesa_vidrio_p4.pak mesa_metal_p4.pak metegol_p4.pak metegol_rio_p4.pak metegol_madrid_p4.pak metegol_munich_p4.pak metegol_londres_p4.pak metegol_mexico_p4.pak metegol_tokio_p4.pak metegol_avella_rojo_p4.pak metegol_avella_celeste_p4.pak sudoku_p4.pak vuelos_p4.pak hockey_p4.pak hockey_neon_p4.pak hockey_hielo_p4.pak oficina_p4.pak
 
 jobs:
   languages:
@@ -77,37 +84,6 @@ jobs:
           git describe --tags --always --dirty
           . $IDF_PATH/export.sh
           tools/build_fw.sh ${{ matrix.profile }}
-      # CAS's engine (apps/cas/engine): Giac and its runtime as PIC, not in
-      # git; built once (~150 MB of sources checked by SHA-256, 10-15 min)
-      # and kept in the cache while apps/cas/engine/ does not change
-      - name: CAS engine (cache)
-        id: cas-engine
-        uses: actions/cache@v4
-        with:
-          path: apps/cas/engine/lib
-          key: cas-engine-${{ hashFiles('apps/cas/engine/build_engine.sh', 'apps/cas/engine/*.cc', 'apps/cas/engine/*.c', 'apps/cas/engine/*.ld') }}
-      - name: CAS engine
-        if: steps.cas-engine.outputs.cache-hit != 'true'
-        continue-on-error: true
-        shell: bash
-        run: |
-          . $IDF_PATH/export.sh
-          CAS_WORK=/tmp/cas-work apps/cas/engine/build_engine.sh
-      # without its engine CAS cannot be built, and build_apps.sh would stop
-      # there: the release goes out without CAS, and says so
-      - name: CAS engine missing
-        shell: bash
-        run: |
-          if [ ! -f apps/cas/engine/lib/libcasengine.a ]; then
-            echo "::warning::CAS's engine did not build: this build leaves CAS out"
-            rm -rf apps/cas
-          fi
-      - name: apps
-        shell: bash
-        run: |
-          . $IDF_PATH/export.sh
-          python -m unittest discover -s tests -p test_dynamic_apps.py
-          PROFILE=${{ matrix.profile }} tools/build_apps.sh
       - name: bundle
         shell: bash
         run: |
@@ -120,47 +96,216 @@ jobs:
           xz -T0 -6 -c build/$p/p4os.elf > out/p4os-$p.elf.xz
           (cd build/$p && zip -q ../../out/p4os-$p-full.zip p4os.bin bootloader/bootloader.bin \
               partition_table/partition-table.bin ota_data_initial.bin cjk.bin flash_args)
-          mkdir -p out/apps && cp apps/*/build/$p/*.so out/apps/
-          # the modules an app loads itself (aos_hal_module_open), in apps/<app>/
-          for m in apps/*/build/$p/modules; do
-            [ -d "$m" ] || continue
-            a=$(basename "$(dirname "$(dirname "$(dirname "$m")")")")
-            mkdir -p "out/apps/$a"
-            cp "$m"/*.so "out/apps/$a/"
-          done
-          for a in $NOT_IN_RELEASE; do
-            rm -f "out/apps/$a.so"
-            rm -rf "out/apps/$a"
-          done
-          (cd out && zip -qr apps-$p.zip apps)
-          if [ "$p" = rev1_3 ]; then
-            # the apps' own pages in the portal, for the card's /web (docs/PORTAL-PAGES.md)
-            mkdir -p out/web && cp apps/*/web/*.js out/web/
-            mkdir -p out/lang && cp -r lang/en lang/de lang/zh-Hans lang/zh-Hant out/lang/
-            for a in $NOT_IN_RELEASE; do
-              for so in apps/$a/build/$p/*.so; do [ -e "$so" ] && rm -f "out/apps/$(basename "$so")"; done
-              rm -rf "out/apps/$a"
-              for js in apps/$a/web/*.js; do
-                [ -e "$js" ] || continue
-                rm -f "out/web/$(basename "$js")"
-                pg=$(basename "$js" .js)
-                for lc in en de zh-Hans zh-Hant; do rm -f "out/lang/$lc/web.$pg.lang"; done
-              done
-              id=$(grep -ho '\.id *= *"[^"]*"' apps/$a/main/*.c | head -1 | sed 's/.*"\(.*\)"/\1/')
-              if [ -n "$id" ]; then
-                for lc in en de zh-Hans zh-Hant; do rm -f "out/lang/$lc/$id.lang"; done
-              fi
-              echo "left out of the release: $a ($id)"
-            done
-            (cd out && zip -qr apps.zip apps && rm -r apps)
-            (cd out && zip -qr web.zip web && rm -r web)
-            (cd out && zip -qr lang.zip lang && rm -r lang)
-          else
-            rm -r out/apps
-          fi
       - uses: actions/upload-artifact@v5
         with:
           name: p4os-${{ matrix.profile }}
+          path: out/*
+
+  # The apps of the card, in six shares at once, and none built again from
+  # the same sources (tools/ci_apps.sh): one after another they took 101 of
+  # the run's 108 minutes. Each share keeps what it built, by a hash of what
+  # an app is made from, for the next run on this branch or on any other.
+  apps:
+    needs: firmware
+    runs-on: ubuntu-latest
+    container: espressif/idf:release-v5.5
+    strategy:
+      fail-fast: false
+      matrix:
+        # as many as tools/ci_apps.sh is told below, and as the cache's key says
+        shard: [0, 1, 2, 3, 4, 5]
+        profile: [rev1_3, rev3_x]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: tools
+        # m4 to curl: CAS's engine (GMP's configure wants m4 and a native cc)
+        run: apt-get update && apt-get install -y --no-install-recommends zsh zip binutils m4 bzip2 xz-utils curl make gcc g++ libc6-dev perl
+      - name: this share
+        id: share
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          tools/ci_apps.sh --list ${{ matrix.shard }} 6 | tr '\n' ' '; echo
+          if tools/ci_apps.sh --list ${{ matrix.shard }} 6 | grep -qx cas; then echo "cas=true" >> "$GITHUB_OUTPUT"; fi
+      # CAS's engine (apps/cas/engine): Giac and its runtime as PIC, not in
+      # git; built once (~150 MB of sources checked by SHA-256, 10-15 min)
+      # and kept in the cache while apps/cas/engine/ does not change
+      - name: CAS engine (cache)
+        if: steps.share.outputs.cas == 'true'
+        id: cas-engine
+        uses: actions/cache@v4
+        with:
+          path: apps/cas/engine/lib
+          key: cas-engine-${{ hashFiles('apps/cas/engine/build_engine.sh', 'apps/cas/engine/*.cc', 'apps/cas/engine/*.c', 'apps/cas/engine/*.ld') }}
+      - name: CAS engine
+        if: steps.share.outputs.cas == 'true' && steps.cas-engine.outputs.cache-hit != 'true'
+        continue-on-error: true
+        shell: bash
+        run: |
+          . $IDF_PATH/export.sh
+          CAS_WORK=/tmp/cas-work apps/cas/engine/build_engine.sh
+      # without its engine CAS cannot be built, and build_apps.sh would stop
+      # there: the release goes out without CAS, and says so
+      - name: CAS engine missing
+        if: steps.share.outputs.cas == 'true'
+        shell: bash
+        run: |
+          if [ ! -f apps/cas/engine/lib/libcasengine.a ]; then
+            echo "::warning::CAS's engine did not build: this build leaves CAS out"
+            rm -rf apps/cas
+          fi
+      - uses: actions/download-artifact@v5
+        with:
+          name: p4os-${{ matrix.profile }}
+          path: firmware-artifact
+      - name: linked firmware for ABI validation
+        shell: bash
+        run: |
+          p=${{ matrix.profile }}
+          mkdir -p "build/$p"
+          xz -dc "firmware-artifact/p4os-$p.elf.xz" > "build/$p/p4os.elf"
+          . $IDF_PATH/export.sh
+          python -m unittest discover -s tests -p test_dynamic_apps.py
+      - name: what was built before
+        uses: actions/cache/restore@v4
+        with:
+          path: .appcache
+          key: apps-${{ matrix.profile }}-${{ matrix.shard }}-of-6-${{ github.run_id }}
+          restore-keys: apps-${{ matrix.profile }}-${{ matrix.shard }}-of-6-
+      - name: apps
+        id: apps
+        shell: bash
+        run: |
+          . $IDF_PATH/export.sh
+          PROFILE=${{ matrix.profile }} tools/ci_apps.sh ${{ matrix.shard }} 6 .appcache
+      # a tag's own cache is of use to nobody: the branches keep theirs, and
+      # a tag reads the default branch's
+      - name: keep what was built
+        if: always() && steps.apps.outputs.built == 'true' && !startsWith(github.ref, 'refs/tags/')
+        uses: actions/cache/save@v4
+        with:
+          path: .appcache
+          key: apps-${{ matrix.profile }}-${{ matrix.shard }}-of-6-${{ github.run_id }}
+      - uses: actions/upload-artifact@v5
+        with:
+          name: so-${{ matrix.profile }}-${{ matrix.shard }}
+          path: |
+            apps/*/build/${{ matrix.profile }}/*.so
+            apps/*/build/${{ matrix.profile }}/modules/*.so
+
+  # The cache has to work, or the shares build everything every time and
+  # nobody notices: a fresh checkout, the cache this run has just kept, and
+  # the question "would anything be built?". The first version kept every
+  # app under a hash taken after its build, and the next run found none.
+  # Not on a tag, which keeps no cache of its own.
+  reuse:
+    if: "!startsWith(github.ref, 'refs/tags/')"
+    needs: apps
+    runs-on: ubuntu-latest
+    container: espressif/idf:release-v5.5
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+        profile: [rev1_3, rev3_x]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/cache/restore@v4
+        with:
+          path: .appcache
+          key: apps-${{ matrix.profile }}-${{ matrix.shard }}-of-6-${{ github.run_id }}
+          restore-keys: apps-${{ matrix.profile }}-${{ matrix.shard }}-of-6-
+      - name: nothing would be built again
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          . $IDF_PATH/export.sh
+          PROFILE=${{ matrix.profile }} tools/ci_apps.sh --check ${{ matrix.shard }} 6 .appcache > /tmp/check.log 2>&1 || true
+          cat /tmp/check.log
+          # CAS's engine is not in git and is part of what CAS is made from:
+          # without it here CAS hashes to something else, so it does not count
+          again=""
+          for a in $(grep "^to build:" /tmp/check.log | sed 's/^to build://'); do
+            [ "$a" = cas ] || again="$again $a"
+          done
+          [ -z "$again" ] || { echo "::error::would be built again:$again"; exit 1; }
+
+  # What goes on the card, from the apps the shares built: apps.zip, web.zip
+  # and lang.zip for a card filled by hand, and what the Tienda reads.
+  store:
+    needs: apps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: so-*
+          path: apps
+          merge-multiple: true
+      - name: bundle
+        shell: bash
+        run: |
+          pip install --quiet pillow
+          python3 -c "import PIL; print('Pillow', PIL.__version__)"
+          mkdir -p out/apps
+          for p in rev1_3 rev3_x; do
+            for dir in apps/*/build/"$p"; do
+              app=${dir#apps/}
+              app=${app%%/*}
+              case " $NOT_IN_RELEASE " in *" $app "*) continue ;; esac
+              cp "$dir"/*.so out/apps/
+              if [ -d "$dir/modules" ]; then
+                mkdir -p "out/apps/$app"
+                cp "$dir/modules"/*.so "out/apps/$app/"
+              fi
+            done
+            (cd out && zip -qr "apps-$p.zip" apps)
+            rm -r out/apps && mkdir out/apps
+          done
+          rmdir out/apps
+          cp out/apps-rev1_3.zip out/apps.zip
+          # the apps' own pages in the portal, for the card's /web (docs/PORTAL-PAGES.md)
+          mkdir -p out/web && cp apps/*/web/*.js out/web/
+          mkdir -p out/lang && cp -r lang/en lang/de lang/zh-Hans lang/zh-Hant out/lang/
+          for a in $NOT_IN_RELEASE; do
+            for js in apps/$a/web/*.js; do
+              [ -e "$js" ] || continue
+              rm -f "out/web/$(basename "$js")"
+              pg=$(basename "$js" .js); rm -f out/lang/*/web."$pg".lang
+            done
+            id=$(grep -ho '\.id *= *"[^"]*"' apps/$a/main/*.c | head -1 | sed 's/.*"\(.*\)"/\1/')
+            [ -n "$id" ] && rm -f out/lang/*/"$id".lang
+            echo "left out of the release: $a ($id)"
+          done
+          (cd out && zip -qr web.zip web && rm -r web)
+          (cd out && zip -qr lang.zip lang && rm -r lang)
+          # The Tienda (docs/plan/TIENDA.md): one <app>.p4app per app and
+          # p4os-store.ndjson, the catalogue the board reads from the
+          # latest published release. A package that is byte for byte the
+          # one of that release is not made again: the catalogue goes on
+          # pointing at it there. An app whose art pack is in no release
+          # yet (store/packs.json) is left out, with a warning.
+          rel="$GITHUB_REF_NAME"
+          case "$GITHUB_REF" in refs/tags/v*) ;; *) rel="$(git describe --tags --abbrev=0)-dev" ;; esac
+          for p in rev1_3 rev3_x; do
+            curl -fsSL -o prev.ndjson \
+                "https://github.com/$GITHUB_REPOSITORY/releases/latest/download/p4os-store-$p.ndjson" || rm -f prev.ndjson
+            python3 tools/gen_store.py build --profile "$p" --release "$rel" --out out --repo "$GITHUB_REPOSITORY" \
+                --previous prev.ndjson --missing-apps skip --missing-packs skip
+            mv out/p4os-store.ndjson "out/p4os-store-$p.ndjson"
+          done
+      - uses: actions/upload-artifact@v5
+        with:
+          name: p4os-store
           path: out/*
 
   # The C6's image, which the P4 installs from the card's /firmware/c6.bin
@@ -197,6 +342,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      # every apps/<app>/store.json, store/source.json and store/packs.json
+      # read as they are: a slip in one fails here, in seconds, and not after
+      # the apps' 45 minutes
+      - name: the Tienda's manifests
+        run: python3 tools/gen_store.py check
       - name: notas_p4.pak
         run: |
           npm install --global --silent lv_font_conv@1.5.3
@@ -218,25 +368,45 @@ jobs:
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [firmware, c6, packs]
+    needs: [firmware, c6, packs, store]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/download-artifact@v5
         with:
+          # not the shares' .so files (so-*): those are inside apps.zip
+          pattern: p4os-*
           path: dist
           merge-multiple: true
       - name: the packs of the latest published release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          from=$(gh release view --repo "${{ github.repository }}" --json tagName -q .tagName)
+          # A new fork may have no release yet. Its catalogue still points
+          # to the original release of each published pack.
+          from=$(gh release list --repo "${{ github.repository }}" --exclude-drafts --exclude-pre-releases \
+                     --limit 1 --json tagName -q '.[0].tagName // empty')
+          if [ -z "$from" ]; then exit 0; fi
           echo "packs from $from"
           for p in $CARRIED_PACKS; do
             gh release download "$from" --repo "${{ github.repository }}" -p "$p" -D dist --skip-existing || echo "not in $from: $p"
           done
           ls -la dist
+      # The catalogue says which firmware this release brings, an image for
+      # each profile, so that a board can offer it in Settings (docs/plan/
+      # TIENDA.md). Here, where the images of the two profiles meet.
+      - uses: actions/checkout@v5
+        with:
+          path: src
+          sparse-checkout: |
+            tools
+            components/aos_ui/include
+      - name: the firmware in the catalogue
+        run: |
+          for p in rev1_3 rev3_x; do
+            python3 src/tools/gen_store.py fw --board lcd5 --catalog "dist/p4os-store-$p.ndjson" dist/p4os-rev*.bin
+          done
       - name: release
         env:
           GH_TOKEN: ${{ github.token }}

@@ -46,6 +46,62 @@ To install, copy `apps/*/build/$PROFILE/*.so` into `/apps` on the card (the port
 `PUT /api/fs/put?path=/apps/<name>.so`, or the card in the computer) and
 restart: the card is scanned at boot.
 
+## In the store
+
+Since 0.30.0 the board has a store (the Tienda app, and the Store page of
+the portal) that lists the apps of a catalogue, downloads them and keeps
+them up to date. The CI makes the catalogue and one package per app from
+what is in the tree; an app is listed when it has a card of its own,
+`apps/<app>/store.json`, next to its `CMakeLists.txt`:
+
+```json
+{
+ "cat": "juegos",
+ "about": {
+  "es": "Una o dos oraciones: qué es y qué se hace con ella.",
+  "en": "One or two sentences: what it is and what you do with it."
+ },
+ "shots": ["app-myapp.png", "app-myapp-play.png", "land-myapp.png"]
+}
+```
+
+| Field | What it is |
+|---|---|
+| `cat` | One of the categories of `store/source.json`: `juegos`, `taller`, `red`, `medios`, `crear`, `utiles`, `programar` |
+| `about` | What the list and the app's page say, in `es` and `en`, 240 characters at most each |
+| `desc` | The long description under it on the app's page, in `es` and `en`: two to four paragraphs of plain text, a blank line between them, 1200 characters at most each. It goes in the catalogue and not in the package |
+| `shots` | Three or four pictures of the app (four at most): names of files in `docs/img`. The store gets a copy of each at its own size, a JPEG 560 px on its long side |
+| `packs` | The app's art packs: `{"file": "x_p4.pak", "need": true}` for what it cannot start without, `"need": false` and a `"name"` in `es` and `en` for an extra the person chooses. A pack is not in the package: it is a file of a release, listed in `store/packs.json` |
+| `needs` | What a board may not have: `"header"` (the 40-pin header), `"usb-host"` |
+| `tags` | `["3d"]`: what the code does not say by itself |
+| `user_files` | In `es` and `en`: what the person has to bring for the app to be of use (ROMs, a WAD) |
+| `license` | When it is not Apache-2.0 |
+| `publish` | `false` for an app that is built and checked but not listed |
+
+The rest is read from the code and the `.so`, and not written: the id, the
+name, the colours and the icon; the languages its package brings; whether it
+plays with a joystick, uses the network, sound or Bluetooth, brings a page
+to the portal, or lives in one orientation only; and the oldest firmware
+that can run it, from the symbols the `.so` asks for.
+
+The pictures are taken in the simulator with the interface in English, at
+the screen's own size (720×1280, or 1280×720 lying down), and show the app
+in use: a game being played and a second level before its menu, a tool with
+believable data on its main screen. PNG for an interface, JPEG for painted
+or 3D scenes. By name: `app-<app>.png` for the main one, `app-<app>-<what>.png`,
+`land-<app>.png` lying down, `web-<app>.png` for its portal page. The first
+of the list is the one shown as a thumbnail.
+
+```
+python3 tools/gen_store.py check          # every store.json, as the CI checks them
+```
+
+The store installs an app on a card where it has never been, and updates it
+while the board is running, with no restart: the old `.so` is unloaded and
+the new one loaded in its place. So an app must give back everything it
+took when it is destroyed (threads, timers, open files, callbacks), and must
+not count on a restart to put its state in order.
+
 ## How the code runs
 
 - **Where:** in PSRAM, where the loader puts it
@@ -128,6 +184,7 @@ Fps measured with the app's own log line in `/api/log`.
 |---|---|---|---|
 | Doom | – | 35 fps | 320×200 ×3 by the PPA into the free buffer, flipped |
 | Pinball 3D | 67–70 fps (the timer's 14 ms; the panel shows 60), 3–6 ms a frame; Casino Real 63–70 (it dipped to 38–45 in its video mode before the DMD redrew only what changes) | – | only the rectangles that changed, from the table's picture and depth; page flipping, the rest copied by the DMA (apps/pinball/README.md) |
+| Bastión | 62.5 fps (the worker's 16 ms), 3–4 ms a frame between waves, 8.4 ms with 43 aliens and nine towers firing (280 tiles) | – | only the 16 px tiles whose list of things changed, composed straight into the panel's free buffer on both cores, then a flip: nothing is copied (apps/bastion/README.md) |
 | Duke Nukem 3D | – | 30 fps (the game's rate) at 320×200 and 480×300 (uncapped 59 and ~34); 640×400 15–21 fps, 640×480 15–18 (all of core 0; clean since the panel fixes of 8b3dde5/fcde1e5) | Build engine to an 8-bit frame, palette to RGB565, PPA into the free buffer, flipped (apps/duke3d/README.md) |
 | Video | 640×360: 30 fps; 720×1280: 24 fps | 1280×720: 20 fps | JPEG engine + `blit_fit` |
 | Visor 3D | ~28 fps with ~16 000 triangles; 13–15 fps with ~100 000 | same | rasteriser on both cores, adaptive size |
@@ -139,6 +196,8 @@ Fps measured with the app's own log line in `/api/log`.
 | Claudito | idle ~3 % of a core | | retro canvas, changed rows only |
 | Lua (cubes) | 34 fps with 24 cubes | | full-screen present |
 | Neon Snakes | 23 fps in combat | | |
+| Hockey de mesa | 62 fps through a match, 2.7–7.1 ms a frame with the puck in play, 1.0–1.3 waiting for a serve; 4.9 MB of PSRAM | – | sprites rendered beforehand, composed by tiles into the panel's free buffer and flipped (apps/hockey/README.md) |
+| Traductor | no network: 1.1 s a short sentence, 4.3 s one of thirty words, 1.5 s more to load the model | same | a small neural model's matrices in float on both cores (1.53x of one); 9 cycles a multiply-add with the weights in PSRAM; 1.7 MB of PSRAM left with a model loaded (apps/traductor/README.md) |
 
 To deploy: `PROFILE=rev1_3 tools/install_apps.sh p4os.local [app…]` (or `rev3_x`). It uploads
 `apps/<name>/build/$PROFILE/<name>.so` and the `<name>_p4.pak` with its parts, if the
@@ -195,6 +254,81 @@ Measured on the board (2026-10-08): Photos 2.1 MB, Pixel Art 2.0 MB and
 Drawing 1.7 MB are closed; Radio 490 KB, Notes 343 KB, Music 156 KB, CAN
 154 KB and the small tools stay. The games have no KEEP, and Gems, Mila,
 Monster Hop and Turbo give all their PSRAM back when closed.
+
+### A secret in a preference
+
+A backup made without a passphrase leaves out the preferences that look
+like a credential, and it only has their names to go by
+([BACKUP.md](BACKUP.md)). So a password, a token or a private key an app
+saves with `aos_hal_pref_set_str` gets a name that says so: one with
+`pass`, `token`, `secret`, `key` (as a word of its own: `xx_key`) or
+`priv` in it, or one that starts with `sec_`. The SSH client's key was
+saved as `sshc_seed`, and the first plain backup made on a board carried
+it.
+
+### Sound an app makes itself, and playing live
+
+`aos_hal_spk_open(rate)`, `aos_hal_spk_write()` and `aos_hal_spk_queued()`
+are a mono 16-bit stream into the mixer: the app writes ahead and keeps
+something queued. From a sample to the speaker there are 40 ms after the
+app's own queue (a 10 ms block of the mixer and a 30 ms buffer in the I2S
+driver), which is what makes music safe and is too much for an instrument.
+
+For an app that is played, **`aos_hal_spk_open_low(rate)`** (since 0.32):
+while that stream is open the board makes its output again with a short
+buffer, and there are 10 ms after the app's queue, which can be 4 ms.
+
+- **It has a price:** 6 ms of the output not running are a click, where
+  the usual output forgives 20. Use it for an instrument, not for a game's
+  effects.
+- **Opening and closing it are a moment of silence** (the output is taken
+  down and made again, and the amplifier cycles).
+- **It is not always given:** with music mixed under the app, or while the
+  microphone records, the stream opens the usual way. `aos_hal_spk_latency_ms()`
+  says which one there is now.
+- **`aos_hal_spk_dry()`** counts the gaps that were heard since the app
+  first wrote: the mixer's blocks that found the app's ring short, and the
+  buffers the output sent with nothing behind them (the output itself
+  late). Size the queue by that number, on the board. Measured there: with
+  a queue of 2 ms and of 4 ms, nothing ran short and the output was never
+  late in 9 s of tone, also with the card and the Wi-Fi busy; 1 ms, less
+  than a block of the mixer, always runs short.
+- Write from a thread of the app's own, a millisecond's worth at a time,
+  sleeping 1 ms while the queue holds what it should.
+
+`GET /api/spk?low=1&ms=3000&queue=4` plays a tone that way from the portal
+and answers with the latency and the gaps: to try a board, or a queue
+size, without the app. In the simulator the stream sounds through SDL and
+`queued()` counts for real.
+
+### What an app asks the network for, and the PSRAM left
+
+`aos_hal_http_get(url, max_bytes)` names a ceiling for the answer. Up to
+0.31.0 the firmware set the whole ceiling aside, in one piece of PSRAM,
+before the request went out, and returned -3 when that piece was not
+there. Vuelos named 1.5 MB for a reading of 30 KB: with its own buffers
+taken the board had 1.7 MB free and no piece that long, so no request ever
+started, and the app only went on saying "Looking for aircraft" (the
+board, 2026-11-22; the simulator's `malloc()` never says no). Since 0.32.0
+the buffer starts at 16 KB and doubles with what arrives, and the ceiling
+is only where a body is cut.
+
+- **An app that is to run on 0.31.0** names a ceiling near what it expects
+  and asks again with half when the answer is -3 (`vl_feed.c`, `vl_feed_pump`).
+- **Any app says why** when a request does not start or does not come
+  back: a line in the log, and something on the screen that is not the
+  same text as "still waiting".
+- **Count what is left after your own buffers.** The board has 14 to 16 MB
+  of PSRAM free with no app open; an app that takes 12 of them leaves the
+  network, the decoders and the system the rest, in pieces.
+- **The requests go in HTTP/1.1 with "Connection: close"** since 0.32.0
+  (HTTP/1.0 before, which adsb.lol answers with 426). An app sees no
+  difference: chunked bodies are taken apart for it, as they were.
+- **In the simulator:** `P4_SIM_HTTP_ROOM=<bytes>` is the largest piece of
+  memory there is for an answer, and with `P4_SIM_HTTP_WHOLE=1` the whole
+  ceiling is asked of it at once, as 0.31.0 does. `P4_SIM_HTTP_LOCAL=1`
+  lets no request out of the computer, for a test that must only reach a
+  `tools/fake_*.py`.
 
 ## Starting with the board
 

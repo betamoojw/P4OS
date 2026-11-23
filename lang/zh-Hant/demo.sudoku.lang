@@ -1,0 +1,138 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Sin memoria	記憶體不足
+Clásico	經典
+6×6	6×6 數獨
+Killer	殺手數獨
+Diagonal	對角線數獨
+Desafío del día	每日挑戰
+Fácil	簡單
+Medio	中等
+Difícil	困難
+Experto	專家
+Maestro	大師
+El tablero está lleno, pero hay errores	格子已填滿，但仍有錯誤
+Última celda libre	最後一格
+Único candidato	唯一候選數
+Único lugar	唯一位置
+Combinaciones de la jaula	區塊組合
+La regla del 45	45 法則
+Candidatos bloqueados	區塊排除
+Par desnudo	顯性數對
+Par oculto	隱性數對
+Trío desnudo	顯性三陣列
+Trío oculto	隱性三陣列
+X-Wing	X 翼
+Cuarteto desnudo	顯性四陣列
+Cuarteto oculto	隱性四陣列
+Pez espada	劍魚
+Ala XY	XY 翼
+Ala XYZ	XYZ 翼
+Cadena corta	短鏈
+Medusa	水母
+Cadena larga	長鏈
+Pista	提示
+Un error	填錯了
+fila	行
+columna	列
+caja	宮
+diagonal	對角線
+ y 	和
+El %d de la celda marcada no va ahí. Aplicar lo borra.	標記格里的 %d 填錯了。點選“應用”將其擦除。
+No hay un paso simple que explicar desde acá: la celda marcada es un %d.	這裡沒有簡單的下一步可以講解。標記格應填 %d。
+Es la única celda vacía de su %s: le falta el %d.	這是所在%s中唯一的空格，缺少的數是 %d。
+En esta celda sólo puede ir el %d: los demás números ya están en su fila, su columna o su caja.	這裡僅能填 %d，其他數字已出現在同行、同列或同宮。
+En esta %s el %d sólo puede ir acá.	在此%s中，%d 只能填在這裡。
+Esta jaula suma %d: con lo que ya hay alrededor sólo le entran el %s. Lo demás sale.	這一區塊的總和是 %d，考慮周圍已填數字，只能使用 %s。其餘候選數可排除。
+Toda %s suma 45. Las jaulas que caen enteras adentro dejan %d para la celda marcada: es un %d.	每個%s的總和都是 45。扣除完全位於其中的區塊，標記格還需填入 %d，因此它是 %d。
+Toda %s suma 45. Las jaulas que caen enteras adentro dejan %d para las celdas marcadas: sólo les entran el %s.	每個%s的總和都是 45。扣除完全位於其中的區塊，標記格之和應為 %d，只能使用 %s。
+En esta caja el %s sólo puede ir sobre una %s: sale del resto de esa %s.	在這個宮中，%s 只能位於同一%s，其餘格子可從該%s排除此數。
+En esta %s el %s sólo puede ir dentro de una caja: sale del resto de esa caja.	在這個%s中，%s 只能位於同一個宮，可從宮內其餘格子排除此數。
+Las celdas marcadas sólo pueden ser %s, entre todas: esos números salen del resto de la %s.	標記格只能填 %s，可從同一%s的其他格子排除這些數。
+En esta %s el %s sólo pueden ir en las celdas marcadas: ahí sale todo lo demás.	在這個%s中，%s 只能出現在標記格，可從標記格排除其他候選數。
+En %d filas el %s sólo puede ir en las mismas %d columnas: sale del resto de esas columnas.	在 %d 行中，%s 都只能位於相同的 %d 列，可從這些列的其他格子排除此數。
+En %d columnas el %s sólo puede ir en las mismas %d filas: sale del resto de esas filas.	在 %d 列中，%s 都只能位於相同的 %d 行，可從這些行的其他格子排除此數。
+La celda del medio tiene dos opciones y cada una obliga a una punta a ser %d. Una de las dos puntas lo es: el %d sale de las celdas que ven a las dos.	中間格有兩個候選數，無論選哪個，其中一端必為 %d。因此能同時看到兩端的格子都可排除 %d。
+Entre la celda del medio y sus dos puntas, alguna es %d: el %d sale de las celdas que ven a las tres.	中間格和兩端共三格，其中必有一格是 %d。同時看到這三格的格子都可排除 %d。
+Si la celda marcada no fuera %d, siguiendo la cadena terminaría siéndolo: es un %d.	假設標記格不是 %d，沿鏈推理後它卻必須是這個數，因此該格只能填 %d。
+Seguí la cadena: en cada línea llena, uno de los dos es cierto; en cada punteada, no pueden serlo los dos. Una de las dos puntas es cierta, así que lo tachado sale.	沿鏈推理，實線兩端至少有一個成立，虛線兩端不能同時成立。鏈的兩端至少有一個成立，因此可刪除劃掉的候選數。
+Campo	田園
+Madera	木紋
+Papiro	莎草紙
+Playa	海灘
+Nieve	白雪
+Piedra	岩石
+Bajo el mar	海底
+Ciudad	城市
+Metal	金屬
+Jardín japonés	日式庭園
+Desierto	沙漠
+Neón	霓虹
+Espacio	太空
+Casa embrujada	鬼屋
+Aliens	外星生物
+Todavía no hay hora: el desafío del día espera al reloj de la red	裝置尚未校時，網路校時後即可開始每日挑戰
+Seguir la partida	繼續遊戲
+Esperando la hora...	正在等待校時…
+Hecho en %s	用時 %s
+Racha %u	連勝 %u
+Temas	主題
+Estadísticas	統計
+Ajustes	設定
+Partida nueva	新遊戲
+Mejor %s	最佳 %s
+Notas: sí	筆記：開
+Notas: no	筆記：關
+Aplicar	應用
+Cerrar	關閉
+Pausa	已暫停
+Seguir	繼續
+Deshacer	復原
+Reiniciar	重新開始
+Menú	選單
+Preparando el tablero...	正在準備棋盤…
+Buscando uno que pida justo esas técnicas	正在尋找恰好需要這些技巧的題目
+¡Resuelto!	解開了！
+%s, récord	%s，重新整理紀錄
+Base	基礎獎勵
+Sin pistas	未用提示
+Sin errores	零失誤
+A tiempo	按時完成
+Sin ayudas	獨立完成
+Racha de días	連續挑戰天數
+%u monedas	%u 枚金幣
+Listo	完成
+Otra igual	再來一題
+Rehacer	重做
+Borrar	擦除
+Auto	自動
+En uso	使用中
+Tuyo	已擁有
+¡Es tuyo!	已解鎖！
+Es el tema que estás usando.	目前正在使用這個主題。
+Ya es tuyo: ponelo cuando quieras.	你已擁有此主題，隨時可以啟用。
+Gratis.	免費。
+Cuesta %u monedas. Tenés %u.	價格為 %u 枚金幣，你現有 %u 枚。
+El fondo, las celdas, los números, las notas y el sonido cambian con el tema.	主題會改變背景、格子、數字、筆記和音效。
+Volver	返回
+Usar este tema	使用此主題
+Comprar por %u	花 %u 枚金幣購買
+Te faltan %u monedas	還差 %u 枚金幣
+%u monedas ganadas en total	累計獲得 %u 枚金幣
+Racha: %u días seguidos (la mejor, %u)	已連續 %u 天（最佳 %u 天）
+Desafío del día: %u seguidos	每日挑戰：連續 %u 次
+Jugadas: %u · ganadas: %u	已玩 %u 局 · 獲勝 %u 局
+Mejor %s · promedio %s	最佳 %s · 平均 %s
+Sin tiempos todavía	暫無用時紀錄
+Marcar los errores	標出錯誤
+Resaltar los números iguales	突顯相同數字
+Resaltar fila, columna y caja	突顯同行、同列及同宮
+Borrar las notas solas	自動清理筆記
+Sonido	聲音
+Fondo animado	動態背景
+Sin marcarlos, cada partida paga más	關閉這些輔助後，每局獎勵更多
+Y las notas de ese número	包括該數字的候選筆記
+Las de la celda elegida	以選中的格子為準
+Al poner un número, sale de las notas que lo ven	填入數字後，自動從相關格子的筆記中刪除該數
+Con el sonido de cada tema	每種主題都有專屬音效
+Burbujas, fantasmas, nieve...: según el tema	氣泡、幽靈、飄雪等隨主題而變

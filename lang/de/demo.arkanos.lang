@@ -5,146 +5,146 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/arkanos/main/ak_draw.c:687
+#: apps\arkanos\main\ak_draw.c:687
 NIVEL 	LEVEL 
 
-#: apps/arkanos/main/ak_draw.c:697
+#: apps\arkanos\main\ak_draw.c:697
 SUPERADO	GESCHAFFT
 
-#: apps/arkanos/main/ak_draw.c:700
-#: apps/arkanos/main/arkanos.c:520
-#: apps/arkanos/main/arkanos.c:543
+#: apps\arkanos\main\ak_draw.c:700
+#: apps\arkanos\main\arkanos.c:520
+#: apps\arkanos\main\arkanos.c:543
 OTRA VEZ	NOCHMAL
 
-#: apps/arkanos/main/ak_level.c:72
+#: apps\arkanos\main\ak_level.c:72
 ANCHA	BREIT
 
-#: apps/arkanos/main/ak_level.c:73
+#: apps\arkanos\main\ak_level.c:73
 LENTA	LANGSAM
 
-#: apps/arkanos/main/ak_level.c:74
+#: apps\arkanos\main\ak_level.c:74
 TRIPLE	DREI
 
-#: apps/arkanos/main/ak_level.c:75
+#: apps\arkanos\main\ak_level.c:75
 DISPARO	SCHUSS
 
-#: apps/arkanos/main/ak_level.c:76
+#: apps\arkanos\main\ak_level.c:76
 IMAN	MAGNET
 
-#: apps/arkanos/main/ak_level.c:77
+#: apps\arkanos\main\ak_level.c:77
 VIDA	LEBEN
 
-#: apps/arkanos/main/ak_level.c:227
+#: apps\arkanos\main\ak_level.c:227
 PRIMER MURO	ERSTE MAUER
 
-#: apps/arkanos/main/ak_level.c:228
+#: apps\arkanos\main\ak_level.c:228
 TORRES	TUERME
 
-#: apps/arkanos/main/ak_level.c:229
+#: apps\arkanos\main\ak_level.c:229
 PIRAMIDE	PYRAMIDE
 
-#: apps/arkanos/main/ak_level.c:230
+#: apps\arkanos\main\ak_level.c:230
 PANAL	WABE
 
-#: apps/arkanos/main/ak_level.c:231
+#: apps\arkanos\main\ak_level.c:231
 FORTALEZA	FESTUNG
 
-#: apps/arkanos/main/ak_level.c:232
+#: apps\arkanos\main\ak_level.c:232
 REJA	GITTER
 
-#: apps/arkanos/main/ak_level.c:233
+#: apps\arkanos\main\ak_level.c:233
 CALAVERA	TOTENKOPF
 
-#: apps/arkanos/main/ak_level.c:234
+#: apps\arkanos\main\ak_level.c:234
 NAVE	SCHIFF
 
-#: apps/arkanos/main/ak_level.c:235
+#: apps\arkanos\main\ak_level.c:235
 ESPIRAL	SPIRALE
 
-#: apps/arkanos/main/ak_level.c:236
+#: apps\arkanos\main\ak_level.c:236
 CORAZON	HERZ
 
-#: apps/arkanos/main/ak_level.c:237
+#: apps\arkanos\main\ak_level.c:237
 CLAUDITO	CLAUDITO
 
-#: apps/arkanos/main/ak_level.c:238
+#: apps\arkanos\main\ak_level.c:238
 EL JEFE	DER BOSS
 
-#: apps/arkanos/main/arkanos.c:340
-#: apps/arkanos/main/arkanos.c:341
+#: apps\arkanos\main\arkanos.c:340
+#: apps\arkanos\main\arkanos.c:341
 SONIDO SI	TON AN
 
-#: apps/arkanos/main/arkanos.c:340
-#: apps/arkanos/main/arkanos.c:341
+#: apps\arkanos\main\arkanos.c:340
+#: apps\arkanos\main\arkanos.c:341
 SONIDO NO	TON AUS
 
-#: apps/arkanos/main/arkanos.c:342
-#: apps/arkanos/main/arkanos.c:343
+#: apps\arkanos\main\arkanos.c:342
+#: apps\arkanos\main\arkanos.c:343
 FPS SI	FPS AN
 
-#: apps/arkanos/main/arkanos.c:342
-#: apps/arkanos/main/arkanos.c:343
+#: apps\arkanos\main\arkanos.c:342
+#: apps\arkanos\main\arkanos.c:343
 FPS NO	FPS AUS
 
-#: apps/arkanos/main/arkanos.c:349
+#: apps\arkanos\main\arkanos.c:349
 RECORD  %lu	BEST  %lu
 
-#: apps/arkanos/main/arkanos.c:456
+#: apps\arkanos\main\arkanos.c:456
 ARKANOS	ARKANOS
 
-#: apps/arkanos/main/arkanos.c:457
+#: apps\arkanos\main\arkanos.c:457
 DOCE MUROS Y UNA BOLA	ZWOELF MAUERN UND EIN BALL
 
-#: apps/arkanos/main/arkanos.c:459
+#: apps\arkanos\main\arkanos.c:459
 JUGAR	SPIELEN
 
-#: apps/arkanos/main/arkanos.c:459
+#: apps\arkanos\main\arkanos.c:459
 arrastra el dedo	Finger ziehen
 
-#: apps/arkanos/main/arkanos.c:473
+#: apps\arkanos\main\arkanos.c:473
 EL DEDO SOBRE LA CANCHA MUEVE LA PALETA	DER FINGER AUF DEM FELD BEWEGT DEN SCHLAEGER
 
-#: apps/arkanos/main/arkanos.c:474
+#: apps\arkanos\main\arkanos.c:474
 EL DEDO EN LA FRANJA DE ABAJO MUEVE LA PALETA	DER FINGER UNTEN IM STREIFEN BEWEGT DEN SCHLAEGER
 
-#: apps/arkanos/main/arkanos.c:476
+#: apps\arkanos\main\arkanos.c:476
 SUELTA EL DEDO PARA SACAR	FINGER HEBEN ZUM AUFSCHLAG
 
-#: apps/arkanos/main/arkanos.c:477
+#: apps\arkanos\main\arkanos.c:477
 CON DISPARO, EL DEDO APOYADO DISPARA	MIT LASER SCHIESST DER AUFGELEGTE FINGER
 
-#: apps/arkanos/main/arkanos.c:478
+#: apps\arkanos\main\arkanos.c:478
 EL BOTON II DE LA DERECHA PAUSA	DIE TASTE II RECHTS PAUSIERT
 
-#: apps/arkanos/main/arkanos.c:479
+#: apps\arkanos\main\arkanos.c:479
 TOCA EL MARCADOR PARA PAUSAR	ZUM PAUSIEREN PUNKTE ANTIPPEN
 
-#: apps/arkanos/main/arkanos.c:487
+#: apps\arkanos\main\arkanos.c:487
 RECORD 0	BEST 0
 
-#: apps/arkanos/main/arkanos.c:490
-#: apps/arkanos/main/arkanos.c:503
-#: apps/arkanos/main/arkanos.c:525
+#: apps\arkanos\main\arkanos.c:490
+#: apps\arkanos\main\arkanos.c:503
+#: apps\arkanos\main\arkanos.c:525
 SALIR	BEENDEN
 
-#: apps/arkanos/main/arkanos.c:499
+#: apps\arkanos\main\arkanos.c:499
 PAUSA	PAUSE
 
-#: apps/arkanos/main/arkanos.c:500
+#: apps\arkanos\main\arkanos.c:500
 SEGUIR	WEITER
 
-#: apps/arkanos/main/arkanos.c:517
-#: apps/arkanos/main/arkanos.c:535
+#: apps\arkanos\main\arkanos.c:517
+#: apps\arkanos\main\arkanos.c:535
 FIN DEL JUEGO	SPIEL VORBEI
 
-#: apps/arkanos/main/arkanos.c:524
+#: apps\arkanos\main\arkanos.c:524
 MENU	MENUE
 
-#: apps/arkanos/main/arkanos.c:535
+#: apps\arkanos\main\arkanos.c:535
 TERMINASTE	DURCHGESPIELT
 
-#: apps/arkanos/main/arkanos.c:539
+#: apps\arkanos\main\arkanos.c:539
 %lu  (RECORD %lu)	%lu  (BEST %lu)
 
-#: apps/arkanos/main/arkanos.c:543
+#: apps\arkanos\main\arkanos.c:543
 OTRA VUELTA	NOCH EINE RUNDE

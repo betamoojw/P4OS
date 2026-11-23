@@ -1,0 +1,126 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Jaque mate	將死
+Rey ahogado	逼和
+Triple repetición	三次重複局面
+Cincuenta movimientos	五十回合規則
+Material insuficiente	子力不足
+Peón	兵
+Caballo	騎士
+Alfil	主教
+Torre	城堡
+Dama	皇后
+Rey	國王
+Negras	黑方
+Blancas	白方
+Jaque	將軍
+Ajedrez	西洋棋
+Reglas completas, reloj y planilla	完整規則、棋鐘與對局記錄
+Sacó todas sus fichas	所有棋子均已移出
+Gammon	雙倍勝
+Backgammon	西洋雙陸棋
+Rojas	紅方
+Carrera de quince fichas con dos dados	用兩枚骰子讓十五枚棋子競速
+Amarillo	黃方
+Rojo	紅方
+El tablero está lleno	棋盤已滿
+Cuatro en línea	四子連珠
+Cuatro fichas en fila, a lo ancho, a lo alto o en diagonal	橫、豎或斜向連成四子
+Sin jugadas	無棋可走
+Cincuenta jugadas de damas	王棋五十步
+De acá (8 × 8)	本地規則（8 × 8）
+Internacionales (10 × 10)	國際規則（10 × 10）
+No	否
+Sí	是
+Reglas	一般棋子可向後吃子
+Los peones comen para atrás	普通棋子可向後吃子
+Comer la mayor cantidad	必須優先吃最多的子
+Damas	西洋跳棋
+Las de acá y las internacionales	本地及國際規則
+Verde	綠方
+Azul	藍方
+Jugadores	玩家
+Llevó sus cuatro fichas a casa	四枚棋子全部到達終點
+Ludo	十字戲
+De dos a cuatro, con dados	兩至四人擲骰對弈
+No quedan jugadas	無棋可走
+Reversi	黑白棋
+Encerrá las fichas del otro y dalas vuelta	夾住對方棋子，將其翻為己方顏色
+Placa	電腦
+RDTAC	KQRBN
+Planilla	棋譜
+Piensa...	思考中…
+Tirá los dados	擲骰子
+Guardada en	已儲存為
+No se pudo guardar	儲存失敗
+No se pudo leer la partida	無法讀取棋局
+Abrir una partida	開啟棋局
+No hay partidas guardadas en /sdcard/mesa/ajedrez	/sdcard/mesa/ajedrez 中沒有已儲存的棋局
+Cancelar	取消
+Seguir	繼續
+Partida nueva	新棋局
+Abandonar	認輸
+Guardar la partida	儲存棋局
+Ajustes	設定
+Salir al menú	返回選單
+Se acabó el tiempo	時間到
+Abandono	已認輸
+Tablas	和局
+¡Ganaste!	你贏了！
+Ganó la placa	電腦獲勝
+Gana	勝方
+Partida terminada	對局結束
+Revancha	再來一局
+Ver el tablero	檢視棋盤
+¿En qué se convierte?	要升變為什麼棋子？
+No hay jugada: pasa el turno	無棋可走，跳過本回合
+No hay memoria	記憶體不足
+Esta es la que haría la placa	這是電腦的推薦走法
+Piensa la placa...	電腦正在思考…
+Pensando...	思考中…
+jugadas	步
+Sin reloj	不限時
+por jugada	每步
+De a dos	雙人對弈
+Contra la placa	人機對弈
+Jugás con	執子顏色
+Al azar	隨機
+Nivel de la placa	電腦水平
+Cómo	對弈方式
+Pasando la placa	輪流傳遞棋盤
+Cara a cara	面對面對弈
+Persona	玩家
+Reloj	棋鍾
+Incremento	加秒
+Bronstein	布龍斯坦延時
+Fischer	菲舍爾加秒
+Jugar	開始對局
+Volver	返回
+Madera	木質
+Mármol	大理石
+Vidrio	玻璃
+Metal	金屬
+Piezas y tablero	棋子與棋盤
+Los juegos de mármol, vidrio y metal se bajan aparte desde la Tienda.	大理石、玻璃和金屬棋具可從應用程式商店分別下載。
+Vista	視角
+Plana	平面
+En 3D	立體
+Marcar las jugadas posibles	顯示可走位置
+Coordenadas	座標
+Sonido	聲音
+Lentas	慢
+Normales	普通
+Rápidas	快
+Las piezas se mueven	棋子移動速度
+Listo	完成
+Jugadas	步數
+damas	王棋
+fichas	棋子
+en casa	到家
+afuera	已移出
+No se pudo abrir la partida	無法開啟棋局
+Juegos de mesa	桌上棋類
+Seguir la partida	繼續棋局
+Reloj de ajedrez	對弈棋鍾
+Para una partida en un tablero de verdad	供實體棋盤對局使用
+Falta el paquete de arte mesa_p4.pak: los juegos se ven con piezas de reemplazo.	缺少美術資源包 mesa_p4.pak，遊戲將使用替代棋子。

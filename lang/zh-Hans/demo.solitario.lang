@@ -1,0 +1,159 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Verde de siempre	经典绿
+Azul	蓝色
+Rojo	红色
+Madera	木纹
+Cuero	皮革
+Noche	夜色
+Océano	海洋
+Damasco	锦缎
+Clásico rojo	经典红
+Clásico azul	经典蓝
+Art déco	装饰艺术
+Luna	月亮
+Olas	波纹
+Escocés	苏格兰格纹
+Arlequín	菱格纹
+Dorado	金色
+Clásica	经典
+Cuatro colores	四色
+Grande	大牌面
+Estándar	标准
+Vegas	拉斯维加斯
+Vegas acumulativo	拉斯维加斯累计计分
+Por tiempo	计时
+Sin puntaje	不计分
+Rebote	弹跳
+Fuegos artificiales	烟花
+Espiral	螺旋
+Al azar	随机
+Primera mano	首胜
+Ganá una mano.	赢得一局。
+De a tres	三张一翻
+Ganá Klondike de a 3.	在每次翻三张牌的经典接龙中获胜。
+Tejedora	织网能手
+Ganá Spider de un palo.	赢得一局单花色蜘蛛纸牌。
+Dos palos	两种花色
+Ganá Spider de dos palos.	赢得一局双花色蜘蛛纸牌。
+Cuatro palos	四种花色
+Ganá Spider de cuatro palos.	赢得一局四花色蜘蛛纸牌。
+Celdas libres	空当高手
+Ganá FreeCell.	赢得一局空当接龙。
+Faraón	法老
+Ganá la Pirámide.	赢得一局金字塔。
+Tres cumbres	三峰登顶
+Ganá TriPeaks.	赢得一局三峰。
+Hoyo en uno	一杆进洞
+Ganá Golf.	赢得一局高尔夫。
+Al norte	极北之地
+Ganá Yukon.	赢得一局育空接龙。
+Con la española	西班牙牌
+Ganá la Española.	使用西班牙牌赢得一局。
+Todos los días	每日一局
+Ganá una mano del día.	赢得一局每日挑战。
+Racha de cinco	五连胜
+Ganá cinco manos seguidas de un mismo juego.	同一玩法连续赢得五局。
+Diez victorias	十场胜利
+Ganá diez manos en total.	累计赢得十局。
+A pulmón	独立完成
+Ganá sin deshacer ni pedir pistas.	不撤销、不提示，赢得一局。
+Contrarreloj	争分夺秒
+Ganá Klondike en menos de tres minutos.	在三分钟内赢得一局经典接龙。
+Casa ganadora	庄家赢家
+Terminá una mano de Vegas con ganancia.	在拉斯维加斯玩法中结算时获得盈利。
+Klondike	经典接龙
+Klondike de a 3	经典接龙，每次翻三张
+Spider, 1 palo	蜘蛛纸牌，单花色
+Spider, 2 palos	蜘蛛纸牌，双花色
+Spider, 4 palos	蜘蛛纸牌，四花色
+FreeCell	空当接龙
+Pirámide	金字塔
+TriPeaks	三峰
+Golf	高尔夫
+Yukon	育空接龙
+Española	西班牙牌
+Nueva	新局
+Deshacer	撤销
+Pista	提示
+Completar	完成
+Menú	菜单
+Mano del día	每日挑战
+Tiempo	用时
+Saldo	余额
+Puntos	得分
+Movidas	步数
+La mano del día espera a que la placa tenga hora.	设备校时后即可开始每日挑战。
+Solitario	纸牌接龙
+Seguir	继续
+Nueva mano	新开一局
+Repetir esta mano	重玩本局
+Elegir juego	选择玩法
+ · ganada	 · 已获胜
+Sin hora todavía	尚未校时
+Opciones	选项
+Apariencia	外观
+Paños, dorsos y barajas	桌布、牌背和牌面
+Estadísticas	统计
+Logros	成就
+Cómo se juega	玩法说明
+Salir	退出
+Siete columnas, se da vuelta de a una	七列牌，每次翻一张
+Siete columnas, se da vuelta de a tres	七列牌，每次翻三张
+Dos mazos, todo de un palo	两副牌，单一花色
+Dos mazos, picas y corazones	两副牌，黑桃和红桃
+Dos mazos, los cuatro palos	两副牌，包含全部四种花色
+Cuatro celdas libres, todo a la vista	四个空当，所有牌面朝上
+Parejas que suman trece	找出点数相加为十三的牌对
+Tres picos, una más o una menos	清空三座牌峰，选比顶牌大或小一点的牌
+Siete columnas, una más o una menos	七列牌，选比顶牌大或小一点的牌
+Sin mazo: se mueve cualquier carta	无牌库，任何明牌均可移动
+Klondike con la baraja de cuarenta	使用西班牙四十张牌的经典接龙
+Tres vueltas	三轮
+Sin límite	不限
+Sí	是
+No	否
+Puntaje	计分方式
+Vueltas al mazo	牌库循环次数
+Pistas	提示
+Manos con solución	可解牌局
+Completar solo	自动收牌
+Al ganar	胜利动效
+Sonido	声音
+El puntaje y las vueltas al mazo valen desde la próxima mano. Vegas: cada mano cuesta una moneda por carta y cada carta que llega a la base paga cinco.	计分方式和牌库循环次数从下一局生效。拉斯维加斯玩法每局按每张牌一枚金币收费，每移一张牌到收牌区可得五枚金币。
+Paños	桌布
+Dorsos	牌背
+Barajas	牌面
+La Española usa siempre la baraja de cuarenta.	西班牙牌玩法始终使用四十张牌。
+Jugadas	对局数
+Ganadas	获胜局数
+Racha	连胜
+Mejor tiempo	最快用时
+Mejor puntaje	最高分
+Saldo de Vegas	拉斯维加斯余额
+Manos del día ganadas	每日挑战胜场
+Listo	完成
+Paño	桌布
+Dorso	牌背
+Baraja	牌面
+Llevá las cuatro bases del as al rey, cada una de un palo. En las columnas se baja de a uno alternando rojo y negro, y una columna vacía sólo toma un rey. Tocá el mazo para dar vuelta una carta.	在四个收牌区按同一花色从 A 到 K 叠牌。在牌列中按红黑交替、点数从大到小接牌，每次相差一点。空列只可放 K。点按牌库翻牌。
+Como Klondike, pero el mazo se da vuelta de a tres cartas y sólo se juega la de arriba.	规则与经典接龙相同，但每次翻三张牌，只有最上面一张可用。
+Armá en las columnas escaleras del rey al as de un mismo palo: completas, se van solas. Se puede bajar sobre cualquier palo, pero sólo se mueve junto lo que es del mismo palo. El mazo reparte una carta en cada columna, si ninguna está vacía.	在牌列中按同一花色从 K 排到 A，完整的一组会自动收走。可以接在任意花色的牌上，但只有同花顺序牌可以一起移动。所有牌列都非空时，可从牌库向每列发一张牌。
+Spider con dos palos: picas y corazones.	双花色蜘蛛纸牌，使用黑桃和红桃。
+Spider con los cuatro palos: el más difícil.	四花色蜘蛛纸牌，难度最高。
+Todas las cartas a la vista. Las cuatro celdas guardan una carta cada una. En las columnas se baja alternando colores; se mueven tantas cartas juntas como celdas y columnas libres alcancen.	所有牌面朝上。四个空当各可暂放一张牌。按红黑交替、点数递减接牌，一次能移动多少张取决于可用的空当和空列。
+Sacá parejas de cartas libres que sumen trece (la J vale 11, la Q 12; el rey sale solo). Una carta está libre si no tiene nada encima. El mazo da vuelta de a una.	移除点数之和为十三的两张自由牌（J 为 11，Q 为 12，K 可单独移除）。没有其他牌压在上面的就是自由牌。每次从牌库翻一张。
+Pasá a la pila de abajo cartas libres que sean una más o una menos que la de arriba (del rey se sigue al as). Despejá los tres picos. Si no hay jugada, tocá el mazo.	将比下方牌堆顶牌大或小一点的自由牌移到该牌堆，K 与 A 可以相接。清空三座牌峰即可获胜。无牌可接时点按牌库。
+Pasá a la pila cartas de abajo de las columnas que sean una más o una menos que la de arriba, sin dar la vuelta del rey al as. Despejá las siete columnas.	把牌列底端比顶牌大或小一点的牌移到牌堆，K 与 A 不能相接。清空七列牌即可获胜。
+Como Klondike, sin mazo: todo está repartido y se puede mover cualquier carta dada vuelta, con todo lo que tiene encima, sobre una de un número más y del otro color.	与经典接龙类似，但没有牌库，所有牌均已发出。可将任意明牌连同压在它上面的所有牌一起移到颜色相反且大一点的牌上。
+Klondike con la baraja española de cuarenta: después del 7 viene la sota. En las columnas se alternan oros y copas con espadas y bastos, y una columna vacía sólo toma un rey.	使用四十张西班牙牌的经典接龙，7 之后接侍从。金币、圣杯与宝剑、木棒交替排列，空列只能放国王。
+Arrastrá una carta o una pila, o tocala para que vaya sola al mejor lugar; dos toques la mandan a la base. Con joystick: la cruz recorre las pilas, A toma y suelta, B cancela, L deshace, R da una pista.	拖动一张或一叠牌，或点按自动移至合适位置。双击可送往收牌区。使用手柄时，用方向键选择牌堆，A 拿起或放下，B 取消，L 撤销，R 提示。
+¡Ganaste!	你赢了！
+ · Mano del día	 · 每日挑战
+Otra mano	再来一局
+No quedan jugadas	无牌可走
+Esta mano ya no tiene movimientos.	本局已没有可走的牌。
+Para repartir no puede haber columnas vacías.	有空列时无法发牌。
+No hay jugadas.	没有可走的牌。
+Sólo queda el mazo.	只剩牌库。
+Buscando una mano con solución...	正在寻找可解牌局…

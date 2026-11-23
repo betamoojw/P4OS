@@ -1,0 +1,266 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Notas al pie	脚注
+Sólo se lee: para editarlo, guardá una copia como docx u odt (en el menú ⋯)	只读：若要编辑，请在 ⋯ 菜单中另存为 docx 或 odt 副本
+Este párrafo tiene control de cambios u objetos que no se editan acá: se guarda como está	此段落包含修订记录或此处无法编辑的对象，将按原样保存
+La selección pasa de una celda a otra: se borra de a una celda	选区跨越多个单元格，请逐个单元格删除
+No está	未找到
+Buscar en el documento	在文档中查找
+Buscar	查找
+Texto normal	正文
+Título 1	标题 1
+Título 2	标题 2
+Título 3	标题 3
+Estilo del párrafo	段落样式
+A la izquierda	左对齐
+Centrado	居中
+A la derecha	右对齐
+Justificado	两端对齐
+Alineación	对齐方式
+Ya hay un archivo con ese nombre	已有同名文件
+No se pudo guardar	无法保存
+Guardado como PDF	已保存为 PDF
+Guardado	已保存
+Guardado. En la copia no va lo que la app no entiende	已保存。副本会省略应用无法识别的内容
+Guardar una copia como	将副本另存为
+Guardar	保存
+%d párrafos, %d palabras, %d caracteres.	%d 个段落，%d 个词，%d 个字符。
+ Leído de %s: se ve y se copia; para editarlo, se guarda una copia como docx u odt.	 从 %s 读取：可查看和复制；若要编辑，请另存为 docx 或 odt 副本。
+Algunos párrafos (marcados al costado) tienen control de cambios u otros objetos: se ven, y se guardan como estaban.	部分段落包含修订记录或其他对象（侧边已标记），可以查看，并会按原样保存。
+Listo	完成
+El documento no tiene títulos	文档中没有标题
+Índice	目录
+Documento de Word (.docx)	Word 文档（.docx）
+Documento de OpenDocument (.odt)	OpenDocument 文档（.odt）
+Texto (.txt)	文本（.txt）
+PDF para imprimir o mandar (.pdf)	用于打印或发送的 PDF（.pdf）
+Ver las páginas como se imprimen	查看打印版式
+Guardar una copia como...	将副本另存为…
+Buscar...	查找…
+Letra más grande	增大字号
+Letra más chica	减小字号
+Seleccionar todo	全选
+Copiar	复制
+Pegar	粘贴
+Editar como texto	以文本方式编辑
+Información	信息
+Estilo	样式
+Alinear	对齐
+Algunos párrafos tienen control de cambios u objetos que no se editan acá: se ven y se guardan como están	部分段落包含修订记录或此处无法编辑的对象，可以查看，并会按原样保存
+De	发件人
+Para	收件人
+Copia	抄送
+Fecha	日期
+Adjuntos	附件
+La vista previa que guarda el archivo. El contenido se edita en Pages, Numbers o Keynote.	这是文件中保存的预览，内容需在 Pages、Numbers 或 Keynote 中编辑。
+Este archivo no trae una vista previa.	此文件未包含预览。
+Los textos de sus tablas	表格中的文本
+Su texto	其中的文本
+Diapositiva	幻灯片
+Objeto	对象
+%d páginas. El PDF no tiene texto: son imágenes (escaneado)	%d 页。此 PDF 没有文本，内容为扫描图像
+%d páginas. El PDF no tiene texto que se pueda leer	%d 页。此 PDF 没有可读取的文本
+%d páginas. Parte del texto no se puede leer: sus letras no dicen qué son	%d 页。部分文本无法读取，字符缺少对应的文字编码
+%d páginas	%d 页
+Este PDF no tiene texto que la app pueda leer (puede ser una imagen escaneada en un formato que la app no muestra).	此 PDF 没有应用可读取的文本，可能是应用不支持的扫描图像格式。
+Falta memoria para dibujar la página	内存不足，无法绘制页面
+No hay una página con ese número	没有此页码对应的页面
+%d páginas; esta, de %.1f × %.1f cm. La app dibuja las páginas con las letras que trae el archivo; las que nombra y no trae, con las suyas.	共 %d 页，本页尺寸为 %.1f × %.1f cm。应用优先使用文件内嵌的字体，未内嵌的字体会用应用自身的字体替代。
+Ir a la página	跳转到页面
+Ir	跳转
+Ver el texto acomodado	查看重排后的文本
+Ir a la página...	跳转到页面…
+Ajustar al ancho	适应宽度
+Más grande	放大
+Gráfico	图表
+Diagrama (SmartArt)	图示（SmartArt）
+Esa celda es parte de una fórmula matricial: se cambia en la computadora	此单元格属于数组公式，请在电脑上修改
+Es demasiado para copiar de una vez	内容过多，无法一次复制
+Cortado	已剪切
+Copiado	已复制
+No hay nada para pegar	没有可粘贴的内容
+Suma %s  ·  Prom. %s	总和 %s · 平均 %s
+%ld celdas	%ld 个单元格
+La fórmula tiene un error	公式有错误
+La fórmula usa una función que la app no tiene	公式使用了应用不支持的函数
+Un CSV no guarda formatos: guardalo como .xlsx o .ods	CSV 无法保存格式，请另存为 .xlsx 或 .ods
+En los .ods los formatos se cambian en la computadora por ahora	目前 .ods 文件的格式需在电脑上修改
+General	常规
+Entero	整数
+Entero con miles	整数（千位分隔）
+Dos decimales	两位小数
+Miles y dos decimales	千位分隔及两位小数
+Moneda	货币
+Porcentaje	百分比
+Porcentaje con decimales	百分比（含小数）
+Fecha y hora	日期和时间
+Hora	时间
+Texto	文本
+Formato de número	数字格式
+Es demasiado para ordenar en la placa	数据量过大，无法在开发板上排序
+Filtro: «%.40s» (%d filas escondidas)	筛选：“%.40s”（已隐藏 %d 行）
+Inmovilizar se ve en la placa; en el archivo queda como estaba	冻结效果仅在开发板上显示，文件中的设置按原样保留
+Esa no es una celda (por ejemplo, B12)	请输入有效的单元格地址，例如 B12
+No está en esta hoja	不在此工作表中
+Buscar en la hoja	在工作表中查找
+Guardado. El CSV tiene sólo la hoja que se veía	已保存。CSV 仅包含当前显示的工作表
+Guardado. En el CSV las fórmulas quedaron como valores	已保存。CSV 中的公式已转换为数值
+Planilla de Excel (.xlsx)	Excel 电子表格（.xlsx）
+Planilla de OpenDocument (.ods)	OpenDocument 电子表格（.ods）
+Datos separados por comas (.csv)	逗号分隔值（.csv）
+Fórmulas que la app calcula	应用支持计算的公式
+Se escriben con = adelante, y con ; o , entre los argumentos. En el archivo quedan con los nombres en inglés, como los guarda Excel. Las que la app no tiene conservan el valor que traía el archivo.	公式以 = 开头，参数之间使用 ; 或 , 分隔。文件中保留 Excel 使用的英文函数名。应用不支持的公式会保留文件中原有的数值。
+Cambiar el nombre de una hoja de un .xlsx todavía no se puede	暂不支持重命名 .xlsx 中的工作表
+Ir a la celda	跳转到单元格
+Nombre de la hoja	工作表名称
+Cambiar	更改
+Formato de número...	数字格式…
+Ordenar de menor a mayor	从小到大排序
+Ordenar de mayor a menor	从大到小排序
+Sacar el filtro	取消筛选
+Filtrar por este valor	按此值筛选
+Ancho de columna justo	自动调整列宽
+Liberar filas y columnas	取消冻结行列
+Inmovilizar hasta acá	冻结到此处
+Cortar	剪切
+Borrar el contenido	清除内容
+Ir a la celda...	跳转到单元格…
+Fórmulas que calcula	支持计算的公式
+Cambiar el nombre de la hoja	重命名工作表
+Un .xls no se puede guardar: se guarda una copia como xlsx u ods	无法保存为 .xls，请另存为 xlsx 或 ods 副本
+Guardado. Hay fórmulas que la app no calcula: el programa de la computadora las recalcula al abrir	已保存。部分公式无法由此应用计算，电脑上的软件将在打开时重新计算
+Hay fórmulas con funciones que la app no tiene: se ve el valor que trae el archivo	部分公式使用了应用不支持的函数，当前显示文件中原有的数值
+Notas: 	备注：
+  ·  oculta	  ·  已隐藏
+Es la última	已经是最后一张
+Es la primera	已经是第一张
+Guardado: el texto de las diapositivas y sus notas	已保存幻灯片文本及其备注
+No hay una diapositiva con ese número	没有此编号对应的幻灯片
+%d diapositivas (%d ocultas, %d con notas), de %.1f × %.1f cm. Se ven y se presentan; para editarlas hace falta PowerPoint o Impress.	共 %d 张幻灯片（%d 张已隐藏，%d 张有备注），尺寸为 %.1f × %.1f cm。可查看和放映，编辑需使用 PowerPoint 或 Impress。
+Ir a la diapositiva	跳转到幻灯片
+PDF, una página por diapositiva (.pdf)	PDF，每张幻灯片一页（.pdf）
+El texto, como documento de Word (.docx)	将文本保存为 Word 文档（.docx）
+El texto, como OpenDocument (.odt)	将文本保存为 OpenDocument（.odt）
+El texto (.txt)	文本（.txt）
+Presentar	放映
+Notas del orador	演讲者备注
+Ir a la diapositiva...	跳转到幻灯片…
+Celular	手机
+Trabajo	工作
+Casa	家庭
+Fax	传真
+(sin nombre)	（未命名）
+Organización	组织
+Cargo	职务
+Teléfono	电话
+Correo	电子邮件
+Dirección	地址
+Web	网站
+Cumpleaños	生日
+Apodo	昵称
+Nota	备注
+No hay contactos en este archivo.	此文件中没有联系人。
+%d contactos	%d 位联系人
+Enero	一月
+Febrero	二月
+Marzo	三月
+Abril	四月
+Mayo	五月
+Junio	六月
+Julio	七月
+Agosto	八月
+Septiembre	九月
+Octubre	十月
+Noviembre	十一月
+Diciembre	十二月
+(sin título)	（无标题）
+Cuándo	时间
+Vence	截止时间
+Dónde	地点
+Todos los días	每天
+Todas las semanas	每周
+Todos los meses	每月
+Todos los años	每年
+Se repite	重复
+Notas	备注
+No hay eventos en este archivo.	此文件中没有日程。
+%d eventos	%d 个日程
+El archivo tiene un error a partir de acá.	文件从此处开始出现错误。
+Se muestran las primeras %d líneas.	显示前 %d 行。
+%d reemplazos	已替换 %d 处
+Reemplazar por	替换为
+Este	此处
+Todos	全部
+Ir a la línea	跳转到行
+Se va a guardar en UTF-8	将以 UTF-8 编码保存
+Se va a guardar en Latin-1 (Windows-1252)	将以 Latin-1（Windows-1252）编码保存
+Finales de línea de Windows (CRLF)	Windows 换行符（CRLF）
+Finales de línea de Unix y Mac (LF)	Unix 和 Mac 换行符（LF）
+Exportar a PDF	导出为 PDF
+Guardá los cambios primero	请先保存更改
+Codificación: %s	编码：%s
+Fin de línea: %s	换行符：%s
+%d líneas	%d 行
+Buscar y reemplazar	查找和替换
+Ir a la línea...	跳转到行…
+Ajustar las líneas	自动换行
+Números de línea	行号
+Letra de ancho fijo	等宽字体
+Ver como árbol	树状视图
+Ver con formato	格式化视图
+Exportar a PDF...	导出为 PDF…
+Cancelar	取消
+El archivo comprimido es muy grande para abrirlo acá (más de 64 MB)	压缩文件过大，无法在此打开（超过 64 MB）
+No se pudo leer el archivo comprimido	无法读取压缩文件
+No se pudo leer el documento	无法读取文档
+La contraseña no es esa	密码不正确
+Es del formato de Office 95 o anterior: la app no lo lee	这是 Office 95 或更早的格式，应用无法读取
+Este PDF tiene contraseña	此 PDF 受密码保护
+Abrir	打开
+Otra app está usando el dibujo en segundo plano: cerrala y probá de nuevo	另一个应用正在使用后台绘制，请关闭该应用后重试
+Ese archivo ya no está	此文件已不存在
+Este formato todavía no se abre: llega en una próxima versión	暂不支持打开此格式，将在后续版本提供
+No es un documento que la app conozca	应用无法识别此文档格式
+El archivo tiene contraseña: la app no lo puede abrir	此文件受密码保护，应用无法打开
+No se pudo leer la presentación	无法读取演示文稿
+El PDF está cifrado de una forma que la app no conoce	应用不支持此 PDF 的加密方式
+No se pudo leer la planilla	无法读取电子表格
+No se pudo leer el archivo	无法读取文件
+Es una copia sacada del archivo comprimido: para quedártela, extraela con una pulsación larga	这是从压缩文件中临时提取的副本，若要保留，请长按并解压
+Ese archivo tiene contraseña: la app no lo puede sacar	此文件受密码保护，应用无法解压
+No se pudo sacar el archivo	无法解压此文件
+Extraído en la carpeta: %s	已解压到文件夹：%s
+Se extrajeron %d archivos en «%s»; %d no se pudieron	已将 %d 个文件解压到“%s”，%d 个未能解压
+Se extrajeron %d archivos en «%s»	已将 %d 个文件解压到“%s”
+No se pudo cambiar el nombre	无法重命名
+No se pudo borrar	无法删除
+No se pudo copiar	无法复制
+Nuevo nombre	新名称
+¿Borrar «%s»?	删除“%s”？
+No se puede deshacer.	此操作无法撤销。
+Borrar	删除
+Extraer en esta carpeta	解压到此文件夹
+Cambiar el nombre	重命名
+Duplicar	创建副本
+Sacar de recientes	从最近使用中移除
+Hoja1	工作表1
+No se pudo crear el archivo	无法创建文件
+Nombre de la planilla	电子表格名称
+Nombre del documento	文档名称
+Planilla	电子表格
+Documento	文档
+Crear	创建
+Markdown (.md)	Markdown（.md）
+Nuevo	新建
+Fondo claro	浅色背景
+Fondo oscuro	深色背景
+Ir a la carpeta de documentos	打开文档文件夹
+Extraer todo en una carpeta	全部解压到一个文件夹
+con contraseña	受密码保护
+Oficina	办公
+Recientes	最近使用
+Archivos	文件
+Todavía no abriste ningún documento. En Archivos están los de la tarjeta, y con + se empieza uno nuevo.	您尚未打开任何文档。“文件”中可查看存储卡上的文档，点击 + 可新建文档。
+No hay archivos en esta carpeta. Se suben desde la página Oficina del portal, o con + se crea uno.	此文件夹中没有文件。可从管理网页的“办公”页面上传，或点击 + 新建。
+Salir sin guardar	不保存并退出
+Hay cambios sin guardar	有未保存的更改

@@ -14,11 +14,15 @@
  * of their own (Home Assistant's REST API). It is the same path: the GET is a
  * POST with no body and no extra headers, not a separate function.
  *
- * HTTP/1.0 is requested on purpose. With 1.1 the server answers with
- * Transfer-Encoding chunked (measured against open-meteo) and it has to be
- * taken apart; with 1.0 it closes the connection on finishing and reading to
- * EOF is enough. Chunked and Content-Length are supported anyway, in case some
- * server uses them.
+ * HTTP/1.1 with "Connection: close" since 2026-11-22. It used to ask in
+ * HTTP/1.0, so that the server closed on finishing and reading to EOF was
+ * enough, with no chunks to take apart. adsb.lol answers 426 (Upgrade
+ * Required) to a 1.0 request and 200 to the same one in 1.1 (Vuelos on the
+ * board, and curl with --http1.0 and --http1.1), and it will not be the only
+ * one. "Connection: close" keeps the reading to EOF; the body is also known to
+ * be whole by its Content-Length, or by the last chunk when it comes chunked
+ * (open-meteo's does), so a server that keeps the connection open anyway does
+ * not cost the ten seconds of a timeout.
  *
  * --- TLS (2026-09-03) ------------------------------------------------------
  *
@@ -57,6 +61,11 @@
  *  - A full handshake is 1.6-1.8 s and a resumed one 0.6. That is why there is
  *    a session cache: without it the Remoto app would pay 1.6 s on every
  *    refresh.
+ *  - The body's buffer grows with what arrives (2026-11-22). It used to be
+ *    the whole ceiling the app named, set aside in one piece before the
+ *    request went out: Vuelos named 1.5 MB for a reading that is 30 KB, the
+ *    board had 1.7 MB of PSRAM left and no piece that long, and no request
+ *    ever started. The ceiling is now only where a body is cut.
  *  - With no valid time the certificate cannot be verified. That is checked
  *    BEFORE spending the handshake, and afterwards the BADCERT_FUTURE bit is
  *    translated, which is the only thing distinguishing "the board is in the
@@ -99,6 +108,7 @@
  * dropped to 1. */
 #define HTTP_SLOTS      3       /* weather + geocoding + one spare */
 #define HTTP_TIMEOUT_S  10
+#define HTTP_FIRST      (16 * 1024)     /* the body's buffer to begin with; it doubles */
 #define TAG             "http"
 
 typedef struct {
@@ -107,7 +117,8 @@ typedef struct {
     int              status;
     char            *body;      /* response */
     int              len;
-    int              max;
+    int              max;       /* the ceiling the app named */
+    int              cap;       /* what the buffer holds now: it grows up to max */
     bool             abandoned; /* the app called release while it was still running */
     bool             tls;       /* the URL was https:// */
     char             host[96];
@@ -184,6 +195,42 @@ static int conn_recv(conn_t *c, char *buf, int max)
     }
 }
 
+/* The body's buffer, in PSRAM: nothing here needs internal RAM, and a body
+ * may be a megabyte. In the simulator P4_SIM_HTTP_ROOM=<bytes> is the
+ * largest piece of memory there is, as on a board whose PSRAM an app has
+ * filled. */
+static char *body_alloc(char *old, int n)
+{
+#ifdef AOS_SIM
+    const char *room = getenv("P4_SIM_HTTP_ROOM");
+    if (room && room[0] && n > atoi(room)) {
+        return NULL;
+    }
+    return realloc(old, (size_t)n);
+#else
+    char *p = heap_caps_realloc(old, (size_t)n, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
+    if (!p && !old) {
+        p = malloc((size_t)n);          /* a board with no PSRAM left and a small body */
+    }
+    return p;
+#endif
+}
+
+/* Room for more of the body: twice what there is, up to the ceiling. Only
+ * the request's own task calls it, while the state is BUSY and nobody else
+ * looks at the buffer. false without the memory; what there was is kept. */
+static bool body_grow(slot_t *s)
+{
+    int want = s->cap > s->max / 2 ? s->max : s->cap * 2;
+    char *p = body_alloc(s->body, want);
+    if (!p) {
+        return false;
+    }
+    s->body = p;
+    s->cap  = want;
+    return true;
+}
+
 static void slot_free(slot_t *s)     /* with the lock held */
 {
     free(s->body);
@@ -225,6 +272,53 @@ static int dechunk(char *body, int len)
     return w;
 }
 
+/* A header's value in the block of headers [h, end), or NULL: 'name' in
+ * lower case with its colon, at the start of a line. */
+static const char *header_find(const char *h, const char *end, const char *name)
+{
+    size_t n = strlen(name);
+    for (const char *p = h; p + n < end; p++) {
+        if (p[0] != '\n') {
+            continue;
+        }
+        size_t i = 0;
+        while (i < n && (p[1 + i] | 0x20) == name[i]) i++;      /* letters fold; ':' and '-' are themselves */
+        if (i == n) {
+            p += 1 + n;
+            while (p < end && (*p == ' ' || *p == '\t')) p++;
+            return p;
+        }
+    }
+    return NULL;
+}
+
+/* Whether the answer in buf[0..got) (NUL after it) is all there, so that
+ * the reading can stop without waiting for the server to close: by its
+ * Content-Length, or by the last chunk of a chunked body. '*head' keeps the
+ * headers' length between calls, 0 until they are whole. An answer that says
+ * neither is whole when the connection closes, as before. */
+static bool body_whole(const char *buf, int got, int *head)
+{
+    if (!*head) {
+        const char *sep = strstr(buf, "\r\n\r\n");
+        if (!sep) {
+            return false;
+        }
+        *head = (int)(sep - buf) + 4;
+    }
+    const char *end = buf + *head;
+    const char *te = header_find(buf, end, "transfer-encoding:");
+    if (te && (te[0] | 0x20) == 'c') {                          /* chunked: "0\r\n", any trailers, "\r\n" */
+        return got - *head >= 5 && !memcmp(buf + got - 5, "0\r\n\r\n", 5) &&
+               (got - *head == 5 || buf[got - 6] == '\n');
+    }
+    const char *cl = header_find(buf, end, "content-length:");
+    if (cl && *cl >= '0' && *cl <= '9') {
+        return got - *head >= atoi(cl);
+    }
+    return false;
+}
+
 /* The real work. Runs in the background thread. */
 static void http_work(slot_t *s)
 {
@@ -251,10 +345,11 @@ static void http_work(slot_t *s)
     }
 
     int n = snprintf(req, cap,
-                     "%s %s HTTP/1.0\r\n"
+                     "%s %s HTTP/1.1\r\n"
                      "Host: %s\r\n"
                      "User-Agent: AmoledOS/1.0\r\n"
-                     "Accept: application/json\r\n",
+                     "Accept: application/json\r\n"
+                     "Connection: close\r\n",
                      s->method, s->path, s->host);
     if (hlen) {
         n += snprintf(req + n, cap - n, "%s", s->hdrs);
@@ -296,9 +391,16 @@ static void http_work(slot_t *s)
 
     /* Everything (headers included) is read into the same buffer and then the
      * body is moved to the front. A GET of this size does not justify two. */
-    int got = 0;
+    int got = 0, head = 0;
     for (;;) {
-        int r = conn_recv(&c, s->body + got, s->max - 1 - got);
+        if (got >= s->cap - 1 && s->cap < s->max && !body_grow(s)) {
+            aos_hal_log(TAG, "%s: no memory for more than %d KB of the answer (its ceiling is %d KB)", s->host,
+                        s->cap / 1024, s->max / 1024);
+            status = AOS_HTTP_ERR_MEM;
+            conn_close(&c);
+            goto done;
+        }
+        int r = conn_recv(&c, s->body + got, s->cap - 1 - got);
         if (r < 0) {
             if (got == 0) {
                 status = AOS_HTTP_ERR_RECV;
@@ -313,6 +415,10 @@ static void http_work(slot_t *s)
         got += r;
         if (got >= s->max - 1) {
             break;                       /* the ceiling the app asked for */
+        }
+        s->body[got] = 0;
+        if (body_whole(s->body, got, &head)) {
+            break;                       /* all of it, whether or not the server closes */
         }
     }
     conn_close(&c);
@@ -330,7 +436,8 @@ static void http_work(slot_t *s)
         goto done;
     }
     *sep = 0;
-    bool chunked = (strstr(s->body, "chunked") != NULL);
+    const char *te = header_find(s->body, sep, "transfer-encoding:");
+    bool chunked = te && (te[0] | 0x20) == 'c';
     char *body = sep + 4;
     blen = got - (int)(body - s->body);
     memmove(s->body, body, blen);
@@ -428,6 +535,22 @@ int aos_hal_http_request(const char *method, const char *url,
         return -1;
     }
 
+#ifdef AOS_SIM
+    /* Two things the Mac does not do by itself. P4_SIM_HTTP_WHOLE=1, with
+     * P4_SIM_HTTP_ROOM (body_alloc), is the firmware up to 0.31.0, which set
+     * the whole ceiling aside before asking: for an app that has to run
+     * there too. P4_SIM_HTTP_LOCAL=1 lets nothing out of this computer, for
+     * a test that must not reach a real service by mistake (its requests
+     * fail as with no route). */
+    const char *room = getenv("P4_SIM_HTTP_ROOM"), *whole = getenv("P4_SIM_HTTP_WHOLE");
+    if (whole && whole[0] == '1' && room && room[0] && max_bytes > atoi(room)) {
+        return -3;
+    }
+    const char *local = getenv("P4_SIM_HTTP_LOCAL");
+    bool refuse = local && local[0] == '1' && !(hlen == 9 && !strncmp(h, "127.0.0.1", 9)) &&
+                  !(hlen == 9 && !strncmp(h, "localhost", 9));
+#endif
+
     LOCK(s_lock);
     slot_t *s = NULL;
     for (int i = 0; i < HTTP_SLOTS; i++) {
@@ -444,6 +567,14 @@ int aos_hal_http_request(const char *method, const char *url,
     memset(s, 0, sizeof(*s));
     memcpy(s->host, h, hlen);
     s->host[hlen] = 0;
+#ifdef AOS_SIM
+    if (refuse) {
+        /* port 9 of this computer: nobody listens there */
+        snprintf(s->host, sizeof(s->host), "127.0.0.1");
+        tls = false;
+        colon = ":9";
+    }
+#endif
     s->tls  = tls;
     s->port = colon ? atoi(colon + 1) : (tls ? 443 : 80);
     snprintf(s->path, sizeof(s->path), "%s", slash ? slash : "/");
@@ -475,16 +606,9 @@ int aos_hal_http_request(const char *method, const char *url,
         memcpy(s->req_body, body, (size_t)s->req_len + 1);
     }
 
-#ifdef AOS_SIM
-    s->body = malloc(max_bytes);
-#else
-    /* To PSRAM: it is a few kilobytes that have no reason to come out of
-     * internal RAM. */
-    s->body = heap_caps_malloc(max_bytes, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
-    if (!s->body) {
-        s->body = malloc(max_bytes);
-    }
-#endif
+    /* A first piece; http_work() asks for more as the body comes. */
+    s->cap  = max_bytes < HTTP_FIRST ? max_bytes : HTTP_FIRST;
+    s->body = body_alloc(NULL, s->cap);
     if (!s->body) {
         slot_free(s);
         UNLOCK(s_lock);

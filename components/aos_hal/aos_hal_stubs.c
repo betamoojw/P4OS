@@ -435,6 +435,15 @@ __attribute__((weak)) bool aos_hal_spk_open(uint32_t sample_rate)
 __attribute__((weak)) int aos_hal_spk_write(const int16_t *pcm, int n)
 { int v; memset(&v, 0, sizeof v); return v; }
 
+__attribute__((weak)) bool aos_hal_spk_open_low(uint32_t sample_rate)
+{ return aos_hal_spk_open(sample_rate); }
+
+__attribute__((weak)) int aos_hal_spk_latency_ms(void)
+{ return 0; }
+
+__attribute__((weak)) int aos_hal_spk_dry(void)
+{ return 0; }
+
 __attribute__((weak)) int aos_hal_spk_queued(void)
 { int v; memset(&v, 0, sizeof v); return v; }
 
@@ -982,6 +991,9 @@ __attribute__((weak)) bool aos_hal_usb_midi_cc(int control, int value)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
 __attribute__((weak)) bool aos_hal_usb_midi_bend(int value)
+{ bool v; memset(&v, 0, sizeof v); return v; }
+
+__attribute__((weak)) bool aos_hal_usb_midi_send(int status, int d1, int d2)
 { bool v; memset(&v, 0, sizeof v); return v; }
 
 __attribute__((weak)) bool aos_hal_usb_card_away(void)

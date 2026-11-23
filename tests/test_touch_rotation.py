@@ -49,7 +49,7 @@ int test_main(void) {
     def test_released_cache_rotation_and_injected_gestures(self):
         source = (ROOT / 'components/aos_ui/aos_ui.c').read_text(encoding='utf-8')
         state = source[source.index('static struct {\n    bool     down;'):source.index('#define EDGE_BOTTOM')]
-        wrapper = source[source.index('static void read_wrap('):source.index('void aos_ui_block_gestures')]
+        wrapper = source[source.index('bool aos_ui_injected_point('):source.index('void aos_ui_block_gestures')]
         inject = source[source.index('void aos_ui_inject_tap('):source.index('void aos_ui_touch_stats(')]
         stubs = r'''
 typedef int gkind_t;
@@ -94,11 +94,16 @@ int test_main(void) {
     if(s_inj.active || d.state || begins!=1) return 4;
     aos_ui_inject_tap(780,1100,80);read_wrap(&dev,&d);
     if(!d.state || d.point.x!=780 || d.point.y!=1100) return 5;
-    input_rotation_reset();width=1280;height=800;tick+=100;read_wrap(&dev,&d);
+    int x,y;
+    if(!aos_ui_injected_point(&x,&y) || x!=780 || y!=1100) return 10;
+    input_rotation_reset();
+    if(aos_ui_injected_point(&x,&y)) return 11;
+    width=1280;height=800;tick+=100;read_wrap(&dev,&d);
     if(d.state || d.point.y!=799) return 6;
     /* Remote out-of-range sample, and rotation caused by gesture_end itself. */
     aos_ui_inject_tap(1300,-1,80);read_wrap(&dev,&d);
     if(d.point.x!=1279 || d.point.y!=0) return 7;
+    if(!aos_ui_injected_point(&x,&y) || x!=1279 || y!=0) return 12;
     tick+=100;rotate_on_end=1;read_wrap(&dev,&d);
     if(d.state || d.point.x>=800 || d.point.y<0 || s_last_swipe!=LV_DIR_NONE) return 8;
     if(resets<5) return 9;

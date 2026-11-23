@@ -1,0 +1,105 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Automático	自動
+En la placa	在開發板上
+Servidor propio	自建伺服器
+En línea	線上
+Cargando el modelo…	正在載入模型…
+Traduciendo en la placa…	正在開發板上翻譯…
+Traduciendo por el inglés…	正在經英語轉譯…
+Esperando al servidor…	正在等待伺服器…
+Esperando a MyMemory…	正在等待 MyMemory…
+Español	西班牙語
+Inglés	英語
+Portugués	葡萄牙語
+Italiano	義大利語
+Francés	法語
+Alemán	德語
+Catalán	加泰隆尼亞語
+Gallego	加利西亞語
+Euskera	巴斯克語
+Neerlandés	荷蘭語
+Sueco	瑞典語
+Polaco	波蘭語
+Ruso	俄語
+Ucraniano	烏克蘭語
+Griego	希臘語
+Turco	土耳其語
+Árabe	阿拉伯語
+Hebreo	希伯來語
+Hindi	印地語
+Japonés	日語
+Coreano	韓語
+Chino	中文
+Detectar	自動檢測
+Traducir del	源語言
+Traducir al	目標語言
+La placa reconoce español, inglés, portugués, italiano, francés y alemán	開發板可識別西班牙語、英語、葡萄牙語、義大利語、法語和德語
+Sin red, en la placa	開發板離線翻譯
+Con red	聯網翻譯
+Paquete de idioma	語言包
+Pasando por el inglés, tarda el doble	經英語轉譯，耗時約為兩倍
+Sólo el diccionario	僅辭典
+Tocá de nuevo para borrar el historial	再次點選以清除歷史記錄
+Historial borrado; los favoritos quedan	歷史記錄已清除，收藏已保留
+Ajustes	設定
+Motor	引擎
+La placa si hay paquete; si no, tu servidor o MyMemory	有語言包時在開發板上翻譯，否則使用您的伺服器或 MyMemory
+Sin red, con los paquetes de idioma de la tarjeta	使用記憶卡中的語言包離線翻譯
+LibreTranslate; la dirección va en la página del portal	LibreTranslate，請在管理網頁填寫伺服器位址
+MyMemory, gratis: %d de %d caracteres hoy	MyMemory 免費額度：今天已使用 %d / %d 個字元
+Paquetes de idioma	語言包
+No hay paquetes en la tarjeta. Se bajan de la Tienda, en los extras del Traductor: cada par trae los dos modelos y los diccionarios.	記憶卡中沒有語言包。可在商店中「翻譯器」的附加內容裡下載，每個語言對包含雙向模型和辭典。
+Traducción y diccionario, %lu MB	翻譯和辭典，%lu MB
+Traducción, %lu MB	翻譯，%lu MB
+Diccionario, %lu MB	辭典，%lu MB
+Historial	歷史記錄
+Borrar el historial	清除歷史記錄
+Los favoritos no se borran	收藏會保留
+La dirección del servidor, su clave y el correo para MyMemory se escriben en la página Traductor del portal.	請在管理網頁的「翻譯器」頁面填寫伺服器位址、金鑰和用於 MyMemory 的電子郵件位址。
+El portapapeles está vacío	剪貼簿為空
+La traducción aparece acá.	譯文會顯示在這裡。
+sustantivo	名詞
+verbo	動詞
+adjetivo	形容詞
+adverbio	副詞
+pronombre	代詞
+preposición	介詞
+conjunción	連詞
+interjección	感嘆詞
+frase	片語
+nombre propio	專有名詞
+numeral	數詞
+artículo	冠詞
+determinante	限定詞
+prefijo	字首
+sufijo	字尾
+abreviatura	縮寫
+modismo	慣用語
+Copiado	已複製
+No reconocí el idioma: elegilo arriba.	無法識別語言，請在上方選擇。
+No hay paquete de idioma para este par. Bajalo de la Tienda o elegí un motor en línea en Ajustes.	沒有此語言對的語言包，請從商店下載，或在設定中選擇線上引擎。
+Sin red. Sin red sólo traducen los paquetes de idioma.	網路未連線。離線翻譯需要語言包。
+No se pudo llegar al servicio.	無法連線翻譯服務。
+El servicio no pudo traducir.	翻譯服務未能完成翻譯。
+Se terminaron los caracteres gratis de MyMemory por hoy. Un correo en la página del portal da diez veces más.	MyMemory 今日免費字元額度已用完。在管理網頁填寫電子郵件位址，可獲得十倍額度。
+El servidor pidió esperar un poco.	伺服器要求稍後重試。
+El servidor pide una clave, o la clave no es la suya: va en la página del portal.	伺服器需要金鑰，或金鑰不正確，請在管理網頁填寫。
+No hay memoria para el modelo: cerrá otras apps.	記憶體不足，無法載入模型，請關閉其他應用程式。
+Cancelado.	已取消。
+Falta la dirección del servidor: se escribe en la página del portal.	未設定伺服器位址，請在管理網頁填寫。
+Cancelar	取消
+Traducir	翻譯
+Sin modelo para este par: lo que dice el diccionario.	沒有此語言對的模型，顯示辭典查詢結果。
+por inglés	經英語轉譯
+Diccionario	辭典
+Detectado: %s	已檢測到：%s
+No se pudo empezar	無法開始
+Favorito	已收藏
+Del historial	來自歷史記錄
+Ya no es favorito	已取消收藏
+Borrado del historial	已從歷史記錄刪除
+Tocá la estrella de una traducción para tenerla acá.	點選譯文旁的星標即可收藏到這裡。
+Lo que traduzcas queda acá. Mantené apretada una línea para borrarla.	翻譯記錄會儲存在這裡，長按一條記錄可刪除。
+Escribí lo que quieras traducir	請輸入要翻譯的內容
+Favoritos	收藏

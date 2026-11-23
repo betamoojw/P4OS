@@ -108,3 +108,25 @@
 本地记录：`build/merge-main-20261114-python-tests.log`、`build/merge-main-20261114-ethernet-abi-tests.log`、`build/merge-main-20261114-forwarding-final-tests.log`、`build/merge-main-20261114-web-tests.log`、`build/merge-main-20261114-symbols.log`、`build/merge-main-20261114-firmware.log`、`build/merge-main-20261114-firmware-final.log`、`build/merge-main-20261114-image-info.log`。导出及应用检查结果为 `build/merge-main-20261114-exports-report.json`、`build/merge-main-20261114-apps-check.log`、`build/merge-main-20261114-apps-report.json`。这些构建产物和日志不纳入 Git。
 
 验证镜像在合并提交前构建，版本为 `v0.15.0-322-g5481de9-dirty`；应用 SHA-256 为 `4de2bab1f0062d588f0fd30eb409af605503d7b06b9c917017ec3b41c935673e`，ELF SHA-256 为 `d315d8de310f1f8d19ef0045c24840db4de31743dd3508571f6baaff4732d6af`。打包字库的 SHA-256 仍为 `c957559d3da940ca81caea0b256c06ff92e2df919a9e2896aac174eb8f679a6b`。提交不会自动更新镜像的版本标识。
+
+## 2026-11-23 合入远程 main
+
+合入源为 `origin/main` 的 `add4d83a1e8b0861aa7266a7dffa38ff5605153c`（0.32.1），合入前 `dev` 为 `cdb91dd`，新增 198 个上游提交，涉及 806 个文件。获取远程状态时确认本地与远程 `dev` 一致。下载曾中断，改用 OpenSSL 后端后完成对象校验和分支更新。
+
+合并处理：
+
+- 解决 10 个冲突文件，包含发布工作流、README、网页、触摸、四份英语/德语目录及两个生成文件。发布流程采用上游应用分片构建，同时保留本分支的双硅配置、独立构建目录、四语言资源和完整烧录包中的字库。
+- 每种中文补齐 2,524 个新增界面词条，覆盖商店、备份、股票、音乐工作室、逻辑分析仪、办公、翻译器、航班和新游戏。每种中文现在有 106 份目录，包含 69 份原生应用目录，系统目录含 3,546 个条目。七个新应用网页使用独立词典，日期和数字随设备区域设置变化。简繁字形覆盖全部通过，字库二进制和 Flash 分区布局保持原有配置。
+- 商店固件目录增加 ABI 与板型/硅配置匹配，例如 `lcd10_1/rev3_x`。应用包、目录和安装流程支持两种硅配置与 `zh-Hans`、`zh-Hant` 标签。默认源改为本 fork 的 `p4os-store-<profile>.ndjson`，发布脚本和终端工具使用相同命名，已有上游美术资源仍引用其实际发布仓库。目录格式与发布示例见 [STORE.md](STORE.md)。本次完成源码与本地验证，线上目录需经本 fork 的发布流程生成。
+- 修复 Mesa 按 720 像素分配缓冲却按实际宽屏尺寸写入的越界，按宿主尺寸分配双缓冲及脏块表。Bastion、Hockey、Metegol 在原生屏幕尺寸与固定画布不匹配时使用已有 LVGL 画布。旋转时释放注入触点，直接读取触点也使用当前旋转坐标。逻辑分析仪的本机和网页接线说明改为查阅对应板型引脚图。
+
+验证结果：
+
+- 30 项 Python 回归和 22 项网页测试全部通过，共 52 项。包括中文格式、字库与内嵌资源，四板型、触摸、网络校时、ABI 101、设置分区保护和网络转发。简繁源目录完整性检查均通过。
+- `lcd10_1/rev3_x` 固件编译成功，完整语言和商店修复编入后的镜像为 8,195,104 字节，应用分区剩余约 2%。该空间余量较小，后续增加原生功能仍需检查镜像大小。
+- Mesa、Bastion、Hockey、Metegol、Logica 五个动态应用按 `rev3_x` 重新编译并通过 ABI 101 检查。两种硅配置的示例应用分别完成商店打包和临时卡目录安装，验证简繁资源与错误配置拒绝。70 份应用清单、85 个资源包和 6 个系统部件校验通过，发布工作流及脚本语法检查通过。
+- 本次构建覆盖 10.1 英寸 `rev3_x`，其余七种固件组合由现有板型测试覆盖相关代码，但未重新编译。实机烧录、商店 OTA 和 GitHub Actions 未执行。
+
+版本识别还依赖发布标签。原有本地标签仅到 `v0.15.0`，本 fork 远端也没有 `v0.32.1` 标签，会使 Git 构建版号与实际代码版本不一致，影响商店的最低固件版本检查。本次从原上游获取了 `v0.32.1` 标签，并核实其指向 `e7908c590e049473afac5d809570d60f277a017f`，确为合入源的祖先。标签当前仅在本地，合并提交后重新构建以生成正确的 `v0.32.1-…` 版号。远端的新克隆和非发布构建也需要对应版本标签，单独推送 `dev` 不会推送标签。
+
+本地记录为 `build/merge-main-20261123-python-tests.log`、`build/merge-main-20261123-web-tests.log`、`build/merge-main-20261123-hans-check.log`、`build/merge-main-20261123-hant-check.log`、`build/merge-main-20261123-firmware-final.log`、`build/merge-main-20261123-firmware-committed.log`、`build/merge-main-20261123-apps.log`、`build/merge-main-20261123-apps-final-check.log` 和 `build/merge-main-20261123-store-manifests.log`。镜像校验和版本信息保存于 `build/merge-main-20261123-image-info.log`，构建产物不纳入 Git。

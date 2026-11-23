@@ -1,0 +1,61 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Sin cuenta. Un pedido por segundo como mucho y sólo para uso no comercial: la placa pregunta cada 5 s.	无需账户，每秒最多一次请求，仅供非商业使用。开发板每 5 秒查询一次。
+Datos abiertos (ODbL). Sin clave, 500 pedidos por día desde tu dirección: la placa los reparte en el día (uno cada 3 minutos). Con una clave, poné cuántos te da.	开放数据（ODbL）。无密钥时，同一地址每天最多请求 500 次，开发板每 3 分钟查询一次。使用密钥时，请填写获批的每日额度。
+Para investigación y uso no comercial. Sin cuenta, 400 créditos por día (un pedido cada 4 minutos más o menos); con un cliente de la API de tu cuenta, 4000.	供研究和非商业用途。无账户时每天 400 点额度，约每 4 分钟一次请求。使用账户的 API 客户端可获得 4,000 点额度。
+Receptor propio	自有接收器
+Un receptor ADS-B en tu red (readsb, dump1090, tar1090): la dirección de su aircraft.json. Cada 2 s.	局域网中的 ADS-B 接收器（readsb、dump1090、tar1090），请填写 aircraft.json 的地址。每 2 秒更新。
+Vuelos	航班
+Cargando…	正在加载…
+Ciudad, pueblo o aeropuerto	城市、城镇或机场
+Abrí Vuelos en la placa para ver acá lo que ve.	在开发板上打开航班应用，即可在此查看相同画面。
+Sin nombre	未命名
+Todavía no hay un lugar elegido: la placa usa la ciudad de Clima.	尚未选择地点，开发板将使用天气应用设置的城市。
+Clave (opcional)	密钥（可选）
+Pedidos por día que te da	每日请求额度
+Client ID (opcional)	客户端 ID（可选）
+Client secret	客户端密钥
+Se crean en la página de tu cuenta de OpenSky. Quedan en la tarjeta de la placa, en /data/vuelos.txt.	可在 OpenSky 账户页面创建，保存在开发板存储卡的 /data/vuelos.txt 中。
+Dirección del aircraft.json	aircraft.json 地址
+Guardado: la placa lo toma en unos segundos	在几秒钟内,板子会接收它.
+No se pudo guardar: %s	保存失败：%s
+Clima no tiene un lugar elegido	天气应用尚未选择地点
+Buscando…	正在搜索…
+Elegir	选择
+No se encontró ningún lugar con ese nombre.	没有找到那个名字的地方.
+No se pudo buscar: %s	搜索失败: %s
+en tierra	在地面
+Vuelo	航班
+Matrícula	注册号
+Tipo	机型
+Altitud	高度
+Vel. vertical	垂直速度
+Rumbo	航向
+Distancia	距离
+%s aviones · %s · %s	%s 架飞机 · %s · %s
+Radio (km)	半径（公里）
+Unidades	单位
+De aviación (ft, kt, NM)	航空单位（英尺、节、海里）
+Métricas (m, km/h, km)	公制（米、公里/小时、公里）
+Estelas	航迹
+No	否
+Nombres en el mapa	地图上的名称
+Origen y destino (adsbdb)	起点和目的地（adsbdb）
+Un avión pasa encima	飞机飞越上空
+Emergencias (7500, 7600, 7700)	紧急情况（7500、7600、7700）
+Militares	军用飞机
+Con sonido	音频启动
+"Encima" es a menos de (km)	上空范围（公里）
+y por debajo de (ft)	且高度低于（英尺）
+Lugar	地点
+Buscar	搜索
+Usar el lugar de Clima	使用天气应用的地点
+La búsqueda es de Open-Meteo. En la placa, una pulsación larga sobre el mapa también elige el lugar.	地点搜索由 Open-Meteo 提供，也可在开发板地图上长按选择地点。
+Fuente de los datos	数据来源
+Mapa y datos	地图与数据
+Avisos	提醒
+Los avisos salen mientras Vuelos está abierta en la placa.	开发板打开航班应用时才会显示提醒。
+Guardar	保存
+Abierta en la placa	已在开发板上打开
+Abrir Vuelos en la placa	在开发板上打开航班应用
+Lo que ve la placa	开发板画面

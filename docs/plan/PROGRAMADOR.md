@@ -19,6 +19,22 @@ paréntesis, con qué se probó en la placa; los detalles, en
   por MD5, lee la flash entera y la borra. (Un DevKit por USB y por el
   header hasta 921600, un C3, el reloj AmoledOS de 16 MB leído y vuelto a
   grabar.)
+- **La lista de firmware** (2026-11-14): hasta 160 entradas (eran 24, y en
+  una tarjeta con más la carpeta nueva no aparecía, porque se cortaba en el
+  orden del directorio). Se ordena por nombre, por lo último copiado a la
+  tarjeta (la fecha más nueva de sus archivos) o por lo último grabado
+  (`firmware/.grabados.txt`, una línea "hora ruta" por cada grabación que
+  termina bien), y se busca por nombre, app, versión o chip, en la app y en
+  el portal. El portal lee la tarjeta cada 5 s como mucho (o con ↻, o al
+  terminar una grabación), no en cada consulta. Cada grabación anota además el CRC-32 del
+  contenido grabado (los bytes de sus archivos, con sus direcciones;
+  `"hora h:<crc> ruta"`): si lo que hay en la tarjeta con ese nombre tiene
+  otro contenido, la lista dice **Versión nueva** (en naranja en la placa,
+  una etiqueta en el portal). El mismo archivo copiado de nuevo no avisa. Se
+  calcula sólo para lo que figura en el registro, y se guarda con la fecha y
+  el tamaño a los que se leyó: se vuelve a leer cuando cambian. Las líneas
+  viejas (sin huella, o con la `m:` de fechas de unas horas del 15/11) no
+  avisan nada.
 - **Arduino AVR por su bootloader** (F3): STK500 v1/v2 y AVR109, desde un
   `.hex`; leer y borrar el programa. (Un Nano por USB y por el header, un
   Mega 2560 y una Pro Micro por USB.)

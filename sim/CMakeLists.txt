@@ -68,7 +68,7 @@ if(NOT DEFINED P4OS_SIM_APPS)
     set(P4OS_SIM_APPS hello_app cotiz clima burbujas simon dados flappy gemas buscaminas atasco radio recorder afinador
         arkanos topos cjump g2043 claudito camaras pixel neon blackjack truco lua video doom chatarra
         visor3d mapas monsterhop turbo mila golf notas eeprom dibujo pwm infrarrojo can vnc rf datalog
-        impresoras cartero ssh)
+        impresoras cartero ssh sudoku solitario bolsa vuelos mesa metegol hockey traductor oficina estudio)
 endif()
 set(AOS_DYNAPP_SRC "")
 foreach(a ${P4OS_SIM_APPS})
@@ -188,6 +188,8 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_bench.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_radio.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_live.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_store.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_backup.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_live.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_net.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/aos_portal_eth.c
@@ -205,6 +207,8 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_chacha.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_shell.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_cmds.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_ssh_sftp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/aos_sshc.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/monocypher/monocypher.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/monocypher/monocypher-ed25519.c
     main.c
@@ -223,6 +227,9 @@ add_executable(p4os_sim
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_tcp.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_ws.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_tls.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_fetch.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_store/aos_store.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_backup/aos_backup.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_crypto.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_logring.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_hal/aos_radio.c
@@ -276,6 +283,8 @@ target_include_directories(p4os_sim PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_fonts/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_io/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_portal/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_store/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_backup/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/aos_ssh/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../components/monocypher/include
     ${SDL2_INCLUDE_DIRS}

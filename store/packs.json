@@ -1,0 +1,427 @@
+{
+ "bastion_cienaga_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 2633579,
+  "sha256": "6b1e402424fd612cba12f92c239029ec6d90452afe2a33aff964c0a088ceb84b"
+ },
+ "bastion_colmena_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 2448100,
+  "sha256": "671740ce6d53f2d6424ecc320e8bfe1dcbe52e62820a0922e4a0eb4633c71d59"
+ },
+ "bastion_cristal_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 2686417,
+  "sha256": "86cbe543b56218333b448e86c5c4214b8dc89861066f3d76ebf47e7ef3d85c44"
+ },
+ "bastion_hielo_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 2225403,
+  "sha256": "11f0780a786b3ca36dec6fa7983d9b859c66a2958e30a1a172117e9d6bab3196"
+ },
+ "bastion_luna_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 2485052,
+  "sha256": "45c4ff4c45c412831ec5e0223eb6ccf8c3ccd7b53a7384bc7738a23c567e2e23"
+ },
+ "bastion_magma_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 2349540,
+  "sha256": "d083a484394c18fd3086404aeb36e5b895c414bb21f2cadcbb271a504a50c01d"
+ },
+ "bastion_nebula_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 2150443,
+  "sha256": "a31a0688080ba56bd124400f5557f75c5b71a12caa5b8b3183ef9299be0d3ade"
+ },
+ "bastion_nucleo_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 1959990,
+  "sha256": "075a1c7789eb2108d05e591b34970b2a456ca26b84bb7e5905b99ef64ed89694"
+ },
+ "bastion_orbita_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 1615916,
+  "sha256": "2d3142d3d86953e649e96c9da0eeac81f915b7914a90c412e93dfd7bbae19fec"
+ },
+ "bastion_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 7500000,
+  "sha256": "e18362722a802d69ab297c81bfe37dce6a4268b9bf5b2a3ebf13e3b7839984b6"
+ },
+ "bastion_p4.pak.1": {
+  "tag": "v0.29.0",
+  "size": 7500000,
+  "sha256": "d5ab8550d62b10ac5a65e846f3bae9163cfd10aa8994461fc8aa0f02e873c36d"
+ },
+ "bastion_p4.pak.2": {
+  "tag": "v0.29.0",
+  "size": 858105,
+  "sha256": "ef10680f43d7f429b115fceb17b6cb41256cbd604cbb3c524c9db1299769649f"
+ },
+ "bastion_selva_p4.pak": {
+  "tag": "v0.29.0",
+  "size": 2550488,
+  "sha256": "18b2fc8a9d393075842033535da107e18e6ac51c18da58943c8a416501434ea8"
+ },
+ "c6.bin": {
+  "tag": "v0.29.0",
+  "size": 1399632,
+  "sha256": "2cb1bae33553fb5bf73e00d1e754d529234207ba0e1c6cc365d5a0279c72f717"
+ },
+ "emoji.pak": {
+  "tag": "v0.28.0",
+  "size": 16203453,
+  "sha256": "9ccba6d53640e8ecaa04a1085aa66e962bcef2a3b31e36659b64ec5334449d09"
+ },
+ "golf_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 3204802,
+  "sha256": "e1a6a245cd63fcaf54b102896a39f6ab036ebe5406f3cb1a024ec861fdff4121"
+ },
+ "hockey_hielo_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 264420,
+  "sha256": "dd3781a05fb8ea1e3e2d29b4ca8564049a3c43b4d20538c1b03c6bb7234ca24d"
+ },
+ "hockey_neon_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 237789,
+  "sha256": "0eaf3e6b5f885b743095394dc2f014f2f12df5588b91c162afb28194e81f7809"
+ },
+ "hockey_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 526980,
+  "sha256": "9381580eaa3a1519371e72a29f36097340ec4078f22aad760073d8c9b1263292"
+ },
+ "infrarrojo_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 8289618,
+  "sha256": "1da5fb3b4f682c4bab066033afe6770ad6573d4f88f9a35603004bc5e22a669c"
+ },
+ "mesa_marmol_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 2490003,
+  "sha256": "4807d5dc5959b0673654bba4d4907caacaab7b494ed2c9e10ae59ae175c3a951"
+ },
+ "mesa_metal_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1067297,
+  "sha256": "3fe58420341db89034ea4dd1bec9501529469c313aad47ec0e661977b924bf33"
+ },
+ "mesa_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 3328060,
+  "sha256": "889d97fbff423a91dccafc3edb6d408d7aed17c26ac123beab04a9db498d2523"
+ },
+ "mesa_vidrio_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1138497,
+  "sha256": "ff8a92d9a6e90c47729d521c0c3a2111afc76a74c96f2770cf8497ea51290c2e"
+ },
+ "metegol_avella_celeste_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1424999,
+  "sha256": "cb726771b5a24494d2a151c08012eb898ac8c3d50bae2622de7abb21a9a978bb"
+ },
+ "metegol_avella_rojo_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1203851,
+  "sha256": "048fef2b4d2281b5553547d775eb9eb3dfe72511e515d8a1155750a9b3fb5ed7"
+ },
+ "metegol_londres_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1411838,
+  "sha256": "2364f63f1acc9e3b42d77d9b692fd803a97051b65ec4a4b9a37d0dd394ccc146"
+ },
+ "metegol_madrid_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1271156,
+  "sha256": "7d3ae4b7041adc2577425114d77bb38d4d445f8d63a579143496cec19fe8f792"
+ },
+ "metegol_mexico_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1459991,
+  "sha256": "a2cbca86f8e1f582b954ad65919d777879e72e9c3e73b45fe31db2ae0b5d158f"
+ },
+ "metegol_munich_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1054178,
+  "sha256": "2f4a72b7cec947d8da6578be092d1c045c3f6715376e88d110036ea77dba57f2"
+ },
+ "metegol_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 4129018,
+  "sha256": "625b45c31b238b4b83c7545e0457524e3ceb485421c72733e51ff0c706162e66"
+ },
+ "metegol_rio_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1383754,
+  "sha256": "e0d6d3a5267a946e9d155193170c965810c5661ca067978b4621d9c780409513"
+ },
+ "metegol_tokio_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 1230143,
+  "sha256": "aaa9dd3c0ab5b52f8b501f63d858a1029ae29579d4dd012415909a5e56ef695d"
+ },
+ "mila_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 7500000,
+  "sha256": "fd69a10a546c69950246fb8a8f44e2401166bef0a85abd3677b3e45877057b9f"
+ },
+ "mila_p4.pak.1": {
+  "tag": "v0.28.0",
+  "size": 7500000,
+  "sha256": "97b3a3d78ec6398b74cc4f8b80cbc9a8b9fc25230ecdb6df9deed53a97b2ee27"
+ },
+ "mila_p4.pak.2": {
+  "tag": "v0.28.0",
+  "size": 1914956,
+  "sha256": "4836679e5a84f75df730ec4f13e6df1b08c52ba82dc34be053bc4cc64c5450b6"
+ },
+ "monsterhop_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 37202325,
+  "sha256": "5e8a743f01023b36f48d5c8b77787b666b5f2781a64e426ba470d174d2e1c8b6"
+ },
+ "notas_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 821032,
+  "sha256": "40a9ac3c96cc27424f11bcece1034b1247d3763ab27b907cc2fed7f6af6c6816"
+ },
+ "oficina_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 898480,
+  "sha256": "729930cc436de0e95a4cc31648607d15a67921a5345bf3963454381229d0cecb"
+ },
+ "pinball_casino_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 3153062,
+  "sha256": "56d1c79e11a4ce7fc4c690719773c61b7d8a1534291bbf6fa9bd19b9f01f7db2"
+ },
+ "pinball_circo_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 3593739,
+  "sha256": "828d8655e086153e38f19a178410d54f9c456707f03bc43712257475676e99f7"
+ },
+ "pinball_jungla_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 3337996,
+  "sha256": "9486cf2f544b48819b55e68df56a0aceac117c8d1360b079367cc5af4ef67468"
+ },
+ "pinball_piratas_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 3252489,
+  "sha256": "fd73f3822e682319effe580dff0a4def648878b4c4243ff43b2eb6d398414a3f"
+ },
+ "pinball_robots_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 3134966,
+  "sha256": "3b3c6c90e4832bd7e7a6355eea8845cfc4ef24b3ee8dfde822e071b8dc2d84b9"
+ },
+ "pinball_zombis_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 3092480,
+  "sha256": "2bcddba6fb38a64f4e46fb24d2a747a1d4b57d8449eae5406d3f179516fdeaaf"
+ },
+ "sudoku_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 3532955,
+  "sha256": "d001b9e54fb1d1c6dabcdfb6738401ddcd0dad5d74f2ffb8735f96c92a797a01"
+ },
+ "traductor_de_en_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "41854be98f277f6aeb23490e883269b96616b7367d5ef0459f7fe7def20d360e"
+ },
+ "traductor_de_en_p4.pak.1": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "bbf5df219cb6198acc2aceea6a8473a0eca6305e28be4f8319a5dc4d394fb218"
+ },
+ "traductor_de_en_p4.pak.2": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "95e4d28b36ca825187e9789b6f86183ec7c76bdeda7d2ca522e65c7f5b7e56e5"
+ },
+ "traductor_de_en_p4.pak.3": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "9841dca619863923ecc5a4f33a5aa57bb3a3773a9ab63224e317635f51c182b0"
+ },
+ "traductor_de_en_p4.pak.4": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "ce2b8b506ba6dbcdc4482f03a3177577486a54fae8adf27155d07a28960d36c3"
+ },
+ "traductor_de_en_p4.pak.5": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "4f8bb475319473ebddb9268e4c168bab54f69a6d8ecc288ff39c0b8f38e717d9"
+ },
+ "traductor_de_en_p4.pak.6": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "dabb1e45c2e060ea5d46d75dbdca02235cd30ce69cdca15fe5b625a23f44e159"
+ },
+ "traductor_de_en_p4.pak.7": {
+  "tag": "v0.31.0",
+  "size": 4104608,
+  "sha256": "959d21476301ba9fe91fb5913b3e0026ff862eb5fb4ffd2fd42ab093099b3c96"
+ },
+ "traductor_es_en_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "91ed3ab64a44d93ec2132749df5c2897a04c81fed8e52786932843ca344415d6"
+ },
+ "traductor_es_en_p4.pak.1": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "42d09185ee5a90d190a86ae1c613dd1e55da8f718e6dccf3c9fcf40256b72e85"
+ },
+ "traductor_es_en_p4.pak.2": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "4dabd9bce47fdc31bfa7ab17c1fd090999daef5950cb85a5a5236303f2cbff08"
+ },
+ "traductor_es_en_p4.pak.3": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "52d65ebc8f71c0e651a4b1a315e42716a5508f7b0d0a5b93f1844e129e27c009"
+ },
+ "traductor_es_en_p4.pak.4": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "36612046eaf7f234d0b27d61d6ae2a5117d6c78b800fe35e9173c7c609d41216"
+ },
+ "traductor_es_en_p4.pak.5": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "f5da45c33cbd4b4c02c59326fb7d23946113557bbdc11ca3b8d85c465b605004"
+ },
+ "traductor_es_en_p4.pak.6": {
+  "tag": "v0.31.0",
+  "size": 1593296,
+  "sha256": "af86a4573c2fafd900458d88a224aea127a501b670836c088e8e295282000ad9"
+ },
+ "traductor_fr_en_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "d946427ac4323eb467a62678da418fa22dd6a2ab08b6d99c5a2d467b6e70a3b5"
+ },
+ "traductor_fr_en_p4.pak.1": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "bfdc34b381485168c0f36937294c57d329facc30915c6e51230fdb604ff9339f"
+ },
+ "traductor_fr_en_p4.pak.2": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "7ef57e9f59b3ead7244e9c4184eebbcb42c428bd7579a5080a4cd29a5740a9ab"
+ },
+ "traductor_fr_en_p4.pak.3": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "e4c2dd4b1331f8f091a91fe95d0a08c71c3b15c3f26dc07cd376378b25ad6a69"
+ },
+ "traductor_fr_en_p4.pak.4": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "6bc36de4c842a90f5a17efff32e2e10c106911fbd26c7e994bc602839c4f308b"
+ },
+ "traductor_fr_en_p4.pak.5": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "977c93646281007930f7fdc1c9e640a6474f7d8532ff68cdc38adceb53e0cdfe"
+ },
+ "traductor_fr_en_p4.pak.6": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "a3af33331cb9c963f9bdd7f0faeb8ad5acbf0121195acd606d6e5d5894148aed"
+ },
+ "traductor_fr_en_p4.pak.7": {
+  "tag": "v0.31.0",
+  "size": 7237280,
+  "sha256": "198ca9c2652d04c2e0c91c5b1c9d5652ffff9336e36bd576b90c4c2fc4d1a6f7"
+ },
+ "traductor_it_en_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "c4064c20fd5c111ab1ffcce2f2794c718be8bc32bae67ef5460d0898e37ba0f0"
+ },
+ "traductor_it_en_p4.pak.1": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "8cfe9f2d44a12d54e208267a1c9c9eb334edda2434b59b22a3ac2c656306e5f2"
+ },
+ "traductor_it_en_p4.pak.2": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "96f0c7e10f5eb40814bad77951441d26e106a665e61ad177eff76b186e7ea93e"
+ },
+ "traductor_it_en_p4.pak.3": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "64caa1f758635469a73c6d3d49a593b8fb85018d4944c9151e69a18f7cc1bcb3"
+ },
+ "traductor_it_en_p4.pak.4": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "f134e992d79d9ecf6c679aad9e31417079f93d8fb9f9e2cfdcb6028b128720cb"
+ },
+ "traductor_it_en_p4.pak.5": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "b70164bc0c23b12af8f4b5a17dc4488e1c2e520c76d98cff02610af1a55fe05a"
+ },
+ "traductor_it_en_p4.pak.6": {
+  "tag": "v0.31.0",
+  "size": 1512928,
+  "sha256": "30844360837a61cd7f87160bf1326830cae9cc09c700d57be8495387b0506546"
+ },
+ "traductor_pt_en_p4.pak": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "3e31bd179401bdf294a77be131124f81c3804d2f07c1480014aa800965c44f09"
+ },
+ "traductor_pt_en_p4.pak.1": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "9916e990b9f803ba60e96bbe641e35a0d283d0a69b7e277a74190688c37cba95"
+ },
+ "traductor_pt_en_p4.pak.2": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "6115983fe1e596455729f13bc52809aa980e074d1f461f49667c15c004ba87da"
+ },
+ "traductor_pt_en_p4.pak.3": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "12713806dd14de85ed1395e949aeae43dbc2f11ac7173c18f7a55fc3c8288115"
+ },
+ "traductor_pt_en_p4.pak.4": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "7d9e017e7bf3a53d924f503c313fc03cc5dc5f28fd137d892b19233c6f0d2521"
+ },
+ "traductor_pt_en_p4.pak.5": {
+  "tag": "v0.31.0",
+  "size": 7500000,
+  "sha256": "210810241f51a0322ee7a38deb96dada49fc2da934de502d4a32e0d70007b7ed"
+ },
+ "traductor_pt_en_p4.pak.6": {
+  "tag": "v0.31.0",
+  "size": 330832,
+  "sha256": "f4c1335cde8409b3b6bdcd419c980840550885d69243044352826d9350425e16"
+ },
+ "turbo_p4.pak": {
+  "tag": "v0.28.0",
+  "size": 9723991,
+  "sha256": "1d00b52352b5e0bf1b20d71e34fb7fdc7b97cf82c720159f327d4c41d1233f99"
+ },
+ "vuelos_p4.pak": {
+  "tag": "v0.30.0",
+  "size": 939608,
+  "sha256": "dab41cb483efab156f2b01910f59df9437e85a02bb6836a9155e6f4c7005f000"
+ }
+}

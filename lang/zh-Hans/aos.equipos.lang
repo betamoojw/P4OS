@@ -1,4 +1,4 @@
-# Offline Chinese catalogue; reviewed terms: ../zh-key-overrides.json
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
 # Spanish keys and printf/escape tokens are preserved.
 La fuente no aceptó %s	电源没有接受 %s
 modelo	模型

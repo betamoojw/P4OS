@@ -1,0 +1,27 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Estudio	工作室
+¿Borrar %s? No se puede deshacer.	删除 %s这不能被撤销.
+Borrado	已删除
+Bajar	下载
+Borrar	清空
+%s no es un archivo que el Estudio lea	音乐工作室无法读取 %s
+Subido	已上传
+Subidos	已上传
+Subir proyectos	上传项目
+Todavía no hay proyectos: el Estudio guarda el suyo solo.	尚无项目，音乐工作室会自动保存项目。
+En la placa se abren desde Canción → Abrir. Un proyecto lleva sus patrones, la canción, los sonidos y la mezcla; las muestras que use van aparte, en Muestras.	在开发板上通过“歌曲 → 打开”载入。项目包含节奏型、歌曲、音色和混音设置，所用采样需另行放入“采样”。
+Subir muestras WAV	上传 WAV 采样
+No hay muestras. Subí WAV tuyos para tocarlos en la batería.	尚无采样，请上传自己的 WAV 文件用于鼓音轨。
+WAV PCM de 8, 16, 24 o 32 bits o en coma flotante, mono o estéreo, de cualquier frecuencia; se usan hasta 12 segundos de cada uno. En la placa: Ritmo → el sonido de la pista.	支持 8、16、24、32 位整数或浮点 PCM WAV，单声道或立体声，任意采样率。每个文件最多使用 12 秒。可在开发板的“鼓机 → 音轨音色”中选择。
+Nada exportado todavía. Se exporta desde Canción → Exportar, en WAV o en MIDI.	尚无导出文件，请在“歌曲 → 导出”中导出为 WAV 或 MIDI。
+Subir sonidos	上传音色
+Ninguno todavía. En la placa: Sonido → Guardar este sonido como…	尚无音色，可在开发板的“音色 → 音色另存为…”中保存。
+Lo que el Estudio guarda en la tarjeta: los proyectos, tus muestras, lo exportado y tus sonidos del sintetizador.	音乐工作室保存在存储卡上的项目、采样、导出文件和合成器音色。
+Abierto en la placa	已在开发板上打开
+Abrir el Estudio en la placa	在开发板上打开音乐工作室
+Actualizar	刷新
+Proyectos	项目
+Muestras	采样
+Exportado	导出文件
+Mis sonidos	我的音色

@@ -1,4 +1,4 @@
-# Offline Chinese catalogue; reviewed terms: ../zh-key-overrides.json
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
 # Spanish keys and printf/escape tokens are preserved.
 no se pudo escuchar en el puerto %u (¿lo usa otro?)	无法监听端口 %u（是否被其他程序占用？）
 Modbus TCP, escuchando en el puerto %u	Modbus TCP 正在监听端口 %u

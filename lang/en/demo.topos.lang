@@ -5,76 +5,76 @@
 # Los \n van escapados a proposito; el cargador los desescapa.
 # Una linea sin traducir (las dos mitades iguales) se ve en espanol.
 
-#: apps/topos/main/topos.c:60
+#: apps\topos\main\topos.c:60
 Clásico	Classic
 
-#: apps/topos/main/topos.c:60
+#: apps\topos\main\topos.c:60
 Supervivencia	Survival
 
-#: apps/topos/main/topos.c:60
+#: apps\topos\main\topos.c:60
 Frenesí	Frenzy
 
-#: apps/topos/main/topos.c:63
+#: apps\topos\main\topos.c:63
 60 segundos	60 seconds
 
-#: apps/topos/main/topos.c:63
+#: apps\topos\main\topos.c:63
 Tres vidas	Three lives
 
-#: apps/topos/main/topos.c:63
+#: apps\topos\main\topos.c:63
 30 segundos a fondo	30 seconds flat out
 
-#: apps/topos/main/topos.c:384
+#: apps\topos\main\topos.c:384
 Sonido	Sound
 
-#: apps/topos/main/topos.c:420
+#: apps\topos\main\topos.c:420
 ¡Ya!	Go!
 
-#: apps/topos/main/topos.c:423
+#: apps\topos\main\topos.c:423
 Nivel	Level
 
-#: apps/topos/main/topos.c:430
+#: apps\topos\main\topos.c:430
 ¡Últimos 10 segundos!	Last 10 seconds!
 
-#: apps/topos/main/topos.c:433
+#: apps\topos\main\topos.c:433
 ¡Tiempo!	Time's up!
 
-#: apps/topos/main/topos.c:439
+#: apps\topos\main\topos.c:439
 ¡Sin vidas!	No lives left!
 
-#: apps/topos/main/topos.c:530
+#: apps\topos\main\topos.c:530
 ¡Nuevo récord!	New best!
 
-#: apps/topos/main/topos.c:530
+#: apps\topos\main\topos.c:530
 ¡Se acabó!	Game over!
 
-#: apps/topos/main/topos.c:539
+#: apps\topos\main\topos.c:539
 Golpes	Hits
 
-#: apps/topos/main/topos.c:540
+#: apps\topos\main\topos.c:540
 Mejor racha	Best streak
 
-#: apps/topos/main/topos.c:543
+#: apps\topos\main\topos.c:543
 Récord	Best
 
-#: apps/topos/main/topos.c:952
-#: apps/topos/main/topos.c:956
+#: apps\topos\main\topos.c:952
+#: apps\topos\main\topos.c:956
 Topos	Whack-a-Mole
 
-#: apps/topos/main/topos.c:986
+#: apps\topos\main\topos.c:986
 Tocá los topos; los de casco, dos veces. ¡Las bombas no!	Tap the moles; the ones in hard hats, twice. Not the bombs!
 
-#: apps/topos/main/topos.c:1007
+#: apps\topos\main\topos.c:1007
 Pausa	Paused
 
-#: apps/topos/main/topos.c:1009
+#: apps\topos\main\topos.c:1009
 Seguir	Resume
 
-#: apps/topos/main/topos.c:1011
-#: apps/topos/main/topos.c:1050
+#: apps\topos\main\topos.c:1011
+#: apps\topos\main\topos.c:1050
 Menú	Menu
 
-#: apps/topos/main/topos.c:1013
+#: apps\topos\main\topos.c:1013
 Salir	Exit
 
-#: apps/topos/main/topos.c:1047
+#: apps\topos\main\topos.c:1047
 Otra vez	Again

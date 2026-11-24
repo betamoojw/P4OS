@@ -1,11 +1,37 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
+const { createServer } = require('node:http');
+const { once } = require('node:events');
+const { gunzipSync } = require('node:zlib');
 const vm = require('node:vm');
 const { test } = require('node:test');
 const root = path.join(__dirname, '..');
 const source = fs.readFileSync(path.join(root, 'components/aos_portal/web/app.js'), 'utf8');
 const language = source.slice(source.indexOf("let LANG = 'es'"), source.indexOf('function h('));
+
+function generatedCatalogs() {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'p4os-portal-'));
+  const file = path.join(temp, 'assets.c');
+  try {
+    execFileSync(process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3'),
+      [path.join(root, 'tools/gen_web_assets.py'), file]);
+    const c = fs.readFileSync(file, 'utf8'), arrays = new Map(), routes = new Map();
+    for (const [, name, data] of c.matchAll(/uint8_t (a\d+)\[\d+\] = \{([^}]+)\}/g)) {
+      arrays.set(name, Buffer.from(data.split(',').map(Number)));
+    }
+    for (const [, url, name] of c.matchAll(/\{ "([^"]+)", "[^"]+", (a\d+), \d+ \}/g)) {
+      routes.set(url, arrays.get(name));
+    }
+    return routes;
+  } finally {
+    if (fs.existsSync(file)) fs.unlinkSync(file);
+    fs.rmdirSync(temp);
+  }
+}
+const builtin = generatedCatalogs();
 
 function fixture(card = '') {
   const nav = { textContent: 'Pantalla', dataset: {} };
@@ -13,22 +39,48 @@ function fixture(card = '') {
     document: { documentElement: {}, querySelectorAll: () => [nav], addEventListener() {} },
     fetch: async url => {
       if (url.startsWith('/lang/')) return { ok: !!card, text: async () => card };
-      const relative = url.replace('/builtin-lang/', 'lang/');
-      const file = path.join(root, relative);
-      return { ok: fs.existsSync(file), text: async () => fs.readFileSync(file, 'utf8') };
+      return { ok: builtin.has(url), text: async () => gunzipSync(builtin.get(url)).toString('utf8') };
     }
   });
   vm.runInContext(language, ctx);
   return { ctx, nav };
 }
 
-test('embedded English and German work without SD, including login text', async () => {
-  for (const code of ['en', 'de', 'zh-Hans', 'zh-Hant']) {
+test('all seven embedded web languages work without SD, including login text', async () => {
+  for (const code of ['en', 'de', 'fr', 'it', 'pt', 'zh-Hans', 'zh-Hant']) {
     const { ctx, nav } = fixture();
     await ctx.setLang(code);
     assert.equal(ctx.document.documentElement.lang, code);
     assert.notEqual(nav.textContent, 'Pantalla');
     assert.notEqual(ctx.tr('Esta red pide la contraseña del portal.'), 'Esta red pide la contraseña del portal.');
+  }
+});
+
+test('browser fetch reads compressed firmware tables and a plain-text SD override over HTTP', async () => {
+  const server = createServer((req, res) => {
+    if (builtin.has(req.url)) {
+      res.writeHead(200, { 'Content-Encoding': 'gzip', 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end(builtin.get(req.url));
+    } else if (req.url === '/lang/zh-Hant/_portal.lang') {
+      res.end('Pantalla\t自訂畫面\r\n');
+    } else {
+      res.writeHead(404).end();
+    }
+  });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  try {
+    const origin = 'http://127.0.0.1:' + server.address().port;
+    const { ctx, nav } = fixture();
+    ctx.fetch = (url, options) => fetch(new URL(url, origin), options);
+    await ctx.setLang('zh-Hant');
+    assert.equal(nav.textContent, '自訂畫面');
+    assert.equal(ctx.tr('Ajustes'), '設定');
+    await ctx.setLang('zh-Hans');
+    assert.equal(ctx.tr('Ajustes'), '设置');
+  } finally {
+    server.closeAllConnections();
+    await new Promise(resolve => server.close(resolve));
   }
 });
 
@@ -132,7 +184,10 @@ test('Simplified and Traditional Chinese use the device locale offline', async (
 });
 test('app catalogues cannot overwrite portal or another app translations', async () => {
   const { ctx } = fixture(); await ctx.setLang('en');
-  ctx.fetch = async url => ({ ok: url.startsWith('/builtin-lang/'), text: async () => url.includes('web.one') ? 'Pantalla\tFirst app\n' : 'Pantalla\tSecond app\n' });
+  ctx.fetch = async url => ({
+    ok: url.startsWith('/builtin-lang/'),
+    text: async () => url.includes('/keys/') ? 'Pantalla' : url.includes('web.one') ? 'First app' : 'Second app'
+  });
   await Promise.all([ctx.loadCatalog('web.one.lang'), ctx.loadCatalog('web.two.lang')]);
   assert.equal(ctx.tr('Pantalla'), 'Display');
   assert.equal(ctx.pageTranslator('one')('Pantalla'), 'First app');
@@ -140,16 +195,43 @@ test('app catalogues cannot overwrite portal or another app translations', async
   assert.equal(ctx.pageTranslator('one')('Inicio'), 'Home');
 });
 test('app pages bind their scoped catalogues, including newly merged pages', () => {
-  for (const page of ['cartero', 'impresoras', 'can', 'luces', 'modbus', 'bolsa', 'estudio', 'logica', 'metegol', 'oficina', 'traductor', 'vuelos']) {
+  for (const page of ['cartero', 'impresoras', 'can', 'luces', 'modbus', 'bolsa', 'estado', 'estudio', 'logica', 'metegol', 'oficina', 'plotter', 'traductor', 'vuelos']) {
     const pageSource = fs.readFileSync(path.join(root, 'apps', page, 'web', `${page}.js`), 'utf8');
     assert.match(pageSource, new RegExp(`window\\.P4OS\\.forPage\\('${page}'\\)`));
   }
 });
 test('legacy SD app pages retain translations without replacing portal words', async () => {
   const { ctx } = fixture(); await ctx.setLang('en');
-  ctx.fetch = async url => ({ ok: url.startsWith('/builtin-lang/'), text: async () => 'Legacy only\tLegacy translation\nPantalla\tApp display\n' });
+  ctx.fetch = async url => ({ ok: url.startsWith('/lang/'), text: async () => 'Legacy only\tLegacy translation\nPantalla\tApp display\n' });
   await ctx.loadCatalog('web.legacy.lang');
   assert.equal(ctx.tr('Legacy only'), 'Legacy translation');
   assert.equal(ctx.tr('Pantalla'), 'Display');
   assert.equal(ctx.pageTranslator('other')('Legacy only'), 'Legacy only');
+});
+
+test('late responses from an earlier selection cannot replace the current language', async () => {
+  const { ctx, nav } = fixture();
+  const fetch = ctx.fetch;
+  let release;
+  ctx.fetch = async url => {
+    if (!release && url === '/lang/en/_portal.lang') {
+      return { ok: true, text: () => new Promise(resolve => { release = resolve; }) };
+    }
+    return fetch(url);
+  };
+  const slow = ctx.setLang('en');
+  await new Promise(resolve => setImmediate(resolve));
+  await ctx.setLang('de');
+  await ctx.setLang('en');
+  release('Pantalla\tStale response');
+  await slow;
+  assert.equal(ctx.tr('Pantalla'), 'Display');
+  assert.equal(nav.textContent, 'Display');
+});
+
+test('unavailable built-in tables still allow a card-only language', async () => {
+  const { ctx, nav } = fixture('Pantalla\tCard language\r\n\n');
+  await ctx.setLang('xx');
+  assert.equal(nav.textContent, 'Card language');
+  assert.equal(ctx.tr('Inicio'), 'Inicio');
 });

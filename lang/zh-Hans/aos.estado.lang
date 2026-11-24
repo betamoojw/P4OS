@@ -1,0 +1,138 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Casa	家庭
+Cámaras	摄像头
+NAS	NAS
+Red	网络
+Impresora 3D	3D 打印机
+Taller	工作间
+Router	路由器
+Página web	网页
+Internet	互联网
+Puerto TCP	TCP 端口
+No se encuentra el nombre	无法解析名称
+Rechaza la conexión	连接被拒绝
+No contesta	无响应
+Certificado no válido	证书无效
+La placa todavía no tiene hora	开发板尚未完成校时
+Contestó otro código	返回了其他状态码
+Falta la palabra	缺少指定关键词
+No contesta HTTP	未收到 HTTP 响应
+Cortó la conexión	连接已断开
+Sin memoria	内存不足
+La dirección no sirve	地址无效
+Anda	正常
+Lento	缓慢
+Caído	故障
+En pausa	已暂停
+Probando	正在检查
+Sin servicios	没有服务
+Sin red	未连接网络
+%d caído	%d 项故障
+%d caídos	%d 项故障
+%d lento	%d 项缓慢
+%d lentos	%d 项缓慢
+Todo anda	全部正常
+Sin servicios todavía	尚无服务
+hace 24 h	24 小时前
+hace 6 h	6 小时前
+Sin cortes registrados	没有中断记录
+%s · sigue caído	%s · 仍有故障
+Caído desde hace %s	已故障 %s
+Lento, anda desde hace %s	响应缓慢，已持续运行 %s
+Anda desde hace %s	已持续运行 %s
+Certificado	证书
+%d días	%d 天
+Venció	已过期
+Conexión	连接
+En pausa: no se prueba	已暂停检查
+Todavía no se probó	尚未检查
+Último chequeo hace %s: el puerto abre en %s	上次检查在 %s 前：端口连接耗时 %s
+Último chequeo hace %s: %d, contestó en %s (conectar: %s)	上次检查在 %s 前：状态码 %d，响应耗时 %s（连接耗时 %s）
+contestó %d	返回状态码 %d
+Último chequeo hace %s: %s	上次检查在 %s 前：%s
+No se pudo leer el certificado (el servidor sólo habla TLS 1.3, o no es HTTPS).	无法读取证书，服务器可能仅支持 TLS 1.3，或未使用 HTTPS。
+Certificado de %s: venció.	%s 的证书已过期。
+Certificado de %s: vence en %d días.	%s 的证书将在 %d 天后过期。
+Lo firmó él mismo.	这是自签名证书。
+Se confía en él.	此证书已受信任。
+Seguir	恢复
+Pausar	暂停
+No se pudo guardar el certificado	无法保存证书
+Listo: se confía en este certificado	已完成，此证书已受信任
+Latencia	延迟
+En 24 h	24 小时内
+En 7 días	7 天内
+Sin datos todavía	暂无数据
+ahora	现在
+Probar ahora	立即检查
+Confiar en este certificado	信任此证书
+Últimos cortes	最近中断
+%s · cada %s	%s · 每 %s
+Falta el nombre	缺少名称
+El nombre no puede llevar corchetes	名称不能包含方括号
+Ya hay un servicio con ese nombre	已有同名服务
+Falta la IP o el nombre en la dirección	地址中缺少 IP 或主机名
+La dirección tiene que empezar con http:// o https://	地址必须以 http:// 或 https:// 开头
+El código esperado: 200, 200-399 o 200,401	预期状态码可填写 200、200-399 或 200,401
+Falta la dirección (IP o nombre)	缺少地址（IP 或主机名）
+El puerto va de 1 a 65535	端口范围为 1 至 65535
+No se pudo guardar en la tarjeta	无法保存到存储卡
+Tocá de nuevo para borrar	再次点击以删除
+puerto TCP %d	TCP 端口 %d
+Las direcciones se cargan más cómodo desde la página Mi casa del portal.	可在管理网页的“家庭状态”页面更方便地填写地址。
+Editar servicio	编辑服务
+Servicio nuevo	新建服务
+¿Qué querés vigilar?	您要监测什么？
+Guardar	保存
+Nombre	名称
+Grupo	分组
+Casa, Red, Cámaras...	家庭、网络、摄像头…
+Cómo se prueba	检查方式
+Pedido HTTP(S)	HTTP(S) 请求
+Puerto TCP abierto	TCP 端口可连接
+Dirección	地址
+Códigos que valen	表示正常的状态码
+Palabra que tiene que estar (opcional)	必须包含的关键词（可选）
+Dirección (IP o nombre)	地址（IP 或主机名）
+Puerto	端口
+Probar cada	检查间隔
+Lento desde (ms)	响应缓慢阈值（ms）
+Avisar si al certificado le quedan menos días (0: no)	证书剩余天数低于此值时提醒（0 为关闭）
+Borrar este servicio	删除此服务
+falló una vez, probando de nuevo	已失败一次，正在重试
+falló varias veces, probando de nuevo	已失败多次，正在重试
+anda	正常
+anda desde hace %s	已持续运行 %s
+Contestó %d	返回状态码 %d
+%d d	%d 天
+lento	缓慢
+caído	故障
+andan	正常
+lentos	缓慢
+caídos	故障
+No entran más servicios	服务数量已达上限
+Mi casa	家庭状态
+La placa no tiene red: los chequeos esperan a que vuelva.	开发板未连接网络，检查会在网络恢复后继续。
+Sin grupo	未分组
+Todavía no hay servicios.\n\nAgregá uno con + (hay plantillas para Home Assistant, Frigate, un NAS, una impresora 3D, el router o una página), o cargalos cómodo desde la página Mi casa del portal.	尚无服务。\n\n点击 + 添加服务，可选择 Home Assistant、Frigate、NAS、3D 打印机、路由器或网页模板，也可在管理网页的“家庭状态”页面填写。
+Agregar un servicio	添加服务
+Probando todos	正在检查全部服务
+Opciones	选项
+Pitido con cada aviso	每次提醒时发出提示音
+Vigilar desde que prende la placa	开发板启动后开始监测
+Fallas seguidas para darlo por caído	连续失败多少次后判定为故障
+Probar todos	检查全部
+Listo	完成
+%d d %d h	%d 天 %d 小时
+%d h %d min	%d 小时 %d 分钟
+%d min	%d 分钟
+%d s	%d 秒
+recién	刚刚
+hace %s	%s 前
+hoy %02d:%02d	今天 %02d:%02d
+%s se cayó	%s 出现故障
+%s volvió	%s 已恢复
+Certificado de %s	%s 的证书
+Estuvo caído %s	故障持续了 %s
+Vence en %d días	将在 %d 天后过期

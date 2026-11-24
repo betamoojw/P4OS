@@ -130,3 +130,26 @@
 版本识别还依赖发布标签。原有本地标签仅到 `v0.15.0`，本 fork 远端也没有 `v0.32.1` 标签，会使 Git 构建版号与实际代码版本不一致，影响商店的最低固件版本检查。本次从原上游获取了 `v0.32.1` 标签，并核实其指向 `e7908c590e049473afac5d809570d60f277a017f`，确为合入源的祖先。标签当前仅在本地，合并提交后重新构建以生成正确的 `v0.32.1-…` 版号。远端的新克隆和非发布构建也需要对应版本标签，单独推送 `dev` 不会推送标签。
 
 本地记录为 `build/merge-main-20261123-python-tests.log`、`build/merge-main-20261123-web-tests.log`、`build/merge-main-20261123-hans-check.log`、`build/merge-main-20261123-hant-check.log`、`build/merge-main-20261123-firmware-final.log`、`build/merge-main-20261123-firmware-committed.log`、`build/merge-main-20261123-apps.log`、`build/merge-main-20261123-apps-final-check.log` 和 `build/merge-main-20261123-store-manifests.log`。镜像校验和版本信息保存于 `build/merge-main-20261123-image-info.log`，构建产物不纳入 Git。
+
+## 2026-11-24 合入远程 main
+
+合入源为 `origin/main` 的 `6ac8cd8b7c1eb8e8ebae815160d2af0c78ca6ccd`，合入前本地和远程 `dev` 均为 `ead01bf5`。本次取得 77 个上游提交，上游差异涉及 754 个文件，包含串口帧格式和控制线、高清图标、九个应用，以及葡萄牙语、法语和意大利语目录。
+
+合并与兼容性处理：
+
+- 解决 11 个冲突文件，保留四板型、两种硅配置、ABI 101、分配置商店目录与完整烧录包中的 CJK 字库。检查 79 份应用清单（其中 2 份标记为不发布）、89 个资源包和 9 个系统部件；发布脚本整合七种翻译目录，高清图标包沿用上游的安装方式。
+- 每种中文补齐 1,416 个新增或新增提取的词条，现在各有 117 份目录、78 份原生应用目录，系统目录含 3,576 个条目。小海龟的积木控件和 154 条内置关卡文字接入翻译目录，Logo/Lua 的实际命令保持原语法。英语、德语及两种中文的内置目录同步生成；葡萄牙语、法语和意大利语保留原来的英文编程控件回退，原生语言包仍可从卡上安装。
+- 修复 Asteroides、Tanques 和 Tortuga 在宽板上的缓存或脏块表容量，补齐 Asteroides 的中文绘制、旋转和边缘裁剪。Vuelo 的三档渲染尺寸按实际屏幕比例计算，避免 1280×800 上的上下旧帧和触点偏移。Estado 与 Plotter 使用新增的独立目录复制接口，从 Flash 读取翻译并接受 SD 逐键覆盖，不依赖前台应用目录；语言切换先停止后台任务再重建。中文数值采用小数点。
+- 上游扩大的串口状态结构通过带长度的 `aos_serial_stat_ex` 提供给新调用方，保留旧 `aos_serial_stat` 仅写入原有 248 字节。实际固件运行时导出 3,756 个符号，合入前的 3,706 个生成导出全部保留。新增独立语言目录接口为 `aos_i18n_app_catalog_dup`。
+- 为保持原 Flash 分区布局，网页翻译按页面共享原文键，七种译文分别压缩，减少 363,134 字节；316 个原生目录采用更深的标准 Deflate 压缩，比相同内容的默认 zlib 减少 34,339 字节。常规固件编译仍直接使用已生成的 C 文件，设备仍用现有 zlib 解压器；维护者重新生成时使用 `gen_lang.py embed --compressor 7zip en de zh-Hans zh-Hant`，见 [BUILDING.md](BUILDING.md)。CJK 字库内容、分区表和无需 SD 卡的中文能力保持不变。
+
+验证结果与范围：
+
+- 37 项 Python 回归与 25 项网页测试通过，共 62 项，无跳过。覆盖板型与旋转、旧/新串口 ABI、简繁格式和字形、关卡文本提取、真实 C 语言加载与应用解析器的无卡/卡覆盖行为、网页压缩目录的 HTTP 加载与语言切换等。简繁源目录检查通过；小海龟的 47 个内置 Logo 关卡通过本机 C 测试。
+- `lcd10_1/rev3_x` 最终固件编译成功，镜像为 8,307,680 字节，应用分区剩余 15,392 字节（约 15 KiB，0.18%）。编译器按整数显示为 0% 并提示空间紧张，后续增加原生功能必须再次核查容量。本次没有扩大或重新分配分区。
+- Asteroides、DJ、Estado、Plotter、Sumar、Tanques、Tortuga、Vitral、Vuelo 九个动态应用已按 `rev3_x` 编译，并对最终固件通过 ABI 101、导入符号、浮点/指令集及 LVGL 配置检查。两种硅配置的已有示例应用完成七语言商店打包验证，三个工作流及其 23 段脚本语法通过检查。
+- 本次只重新编译 10.1 英寸 `rev3_x` 固件；另外七种板型/硅配置组合未重编译，板型几何与相关代码由自动化测试覆盖。未烧录设备，未进行实机验证、商店 OTA 或 GitHub Actions 发布。
+
+本次另从原上游取得本地 `v0.33.0` 标签，已确认其指向 `eef973cbc0dc6a1a9cd28b523431ecf8e430b42d`，属于合入源历史。合并后再次构建以更新固件版号；该标签仍只在本地，推送 `dev` 不会自动推送它。
+
+本地日志为 `build/merge-main-20261124-python-tests.log`、`build/merge-main-20261124-web-tests.log`、`build/merge-main-20261124-hans-check.log`、`build/merge-main-20261124-hant-check.log`、`build/merge-main-20261124-tg-levels.log`、`build/merge-main-20261124-firmware-bootstrap.log`、`build/merge-main-20261124-firmware-final.log`、`build/merge-main-20261124-firmware-committed.log`、`build/merge-main-20261124-exports.log`、`build/merge-main-20261124-apps.log`、`build/merge-main-20261124-apps-precommit-check.log` 和 `build/merge-main-20261124-apps-final-check.log`。首轮应用检查使用的引导构建缺少新符号，最终检查已通过；镜像版本与校验信息保存在 `build/merge-main-20261124-image-info.log`。产物与日志不纳入 Git。

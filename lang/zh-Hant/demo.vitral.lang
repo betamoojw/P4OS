@@ -1,0 +1,66 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Deshacer	復原
+Pista	提示
+Flecha	箭頭
+Cohete	火箭
+Pez	魚
+Corona	王冠
+Montañas	山巒
+Escalera	階梯
+Rombo	菱形
+Barco	小船
+Casa	房屋
+Corazón	愛心
+Árbol	樹木
+Gota	水滴
+Gato	貓咪
+Ventana	窗戶
+Torre	高塔
+Récord:	最高分：
+Piezas de vidrio que caen	不斷落下的玻璃拼塊
+Maratón	馬拉松
+Contrarreloj	限時
+Rompecabezas	拼圖
+De a dos	雙人
+Opciones	選項
+Cómo se juega	玩法說明
+Llená el vitral con las piezas que te tocan, sin que sobre nada.	用給定的拼塊填滿彩窗，不留空隙。
+Volver	返回
+Controles	操作方式
+teclas en pantalla	螢幕按鍵
+gestos	手勢
+Sonido	音效
+sí	開
+no	關
+Sombra de la pieza	落點陰影
+Nivel inicial	初始等級
+Listo	完成
+Caen piezas de vidrio de tres y de cinco cuadros. Una fila completa se rompe y suma puntos; varias juntas suman más. Una fila completa de un solo color es un vitral: vale el triple y se lleva también la fila de abajo. El vidrio transparente va con cualquier color.	三格和五格的玻璃拼塊不斷落下。填滿一列即可消除並得分，同時消除多列得分更高。同色的一整列稱為彩窗，得分為三倍，還會消除下方一列。透明玻璃可搭配任何顏色。
+Con el dedo: deslizá a los costados para mover la pieza y hacia abajo para bajarla; un golpe rápido hacia abajo la tira, uno hacia arriba la guarda. Un toque la gira: en la mitad derecha a la derecha, en la izquierda al revés.	觸控螢幕：左右滑動移動拼塊，向下滑動緩降；快速下滑直接落下，上滑暫存。點選螢幕右半部順時針旋轉，點選螢幕左半部逆時針旋轉。
+Con joystick: la cruz mueve y baja, arriba la tira, A y B giran, L o R la guardan y START pausa. Con teclado: flechas, Z y X giran, espacio la tira y C la guarda.	手把：方向鍵移動和緩降，向上直接落下，A 和 B 旋轉，L 或 R 暫存，START 暫停。鍵盤：方向鍵移動，Z 和 X 旋轉，空格直接落下，C 暫存。
+Pausa	暫停
+Seguir	繼續
+Empezar de nuevo	重新開始
+Niveles	關卡
+Menú	選單
+Ganó el jugador %d	玩家 %d 獲勝
+Revancha	再戰一局
+¡Vitral completo!	彩窗拼好了！
+Tiempo:	時間：
+Siguiente	下一關
+Otra vez	再來一次
+Se acabaron las piezas	拼塊已用完
+Quedó vidrio sin llenar. Deshacé la última o empezá de nuevo.	仍有空隙未填滿。請復原上一步，或重新開始。
+¡Tiempo!	時間到！
+Se llenó el vitral	彩窗已堆滿
+¡Récord nuevo!	新紀錄！
+%d filas, %d vitrales, nivel %d	%d 列，%d 個彩窗，第 %d 級
+¡Vitral!	彩窗！
+PIEZAS	拼塊
+NIVEL	等級
+TIEMPO	時間
+FILAS	列數
+QUEDA	剩餘
+SIGUE	下一塊
+GUARDADA	暫存

@@ -33,7 +33,7 @@ class WebAssets(unittest.TestCase):
                 entries = generator.read_pack(str(ROOT / 'lang' / code / '_portal.lang'))
                 self.assertFalse(set(keys) - set(entries))
 
-    def test_embedded_catalogues_match_source_and_have_unique_routes(self):
+    def test_embedded_catalogues_round_trip_all_translations_with_shared_keys(self):
         (ROOT / 'build').mkdir(exist_ok=True)
         with tempfile.TemporaryDirectory(dir=ROOT / 'build') as directory:
             output = Path(directory) / 'assets.c'
@@ -48,11 +48,21 @@ class WebAssets(unittest.TestCase):
         catalogs = sorted((ROOT / 'lang').glob('*/_portal.lang')) + sorted((ROOT / 'lang').glob('*/web.*.lang'))
         self.assertTrue(catalogs)
         for file in catalogs:
-            route = '/builtin-lang/' + file.parent.name + '/' + file.name
-            with self.subTest(route=route):
-                self.assertEqual(gzip.decompress(arrays[routes[route]]), file.read_bytes())
-        self.assertIn('/builtin-lang/en/_portal.lang', routes)
-        self.assertIn('/builtin-lang/de/_portal.lang', routes)
+            with self.subTest(file=file):
+                expected = {}
+                for line in file.read_text(encoding='utf-8').split('\n'):
+                    if not line.startswith('#') and '\t' in line:
+                        key, value = line.split('\t', 1)
+                        if key and value:
+                            expected[key] = value
+                keys = '/builtin-lang/keys/' + file.name
+                values = '/builtin-lang/values/' + file.parent.name + '/' + file.name
+                keys = gzip.decompress(arrays[routes[keys]]).decode().split('\n')
+                values = gzip.decompress(arrays[routes[values]]).decode().split('\n')
+                self.assertEqual(len(keys), len(values))
+                self.assertEqual({k: v for k, v in zip(keys, values) if v}, expected)
+        self.assertEqual(len([r for r in routes if r.startswith('/builtin-lang/keys/')]),
+                         len({p.name for p in catalogs}))
 
 
 if __name__ == '__main__':

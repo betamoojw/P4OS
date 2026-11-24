@@ -10,8 +10,8 @@
    "en": "The system and the web portal in English."
   },
   "desc": {
-   "es": "Las pantallas del sistema ya vienen traducidas adentro del firmware. Este paquete trae además las traducciones del portal web, que sólo se leen de la tarjeta, y la última versión de las del sistema.\n\nEl idioma se elige en Ajustes, Idioma. Cada app trae sus propias traducciones.",
-   "en": "The system's screens come translated inside the firmware. This brings the web portal's translations as well, which are only read from the card, and the latest version of the system's.\n\nThe language is chosen in Settings, Language. Each app brings its own translations."
+   "es": "El sistema y el portal web ya incluyen este idioma en el firmware. Este paquete actualiza sus traducciones en la tarjeta.\n\nEl idioma se elige en Ajustes, Idioma. Cada app trae sus propias traducciones.",
+   "en": "The system and web portal include this language in the firmware. This pack updates their translations on the card.\n\nChoose it in Settings, Language. Each app also brings its own translations."
   },
   "glyph": "AOS_SYM_TRANSLATE",
   "colors": [
@@ -40,8 +40,8 @@
    "en": "The system and the web portal in German."
   },
   "desc": {
-   "es": "Las pantallas del sistema ya vienen traducidas adentro del firmware. Este paquete trae además las traducciones del portal web, que sólo se leen de la tarjeta, y la última versión de las del sistema.\n\nEl idioma se elige en Ajustes, Idioma. Cada app trae sus propias traducciones.",
-   "en": "The system's screens come translated inside the firmware. This brings the web portal's translations as well, which are only read from the card, and the latest version of the system's.\n\nThe language is chosen in Settings, Language. Each app brings its own translations."
+   "es": "El sistema y el portal web ya incluyen este idioma en el firmware. Este paquete actualiza sus traducciones en la tarjeta.\n\nEl idioma se elige en Ajustes, Idioma. Cada app trae sus propias traducciones.",
+   "en": "The system and web portal include this language in the firmware. This pack updates their translations on the card.\n\nChoose it in Settings, Language. Each app also brings its own translations."
   },
   "glyph": "AOS_SYM_TRANSLATE",
   "colors": [
@@ -128,6 +128,96 @@
    {
     "path": "lang/zh-Hant/_portal.lang",
     "from": "lang/zh-Hant/_portal.lang"
+   }
+  ]
+ },
+ {
+  "file": "sys-lang-pt",
+  "name": {
+   "es": "Portugués (Brasil)",
+   "en": "Portuguese (Brazil)"
+  },
+  "about": {
+   "es": "El sistema y el portal web en portugués de Brasil.",
+   "en": "The system and the web portal in Brazilian Portuguese."
+  },
+  "desc": {
+   "es": "Las pantallas del sistema y el portal web en portugués de Brasil. Instalá este paquete en la tarjeta para que el idioma aparezca en Ajustes. El portal web sigue el idioma de la placa.\n\nEl idioma se elige en Ajustes, Idioma. Cada app trae sus propias traducciones; una app recién salida puede verse en castellano hasta la próxima pasada de traducción.\n\nTraducción sin revisar por hablantes nativos: puede tener errores. Si encontrás uno, reportalo como issue en el GitHub de P4OS.",
+   "en": "The system's screens and the web portal in Brazilian Portuguese. Install this pack on the card to make the language available in Settings. The web portal follows the board's language.\n\nThe language is chosen in Settings, Language. Each app brings its own translations; a brand-new app may show Spanish until the next translation pass.\n\nThis translation has not been reviewed by native speakers and may have mistakes. If you find one, please report it as an issue on P4OS's GitHub."
+  },
+  "glyph": "AOS_SYM_TRANSLATE",
+  "colors": [
+   "30B0C7",
+   "0B5E6B"
+  ],
+  "files": [
+   {
+    "path": "lang/pt/_sistema.lang",
+    "from": "lang/pt/_sistema.lang"
+   },
+   {
+    "path": "lang/pt/_portal.lang",
+    "from": "lang/pt/_portal.lang"
+   }
+  ]
+ },
+ {
+  "file": "sys-lang-fr",
+  "name": {
+   "es": "Francés",
+   "en": "French"
+  },
+  "about": {
+   "es": "El sistema y el portal web en francés.",
+   "en": "The system and the web portal in French."
+  },
+  "desc": {
+   "es": "Las pantallas del sistema y el portal web en francés. Instalá este paquete en la tarjeta para que el idioma aparezca en Ajustes. El portal web sigue el idioma de la placa.\n\nEl idioma se elige en Ajustes, Idioma. Cada app trae sus propias traducciones; una app recién salida puede verse en castellano hasta la próxima pasada de traducción.\n\nTraducción sin revisar por hablantes nativos: puede tener errores. Si encontrás uno, reportalo como issue en el GitHub de P4OS.",
+   "en": "The system's screens and the web portal in French. Install this pack on the card to make the language available in Settings. The web portal follows the board's language.\n\nThe language is chosen in Settings, Language. Each app brings its own translations; a brand-new app may show Spanish until the next translation pass.\n\nThis translation has not been reviewed by native speakers and may have mistakes. If you find one, please report it as an issue on P4OS's GitHub."
+  },
+  "glyph": "AOS_SYM_TRANSLATE",
+  "colors": [
+   "5E5CE6",
+   "2C2A8C"
+  ],
+  "files": [
+   {
+    "path": "lang/fr/_sistema.lang",
+    "from": "lang/fr/_sistema.lang"
+   },
+   {
+    "path": "lang/fr/_portal.lang",
+    "from": "lang/fr/_portal.lang"
+   }
+  ]
+ },
+ {
+  "file": "sys-lang-it",
+  "name": {
+   "es": "Italiano",
+   "en": "Italian"
+  },
+  "about": {
+   "es": "El sistema y el portal web en italiano.",
+   "en": "The system and the web portal in Italian."
+  },
+  "desc": {
+   "es": "Las pantallas del sistema y el portal web en italiano. Instalá este paquete en la tarjeta para que el idioma aparezca en Ajustes. El portal web sigue el idioma de la placa.\n\nEl idioma se elige en Ajustes, Idioma. Cada app trae sus propias traducciones; una app recién salida puede verse en castellano hasta la próxima pasada de traducción.\n\nTraducción sin revisar por hablantes nativos: puede tener errores. Si encontrás uno, reportalo como issue en el GitHub de P4OS.",
+   "en": "The system's screens and the web portal in Italian. Install this pack on the card to make the language available in Settings. The web portal follows the board's language.\n\nThe language is chosen in Settings, Language. Each app brings its own translations; a brand-new app may show Spanish until the next translation pass.\n\nThis translation has not been reviewed by native speakers and may have mistakes. If you find one, please report it as an issue on P4OS's GitHub."
+  },
+  "glyph": "AOS_SYM_TRANSLATE",
+  "colors": [
+   "FF375F",
+   "9E0A2B"
+  ],
+  "files": [
+   {
+    "path": "lang/it/_sistema.lang",
+    "from": "lang/it/_sistema.lang"
+   },
+   {
+    "path": "lang/it/_portal.lang",
+    "from": "lang/it/_portal.lang"
    }
   ]
  },

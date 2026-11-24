@@ -51,14 +51,14 @@ Revancha	Revanche
 #: apps\metegol\main\metegol.c:504
 Menú	Menü
 
-#: apps\metegol\main\metegol.c:631
+#: apps\metegol\main\metegol.c:633
 #: apps\metegol\main\mg_menu.c:193
 Falta el paquete del juego: bajalo de la Tienda	Das Spielpaket fehlt: lade es im Store
 
-#: apps\metegol\main\metegol.c:648
+#: apps\metegol\main\metegol.c:650
 Preparando la cancha...	Das Spielfeld wird vorbereitet...
 
-#: apps\metegol\main\metegol.c:723
+#: apps\metegol\main\metegol.c:725
 No se pudo cargar el estadio	Das Stadion konnte nicht geladen werden
 
 #: apps\metegol\main\mg_menu.c:182

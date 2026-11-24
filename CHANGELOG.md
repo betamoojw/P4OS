@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.33.0 — 2026-11-24
+
+Nine new apps, three new languages, and a Terminal that reads multimeters.
+
+- **Nine new apps in the Store**, from the card:
+  - **Planeo** (Glide): a light plane over worlds the board draws live in
+    3D, made afresh each time (islands, canyons, snow, a volcano, a city),
+    with rings against the clock, races, deliveries and free flight. About
+    30 fps on the board at 426×240, scaled to the screen by the PPA.
+  - **DJ**: two decks that play MP3, WAV and FLAC from the card, platters
+    to scratch with the fingers, pitch, cues, loops, tempo and beat
+    detection with SYNC, a three-band EQ, filter and effects per deck, and
+    the mix recorded to WAV. On the board two decks with effects take a
+    quarter of a core.
+  - **Vitral**: pieces of coloured glass of three and five squares fall in a
+    lead window twelve wide; a row of one colour is a stained glass worth
+    triple. Marathon, against the clock, thirty puzzle windows and two
+    players on one screen.
+  - **Fusión** (Fusion): numbered tiles that slide and fuse, on boards of
+    3×3 to 6×6, with classic goals, against the clock, fixed blocks and two
+    players passing the board; four themes and achievements.
+  - **Deriva**: rocks in space in neon vectors: a ship with inertia, rocks
+    that split, enemies, bosses and powers; a campaign of twelve sectors with
+    a workshop between them, an endless arcade, alone or for two.
+  - **Tanques** (Tanks): turn-based battles of toy tanks in 3D: drive from
+    above, aim from the turret, fire. Six tanks to upgrade and paint, twenty
+    weapons, a story and free battles on generated maps, against the board
+    or two people. Two optional packs, Misión a la Luna and Día de playa,
+    each with its tank, weapon, modes and missions.
+  - **Tortuga** (Turtle): learn to program by guiding a turtle with blocks,
+    a Logo of its own or Lua, through nine worlds of 47 levels.
+  - **Monitor serie** (Serial Plotter): plots live what comes in on a serial
+    port, on the Terminal's channels; profiles for meters.
+  - **Mi casa** (Home Status): the services at home, up or down,
+    with latency, availability and notices.
+- **Brazilian Portuguese, French and Italian**, the whole system, the portal
+  and every app, as System parts in the Store. **They were translated with
+  no native speaker reviewing them and may have mistakes: if you find a bad
+  translation, please report it as an issue so we can fix it.** Since every
+  app's package carries its languages, almost every app shows an update in
+  the Store this time (about 20 MB, once). A language the Store installs
+  gets its own name in Settings without its meta.txt. The monospaced font
+  (Terminal, Notes, code) gains Latin Extended-A and the typographic quotes,
+  and the big sizes the French oe; Tortuga plays with the English keywords
+  in every language but Spanish (German and the three new ones).
+- **The Terminal talks to multimeters.** Its speed is a button that opens
+  the connection's sheet: 300 to 2000000 baud in the list and any other
+  typed in (50 to 5000000), 5 to 8 data bits, parity and stop bits (7E1,
+  8O2...), and on a USB adapter whether DTR and RTS are up - the optical
+  cables of many multimeters are powered by DTR with RTS off. The same in
+  the portal's Terminal and in `POST /api/serial/start` (`frame`, `dtr`,
+  `rts`). Before, it started at 9600 and was always 8N1. For apps:
+  `aos_io_uart_set_frame` and `aos_hal_usb_serial_set_frame` take the data
+  bits too, and a change of speed on a USB port no longer puts its frame
+  back to 8N1. Tried on the board with a WH5000 multimeter on its USB
+  cable (a CP2102) at 2400 8N1.
+
 ## 0.32.1 — 2026-11-22
 
 One fix to the firmware; no app changed.

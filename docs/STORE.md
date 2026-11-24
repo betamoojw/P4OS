@@ -206,21 +206,24 @@ not the package that was published, it needs a newer P4OS.
 
 ## The parts of the system
 
-Three things the system reads from the card are not apps, and used to be
-files to copy. They are in the Store's **System** chip:
+The Store's **System** chip includes resources the system reads from the card:
 
 | | Where it goes | |
 |---|---|---|
 | **English**, **German**, **Simplified Chinese**, **Traditional Chinese** | `lang/<code>/_sistema.lang`, `_portal.lang` | Optional updates for the system and web portal. Both Chinese variants (`zh-Hans`, `zh-Hant`) work from onboard flash, including the fonts, without a card. |
+| **Brazilian Portuguese**, **French**, **Italian** | same two files for `pt`, `fr` or `it` | Install the pack to enable the language in Settings. The web portal follows the device. |
 | **Colour emoji** | `fonts/emoji.pak` | 4012 emoji, 16 MB. They show after a restart |
 | **The radio's firmware (C6)** | `firmware/c6.bin` | Getting it only leaves the file there: Settings → Update → "Install on the C6" puts it in the C6 |
+
+The official source can also publish an HD icon style as `icons/<name>.pak`. The
+firmware reads installed styles from the card for selection in Settings.
 
 A part of the system has no package. It is a list of files, each one a
 file of a release with its size and its SHA-256 and the place on the card
 it goes to; each is downloaded, checked and moved into place.
 
-- **Only the official source can offer them**, and only into those three
-  places. A line saying so in another catalogue is not read.
+- **Only the official source can offer them**, and each path must match
+  one of the destinations above.
 - **What is on the card already is not downloaded again.** A file copied
   by hand shows as such; **Get** hashes it once, and when it is the
   catalogue's it only writes the receipt.

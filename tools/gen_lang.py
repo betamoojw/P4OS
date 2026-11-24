@@ -10,7 +10,8 @@ catalog.
                                                any translations already there
     python3 tools/gen_lang.py check en         what the pack is missing, and
                                                what it has that the code lost
-    python3 tools/gen_lang.py stats            how much of the UI is marked up
+    python3 tools/gen_lang.py stats            how much of the UI is marked up,
+                                               and how far each language is
 
 Packs live in `lang/<code>/` at the root of the repo by default, tracked in
 git (sim/sim_fs is not). `tools/install_lang.sh <host> <code>` puts them on the
@@ -45,6 +46,8 @@ silence.
 import argparse
 import os
 import re
+import shutil
+import subprocess
 import sys
 import zlib
 from collections import OrderedDict
@@ -365,6 +368,28 @@ def web_catalogs(warnings=None):
     return out
 
 
+def scan_turtle_levels(path):
+    """The embedded .tl prose is translated by tg_level_text at display time.
+
+    Read only Spanish titles, story cards and hints; map/Logo/Lua/Python
+    sections are executable content and must never enter the catalog.
+    Match the level parser's trimming, then use the same catalog escaping
+    as a C source literal.
+    """
+    found = OrderedDict()
+    rel = os.path.relpath(path, REPO)
+    with open(path, encoding="utf-8") as fh:
+        for line_no, line in enumerate(fh, 1):
+            match = re.match(r"^@(titulo|idea|carta|pista) +es: *(.*)", line)
+            if not match:
+                continue
+            key = match.group(2).rstrip(" \t\r\n")
+            key = key.replace("\\", "\\\\").replace('"', '\\"')
+            if key:
+                found.setdefault(key, []).append("%s:%d" % (rel, line_no))
+    return found
+
+
 def collect():
     """Everything, as an ordered {catalog filename: {key: [refs]}}."""
     catalogs = OrderedDict()
@@ -385,6 +410,10 @@ def collect():
                 "apps/%s  (nombre de app)" % dirname)
 
         marked = scan_marked(main, warnings)
+        if dirname == "tortuga":
+            levels = os.path.join(os.path.dirname(main), "levels", "mundos.tl")
+            for key, refs in scan_turtle_levels(levels).items():
+                marked.setdefault(key, []).extend(refs)
         if not marked:
             continue
         if not app_id:
@@ -490,6 +519,11 @@ def cmd_template(args):
     print("  in %s" % out_dir)
 
 
+# printf conversions, for comparing a translation with its key. No space flag:
+# "50 % de" is text.
+FORMAT = re.compile(r"%%|%[-+#0]*[0-9*]*(?:\.[0-9*]+)?(?:hh|h|ll|l|z|j|t|L)?[diouxXeEfgGcsp]")
+
+
 def cmd_check(args):
     catalogs = collect()
     pack_dir = os.path.join(args.out, args.code)
@@ -507,7 +541,16 @@ def cmd_check(args):
                         if have.get(k) == (k.split("\\x04", 1)[1]
                                            if "\\x04" in k else k)]
 
-        if not (missing or orphan):
+        # The C code hands the arguments over in order, so a translation has
+        # to carry the same conversions in the same order: a %s turned into
+        # %d, or one dropped, reads the wrong argument and can crash the
+        # board. "% d" with a space is left out on purpose: it is the
+        # Spanish "50 % de...", text and not a conversion.
+        formats = [k for k in entries if k in have
+                   and FORMAT.findall(have[k]) != FORMAT.findall(
+                       k.split("\\x04", 1)[1] if "\\x04" in k else k)]
+
+        if not (missing or orphan or formats):
             # "identical" and not "untranslated": many of them are identical on
             # purpose - proper nouns, cities, SI units. Calling them pending
             # sends you hunting for work that does not exist.
@@ -526,6 +569,11 @@ def cmd_check(args):
                   " did the Spanish text change?):" % len(orphan))
             for k in orphan[:6]:
                 print("        %s" % k)
+        if formats:
+            print("     %d with other conversions than the Spanish (%%s, %%d..."
+                  " must be the same, in the same order):" % len(formats))
+            for k in formats[:6]:
+                print("        %s  ->  %s" % (k, have[k]))
 
     # Pixel canvases decode UTF-8 and use the shared font fallback.
 
@@ -707,6 +755,44 @@ def c_escape(text):
     return "".join(out)
 
 
+def find_7zip():
+    candidates = ['7zz', '7z']
+    if os.name == 'nt':
+        for variable in ('ProgramW6432', 'ProgramFiles', 'ProgramFiles(x86)'):
+            if os.environ.get(variable):
+                candidates.append(os.path.join(os.environ[variable], '7-Zip', '7z.exe'))
+    for candidate in candidates:
+        executable = shutil.which(candidate)
+        if executable:
+            return executable
+    sys.exit("--compressor 7zip requires the 7-Zip command-line tool (7zz or 7z on PATH).")
+
+
+def compress_with_7zip(executable, raw):
+    result = subprocess.run([executable, 'a', '-tgzip', '-si', '-so', '-an', '-bso0', '-bsp0', '-mx=9'],
+                            input=raw, capture_output=True)
+    if result.returncode:
+        sys.exit("7-Zip compression failed: " + result.stderr.decode(errors='replace').strip())
+    member = result.stdout
+    if zlib.decompress(member, 31) != raw:
+        raise ValueError("7-Zip gzip output did not reproduce the catalogue")
+
+    # RFC 1952: skip the gzip header and any optional fields, then replace the
+    # eight-byte trailer with RFC 1950's Adler-32. Both wrappers contain Deflate.
+    flags, start = member[3], 10
+    if flags & 4:  # extra field
+        start += 2 + int.from_bytes(member[start:start + 2], 'little')
+    for flag in (8, 16):  # zero-terminated file name and comment
+        if flags & flag:
+            start = member.index(b'\0', start) + 1
+    if flags & 2:  # header CRC-16
+        start += 2
+    packed = b'\x78\xda' + member[start:-8] + zlib.adler32(raw).to_bytes(4, 'big')
+    if zlib.decompress(packed) != raw:
+        raise ValueError("7-Zip zlib stream did not reproduce the catalogue")
+    return packed
+
+
 def cmd_embed(args):
     """Generates aos_ui/aos_lang_embedded.c with the requested packs.
 
@@ -715,6 +801,7 @@ def cmd_embed(args):
     simulator and already in gen_symbols.py's DEFAULT_LIBS. A new component is
     three pieces of wiring by hand and each one is a place to forget.
     """
+    compressor = find_7zip() if args.compressor == '7zip' else None
     packs = []
     for code in args.codes:
         d = os.path.join(args.out, code)
@@ -766,12 +853,14 @@ def cmd_embed(args):
     out.append('#include "aos_lang_embedded.h"')
     out.append("")
 
+    compressed_bytes = 0
     for code, name, strings, apps, files in packs:
         ident = re.sub(r'[^A-Za-z0-9]', '_', code)
         for fn, pairs in files:
             sym = "blob_%s_%s" % (ident, re.sub(r"[^A-Za-z0-9]", "_", fn))
             raw = ''.join(k + '\t' + v + '\n' for k, v in pairs).encode('utf-8')
-            compressed = zlib.compress(raw, 9)
+            compressed = compress_with_7zip(compressor, raw) if compressor else zlib.compress(raw, 9)
+            compressed_bytes += len(compressed)
             out.append("static const unsigned char %s[] = {" % sym)
             for offset in range(0, len(compressed), 24):
                 out.append('    ' + ','.join(str(b) for b in compressed[offset:offset + 24]) + ',')
@@ -798,6 +887,7 @@ def cmd_embed(args):
 
     total = os.path.getsize(EMBED_OUT)
     print("  %s" % os.path.relpath(EMBED_OUT, REPO))
+    print("    %s: %d compressed bytes" % (args.compressor, compressed_bytes))
     for code, name, strings, apps, files in packs:
         print("    %-4s %-10s %3d strings, %2d app catalogues"
               % (code, name, strings, apps))
@@ -876,6 +966,39 @@ def cmd_stats(args):
     print("  app catalogues            : %d" % (len(catalogs) - 1))
     print("  calls to _() in the firmware: %d" % total_calls)
 
+    # How far each language is: the strings of the code that its pack has. A
+    # new text reaches English and German in the commit that adds it, and
+    # Portuguese, French and Italian in the pass before a release, which
+    # takes the catalogues this lists. Whether a string is equal to the
+    # Spanish says nothing - "Vertical", "Bluetooth", "Fotos" are right in
+    # Portuguese - so that is shown apart, as a hint and not as work. (Run
+    # `template` on a copy, never on lang/<code>: it fills every missing
+    # string with the Spanish, and this would count them as done.)
+    codes = sorted(d for d in os.listdir(args.out)
+                   if os.path.isfile(os.path.join(args.out, d, SYSTEM_CATALOG))
+                   and d != "xx")
+    if not codes:
+        return
+    print("\n  language   in the pack           same as es   catalogues behind")
+    for code in codes:
+        total = done = same = 0
+        behind = []
+        for filename, entries in catalogs.items():
+            have = read_pack(os.path.join(args.out, code, filename))
+            n = 0
+            for k in entries:
+                if k in have:
+                    n += 1
+                    if have[k] == (k.split("\\x04", 1)[1] if "\\x04" in k else k):
+                        same += 1
+            total += len(entries)
+            done += n
+            if n < len(entries):
+                behind.append("%s %d" % (filename, len(entries) - n))
+        print("  %-4s %6d/%-6d %5.1f%%   %6d       %s" % (
+            code, done, total, 100.0 * done / total if total else 0, same,
+            ", ".join(behind[:4]) + (" +%d more" % (len(behind) - 4) if len(behind) > 4 else "")))
+
 
 def main():
     ap = argparse.ArgumentParser(
@@ -908,6 +1031,8 @@ def main():
     e = sub.add_parser("embed",
                        help="mete packs adentro del binario (aos_ui/aos_lang_embedded.c)")
     e.add_argument("codes", nargs="+")
+    e.add_argument("--compressor", choices=("zlib", "7zip"), default="zlib",
+                   help="encoder for the embedded zlib streams; 7zip saves space in release builds")
     e.set_defaults(func=cmd_embed)
 
     u = sub.add_parser("unmarked",

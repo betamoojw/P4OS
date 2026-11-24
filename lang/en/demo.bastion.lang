@@ -33,12 +33,12 @@ Música: no	Music: off
 Pausa	Paused
 
 #: apps\bastion\main\bastion.c:399
-#: apps\bastion\main\bastion.c:755
+#: apps\bastion\main\bastion.c:756
 #: apps\bastion\main\bs_menu.c:560
 Supervivencia	Survival
 
 #: apps\bastion\main\bastion.c:400
-#: apps\bastion\main\bastion.c:756
+#: apps\bastion\main\bastion.c:757
 #: apps\bastion\main\bs_menu.c:510
 Sector	Sector
 
@@ -127,7 +127,7 @@ No hay memoria para la batalla: cerrá otras apps y probá de nuevo	Not enough m
 #: apps\bastion\main\bastion.c:690
 No se pudo cargar el mundo	The world could not be loaded
 
-#: apps\bastion\main\bastion.c:759
+#: apps\bastion\main\bastion.c:760
 Desplegando defensas...	Deploying defences...
 
 #: apps\bastion\main\bs_data.c:17

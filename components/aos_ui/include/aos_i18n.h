@@ -1,16 +1,15 @@
 /*
  * AmoledOS - translation
  *
- * Spanish is the source language: it lives in the code, and every other
- * language is a pack on the microSD. The catalog key is the Spanish string
+ * Spanish is the source language. The firmware embeds offline catalogues
+ * and can load translations from a microSD card. The catalog key is the Spanish string
  * itself, gettext style, so marking a string up is wrapping it rather than
  * inventing an identifier for it:
  *
  *     aos_ui_toast(_("Sin conexion"), 1600);
  *
- * With no pack loaded aos_tr() returns its own argument, so the system behaves
- * exactly as it did before any of this existed. No card means Spanish, which
- * is the right fallback for free.
+ * For each language, card translations take priority and the embedded
+ * catalogue supplies missing keys. An untranslated key uses its Spanish text.
  *
  * A pack is a directory you copy to the card:
  *
@@ -109,7 +108,7 @@ void aos_i18n_init(void);
 
 #define AOS_LANG_CODE_MAX   12
 #define AOS_LANG_NAME_MAX   28
-#define AOS_LANG_MAX        8
+#define AOS_LANG_MAX        16
 
 typedef struct {
     char code[AOS_LANG_CODE_MAX];   /* directory name under /lang: "en", "pt" */
@@ -153,6 +152,11 @@ bool aos_i18n_set(const char *code);
  * is active, or when the pack ships no catalog for that app, is a no-op. */
 void aos_i18n_app_load(const char *app_id);
 void aos_i18n_app_unload(void);
+/* On the UI thread, obtain an independent mutable copy for a background app.
+ * The selected language's SD entries precede embedded entries. First match
+ * wins. Returns NULL for the source language or a missing catalogue.
+ * The caller owns the result and releases it with free(). */
+char *aos_i18n_app_catalog_dup(const char *app_id);
 /* The app was destroyed: its catalogue goes (aos_ui.c). A catalogue lives
  * as long as its app, so pointers an app keeps into it stay good while it
  * is alive in the background. */

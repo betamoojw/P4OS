@@ -40,8 +40,10 @@ by touch never sees it. Board games put a cursor on the board the same way.
 | Claude Jump | D-pad or stick walks · START pause · L/R costumes in the shop |
 | Claudito | left/right go along the action bar, A presses · with the sponge or the hand, the D-pad moves it and A held is the finger · B strokes it (or wakes it) |
 | Dados | D-pad over the dice and buttons · A or START rolls · L/R change the die |
+| Deriva | An analog stick aims the ship and, pushed past half way, thrusts · D-pad turns, up thrusts · A or L fires · B or R jumps · START pause · two players: with two gamepads each has one, with one gamepad it is player 2's and player 1 plays on the screen · menus and the workshop: D-pad and A, B back |
 | Doom | stick or D-pad moves and turns · A fire / Enter · B use / back · L/R strafe, both together next weapon · START menu (held 2 s leaves) |
 | Flappy | A flaps, starts and retries · START pause |
+| Fusión | D-pad slides the tiles · B or L undo · START pause · menu, pause, achievements and the end: D-pad and A (START plays from the menu, B closes the pause and the achievements) |
 | Gemas | D-pad moves a frame · A picks a jewel, a direction swaps it · START pause |
 | Golf | stick turns the line by speed, D-pad by 0.25° · L/R club · A is every tap of the swing and the putt · B from the 3D view back to the map · up/down move the putt's marker · START pause |
 | Hockey de mesa | D-pad or stick pushes the mallet · A held pushes it fast (a shot) · B takes it back to the goal · START pause; a second gamepad plays player 2, with its directions turned (they sit at the other end) · against the board both gamepads play player 1 · menus: D-pad and A, B back, START plays |
@@ -52,12 +54,16 @@ by touch never sees it. Board games put a cursor on the board the same way.
 | Monster Hop | D-pad hops (held, it keeps hopping) · A action · START pause, Play on the title · L/R tabs and zones |
 | Neon Snakes | D-pad or stick turns · START pause |
 | Pinball 3D | L or left the left flippers, R or right the right ones · A launches (held, it charges) · up nudges · START pause · in the carousel left/right pick a table, A or START plays, up the settings |
+| Planeo | Left stick or D-pad: roll and pitch · A / B throttle up / down · L / R the pedals (rudder), both together change the camera · START pause · menus: D-pad and A, B back |
 | Simon | the four directions are the four pads, clockwise from the top left (up green) · A or START starts |
 | Solitario | D-pad walks the piles (up/down in a column choose how many cards) · A picks up and drops (on the same pile, to its best place) · B cancels · L undo · R hint · START menu; in the panels D-pad + A, B back |
 | Sudoku | D-pad walks the cells · A places the chosen number · B notes it · L/R change the number · START pause (with hint, undo, restart and menu); menus and shop D-pad + A, B back |
+| Tanques | Driving: D-pad or stick moves a cursor on the map, A drives there, START or R aims · Aiming: left/right turn the turret, up/down raise the barrel, L/R change weapon, A fires, B back to driving · menus and hangar: D-pad and A, B back, L/R change the hangar's tank |
 | Topos | D-pad moves a frame over the holes · A or B whacks · START pause |
+| Tortuga | START runs or stops · R steps · L changes the speed · blocks: D-pad up/down chooses a block, left/right a piece of the palette, A puts it, B deletes · menus: D-pad and A, B back |
 | Truco | D-pad over your cards and the calls · A lifts and plays a card, answers · B puts a lifted card back · START menu |
 | Turbo | stick is an analog wheel (D-pad the arrows) · A gas · B brake · START pause · L/R car in the garage |
+| Vitral | left/right move (repeating) · down soft drop · up drops · A turns clockwise, B the other way · L or R hold · START pause; a second gamepad plays player 2 in a match · menus: D-pad and A, B back, START plays |
 | Vuelos (not a game) | D-pad or stick moves the map · L/R zoom out/in · A picks the aircraft nearest the centre, the next one at every press · B lets it go · START the list; in the panels B or START goes back |
 
 Two-board games (Neon Snakes, Monster Hop's race, Mila's visits, Truco,

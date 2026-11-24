@@ -1,0 +1,71 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+El parlante está ocupado	扬声器正被占用
+No hay temas. Copiá MP3, WAV o FLAC a la carpeta music de la tarjeta.	暂无曲目。请将 MP3、WAV 或 FLAC 文件复制到存储卡的 music 文件夹。
+Nada coincide con la búsqueda.	没有符合搜索条件的内容。
+%d de %d	%d / %d
+%d temas	%d 首曲目
+Cargar en la bandeja %c	加载到 %c 播放台
+Temas	曲目
+Buscar	搜索
+Música	音乐
+Grabaciones	录音
+Tocá el control de la pantalla que querés manejar	请点击屏幕上要控制的控件
+Controles MIDI borrados	MIDI 控件映射已清除
+Ajustes	设置
+Suave	平滑
+Corte (scratch)	陡峭（搓盘）
+Sí	是
+No	否
+Scratch	搓盘
+Sólo empujar	仅微调转速
+Muy cerca	非常近
+Cerca	近
+Lejos	远
+Muy lejos	非常远
+Rango del pitch	变速范围
+Curva del crossfader	交叉推子曲线
+Cue, hot cues y loops a tiempo	提示点、热提示点和循环对齐节拍
+Al tocar el centro del plato	触摸转盘中央时
+Forma de onda	波形
+Controlador MIDI por USB	USB MIDI 控制器
+Aprender	学习
+Borrar	清除
+%d controles	%d 个控件
+Aprender: tocá un control de la pantalla y después movelo en el aparato. La placa tiene un solo parlante: suena la suma de las dos bandejas; la mezcla se graba en estéreo.	学习映射：先点击屏幕上的控件，再操作设备上的对应控件。开发板只有一个扬声器，播放两个播放台混合后的声音；混音录制为立体声。
+Sin tempo todavía	尚未确定速度
+Tempo y grilla: bandeja %c	速度与节拍网格：播放台 %c
+Mover la grilla	移动节拍网格
+< 1 tiempo	< 1 拍
+1 tiempo >	1 拍 >
+Un tiempo acá	在此设一拍
+La grilla se guarda con el tema. \"Un tiempo acá\" pone una línea de la grilla donde está el cabezal: pausá el tema justo en un golpe y tocalo.	节拍网格会随曲目保存。\"在此设一拍\" 会在播放指针处设置一条网格线：将曲目暂停在准确的节拍处，再点击此按钮。
+Control aprendido	控件映射已学习
+No se pudo abrir	无法打开
+Demasiado largo	时长过长
+Formato no soportado	不支持此格式
+Sin memoria	内存不足
+Eco	回声
+Flanger	镶边效果
+Filtro LFO	LFO 滤波器
+Bitcrush	位深失真
+Pitch	变速
+SYNC	同步
+LOOP	循环
+CARGAR	加载
+CUE	CUE
+FX	效果
+AGUDOS	高频
+MEDIOS	中频
+GRAVES	低频
+FILTRO	滤波器
+MÁSTER	主输出
+tiempo	拍
+GRABAR	录制
+Cargando...	正在加载…
+Sin tema	未加载曲目
+Tocá CARGAR para elegir uno	点击“加载”选择曲目
+BPM	BPM
+Grabando la mezcla en Grabaciones	正在将混音录制到“录音”
+Ahora mové o apretá el control del aparato MIDI	现在请移动或按下 MIDI 设备上的控件
+Hot cue borrado	热提示点已清除

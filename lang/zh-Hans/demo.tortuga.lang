@@ -1,0 +1,312 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+repetir	重复
+si	如果
+no 	非 
+mientras %s%s [	当 %s%s 时 [
+sino	否则
+fin	结束
+definir truco	定义招式
+Tocá las piezas de abajo para armar el programa.	点击下方积木来编写程序。
+(sin número)	（无数字）
+sin número	无数字
+Listo	完成
+¿Qué pregunta?	选择哪种条件？
+quitar «no»	移除“非”
+poner «no»	添加“非”
+girar	转弯
+truco nuevo	新建招式
+usar truco	使用招式
+mientras	当……时
+cuenta =	计数 =
+cuenta +=	计数 +=
+negación	取反
+cuenta = 0	计数 = 0
+sangría	缩进
+Escribí el programa, o tocá las órdenes de abajo	编写程序，或点击下方指令
+Escribí el programa en Lua, o tocá las órdenes de abajo	用 Lua 编写程序，或点击下方指令
+no entiendo «%c»	无法识别“%c”
+el programa es demasiado largo	程序太长
+falta cerrar el paréntesis	缺少右圆括号
+«%s» es una orden, no un valor	“%s”是指令，不能作为值
+falta un valor	缺少一个值
+falta abrir el bloque con [	代码块必须以 [ 开始
+falta cerrar el bloque con ]	代码块必须以 ] 结束
+después de «para» va el nombre	to 后面需要填写名称
+falta el «fin» de «%s»	“%s”缺少 end
+después de «haz» va el nombre	make 后面需要填写名称
+«%s» no va acá	这里不能使用“%s”
+después de «%s» va derecha o izquierda	“%s”后面应为 right 或 left
+«%s» es una pregunta: va en un «si» o un «mientras»	“%s”是条件判断，应放在 if 或 while 中
+no conozco «%s»	未知指令“%s”
+sobra un ]	多了一个 ]
+no entiendo lo que sigue	无法理解后面的内容
+no hay memoria	内存不足
+«%s» todavía no está definido	“%s”尚未定义
+«%s» se llama a sí mismo demasiadas veces	“%s”调用自身的次数过多
+acá va un número	这里需要一个数字
+acá va una pregunta de sí o no	这里需要一个结果为是或否的条件
+«%s» no tiene valor todavía	“%s”尚未赋值
+no se puede dividir por cero	不能除以零
+«%s» lleva un número	“%s”需要一个数字
+falta un «end» para cerrar lo que abre la línea %d	缺少 end，无法结束第 %d 行开始的代码块
+falta un «end»	缺少 end
+falta el «then» del «if»	if 缺少 then
+falta el «do»	缺少 do
+el programa usó demasiada memoria	程序使用了过多内存
+Programá a la tortuga hasta la meta	编写程序，带小海龟走到终点
+Jugar	开始游戏
+Mundos	世界
+Hoja libre	自由画纸
+Difícil	困难
+Fácil	简单
+Sonido	音效
+Difícil: la tortuga tiene que terminar justo en la meta.	困难模式：小海龟必须恰好停在终点。
+Fácil: se gana al pasar por la meta.	简单模式：经过终点即可过关。
+¿Cómo querés programar?	想用哪种方式编程？
+Sin teclado: se tocan las piezas	无需键盘，点击积木即可
+El clásico de la tortuga, con palabras	用文字指令控制小海龟的经典语言
+Un lenguaje de verdad, chico	小巧实用的编程语言
+Se instala aparte	需单独安装
+repetir 4	重复 4 次
+avanzar 2	前进 2 格
+girar derecha	向右转
+pronto	即将推出
+sí	是
+no	否
+En la línea %d, la tortuga chocó con una piedra.	执行到第 %d 行时，小海龟撞到了石头。
+En la línea %d, la tortuga chocó con el borde.	执行到第 %d 行时，小海龟撞到了边界。
+En la línea %d, la tortuga se metió al agua. ¿Había un puente?	执行到第 %d 行时，小海龟走进了水里。那里有桥吗？
+En la línea %d, la puerta estaba cerrada: falta la llave.	执行到第 %d 行时，门仍锁着：还没有钥匙。
+En este nivel todavía no está «%s».	这一关尚不支持“%s”。
+Línea %d: «%s» no lleva esos datos.	第 %d 行：“%s”不接受这些参数。
+Línea %d: en el mapa la tortuga gira de a 90 grados.	第 %d 行：小海龟在地图上只能以 90 度为单位转向。
+Línea %d: en el mapa se avanza de a casillas enteras.	第 %d 行：小海龟在地图上只能按整格前进。
+Línea %d: la tortuga se salió de la hoja.	第 %d 行：小海龟走出了画纸。
+Línea %d: «%s» no sirve en la hoja.	第 %d 行：“%s”无法在画纸上使用。
+El programa terminó y la tortuga quedó a %d casillas de la meta.	程序结束了，小海龟距离终点还有 %d 格。
+El programa terminó y la tortuga no llegó a la meta.	程序结束了，小海龟还没走到终点。
+Llegó, pero quedan %d lechugas sin comer.	已经到达终点，但还有 %d 棵生菜没吃。
+La tortuga tenía que decir cuántas lechugas había.	小海龟需要说出生菜的数量。
+La tortuga pasó por la meta pero no se quedó ahí: en el modo difícil tiene que terminar justo encima.	小海龟经过了终点，却没有停下来。困难模式要求恰好停在终点上。
+La tortuga se quedó dando vueltas: ¿el mientras tiene cómo terminar?	小海龟一直在兜圈，你的 while 循环能结束吗？
+El dibujo no es igual a la figura. Mirá la de puntitos.	画出的图案与目标不同，请参考虚线图案。
+Línea %d: %s	第 %d 行：%s
+No anduvo.	运行失败。
+Volver a intentar	再试一次
+¡Llegó!	到达终点！
+%d piezas: ¡perfecto!	%d 块积木，完美！
+%d piezas. Para tres estrellas: %d o menos.	使用了 %d 块积木。获得三星需要不超过 %d 块。
+Con la tercera pista, dos estrellas como mucho.	使用第三条提示后，最多只能获得两星。
+Anduvo en los %d caminos.	全部 %d 条路线都成功了。
+Otra vez	再来一次
+Siguiente	下一关
+En el primer camino anduvo, en el %d no: %.220s	第一条路线成功了，但第 %d 条失败：%.220s
+Probá preguntar en vez de contar.	试试判断条件，而不是只数步数。
+Todavía no hay bloques: tocá las piezas de abajo.	还没有积木，请点击下方积木。
+Todavía no hay programa: escribilo o tocá las órdenes de abajo.	还没有程序，请编写程序或点击下方指令。
+Lento	慢
+Normal	正常
+Rápido	快
+Muy rápido	很快
+Al toque	立即完成
+Pista %d de %d	第 %d 条提示，共 %d 条
+Así empieza (cambiá los ?):	从这里开始（请替换 ?）：
+Cerrar	关闭
+Ver el esqueleto	查看程序框架
+Otra pista	下一条提示
+(vacío)	（空）
+Ver estos bloques escritos en...	将这些积木显示为以下语言：
+¡A jugar!	开始游戏！
+%d mapas	%d 张地图
+Correr	运行
+Paso	单步
+paso %d de %d	第 %d 步，共 %d 步
+avanzar	前进
+retroceder	后退
+girar izquierda	向左转
+comer	吃
+decir	说
+bajar lápiz	落笔
+subir lápiz	抬笔
+color	颜色
+camino adelante	前方有路
+camino a la derecha	右边有路
+camino a la izquierda	左边有路
+agua adelante	前方有水
+hay lechuga	脚下有生菜
+en la meta	已到终点
+tengo la llave	已有钥匙
+Bloques	积木
+Mundo %d	世界 %d
+Primeros pasos	迈出第一步
+Ponele nombre	起个名字
+Preguntar	判断条件
+Hasta que	直到完成
+Contar	数一数
+A medida	量身定制
+El lápiz	画笔
+La gran travesía	大冒险
+Una orden detrás de otra	逐条执行指令
+Repetir	重复
+Procedimientos	过程
+Si, sino y sensores	if、else 与传感器
+Mientras	while 循环
+Variables	变量
+Parámetros	参数
+Dibujar como en LOGO	像 LOGO 一样画图
+Todo junto	综合运用
+Derecho a la meta	直达终点
+¡Hola! Soy la tortuga. Hago exactamente lo que dice tu programa, una orden detrás de otra.	你好！我是小海龟。我会严格按照你的程序，依次执行每条指令。
+Armá el programa abajo y tocá Correr. Llevame hasta la bandera.	在下方拼好程序，再点击“运行”，带我走到旗帜处吧。
+La tortuga ya mira hacia la meta. ¿Cuántas casillas hay hasta ahí?	小海龟已经面朝终点了。距离终点还有几格呢？
+Avanzar puede llevar un número: cuántas casillas de una vez.	“前进”后面可以填写数字，表示一次走几格。
+Doblar	转弯
+Primero hasta la esquina, después girar, después bajar.	先走到拐角，再转弯，然后往下走。
+Para la tortuga, doblar hacia abajo es girar a la derecha.	对小海龟来说，向下转弯就是向右转。
+La esquina	拐角
+Contá las casillas hasta cada esquina antes de doblar.	每次转弯前，先数数距离拐角还有几格。
+Son dos giros, uno para cada lado.	需要转两次弯，两次方向相反。
+La primera lechuga	第一棵生菜
+Hay que parar justo sobre la lechuga y comerla antes de seguir.	先停在生菜上，把它吃掉，再继续前进。
+Avanzar, comer, avanzar: tres órdenes.	前进、吃、前进，一共三条指令。
+La llave y la puerta	钥匙与门
+La llave se junta sola al pasar por encima.	走过钥匙所在的位置，就会自动拾取钥匙。
+Con la llave, la puerta se abre sola cuando la tortuga llega.	拿到钥匙后，小海龟走到门前时，门会自动打开。
+El zigzag	曲折小路
+Es una escalera: derecha, izquierda, derecha, izquierda.	这是一段阶梯：向右、向左、向右、向左。
+Mirá cuántas casillas tiene cada tramo antes de girar.	每次转弯前，看看这一段有几格。
+Lechugas en fila	一排生菜
+Cuando algo se repite, no hace falta escribirlo muchas veces: repetir lo hace por vos.	当一件事不断重复时，不用把它写很多遍，“重复”会帮你完成。
+Menos piezas, más estrellas.	积木越少，星星越多。
+Avanzar y comer, avanzar y comer... ¿cuántas veces?	前进、吃，前进、吃……要重复几次呢？
+Repetir hace lo de adentro las veces que le digas.	“重复”会按照你指定的次数，执行里面的指令。
+La escalera	阶梯
+Mirá un escalón: avanzar, girar a la izquierda, avanzar, girar a la derecha.	看看一级台阶：前进、向左转、前进、向右转。
+Son cuatro escalones iguales.	一共有四级相同的台阶。
+Escalera de lechugas	生菜阶梯
+Cada escalón tiene una lechuga. Lo que se repite es comer y subir.	每级台阶上都有一棵生菜。重复的动作是吃生菜和爬台阶。
+Después de los cuatro escalones falta un paso hasta la meta.	爬完四级台阶后，再走一格就到终点。
+La vuelta a la laguna	绕过池塘
+La meta está donde arrancás: hay que dar la vuelta entera.	终点就在起点处，要绕一整圈。
+Cada lado es igual: avanzar 3, comer, girar.	每条边的动作都相同：前进 3 格、吃、转弯。
+El cerco de lechugas	生菜围栏
+Un lado es tres veces avanzar y comer. Y son cuatro lados.	走一条边要重复三次“前进、吃”，一共有四条边。
+Se puede poner un repetir adentro de otro.	可以在一个“重复”里面再放一个“重复”。
+La serpiente	蛇形小路
+Bajar, pasar, subir, pasar... y otra vez lo mismo.	向下、横着走、向上、横着走……再重复同样的动作。
+Lo que se repite son ocho órdenes. Al final falta bajar una vez más.	重复的部分有八条指令，最后再向下走一段。
+Tres rincones	三个角落
+Un truco es un grupo de órdenes con un nombre. Lo armás una vez y después lo usás cuando quieras.	招式就是一组有名字的指令。只要编写一次，随时都能调用。
+Entrar a un rincón, comer y volver: son siempre las mismas cinco órdenes.	走进角落、吃生菜、再回来，始终是同样的五条指令。
+Ponele un nombre a esas cinco órdenes y usalo tres veces.	给这五条指令起个名字，再使用三次。
+Dos piedras	两块石头
+Rodear una piedra lleva siete órdenes. ¿Y si le ponés un nombre?	绕过一块石头需要七条指令，不如给它们起个名字？
+Entre las dos piedras hay distinta distancia: por eso no alcanza con repetir.	两块石头的距离不同，所以只用“重复”还不够。
+El truco sirve para todos lados	招式不挑方向
+Las dos piedras se rodean igual, aunque la tortuga mire para otro lado.	即使面朝不同方向，绕过两块石头的方法也相同。
+Las órdenes de girar son para la tortuga, no para el mapa.	转弯的左右方向是以小海龟为准，不是以地图为准。
+Las dos lagunas	两个池塘
+Cada laguna tiene una lechuga en cada esquina. La vuelta es igual en las dos.	每个池塘的四个角都有生菜，绕两个池塘的动作相同。
+Un truco con un repetir adentro, y lo usás dos veces.	在招式里使用“重复”，再调用这个招式两次。
+Dos trucos	两个招式
+Hay piedras para rodear y rincones con lechuga: un truco para cada cosa.	既要绕过石头，又要进入有生菜的角落，为它们各写一个招式吧。
+Los rincones están abajo: el truco gira a la derecha para entrar.	角落在下方，招式需要向右转才能进去。
+Lechugas salteadas	散落的生菜
+Desde ahora tu programa se prueba en varios caminos a la vez, y tiene que andar en todos.	从现在起，你的程序会在多条路线上运行，必须在每条路线上都成功。
+Para eso la tortuga puede preguntar: si pasa algo, hace una cosa; si no, otra.	为此，小海龟可以判断条件：如果条件成立，就做一件事；否则做另一件事。
+Tu programa se prueba en tres caminos distintos: no sirve contar dónde están.	程序会在三条不同路线上运行，不能只记住生菜的位置。
+En cada casilla, preguntá si hay lechuga, y si hay, comela.	每走到一格，都检查是否有生菜；如果有，就吃掉。
+¿Por dónde sigue?	现在往哪走？
+Los caminos tienen ocho casillas, pero doblan en lugares distintos.	每条路线都有八格长，但转弯的位置不同。
+Si hay camino adelante, avanzá; si no, girá y avanzá. Ocho veces.	如果前方有路，就前进；否则先转弯再前进。重复八次。
+Charcos	水坑
+El camino va de a dos casillas. Si adelante hay agua, rodeala; si no, avanzá dos.	路线每段有两格。如果前方有水，就绕过去；否则前进两格。
+Rodear el charco es un truco con nombre, como en el mundo 3.	像世界 3 那样，把绕过水坑的动作写成一个有名字的招式。
+¿Dónde está el puente?	桥在哪里？
+A veces el puente está justo adelante, a veces una casilla más allá.	桥有时就在正前方，有时偏在旁边一格。
+Si adelante hay agua, correte una casilla antes de cruzar.	如果前方有水，先移到旁边一格，再过桥。
+Charcos y lechugas	水坑与生菜
+Como en Charcos, pero al final de cada tramo puede haber una lechuga.	与“水坑”关卡类似，不过每一段的尽头可能有生菜。
+Dos preguntas en cada vuelta: ¿hay agua? y, después de moverte, ¿hay lechuga?	每次判断两个条件：前方有水吗？移动后，脚下有生菜吗？
+Para los dos lados	左右都能走
+Ahora los caminos doblan a la derecha o a la izquierda.	现在，路线可能向右或向左转。
+Si no hay camino adelante, preguntá si hay a la derecha; si no, es a la izquierda.	如果前方没路，就看看右边；右边也没路，就往左边走。
+Hasta la pared	走到墙边
+«Mientras» repite hasta que algo cambia. No hace falta saber cuántas veces.	“当……时”会不断重复，直到条件改变。不必预先知道重复次数。
+Cada camino es de otro largo. No hace falta contar.	每条路线的长度不同，无需数步数。
+Mientras haya camino adelante, avanzá.	只要前方有路，就继续前进。
+Lechugas hasta la meta	一路吃到终点
+No sabés cuánto mide el camino ni dónde están las lechugas.	你不知道路线有多长，也不知道生菜在哪里。
+Mientras no estés en la meta: avanzá, y si hay lechuga, comela.	只要还没到终点，就前进；如果有生菜，就吃掉。
+Hasta el fondo	走完全程
+No sabés cuánto mide cada tramo: avanzá mientras haya camino.	每一段的长度都未知，只要有路就往前走。
+Hay una forma de hacerlo con una sola vuelta que pregunta y gira.	只用一个循环，在里面判断条件和转弯，也能完成。
+El laberinto	迷宫
+Una regla vieja de los laberintos: andá siempre con la mano derecha tocando la pared.	有一个走迷宫的老办法：始终让右手贴着墙走。
+Si hay camino a la derecha, doblá y avanzá; si no, si hay adelante, avanzá; si no, girá a la izquierda.	右边有路就右转并前进，否则前方有路就前进，再否则就左转。
+Escalera sin contar	不用数的阶梯
+Las escaleras tienen distinta cantidad de escalones.	这些阶梯的台阶数各不相同。
+Mientras no estés en la meta, subí un escalón más.	只要还没到终点，就再爬一级台阶。
+El laberinto grande	大迷宫
+La regla de la mano derecha sirve en cualquier laberinto como estos.	右手贴墙的方法适用于这些迷宫。
+Es el mismo programa que en El laberinto.	使用“迷宫”关卡的同一个程序就可以。
+Contá las lechugas	数生菜
+Una variable es una cajita con un nombre que guarda un número. Lo podés cambiar y usar después.	变量就像一个有名字的小盒子，里面存着一个数字。你可以修改它，以后再使用。
+Al final la tortuga tiene que decir cuántas lechugas vio.	最后，小海龟需要说出见到的生菜数量。
+Una variable que arranque en 0 y sume uno por cada lechuga.	让变量从 0 开始，每遇到一棵生菜就加 1。
+Contar hasta la pared	数到墙边
+Ahora tampoco sabés cuánto mide el camino.	这次你也不知道路线有多长。
+Mientras haya camino: avanzar y, si hay lechuga, sumar uno. Después, decir.	只要有路，就前进；如果有生菜，就把计数加 1。最后说出结果。
+La espiral de pasos	逐步扩大的螺旋
+Cada tramo es una casilla más largo que el anterior: 1, 2, 3...	每一段都比上一段长一格：1、2、3……
+Guardá el largo en una variable y sumale uno después de cada giro.	用变量保存长度，每转一次弯就加 1。
+La espiral hacia adentro	向内收缩的螺旋
+Ahora cada tramo es una casilla más corto: 5, 4, 3...	这次每一段都短一格：5、4、3……
+La variable arranca en 5 y le restás uno en cada vuelta.	变量从 5 开始，每次减 1。
+Filas a medida	长短不一的生菜行
+Los trucos pueden recibir un dato, como un número: así el mismo truco sirve para tamaños distintos.	招式可以接收一个值，例如数字，这样同一个招式就能处理不同的大小。
+Hay filas de lechugas de distinto largo: 3, 2 y 3.	这里有几行不同长度的生菜，分别是 3、2、3 格。
+Un truco que reciba el largo: para fila n, repetir n veces avanzar y comer.	让招式接收长度：用 to row n 定义招式，在里面重复 n 次“前进、吃”。
+Escalones de todos los tamaños	大小不一的台阶
+Un escalón de tamaño n: avanzar n, girar a la izquierda, avanzar n, girar a la derecha.	大小为 n 的台阶：前进 n、向左转、前进 n、向右转。
+Después lo usás con 1, con 2 y con 3.	然后分别传入 1、2、3 来调用。
+Rodear a medida	绕过大小不同的石头
+Una piedra es de una casilla y la otra de dos.	一块石头宽一格，另一块宽两格。
+El truco rodear recibe el ancho, y arriba avanza el ancho más uno.	让招式接收宽度，在石头上方前进“宽度加 1”的距离。
+El cuadrado	正方形
+Ahora estás sobre una hoja: la tortuga deja un trazo por donde pasa.	现在来到画纸上了，小海龟走到哪里，就会留下一条线。
+Avanza en pasos chicos y gira los grados que quieras. Dibujá la figura de puntitos.	它可以走小步，也可以转动任意角度。沿着虚线画出图案吧。
+En la hoja la tortuga avanza pasos y gira grados. El lápiz ya está bajado.	在画纸上，小海龟按步数移动、按角度转弯，画笔已经放下。
+Cuatro lados de 100 y, en cada esquina, un giro de 90.	四条边，每条长 100，在每个拐角转 90 度。
+El triángulo	三角形
+Tres lados iguales. ¿Cuánto hay que girar en cada punta?	三条相等的边，每个拐角要转多少度呢？
+En total la tortuga da una vuelta entera, 360 grados, en tres giros.	小海龟总共要转一整圈，也就是分三次转完 360 度。
+La estrella	星星
+Cinco puntas, cinco lados iguales.	五个角，五条等长的边。
+En total la tortuga da dos vueltas enteras: 720 grados en cinco giros.	小海龟总共要转两圈，也就是分五次转完 720 度。
+La casita	小房子
+Primero el cuadrado, después el techo arriba.	先画正方形，再在上面画屋顶。
+El techo es un triángulo: subí por la pared, girá 30 y hacé dos lados.	屋顶是三角形：先沿墙向上走，再转 30 度，画出两条边。
+Polígonos	多边形
+Un triángulo, un cuadrado, un pentágono y un hexágono, uno sobre otro.	把三角形、正方形、五边形和六边形叠在一起。
+Un truco poligono que reciba los lados: gira 360 dividido los lados.	编写一个接收边数的多边形招式，每次转动的角度为 360 除以边数。
+La espiral	螺旋
+Cada lado es 10 más largo que el anterior.	每条边都比上一条长 10。
+Guardá el largo en una variable: empieza en 10 y suma 10 en cada vuelta.	用变量保存长度，从 10 开始，每次加 10。
+La flor	花朵
+Doce hexágonos, cada uno girado 30 grados del anterior.	画十二个六边形，每个都比前一个旋转 30 度。
+Primero enseñale a dibujar un polígono de cualquier cantidad de lados.	先教小海龟画出任意边数的多边形。
+El árbol	树
+Un árbol es un tronco con dos árboles más chicos arriba.	一棵树由树干和上方两棵更小的树组成。
+El truco arbol se usa a sí mismo, con un largo cada vez más chico, y para cuando es muy corto.	画树的招式会调用自身，每次画得更小，短到一定程度就停止。
+El laberinto de las lechugas	生菜迷宫
+La gran travesía: niveles que piden todo lo que aprendiste, junto.	大冒险：这些关卡需要综合运用你学过的所有知识。
+La mano derecha te lleva por todo el laberinto. En el camino hay lechugas.	右手贴墙能带你走遍迷宫，路上还有生菜。
+Al programa del laberinto sumale una pregunta: si hay lechuga, comela.	给迷宫程序加一个判断：如果有生菜，就吃掉。
+Charcos sin contar	不用数的水坑
+Los caminos son de distinto largo y los charcos están en cualquier lado.	路线长短不一，水坑的位置也不固定。
+Mientras no llegues: si hay agua, rodeala; si no, avanzá una.	到达终点前不断重复：有水就绕过去，否则前进一格。
+El molinete	风车
+Ocho cuadrados que giran alrededor del mismo punto.	围绕同一个点画八个正方形。
+Un truco cuadrado, y entre cuadrado y cuadrado, un giro de 45.	写一个画正方形的招式，每画完一个就转 45 度。

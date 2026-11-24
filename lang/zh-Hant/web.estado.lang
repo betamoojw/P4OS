@@ -1,0 +1,131 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Casa	家庭
+Cámaras	攝影機
+NAS	NAS
+Red	網路
+Impresora 3D	3D 印表機
+Taller	工作間
+Router	路由器
+Página web	網頁
+Internet	網際網路
+Puerto TCP	TCP 埠
+Probando	正在檢查
+Anda	正常
+Lento	緩慢
+Caído	故障
+En pausa	已暫停
+No se encuentra el nombre	找不到主機名稱
+Rechaza la conexión	連線被拒絕
+No contesta	沒有回應
+Certificado no válido	憑證無效
+La placa todavía no tiene hora	開發板尚未校時
+Contestó otro código	收到其他狀態碼
+Falta la palabra	缺少指定文字
+No contesta HTTP	未收到 HTTP 回應
+Cortó la conexión	連線已斷開
+Sin memoria	記憶體不足
+La dirección no sirve	地址無效
+servicio %d	服務 %d
+%s: el nombre, de 1 a 39 caracteres y sin corchetes	%s：名稱需為 1 至 39 個字元，且不能包含方括號
+%s: hay dos con ese nombre	%s：已有同名服務
+%s: el grupo, de 23 caracteres como mucho	%s：群組名稱最多為 23 個字元
+%s: falta la dirección (IP o nombre, sin espacios)	%s：缺少地址（IP 或主機名稱，不能包含空格）
+%s: el puerto va de 1 a 65535	%s：埠範圍為 1 至 65535
+%s: falta la IP o el nombre en la dirección	%s：地址中缺少 IP 或主機名稱
+%s: la dirección tiene que empezar con http:// o https://	%s：地址必須以 http:// 或 https:// 開頭
+%s: los códigos que valen, como 200, 200-399 o 200,401	%s：有效狀態碼的格式示例：200、200-399 或 200,401
+%d d %d h	%d 天 %d 小時
+%d h %d min	%d 小時 %d 分鐘
+%d min	%d 分鐘
+%d s	%d 秒
+recién	剛剛
+hace %s	%s前
+Contestó %d	收到狀態碼 %d
+La placa no tomó la orden (%d)	開發板未接受指令 (%d)
+Probando %s	正在檢查 %s
+Probar	檢查
+Seguir	繼續
+Pausar	暫停
+Ver más	詳情
+¿Confiar en el certificado que muestra %s? Desde ahora sólo vale ese: si el servidor lo cambia, va a salir caído hasta que confíes en el nuevo.	信任 %s 提供的憑證？此後將僅認可這張憑證。如果伺服器更換憑證，在您信任新憑證之前，該服務會顯示為故障。
+Listo: se confía en este certificado	完成：已信任此憑證
+Confiar en este certificado	信任此憑證
+falló una vez, probando de nuevo	失敗 1 次，正在重試
+falló %d veces, probando de nuevo	失敗 %d 次，正在重試
+anda	正常
+anda desde hace %s	已正常執行 %s
+24 h	24 小時
+7 días	7 天
+conectar	連線
+Certificado de %s: venció	%s 的憑證：已過期
+Certificado de %s: %d días	%s 的憑證：剩餘 %d 天
+No se pudo leer el certificado	無法讀取憑證
+%s: las últimas 24 horas	%s：過去 24 小時
+Pidiendo el historial a la placa...	正在向開發板請求歷史記錄…
+%s, %s: %s	%s，%s：%s
+%s: sigue caído (%s)	%s：仍處於故障狀態 (%s)
+Sin cortes registrados	沒有中斷記錄
+Latencia de cada cinco minutos (arriba: %s); en rojo, los que no contestó	每五分鐘的延遲（上限：%s）；沒有回應時以紅色顯示
+Disponibilidad por día	每日可用率
+Últimos cortes	最近的中斷
+Pedido HTTP(S)	HTTP(S) 請求
+Puerto TCP abierto	TCP 埠連通
+Sin nombre	未命名
+Más arriba	上移
+Más abajo	下移
+¿Sacar %s de la lista?	從列表中移除 %s？
+este servicio	此服務
+Borrar	刪除
+Nombre	名稱
+Grupo	群組
+Casa, Red, Cámaras...	家庭、網路、攝影機…
+Ícono	圖示
+Cómo se prueba	檢查方式
+Dirección (IP o nombre)	地址（IP 或主機名稱）
+Puerto	埠
+Dirección	地址
+Códigos que valen	表示正常的狀態碼
+Palabra que tiene que estar (opcional)	回應內容須包含的文字（選填）
+Avisar si al certificado le quedan menos días (0: no)	憑證剩餘天數小於此值時提醒（0：不提醒）
+Probar cada	檢查間隔
+Lento desde (ms)	緩慢門檻值 (ms)
+Esperar hasta (ms)	等候逾時 (ms)
+se cayó: contestó %s	發生故障：返回 %s
+se cayó: %s	發生故障：%s
+volvió después de %s	中斷 %s 後恢復
+su certificado venció	憑證已過期
+a su certificado le quedan %s días	憑證還有 %s 天過期
+Nada todavía: acá aparece cada vez que algo se cae o vuelve.	暫無記錄：服務發生故障或恢復時會顯示在這裡。
+Mi casa	家庭狀態
+Leyendo...	正在讀取…
+Guardar en la tarjeta	儲存到記憶卡
+andan	正常
+lento	緩慢
+lentos	緩慢
+caído	故障
+caídos	故障
+La placa no tiene red: los chequeos esperan.	開發板未連線網路：檢查暫緩。
+Probando todos	正在檢查全部服務
+Probar todos	檢查全部
+Sin grupo	未分組
+La app Mi casa no está abierta en la placa. 	開發板尚未開啟“家庭狀態”應用。
+Abrirla	開啟應用
+Ningún servicio todavía: agregalos en Servicios.	暫無服務：請在“服務”頁面新增。
+No se puede leer el estado: %s	無法讀取狀態：%s
+Guardado: la placa empieza a probarlos	已儲存：開發板開始檢查服務
+No se pudo guardar: %s	無法儲存：%s
+IP o nombre: 10.20.30.40	IP 或主機名稱：10.20.30.40
+No entran más de 32 servicios	最多可新增 32 個服務
++ Agregar	+ 新增
+Pitido con cada aviso	每次提醒時發出提示音
+Vigilar desde que prende la placa	開發板啟動時開始監測
+Fallas seguidas para darlo por caído	判定故障的連續失敗次數
+Todos	全部
+Cada servicio se prueba solo: un pedido HTTP(S) que tiene que contestar con uno de los códigos (y, si se pide, tener una palabra), o un puerto TCP que tiene que abrir. Probá sólo tus equipos.	每個服務會獨立檢查：HTTP(S) 請求須返回指定狀態碼（也可要求包含指定文字），或 TCP 埠須能連線。請僅檢查您自己的裝置。
+Agregar desde una plantilla	從範本新增
+Actualizar	重新整理
+Bajar	下載
+Ahora	當前
+Servicios	服務
+Historial	歷史記錄

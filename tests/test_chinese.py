@@ -15,6 +15,7 @@ import gen_lang
 FORMAT = re.compile(r'%(?:\d+\$)?[-+ #0]*(?:\*|\d+)?(?:\.(?:\*|\d+))?(?:hh|ll|[hlzjtL])?[diuoxXfFeEgGaAcsp%](?=$|[^a-z]|x%)')
 
 INTENTIONALLY_IDENTICAL = {
+    'BPM', 'CUE', 'DJ', 'EMP', 'NAS', 'km/h', 'm',
     '808', 'CCL', 'FM', 'GET', 'MEP', 'MyMemory',
     '%.1f %%/h', '%d/%dE', '%dC', '%dC x%d', '%s  %s +%d%%',
     '%s%d PCA9685', '%s, EN GPIO%d, BOOT GPIO%d', '%u h', '+%dC',

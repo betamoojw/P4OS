@@ -1,0 +1,124 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Multímetro	万用表
+Lectura	读数
+Perfil %d	配置 %d
+Elegí el puerto y tocá Conectar	请选择端口并点击“连接”
+Llegan líneas pero sin números: mirá Formato	已收到数据行，但没有数字，请检查“格式”
+Esperando datos…	正在等待数据…
+Hacen falta dos series con datos	需要两个包含数据的序列
+fecha y hora	日期和时间
+segundos	秒
+Valor %d	数值 %d
+nada	无
+Listo	完成
+(todavía no llegó nada)	（尚未收到数据）
+No se pudo abrir el puerto	无法打开端口
+Entre 50 y 5000000 baudios	波特率需在 50 至 5000000 之间
+Velocidad en baudios	波特率
+Conexión	连接
+VELOCIDAD (BAUDIOS)	速率（波特）
+Otra…	其他…
+BITS DE DATOS	数据位
+PARIDAD	校验位
+Ninguna (N)	无（N）
+Par (E)	偶校验（E）
+Impar (O)	奇校验（O）
+BITS DE STOP	停止位
+LÍNEAS DEL ADAPTADOR USB	USB 转接器控制线
+Prendidas, como las deja una computadora. El cable óptico de muchos multímetros se alimenta de DTR con RTS apagado: si no llega nada, probá apagar RTS. Los puertos del header no tienen estas líneas.	默认开启，与电脑的设置相同。许多万用表的光电连接线通过 DTR 供电，并要求 RTS 关闭。若收不到数据，请尝试关闭 RTS。排针上的端口没有这些控制线。
+El canal es el mismo de la Terminal: los dos miran el mismo aparato a la vez, y la captura sigue con la app cerrada. Con la velocidad o el formato equivocados llegan caracteres raros: la vista de Formato muestra qué llega.	与“终端”共用同一通道，两者可同时查看同一个设备，关闭应用后采集仍会继续。速率或格式错误时可能收到乱码，可在“格式”页面查看收到的内容。
+Ya hay 12 perfiles	已有 12 个配置
+Formato	格式
+CÓMO LEER LAS LÍNEAS	数据行解析方式
+Automático	自动
+Automático entiende números separados por espacios, comas, punto y coma o tabs (una serie por columna), el formato nombre:valor de los plotters serie (temp:21.5,hum:40), una palabra antes de cada número (Temp 21.5) y CSV con encabezado. Las líneas sin números se saltean.	自动模式支持以空格、逗号、分号或制表符分隔的数字（每列一个序列）、串口绘图常用的 名称:数值 格式（temp:21.5,hum:40）、每个数字前带一个单词的格式（Temp 21.5），以及带表头的 CSV。没有数字的数据行会跳过。
+Editar el perfil…	编辑配置…
+PERFIL NUEVO	新建配置
+En blanco	空白
+Valor y punto decimal	数值与小数点
+Un perfil sirve para lo que el automático no entiende: elige qué campo de la línea es cada serie, con una escala y un desplazamiento, o con el punto decimal según otro campo (el «+0265 4» de un multímetro es 26.5). Cambiar el formato vuelve a leer las últimas 3000 líneas del canal.	配置用于处理自动模式无法识别的格式。可指定每个序列使用的字段、倍率和偏移量，或通过另一字段确定小数位数（例如万用表的“+0265 4”表示 26.5）。更改格式后会重新解析通道最近的 3000 行数据。
+LO QUE LLEGA	收到的内容
+Nombre del perfil	配置名称
+Usar sólo las líneas que tengan… (vacío: todas)	仅使用包含以下内容的数据行…（留空表示全部）
+Nombre de la serie	序列名称
+Unidad (V, °C, kg…)	单位（V、°C、kg…）
+Multiplicar por	乘以
+Y sumarle	再加上
+Código:decimales, separados por comas (vacío: el campo dice los decimales)	代码:小数位数，以逗号分隔（留空时直接使用字段值作为小数位数）
+EL PERFIL	配置
+Nombre	名称
+Sólo líneas con	仅包含以下内容的数据行
+todas	全部
+Coma decimal	使用逗号作小数点
+LA ÚLTIMA LÍNEA, POR CAMPOS	最近一行的字段
+(sin campos)	（没有字段）
+(no coincide: salteada)	（不匹配，已跳过）
+(sin números)	（没有数字）
+Campo	字段
+Nombre…	名称…
+Unidad	单位
+Punto según el campo	按字段确定小数点
+Punto: como viene	小数点：使用原始值
+Códigos	代码
+el valor	数值
+Quitar	移除
+Agregar una serie	添加序列
+Los campos se cuentan cortando la línea en espacios, tabs, comas, punto y coma, «:» y «=». Con el punto según otro campo, el número se divide por 10 a la cantidad de decimales que dice ese campo; los códigos traducen su valor (4:1 quiere decir que un 4 son un decimal).	数据行按空格、制表符、逗号、分号、: 和 = 分成字段。使用另一字段确定小数点时，将数值除以 10 的相应次幂；代码映射用于转换该字段的含义，例如 4:1 表示字段值为 4 时保留一位小数。
+Borrar el perfil	删除配置
+Avisar por debajo de… (vacío: sin aviso)	低于此值时提醒…（留空则不提醒）
+Avisar por encima de… (vacío: sin aviso)	高于此值时提醒…（留空则不提醒）
+Series y avisos	序列与提醒
+Todavía no llegaron números. Cada nombre que aparece en las líneas (o cada columna) es una serie.	尚未收到数字。数据行中的每个名称或每一列对应一个序列。
+Oculta	隐藏
+Se ve	显示
+Grande	放大
+Mínimo	最小值
+Máximo	最大值
+Pitido	提示音
+Cuando una serie sale de su mínimo o su máximo aparece un aviso, también con otra app adelante, y si tiene pitido, suena; como mucho una vez cada 10 segundos. Los límites se guardan por el nombre de la serie y se ven en el gráfico como líneas punteadas. Tocar una serie en el gráfico la pone grande; tocarla de nuevo la oculta.	序列超出最小值或最大值时会显示提醒，即使前台正在运行其他应用也会提醒；启用提示音后还会发声，每 10 秒最多提醒一次。阈值按序列名称保存，并在图表中以虚线显示。点击图表中的序列可放大，再次点击会隐藏。
+El máximo tiene que ser mayor que el mínimo	最大值必须大于最小值
+Abajo del gráfico	图表底部
+Arriba del gráfico	图表顶部
+Vista	视图
+VENTANA DE TIEMPO	时间窗口
+GRÁFICO	图表
+Contra el tiempo	随时间变化
+XY: una contra otra	XY：两个序列相互对应
+EJE X	X 轴
+EJE Y	Y 轴
+ESCALA	刻度
+Automática	自动
+Fija	固定
+Desde	起点
+Hasta	终点
+DATOS	数据
+Borrar el gráfico	清空图表
+%u lecturas en %s. En memoria quedan las filas de los últimos minutos u horas, según cuántas lleguen, y un resumen por segundo de las últimas 8 horas.	%u 条读数，用时 %s。内存保留最近几分钟或几小时的数据行（取决于接收量），以及最近 8 小时的每秒汇总。
+En el gráfico: un dedo lee el punto que toca; dos dedos acercan o alejan, y arrastrados van hacia atrás en el tiempo (el gráfico se pausa; En vivo vuelve).	在图表上，单指触摸可读取对应点的数值；双指可缩放，拖动可查看历史数据（此时图表暂停，点击“实时”可恢复）。
+Conectá un puerto primero	请先连接端口
+Enviar al puerto	发送到端口
+FIN DE LÍNEA	换行符
+Línea para enviar…	要发送的内容…
+%s: %s %s, por debajo de %s	%s：%s %s，低于 %s
+%s: %s %s, por encima de %s	%s：%s %s，高于 %s
+encabezado:	表头：
+(¿serie nueva?)	（新序列？）
+%s lo tiene %s	%s 正由 %s 占用
+Guardado en	已保存到
+Hace falta la tarjeta	需要存储卡
+Grabando a CSV en la tarjeta	正在存储卡上录制 CSV
+Sin datos todavía	暂无数据
+mín	最小
+máx	最大
+prom	平均
+Detener	停止
+Conectar	连接
+líneas	行
+sin números	无数字
+perdidas	丢失
+grabando	正在录制
+Desconectado: el gráfico guarda lo que llegó	已断开连接，图表保留已接收的数据
+Sin conexión: elegí el puerto y la velocidad	尚未连接，请选择端口和速率
+En vivo	实时
+No hay memoria para los datos	内存不足，无法存放数据

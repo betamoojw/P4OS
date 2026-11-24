@@ -503,6 +503,17 @@ static char *merged_blob(const char *code, const char *file, const char **where)
     return both;
 }
 
+char *aos_i18n_app_catalog_dup(const char *app_id)
+{
+    if (!app_id || !*app_id || strchr(app_id, '/') || strchr(app_id, '\\') || !strcmp(s_code, BASE_CODE))
+        return NULL;
+    char file[AOS_LANG_CODE_MAX + 64];
+    int len = snprintf(file, sizeof file, "%s.lang", app_id);
+    if (len < 0 || (size_t)len >= sizeof file) return NULL;
+    const char *where;
+    return merged_blob(s_code, file, &where);
+}
+
 static bool catalog_load(catalog_t *cat, const char *code, const char *file)
 {
     catalog_free(cat);
@@ -648,11 +659,33 @@ void aos_i18n_init(void)
     }
 }
 
+/* A language's own name by its code, for a pack with no meta.txt: the
+ * Store installs only lang/<code>/_*.lang (aos_store.c, sys_allowed), so a
+ * language it brings would otherwise show up in Settings as "pt". */
+static const char *native_name(const char *code)
+{
+    const aos_lang_pack_t *pack = embedded_pack(code);
+    if (pack) return pack->name;
+    static const char *const N[][2] = {
+        { "en", "English" }, { "de", "Deutsch" }, { "pt", "Português (Brasil)" }, { "fr", "Français" },
+        { "it", "Italiano" }, { "ca", "Català" }, { "gl", "Galego" }, { "eu", "Euskara" },
+        { "nl", "Nederlands" }, { "pl", "Polski" }, { "cs", "Čeština" }, { "sk", "Slovenčina" },
+        { "ro", "Română" }, { "hu", "Magyar" }, { "sv", "Svenska" }, { "da", "Dansk" },
+        { "nb", "Norsk" }, { "fi", "Suomi" }, { "tr", "Türkçe" }, { "el", "Ελληνικά" },
+        { "hr", "Hrvatski" }, { "sl", "Slovenščina" }, { "lt", "Lietuvių" }, { "lv", "Latviešu" },
+        { "et", "Eesti" }, { "id", "Bahasa Indonesia" }, { "ms", "Bahasa Melayu" },
+    };
+    for (size_t i = 0; i < sizeof N / sizeof N[0]; i++)
+        if (!strcmp(N[i][0], code)) return N[i][1];
+    return code;
+}
+
 /* Reads the display name out of a pack's meta.txt. Falls back to the
- * directory name, so a pack with a broken meta is still selectable. */
+ * language's own name when the firmware knows it, then to the directory
+ * name, so a pack with a broken meta is still selectable. */
 static void read_meta_name(const char *code, char *out, size_t len)
 {
-    snprintf(out, len, "%s", code);
+    snprintf(out, len, "%s", native_name(code));
 
     char path[192];
     pack_path(path, sizeof(path), code, META_FILE);

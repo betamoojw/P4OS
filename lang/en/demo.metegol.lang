@@ -51,14 +51,14 @@ Revancha	Rematch
 #: apps\metegol\main\metegol.c:504
 Menú	Menu
 
-#: apps\metegol\main\metegol.c:631
+#: apps\metegol\main\metegol.c:633
 #: apps\metegol\main\mg_menu.c:193
 Falta el paquete del juego: bajalo de la Tienda	The game's pack is missing: get it from the Store
 
-#: apps\metegol\main\metegol.c:648
+#: apps\metegol\main\metegol.c:650
 Preparando la cancha...	Getting the pitch ready...
 
-#: apps\metegol\main\metegol.c:723
+#: apps\metegol\main\metegol.c:725
 No se pudo cargar el estadio	The stadium could not be loaded
 
 #: apps\metegol\main\mg_menu.c:182

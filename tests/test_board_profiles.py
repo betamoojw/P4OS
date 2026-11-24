@@ -68,12 +68,19 @@ static unsigned short framebuffer[AOS_PANEL_W * AOS_PANEL_H];
 #define aos_hal_display_get_rotation() {rotation}
 #include "gf_gfx.h"
 #include "jm_gfx.h"
+#include "ast_gfx.h"
+#include "tg_gfx.h"
+#include "tq_scene.h"
 _Static_assert(AOS_PANEL_W == {width}, "host native stride");
 _Static_assert(AOS_PANEL_W * AOS_PANEL_H * 2 == {width * 1280 * 2}, "frame bytes");
 _Static_assert(GF_MAXPX == {width * 1280}, "golf canvas capacity");
 _Static_assert(JM_MAXPX == {width * 1280}, "board games canvas capacity");
 _Static_assert(JM_MAX_TILES == {((w+15)//16) * ((h+15)//16)}, "board games tile capacity");
-''', "-DAOS_DYNAMIC_APP=1", "-I" + str(ROOT / "apps/golf/main"), "-I" + str(ROOT / "apps/mesa/main"))
+_Static_assert(TQ_FRAME_PIXELS == {width * 1280}, "tank framebuffer capacity");
+_Static_assert(AST_TILE_COUNT(AOS_PANEL_W, AOS_PANEL_H) == {w*h//256}, "asteroids tile capacity");
+_Static_assert(TGX_MAX_TILES == {w*h//256}, "turtle tile capacity");
+''', "-DAOS_DYNAMIC_APP=1", *("-I" + str(ROOT / "apps" / app / "main")
+                              for app in ("golf", "mesa", "asteroides", "tortuga", "tanques")))
 
     def test_header_conversion(self):
         for board in (5, 7, 8, 101):

@@ -1,0 +1,83 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Neón	霓虹
+Gemas	寶石
+Papel	紙張
+Bosque	森林
+Primeros pasos	初試身手
+Llegá a 128.	合成 128。
+Buen pulso	穩紮穩打
+Llegá a 512.	合成 512。
+Mil y pico	邁過千分
+Llegá a 1024.	合成 1024。
+Leyenda	傳奇
+Llegá a 4096.	合成 4096。
+De bolsillo	袖珍棋盤
+En el tablero de 3×3, llegá a 256.	在 3×3 棋盤上合成 256。
+Sin red	不留退路
+Cumplí una meta sin deshacer.	不使用復原，完成一個目標。
+Triple	三重融合
+Hacé tres fusiones en un solo movimiento.	一次移動完成三次融合。
+A contrarreloj	爭分奪秒
+Sumá 3000 puntos contra reloj.	在限時模式中獲得 3000 分。
+Entre piedras	石間求生
+Llegá a 512 con bloques.	在障礙模式中合成 512。
+Mano a mano	針鋒相對
+Terminá una partida de a dos.	完成一局雙人遊戲。
+Maratón	馬拉松
+Hacé 500 movimientos en una partida.	一局遊戲中移動 500 次。
+Coleccionista	收藏家
+Jugá con los cuatro temas.	使用全部四個主題遊玩。
+Clásico	經典
+Contra reloj	限時
+Bloques	障礙
+De a dos	雙人
+Juntá fichas iguales hasta la meta. Cada meta cumplida da otra más alta y un deshacer más.	合併相同的方塊，達到目標。每完成一個目標，就會解鎖更高目標並增加一次復原機會。
+Dos minutos para sumar todo lo que puedas. Cada meta da 20 segundos; deshacer cuesta 10.	在兩分鐘內儘量得分。每完成一個目標增加 20 秒，復原一次扣除 10 秒。
+Piedras fijas que no se mueven y cortan las filas. Las fichas frenan contra ellas.	固定石塊無法移動，會截斷行列，數字方塊碰到它們就會停下。
+Una jugada cada uno, pasándose la placa. Gana quien llega a la meta, o quien sume más.	兩人輪流操作開發板，每人移動一次。先達到目標或得分更高的人獲勝。
+Logro: %s	成就：%s
+¡Meta %s!	達到目標 %s！
++20 segundos. Ahora, %s.	增加 20 秒，下個目標為 %s。
+Ahora, %s. Un deshacer más.	下個目標為 %s，增加一次復原機會。
+Jugador 1	玩家 1
+Jugador 2	玩家 2
+Puntos	分數
+Récord	最高分
+Tiempo	時間
+Meta	目標
+%d×%d · De a dos · gana quien llegue a %s	%d×%d · 雙人 · 先達到 %s 者獲勝
+%d×%d · Contra reloj · meta %s	%d×%d · 限時 · 目標 %s
+%d×%d · %s · nivel %d	%d×%d · %s · 第 %d 級
+-10 s	-10 秒
+Turno del jugador 2	輪到玩家 2
+Turno del jugador 1	輪到玩家 1
+Sonido: sí	音效：開
+Sonido: no	音效：關
+Pausa	已暫停
+Seguir	繼續
+Empezar de nuevo	重新開始
+Menú	選單
+¡Empate!	平局！
+¡Gana el jugador %d!	玩家 %d 獲勝！
+¡Se acabó el tiempo!	時間到！
+No quedan movimientos	已無可用移動
+Jugador 1: %s   Jugador 2: %s	玩家 1：%s   玩家 2：%s
+%s puntos	%s 分
+¡Récord nuevo!	新紀錄！
+Récord: %s	最高分：%s
+Ficha más alta: %s · %lu movimientos	最大方塊：%s · %lu 次移動
+Otra vez	再來一局
+Logros	成就
+%d de %d	%d / %d
+Cerrar	關閉
+Récord en %d×%d, %s: %s puntos, ficha %s	%d×%d、%s 模式的紀錄：%s 分，最大方塊 %s
+Todavía sin récord en %d×%d, %s	%d×%d、%s 模式暫無紀錄
+Seguir (%d×%d, %s)	繼續（%d×%d，%s）
+Partida nueva	新遊戲
+Jugar	開始
+Deslizá, juntá dos iguales, llegá más alto.	滑動方塊，合併相同數字，挑戰更高目標。
+Tablero	棋盤
+Modo	模式
+Tema	主題
+Deslizá en cualquier dirección. Dos fichas iguales se funden en una.	向任意方向滑動，兩個相同的方塊會融合為一個。

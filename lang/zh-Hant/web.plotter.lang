@@ -1,0 +1,60 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Monitor serie	串列埠繪圖
+Monitor serie no está abierto en la placa: el gráfico en vivo aparece cuando la app está abierta (al frente o atrás).	開發板尚未開啟“串列埠繪圖”：應用在前臺或後臺執行時，才會顯示即時圖表。
+Abrir en la placa	在開發板上開啟
+Línea para enviar…	要傳送的文字行…
+Enviado	已傳送
+Bajar la imagen	下載圖片
+Bajar lo que se ve (CSV)	下載當前資料 (CSV)
+Series	資料序列
+Enviar al puerto	傳送到埠
+Enviar	傳送
+Con el fin de línea que se eligió en la app.	使用應用中選擇的行尾格式。
+Lo que llega	接收資料
+Grabaciones (CSV)	記錄 (CSV)
+Perfiles y avisos	設定與提醒
+Esperando datos…	正在等待資料…
+Canal %s · %s a %s %s	通道 %s · %s，%s Bd，%s
+Canal %s · sin conexión	通道 %s · 未連線
+%s líneas	%s 行
+%s perdidas	遺失 %s 行
+grabando	正在記錄
+En vivo	即時
+Pausa	暫停
+Detener la grabación	停止記錄
+Grabar CSV	記錄 CSV
+¿Borrar el gráfico?	清空圖表？
+Borrar	清空
+Serie	資料序列
+Último	最新值
+Mín.	最小值
+Máx.	最大值
+Prom.	平均值
+Avisos	提醒
+Todavía no llegaron números.	尚未收到數值。
+Todavía no hay: el botón de grabar de la app (o Grabar CSV acá) las deja en /plotter de la tarjeta.	暫無記錄：在應用中點選記錄按鈕，或在此處點選“記錄 CSV”，資料會儲存到記憶卡的 /plotter 目錄。
+Bajar	下載
+¿Borrar %s?	刪除 %s？
+Guardado: la app lo toma en un segundo	已儲存，設定將在一秒內生效
+Un perfil es para las líneas que el modo automático no entiende: cada serie es un campo de la línea (cortada en espacios, tabs, comas, punto y coma, «:» y «=»), por una escala más un desplazamiento; el punto decimal puede venir de otro campo, con códigos como 0:0,1:3,2:2,4:1 (código:decimales).	設定用於解析自動模式無法識別的資料行：以空格、定位字元（Tab）、逗號、分號、「:」或「=」分割後，每個資料序列取其中一個欄位，乘以比例再加上偏移量。小數位數也可由另一欄位指定，例如 0:0,1:3,2:2,4:1（代碼:小數位數）。
+Nombre	名稱
+Sólo líneas con	僅接收包含以下內容的行
+Coma decimal	使用逗號作為小數點
+Campo	欄位
+Unidad	單位
+Multiplicar por	乘以
+Sumar	加上
+Punto según el campo (0: no)	指定小數位數的欄位（0：不使用）
+Códigos	代碼
+Quitar la serie	移除資料序列
+Agregar una serie	新增資料序列
+Borrar el perfil	刪除設定
+Perfil %d	設定 %d
+Perfil nuevo	新建設定
+Por el nombre de la serie: un aviso en la placa (y un pitido, si se pide) cuando el valor sale de los límites. Vacío: sin límite.	按資料序列名稱設定：數值超出上下限時，開發板會顯示提醒（也可發出提示音）。留空表示不限制。
+Mínimo	下限
+Máximo	上限
+Pitido	提示音
+Agregar un aviso	新增提醒
+Guardar	儲存

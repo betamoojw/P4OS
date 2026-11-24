@@ -14,6 +14,56 @@ noviembre, junto; el detalle de cada cosa está en su sección, más abajo.
 De antes de noviembre quedan 69 renglones sin tachar desde "Pendientes,
 en resumen": no se revisaron en esta pasada.
 
+**Lo que entra en la 0.33.0 (2026-11-23/24), publicada el 2026-11-24:**
+
+- [ ] **Tanques**: el usuario lo jugó en la placa (vista de arriba ~30 fps
+      quieta y 16-22 fps deslizando; primera persona 36-77 ms; 9,9-12,6 MB de
+      PSRAM de 16,5 libres). Falta abrir los dos DLC en la placa.
+- [ ] **Tortuga**, **Monitor serie** (con el WH5000: el perfil del
+      multímetro supone qué es el último número; verificar con otros rangos)
+      y **Mi casa** (Estado de la casa): sólo probadas en el simulador.
+- [ ] **Deriva**: medir los fps en la placa (el registro da una línea cada
+      5 s) y jugarla con los pulgares y con joystick.
+- [ ] **Fusión**: los fps en 6×6 y las flechas de un teclado a mano.
+- [x] **Vitral** en la placa (2026-11-23, sin el usuario): 59,5-59,9 fps en
+      maratón, 1,6-2,6 ms de dibujo; 1,1 MB de PSRAM.
+- [x] **DJ** en la placa (2026-11-23, sin el usuario, con temas sintetizados y
+      leyendo sus MP3): el hilo de audio 20 % con dos bandejas, 25 % con
+      efectos; cola 8 ms + 10 ms de salida; sin faltas; la interfaz 28-30 fps;
+      8,7 MB de PSRAM libres con la app abierta.
+- [x] **Planeo** en la placa (2026-11-24, con el piloto automático): 426x240
+      a 26-34 fps sin caídas por el rumbo (mapa en mosaicos), PPA 12-13 ms en
+      paralelo, un mundo en 4,0 s, 8 MB de PSRAM. El usuario lo miró en la
+      pantalla: se ve bien.
+- [x] **Planeo** jugado a mano por el usuario un rato (2026-11-24): sin
+      problemas.
+- [ ] **Planeo** con joystick, y las misiones enteras.
+- [ ] **DJ** a mano: escucharla, los dos platos con las dos manos, MIDI.
+- [x] **Vitral** probado a mano por el usuario (2026-11-24): "funciona todo
+      bien".
+- [ ] **Vitral**, lo que falta a mano: los gestos, dos pulgares de a dos, un vitral de
+      verdad con los rayos, acostada y el rompecabezas 19.
+- [ ] **Portugués, francés e italiano** desde la Tienda: que Ajustes los
+      liste con su nombre, recorrer el inicio, Ajustes y un par de apps.
+- [ ] La Tienda tras la release: casi todas las apps ofrecen actualizar
+      (traen sus idiomas nuevos); que se actualicen todas de una sin
+      problemas.
+
+**La Terminal con cualquier velocidad y formato (2026-11-23, para la próxima release):**
+instalada en la placa por OTA (`v0.32.1-1-gadd4d83a-dirty`, confirmada).
+
+- [x] **El tester del usuario, leído** (2026-11-23): un multímetro WH5000
+      ("USB True-RMS, 6000 counts") con su cable USB, que es un CP2102
+      (`usb0 Silicon Labs CP2102 USB to UART Bridge`), a **2400 8N1** con
+      DTR y RTS como quedan (prendidos). Llega una línea de texto por
+      lectura, como `+0265 4`: el signo, los cuatro dígitos de la pantalla
+      (026.5) y un número más (la posición del punto o el rango, sin
+      descifrar). 101 líneas seguidas sin basura. Antes no se podía: la
+      lista empezaba en 9600. En el simulador anduvo además contra un pty
+      a 2400 7E1, a 1800 tipeado a mano y a 1234 8O2.
+- [ ] Una velocidad baja en un UART del header (`uart.a`/`uart.b`) con algo
+      real del otro lado.
+
 **La 0.32.1 (publicada el 2026-11-22, un solo arreglo):**
 
 - [ ] La Tienda espera una descarga libre: tocar "Obtener" apenas se abre

@@ -37,7 +37,7 @@ concurrency:
 env:
   NOT_IN_RELEASE: pato
   # carried over from the latest published release into each new one
-  CARRIED_PACKS: monsterhop_p4.pak turbo_p4.pak golf_p4.pak mila_p4.pak mila_p4.pak.1 mila_p4.pak.2 infrarrojo_p4.pak pinball_zombis_p4.pak pinball_robots_p4.pak pinball_jungla_p4.pak pinball_circo_p4.pak pinball_casino_p4.pak pinball_piratas_p4.pak bastion_p4.pak bastion_p4.pak.1 bastion_p4.pak.2 bastion_luna_p4.pak bastion_selva_p4.pak bastion_magma_p4.pak bastion_hielo_p4.pak bastion_orbita_p4.pak bastion_cristal_p4.pak bastion_cienaga_p4.pak bastion_nebula_p4.pak bastion_colmena_p4.pak bastion_nucleo_p4.pak mesa_p4.pak mesa_marmol_p4.pak mesa_vidrio_p4.pak mesa_metal_p4.pak metegol_p4.pak metegol_rio_p4.pak metegol_madrid_p4.pak metegol_munich_p4.pak metegol_londres_p4.pak metegol_mexico_p4.pak metegol_tokio_p4.pak metegol_avella_rojo_p4.pak metegol_avella_celeste_p4.pak sudoku_p4.pak vuelos_p4.pak hockey_p4.pak hockey_neon_p4.pak hockey_hielo_p4.pak oficina_p4.pak
+  CARRIED_PACKS: monsterhop_p4.pak turbo_p4.pak golf_p4.pak mila_p4.pak mila_p4.pak.1 mila_p4.pak.2 infrarrojo_p4.pak pinball_zombis_p4.pak pinball_robots_p4.pak pinball_jungla_p4.pak pinball_circo_p4.pak pinball_casino_p4.pak pinball_piratas_p4.pak bastion_p4.pak bastion_p4.pak.1 bastion_p4.pak.2 bastion_luna_p4.pak bastion_selva_p4.pak bastion_magma_p4.pak bastion_hielo_p4.pak bastion_orbita_p4.pak bastion_cristal_p4.pak bastion_cienaga_p4.pak bastion_nebula_p4.pak bastion_colmena_p4.pak bastion_nucleo_p4.pak mesa_p4.pak mesa_marmol_p4.pak mesa_vidrio_p4.pak mesa_metal_p4.pak metegol_p4.pak metegol_rio_p4.pak metegol_madrid_p4.pak metegol_munich_p4.pak metegol_londres_p4.pak metegol_mexico_p4.pak metegol_tokio_p4.pak metegol_avella_rojo_p4.pak metegol_avella_celeste_p4.pak sudoku_p4.pak vuelos_p4.pak hockey_p4.pak hockey_neon_p4.pak hockey_hielo_p4.pak oficina_p4.pak tanques_p4.pak tanques_luna.pak tanques_playa.pak tortuga_p4.pak
 
 jobs:
   languages:
@@ -275,7 +275,9 @@ jobs:
           cp out/apps-rev1_3.zip out/apps.zip
           # the apps' own pages in the portal, for the card's /web (docs/PORTAL-PAGES.md)
           mkdir -p out/web && cp apps/*/web/*.js out/web/
-          mkdir -p out/lang && cp -r lang/en lang/de lang/zh-Hans lang/zh-Hant out/lang/
+          # every language there is (lang/xx is the pseudo-language for tests)
+          mkdir -p out/lang
+          for l in lang/*/; do l=$(basename "$l"); [ "$l" = xx ] || cp -r "lang/$l" out/lang/; done
           for a in $NOT_IN_RELEASE; do
             for js in apps/$a/web/*.js; do
               [ -e "$js" ] || continue
@@ -288,9 +290,8 @@ jobs:
           done
           (cd out && zip -qr web.zip web && rm -r web)
           (cd out && zip -qr lang.zip lang && rm -r lang)
-          # The Tienda (docs/plan/TIENDA.md): one <app>.p4app per app and
-          # p4os-store.ndjson, the catalogue the board reads from the
-          # latest published release. A package that is byte for byte the
+          # The Store publishes one catalogue and one package per app for
+          # each silicon profile. A package that is byte for byte the
           # one of that release is not made again: the catalogue goes on
           # pointing at it there. An app whose art pack is in no release
           # yet (store/packs.json) is left out, with a warning.

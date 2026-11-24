@@ -127,6 +127,9 @@ Editar:	編輯：
 menu.txt ordena el inicio, modules.txt dice qué hay conectado al header; los dos se aplican al guardar. cameras.txt son las cámaras de la app Cámaras (y su Frigate), que la relee al guardar. El firmware para el Programador va en /firmware.	menu.txt 配置主螢幕，modules.txt 配置擴充套件介面上的模組，兩者均在儲存後生效。cameras.txt 配置攝像頭應用及 Frigate，儲存後重新載入。燒錄工具使用的韌體請放入 /firmware 目錄。
 Canal A	通道 A
 Canal B	通道 B
+Velocidad en baudios	鮑率
+Bits de datos, paridad y bits de stop	資料位元、同位檢查和停止位元
+Línea %s del adaptador USB	USB 介面卡的 %s 控制線
 Conectar	連線
 Grabar	錄製
 Seguir	自動滾動

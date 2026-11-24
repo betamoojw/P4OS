@@ -209,13 +209,16 @@ run still going.
 
 | Job | What it does | Time |
 |---|---|---|
-| `firmware` (rev1_3, rev3_x) | the firmware of each profile, its ELF and the full-flash bundle | 5-6 min each |
-| `apps` (six shares) | the apps of the card, dealt out to six jobs at once | up to 20 min when everything is built |
-| `reuse` (six) | checks that the cache works (below) | 1-2 min each |
-| `store` | `apps.zip`, `web.zip`, `lang.zip`, and what the Store reads: the catalogue, a package an app, the pictures | under a minute |
+| `firmware` (rev1_3, rev3_x) | LCD5 firmware for each silicon profile, its ELF and the full-flash bundle with the CJK font image | 5-6 min each |
+| `apps` (six shares per profile) | ABI 101 apps for each silicon profile | up to 20 min when everything is built |
+| `reuse` (six per profile) | checks each profile's app cache (below) | 1-2 min each |
+| `store` | per-profile app archives, catalogues and packages, plus shared screenshots, portal pages and language packs | under a minute |
 | `c6` | the ESP32-C6's firmware | 3 min |
 | `packs` | the emoji and Notes packs, and `tools/gen_store.py check` | under a minute |
-| `release` (tags only) | writes the firmware into the catalogue and makes a **draft** release with everything | under a minute |
+| `release` (tags only) | records the firmware by board and profile in both catalogues and makes a **draft** release | under a minute |
+
+`.github/workflows/boards.yml` builds the 7-, 8- and 10.1-inch boards
+with both silicon profiles on pushes to `main` and on pull requests.
 
 **The apps are not built twice from the same sources.** They used to be
 built one after another, sixty ESP-IDF projects that each compile LVGL and
@@ -310,3 +313,56 @@ and rebuild. Compilation rejects disabled decoding to prevent unreadable
 large text. Rebuild dynamic apps against the resulting firmware configuration;
 `tools/build_apps.py --all-profiles --all-boards` synchronizes LVGL settings.
 Chinese fallback fonts and compressed native catalogues remain in onboard Flash.
+
+## Translations
+
+The interface is written in Rioplatense Spanish, and the Spanish text is the
+key: `_("Ajustes")` in C, `tr('Ajustes')` in the portal's scripts.
+`tools/gen_lang.py` collects them into one plain-text catalogue per piece,
+`lang/<code>/<file>.lang` (one line per string: the Spanish, a TAB, the
+translation):
+
+| Catalogue | Holds | Travels |
+|---|---|---|
+| `_sistema.lang` | system screens and home-screen app names | embedded for `en`, `de`, `zh-Hans` and `zh-Hant`; also available on the card |
+| `_portal.lang`, `web.<page>.lang` | the portal and individual app pages | embedded browser assets for all seven translated languages; the card can override individual entries |
+| `<app id>.lang` | one native app | in the app's package and, for the four embedded languages, compressed in the firmware |
+
+English, German, Simplified Chinese and Traditional Chinese are selectable
+without a card. For Brazilian Portuguese (`pt`), French (`fr`) and Italian
+(`it`), install the Store's System language pack or copy the catalogues
+to the card to enable the language in Settings. `lang/GLOSSARY-<code>.md`
+records the terms, tone and app names of those three languages.
+For each web catalogue, the firmware stores the Spanish keys once and a
+compressed list of corresponding translations per language. The browser
+combines the two and then applies the card's ordinary two-column catalogue.
+After editing an embedded native catalogue, regenerate the checked-in resource
+with `python3 tools/gen_lang.py embed --compressor 7zip en de zh-Hans zh-Hant`.
+7-Zip is needed only for this maintenance step. Both the firmware and the
+simulator read the resulting standard zlib streams.
+Those three have not been reviewed by native speakers and may have
+mistakes: whoever finds one does us a favour reporting it as an issue on
+GitHub.
+
+```
+cp -R lang <scratch>/lang
+python3 tools/gen_lang.py --out <scratch>/lang template en   # rewrites EVERY catalogue
+python3 tools/gen_lang.py check pt      # missing, left over, %s/%d that differ
+python3 tools/gen_lang.py stats         # how far each language is
+tools/install_lang.sh sim pt            # the simulator reads sim/sim_fs/lang
+```
+
+**Who translates what.** Whoever writes or changes a text translates it into
+English and German in the same commit: those two are always complete.
+Portuguese, French and Italian are completed by a translation pass before
+each release; until then a new text shows in Spanish in those three, which
+is what the catalogue does with a string it does not have. `stats` lists, per
+language, the percentage done and the catalogues that are behind: that list
+is the pass's work.
+
+Rules that break things when ignored: the `%s`, `%d`, `%.1f`... stay the
+same and in the same order (`check` compares them); `\n` stays escaped; a
+translation never starts with `#` (the line becomes a comment); the
+no-break space is the literal character. Demo 2043, ARKANOS, Claudito and
+Chatarra draw with their own ASCII-only font: no accents in their
+catalogues (`check` warns).

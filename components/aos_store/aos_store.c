@@ -30,6 +30,7 @@
 #include "aos_fetch.h"
 #include "aos_backup.h"
 #include "aos_hal.h"
+#include "aos_ui.h"
 #include "cJSON.h"
 
 #include <ctype.h>
@@ -419,8 +420,9 @@ static bool allowed(const char *path, const char *file)
 
 /* Where a part of the system may put a file - the official source's own
  * (see "System parts" below): lang/<code>/_<name>.lang, the system's and
- * the portal's translations; fonts/<name>.pak, the colour emoji; and
- * firmware/<name>.bin, the radio's firmware, which Settings installs. */
+ * the portal's translations; fonts/<name>.pak, the colour emoji;
+ * icons/<name>.pak, the HD icons (aos_icon_pack.h); and firmware/<name>.bin,
+ * the radio's firmware, which Settings installs. */
 static bool sys_allowed(const char *path)
 {
     if (strlen(path) >= sizeof(((app_t *)0)->sys_path) || strstr(path, "..") || strchr(path, '\\') || strstr(path, "//")) return false;
@@ -431,6 +433,7 @@ static bool sys_allowed(const char *path)
         return b && locale_ok(a + 1, (size_t)(b - a - 1)) && !strchr(b + 1, '/') &&
                b[1] == '_' && ends(b + 1, ".lang") && name_ok(b + 1, strlen(b + 1), "_.");
     if (!strncmp(path, "fonts/", 6)) return !b && ends(a + 1, ".pak") && name_ok(a + 1, strlen(a + 1), "_.") && a[1] != '.';
+    if (!strncmp(path, "icons/", 6)) return !b && ends(a + 1, ".pak") && name_ok(a + 1, strlen(a + 1), "_.") && a[1] != '.';
     if (!strncmp(path, "firmware/", 9)) return !b && ends(a + 1, ".bin") && name_ok(a + 1, strlen(a + 1), "_.") && a[1] != '.';
     return false;
 }
@@ -1364,6 +1367,7 @@ static bool install_system(cJSON *entry, app_t app, bool adopt, err_t *e)
             snprintf(dest, sizeof dest, "%s%s", path, held ? ".new" : "");
             if (!move(tmp, dest)) { fail(e, AOS_STORE_E_CARD, "could not put %.80s in place", dest); goto out; }
             waits = waits || held;
+            if (!strncmp(path, "icons/", 6)) aos_ui_request_icons();   /* the home screen shows it now */
         }
         i++;
     }

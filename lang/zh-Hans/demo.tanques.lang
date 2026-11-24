@@ -1,0 +1,245 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Falta el arte: copiá tanques_p4.pak en /apps de la tarjeta.	缺少美术资源：请将 tanques_p4.pak 复制到存储卡的 /apps 目录。
+¡Fuera de combate!	被击毁了！
+¡Cerca!	差一点！
+¡Afuera!	出界了！
+¡Escudo!	护盾！
+¡Sin energía!	能量耗尽！
+EMP	EMP
+¡Zas!	电击！
+¡Mina!	地雷！
+¡Quema!	着火了！
+¡Zap!	电击！
+¡Bandera!	旗帜！
+¡Recuperada!	夺回了！
+¡Captura!	夺旗成功！
+¡Un cofre!	发现宝箱！
+¡Oleada %d!	第 %d 波！
+No hay memoria para el arte	内存不足，无法加载美术资源
+Oleada %d de %d	第 %d 波，共 %d 波
+Oleada %d	第 %d 波
+Puntos %d-%d (a %d)	比分 %d-%d（目标 %d 分）
+Banderas %d-%d (a %d)	旗帜 %d-%d（目标 %d 面）
+Cofres %d-%d (quedan %d)	宝箱 %d-%d（剩余 %d 个）
+Ronda %d de %d	第 %d 回合，共 %d 回合
+Juega %s	%s 出战
+Tu turno	轮到你了
+Turno: %s	当前回合：%s
+Gravedad baja	低重力
+Viento %s %.0f	风向 %s 风速 %.0f
+Apuntar	瞄准
+Terminar	结束回合
+Mover	移动
+Elevación %d°   Giro %d°	仰角 %d°   转角 %d°
+Segundo disparo: AP x2	第二次射击：AP 消耗 ×2
+Tocá el mapa adonde ir. Arrastrá para mirar.	点击地图选择目的地，拖动查看周围。
+¡Fuego!	开火！
+¿Dejar la batalla?	退出战斗？
+Dejar	退出
+Seguir	继续
+Turno de %s\nPasale la placa	轮到 %s\n请把设备交给对方
+No llega hasta ahí	无法到达那里
+Sin AP	AP 已耗尽
+Bombo	战鼓
+Para todo: buen blindaje, buen motor, tres armas	全能型：装甲厚、动力足，配备三种武器
+Pulga	跳蚤
+Liviana y rápida: llega lejos, aguanta poco	轻巧敏捷：移动距离远，但防护较弱
+Mamut	猛犸
+Pesado: mucho blindaje, dos cañones, lento	重型：厚重装甲、双炮，移动缓慢
+Obús	榴弹炮
+Artillería: lo que va por arriba pega más	火炮型：抛射炮弹的伤害更高
+Avispa	黄蜂
+Misiles: los guiados y los láser pegan más	导弹型：制导导弹和激光的伤害更高
+Topo	鼹鼠
+Ingeniero: cava, arregla y planta minas mejor	工程型：擅长挖掘、维修和布设地雷
+Tortuga	乌龟
+Caparazón: empieza con escudo; su escudo y la Tesla rinden más	重甲型：开局自带护盾，护盾和特斯拉线圈效果更强
+Anfibio	两栖
+Anda por el agua; el cañón doble le pega más	可在水上行驶，双炮伤害更高
+Tanques	坦克
+Misión a la Luna	月球任务
+Día de playa	海滩一日
+Clásico	经典
+Oleadas	波次生存
+Rey de la colina	山丘之王
+Captura la bandera	夺旗
+Búsqueda del tesoro	寻宝
+Gana el último equipo en pie	最后存活的队伍获胜
+Tandas de tanques cada vez más duros: ¿cuántas aguantás?	一波波坦克越来越强，你能坚持多久？
+Un punto por turno empezado dentro de la colina: gana el primero a 4	每次在山丘上开始回合得 1 分，先得 4 分获胜
+Traé la bandera del otro a la tuya: gana el primero a 2	将敌方旗帜带回己方旗帜处，先夺旗 2 次获胜
+Cofres por el mapa: gana el que junta más	宝箱散落在地图上，收集最多者获胜
+Blindaje	装甲
+Motor	引擎
+Velocidad	速度
+Energía	能量
+Más vida y menos daño por golpe	增加生命值，降低每次受到的伤害
+Sube mejor las lomas	增强爬坡能力
+Más metros por punto de acción	每点行动点可移动更远
+Un punto de acción más por turno	每回合增加 1 点行动点
+Cañón	火炮
+Rápido y recto: el de siempre	经典炮弹：快速直射
+Mortero	迫击炮
+Por arriba de lo que tapa	越过前方障碍
+Misil guiado	制导导弹
+Se tuerce hacia el tanque más cercano	转向追踪最近的坦克
+Racimo	集束弹
+Se abre arriba en cinco bombitas	在最高点分裂成五枚小炸弹
+Láser	激光
+Derecho, sin caer, corta lo que encuentra	直线穿透前方目标，不受重力影响
+Napalm	燃烧弹
+Deja fuego dos turnos	留下持续两个回合的火焰
+Minas	地雷
+Tres minas: explotan al pasar	布设三枚地雷，经过时引爆
+Pulso EMP	EMP 脉冲
+Sin daño: el de al lado pierde la mitad de AP	不造成伤害，附近坦克损失一半 AP
+Escudo	护盾
+Frena los próximos 40 de daño	抵挡接下来的 40 点伤害
+Reparación	维修
+Recupera 30 de vida	恢复 30 点生命值
+Humo	烟雾
+Una nube: lo que tira desde ahí o hacia ahí se desvía	形成烟雾，射入或射出的炮弹都会偏离
+Rebote	弹跳弹
+Pica dos veces antes de explotar	弹跳两次后爆炸
+Perforador	钻地弹
+Se mete en la tierra y explota abajo	钻入地下后爆炸
+Bombardeo	空袭
+Marcás un punto y caen cinco bombas	标记一个位置，投下五枚炸弹
+Francotirador	狙击弹
+Muy rápido, poco radio, mucho daño	速度极快、爆炸范围小、伤害高
+Escopeta	霰弹炮
+Cinco perdigones abiertos	发射五枚散开的弹丸
+Terremoto	地震
+Levanta y hunde el suelo alrededor	使周围地面隆起或下陷
+Teletransporte	传送
+Tu tanque aparece donde cae	将你的坦克传送到弹着点
+Muro	石墙
+Levanta tres piedras donde cae	在弹着点竖起三块岩石
+Bomba gorda	巨型炸弹
+Lenta y enorme	速度慢，威力巨大
+Bobina Tesla	特斯拉线圈
+Un rayo que salta a todo lo que hay cerca	闪电会连锁攻击附近所有目标
+Cañón doble	双炮
+Dos tiros seguidos: el segundo se abre por el retroceso	连续射击两次，后坐力会使第二发偏离
+Naranja	橙色
+Crema	奶油色
+Azul	蓝色
+Blanco	白色
+Verde	绿色
+Arena	沙色
+Rojo	红色
+Gris	灰色
+Carbón	炭黑色
+Violeta	紫色
+Rosa	粉色
+Celeste	天蓝色
+Pradera	草原
+Desierto	沙漠
+Nieve	雪地
+Ruinas	废墟
+Volcán	火山
+Luna	月球
+Playa	海滩
+Despejado	晴朗
+Viento	有风
+Tormenta	风暴
+Niebla	雾天
+Chico	小
+Mediano	中
+Grande	大
+Muy grande	特大
+Fácil	简单
+Normal	普通
+Difícil	困难
+Muy pocos	极少
+Pocos	少
+Muchos	多
+Un montón	很多
+El primer día	第一天
+La loma del medio	中央山丘
+Dos contra uno	二对一
+Arena en los ojos	风沙迷眼
+El oasis	绿洲
+Tormenta de arena	沙尘暴
+Bajo cero	零度以下
+El muñeco de nieve	雪人
+Avalancha	雪崩
+La ciudad vacía	空城
+La plaza	广场
+El volcán	火山
+Alunizaje	登月
+Acá todo cae más despacio: apuntá más bajo	这里的一切下落都更慢，瞄准时压低炮口
+Defensa de la base	保卫基地
+Aguantá 6 rondas	坚持 6 个回合
+El rey del cráter	陨石坑之王
+Rey de la colina: 4 puntos	山丘之王：获得 4 分
+Escolta al rover	护送月球车
+El rover tiene que sobrevivir	月球车必须存活
+Lluvia de meteoritos	流星雨
+Oleadas: aguantá 3	波次生存：坚持 3 波
+La cara oculta	月球背面
+El jefe tiene el triple de vida	首领拥有三倍生命值
+Desembarco	登陆
+Un solo puente une las islas	岛屿之间只有一座桥连接
+Cofres en la arena	沙中的宝箱
+La bandera pirata	海盗旗
+Captura la bandera: 2 veces	夺旗：夺取 2 次
+Marea alta	涨潮
+Ganá en 7 rondas o menos	在 7 个回合内获胜
+Que no crucen	阻止他们过桥
+Aguantá 7 rondas	坚持 7 个回合
+El almirante	海军上将
+Vos	你
+No te alcanzan las monedas	金币不足
+Tiene que llevar por lo menos un arma	至少需要携带一种武器
+Al máximo	已升至最高级
+Mejorar\n%d	升级\n%d
+Lleva %d de %d armas	已装备 %d 种武器，最多 %d 种
+Viene con\n%s	自带\n%s
+Comprar\n%d	购买\n%d
+Quitar	卸下
+Llevar	装备
+Color	颜色
+Segundo color	第二种颜色
+Emblema	徽章
+Color del emblema	徽章颜色
+%ld monedas	%ld 金币
+%s\nVida %d · Blindaje %d%% · %d AP · %d armas	%s\n生命 %d · 装甲 %d%% · %d AP · %d 种武器
+Comprar · %d	购买 · %d
+El tuyo	已拥有
+Usar este	使用这辆
+Hangar	车库
+Mejoras	升级
+Armas	武器
+Pintura	涂装
+Historia	故事
+Batalla libre	自由对战
+Jefe %s	首领 %s
+Rover	月球车
+Campaña	战役
+No instalado: llega con su paquete	尚未安装，请安装对应资源包
+%s · %s · %d monedas	%s · %s · %d 金币
+%s · 1 rival · %d monedas	%s · 1 名对手 · %d 金币
+%s · %d rivales · %d monedas	%s · %d 名对手 · %d 金币
+Ganá la anterior para jugarla	完成上一关后即可解锁
+Sin aire	无大气
+Objetos	物体
+Jugador 1	玩家 1
+Jugador 2	玩家 2
+Modo	模式
+Lugar	场地
+Tamaño	大小
+Rivales	对手
+Dificultad	难度
+Clima	天气
+Jugadores	玩家
+Tanque del 2	玩家 2 的坦克
+¡A la batalla!	出战！
+%d oleadas	%d 波
+Empate	平局
+¡Ganó %s!	%s 获胜！
+¡Ganaste!	你赢了！
+Perdiste	你输了
+Daño hecho: %d   Tanques fuera: %d	造成伤害：%d   击毁坦克：%d
++%d monedas	+%d 金币

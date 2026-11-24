@@ -1,0 +1,79 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Islas	群島
+Cañones	峽谷
+Nieve	雪地
+Volcán	火山
+Ciudad	城市
+Mañana	清晨
+Mediodía	正午
+Atardecer	黃昏
+Noche	夜晚
+Anillos	穿環
+Carrera	競速
+Entregas	送貨
+Pasá por los anillos en orden, lo más rápido que puedas.	按順序穿過圓環，儘可能快地完成。
+Una carrera por los anillos contra otro avión.	與另一架飛機比賽，穿過各個圓環。
+Pasá bajo por la luz verde a buscar cada paquete y llevalo a la naranja.	低空飛過綠光拾取包裹，再送到橙光處。
+Rápida	流暢
+Normal	標準
+Fina	精細
+Volá sobre mundos que el P4 dibuja en vivo	飛越由 P4 即時繪製的世界
+Misiones	任務
+Vuelo libre	自由飛行
+Ajustes	設定
+Se abre con %d estrellas (tenés %d).	需要 %d 顆星解鎖（您有 %d 顆）。
+Récord: %s	紀錄：%s
+Sin récord	暫無紀錄
+Sin reloj ni anillos: elegí un mundo y una hora, y volá.	沒有計時和圓環限制，選擇一個世界和時段，自由飛行。
+Mundo	世界
+Hora	時段
+Volar	起飛
+Apagado	關
+Prendido	開
+Arriba sube	向上抬頭
+Arriba baja	向上俯衝
+Detrás	後方視角
+Cabina	駕駛艙
+Sonido	音效
+Palanca	搖桿
+Calidad	畫質
+Cámara	視角
+Cuadros por segundo	每秒影格數
+\"Arriba baja\" es como en un avión: tirar hacia vos levanta la nariz. La calidad fina dibuja más puntos y va más lenta.	\"向上俯衝\" 與真實飛機的操作相同：向自己拉動搖桿會抬起機頭。精細畫質會繪製更多細節，執行速度也會降低。
+Pausa	暫停
+Seguir	繼續
+Empezar de nuevo	重新開始
+Salir al menú	返回選單
+¡Ganaste la carrera!	競速獲勝！
+Te ganó por poco	差一點就贏了
+¡Misión cumplida!	任務完成！
+¡Récord nuevo!	新紀錄！
+Ganale para la segunda estrella.	擊敗對手可獲得第二顆星。
+Tercera estrella: ganale por seis segundos (%s).	第三顆星：領先對手六秒獲勝（%s）。
+Próxima estrella: %s	下一顆星：%s
+Otra vez	再來一次
+Siguiente	下一關
+Menú	選單
+ANILLOS	穿環
+CARRERA	競速
+ENTREGAS	送貨
+VUELO LIBRE	自由飛行
+¡YA!	出發！
+¡LLEGASTE!	到達終點！
+¡GANASTE!	你贏了！
+TE GANÓ	落敗
+¡PAQUETE!	拾取包裹！
+¡ENTREGADO!	送達！
+¡PÉRDIDA!	失速！
+¡CHOQUE!	撞擊！
+¡RÉCORD!	新紀錄！
+km/h	km/h
+m	m
+1.º	第1
+2.º	第2
+¡MUY BAJO!	飛得太低！
+Buscá el paquete	拾取包裹
+Llevalo a destino	送往目的地
+ÚLTIMO	最後
+Armando el mundo: %s	正在生成世界：%s

@@ -1,0 +1,71 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+El parlante está ocupado	揚聲器正被佔用
+No hay temas. Copiá MP3, WAV o FLAC a la carpeta music de la tarjeta.	暫無曲目。請將 MP3、WAV 或 FLAC 檔案複製到記憶卡的 music 資料夾。
+Nada coincide con la búsqueda.	沒有符合搜尋條件的內容。
+%d de %d	%d / %d
+%d temas	%d 首曲目
+Cargar en la bandeja %c	載入到 %c 播放台
+Temas	曲目
+Buscar	搜尋
+Música	音樂
+Grabaciones	錄音
+Tocá el control de la pantalla que querés manejar	請點選螢幕上要控制的控制元件
+Controles MIDI borrados	MIDI 控制元件映射已清除
+Ajustes	設定
+Suave	平滑
+Corte (scratch)	陡峭（刷碟）
+Sí	是
+No	否
+Scratch	刷碟
+Sólo empujar	僅微調轉速
+Muy cerca	非常近
+Cerca	近
+Lejos	遠
+Muy lejos	非常遠
+Rango del pitch	變速範圍
+Curva del crossfader	交叉推桿曲線
+Cue, hot cues y loops a tiempo	提示點、熱提示點和循環對齊節拍
+Al tocar el centro del plato	觸控轉盤中央時
+Forma de onda	波形
+Controlador MIDI por USB	USB MIDI 控制器
+Aprender	學習
+Borrar	清除
+%d controles	%d 個控制元件
+Aprender: tocá un control de la pantalla y después movelo en el aparato. La placa tiene un solo parlante: suena la suma de las dos bandejas; la mezcla se graba en estéreo.	學習映射：先點選螢幕上的控制元件，再操作裝置上的對應控制元件。開發板只有一個揚聲器，播放兩個播放台混合後的聲音；混音錄製為立體聲。
+Sin tempo todavía	尚未確定速度
+Tempo y grilla: bandeja %c	速度與節拍網格：播放台 %c
+Mover la grilla	移動節拍網格
+< 1 tiempo	< 1 拍
+1 tiempo >	1 拍 >
+Un tiempo acá	在此設一拍
+La grilla se guarda con el tema. \"Un tiempo acá\" pone una línea de la grilla donde está el cabezal: pausá el tema justo en un golpe y tocalo.	節拍網格會隨曲目儲存。\"在此設一拍\" 會在播放指標處設定一條網格線：將曲目暫停在準確的節拍處，再點選此按鈕。
+Control aprendido	控制元件映射已學習
+No se pudo abrir	無法開啟
+Demasiado largo	時長過長
+Formato no soportado	不支援此格式
+Sin memoria	記憶體不足
+Eco	回聲
+Flanger	鑲邊效果
+Filtro LFO	LFO 濾波器
+Bitcrush	位元深度失真
+Pitch	變速
+SYNC	同步
+LOOP	循環
+CARGAR	載入
+CUE	CUE
+FX	效果
+AGUDOS	高頻
+MEDIOS	中頻
+GRAVES	低頻
+FILTRO	濾波器
+MÁSTER	主輸出
+tiempo	拍
+GRABAR	錄製
+Cargando...	正在載入…
+Sin tema	未載入曲目
+Tocá CARGAR para elegir uno	點選「載入」選擇曲目
+BPM	BPM
+Grabando la mezcla en Grabaciones	正在將混音錄製到「錄音」
+Ahora mové o apretá el control del aparato MIDI	現在請移動或按下 MIDI 裝置上的控制元件
+Hot cue borrado	熱提示點已清除

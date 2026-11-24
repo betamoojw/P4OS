@@ -1,0 +1,131 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+Casa	家庭
+Cámaras	摄像头
+NAS	NAS
+Red	网络
+Impresora 3D	3D 打印机
+Taller	工作间
+Router	路由器
+Página web	网页
+Internet	互联网
+Puerto TCP	TCP 端口
+Probando	正在检查
+Anda	正常
+Lento	缓慢
+Caído	故障
+En pausa	已暂停
+No se encuentra el nombre	找不到主机名
+Rechaza la conexión	连接被拒绝
+No contesta	无响应
+Certificado no válido	证书无效
+La placa todavía no tiene hora	开发板尚未获取时间
+Contestó otro código	返回了其他状态码
+Falta la palabra	缺少指定文字
+No contesta HTTP	没有 HTTP 响应
+Cortó la conexión	连接已断开
+Sin memoria	内存不足
+La dirección no sirve	地址无效
+servicio %d	服务 %d
+%s: el nombre, de 1 a 39 caracteres y sin corchetes	%s：名称需为 1 至 39 个字符，且不能包含方括号
+%s: hay dos con ese nombre	%s：已有同名服务
+%s: el grupo, de 23 caracteres como mucho	%s：分组名称最多为 23 个字符
+%s: falta la dirección (IP o nombre, sin espacios)	%s：缺少地址（IP 或主机名，不能包含空格）
+%s: el puerto va de 1 a 65535	%s：端口范围为 1 至 65535
+%s: falta la IP o el nombre en la dirección	%s：地址中缺少 IP 或主机名
+%s: la dirección tiene que empezar con http:// o https://	%s：地址必须以 http:// 或 https:// 开头
+%s: los códigos que valen, como 200, 200-399 o 200,401	%s：有效状态码的格式示例：200、200-399 或 200,401
+%d d %d h	%d 天 %d 小时
+%d h %d min	%d 小时 %d 分钟
+%d min	%d 分钟
+%d s	%d 秒
+recién	刚刚
+hace %s	%s前
+Contestó %d	返回状态码 %d
+La placa no tomó la orden (%d)	开发板未接受指令 (%d)
+Probando %s	正在检查 %s
+Probar	检查
+Seguir	继续
+Pausar	暂停
+Ver más	详情
+¿Confiar en el certificado que muestra %s? Desde ahora sólo vale ese: si el servidor lo cambia, va a salir caído hasta que confíes en el nuevo.	信任 %s 提供的证书？此后将仅认可这张证书。如果服务器更换证书，在您信任新证书之前，该服务会显示为故障。
+Listo: se confía en este certificado	完成：已信任此证书
+Confiar en este certificado	信任此证书
+falló una vez, probando de nuevo	失败 1 次，正在重试
+falló %d veces, probando de nuevo	失败 %d 次，正在重试
+anda	正常
+anda desde hace %s	已正常运行 %s
+24 h	24 小时
+7 días	7 天
+conectar	连接
+Certificado de %s: venció	%s 的证书：已过期
+Certificado de %s: %d días	%s 的证书：剩余 %d 天
+No se pudo leer el certificado	无法读取证书
+%s: las últimas 24 horas	%s：过去 24 小时
+Pidiendo el historial a la placa...	正在向开发板请求历史记录…
+%s, %s: %s	%s，%s：%s
+%s: sigue caído (%s)	%s：仍处于故障状态 (%s)
+Sin cortes registrados	没有中断记录
+Latencia de cada cinco minutos (arriba: %s); en rojo, los que no contestó	每五分钟的延迟（上限：%s）；无响应时显示为红色
+Disponibilidad por día	每日可用率
+Últimos cortes	最近的中断
+Pedido HTTP(S)	HTTP(S) 请求
+Puerto TCP abierto	TCP 端口连通
+Sin nombre	未命名
+Más arriba	上移
+Más abajo	下移
+¿Sacar %s de la lista?	从列表中移除 %s？
+este servicio	此服务
+Borrar	删除
+Nombre	名称
+Grupo	分组
+Casa, Red, Cámaras...	家庭、网络、摄像头…
+Ícono	图标
+Cómo se prueba	检查方式
+Dirección (IP o nombre)	地址（IP 或主机名）
+Puerto	端口
+Dirección	地址
+Códigos que valen	表示正常的状态码
+Palabra que tiene que estar (opcional)	响应中必须包含的文字（可选）
+Avisar si al certificado le quedan menos días (0: no)	证书剩余天数小于此值时提醒（0：不提醒）
+Probar cada	检查间隔
+Lento desde (ms)	缓慢阈值 (ms)
+Esperar hasta (ms)	等待超时 (ms)
+se cayó: contestó %s	发生故障：返回 %s
+se cayó: %s	发生故障：%s
+volvió después de %s	中断 %s 后恢复
+su certificado venció	证书已过期
+a su certificado le quedan %s días	证书还有 %s 天过期
+Nada todavía: acá aparece cada vez que algo se cae o vuelve.	暂无记录：服务发生故障或恢复时会显示在这里。
+Mi casa	家庭状态
+Leyendo...	正在读取…
+Guardar en la tarjeta	保存到存储卡
+andan	正常
+lento	缓慢
+lentos	缓慢
+caído	故障
+caídos	故障
+La placa no tiene red: los chequeos esperan.	开发板未连接网络：检查暂缓。
+Probando todos	正在检查全部服务
+Probar todos	检查全部
+Sin grupo	未分组
+La app Mi casa no está abierta en la placa. 	开发板尚未打开“家庭状态”应用。
+Abrirla	打开应用
+Ningún servicio todavía: agregalos en Servicios.	暂无服务：请在“服务”页面添加。
+No se puede leer el estado: %s	无法读取状态：%s
+Guardado: la placa empieza a probarlos	已保存：开发板开始检查服务
+No se pudo guardar: %s	无法保存：%s
+IP o nombre: 10.20.30.40	IP 或主机名：10.20.30.40
+No entran más de 32 servicios	最多可添加 32 个服务
++ Agregar	+ 添加
+Pitido con cada aviso	每次提醒时发出提示音
+Vigilar desde que prende la placa	开发板启动时开始监测
+Fallas seguidas para darlo por caído	判定故障的连续失败次数
+Todos	全部
+Cada servicio se prueba solo: un pedido HTTP(S) que tiene que contestar con uno de los códigos (y, si se pide, tener una palabra), o un puerto TCP que tiene que abrir. Probá sólo tus equipos.	每个服务会独立检查：HTTP(S) 请求须返回指定状态码（也可要求包含指定文字），或 TCP 端口须能连接。请仅检查您自己的设备。
+Agregar desde una plantilla	从模板添加
+Actualizar	刷新
+Bajar	下载
+Ahora	当前
+Servicios	服务
+Historial	历史记录

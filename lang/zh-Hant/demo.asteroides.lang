@@ -1,0 +1,96 @@
+# Offline Chinese catalogue; reviewed terms: ../zh-overrides.json
+# Spanish keys and printf/escape tokens are preserved.
+El segundo jugador juega con un joystick USB: enchufá uno	第二位玩家需要 USB 手把，請插入一個手把
+Seguir: sector %d	繼續：星區 %d
+Campaña nueva	新戰役
+Campaña	戰役
+Arcade	街機
+Arcade de a dos	雙人街機
+Ajustes	設定
+Récord del arcade: %d (oleada %d)	街機紀錄：%d（第 %d 波）
+Fácil	簡單
+Difícil	困難
+Normal	普通
+Dificultad: %s	難度：%s
+Controles: palanca	操作：搖桿
+Controles: botones	操作：按鈕
+Disparo a la izquierda	左側射擊
+Disparo a la derecha	右側射擊
+Sonido: sí	音效：開
+Sonido: no	音效：關
+Música: sí	音樂：開
+Música: no	音樂：關
+Sacudidas: sí	畫面震動：開
+Sacudidas: no	畫面震動：關
+La campaña vuelve a empezar	戰役將從頭開始
+Cómo se juega	玩法說明
+Empezar la campaña de cero	重新開始戰役
+Volver	返回
+Con un pulgar en la palanca la nave gira hacia donde apuntás; llevada más allá de la mitad, además empuja. Sin nada que la frene, la nave sigue de largo: para parar hay que darse vuelta y empujar.	用一隻拇指操作搖桿，飛船會轉向所指方向；推動超過一半時還會產生推力。飛船會持續漂移，若要停下，需要轉身向反方向推進。
+Con el otro pulgar: cualquier lugar de ese lado dispara, y el botón redondo es el salto, que te lleva a un lugar despejado y tarda en volver a cargarse.	另一隻拇指點選螢幕另一側的任意位置即可射擊。圓形按鈕用於躍遷，可將飛船傳送到空曠處，使用後需要等待充能。
+Las rocas comunes se parten en dos, las violetas en tres. Las de metal aguantan varios tiros. Las naranjas explotan y se llevan lo que tienen cerca. Las verdes se te pegan: cada una te frena y tres te aplastan; un salto o un escudo te las sacan.	普通岩石會裂成兩塊，紫色岩石會裂成三塊。金屬岩石需要多次射擊才能摧毀。橙色岩石會爆炸並摧毀附近物體。綠色岩石會黏住飛船，每塊都會減速，三塊就會壓毀飛船；躍遷或護盾可以將它們清除。
+Los enemigos y las rocas grandes dejan mejoras: disparo triple, escudo, rayo e imán. Los cristales se juntan pasando cerca y en la campaña se gastan en el taller entre sectores.	敵人和大型岩石會掉落三連發、護盾、光束和磁鐵等強化道具。靠近水晶即可拾取，戰役中可在星區之間的工坊消費。
+La campaña son doce sectores, con un jefe cada cuatro. El arcade son oleadas sin fin y el récord. Con dos joysticks USB, o uno más la pantalla, juegan dos.	戰役共有十二個星區，每四個星區有一個首領。街機模式則是無盡波次和分數挑戰。連接兩個 USB 手把，或使用一個手把加觸控螢幕，即可雙人遊玩。
+Joystick: la palanca o la cruz para girar (arriba empuja), A dispara, B salta, START pausa.	手把：搖桿或方向鍵轉向（向上推進），A 射擊，B 躍遷，START 暫停。
+Motor	引擎
+Cañón	火炮
+Blindaje	裝甲
+Salto	躍遷
+Imán	磁鐵
+empuja más y llega más rápido	增強推力，提高最高速度
+dispara más seguido y más lejos	提高射速和射程
+cada sector empieza con escudo	每個星區開始時獲得護盾
+el salto carga antes	縮短躍遷充能時間
+los cristales vienen de más lejos	吸引更遠處的水晶
+Nave extra (%d)  ·  %d	額外飛船（%d） · %d
+completo	已滿
+Faltan cristales	水晶不足
+Cristales: %d	水晶：%d
+Taller	工坊
+una vida más para lo que queda	為後續旅程增加一次生命
+Aurora	極光
+Cuarzo	石英
+Ámbar	琥珀
+Forja	鍛爐
+Coral	珊瑚
+Índigo	靛藍
+Ceniza	灰燼
+Panal	蜂房
+Jade	翡翠
+Magma	岩漿
+Vacío	虛空
+Abismo	深淵
+El Coloso	巨像
+La Colmena	蜂巢
+La Serpiente	巨蛇
+Disparo triple	三連發
+Escudo	護盾
+Rayo	光束
+Una nave más	增加一艘飛船
+Sector	星區
+Oleada	波次
+Sector limpio	星區已清空
+¡Cuidado!	小心！
+Sin naves	飛船已耗盡
+¡Campaña completa!	戰役通關！
+¡Listos!	準備就緒！
+Disparo	射擊
+Récord	紀錄
+Pausa	暫停
+Sector %d, oleada %d de %d  ·  %d puntos	星區 %d，第 %d / %d 波 · %d 分
+Oleada %d  ·  %d puntos	第 %d 波 · %d 分
+Seguir	繼續
+Empezar el sector de nuevo	重新開始星區
+Empezar de nuevo	重新開始
+Salir al menú	返回選單
+Al sector %d	前往星區 %d
+Sector %d  ·  %d puntos	星區 %d · %d 分
+Los cristales y las mejoras quedan	水晶和升級會保留
+Probar el sector otra vez	再挑戰此星區
+¡Récord nuevo!	新紀錄！
+El %d.º mejor	排名第 %d
+Otra vez	再來一次
+Menú	選單
+%d puntos y %d cristales	%d 分，%d 顆水晶
+Los doce sectores, limpios. Ahora, el arcade.	十二個星區全部清空，現在來挑戰街機模式吧。
+No hay memoria para el juego	記憶體不足，無法執行遊戲

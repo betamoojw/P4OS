@@ -1881,6 +1881,19 @@ Pitido	提示音
 Sin avisos.	暂无提醒。
 Agregar un texto…	添加文本…
 SUGERENCIAS	建议
+Entre 50 y 5000000 baudios	50 至 5,000,000 Bd
+Velocidad en baudios	波特率
+VELOCIDAD (BAUDIOS)	波特率
+Otra…	其他…
+BITS DE DATOS	数据位
+PARIDAD	校验方式
+Ninguna (N)	无校验 (N)
+Par (E)	偶校验 (E)
+Impar (O)	奇校验 (O)
+BITS DE STOP	停止位
+LÍNEAS DEL ADAPTADOR USB	USB 适配器控制线
+Prendidas, como las deja una computadora. El cable óptico de muchos multímetros se alimenta de DTR con RTS apagado: si no llega nada, probá apagar RTS. Los puertos del header no tienen estas líneas.	默认开启，与电脑连接时一致。许多万用表的光电线缆由 DTR 供电，并要求关闭 RTS：如果没有数据，请尝试关闭 RTS。排针串口没有这些控制线。
+Lo más común es 8N1 (8 bits, sin paridad, 1 de stop). Muchos multímetros usan 7E1, 7O1 o 7N2 a 1200, 2400 o 19200; el manual o la etiqueta del cable lo dicen. Con la velocidad o el formato equivocados llegan caracteres raros: la vista Hexa ayuda a ver qué llega.	最常用的是 8N1（8 个数据位、无校验、1 个停止位）。许多万用表使用 7E1、7O1 或 7N2，波特率为 1200、2400 或 19200；请查阅说明书或线缆标签。波特率或格式不正确会出现乱码，可通过十六进制视图查看收到的数据。
 Hexa	十六进制
 Final	结束
 Enviar al puerto…	发送到串口…
@@ -2035,6 +2048,12 @@ SONIDOS DEL SISTEMA	系统音效
 Sonidos del sistema	系统音效
 Clic del teclado	键盘音效
 Al bloquear y desbloquear, las notificaciones, las capturas y la grabación de pantalla. Se apagan también con la campana del Centro de control.	锁定、解锁、通知、截图和录屏时播放音效。也可通过控制中心的铃铛按钮关闭。
+3D de juguete	3D 玩具
+Línea	线条
+ÍCONOS	图标
+Los de siempre	默认图标
+Los íconos dibujados de un pack; las apps que no están en él se ven como siempre.	使用图标包中的图标。包内未收录的应用仍显示默认图标。
+Los packs de íconos se bajan de la Tienda, en Sistema.	可在商店的“系统”分类中下载图标包。
 El del reloj cambia con la hora del día: noche, amanecer, día y atardecer. El degradado queda debajo de la foto, si elegís una.	带时钟的壁纸会随时间呈现夜晚、黎明、白天和黄昏的色彩。选择照片后，渐变背景会保留在照片下方。
 FOTO	照片
 %s, rotando	%s，轮换显示
@@ -3303,6 +3322,8 @@ no se pudo empezar	不能开始
 falta path	路径不存在
 ya hay un trabajo en curso	一个工作已经在运行
 no hay una consola abierta	没有已打开的控制台
+la velocidad va de 50 a 5000000 baudios	波特率范围为 50 至 5000000
+el formato es como 8N1 o 7E1	格式应为 8N1 或 7E1 等
 no se pudo abrir el puerto (¿lo tiene otra app?)	无法打开端口 (还有其他应用程序吗?)
 el canal no está conectado	频道没有连接
 hace falta el canal conectado y la tarjeta	需要连接的通道和卡
@@ -3483,6 +3504,7 @@ Cronometro	秒表
 Reloj mundial	世界时钟
 Afinador	通纳
 ARKANOS	阿卡诺斯
+Deriva	星际漂流
 Atasco	交通堵塞
 Bastión	堡垒
 Blackjack	黑龙江
@@ -3504,12 +3526,14 @@ Cotizaciones	货币
 Dados	骰子
 Datalog	数据表
 Dibujo	绘画
+DJ	DJ
 DMX	DMX
 Doom	毁灭
 Duke Nukem 3D	杜克核3D
 EEPROM	EEPROM
 Emulador	模拟器
 Equipos	设备
+Mi casa	家庭状态
 Estudio	工作室
 Flappy	快乐的
 2043	2043
@@ -3529,6 +3553,7 @@ Oficina	办公套件
 Pato goma	帕托古马
 Pinball 3D	弹丸 3D
 Pixel Art	像素艺术
+Monitor serie	串口绘图
 PWM	PWM
 Python	字符串
 Radio	无线电
@@ -3538,11 +3563,16 @@ Simon	西蒙
 Solitario	纸牌接龙
 SSH	SSH
 Sudoku	数独
+Fusión	数字融合
+Tanques	坦克
 Topos	闪闪发光
+Tortuga	小海龟
 Traductor	翻译器
 Truco	Truco 纸牌
 Turbo	涡轮
 Video	视频
 Visor 3D	3D 显示器
+Vitral	彩色玻璃
 VNC	其他
+Planeo	滑翔
 Vuelos	航班

@@ -41,7 +41,7 @@ with its size and SHA-256 and the place on the card it goes to. A file "from"
 the tree (a language pack) is published with this release under a flat name
 (lang-en-_portal.lang); an "asset" (emoji.pak, c6.bin) is one a release
 already has, by store/packs.json. Only the official source's are read by the
-board, and only into lang/<code>/_*.lang, fonts/*.pak and firmware/*.bin.
+board, and only into lang/<code>/_*.lang, fonts/*.pak, icons/*.pak and firmware/*.bin.
 
 A package, <file>.p4app, is a zip WITHOUT compression whose paths are the
 card's: apps/<file>.so, the modules the app loads itself in apps/<app>/, its
@@ -204,7 +204,7 @@ def load_packs():
     return packs
 
 
-SYS_PATH = re.compile(r"lang/(?:[a-z]{2}|zh-Hans|zh-Hant)/_[a-z0-9_]+\.lang|fonts/[a-z0-9_]+\.pak|firmware/[a-z0-9_]+\.bin")
+SYS_PATH = re.compile(r"lang/(?:[a-z]{2}|zh-Hans|zh-Hant)/_[a-z0-9_]+\.lang|(?:fonts|icons)/[a-z0-9_]+\.pak|firmware/[a-z0-9_]+\.bin")
 SYS_FW_MIN = "0.30.0"           # the first firmware that knows what a part of the system is
 
 
@@ -614,6 +614,8 @@ def build_app(app_dir, m, a, since, icons, abi):
         files["web/" + os.path.basename(page)] = open(page, "rb").read()
         pages.append(os.path.splitext(os.path.basename(page))[0])
     for code in sorted(os.listdir(os.path.join(ROOT, "lang"))):
+        if code == "xx":
+            continue                    # the pseudo-language of the tests
         for lang_id in [app_id] + ["web." + p for p in pages]:
             path = os.path.join(ROOT, "lang", code, lang_id + ".lang")
             if os.path.isfile(path):

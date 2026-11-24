@@ -188,8 +188,8 @@ Revancha	Rematch
 #: apps\hockey\main\hockey.c:491
 Menú	Menu
 
-#: apps\hockey\main\hockey.c:588
+#: apps\hockey\main\hockey.c:589
 Prendiendo el aire...	Turning the air on...
 
-#: apps\hockey\main\hockey.c:658
+#: apps\hockey\main\hockey.c:659
 No se pudo cargar la mesa	The table could not be loaded

@@ -418,7 +418,7 @@ static cJSON *apps_list(void)
     struct dirent *de;
     while (dir && (de = readdir(dir)) != NULL) {
         if (!ends(de->d_name, ".json") || de->d_name[0] == '.' || strlen(de->d_name) > 40) continue;
-        snprintf(rel, sizeof rel, "apps/.store/%s", de->d_name);
+        snprintf(rel, sizeof rel, "apps/.store/%.40s", de->d_name);
         char *text = slurp(rel, 128 * 1024, NULL);
         cJSON *r = text ? cJSON_Parse(text) : NULL;
         free(text);
@@ -865,14 +865,14 @@ int aos_backup_folders(aos_backup_folder_t *out, int max)
         struct stat st;
         if (de->d_name[0] == '.' || strlen(de->d_name) >= sizeof out[0].name || strchr(de->d_name, ',') || strchr(de->d_name, '=') ||
             in_list(de->d_name, NOT_OURS, sizeof NOT_OURS / sizeof NOT_OURS[0])) continue;
-        snprintf(f, sizeof f, "%s/%s", d, de->d_name);
+        snprintf(f, sizeof f, "%s/%.*s", d, (int)sizeof out[0].name - 1, de->d_name);
         if (stat(f, &st) != 0 || !S_ISDIR(st.st_mode)) continue;
         int said = dir_choice(dirs, de->d_name);
         /* in the order of their names: the card lists them as they were made */
         int at = n;
         while (at > 0 && strcasecmp(out[at - 1].name, de->d_name) > 0) at--;
         memmove(&out[at + 1], &out[at], sizeof *out * (size_t)(n - at));
-        snprintf(out[at].name, sizeof out[at].name, "%s", de->d_name);
+        memcpy(out[at].name, de->d_name, strlen(de->d_name) + 1);
         out[at].on = said >= 0 ? said == 1 : !in_list(de->d_name, BIG, sizeof BIG / sizeof BIG[0]);
         n++;
     }
@@ -1022,8 +1022,8 @@ int aos_backup_copy_now(bool to_drive, char *why, size_t why_len)
         while (ok && dir && (de = readdir(dir)) != NULL) {
             if (de->d_name[0] == '.' || strlen(de->d_name) >= sizeof dirs[0].name ||
                 in_list(de->d_name, NOT_OURS, sizeof NOT_OURS / sizeof NOT_OURS[0])) continue;
-            snprintf(a, 400, "%s/card/%s", root, de->d_name);
-            snprintf(b, 400, "%s/%s", card, de->d_name);
+            snprintf(a, 400, "%s/card/%.*s", root, (int)sizeof dirs[0].name - 1, de->d_name);
+            snprintf(b, 400, "%s/%.*s", card, (int)sizeof dirs[0].name - 1, de->d_name);
             if (stat(a, &st) == 0 && S_ISDIR(st.st_mode)) ok = copy_tree(a, b, buf, 0);
         }
         if (dir) closedir(dir);

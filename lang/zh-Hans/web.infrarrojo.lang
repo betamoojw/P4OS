@@ -72,15 +72,23 @@ ese aire no está en la base	该空调不在数据库中
 no se pudo	它失败了
 la app no contesta: ¿está abierta en la placa?	应用程序没有答案:它是否在板上开放?
 Infrarrojo	红外线
+el emisor Zigbee %s	Zigbee 红外发射器 %s
+el emisor Zigbee %s (no está en la red)	Zigbee 红外发射器 %s（未入网）
+el LED de la placa	开发板的 LED
 Cargando…	正在加载…
 Escuchar	听我说
 Abierta en la placa	在板上打开
+Va por el emisor Zigbee: %s	已交给 Zigbee 红外发射器发送：%s
 Mandado: %s	发送: %s
 Mandar	发送
 Subir	走上
 Borrar	删除
+La de la app (%s)	应用设置 (%s)
+LED de la placa	开发板的 LED
+Emisor Zigbee %s	Zigbee 红外发射器 %s
 Nombre	名称
 Tipo	类型
+Sale por	发送方式
 Sin botones.	没有按钮。
 Guardado	保存
 Guardar	保存
@@ -100,6 +108,7 @@ Apagado	关闭了
 No se pudo leer: %s	我读不懂: %s
 Editar	编辑
 %s botones	%s 按钮
+sale por %s	通过 %s 发送
 Todavía no hay aparatos. Creá uno abajo, importalo, o agregalo desde Códigos en la placa.	在下面创建一个,进口一个或从板上的代码中添加一个.
 Nombre del botón	按钮名称
 Aparato nuevo…	新的设备...
@@ -110,14 +119,20 @@ Aparato nuevo	新设备
 Guardado en %s	保存到 %s
 Copiado	复制
 Copiar las duraciones	复制时间
-Apuntá el control al receptor y apretá un botón.	将遥控器指向接收器 按下按钮 。
 Tocá Escuchar y apretá un botón del control.	录音听器 按遥控器上的按钮
-La placa está escuchando	开发板正在听
+Apuntá el control al emisor Zigbee y apretá un botón.	请将遥控器对准 Zigbee 红外发射器并按下按钮。
+Apuntá el control al receptor y apretá un botón.	将遥控器指向接收器 按下按钮 。
+El emisor Zigbee no tomó el código	Zigbee 红外发射器未接受遥控码
+LED de la placa (GPIO%s)	开发板的 LED (GPIO%s)
+La placa está escuchando por %s	开发板正在通过 %s 监听
 La placa no está escuchando	开发板不听
+Sale y escucha por	收发方式
 Receptor en GPIO%s, LED en GPIO%s (se cambian en la app, pestaña Cableado)	接收器 GPIO%s, LED 灯 GPIO%s (在应用程序中更改,电缆标签)
 Abrir la app en la placa	在板上打开应用程序
 La app todavía no habló: abrila en la placa.	应用程序还没有报道:
 Parar	停止
+La placa escucha por %s y cada botón que apretás aparece acá, decodificado.	开发板通过 %s 监听。按下遥控器按钮后，解码结果会显示在这里。
+La placa escucha con su receptor y cada botón que apretás aparece acá, decodificado.	开发板用接收器 监听你按的每个按钮 都在这里出现 解码了
 Nombre (Tele del living)	名称 (客厅电视)
 Falta el nombre	这个名字不见
 un aire de SmartIR se agrega desde Códigos en la placa (la base ya lo trae)	从板上的代码中添加一个SmartIR空调 (数据库已经拥有它)
@@ -127,7 +142,6 @@ Un código: Broadlink en base64, Pronto (0000 006D …), Tuya, o duraciones [900
 dirección y comando en hexa	在 hex 中的地址和命令
 Aparatos	设备
 Aprender	学习
-La placa escucha con su receptor y cada botón que apretás aparece acá, decodificado.	开发板用接收器 监听你按的每个按钮 都在这里出现 解码了
 Agregar	添加
 Crear	创建
 Importar un aparato (un JSON bajado de acá) o un archivo de SmartIR de televisor, ventilador o luz:	导入设备 (下载的JSON) 或用于电视,风扇或灯具的SmartIR文件:

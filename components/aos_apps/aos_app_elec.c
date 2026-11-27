@@ -243,7 +243,7 @@ static void kp_event(lv_event_t *e)
         if (n) cur[n - 1] = 0;
     } else if (!strcmp(t, LV_SYMBOL_OK)) {
         if (U.target_str) {
-            snprintf(U.target_str, 12, "%s", cur);
+            snprintf(U.target_str, 12, "%.11s", cur);
         } else {
             double v = parse_eng(cur);
             if (isnan(v)) { aos_ui_toast(_("No es un número"), 1500); return; }

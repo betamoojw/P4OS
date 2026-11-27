@@ -227,7 +227,7 @@ static void refresh(void)
     } else {
         lv_label_set_text(U.sub, in ? _("pidiendo los datos…") : _("sin sesión"));
     }
-    char opus[48] = "", son[48] = "", wk[100] = "";
+    char opus[48] = "", son[48] = "", wk[sizeof opus + sizeof son + sizeof "  ·  "] = "";
     if (st.seven_day_opus.valid) snprintf(opus, sizeof opus, "Opus %.0f%%", (double)st.seven_day_opus.pct);
     if (st.seven_day_sonnet.valid) snprintf(son, sizeof son, "Sonnet %.0f%%", (double)st.seven_day_sonnet.pct);
     snprintf(wk, sizeof wk, "%s%s%s", opus, opus[0] && son[0] ? "  ·  " : "", son);

@@ -178,8 +178,8 @@ static bool is_dir_entry(const char *dir, const struct dirent *e)
     if (e->d_type != DT_UNKNOWN) return false;
     char full[512];
     struct stat st;
-    snprintf(full, sizeof full, "%s/%s", dir, e->d_name);
-    return stat(full, &st) == 0 && S_ISDIR(st.st_mode);
+    int written = snprintf(full, sizeof full, "%s/%s", dir, e->d_name);
+    return written >= 0 && (size_t)written < sizeof full && stat(full, &st) == 0 && S_ISDIR(st.st_mode);
 }
 
 static int name_cmp_idx(const void *a, const void *b)
@@ -307,11 +307,11 @@ static void walk(const char *rel, int depth)
         if (is_photo(e->d_name)) {
             count++;
             if (strlen(e->d_name) < sizeof first && (!first[0] || img_name_cmp(e->d_name, first) < 0)) {
-                snprintf(first, sizeof first, "%s", e->d_name);
+                memcpy(first, e->d_name, strlen(e->d_name) + 1);
             }
         } else if (depth < ALBUM_DEPTH && nsub < 8 && strlen(e->d_name) < sizeof subs[0] &&
                    is_dir_entry(dir, e)) {
-            snprintf(subs[nsub++], sizeof subs[0], "%s", e->d_name);
+            memcpy(subs[nsub++], e->d_name, strlen(e->d_name) + 1);
         }
     }
     closedir(d);

@@ -2788,3 +2788,140 @@ La autoridad HTTPS de la placa	L'autorità HTTPS della scheda
 
 #: components/aos_portal/web/app.js:3615
 , para que el navegador confíe en ella.	, perché il browser se ne fidi.
+%s actualizaciones en cola	%s aggiornamenti in coda
+Hasta %s: un pack que la tarjeta ya tiene no se baja de nuevo	Fino a %s: un pacchetto già presente sulla scheda non viene riscaricato
+Actualizar todas (%s)	Aggiorna tutte (%s)
+Zigbee	Zigbee
+trama corta	frame corto
+Acuse	Conferma
+Comando	Comando
+trama de tipo %s	frame di tipo %s
+Datos	Dati
+cifrada en la capa MAC	cifrato a livello MAC
+comando de red	comando di rete
+datos	dati
+cifrada	cifrato
+Canal %s	Canale %s
+Radio	Radio
+el C6 no contesta	il C6 non risponde
+escaneando, canal %s	scansione, canale %s
+escuchando el canal %s	in ascolto sul canale %s
+apagada	spenta
+Firmware del C6	Firmware del C6
+El C6 se cayó con la radio prendida y la dejó apagada; escanear o escuchar la vuelve a probar.	Il C6 è andato in crash con la radio accesa e l'ha lasciata spenta; scansionare o ascoltare la riprova.
+Escuchar	Ascolta
+%s paquetes	%s pacchetti
+%s perdidos en el C6	%s persi nel C6
+guardando %s en %s	salvataggio di %s in %s
+coordinador	coordinatore
+%s paquetes · %s dBm · hace %s s	%s pacchetti · %s dBm · %s s fa
+Todavía nadie: escuchá un canal con tráfico.	Ancora nessuno: ascolta un canale con traffico.
+Olvidarlos	Dimenticali
+Capturas en la tarjeta	Catture sulla scheda
+Ninguna todavía.	Nessuna ancora.
+Se abren con Wireshark: cada paquete trae su canal, RSSI y LQI.	Si aprono con Wireshark: ogni pacchetto porta il suo canale, RSSI e LQI.
+Canales	Canali
+Escanear	Scansiona
+A fondo (2 s por canal)	A fondo (2 s per canale)
+La barra es la energía del canal; el número, los paquetes oídos. Una red Zigbee o Thread se ve como un canal con paquetes.	La barra è l'energia del canale; il numero, i pacchetti sentiti. Una rete Zigbee o Thread appare come un canale con pacchetti.
+Guardar para Wireshark	Salva per Wireshark
+Zigbee y Thread	Zigbee e Thread
+contacto	contatto
+abierto	aperto
+cerrado	chiuso
+movimiento	movimento
+sin movimiento	nessun movimento
+agua	acqua
+¡agua!	acqua!
+seco	asciutto
+humo	fumo
+alarma	allarme
+normal	normale
+gas	gas
+batería	batteria
+encendido	acceso/spento
+nivel	livello
+color	colore
+temperatura	temperatura
+presión	pressione
+humedad	umidità
+presencia	presenza
+luz	luce
+medidor	contatore
+eléctrico	elettrico
+La red no tomó el pedido	La rete non ha accettato la richiesta
+Nombre del equipo	Nome del dispositivo
+¿Sacar %s de la red? Para volver a sumarlo hay que resetearlo.	Rimuovere %s dalla rete? Per aggiungerlo di nuovo va resettato.
+router	router
+a red eléctrica	a rete elettrica
+a pila	a batteria
+sin noticias desde que arrancó la placa	nessuna notizia dall'avvio della scheda
+se fue	uscito
+no contestó	non ha risposto
+configurándolo	lo configuro
+hay alguien	c'è qualcuno
+nadie	nessuno
+salida %d: %s	uscita %d: %s
+prendida	accesa
+enviando...	invio...
+no tomó el código	non ha preso il codice
+Arriba	Su
+Abajo	Giù
+Cerrar con llave	Chiudi a chiave
+Ventilador: otro modo	Ventola: modalità successiva
+Esperando el control remoto... (tocá para cancelar)	In attesa del telecomando... (tocca per annullare)
+Aprender un código	Impara un codice
+Enviar el último aprendido	Invia l'ultimo appreso
+Guardarlo...	Salvalo...
+Nombre del código	Nome del codice
+Guardados: tocá uno para mandarlo.	Salvati: toccane uno per inviarlo.
+¿Borrar el código %s?	Eliminare il codice %s?
+Código borrado	Codice eliminato
+brillo	luminosità
+posición	posizione
+tono	tonalità
+Lo que mandó, crudo (%s)	Quello che ha inviato, grezzo (%s)
+comando	comando
+antes	prima
+Sacar	Rimuovi
+Mi red	La mia rete
+Armando la red...	Creo la rete...
+Armar la red	Crea la rete
+Sumar equipos	Aggiungi dispositivi
+Sumar Zigbee 3.0	Aggiungi Zigbee 3.0
+Abierta: %d s	Aperta: %d s
+Cerrar	Chiudi
+La placa arma su propia red Zigbee, con el C6 de radio, y los equipos se suman a ella: así se prueba cualquiera. Un equipo está en una sola red: para sumarlo acá hay que resetearlo (en general, el botón apretado hasta que parpadea).	La scheda crea la propria rete Zigbee, con il C6 come radio, e i dispositivi vi entrano: così si può provarne qualunque. Un dispositivo sta in una sola rete: per aggiungerlo qui va resettato (di solito, tenendo premuto il pulsante finché lampeggia).
+Abierta para sumar: reseteá los equipos de a uno; cada uno aparece acá cuando entra. Si es a pila, tocale el botón cada tanto mientras se configura.	Aperta per aggiungere: resetta i dispositivi uno alla volta; ognuno compare qui quando entra. Se è a batteria, premi ogni tanto il suo pulsante mentre si configura.
+Red en el canal %s, %s equipos. Los valores llegan cuando el equipo los manda: uno a pila puede tardar en dar noticias. Si un equipo sigue titilando y no termina de sumarse, probá con Sumar Zigbee 3.0.	Rete sul canale %s, %s dispositivi. I valori arrivano quando il dispositivo li invia: uno a batteria può tardare a dare notizie. Se un dispositivo continua a lampeggiare e non finisce di entrare, prova Aggiungi Zigbee 3.0.
+Todavía no se sumó ningún equipo.	Nessun dispositivo è ancora entrato.
+No se pudo	Non è stato possibile
+Emular un equipo	Emula un dispositivo
+La placa se suma a otra red Zigbee (la de Home Assistant) haciéndose pasar por un equipo: una luz en el endpoint 1 y un sensor de temperatura, humedad y batería en el 2 (fabricante P4OS, modelo P4OS-EMU-LT). Así se ve si el coordinador lo lee, lo maneja y qué le pide. Antes, en Home Assistant: Agregar dispositivo (ZHA) o Permitir unirse (Zigbee2MQTT).	La scheda entra in un'altra rete Zigbee (quella di Home Assistant) fingendosi un dispositivo: una luce sull'endpoint 1 e un sensore di temperatura, umidità e batteria sul 2 (produttore P4OS, modello P4OS-EMU-LT). Così si vede se il coordinatore lo legge, lo comanda e cosa chiede. Prima, in Home Assistant: Aggiungi dispositivo (ZHA) o Permetti di unirsi (Zigbee2MQTT).
+Hay una red guardada de la vez anterior: la placa vuelve a ella sin que la abran.	C'è una rete salvata dall'ultima volta: la scheda ci torna senza che venga aperta.
+La placa se reinicia y arranca como equipo. Tus equipos quedan guardados y vuelven con Volver a Mi red. ¿Seguir?	La scheda si riavvia come dispositivo. I tuoi dispositivi restano salvati e tornano con Torna a La mia rete. Continuare?
+Reiniciando para emular...	Riavvio per emulare...
+Reiniciar y emular	Riavvia ed emula
+Buscando una red abierta... (intento %s de 36)	Cerco una rete aperta... (tentativo %s di 36)
+Fuera de la red	Fuori dalla rete
+No encontró una red abierta en 3 minutos	Nessuna rete aperta trovata in 3 minuti
+Buscar otra vez	Cerca di nuovo
+Volviendo a la red propia: la placa se reinicia	Ritorno alla rete propria: la scheda si riavvia
+Volver a Mi red	Torna a La mia rete
+En la red 0x%s, canal %s, como 0x%s	Nella rete 0x%s, canale %s, come 0x%s
+con su propia clave de enlace	con la propria chiave di collegamento
+sin clave propia todavía	ancora nessuna chiave propria
+Home Assistant pide que se identifique: %s s	Home Assistant chiede di identificarsi: %s s
+Luz: prendida	Luce: accesa
+Luz: apagada	Luce: spenta
+Reportar ahora	Riporta ora
+¿Seguro? Tocá otra vez	Sicuro? Tocca di nuovo
+Salir de la red	Esci dalla rete
+Lo que pidió el coordinador	Cosa ha chiesto il coordinatore
+emulando un equipo en otra red, canal %s	emula un dispositivo su un'altra rete, canale %s
+emulando un equipo: buscando una red	emula un dispositivo: cerca una rete
+la red Zigbee de la placa, canal %s	la rete Zigbee della scheda, canale %s
+armando la red Zigbee	avvio della rete Zigbee
+sin usar	inutilizzata
+No se pudo armar la red: ¿el C6 tiene su firmware nuevo? Tienda, Sistema, Firmware de la radio (C6)	Impossibile creare la rete: il C6 ha il nuovo firmware? Store, Sistema, Firmware della radio (C6)
+La radio no contesta: el C6 necesita su firmware nuevo (3.0.9-154.15). En la placa: 1) Tienda, Sistema, Firmware de la radio (C6): bajarlo. 2) Ajustes, Actualización, Instalar en el C6. Son unos 15 s sin Wi-Fi y la placa se reinicia sola.	La radio non risponde: il C6 ha bisogno del nuovo firmware (3.0.9-154.15). Sulla scheda: 1) Store, Sistema, Firmware della radio (C6): scaricalo. 2) Impostazioni, Aggiornamento, Installa sul C6. Circa 15 s senza Wi-Fi, poi la scheda si riavvia da sola.

@@ -917,7 +917,8 @@ static void saved_prune(const char *dir)
     while ((e = readdir(d)) && n < CAP) {
         size_t l = strlen(e->d_name);
         if (l < 8 || l >= sizeof v[0].name || strcmp(e->d_name + l - 7, ".ndjson")) continue;
-        snprintf(path, sizeof path, "%s/%s", dir, e->d_name);
+        int written = snprintf(path, sizeof path, "%s/%s", dir, e->d_name);
+        if (written < 0 || (size_t)written >= sizeof path) continue;
         struct stat st;
         if (stat(path, &st)) continue;
         memcpy(v[n].name, e->d_name, l + 1);
@@ -1139,7 +1140,12 @@ static void scan_thread(void *arg)
                 int ti = nt_mdns_type_index(svc[s].type);
                 for (int i = 0; i < count; i++) {
                     if (!w.alive[i] || w.h[i].ip != svc[s].ip) continue;
-                    if (!w.h[i].name[0] && svc[s].host[0]) snprintf(w.h[i].name, sizeof w.h[i].name, "%s.local", svc[s].host);
+                    if (!w.h[i].name[0] && svc[s].host[0]) {
+                        size_t len = strlen(svc[s].host);
+                        snprintf(w.h[i].name, sizeof w.h[i].name, "%s", svc[s].host);
+                        if (len + sizeof ".local" <= sizeof w.h[i].name)
+                            memcpy(w.h[i].name + len, ".local", sizeof ".local");
+                    }
                     if (ti >= 0) w.h[i].mdns |= NT_MDNS_TYPES[ti].bit;
                 }
             }

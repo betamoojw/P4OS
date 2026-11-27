@@ -155,7 +155,9 @@ static void card_new(uint8_t addr, uint8_t iface, bool tx)
         char v[24], p[32];
         wide_to_str(info.iManufacturer, v, sizeof v);
         wide_to_str(info.iProduct, p, sizeof p);
-        snprintf(n.name, sizeof n.name, "%s%s%s", v, v[0] && p[0] ? " " : "", p);
+        strlcpy(n.name, v, sizeof n.name);
+        if (*v && *p) strlcat(n.name, " ", sizeof n.name);
+        strlcat(n.name, p, sizeof n.name);
         /* 48 kHz 16-bit PCM in one of its alternate settings, two channels
          * if it has them */
         for (uint8_t alt = 1; alt <= info.iface_alt_num; alt++) {

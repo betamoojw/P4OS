@@ -2112,6 +2112,7 @@ En la tarjeta	存储卡中的版本
 Una versión nueva del firmware del C6 se copia a /firmware/c6.bin de la tarjeta (portal o tools/install_c6.sh) y se instala desde acá.	通过网页管理或 tools/install_c6.sh 将 C6 新固件复制到存储卡的 /firmware/c6.bin，再从此处安装。
 Instalar en el C6	安装 C6 固件
 El C6 la escribe en su otra ranura y la revisa antes de cambiar. Mientras tanto no hay Wi-Fi, y al terminar la placa se reinicia.	C6 会将固件写入备用分区，校验后再切换。安装期间 Wi-Fi 暂不可用，完成后设备会重启。
+Ojo si en esta placa usás otro firmware además de P4OS: esta versión es esp_hosted 3, y uno que traiga esp_hosted 2 (el Launcher, un sketch de Arduino, varias demos) no se entiende con ella y se queda sin Wi-Fi. Para volver, se instala desde acá un firmware 2.x del C6.	如果这块开发板也运行其他固件，请留意：此版本使用 esp_hosted 3。使用 esp_hosted 2 的固件（如 Launcher、Arduino 程序和一些演示程序）将无法与 C6 通信，Wi-Fi 也无法使用。如需恢复，可在此安装 2.x 版 C6 固件。
 escribiendo la otra ranura… %u %%	正在写入另一个固件分区… %u %%
 bajando… %u %%	正在下载… %u %%
 lista: arranca al reiniciar	已就绪，重启后启用
@@ -2452,6 +2453,10 @@ Reinstalar	重新安装
 Necesita P4OS %s o más nuevo.\nActualizá el sistema primero.	需要 P4OS %s 或更新版本。\n请先更新系统。
 Nueva	新的
 Quedó apartada: hizo caer la placa	已隔离：曾导致开发板崩溃
+%d actualizaciones en cola	已将 %d 项更新加入队列
+%d actualizaciones, hasta %s	%d 项更新，最多 %s
+%d necesitan un P4OS más nuevo: actualizá el sistema primero.	有 %d 项需要更高版本的 P4OS，请先更新系统。
+Actualizar todas	全部更新
 Actualizaciones	更新
 Nuevas	上新
 Instaladas	已安装
@@ -2626,6 +2631,152 @@ Partición	分区
 El tráfico en bytes no se cuenta: lwIP lo haría con sus estadísticas, que este firmware tiene apagadas.	通过数据的数据, lwIP可以使用其统计数据来计算.
 RAM	存储器
 La memoria, el procesador y la red de la placa.	设备的内存、处理器和网络。
+pedido de asociación	关联请求
+respuesta de asociación	关联响应
+aviso de desasociación	解除关联通知
+pedido de datos	数据请求
+pedido de beacon	信标请求
+realineación	协调器重配置
+comando	命令
+trama corta (%d bytes)	短帧（%d 字节）
+acepta equipos nuevos	允许新设备加入
+cerrada	已关闭
+Acuse	确认帧
+Comando	命令
+cifrada en la capa MAC	MAC 层已加密
+comando de red	网络命令
+datos	数据
+radio	半径
+cifrada	已加密
+6LoWPAN (Thread)	6LoWPAN (Thread)
+6LoWPAN, malla	6LoWPAN 网状网络
+trama de tipo %d	类型为 %d 的帧
+trama de %d bytes, cortada	帧长 %d 字节，数据已截断
+El C6 no tomó el pedido	C6 未接受请求
+A fondo (2 s por canal)	详细扫描（每个信道 2 秒）
+La barra es la energía que hay en el canal; el número, los paquetes que se oyeron mientras se escuchaba. Una red Zigbee o Thread se ve como un canal con paquetes. Para una red nueva conviene uno sin paquetes y lejos del Wi-Fi: Zigbee suele usar el 11, 15, 20 o 25.	条形图表示信道能量，数字表示监听时收到的数据包数。有 Zigbee 或 Thread 网络的信道通常可收到数据包。新建网络时，建议选没有数据包且远离 Wi-Fi 的信道。Zigbee 常用 11、15、20 或 25 信道。
+Escuchar	监听
+Guardar para Wireshark	保存供 Wireshark 分析
+Olvidarlos	清除记录
+Lo que se oyó mientras se escuchaba, el más reciente arriba. La dirección larga de una corta aparece cuando la red la manda.	按监听时间从新到旧排列。网络发送长地址后，会将它显示在对应的短地址旁。
+Todavía nadie: escuchá un canal con tráfico.	尚未发现设备。请在有流量的信道上监听。
+coordinador	协调器
+%u paquetes · %d dBm, promedio %d · hace %u s	%u 个包 · %d dBm，平均 %d · %u 秒前
+canal	信道
+No se pudo armar la red: ¿el C6 tiene su firmware nuevo? Tienda, Sistema, Firmware de la radio (C6)	无法启动网络。请在“商店 → 系统 → 无线固件 (C6)”中检查 C6 固件是否已更新。
+La red no tomó el pedido	网络未接受请求
+Sumar Zigbee 3.0	添加 Zigbee 3.0 设备
+contacto	门窗触点
+movimiento	移动
+agua	水浸
+humo	烟雾
+gas	燃气
+alarma	警报
+cerrado	已闭合
+sin movimiento	无移动
+¡agua!	检测到水！
+seco	干燥
+normal	正常
+batería	电池
+encendido	开关
+nivel	等级
+color	颜色
+temperatura	温度
+presión	气压
+humedad	湿度
+presencia	有人感应
+luz	照度
+medidor	计量
+eléctrico	电气测量
+No se pudo guardar	无法保存
+Ponele un nombre	命名
+Guardado	已保存
+No se pudo guardar (¿hay tarjeta?)	无法保存。请检查存储卡。
+Nombre del equipo	设备名称
+Nombre del código	遥控码名称
+Por ejemplo: Sensor de la cocina	例如：厨房传感器
+Por ejemplo: Tele, volumen +	例如：电视音量加
+Código borrado	遥控码已删除
+Mantenelo apretado otra vez para borrarlo	再次长按即可删除
+La placa está emulando un equipo en otra red (pestaña Emular). La red propia y sus equipos quedan guardados: vuelven con Volver a Mi red, que reinicia la placa.	开发板正在另一个网络中模拟设备（见“模拟”页）。原网络和设备已保留。选择“返回我的网络”后，开发板将重启并恢复原网络。
+Armando la red...	正在启动网络…
+Armar la red	启动网络
+Abierta para sumar	开放入网
+Abierta: %d s	开放入网：%d 秒
+Sumar equipos	添加设备
+La placa arma su propia red Zigbee, con el C6 de radio, y los equipos se suman a ella: así se prueba cualquiera. Un equipo está en una sola red: para sumarlo acá hay que resetearlo (en general, el botón apretado hasta que parpadea).	开发板使用 C6 无线模块建立自己的 Zigbee 网络，设备加入后即可测试。每个设备只能加入一个网络。要在此添加设备，请先复位设备（通常是长按按钮，直到指示灯闪烁）。
+La red queda abierta mientras estés acá, hasta Cerrar. Reseteá los equipos de a uno: la pantalla avisa cuando entra cada uno y qué es. Si es a pila, tocale el botón cada tanto mientras se configura.	停留在此页面时网络保持开放，直到点击“关闭”。请逐个复位设备。每个设备加入后，屏幕会显示其类型。如果设备使用电池，请在设置过程中不时按一下它的按钮。
+Red en el canal %u. %d equipos. Los valores llegan cuando el equipo los manda: uno a pila puede tardar en dar noticias (tocale el botón para despertarlo). Una salida se prende o se apaga tocándola. Si un equipo sigue titilando y no termina de sumarse, probá con Sumar Zigbee 3.0. Tocá el nombre de un equipo para ponerle uno tuyo.	网络位于信道 %u，共 %d 个设备。设备主动上报时才会更新数值，电池设备可能需要一段时间（可按按钮唤醒）。点按输出可切换开关。如果设备一直闪烁且无法入网，可尝试“添加 Zigbee 3.0 设备”。点按设备名称可重新命名。
+¿Seguro?	确定吗？
+Sacar	移除
+router	路由器
+a red eléctrica	市电供电
+a pila	电池供电
+sin noticias desde que arrancó la placa	开发板启动后尚无上报
+se fue	已离网
+no contestó	无响应
+configurándolo	正在设置
+hay alguien	有人
+nadie	无人
+salida %d: %s	输出 %d：%s
+prendida	开
+brillo	亮度
+antes	先前
+Subir	上升
+Parar	停止
+Bajar	下降
+Ventilador: otro modo	风扇：下一模式
+Esperando el control remoto... (tocá para cancelar)	正在等待遥控器…（点按取消）
+Aprender un código	学习遥控码
+Enviar el último aprendido	发送最近学到的遥控码
+Guardarlo...	保存…
+enviando...	正在发送…
+no tomó el código	未接受遥控码
+Guardados (tocá para mandar, mantené para borrar):	已保存（点按发送，长按删除）：
+Reiniciando para emular...	正在重启以模拟设备…
+Volviendo a la red propia: la placa se reinicia	正在返回原网络，开发板将重启
+Luz y sensor de temperatura	灯和温度传感器
+Endpoint 1: una luz que se prende y se apaga (0x0100). Endpoint 2: temperatura, humedad y batería (0x0302). Fabricante P4OS, modelo P4OS-EMU-LT.	端点 1：可开关的灯 (0x0100)。端点 2：温度、湿度和电池电量 (0x0302)。制造商 P4OS，型号 P4OS-EMU-LT。
+La placa se suma a otra red Zigbee, la de Home Assistant por ejemplo, haciéndose pasar por este equipo, para ver si el coordinador lo lee y lo maneja, y qué le pide. Entra como router, con corriente: un equipo a pila no se puede emular. Antes, en Home Assistant: Agregar dispositivo (ZHA) o Permitir unirse (Zigbee2MQTT).	开发板会模拟此设备加入另一个 Zigbee 网络（例如 Home Assistant），以测试协调器能否读取和控制设备，并查看它发出的请求。开发板以市电路由器身份加入，仅支持模拟市电设备。请先在 Home Assistant 中选择“添加设备”(ZHA) 或“允许加入”(Zigbee2MQTT)。
+Hay una red guardada de la vez anterior: la placa vuelve a ella sin que la abran.	已保留上次的网络，开发板无需重新开放入网即可连接。
+Para emular, la placa deja su red un rato: se reinicia y arranca como equipo. Tus equipos quedan guardados y vuelven con Volver a Mi red.	开发板将暂时离开原网络并重启为模拟设备。原有设备已保留，选择“返回我的网络”即可恢复。
+Reiniciar y emular	重启并模拟
+Buscando una red abierta... (intento %u de 36)	正在查找开放的网络…（第 %u 次，共 36 次）
+Fuera de la red	未入网
+No encontró una red abierta en 3 minutos	3 分钟内未找到开放的网络
+Abrí la red en Home Assistant (Agregar dispositivo, o Permitir unirse) y la placa entra sola. Busca en los 16 canales cada 5 s.	请在 Home Assistant 中选择“添加设备”或“允许加入”。开发板每 5 秒搜索全部 16 个信道，找到网络后自动加入。
+Buscar otra vez	重新搜索
+Volver a Mi red	返回我的网络
+En la red 0x%04X, canal %u, como 0x%04X	网络 0x%04X，信道 %u，本机地址 0x%04X
+Con su propia clave de enlace (Zigbee 3.0).	已有独立链路密钥 (Zigbee 3.0)。
+Sin clave propia todavía (sólo la de la red).	尚无独立链路密钥（仅有网络密钥）。
+Home Assistant pide que se identifique: %u s	Home Assistant 请求识别设备：%u 秒
+Luz: prendida	灯：开
+Luz: apagada	灯：关
+La luz la prende y la apaga Home Assistant; tocarla acá también, y Home Assistant tendría que enterarse.	Home Assistant 可控制这盏灯。在此点按也能切换开关，Home Assistant 应会收到状态更新。
+Un valor nuevo sale según los reportes que configuró el coordinador (abajo, en lo que pidió): un cambio chico puede esperar. Reportar ahora los manda ya.	新数值将按协调器设置的规则上报（见下方的请求记录）。变化较小时可能稍后才发送。点按“立即上报”可马上发送。
+Reportar ahora	立即上报
+Salir de la red	离开网络
+Lo que pidió el coordinador	协调器的请求
+La radio no contesta: el C6 necesita su firmware nuevo (3.0.9-154.15). 1) Tienda, Sistema, Firmware de la radio (C6): bajarlo. 2) Ajustes, Actualización, Instalar en el C6. Son unos 15 s sin Wi-Fi y la placa se reinicia sola.	无线模块无响应。C6 需要固件 3.0.9-154.15。先在“商店 → 系统 → 无线固件 (C6)”下载，然后在“设置 → 更新”中选择“安装到 C6”。Wi-Fi 将中断约 15 秒，开发板随后会自动重启。
+El C6 se cayó con la radio prendida y la dejó apagada para no perder el Wi-Fi. Tocá Escanear o Escuchar para probar otra vez.	C6 在无线模块运行时异常，为保留 Wi-Fi 已关闭无线模块。点按“扫描”或“监听”可重试。
+La radio: emulando un equipo	无线模块：正在模拟设备
+La radio: la red Zigbee, canal %u	无线模块：Zigbee 网络，信道 %u
+La radio: armando la red Zigbee	无线模块：正在启动 Zigbee 网络
+Escaneando, canal %u	正在扫描信道 %u
+Escuchando el canal %u	正在监听信道 %u
+La radio, sin usar	无线模块空闲
+Escaneando...	正在扫描…
+Hay tráfico en el canal %d: en Escuchar se ve qué es.	信道 %d 上有流量。点按“监听”可查看详情。
+No se oyó ningún paquete. Probá a fondo: las redes tranquilas mandan poco.	未收到数据包。可尝试详细扫描，空闲网络发送的数据较少。
+%u paquetes	%u 个数据包
+%u perdidos en el C6	C6 丢失 %u 个数据包
+guardando %u en %s	正在将 %u 个数据包保存至 %s
+Zigbee y Thread	Zigbee 与 Thread
+Canales	信道
+Equipos	设备
+Mi red	我的网络
+Emular	模拟设备
 No se pudo escribir en la tarjeta.	我不能写信给卡.
 No hay tarjeta.	没有卡.
 Elegí al menos un valor.	选择至少一个值.
@@ -2843,7 +2994,6 @@ A descansar	时间休息.
 A enfocar	集中注意力的时候了
 enfoque / descanso	专注/休息
 hoy: 0	今天: 0
-Parar	停止
 origen del idioma\x04firmware	固件
 origen del idioma\x04tarjeta	卡
 Menu: lista	菜单:列表
@@ -3491,6 +3641,116 @@ escribe lo que le pasen	输出传入的参数
 cierra la sesión (también Ctrl-D)	结束会话（也可按 Ctrl-D）
 %s: no existe ese comando; «help» muestra los que hay.\n	%s：没有此命令，运行 help 查看可用命令。\n
 «help» muestra los comandos; Ctrl-D o «exit» para salir.\n	运行 help 查看命令，按 Ctrl-D 或输入 exit 退出。\n
+Zigbee: 0x%04x no contestó (dormido): tocale el botón	Zigbee：0x%04x 无响应（休眠中），请按一下设备按钮
+Zigbee: entró un equipo (0x%04x), preguntándole qué es	Zigbee：设备已加入 (0x%04x)，正在查询设备信息
+mantenido	长按
+un toque	单击
+doble	双击
+triple	三击
+botón	按钮
+soltado	已松开
+Zigbee: %s, salida %u %s	Zigbee：%s，输出 %u %s
+alternar	切换
+encender un rato	定时开启
+a un nivel	调至指定等级
+bajar	降低
+subir	升高
+un paso abajo	降低一级
+un paso arriba	升高一级
+escena	场景
+parar	停止
+mover	移动
+Zigbee: 0x%04x salió de la red	Zigbee：0x%04x 已离网
+Zigbee: se pueden sumar equipos por %u s	Zigbee：允许设备在 %u 秒内加入
+Zigbee: ya no se pueden sumar equipos	Zigbee：已关闭入网
+Zigbee: 0x%04x, sacado de la red	Zigbee：已从网络中移除 0x%04x
+la luz, tocada en la placa: %s	已在开发板上点按灯：%s
+mandó todos los valores al coordinador	已向协调器上报全部数值
+leyó %s (ep %u):%s	已读取 %s（端点 %u）：%s
+escribió en %s (ep %u)	已写入 %s（端点 %u）
+configuró reportes de %s 0x%04x: cada %u s a %u s	已设置 %s 0x%04x 的上报间隔：%u 至 %u 秒
+leyó la configuración de reportes de %s	已读取 %s 的上报配置
+preguntó qué atributos tiene %s	请求列出 %s 的属性
+preguntó qué comandos tiene %s	请求列出 %s 的命令
+comando general 0x%02x en %s	通用命令 0x%02x，目标 %s
+Prender	开启
+Cambiar	切换
+mandó %s a la luz	已向灯发送 %s
+pidió que se identifique %u s	请求设备识别自身，持续 %u 秒
+comando 0x%02x de %s	命令 0x%02x，目标 %s
+pidió la dirección corta	请求短地址
+pidió la dirección larga	请求长地址
+pidió el descriptor del nodo	请求节点描述符
+pidió el descriptor de energía	请求电源描述符
+pidió el descriptor del endpoint %u	请求端点 %u 的描述符
+pidió la lista de endpoints	请求端点列表
+ató %s (ep %u) a sí mismo	已将 %s（端点 %u）绑定至协调器
+desató %s (ep %u)	已解除 %s（端点 %u）的绑定
+pidió la tabla de vecinos	请求邻居表
+pidió la tabla de rutas	请求路由表
+le pidió a la placa que se vaya de la red	请求开发板离开网络
+abrió la red para sumar por %u s	已开放入网 %u 秒
+pedido ZDO 0x%04x	ZDO 请求 0x%04x
+la luz quedó %s	灯的当前状态：%s
+no encontró una red abierta en 3 minutos	3 分钟内未找到开放的网络
+adentro: canal %u, PAN 0x%04x, la placa es 0x%04x	已加入：信道 %u，PAN 0x%04x，本机地址 0x%04x
+buscando una red abierta para sumarse	正在查找允许加入的网络
+de vuelta en la red de antes	已重新加入原网络
+la red de antes no está: buscando una abierta	原网络不可用，正在查找开放的网络
+el coordinador le dio su propia clave de enlace (Zigbee 3.0)	协调器已分配独立链路密钥 (Zigbee 3.0)
+salió de la red	已离开网络
+el coordinador la sacó de la red	协调器已将本设备移出网络
+arrancando la pila como router	正在以路由器身份启动协议栈
+la pila no arrancó (¿el C6 tiene su firmware 154?)	协议栈启动失败。请检查 C6 是否已安装支持 802.15.4 的固件。
+pidió irse de la red y olvidarla	已请求离网并清除网络记录
+vuelve a la red propia (se reinicia)	正在返回原网络（即将重启）
+humedad del suelo	土壤湿度
+caudal	流量
+energía	电能
+consumo	耗电功率
+tensión	电压
+corriente	电流
+potencia	功率
+cortina	窗帘
+ambiente	室温
+consigna	设定值
+modo	模式
+tono	色温
+cerradura	门锁
+ventilador	风扇
+estado	状态
+%d %% cerrada	已关闭 %d %%
+frío	制冷
+calor	制热
+con llave	已锁定
+a medias	未完全锁好
+baja	低
+alta	高
+prendido	开
+inteligente	智能
+bloqueo de teclas	按键锁
+acción	动作
+posición	位置
+corrección	校正
+al volver la luz	断电恢复
+luz de fondo	背光
+antiheladas	防冻保护
+funcionando	运行中
+sentido del motor	电机方向
+estado de la pila	电池状态
+ventana abierta	开窗
+cuenta regresiva	倒计时
+tapa abierta	防拆
+formaldehído	甲醛
+distancia	距离
+sensibilidad	灵敏度
+válvula	阀门
+temperatura eco	节能温度
+temperatura de confort	舒适温度
+factor de potencia	功率因数
+frecuencia	频率
+energía entregada	发电量
+salida %d	输出 %d
 Calculadora	计算器
 Calendario	日历
 Claude	Claude
@@ -3499,6 +3759,7 @@ Electrónica	电子工具
 Tiras LED	灯光带
 Macro pad	宏键盘
 Módulos	模块
+Zigbee	Zigbee
 Control PC	电脑控制
 Cronometro	秒表
 Reloj mundial	世界时钟
@@ -3532,7 +3793,6 @@ Doom	毁灭
 Duke Nukem 3D	杜克核3D
 EEPROM	EEPROM
 Emulador	模拟器
-Equipos	设备
 Mi casa	家庭状态
 Estudio	工作室
 Flappy	快乐的

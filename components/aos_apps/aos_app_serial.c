@@ -474,7 +474,7 @@ static void load_port_baud(void)
     if (!aos_io_frame_parse(frame, NULL, NULL, NULL)) snprintf(frame, sizeof frame, "8N1");
     aos_hal_pref_get_i32(key_lines(S.ch), &lines);
     T.baud = (uint32_t)baud;
-    snprintf(T.frame, sizeof T.frame, "%s", frame);
+    memcpy(T.frame, frame, sizeof T.frame);  /* validated three-character frame and terminator */
     T.lines = (uint8_t)(lines & (AOS_SERIAL_DTR | AOS_SERIAL_RTS));
     if (st.running) {
         T.baud = st.baud;

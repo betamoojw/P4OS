@@ -153,3 +153,11 @@
 本次另从原上游取得本地 `v0.33.0` 标签，已确认其指向 `eef973cbc0dc6a1a9cd28b523431ecf8e430b42d`，属于合入源历史。合并后再次构建以更新固件版号；该标签仍只在本地，推送 `dev` 不会自动推送它。
 
 本地日志为 `build/merge-main-20261124-python-tests.log`、`build/merge-main-20261124-web-tests.log`、`build/merge-main-20261124-hans-check.log`、`build/merge-main-20261124-hant-check.log`、`build/merge-main-20261124-tg-levels.log`、`build/merge-main-20261124-firmware-bootstrap.log`、`build/merge-main-20261124-firmware-final.log`、`build/merge-main-20261124-firmware-committed.log`、`build/merge-main-20261124-exports.log`、`build/merge-main-20261124-apps.log`、`build/merge-main-20261124-apps-precommit-check.log` 和 `build/merge-main-20261124-apps-final-check.log`。首轮应用检查使用的引导构建缺少新符号，最终检查已通过；镜像版本与校验信息保存在 `build/merge-main-20261124-image-info.log`。产物与日志不纳入 Git。
+
+## 2026-11-27 合并远程 main
+
+本地 `dev` 从 `545c1451` 合入 `origin/main` 的 `1fd1e912`，包含 106 个上游提交。14 个冲突文件涉及网页导航和样式、内置语言目录、依赖锁、动态应用导出与商店安装路径。简体和繁体中文分别补齐 438 个词条，涵盖 Zigbee、红外和设备管理网页。
+
+- 10.1 英寸 `rev3_x` 的首轮镜像超出 OTA 分区 464,800 字节。改用 ESP-IDF 体积优化，修正名称拼接和文件路径的长度处理后，镜像为 8,107,744 字节，两个 OTA 分区各余 215,328 字节。板载字库与源文件的 SHA-256 一致。
+- 37 项回归测试、25 项网页测试及两个中文目录的完整性检查通过。红外（`infrarrojo`）和飞行（`vuelo`）两个动态应用按 ABI 101 编译通过。商店清单检查覆盖 79 个应用、93 个资源包和 13 个系统部件。
+- 本次验证覆盖一套固件构建。四种板型和两种芯片配置的几何与固件路径由自动化回归覆盖。Zigbee 联网、设备操作和体积优化后的运行性能尚未实机验证。

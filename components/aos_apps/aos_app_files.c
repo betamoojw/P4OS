@@ -2486,7 +2486,7 @@ static void bind(cell_t *c, int p)
         lv_obj_set_style_text_color(c->icon, lv_color_hex(col), 0);
         if (e->kind == K_IMAGE) th_ask(ei);
     }
-    char nm[NAME_LEN + 8], sub[PATH_LEN];
+    char nm[NAME_LEN + 8], sub[PATH_LEN + 64];
     disp(nm, sizeof nm, base_of(NM(L.l, e)));
     lv_label_set_text(c->name, nm);
     sub_text(e, ei, sub, sizeof sub);
@@ -3662,9 +3662,9 @@ static void ctx_menu(int ei)
         a[n++] = (act_t){ f ? AOS_SYM_STAR : AOS_SYM_STAR_OUTLINE, f ? _("Quitar de favoritos") : _("Agregar a favoritos"), AOS_C_TEXT, act_fav };
     }
     a[n++] = (act_t){ AOS_SYM_DELETE, _("Borrar"), AOS_C_RED, act_delete };
-    char nm[NAME_LEN], sub[PATH_LEN + 64];
+    char nm[NAME_LEN], sub[PATH_LEN + 128];
     disp(nm, sizeof nm, base_of(NM(L.l, e)));
-    char s2[PATH_LEN];
+    char s2[PATH_LEN + 64];
     sub_text(e, ei, s2, sizeof s2);
     snprintf(sub, sizeof sub, "%s · %s", aos_tr(KIND[e->kind].name), s2);
     const char *g;

@@ -30,6 +30,12 @@ need `CONFIG_LV_USE_FONT_COMPRESSED=y`: a build directory from before that
 draws big text as noise. Delete the directory's `sdkconfig` (or set the line
 by hand) once.
 
+When upgrading a build directory from before 0.34, back up its `sdkconfig`
+and regenerate it from the board and revision defaults. The P4 starts the C6
+link after microSD initialization. Zigbee uses ESP-Hosted peer data and
+OpenThread's Spinel transport. The firmware uses size optimization to fit
+the radio stack and offline language packs in each OTA slot.
+
 The wired-network tools also require `CONFIG_ETH_USE_SPI_ETHERNET=y` and
 `CONFIG_ETH_SPI_ETHERNET_W5500=y`; connection sharing requires
 `CONFIG_LWIP_IP_FORWARD=y` and `CONFIG_LWIP_IPV4_NAPT=y`. Set these in older

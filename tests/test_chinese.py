@@ -25,7 +25,7 @@ INTENTIONALLY_IDENTICAL = {
     'DE AD BE EF', 'DMX', 'EEPROM', 'EN / RST', 'GND · p19', 'Home Assistant',
     'Mac', 'Modbus', 'MQTT', 'PSRAM', 'PWM', 'RX GPIO%d · p%u', 'Spotlight',
     'SSH', 'TX GPIO%d · p%u', 'URL', 'USB', 'USB 3 (850 mA)', 'USB…',
-    'V/div', 'Wi-Fi', 'n', '{{%s}} = %s', '≈ %s m', '≈ %s m · %s',
+    'V/div', 'Wi-Fi', 'Zigbee', '6LoWPAN (Thread)', 'n', '{{%s}} = %s', '≈ %s m', '≈ %s m · %s',
 }
 
 class Chinese(unittest.TestCase):

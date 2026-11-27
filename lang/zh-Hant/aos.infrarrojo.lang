@@ -18,6 +18,13 @@ GND (pata 19)	GND (第19條)
 LED IR (cátodo abajo)	紅光 LED (陰極下)
 5V (pata 1)	5V (點1)
 GND (pata 26)	GND (第26節)
+Salida	輸出
+Por el LED del GPIO%d	透過 GPIO%d 上的 LED
+LED de la placa	開發板的 LED
+Emisor Zigbee %s	Zigbee 紅外線發射器 %s
+Un emisor IR de la red Zigbee de la placa	開發板 Zigbee 網路中的紅外線發射器
+Los controles, los aires y las pruebas de Códigos salen por acá, salvo un aparato que tenga la suya (Editar, Nombre y tipo). Aprender escucha por el mismo lado: con un emisor, el control se apunta al emisor.	遙控器、空調以及“遙控碼”中的測試預設使用此輸出。若裝置已單獨設定，則使用裝置指定的輸出（見“編輯 → 名稱和型別”）。學習遙控碼時使用同一裝置：使用紅外線發射器時，請將遙控器對準發射器。
+Por un emisor Zigbee cada código tarda de medio segundo a unos segundos en salir, y un botón apretado no se repite.	透過 Zigbee 紅外線發射器傳送一個遙控碼需半秒到數秒；長按按鈕不會重複傳送。
 Cableado	電纜
 Pines	引腳
 Receptor	接收器
@@ -141,6 +148,9 @@ Guardar	儲存
 Crudo (protocolo desconocido)	原材料 (未知協議)
 En pausa.	停下來.
 Escuchando. Apuntá el control al receptor y apretá un botón.	聽著,把遙控器指向接收器,然後按一鍵.
+Recibiendo el código del emisor Zigbee…	正在從 Zigbee 紅外線發射器接收遙控碼…
+No se puede escuchar por %s: la red Zigbee tiene que estar andando, con el emisor en ella.	無法透過 %s 監聽。請確認 Zigbee 網路已啟動，且發射器已入網。
+Escuchando por %s. Apuntá el control al emisor y apretá un botón.	正在透過 %s 監聽。請將遙控器對準發射器並按下按鈕。
 Escuchar	聽我說
 Pausar	暫停
 Aprendiendo «%s» de %s: apretalo %d veces.	學習%s中文字不須改動。 %s: 按下 %d 幾次.
@@ -153,11 +163,24 @@ Guardar en un aparato	儲存在裝置中
 Últimas capturas	最後的捕獲
 %d duraciones	%d 持續時間
 Mandar	傳送
+el LED de la placa	開發板的 LED
+el emisor Zigbee %s	Zigbee 紅外線發射器 %s
+el emisor Zigbee %s (no está en la red)	Zigbee 紅外線發射器 %s（未入網）
+El emisor Zigbee no tomó el código	Zigbee 紅外線發射器未接受遙控碼
+La red Zigbee no está andando	Zigbee 網路尚未啟動
+Ese código es muy largo para el emisor Zigbee	遙控碼過長，Zigbee 紅外線發射器無法傳送
+Ese emisor Zigbee no está en la red	此 Zigbee 紅外線發射器未入網
+El emisor Zigbee está ocupado: esperá que termine	Zigbee 紅外線發射器正忙，請稍後再試
+Mandando por el emisor Zigbee… (%d en espera)	正在透過 Zigbee 紅外線發射器傳送…（%d 項等待中）
+Mandando por el emisor Zigbee…	正在透過 Zigbee 紅外線發射器傳送…
+El emisor Zigbee está ocupado	Zigbee 紅外線發射器正忙
 crudo	原材料
+Va por el emisor Zigbee	已交給 Zigbee 紅外線發射器傳送
+Mandado	傳送
 Escuchando	傾聽
 Listo	完成
+Sale por %s	透過 %s 傳送
 No encuentro ese aparato	沒有找到的裝置
-Mandado	傳送
 Protocolo desconocido	不知名協議
 Sin duraciones	沒有持續時間
 Pedido desconocido	不知名的請求
@@ -207,6 +230,9 @@ Dirección (hexa)	地址 (六)
 Comando (hexa)	命令 (六)
 Probar	試著
 Código a mano	手動編碼
+Sale por	傳送方式
+La de Cableado	使用接線設定
+La de Cableado ahora: %s.	當前接線設定：%s。
 Falta el nombre	這個名字不見
 Un aire acondicionado se agrega desde Códigos: manda el estado entero y necesita su modelo.	氣冷器是從Codes中新增的:它傳送了整個狀態,需要其模型.
 Crear	建立

@@ -77,7 +77,7 @@ async function loadCatalog(file) {
   }
 }
 /* the menu that index.html brings, translated where it stands */
-const NAV_NAMES = [N_('Pantalla'), N_('Inicio'), N_('Tienda'), N_('Wi-Fi y Ethernet'), N_('Red'), N_('Terminal'), N_('Programador'), N_('Banco'),
+const NAV_NAMES = [N_('Pantalla'), N_('Inicio'), N_('Tienda'), N_('Wi-Fi y Ethernet'), N_('Red'), N_('Terminal'), N_('Programador'), N_('Banco'), N_('Zigbee'),
   N_('Macro pad'), N_('Expansión'), N_('Archivos'), N_('Ajustes'), N_('Respaldo'), N_('Firmware'), N_('Registro')];
 async function setLang(code) {
   const version = ++languageVersion;
@@ -3346,9 +3346,21 @@ function pageTienda() {
             onclick: () => { if (confirm(tr('¿Quitar %s de la placa? Lo que la app guardó queda en la tarjeta.', L(e.name)))) act('remove', { file: e.file }); } }, tr('Quitar')) : null,
           (a.state === 'installed' || a.state === 'by_hand') && e.id ? h('button', { class: 'btn', onclick: () => post('open?id=' + encodeURIComponent(e.id)).catch(x => toast(x.message, true)) }, tr('Abrir')) : null)));
   }
+  // "Actualizar todas": every update this firmware can run, queued one after
+  // another (the board's queue does not take one twice)
+  async function updateAll(files) {
+    try {
+      for (const f of files) st = await post('store/install', { file: f, packs: 'need' });
+      toast(tr('%s actualizaciones en cola', files.length));
+    } catch (e) { toast(e.message, true); }
+    draw(); poll(400);
+  }
   function draw() {
     if (gone || !st) return;
     const by = new Map(st.apps.map(a => [a.file, a]));
+    const upAll = st.apps.filter(a => a.state === 'update' && a.fits).map(a => a.file);
+    const upBytes = upAll.reduce((n, f) => { const e = cat.find(x => x.file === f);
+      return n + (e ? (e.pkg.size || 0) + (e.packs || []).filter(p => p.need).reduce((m, p) => m + p.size, 0) : 0); }, 0);
     const ups = st.apps.filter(a => a.state === 'update').length, hand = st.apps.filter(a => a.state === 'by_hand').length,
           ours = st.apps.filter(a => a.state === 'by_hand' && a.src >= 0).length;
     const j = st.job;
@@ -3376,6 +3388,8 @@ function pageTienda() {
       h('div', { class: 'small mono muted', style: 'word-break:break-all;margin:6px 0' }, st.url),
       ups ? row(tr('Actualizaciones'), String(ups), 'warn') : null,
       h('div', { class: 'btns', style: 'margin-top:10px' },
+        upAll.length > 1 ? h('button', { class: 'btn pri', title: tr('Hasta %s: un pack que la tarjeta ya tiene no se baja de nuevo', fmtBytes(upBytes)),
+                                         onclick: () => updateAll(upAll) }, tr('Actualizar todas (%s)', upAll.length)) : null,
         h('button', { class: 'btn', disabled: st.busy, onclick: () => act('refresh', {}) }, tr('Buscar de nuevo')),
         ours ? h('button', { class: 'btn', disabled: st.busy, title: tr('Un recibo para las que son las del catálogo: no cambia ninguna app'),
                              onclick: () => act('adopt', {}) }, tr('Que la Tienda maneje las %s copiadas a mano', ours)) : null,
@@ -3612,7 +3626,452 @@ function pageRespaldo() {
   return () => { gone = true; clearTimeout(timer); };
 }
 
-const PAGES = { pantalla: pagePantalla, inicio: pageInicio, tienda: pageTienda, wifi: pageWifi, red: pageRed, ha: pageHa, terminal: pageTerminal, programador: pageProgramador, banco: pageBanco, claude: pageClaude, mqtt: pageMqtt, macropad: pageMacropad, expansion: pageExpansion, archivos: pageArchivos, ajustes: pageAjustes, respaldo: pageRespaldo, firmware: pageFirmware, registro: pageRegistro };
+/* ---- Zigbee y Thread ----
+ * The C6's 802.15.4 radio (/api/154, components/aos_154): the channels'
+ * energy and traffic, what is heard on one, decoded, the captures on the
+ * card for Wireshark, and the devices heard. The board's Zigbee app does
+ * the same; the radio only listens. */
+let zbT;
+function zbDecode(hex) {
+  const f = hex.match(/../g).map(x => parseInt(x, 16)), len = f.length - 2;
+  if (len < 3) return [tr('trama corta'), ''];
+  const fcf = f[0] | f[1] << 8, type = fcf & 7, sec = fcf >> 3 & 1, comp = fcf >> 6 & 1, dm = fcf >> 10 & 3, sm = fcf >> 14 & 3;
+  let at = 3, pan = '', da = '-', sa = '-';
+  const adr = m => { if (m === 2) { const v = (f[at] | f[at + 1] << 8).toString(16).toUpperCase().padStart(4, '0'); at += 2; return '0x' + v; }
+    if (m === 3) { const v = f.slice(at, at + 8).reverse().map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase(); at += 8; return v; } return '-'; };
+  if (dm) { pan = (f[at] | f[at + 1] << 8).toString(16).toUpperCase().padStart(4, '0'); at += 2; da = adr(dm); }
+  if (sm) { if (!comp) at += 2; sa = adr(sm); }
+  if (type === 2) return [tr('Acuse') + ' #' + f[2], ''];
+  if (type === 0) return ['Beacon ' + sa, ''];
+  if (type === 3) return [tr('Comando') + ' ' + sa + ' → ' + da, ''];
+  if (type !== 1) return [tr('trama de tipo %s', type), ''];
+  const l1 = tr('Datos') + ' ' + sa + ' → ' + da + (pan ? '  PAN ' + pan : '');
+  if (sec) return [l1, tr('cifrada en la capa MAC')];
+  if (at + 8 <= len && ((f[at] >> 2) & 15) === 2 && (f[at] & 3) <= 1) {
+    const nf = f[at] | f[at + 1] << 8, h4 = v => '0x' + v.toString(16).toUpperCase().padStart(4, '0');
+    return [l1, 'Zigbee ' + ((nf & 3) ? tr('comando de red') : tr('datos')) + '  ' + h4(f[at + 4] | f[at + 5] << 8) + ' → ' + h4(f[at + 2] | f[at + 3] << 8) +
+      (nf >> 9 & 1 ? ', ' + tr('cifrada') : '')];
+  }
+  if (at < len && (f[at] & 0xe0) === 0x60) return [l1, '6LoWPAN (Thread)'];
+  return [l1, ''];
+}
+
+/* "Mi red": the board's own Zigbee network (aos_zigbee, the P4's stack with
+ * the C6 for its radio), as the board's Zigbee app shows it in its tab of
+ * the same name (aos_app_zigbee.c, fill_net): a card per device with its
+ * values and what drives it, to see and work them from away. The page
+ * already asks for /api/154 every second; this redraws from it every two,
+ * and never under the user: not while a pointer is down on it (a press that
+ * outlived its button would be lost, and a slider's drag with it), and not
+ * when nothing it shows changed. What was just asked for shows as asked
+ * until the device says so, a few seconds at most. */
+const ZB_ZONE = { 0x0015: [N_('contacto'), N_('abierto'), N_('cerrado')], 0x000d: [N_('movimiento'), N_('movimiento'), N_('sin movimiento')],
+  0x002a: [N_('agua'), N_('¡agua!'), N_('seco')], 0x0028: [N_('humo'), N_('alarma'), N_('normal')], 0x002b: [N_('gas'), N_('alarma'), N_('normal')] };
+const ZB_CLUSTER = { 0x0001: N_('batería'), 0x0006: N_('encendido'), 0x0008: N_('nivel'), 0x0300: N_('color'), 0x0402: N_('temperatura'),
+  0x0403: N_('presión'), 0x0405: N_('humedad'), 0x0406: N_('presencia'), 0x0400: N_('luz'), 0x0500: 'IAS', 0x0702: N_('medidor'),
+  0x0b04: N_('eléctrico'), 0xef00: 'Tuya' };
+/* a value as it goes on the air: little-endian, n bytes in hex */
+const zbHex = (v, n) => Array.from({ length: n }, (_, i) => ((v >> 8 * i) & 255).toString(16).padStart(2, '0')).join('');
+const zbH4 = v => '0x' + v.toString(16).padStart(4, '0');
+const zbMeas = (d, cl, at, def) => { const m = (d.measures || []).find(x => x.cluster === cl && x.attr === at); return m ? m.raw : def; };
+const zbAgo = s => s < 120 ? tr('hace %s s', s) : tr('hace %s min', Math.floor(s / 60));
+/* a name for the board: 32 bytes at most, cut between characters */
+function zbCut(s) {
+  let out = '';
+  for (const ch of s.trim()) { if (new TextEncoder().encode(out + ch).length > 32) break; out += ch; }
+  return out;
+}
+/* what the board already shows by name, left out of the raw lines */
+function zbNamed(d, a) {
+  if (a.command != null) return a.cluster === 0x0500 && a.command === 0;
+  if ((d.measures || []).some(m => m.cluster === a.cluster && m.attr === a.attr)) return true;
+  if (a.cluster === 0x0001) return a.attr === 0x20 || a.attr === 0x21;
+  if ([0x0006, 0x0008, 0x0402, 0x0405, 0x0406].includes(a.cluster)) return a.attr === 0;
+  return a.cluster === 0x0500 && (a.attr === 1 || a.attr === 2);
+}
+function zbNet() {
+  const head = h('div', { class: 'card pad' }), list = h('div', { class: 'zbnet' }), el = h('div', {}, head, list);
+  let st = null, sig = '', last = 0, downs = 0, starting = false;
+  const pend = new Map();           /* what was just asked: key -> [value, until] */
+  const raw = new Set();            /* the devices whose raw lines are open */
+  const pendSet = (k, v, ms) => pend.set(k, [v, Date.now() + ms]);
+  const pendGet = (k, now) => {
+    const p = pend.get(k);
+    if (p && (p[1] < Date.now() || p[0] === now)) { pend.delete(k); return undefined; }
+    return p ? p[0] : undefined;
+  };
+  el.addEventListener('pointerdown', () => {
+    downs++;
+    const up = () => {
+      document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', up);
+      /* after the click the release brings, or the button would be gone */
+      setTimeout(() => { downs = Math.max(0, downs - 1); draw(null, true); }, 400);
+    };
+    document.addEventListener('pointerup', up); document.addEventListener('pointercancel', up);
+  });
+  const act = async (what, body, done) => {
+    try { const s = await post('154/' + what, body); if (done) toast(done); draw(s, true); }
+    catch (e) { toast(e.status === 400 ? tr('La red no tomó el pedido') : e.message, true); }
+  };
+  const start = async () => {
+    starting = true;
+    draw(null, true);
+    let s = null;
+    try {
+      if (st && (st.state === 'scanning' || st.state === 'sniffing')) await post('154/stop');
+      s = await post('154/zbhost', { channel: 26 });     /* the board app's: away from Wi-Fi's 1, 6 and 11 */
+    } catch { toast(tr('No se pudo armar la red: ¿el C6 tiene su firmware nuevo? Tienda, Sistema, Firmware de la radio (C6)'), true); }
+    starting = false;
+    draw(s, true);
+  };
+
+  function card(d, z) {
+    const ie = d.ieee, idn = d.ident, v = d.values || {}, c = d.controls || {}, ir = z.ir || {};
+    const what = idn ? idn.vendor + ' ' + idn.model : ((d.manufacturer || '') + ' ' + (d.model || '')).trim();
+    const title = d.name || what || ie.toUpperCase().match(/..../g).join(':');
+    const news = d.heard_s != null;
+    const rename = () => {
+      const n = prompt(tr('Nombre del equipo'), d.name || '');
+      if (n != null && n.trim() !== d.name) act('zbname', { ieee: ie, name: zbCut(n) });
+    };
+    const remove = () => { if (confirm(tr('¿Sacar %s de la red? Para volver a sumarlo hay que resetearlo.', title))) act('zbremove', { ieee: ie }); };
+    const line = [idn && idn.description, d.name && what, '0x' + d.nwk.toString(16).toUpperCase().padStart(4, '0'),
+      d.router ? tr('router') : d.power === 1 ? tr('a red eléctrica') : tr('a pila'), d.rssi ? d.rssi + ' dBm' : null,
+      news ? zbAgo(d.heard_s) : tr('sin noticias desde que arrancó la placa'),
+      d.step === 'left' ? tr('se fue') : d.step === 'failed' ? tr('no contestó') : d.setup ? tr('configurándolo') : null].filter(Boolean).join(' · ');
+
+    /* what the board names, a chip each; the ones that do something are buttons */
+    const chips = [], chip = (text, cls) => chips.push(h('span', { class: 'zbchip ' + (cls || '') }, text));
+    const tog = (text, on, fn) => chips.push(h('button', { class: 'zbchip tog' + (on ? ' on' : ''), onclick: fn }, text));
+    if (v.temperature != null) chip(num(v.temperature, 1) + ' °C', 'zb-or');
+    if (v.humidity != null) chip(num(v.humidity, 1) + ' %', 'zb-teal');
+    if (v.zone && v.zone.alarm != null) {
+      const zn = ZB_ZONE[v.zone.type] || [N_('alarma'), N_('alarma'), N_('normal')];
+      chip(tr(zn[0]) + ': ' + tr(v.zone.alarm ? zn[1] : zn[2]), v.zone.alarm ? 'zb-red' : 'zb-green');
+    }
+    if (v.occupancy != null) chip(v.occupancy ? tr('hay alguien') : tr('nadie'));
+    (v.on || []).forEach((on, q) => {
+      if (on == null) return;
+      const ep = d.endpoints[q], k = ie + ':o' + ep, p = pendGet(k, on);
+      /* On or Off, from what it shows: two Toggles that cross undo each other */
+      tog(tr('salida %d: %s', q + 1, p != null ? '...' : on ? tr('prendida') : tr('apagada')), p != null ? p : on, () => {
+        if (pendGet(k, on) != null) return;                 /* a second tap while the first goes */
+        pendSet(k, !on, 3000);
+        act('zbonoff', { ieee: ie, ep, on: !on });
+      });
+    });
+    if (v.battery != null) chip(tr('batería') + ' ' + Math.round(v.battery) + ' %', v.battery < 20 ? 'zb-red' : 'zb-dim');
+    else if (v.voltage) chip(tr('batería') + ' ' + num(v.voltage, 1) + ' V', 'zb-dim');
+    for (const m of d.measures || []) chip(m.name + ' ' + m.value);
+    /* Tuya's datapoints: by name when the card's table knows the device; a bool one is a button */
+    for (const dp of d.datapoints || []) {
+      const named = dp.name ? dp.name + ' ' + dp.text : null;
+      if (dp.type === 1) {
+        const k = ie + ':d' + dp.dp, now = !!dp.value, p = pendGet(k, now), on = p != null ? p : now;
+        tog(named && p == null ? named : 'dp ' + dp.dp + ': ' + (p != null ? '...' : on ? tr('sí') : tr('no')), on, () => {
+          pendSet(k, !on, 3000);
+          act('zbdp', { ieee: ie, dp: dp.dp, type: 1, value: on ? 0 : 1 });
+        });
+      } else if (named) chip(named);
+      else if (dp.value != null) chip('dp ' + dp.dp + ': ' + dp.value);
+      else chip('dp ' + dp.dp + ': ' + (dp.hex || ''), 'zb-dim');
+    }
+    const mine = ir.ieee === ie;
+    if (c.ir && mine && ir.state === 'sending') chip(tr('enviando...'), 'zb-acc');
+    if (c.ir && mine && ir.state === 'failed') chip(tr('no tomó el código'), 'zb-or');
+
+    /* its controls */
+    const ctl = [], btn = (text, fn, cls) => ctl.push(h('button', { class: 'btn' + (cls ? ' ' + cls : ''), onclick: fn }, text));
+    if (c.cover) for (const [t, cmd] of [[N_('Arriba'), 0], [N_('Parar'), 2], [N_('Abajo'), 1]])
+      btn(tr(t), () => act('zbcmd', { ieee: ie, ep: c.cover, cluster: 0x0102, cmd, data: '', read: 0x0008 }));
+    if (c.thermostat) {
+      /* half a degree from the one asked last, so that taps in a row add up */
+      const k = ie + ':t', m = zbMeas(d, 0x0201, 0x0012, 2000);
+      for (const step of [-50, 50]) btn((step < 0 ? '−' : '+') + num(0.5, 1) + ' °C', () => {
+        const p = pendGet(k, m), x = (p != null ? p : m) + step;
+        pendSet(k, x, 4000);
+        act('zbwrite', { ieee: ie, ep: c.thermostat, cluster: 0x0201, attr: 0x0012, type: 0x29, value: zbHex(x & 0xffff, 2) });
+      });
+    }
+    if (c.lock) {
+      /* an empty code: those that need none take it */
+      btn(tr('Cerrar con llave'), () => act('zbcmd', { ieee: ie, ep: c.lock, cluster: 0x0101, cmd: 0, data: '00', read: 0 }));
+      btn(tr('Abrir'), () => act('zbcmd', { ieee: ie, ep: c.lock, cluster: 0x0101, cmd: 1, data: '00', read: 0 }));
+    }
+    if (c.fan) {
+      const NEXT = [1, 2, 3, 5, 5, 0, 0], m = zbMeas(d, 0x0202, 0x0000, 0);   /* off, low, medium, high, auto, off */
+      btn(tr('Ventilador: otro modo'), () => act('zbwrite', { ieee: ie, ep: c.fan, cluster: 0x0202, attr: 0, type: 0x30,
+        value: zbHex(m >= 0 && m <= 6 ? NEXT[m] : 0, 1) }));
+    }
+    let codes = null;
+    if (c.ir) {
+      const learning = mine && (ir.state === 'learning' || ir.state === 'receiving');
+      btn(learning ? tr('Esperando el control remoto... (tocá para cancelar)') : tr('Aprender un código'),
+        () => act('zbir', { ieee: ie, learn: !learning }), learning ? 'pri' : '');
+      if (ir.learned) {
+        const code = ir.learned;
+        btn(tr('Enviar el último aprendido'), () => act('zbir', { ieee: ie, send: code }));
+        btn(tr('Guardarlo...'), () => {
+          const n = prompt(tr('Nombre del código'), '');
+          if (n && n.trim()) act('zbir', { ieee: ie, save: zbCut(n) }, tr('Guardado'));
+        });
+      }
+      /* its saved codes, a button each (the index is into the whole list) */
+      const mineCodes = (ir.codes || []).map((x, i) => [x, i]).filter(([x]) => x.ieee === ie);
+      if (mineCodes.length) codes = h('div', { class: 'zbcodes' }, h('div', { class: 'small muted' }, tr('Guardados: tocá uno para mandarlo.')),
+        h('div', { class: 'btns' }, mineCodes.map(([x, i]) => h('span', { class: 'zbcode' },
+          h('button', { class: 'btn', onclick: () => act('zbir', { ieee: ie, saved: i }) }, x.name),
+          h('button', { class: 'btn', title: tr('Borrar'), onclick: () => { if (confirm(tr('¿Borrar el código %s?', x.name))) act('zbir', { ieee: ie, forget: i }, tr('Código borrado')); } }, '×')))));
+    }
+
+    /* the sliders: sent when let go. A dimmer's level (Move to Level with
+     * On/Off: 0 turns it off), a curtain's position (Go To Lift Percentage),
+     * a light's color temperature (Move to Color Temperature, in mireds) */
+    const sliders = [];
+    const slider = (label, k, min, max, val, fmt, send) => {
+      const p = pendGet(k, val), cur = p != null ? p : val, out = h('span', { class: 'small muted zbsv' }, fmt(cur));
+      sliders.push(h('label', { class: 'zbslide' }, h('span', { class: 'small' }, label),
+        h('input', { type: 'range', min, max, value: cur, oninput: e => { out.textContent = fmt(+e.target.value); },
+          onchange: e => { const x = +e.target.value; pendSet(k, x, 4000); send(x); } }), out));
+    };
+    const lep = d.level_ep || (v.level ? v.level.ep : 0) || +((d.clusters || []).find(x => /:0008$/.test(x)) || '0:').split(':')[0];
+    if (lep) slider(tr('brillo'), ie + ':l', 0, 254, v.level ? v.level.value : 0, x => Math.round(x * 100 / 254) + ' %',
+      x => act('zblevel', { ieee: ie, ep: lep, level: x }));
+    if (c.cover) slider(tr('posición'), ie + ':c', 0, 100, zbMeas(d, 0x0102, 0x0008, 0), x => x + ' %',
+      x => act('zbcmd', { ieee: ie, ep: c.cover, cluster: 0x0102, cmd: 0x05, data: zbHex(x, 1), read: 0x0008 }));
+    if (c.color) slider(tr('tono'), ie + ':k', 153, 500, zbMeas(d, 0x0300, 0x0007, 300), x => Math.round(1e6 / x) + ' K',
+      x => act('zbcmd', { ieee: ie, ep: c.color, cluster: 0x0300, cmd: 0x0A, data: zbHex(x, 2) + '0500', read: 0x0007 }));
+
+    /* and what it said raw, the newest first */
+    const rest = (d.attributes || []).filter(a => !zbNamed(d, a)).sort((a, b) => a.ago_s - b.ago_s);
+    const rawBox = rest.length ? h('details', { class: 'zbraw', open: raw.has(ie), ontoggle: e => { if (e.target.open) raw.add(ie); else raw.delete(ie); } },
+      h('summary', { class: 'small muted' }, tr('Lo que mandó, crudo (%s)', rest.length)),
+      rest.map(a => h('div', { class: 'small muted mono' }, 'ep' + a.ep + ' ' + (ZB_CLUSTER[a.cluster] ? tr(ZB_CLUSTER[a.cluster]) + ' ' : '') + zbH4(a.cluster) +
+        (a.command != null ? ' ' + tr('comando') + ' 0x' + a.command.toString(16).padStart(2, '0') + ': ' : '/' + zbH4(a.attr) + ' = ') + a.hex +
+        ' · ' + (a.ago_s < 60 ? tr('recién') : tr('antes'))))) : null;
+
+    return h('div', { class: 'card pad zbcard' },
+      h('div', { class: 'zbtop' },
+        h('b', { class: 'zbname' + (d.step === 'left' || !news ? ' muted' : ''), title: tr('Nombre del equipo'), onclick: rename }, title),
+        h('button', { class: 'btn', title: tr('Nombre del equipo'), onclick: rename }, '✎'),
+        h('button', { class: 'btn', onclick: remove }, tr('Sacar'))),
+      h('div', { class: 'small muted' }, line),
+      chips.length ? h('div', { class: 'zbchips' }, chips) : null,
+      d.event ? h('div', { class: 'small ' + (d.event.ago_s < 60 ? 'zb-acc' : 'muted') }, d.event.text + ' · ' + (d.event.ago_s < 60 ? tr('recién') : tr('antes'))) : null,
+      ctl.length ? h('div', { class: 'btns zbctl' }, ctl) : null, codes, sliders, rawBox);
+  }
+
+  function draw(s, force) {
+    if (s) st = s;
+    if (!st || !st.zbhost || downs > 0) return;
+    const t = Date.now();
+    if (!force && t - last < 1900) return;
+    const z = st.zbhost, open = z.open_s || 0, formed = z.state === 'formed', devs = z.devices || [];
+    /* what it shows: the counters left out, the times as they read */
+    const now = JSON.stringify(z, (k, x) => k === 'to_c6' || k === 'from_c6' ? undefined : k === 'ago_s' ? x < 60
+      : k === 'heard_s' ? (x == null ? x : zbAgo(x)) : x) + starting + JSON.stringify([...pend].filter(([, p]) => p[1] >= t));
+    if (now === sig) return;
+    sig = now;
+    last = t;
+    const busy = starting || z.state === 'starting';
+    put(head, h('h2', { style: 'margin-top:0' }, tr('Mi red')),
+      h('div', { class: 'btns' },
+        !formed ? h('button', { class: 'btn pri', disabled: busy, onclick: start }, busy ? tr('Armando la red...') : tr('Armar la red')) : null,
+        formed && !open ? h('button', { class: 'btn pri', onclick: () => act('zbpermit', { seconds: 254 }) }, tr('Sumar equipos')) : null,
+        formed && !open ? h('button', { class: 'btn', onclick: () => act('zbpermit', { seconds: 254, board: true, strict: true, static: true }) }, tr('Sumar Zigbee 3.0')) : null,
+        formed && open ? h('span', { class: 'zbchip zb-acc' }, tr('Abierta: %d s', open)) : null,
+        formed && open ? h('button', { class: 'btn', onclick: () => act('zbpermit', { seconds: 0 }) }, tr('Cerrar')) : null),
+      z.state === 'failed' ? h('p', { class: 'note warn' }, tr('No se pudo armar la red: ¿el C6 tiene su firmware nuevo? Tienda, Sistema, Firmware de la radio (C6)')) : null,
+      h('p', { class: 'note' }, !formed ? tr('La placa arma su propia red Zigbee, con el C6 de radio, y los equipos se suman a ella: así se prueba cualquiera. Un equipo está en una sola red: para sumarlo acá hay que resetearlo (en general, el botón apretado hasta que parpadea).')
+        : open ? tr('Abierta para sumar: reseteá los equipos de a uno; cada uno aparece acá cuando entra. Si es a pila, tocale el botón cada tanto mientras se configura.')
+        : tr('Red en el canal %s, %s equipos. Los valores llegan cuando el equipo los manda: uno a pila puede tardar en dar noticias. Si un equipo sigue titilando y no termina de sumarse, probá con Sumar Zigbee 3.0.', z.channel, devs.length)));
+    put(list, formed && !devs.length ? h('p', { class: 'note' }, tr('Todavía no se sumó ningún equipo.')) : null,
+      devs.slice().reverse().map(d => card(d, z)));        /* the newest first, as on the board */
+  }
+  return { el, draw };
+}
+
+/* ---- Emular: the board as a device on someone else's network (Home
+ * Assistant's), docs/plan/ZIGBEE-EMULAR.md; POST /api/154/zbemu ---- */
+function zbEmu() {
+  const el = h('div', { class: 'card pad' });
+  let sig = '', held = false, armed = 0;
+  el.addEventListener('pointerdown', () => {
+    held = true;
+    const up = () => { document.removeEventListener('pointerup', up); setTimeout(() => { held = false; }, 400); };
+    document.addEventListener('pointerup', up);
+  });
+  const act = async (body, done) => {
+    try { const s = await post('154/zbemu', body); if (done) toast(done); sig = ''; draw(s); }
+    catch (e) { toast(e.status === 400 ? tr('No se pudo') : e.message, true); }
+  };
+  const slider = (label, unit, min, max, step, now, key) => {
+    const out = h('span', {}, label + ' ' + now + ' ' + unit);
+    const r = h('input', { type: 'range', min, max, step, value: now, style: 'width:100%',
+      oninput: e => { out.textContent = label + ' ' + e.target.value + ' ' + unit; },
+      onchange: e => act({ set: { [key]: +e.target.value } }) });
+    return h('div', { style: 'margin:10px 0' }, out, r);
+  };
+  function draw(st) {
+    if (!st || held) return;
+    const m = st.zbemu || { state: 'off', log: [] };
+    const ns = JSON.stringify([m.state, m.saved, m.tries, m.on, m.temp, m.hum, m.battery, m.tclk, m.identify_s,
+      (m.log || []).length, ((m.log || []).slice(-1)[0] || {}).text, st.zbhost && st.zbhost.state, Date.now() - armed < 4000]);
+    if (ns === sig) return;
+    sig = ns;
+    const kids = [h('h2', {}, tr('Emular un equipo'))];
+    if (m.state === 'off') {
+      kids.push(h('p', {}, tr('La placa se suma a otra red Zigbee (la de Home Assistant) haciéndose pasar por un equipo: una luz en el endpoint 1 y un sensor de temperatura, humedad y batería en el 2 (fabricante P4OS, modelo P4OS-EMU-LT). Así se ve si el coordinador lo lee, lo maneja y qué le pide. Antes, en Home Assistant: Agregar dispositivo (ZHA) o Permitir unirse (Zigbee2MQTT).')));
+      if (m.saved) kids.push(h('p', { class: 'note' }, tr('Hay una red guardada de la vez anterior: la placa vuelve a ella sin que la abran.')));
+      const own = st.zbhost && st.zbhost.state !== 'off';
+      kids.push(h('div', { class: 'btns' }, own
+        ? h('button', { class: 'btn pri', onclick: () => { if (confirm(tr('La placa se reinicia y arranca como equipo. Tus equipos quedan guardados y vuelven con Volver a Mi red. ¿Seguir?'))) act({ join: true, restart: true }, tr('Reiniciando para emular...')); } }, tr('Reiniciar y emular'))
+        : h('button', { class: 'btn pri', onclick: () => act({ join: true }) }, tr('Unirse'))));
+    } else if (m.state !== 'joined') {
+      kids.push(h('p', {}, m.state === 'searching' ? tr('Buscando una red abierta... (intento %s de 36)', m.tries)
+        : m.state === 'left' ? tr('Fuera de la red') : tr('No encontró una red abierta en 3 minutos')));
+      kids.push(h('div', { class: 'btns' },
+        m.state !== 'searching' ? h('button', { class: 'btn pri', onclick: () => act({ join: true }) }, tr('Buscar otra vez')) : null,
+        h('button', { class: 'btn', onclick: () => act({ home: true }, tr('Volviendo a la red propia: la placa se reinicia')) }, tr('Volver a Mi red'))));
+    } else {
+      kids.push(h('p', {}, tr('En la red 0x%s, canal %s, como 0x%s', m.pan.toString(16).toUpperCase().padStart(4, '0'), m.channel,
+        m.nwk.toString(16).toUpperCase().padStart(4, '0')) + ' · ' + (m.tclk ? tr('con su propia clave de enlace') : tr('sin clave propia todavía'))));
+      if (m.identify_s) kids.push(h('p', { class: 'warn' }, tr('Home Assistant pide que se identifique: %s s', m.identify_s)));
+      kids.push(h('div', { class: 'btns' },
+        h('button', { class: m.on ? 'btn pri' : 'btn', onclick: () => act({ set: { on: !m.on } }) }, m.on ? tr('Luz: prendida') : tr('Luz: apagada'))));
+      kids.push(slider(tr('temperatura'), '°C', -20, 50, 0.1, m.temp, 'temp'), slider(tr('humedad'), '%', 0, 100, 1, m.hum, 'hum'),
+        slider(tr('batería'), '%', 0, 100, 1, m.battery, 'battery'));
+      const leaving = Date.now() - armed < 4000;
+      kids.push(h('div', { class: 'btns' },
+        h('button', { class: 'btn pri', onclick: () => act({ report: true }) }, tr('Reportar ahora')),
+        h('button', { class: 'btn', onclick: () => act({ home: true }, tr('Volviendo a la red propia: la placa se reinicia')) }, tr('Volver a Mi red')),
+        h('button', { class: 'btn', onclick: () => { if (leaving) { armed = 0; act({ leave: true }); } else { armed = Date.now(); sig = ''; draw(st); } } },
+          leaving ? tr('¿Seguro? Tocá otra vez') : tr('Salir de la red'))));
+    }
+    if ((m.log || []).length) {
+      const ago = s => s < 120 ? s + ' s' : Math.floor(s / 60) + ' min';
+      kids.push(h('h2', {}, tr('Lo que pidió el coordinador')), h('div', { class: 'zbemu-log' },
+        m.log.slice().reverse().map(x => h('div', { class: x.board ? 'zbemu-board' : '' }, h('span', { class: 'note' }, ago(x.ago_s) + '  '), x.text))));
+    }
+    put(el, ...kids);
+  }
+  return { el, draw };
+}
+
+async function pageZigbee() {
+  const status = h('div', { class: 'card pad' }), chans = h('div', { class: 'card pad' }), sniff = h('div', { class: 'card pad' });
+  const devs = h('div', { class: 'card pad' }), caps = h('div', { class: 'card pad' }), net = zbNet(), emu = zbEmu();
+  const canvas = h('canvas', { width: 1200, height: 400, style: 'width:100%;height:auto;display:block' });
+  let st = null, from = 1, rows = [], chan = 15, pcap = true;
+  const act = (what, body) => post('154/' + what, body).then(s => { st = s; draw(); }).catch(e => toast(e.message, true));
+  const chSel = h('select', { onchange: e => { chan = +e.target.value; if (st && st.state === 'sniffing') act('sniff', { channel: chan, pcap }); } },
+    Array.from({ length: 16 }, (_, i) => h('option', { value: 11 + i }, tr('Canal %s', 11 + i))));
+  const pcapBox = h('input', { type: 'checkbox', checked: true, onchange: e => { pcap = e.target.checked; } });
+  const goBtn = h('button', { class: 'btn pri', onclick: () => {
+    if (st && st.state === 'sniffing') return act('stop');
+    from = (st ? st.last : 0) + 1;      // the list and the count start over
+    rows = [];
+    act('sniff', { channel: chan, pcap });
+  } });
+  const counts = h('div', { class: 'note' }), list = h('div', { style: 'max-height:480px;overflow-y:auto;margin-top:8px' });
+  function bars() {
+    const c = canvas.getContext('2d'), W = canvas.width, H = canvas.height, cw = W / 16, top = 40, bot = H - 40;
+    c.clearRect(0, 0, W, H);
+    for (const w of [1, 6, 11]) {      // Wi-Fi 1, 6, 11: 22 MHz around 2407 + 5w
+      const x0 = ((2407 + 5 * w - 11) - 2405 + 2.5) / 5 * cw;
+      c.fillStyle = 'rgba(10,132,255,.12)'; c.fillRect(x0, top - 10, 22 / 5 * cw, bot - top + 10);
+      c.fillStyle = '#0a84ff'; c.font = '28px system-ui'; c.textAlign = 'left'; c.fillText('Wi-Fi ' + w, Math.max(6, x0 + 6), top - 14);
+    }
+    (st ? st.channels : []).forEach((ch, i) => {
+      c.fillStyle = '#8e8e93'; c.font = '30px system-ui'; c.textAlign = 'center'; c.fillText(ch.ch, i * cw + cw / 2, H - 6);
+      if (ch.ed_max == null) return;
+      const db = Math.max(-100, Math.min(-35, ch.ed_max)), hgt = 6 + (bot - top - 40) * (db + 100) / 65;
+      c.fillStyle = ch.frames ? '#eb0443' : db > -75 ? '#ff9f0a' : '#30d158';
+      c.fillRect(i * cw + 6, bot - hgt, cw - 12, hgt);
+      if (ch.frames) { c.fillStyle = '#fff'; c.fillText(ch.frames, i * cw + cw / 2, bot - hgt - 8); }
+      c.textAlign = 'left';
+    });
+  }
+  function draw() {
+    if (!st) return;
+    /* what the 802.15.4 radio is doing: the board's Zigbee network (or a
+     * device it emulates) first, as the C6 is then the stack's radio and
+     * does not answer the scanner's hello; then the scan and the sniffer */
+    const zb = st.zbhost || {}, em = st.zbemu || {};
+    const radio = zb.emulating ? (em.state === 'joined' ? tr('emulando un equipo en otra red, canal %s', em.channel) : tr('emulando un equipo: buscando una red'))
+      : zb.state === 'formed' ? tr('la red Zigbee de la placa, canal %s', zb.channel)
+      : zb.state === 'starting' ? tr('armando la red Zigbee')
+      : !st.reachable ? tr('el C6 no contesta')
+      : st.state === 'scanning' ? tr('escaneando, canal %s', st.channel)
+      : st.state === 'sniffing' ? tr('escuchando el canal %s', st.channel) : tr('sin usar');
+    const busy = zb.emulating || zb.state === 'formed' || zb.state === 'starting';
+    put(status, row(tr('Radio'), radio, (busy || st.reachable ? '' : 'warn') + ' wrap'),
+      row(tr('Firmware del C6'), st.c6 || '?'),
+      !st.reachable && !busy ? h('p', { class: 'note' }, tr('La radio no contesta: el C6 necesita su firmware nuevo (3.0.9-154.15). En la placa: 1) Tienda, Sistema, Firmware de la radio (C6): bajarlo. 2) Ajustes, Actualización, Instalar en el C6. Son unos 15 s sin Wi-Fi y la placa se reinicia sola.')) : null,
+      st.guarded ? h('p', { class: 'note warn' }, tr('El C6 se cayó con la radio prendida y la dejó apagada; escanear o escuchar la vuelve a probar.')) : null);
+    bars();
+    goBtn.textContent = st.state === 'sniffing' ? tr('Parar') : tr('Escuchar');
+    chSel.value = String(chan);
+    counts.textContent = tr('%s paquetes', st.frames) + (st.dropped ? ' · ' + tr('%s perdidos en el C6', st.dropped) : '') +
+      (st.pcap ? ' · ' + tr('guardando %s en %s', st.pcap_frames, st.pcap.replace(/^.*\//, '')) : '');
+    put(list, rows.slice(-80).reverse().map(fr => { const [a, b] = zbDecode(fr.hex);
+      return h('div', { class: 'row', style: 'flex-direction:column;align-items:stretch' },
+        h('div', { class: 'btns', style: 'justify-content:space-between;flex-wrap:nowrap' }, h('span', { class: 'small' }, a),
+          h('span', { class: 'small muted' }, fr.rssi + ' dBm · ' + fr.hex.length / 2 + ' B')),
+        b ? h('div', { class: 'small muted' }, b) : null); }));
+  }
+  async function loadDevs() {
+    try {
+      const d = await api('154/devices');
+      put(devs, h('h2', {}, tr('Equipos')), d.devices.length ? d.devices.map(x => row(
+        h('span', {}, (x.short || x.ext) + (x.short === '0x0000' ? ' · ' + tr('coordinador') : '') + (x.vendor ? ' · ' + x.vendor : ''),
+          x.short && x.ext ? h('div', { class: 'small muted mono' }, x.ext) : null),
+        tr('%s paquetes · %s dBm · hace %s s', x.frames, x.rssi_avg, Math.round(x.ago_ms / 1000)) + (x.pan ? ' · PAN ' + x.pan : ''))) :
+        h('p', { class: 'note' }, tr('Todavía nadie: escuchá un canal con tráfico.')),
+        h('div', { class: 'btns', style: 'margin-top:8px' }, h('button', { class: 'btn', onclick: () => post('154/devices/clear').then(loadDevs) }, tr('Olvidarlos'))));
+    } catch {}
+  }
+  async function loadCaps() {
+    const es = (await fsList('/zigbee').catch(() => [])).filter(e => /\.pcap$/.test(e.name)).sort((a, b) => b.mtime - a.mtime);
+    put(caps, h('h2', {}, tr('Capturas en la tarjeta')),
+      es.length ? es.slice(0, 12).map(e => row(h('a', { href: fsUrl('/zigbee/' + e.name, true) }, e.name), fmtBytes(e.size))) :
+        h('p', { class: 'note' }, tr('Ninguna todavía.')),
+      h('p', { class: 'note' }, tr('Se abren con Wireshark: cada paquete trae su canal, RSSI y LQI.')));
+  }
+  async function load() {
+    try { st = await api('154'); } catch { return; }
+    if (st.state === 'sniffing' || st.last >= from) {
+      try { const r = await api('154/frames?from=' + from); if (r.frames.length) { rows = rows.concat(r.frames).slice(-200); from = r.frames[r.frames.length - 1].seq + 1; } } catch {}
+    }
+    const best = (st.channels || []).filter(c => c.frames).sort((a, b) => b.frames - a.frames)[0];
+    if (best && st.state !== 'sniffing') chan = best.ch;
+    draw();
+    /* emulating, the board's own network is off and its section says nothing useful */
+    net.el.style.display = st.zbhost && st.zbhost.emulating ? 'none' : '';
+    net.draw(st);
+    emu.draw(st);
+  }
+  put(chans, h('h2', {}, tr('Canales')), canvas,
+    h('div', { class: 'btns', style: 'margin-top:10px' },
+      h('button', { class: 'btn pri', onclick: () => act('scan', { first: 11, last: 26, dwell: 250 }) }, tr('Escanear')),
+      h('button', { class: 'btn', onclick: () => act('scan', { first: 11, last: 26, dwell: 2000 }) }, tr('A fondo (2 s por canal)'))),
+    h('p', { class: 'note' }, tr('La barra es la energía del canal; el número, los paquetes oídos. Una red Zigbee o Thread se ve como un canal con paquetes.')));
+  put(sniff, h('h2', {}, tr('Escuchar')),
+    h('div', { class: 'btns' }, chSel, h('label', { class: 'small' }, pcapBox, ' ', tr('Guardar para Wireshark')), goBtn), counts, list);
+  put(main, h('h1', {}, tr('Zigbee y Thread')), status, h('div', { style: 'height:16px' }), net.el, h('div', { style: 'height:16px' }), emu.el,
+    h('div', { style: 'height:16px' }), chans, h('div', { style: 'height:16px' }), sniff,
+    h('div', { style: 'height:16px' }), devs, h('div', { style: 'height:16px' }), caps);
+  clearTimeout(zbT);
+  post('154/hello').catch(() => {});
+  await load();
+  loadDevs();
+  loadCaps();
+  let n = 0;
+  const tick = () => { if (location.hash !== '#zigbee') return; load(); if (++n % 3 === 0) loadDevs(); if (n % 10 === 0) loadCaps(); zbT = setTimeout(tick, 1000); };
+  zbT = setTimeout(tick, 1000);
+}
+
+const PAGES = { pantalla: pagePantalla, inicio: pageInicio, tienda: pageTienda, wifi: pageWifi, red: pageRed, ha: pageHa, terminal: pageTerminal, programador: pageProgramador, banco: pageBanco, claude: pageClaude, zigbee: pageZigbee, mqtt: pageMqtt, macropad: pageMacropad, expansion: pageExpansion, archivos: pageArchivos, ajustes: pageAjustes, respaldo: pageRespaldo, firmware: pageFirmware, registro: pageRegistro };
 
 /* ---- the apps' own pages (docs/PORTAL-PAGES.md) ----
  * An app brings its page in apps/<x>/web/<x>.js; tools/install_apps.sh puts

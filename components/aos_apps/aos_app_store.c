@@ -27,6 +27,7 @@
 #include "aos_store.h"
 #include "aos_hal.h"
 #include "aos_i18n.h"
+#include "aos_icon_pack.h"
 #include "aos_icon_ops.h"
 #include "aos_sys_glyphs.h"
 #include "aos_theme.h"
@@ -105,6 +106,10 @@ AOS_BSS_PSRAM static struct {
     char      entry[200];       /* what was typed as a source's address */
     lv_obj_t *ta;
     bool      started;          /* 'sel' was set to "none" once */
+    /* the list's icon places, an icon drawn only in those near the screen */
+    lv_obj_t *slot[ITEMS_MAX];
+    int       slot_item[ITEMS_MAX];
+    int       nslot;
 } S;
 
 static void build(void);
@@ -613,6 +618,42 @@ static lv_obj_t *chip_row(lv_obj_t *page, int32_t h)
     return chips;
 }
 
+/* The list's icons, only where they can be seen: an icon pack's picture is
+ * 46 KB at the list's 96 px, and "Actualizaciones" with 67 apps held almost
+ * 4 MB of PSRAM (on the board, 2026-11-25). A row gets its icon when it comes
+ * within half a screen of the list's window and lets go of it a screen and
+ * a half away, and the pictures let go are not kept (decoding one again is
+ * ~3 ms). With a screen each way and the pack's 1 MB of kept pictures,
+ * "Todo" still held 2.75 MB against 3.3 without any of this. */
+static void icons_near(void)
+{
+    if (!S.list || !S.nslot) return;
+    lv_area_t win;
+    lv_obj_get_coords(S.list, &win);
+    int32_t h = lv_area_get_height(&win);
+    bool let_go = false;
+    for (int k = 0; k < S.nslot; k++) {
+        lv_obj_t *sl = S.slot[k];
+        if (!sl) continue;
+        lv_area_t a;
+        lv_obj_get_coords(sl, &a);
+        bool near = a.y2 >= win.y1 - h / 2 && a.y1 <= win.y2 + h / 2;
+        bool far = a.y2 < win.y1 - h * 3 / 2 || a.y1 > win.y2 + h * 3 / 2;
+        if (near && !lv_obj_get_child_count(sl)) icon_of(sl, &S.items[S.slot_item[k]], 96);
+        else if (far && lv_obj_get_child_count(sl)) {
+            lv_obj_clean(sl);
+            let_go = true;
+        }
+    }
+    if (let_go) aos_icon_pack_let_go();
+}
+
+static void list_scrolled(lv_event_t *e)
+{
+    (void)e;
+    icons_near();
+}
+
 static void row(lv_obj_t *parent, int i)
 {
     const item_t *it = &S.items[i];
@@ -627,7 +668,14 @@ static void row(lv_obj_t *parent, int i)
     lv_obj_add_flag(r, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(r, row_cb, LV_EVENT_CLICKED, (void *)(intptr_t)i);
 
-    icon_of(r, it, 96);
+    /* the icon's place; the icon when it comes near the screen (icons_near) */
+    lv_obj_t *sl = box(r);
+    lv_obj_set_size(sl, 96, 96);
+    aos_make_decorative(sl);
+    if (S.nslot < ITEMS_MAX) {
+        S.slot[S.nslot] = sl;
+        S.slot_item[S.nslot++] = i;
+    }
     lv_obj_t *t = box(r);
     lv_obj_set_height(t, LV_SIZE_CONTENT);
     lv_obj_set_flex_grow(t, 1);
@@ -663,6 +711,65 @@ static void row(lv_obj_t *parent, int i)
         lv_obj_set_style_pad_right(ok, 24, 0);
     } else if (it->st.src >= 0 || it->id[0])
         pill(r, action_text(it, buf), it->st.state == AOS_STORE_UPDATE, action_cb, (void *)(intptr_t)i);
+}
+
+/* "Actualizar todas": every update this firmware can run, queued one after
+ * another (the queue takes a backup's whole list, aos_store.c QUEUE). */
+static void update_all_cb(lv_event_t *e)
+{
+    (void)e;
+    int queued = 0;
+    bool full = false;
+    for (int i = 0; i < S.n && !full; i++) {
+        const item_t *it = &S.items[i];
+        if (it->st.state != AOS_STORE_UPDATE || !it->st.fits) continue;
+        if (aos_store_install(it->file, NULL)) queued++;
+        else full = true;
+    }
+    if (full) aos_ui_toast(_("Hay demasiadas cosas en cola"), 2500);
+    else if (queued) {
+        char msg[80];
+        snprintf(msg, sizeof msg, _("%d actualizaciones en cola"), queued);
+        aos_ui_toast(msg, 2500);
+    }
+    build();
+}
+
+/* At the head of "Actualizaciones": how many, how much at most (the packages
+ * and the packs they need; a pack the card has already is not downloaded
+ * again), and the button; the ones that need a newer P4OS are left out. */
+static void update_all_card(lv_obj_t *list)
+{
+    int n = 0, later = 0;
+    uint64_t bytes = 0;
+    for (int i = 0; i < S.n; i++) {
+        const item_t *it = &S.items[i];
+        if (it->st.state != AOS_STORE_UPDATE) continue;
+        if (!it->st.fits) { later++; continue; }
+        n++;
+        bytes += it->size;
+    }
+    if (n < 2 && !later) return;        /* one is its own button */
+    lv_obj_t *card = box(list);
+    lv_obj_set_size(card, lv_pct(100), LV_SIZE_CONTENT);
+    lv_obj_set_style_bg_color(card, AOS_C_CARD, 0);
+    lv_obj_set_style_bg_opa(card, LV_OPA_COVER, 0);
+    lv_obj_set_style_radius(card, AOS_UI_RADIUS, 0);
+    lv_obj_set_style_pad_all(card, 24, 0);
+    lv_obj_set_style_pad_row(card, 18, 0);
+    lv_obj_set_flex_flow(card, LV_FLEX_FLOW_COLUMN);
+    char buf[120], sz[20];
+    if (n) {
+        snprintf(buf, sizeof buf, _("%d actualizaciones, hasta %s"), n, size_text(bytes > UINT32_MAX ? UINT32_MAX : (uint32_t)bytes, sz));
+        aos_label(card, buf, aos_font_body, AOS_C_TEXT);
+    }
+    if (later) {
+        snprintf(buf, sizeof buf, _("%d necesitan un P4OS más nuevo: actualizá el sistema primero."), later);
+        lv_obj_t *l = aos_label(card, buf, aos_font_caption, AOS_C_DIM);
+        lv_obj_set_width(l, lv_pct(100));
+        lv_label_set_long_mode(l, LV_LABEL_LONG_MODE_WRAP);
+    }
+    if (n) pill(card, _("Actualizar todas"), true, update_all_cb, NULL);
 }
 
 static void build_list(lv_obj_t *page)
@@ -706,6 +813,8 @@ static void build_list(lv_obj_t *page)
     }
 
     S.list = box(page);
+    S.nslot = 0;
+    lv_obj_add_event_cb(S.list, list_scrolled, LV_EVENT_SCROLL, NULL);
     lv_obj_set_width(S.list, lv_pct(100));
     lv_obj_set_flex_grow(S.list, 1);
     lv_obj_set_flex_flow(S.list, LV_FLEX_FLOW_COLUMN);
@@ -761,6 +870,7 @@ static void build_list(lv_obj_t *page)
             pill(card, buf, true, replace_cb, NULL);
         } else pill(card, _("Reemplazarlas por las de la Tienda"), false, replace_cb, NULL);
     }
+    if (S.filter == F_UPDATES) update_all_card(S.list);
     for (int i = 0; i < S.n; i++) {
         if (!shown(&S.items[i])) continue;
         row(S.list, i);
@@ -1436,6 +1546,7 @@ static void build(void)
     last_filter = S.filter;
     lv_obj_clean(S.root);
     S.list = S.banner = S.banner_detail = NULL;
+    S.nslot = 0;
     S.ta = NULL;
     if (S.sel >= S.n) S.sel = -1;
     for (int i = 0; i < G.n; i++) G.s[i].frame = NULL;
@@ -1492,6 +1603,10 @@ static void build(void)
     if (same_view && S.list && scroll) {
         lv_obj_update_layout(S.list);
         lv_obj_scroll_to_y(S.list, scroll, LV_ANIM_OFF);
+    }
+    if (S.list) {
+        lv_obj_update_layout(S.list);
+        icons_near();
     }
 }
 

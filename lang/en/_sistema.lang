@@ -12,7 +12,7 @@ Hay un respaldo en la tarjeta	There is a backup on the card
 Del %s, de «%.30s» con P4OS %.20s: %d ajustes y %d apps.	From %s, of “%.30s” with P4OS %.20s: %d settings and %d apps.
 
 #: components\aos_ui\aos_backup_ui.c:105
-#: components\aos_apps\aos_app_settings.c:2335
+#: components\aos_apps\aos_app_settings.c:2342
 sin fecha	no date
 
 #: components\aos_ui\aos_backup_ui.c:108
@@ -57,38 +57,38 @@ Home Assistant: configurar en Ajustes	Home Assistant: set up in Settings
 #: components\aos_ui\aos_home.c:665
 Clima: próximamente	Weather: coming soon
 
-#: components\aos_ui\aos_home.c:1006
-#: components\aos_ui\aos_home.c:1268
+#: components\aos_ui\aos_home.c:1032
+#: components\aos_ui\aos_home.c:1294
 #: components\aos_ui\aos_widget_edit.c:190
 #: components\aos_apps\aos_app_bus.c:1118
 Listo	Done
 
-#: components\aos_ui\aos_home.c:1021
+#: components\aos_ui\aos_home.c:1047
 + Widget	+ Widget
 
-#: components\aos_ui\aos_home.c:1147
+#: components\aos_ui\aos_home.c:1173
 Nombre de la carpeta	Folder name
 
-#: components\aos_ui\aos_home.c:1268
+#: components\aos_ui\aos_home.c:1294
 #: components\aos_apps\aos_app_modules.c:757
 Editar	Edit
 
-#: components\aos_ui\aos_home.c:1275
+#: components\aos_ui\aos_home.c:1301
 #: components\aos_apps\aos_app_files.c:2589
 #: components\aos_apps\aos_app_music.c:1021
 #: components\aos_apps\aos_app_photos.c:1555
 Carpeta vacía	Empty folder
 
-#: components\aos_ui\aos_home.c:1310
+#: components\aos_ui\aos_home.c:1336
 No se pudo guardar el inicio	Could not save the home screen
 
-#: components\aos_ui\aos_home.c:1339
+#: components\aos_ui\aos_home.c:1365
 #: components\aos_apps\aos_app_files.c:335
 #: components\aos_apps\aos_app_music.c:805
-#: components\aos_apps\aos_app_settings.c:2371
+#: components\aos_apps\aos_app_settings.c:2378
 Carpeta	Folder
 
-#: components\aos_ui\aos_i18n.c:769
+#: components\aos_ui\aos_i18n.c:780
 Español	Spanish
 
 #: components\aos_ui\aos_lock.c:186
@@ -306,7 +306,7 @@ Pantalla	Display
 #: components\aos_ui\aos_search.c:210
 #: components\aos_apps\aos_app_settings.c:66
 #: components\aos_apps\aos_app_settings.c:895
-#: components\aos_apps\aos_app_store.c:860
+#: components\aos_apps\aos_app_store.c:970
 Sonido	Sound
 
 #: components\aos_ui\aos_search.c:211
@@ -399,7 +399,7 @@ Nada con eso	Nothing found
 #: components\aos_ui\aos_search.c:760
 #: components\aos_apps\aos_app_bus.c:1728
 #: components\aos_apps\aos_app_files.c:3132
-#: components\aos_apps\aos_app_store.c:1284
+#: components\aos_apps\aos_app_store.c:1394
 Buscar	Search
 
 #: components\aos_ui\aos_sensor_text.c:27
@@ -647,7 +647,7 @@ Quieto	Still
 
 #: components\aos_ui\aos_sensor_text.c:58
 #: components\aos_apps\aos_app_elec.c:604
-#: components\aos_apps\aos_app_settings.c:2728
+#: components\aos_apps\aos_app_settings.c:2735
 Blanco	White
 
 #: components\aos_ui\aos_sensor_text.c:58
@@ -883,7 +883,7 @@ Acelerómetro y giróscopo	Accelerometer and gyroscope
 
 #: components\aos_ui\aos_sensor_text.c:212
 #: components\aos_ui\aos_sensor_text.c:212
-#: components\aos_apps\aos_app_settings.c:2864
+#: components\aos_apps\aos_app_settings.c:2871
 Acelerómetro	Accelerometer
 
 #: components\aos_ui\aos_sensor_text.c:213
@@ -1098,7 +1098,7 @@ Seleccionar	Select
 Pegar	Paste
 
 #: components\aos_ui\aos_textsel.c:342
-#: components\aos_apps\aos_app_store.c:673
+#: components\aos_apps\aos_app_store.c:780
 Todo	All
 
 #: components\aos_ui\aos_theme.c:256
@@ -1158,22 +1158,22 @@ mes\x04NOV	NOV
 #: components\aos_ui\aos_theme.c:268
 mes\x04DIC	DEC
 
-#: components\aos_ui\aos_ui.c:1425
+#: components\aos_ui\aos_ui.c:1561
 Falta la fuente china: instalá el paquete completo por USB.	The Chinese font is missing: install the complete package over USB.
 
-#: components\aos_ui\aos_ui.c:1443
+#: components\aos_ui\aos_ui.c:1579
 No se pudo cambiar el idioma.	Could not change language.
 
-#: components\aos_ui\aos_ui.c:1664
+#: components\aos_ui\aos_ui.c:1801
 Captura guardada en	Screenshot saved to
 
-#: components\aos_ui\aos_ui.c:1666
+#: components\aos_ui\aos_ui.c:1803
 No se pudo guardar la captura (¿hay tarjeta?)	Could not save the screenshot (is there a card?)
 
-#: components\aos_ui\aos_ui.c:1677
+#: components\aos_ui\aos_ui.c:1814
 Ethernet en pausa: %s lo usa %s	Ethernet paused: %s is in use by %s
 
-#: components\aos_ui\aos_ui.c:1678
+#: components\aos_ui\aos_ui.c:1815
 Ethernet volvió	Ethernet is back
 
 #: components\aos_ui\aos_widget_edit.c:39
@@ -1188,11 +1188,11 @@ La hora y la fecha, grandes.	The time and the date, large.
 Chico	Small
 
 #: components\aos_ui\aos_widget_edit.c:42
-#: components\aos_apps\aos_app_settings.c:2726
+#: components\aos_apps\aos_app_settings.c:2733
 Mediano	Medium
 
 #: components\aos_ui\aos_widget_edit.c:42
-#: components\aos_apps\aos_app_settings.c:2726
+#: components\aos_apps\aos_app_settings.c:2733
 Grande	Large
 
 #: components\aos_ui\aos_widget_edit.c:266
@@ -1255,12 +1255,14 @@ sin conexión	not connected
 sin configurar	not set up
 
 #: components\aos_apps\aos_app_bench.c:287
+#: components\aos_apps\aos_app_zigbee.c:1012
 #: components\aos_apps\_pending\aos_app_settings.c:2164
+#: components\aos_154\aos_zigbee_devices.c:892
 apagada	off
 
 #: components\aos_apps\aos_app_bench.c:290
 #: components\aos_apps\aos_app_net.c:2559
-#: components\aos_apps\aos_app_settings.c:1886
+#: components\aos_apps\aos_app_settings.c:1893
 buscando…	searching…
 
 #: components\aos_apps\aos_app_bench.c:290
@@ -1422,7 +1424,7 @@ Respondieron %d direcciones   %s	%d addresses responded   %s
 DISPOSITIVOS	DEVICES
 
 #: components\aos_apps\aos_app_bus.c:449
-#: components\aos_apps\aos_app_settings.c:2419
+#: components\aos_apps\aos_app_settings.c:2426
 #: components\aos_apps\aos_app_sysmon.c:321
 desconocido	unknown
 
@@ -1435,6 +1437,7 @@ Tocá Escanear.	Tap Scan.
 #: components\aos_apps\aos_app_bus.c:495
 #: components\aos_apps\aos_app_net.c:1575
 #: components\aos_apps\aos_app_net.c:1656
+#: components\aos_apps\aos_app_zigbee.c:297
 Escanear	Scan
 
 #: components\aos_apps\aos_app_bus.c:519
@@ -2090,7 +2093,7 @@ Borrar	Delete
 #: components\aos_apps\aos_app_clock.c:539
 #: components\aos_apps\aos_app_macropad.c:2494
 #: components\aos_apps\aos_app_modules.c:864
-#: components\aos_apps\aos_app_settings.c:2214
+#: components\aos_apps\aos_app_settings.c:2221
 Guardar	Save
 
 #: components\aos_apps\aos_app_clock.c:585
@@ -2112,8 +2115,8 @@ Iniciar	Start
 
 #: components\aos_apps\aos_app_clock.c:708
 #: components\aos_apps\aos_app_life.c:383
-#: components\aos_apps\aos_app_settings.c:2101
-#: components\aos_apps\aos_app_settings.c:2161
+#: components\aos_apps\aos_app_settings.c:2108
+#: components\aos_apps\aos_app_settings.c:2168
 Seguir	Resume
 
 #: components\aos_apps\aos_app_clock.c:708
@@ -2304,6 +2307,7 @@ libra por pulgada²	pound per inch²
 milímetro de mercurio	millimetre of mercury
 
 #: components\aos_apps\aos_app_convert.c:137
+#: components\aos_apps\aos_app_zigbee.c:206
 Datos	Data
 
 #: components\aos_apps\aos_app_convert.c:138
@@ -2648,7 +2652,7 @@ Hoy %02d:%02d	Today %02d:%02d
 Ayer %02d:%02d	Yesterday %02d:%02d
 
 #: components\aos_apps\aos_app_files.c:336
-#: components\aos_apps\aos_app_settings.c:1971
+#: components\aos_apps\aos_app_settings.c:1978
 Imagen	Image
 
 #: components\aos_apps\aos_app_files.c:337
@@ -2667,7 +2671,7 @@ Datos o configuración	Data or settings
 
 #: components\aos_apps\aos_app_files.c:341
 #: components\aos_apps\aos_app_files.c:2700
-#: components\aos_apps\aos_app_settings.c:2842
+#: components\aos_apps\aos_app_settings.c:2849
 Firmware	Firmware
 
 #: components\aos_apps\aos_app_files.c:342
@@ -3080,7 +3084,7 @@ Info	Info
 #: components\aos_apps\aos_app_files.c:3840
 #: components\aos_apps\aos_app_flasher.c:996
 #: components\aos_apps\aos_app_settings.c:617
-#: components\aos_apps\aos_app_settings.c:2329
+#: components\aos_apps\aos_app_settings.c:2336
 No hay tarjeta	No card
 
 #: components\aos_apps\aos_app_files.c:3842
@@ -3290,9 +3294,9 @@ Programa borrado	Program erased
 Flash borrada	Flash erased
 
 #: components\aos_apps\aos_app_flasher.c:186
-#: components\aos_apps\aos_app_settings.c:2462
+#: components\aos_apps\aos_app_settings.c:2469
+#: components\aos_apps\aos_app_zigbee.c:782
 #: components\aos_flasher\aos_flasher_avr.c:866
-#: components\aos_flasher\aos_flasher_stm32.c:391
 No se pudo borrar	Could not erase it
 
 #: components\aos_apps\aos_app_flasher.c:187
@@ -3551,7 +3555,7 @@ grabado	flashed
 archivos	files
 
 #: components\aos_apps\aos_app_flasher.c:1069
-#: components\aos_apps\aos_app_settings.c:1940
+#: components\aos_apps\aos_app_settings.c:1947
 Versión nueva	New version
 
 #: components\aos_apps\aos_app_flasher.c:1160
@@ -3633,7 +3637,7 @@ RESTANTE	REMAINING
 ARCHIVOS	FILES
 
 #: components\aos_apps\aos_app_flasher.c:1344
-#: components\aos_apps\aos_app_settings.c:3313
+#: components\aos_apps\aos_app_settings.c:3320
 REGISTRO	LOG
 
 #: components\aos_apps\aos_app_flasher.c:1381
@@ -3797,6 +3801,7 @@ Quitado de favoritos	Removed from favorites
 #: components\aos_apps\aos_app_ha.c:540
 #: components\aos_apps\aos_app_ha.c:745
 #: components\aos_apps\aos_app_ha.c:783
+#: components\aos_154\aos_zigbee_emu.c:321
 Apagar	Turn off
 
 #: components\aos_apps\aos_app_ha.c:540
@@ -3826,7 +3831,7 @@ hace %u h  ·  ahora	%u h ago  ·  now
 7 días	7 days
 
 #: components\aos_apps\aos_app_ha.c:752
-#: components\aos_apps\aos_app_settings.c:2826
+#: components\aos_apps\aos_app_settings.c:2833
 Ahora	Now
 
 #: components\aos_apps\aos_app_ha.c:776
@@ -3848,6 +3853,7 @@ Apretar	Press
 Reproducir / pausar	Play / pause
 
 #: components\aos_apps\aos_app_ha.c:782
+#: components\aos_apps\aos_app_zigbee.c:1107
 Cerrar con llave	Lock
 
 #: components\aos_apps\aos_app_ha.c:797
@@ -3907,7 +3913,7 @@ tocá para escribirla	tap to enter it
 Token	Token
 
 #: components\aos_apps\aos_app_ha.c:895
-#: components\aos_apps\aos_app_settings.c:2502
+#: components\aos_apps\aos_app_settings.c:2509
 guardado	saved
 
 #: components\aos_apps\aos_app_ha.c:895
@@ -4531,7 +4537,7 @@ Retenido	Retained
 Probando…	Testing…
 
 #: components\aos_apps\aos_app_macropad.c:2462
-#: components\aos_apps\aos_app_settings.c:2461
+#: components\aos_apps\aos_app_settings.c:2468
 Tocá otra vez para borrarlo	Tap again to delete it
 
 #: components\aos_apps\aos_app_macropad.c:2492
@@ -4981,12 +4987,17 @@ Explorar	Explore
 Publicar	Publish
 
 #: components\aos_apps\aos_app_mqtt.c:231
+#: components\aos_apps\aos_app_zigbee.c:1085
+#: components\aos_apps\aos_app_zigbee.c:1177
+#: components\aos_apps\aos_app_zigbee.c:1180
 recién	just now
 
 #: components\aos_apps\aos_app_mqtt.c:232
+#: components\aos_apps\aos_app_zigbee.c:978
 hace %u s	%u s ago
 
 #: components\aos_apps\aos_app_mqtt.c:233
+#: components\aos_apps\aos_app_zigbee.c:979
 hace %u min	%u min ago
 
 #: components\aos_apps\aos_app_mqtt.c:234
@@ -4996,7 +5007,7 @@ hace %u h	%u h ago
 hace %u días	%u days ago
 
 #: components\aos_apps\aos_app_mqtt.c:380
-#: components\aos_apps\aos_app_settings.c:1906
+#: components\aos_apps\aos_app_settings.c:1913
 Sin red	No network
 
 #: components\aos_apps\aos_app_mqtt.c:381
@@ -5071,6 +5082,7 @@ Publicar acá	Publish here
 %s mensajes	%s messages
 
 #: components\aos_apps\aos_app_mqtt.c:1402
+#: components\aos_154\aos_zigbee_fmt.c:52
 valor	value
 
 #: components\aos_apps\aos_app_mqtt.c:1419
@@ -5181,18 +5193,20 @@ MQTT 3.1.1 · cliente %s	MQTT 3.1.1 · client %s
 BROKER	BROKER
 
 #: components\aos_apps\aos_app_mqtt.c:1947
-#: components\aos_apps\aos_app_settings.c:2370
+#: components\aos_apps\aos_app_settings.c:2377
 Servidor	Server
 
 #: components\aos_apps\aos_app_mqtt.c:1948
-#: components\aos_apps\aos_app_settings.c:2486
-#: components\aos_apps\aos_app_settings.c:2500
+#: components\aos_apps\aos_app_settings.c:2493
+#: components\aos_apps\aos_app_settings.c:2507
 ninguno	none
 
 #: components\aos_apps\aos_app_mqtt.c:1952
 ID de cliente	Client ID
 
 #: components\aos_apps\aos_app_mqtt.c:1952
+#: components\aos_154\aos_zigbee_fmt.c:126
+#: components\aos_154\aos_zigbee_fmt.c:134
 automático	automatic
 
 #: components\aos_apps\aos_app_mqtt.c:1953
@@ -5932,7 +5946,9 @@ sin dirección todavía	no address yet
  (privada: la eligió el equipo, no su fabricante)	 (private: chosen by the device, not by its maker)
 
 #: components\aos_apps\aos_app_net.c:2544
-#: components\aos_apps\aos_app_settings.c:2867
+#: components\aos_apps\aos_app_settings.c:2874
+#: components\aos_apps\aos_app_zigbee.c:1060
+#: components\aos_154\aos_zigbee_tuya.c:250
 sí	yes
 
 #: components\aos_apps\aos_app_net.c:2544
@@ -6083,8 +6099,8 @@ puerto	port
 Despertar	Wake it
 
 #: components\aos_apps\aos_app_net.c:2844
-#: components\aos_apps\aos_app_store.c:1003
-#: components\aos_apps\aos_app_store.c:1217
+#: components\aos_apps\aos_app_store.c:1113
+#: components\aos_apps\aos_app_store.c:1327
 Quitar	Remove
 
 #: components\aos_apps\aos_app_net.c:2856
@@ -6160,7 +6176,7 @@ Copiá fotos .jpg o .png a la carpeta %s	Copy .jpg or .png photos to the %s fold
 nada	none
 
 #: components\aos_apps\aos_app_serial.c:378
-#: components\aos_apps\aos_app_settings.c:3248
+#: components\aos_apps\aos_app_settings.c:3255
 grabando	recording
 
 #: components\aos_apps\aos_app_serial.c:380
@@ -6457,7 +6473,7 @@ Sonda en %s: SWCLK al TX, SWDIO al RX	Probe on %s: SWCLK to TX, SWDIO to RX
 Mejor expulsar la tarjeta en la computadora antes	Better eject the card on the computer first
 
 #: components\aos_apps\aos_app_settings.c:700
-#: components\aos_apps\aos_app_settings.c:2471
+#: components\aos_apps\aos_app_settings.c:2478
 AHORA	NOW
 
 #: components\aos_apps\aos_app_settings.c:703
@@ -6554,9 +6570,9 @@ SALIDA A INTERNET	WAY OUT TO THE INTERNET
 Por cable	By wire
 
 #: components\aos_apps\aos_app_settings.c:794
-#: components\aos_apps\aos_app_settings.c:3070
-#: components\aos_apps\aos_app_settings.c:3103
-#: components\aos_apps\aos_app_settings.c:3301
+#: components\aos_apps\aos_app_settings.c:3077
+#: components\aos_apps\aos_app_settings.c:3110
+#: components\aos_apps\aos_app_settings.c:3308
 Ninguna	None
 
 #: components\aos_apps\aos_app_settings.c:795
@@ -6610,7 +6626,7 @@ Con cables sueltos, 8 MHz. Con el módulo en una placa, hasta 40: más reloj es 
 EN EL PORTAL	IN THE PORTAL
 
 #: components\aos_apps\aos_app_settings.c:868
-#: components\aos_apps\aos_app_settings.c:3086
+#: components\aos_apps\aos_app_settings.c:3093
 De confianza	Trusted
 
 #: components\aos_apps\aos_app_settings.c:869
@@ -6632,7 +6648,7 @@ Editar inicio	Edit Home Screen
 En el modo edición, «+ Widget» suma al inicio el reloj, los sensores, Home Assistant y más; tocá un widget para elegir su tamaño y qué muestra, o para quitarlo.	In edit mode, “+ Widget” adds the clock, the sensors, Home Assistant and more to the home screen; tap a widget to choose its size and what it shows, or to remove it.
 
 #: components\aos_apps\aos_app_settings.c:902
-#: components\aos_apps\aos_app_settings.c:2854
+#: components\aos_apps\aos_app_settings.c:2861
 #: components\aos_portal\aos_portal_store.c:161
 #: components\aos_portal\aos_portal_store.c:272
 sin tarjeta	no card
@@ -6644,7 +6660,7 @@ modo seguro	safe mode
 hubo un cuelgue	there was a hang
 
 #: components\aos_apps\aos_app_settings.c:925
-#: components\aos_apps\aos_app_settings.c:3346
+#: components\aos_apps\aos_app_settings.c:3353
 Reiniciar la placa	Restart the board
 
 #: components\aos_apps\aos_app_settings.c:1038
@@ -6654,6 +6670,7 @@ La contraseña WPA2 lleva de 8 a 63 caracteres	A WPA2 password has 8 to 63 chara
 Contraseña de	Password for
 
 #: components\aos_apps\aos_app_settings.c:1048
+#: components\aos_apps\aos_app_zigbee.c:1318
 Unirse	Join
 
 #: components\aos_apps\aos_app_settings.c:1059
@@ -6691,7 +6708,7 @@ Conectados	Connected
 Compartir la salida	Share the way out
 
 #: components\aos_apps\aos_app_settings.c:1138
-#: components\aos_apps\aos_app_settings.c:3108
+#: components\aos_apps\aos_app_settings.c:3115
 Cambiar la contraseña	Change the password
 
 #: components\aos_apps\aos_app_settings.c:1145
@@ -6930,7 +6947,7 @@ anduvo: se puede volver	it worked: you can go back
 sin probar	untested
 
 #: components\aos_apps\aos_app_settings.c:1788
-#: components\aos_apps\aos_app_settings.c:1964
+#: components\aos_apps\aos_app_settings.c:1971
 a prueba	on trial
 
 #: components\aos_apps\aos_app_settings.c:1789
@@ -6955,7 +6972,7 @@ LA RADIO (ESP32-C6)	THE RADIO (ESP32-C6)
 En el C6	On the C6
 
 #: components\aos_apps\aos_app_settings.c:1839
-#: components\aos_apps\aos_app_settings.c:2492
+#: components\aos_apps\aos_app_settings.c:2499
 todavía no arrancó	not up yet
 
 #: components\aos_apps\aos_app_settings.c:1839
@@ -6974,1020 +6991,1029 @@ Instalar en el C6	Install on the C6
 #: components\aos_apps\aos_app_settings.c:1855
 El C6 la escribe en su otra ranura y la revisa antes de cambiar. Mientras tanto no hay Wi-Fi, y al terminar la placa se reinicia.	The C6 writes it into its other slot and checks it before switching. There is no Wi-Fi meanwhile, and the board restarts at the end.
 
-#: components\aos_apps\aos_app_settings.c:1883
-escribiendo la otra ranura… %u %%	writing the other slot… %u %%
-
-#: components\aos_apps\aos_app_settings.c:1884
-bajando… %u %%	downloading… %u %%
-
-#: components\aos_apps\aos_app_settings.c:1885
-lista: arranca al reiniciar	ready: it runs after a restart
-
-#: components\aos_apps\aos_app_settings.c:1889
-no se pudo bajar: revisá la red	the download failed: check the network
+#: components\aos_apps\aos_app_settings.c:1862
+Ojo si en esta placa usás otro firmware además de P4OS: esta versión es esp_hosted 3, y uno que traiga esp_hosted 2 (el Launcher, un sketch de Arduino, varias demos) no se entiende con ella y se queda sin Wi-Fi. Para volver, se instala desde acá un firmware 2.x del C6.	Mind it if this board runs other firmware besides P4OS: this version is esp_hosted 3, and one that carries esp_hosted 2 (the Launcher, an Arduino sketch, several demos) cannot talk to it and is left without Wi-Fi. To go back, install a 2.x C6 firmware from here.
 
 #: components\aos_apps\aos_app_settings.c:1890
-no está en el servidor	it is not on the server
+escribiendo la otra ranura… %u %%	writing the other slot… %u %%
 
 #: components\aos_apps\aos_app_settings.c:1891
-la placa todavía no tiene la hora de la red	the board does not have the network time yet
+bajando… %u %%	downloading… %u %%
 
 #: components\aos_apps\aos_app_settings.c:1892
-#: components\aos_apps\aos_app_settings.c:2029
+lista: arranca al reiniciar	ready: it runs after a restart
+
+#: components\aos_apps\aos_app_settings.c:1896
+no se pudo bajar: revisá la red	the download failed: check the network
+
+#: components\aos_apps\aos_app_settings.c:1897
+no está en el servidor	it is not on the server
+
+#: components\aos_apps\aos_app_settings.c:1898
+la placa todavía no tiene la hora de la red	the board does not have the network time yet
+
+#: components\aos_apps\aos_app_settings.c:1899
+#: components\aos_apps\aos_app_settings.c:2036
 #: components\aos_portal\aos_portal_modules.c:299
 no se pudo escribir en la tarjeta	could not write to the card
 
-#: components\aos_apps\aos_app_settings.c:1893
+#: components\aos_apps\aos_app_settings.c:1900
 la imagen no es la publicada: no se escribió nada	the image is not the published one: nothing was written
 
-#: components\aos_apps\aos_app_settings.c:1894
+#: components\aos_apps\aos_app_settings.c:1901
 no se pudo escribir la otra ranura	the other slot could not be written
 
-#: components\aos_apps\aos_app_settings.c:1895
+#: components\aos_apps\aos_app_settings.c:1902
 cancelada	cancelled
 
-#: components\aos_apps\aos_app_settings.c:1896
+#: components\aos_apps\aos_app_settings.c:1903
 ya es la que corre	it is the one already running
 
-#: components\aos_apps\aos_app_settings.c:1897
-#: components\aos_apps\aos_app_settings.c:2040
+#: components\aos_apps\aos_app_settings.c:1904
+#: components\aos_apps\aos_app_settings.c:2047
 no se pudo	it failed
 
-#: components\aos_apps\aos_app_settings.c:1913
-#: components\aos_apps\aos_app_store.c:449
-#: components\aos_apps\aos_app_store.c:1264
+#: components\aos_apps\aos_app_settings.c:1920
+#: components\aos_apps\aos_app_store.c:454
+#: components\aos_apps\aos_app_store.c:729
+#: components\aos_apps\aos_app_store.c:1374
 Hay demasiadas cosas en cola	Too many things are waiting already
 
-#: components\aos_apps\aos_app_settings.c:1920
-#: components\aos_apps\aos_app_settings.c:2123
-#: components\aos_apps\aos_app_settings.c:3200
+#: components\aos_apps\aos_app_settings.c:1927
+#: components\aos_apps\aos_app_settings.c:2130
+#: components\aos_apps\aos_app_settings.c:3207
 Tocá otra vez para reiniciar	Tap again to restart
 
-#: components\aos_apps\aos_app_settings.c:1921
+#: components\aos_apps\aos_app_settings.c:1928
 Reiniciando con la versión nueva…	Restarting into the new version…
 
-#: components\aos_apps\aos_app_settings.c:1934
+#: components\aos_apps\aos_app_settings.c:1941
 DESDE GITHUB	FROM GITHUB
 
-#: components\aos_apps\aos_app_settings.c:1937
+#: components\aos_apps\aos_app_settings.c:1944
 ninguna para esta placa	none for this board
 
-#: components\aos_apps\aos_app_settings.c:1937
+#: components\aos_apps\aos_app_settings.c:1944
 todavía sin catálogo	no catalogue yet
 
-#: components\aos_apps\aos_app_settings.c:1938
+#: components\aos_apps\aos_app_settings.c:1945
 ninguna: está al día	none: it is up to date
 
-#: components\aos_apps\aos_app_settings.c:1943
-#: components\aos_apps\aos_app_settings.c:2307
+#: components\aos_apps\aos_app_settings.c:1950
+#: components\aos_apps\aos_app_settings.c:2314
 Reiniciar ahora	Restart now
 
-#: components\aos_apps\aos_app_settings.c:1947
+#: components\aos_apps\aos_app_settings.c:1954
 Bajar e instalar %s	Download and install %s
 
-#: components\aos_apps\aos_app_settings.c:1950
+#: components\aos_apps\aos_app_settings.c:1957
 Buscar actualizaciones	Check for updates
 
-#: components\aos_apps\aos_app_settings.c:1952
+#: components\aos_apps\aos_app_settings.c:1959
 La placa la baja de la última versión publicada, la revisa entera antes de escribir nada y la deja en la otra ranura. No se reinicia sola.	The board downloads it from the latest published release, checks it whole before writing anything and leaves it in the other slot. It does not restart by itself.
 
-#: components\aos_apps\aos_app_settings.c:1960
+#: components\aos_apps\aos_app_settings.c:1967
 LA QUE CORRE	RUNNING
 
-#: components\aos_apps\aos_app_settings.c:1961
-#: components\aos_apps\aos_app_settings.c:1973
+#: components\aos_apps\aos_app_settings.c:1968
+#: components\aos_apps\aos_app_settings.c:1980
 #: components\aos_apps\aos_app_sysmon.c:1235
 Versión	Version
 
-#: components\aos_apps\aos_app_settings.c:1962
-#: components\aos_apps\aos_app_settings.c:1974
+#: components\aos_apps\aos_app_settings.c:1969
+#: components\aos_apps\aos_app_settings.c:1981
 Compilada	Built
 
-#: components\aos_apps\aos_app_settings.c:1963
 #: components\aos_apps\aos_app_settings.c:1970
-#: components\aos_apps\aos_app_settings.c:1975
+#: components\aos_apps\aos_app_settings.c:1977
+#: components\aos_apps\aos_app_settings.c:1982
 Ranura	Slot
 
-#: components\aos_apps\aos_app_settings.c:1964
+#: components\aos_apps\aos_app_settings.c:1971
 confirmada	confirmed
 
-#: components\aos_apps\aos_app_settings.c:1966
+#: components\aos_apps\aos_app_settings.c:1973
 LA ANTERIOR	THE PREVIOUS ONE
 
-#: components\aos_apps\aos_app_settings.c:1968
+#: components\aos_apps\aos_app_settings.c:1975
 No se pudo leer la otra ranura	Could not read the other slot
 
-#: components\aos_apps\aos_app_settings.c:1978
+#: components\aos_apps\aos_app_settings.c:1985
 Volver a esta versión	Go back to this version
 
-#: components\aos_apps\aos_app_settings.c:1980
+#: components\aos_apps\aos_app_settings.c:1987
 Las versiones nuevas llegan desde GitHub, por el portal (Firmware) o con tools/ota.sh, y se escriben en la otra ranura. Arrancan a prueba: si la placa se reinicia antes de confirmarla, a los 30 s, vuelve sola a la anterior.	New versions arrive from GitHub, through the portal (Firmware) or tools/ota.sh, and are written to the other slot. They boot on trial: if the board restarts before confirming one, at 30 s, it goes back to the previous one by itself.
 
-#: components\aos_apps\aos_app_settings.c:2016
+#: components\aos_apps\aos_app_settings.c:2023
 conectando con el servidor…	connecting to the server…
 
-#: components\aos_apps\aos_app_settings.c:2017
+#: components\aos_apps\aos_app_settings.c:2024
 copiando: %u archivos, %u KB	copying: %u files, %u KB
 
-#: components\aos_apps\aos_app_settings.c:2018
+#: components\aos_apps\aos_app_settings.c:2025
 restaurando…	restoring…
 
-#: components\aos_apps\aos_app_settings.c:2019
+#: components\aos_apps\aos_app_settings.c:2026
 preparando la clave…	preparing the key…
 
-#: components\aos_apps\aos_app_settings.c:2019
+#: components\aos_apps\aos_app_settings.c:2026
 respaldando…	backing up…
 
-#: components\aos_apps\aos_app_settings.c:2020
+#: components\aos_apps\aos_app_settings.c:2027
 #: components\aos_portal\aos_portal_modules.c:299
 #: components\aos_ssh\aos_ssh_cmds.c:152
 #: components\aos_ssh\aos_ssh_cmds.c:801
 no hay tarjeta	no card
 
-#: components\aos_apps\aos_app_settings.c:2022
+#: components\aos_apps\aos_app_settings.c:2029
 restaurado: %d ajustes	restored: %d settings
 
-#: components\aos_apps\aos_app_settings.c:2023
+#: components\aos_apps\aos_app_settings.c:2030
 copiados: %u archivos, %u KB	copied: %u files, %u KB
 
-#: components\aos_apps\aos_app_settings.c:2024
+#: components\aos_apps\aos_app_settings.c:2031
 el servidor contestó y deja entrar a la placa	the server answered and lets the board in
 
-#: components\aos_apps\aos_app_settings.c:2025
+#: components\aos_apps\aos_app_settings.c:2032
 enviado al servidor	sent to the server
 
-#: components\aos_apps\aos_app_settings.c:2026
+#: components\aos_apps\aos_app_settings.c:2033
 hecho	done
 
-#: components\aos_apps\aos_app_settings.c:2030
+#: components\aos_apps\aos_app_settings.c:2037
 ese respaldo no está	that backup is not there
 
-#: components\aos_apps\aos_app_settings.c:2031
+#: components\aos_apps\aos_app_settings.c:2038
 no es un respaldo, o está dañado	it is not a backup, or it is damaged
 
-#: components\aos_apps\aos_app_settings.c:2032
+#: components\aos_apps\aos_app_settings.c:2039
 esa no es su frase	that is not its passphrase
 
-#: components\aos_apps\aos_app_settings.c:2033
+#: components\aos_apps\aos_app_settings.c:2040
 es de un P4OS más nuevo	it is from a newer P4OS
 
-#: components\aos_apps\aos_app_settings.c:2034
+#: components\aos_apps\aos_app_settings.c:2041
 no alcanzó la memoria	not enough memory
 
-#: components\aos_apps\aos_app_settings.c:2035
+#: components\aos_apps\aos_app_settings.c:2042
 no hay pendrive, o no se pudo escribir en él	there is no pendrive, or it could not be written
 
-#: components\aos_apps\aos_app_settings.c:2036
+#: components\aos_apps\aos_app_settings.c:2043
 falta el servidor, aceptar su clave o la frase de las copias	the server, its key's acceptance or the copies' passphrase is missing
 
-#: components\aos_apps\aos_app_settings.c:2037
+#: components\aos_apps\aos_app_settings.c:2044
 el servidor no contesta, o dijo que no	the server does not answer, or said no
 
-#: components\aos_apps\aos_app_settings.c:2038
+#: components\aos_apps\aos_app_settings.c:2045
 el servidor muestra otra clave: no se mandó nada	the server shows another key: nothing was sent
 
-#: components\aos_apps\aos_app_settings.c:2039
+#: components\aos_apps\aos_app_settings.c:2046
 el servidor no deja entrar la clave de la placa	the server does not let the board's key in
 
-#: components\aos_apps\aos_app_settings.c:2076
-#: components\aos_apps\aos_app_settings.c:2085
-#: components\aos_apps\aos_app_settings.c:2106
-#: components\aos_apps\aos_app_settings.c:2118
+#: components\aos_apps\aos_app_settings.c:2083
+#: components\aos_apps\aos_app_settings.c:2092
+#: components\aos_apps\aos_app_settings.c:2113
+#: components\aos_apps\aos_app_settings.c:2125
 Ya hay un respaldo en curso	A backup is already under way
-
-#: components\aos_apps\aos_app_settings.c:2084
-#: components\aos_apps\aos_app_settings.c:2140
-No son la misma frase	They are not the same passphrase
 
 #: components\aos_apps\aos_app_settings.c:2091
 #: components\aos_apps\aos_app_settings.c:2147
+No son la misma frase	They are not the same passphrase
+
+#: components\aos_apps\aos_app_settings.c:2098
+#: components\aos_apps\aos_app_settings.c:2154
 Una frase de seis letras o más	A passphrase of six letters or more
 
-#: components\aos_apps\aos_app_settings.c:2094
-#: components\aos_apps\aos_app_settings.c:2150
+#: components\aos_apps\aos_app_settings.c:2101
+#: components\aos_apps\aos_app_settings.c:2157
 La misma frase, otra vez	The same passphrase, again
 
-#: components\aos_apps\aos_app_settings.c:2094
+#: components\aos_apps\aos_app_settings.c:2101
 Respaldar	Back up
 
-#: components\aos_apps\aos_app_settings.c:2101
+#: components\aos_apps\aos_app_settings.c:2108
 Una frase para cifrarlo	A passphrase to seal it
 
-#: components\aos_apps\aos_app_settings.c:2113
+#: components\aos_apps\aos_app_settings.c:2120
 Tocá otra vez: pisa los ajustes de ahora	Tap again: it overwrites the settings there are
 
-#: components\aos_apps\aos_app_settings.c:2117
+#: components\aos_apps\aos_app_settings.c:2124
 La frase de este respaldo	This backup's passphrase
 
-#: components\aos_apps\aos_app_settings.c:2117
+#: components\aos_apps\aos_app_settings.c:2124
 Restaurar	Restore
 
-#: components\aos_apps\aos_app_settings.c:2124
+#: components\aos_apps\aos_app_settings.c:2131
 Reiniciando…	Restarting…
 
-#: components\aos_apps\aos_app_settings.c:2150
+#: components\aos_apps\aos_app_settings.c:2157
 Cifrar	Seal
 
-#: components\aos_apps\aos_app_settings.c:2156
+#: components\aos_apps\aos_app_settings.c:2163
 Tocá otra vez: las copias vuelven a ir sin contraseñas	Tap again: the copies go without passwords again
 
-#: components\aos_apps\aos_app_settings.c:2161
+#: components\aos_apps\aos_app_settings.c:2168
 Una frase para las copias automáticas	A passphrase for the automatic copies
 
-#: components\aos_apps\aos_app_settings.c:2174
+#: components\aos_apps\aos_app_settings.c:2181
 Tocá otra vez: copia a la tarjeta lo que hay en el pendrive	Tap again: it copies to the card what the pendrive has
 
-#: components\aos_apps\aos_app_settings.c:2195
+#: components\aos_apps\aos_app_settings.c:2202
 Como usuario@servidor	As user@server
 
-#: components\aos_apps\aos_app_settings.c:2214
+#: components\aos_apps\aos_app_settings.c:2221
 usuario@servidor, o usuario@servidor:puerto	user@server, or user@server:port
 
-#: components\aos_apps\aos_app_settings.c:2230
+#: components\aos_apps\aos_app_settings.c:2237
 La carpeta del servidor	The server's folder
 
-#: components\aos_apps\aos_app_settings.c:2237
-#: components\aos_apps\aos_app_settings.c:2269
+#: components\aos_apps\aos_app_settings.c:2244
+#: components\aos_apps\aos_app_settings.c:2276
 Conectando con el servidor…	Connecting to the server…
 
-#: components\aos_apps\aos_app_settings.c:2242
+#: components\aos_apps\aos_app_settings.c:2249
 Tocá otra vez si es la clave de tu servidor	Tap again if it is your server's key
 
-#: components\aos_apps\aos_app_settings.c:2249
+#: components\aos_apps\aos_app_settings.c:2256
 Tocá otra vez: los servidores que conocían la clave anterior dejan de dejarla entrar	Tap again: the servers that knew the old key stop letting it in
 
-#: components\aos_apps\aos_app_settings.c:2250
+#: components\aos_apps\aos_app_settings.c:2257
 Clave nueva: su línea está en el portal, Respaldo	New key: its line is in the portal, Backup
 
-#: components\aos_apps\aos_app_settings.c:2250
+#: components\aos_apps\aos_app_settings.c:2257
+#: components\aos_apps\aos_app_zigbee.c:1222
 No se pudo	It could not be done
 
-#: components\aos_apps\aos_app_settings.c:2265
+#: components\aos_apps\aos_app_settings.c:2272
 Primero elegí una frase para las copias: más arriba, «Cifrarlas con una frase…». Sin frase no sube nada.	First choose a passphrase for the copies: further up, “Seal them with a passphrase…”. Without one nothing is sent.
 
-#: components\aos_apps\aos_app_settings.c:2284
+#: components\aos_apps\aos_app_settings.c:2291
 Pedidas a la Tienda: %d	Asked of the Store: %d
 
-#: components\aos_apps\aos_app_settings.c:2296
+#: components\aos_apps\aos_app_settings.c:2303
 RESPALDAR	BACK UP
 
-#: components\aos_apps\aos_app_settings.c:2300
+#: components\aos_apps\aos_app_settings.c:2307
 Respaldar ahora	Back up now
 
-#: components\aos_apps\aos_app_settings.c:2301
+#: components\aos_apps\aos_app_settings.c:2308
 Respaldar todo, cifrado…	Back up everything, sealed…
 
-#: components\aos_apps\aos_app_settings.c:2303
+#: components\aos_apps\aos_app_settings.c:2310
 Guarda en la tarjeta los ajustes de la placa y de sus apps, la lista de apps y el orden del inicio. Sin frase no lleva lo que parece una contraseña o una clave. Cifrado lleva todo, y sin su frase no se puede abrir.	It keeps on the card the settings of the board and of its apps, the list of apps and the order of the home screen. Without a passphrase it leaves out what looks like a password or a key. Sealed it carries everything, and without its passphrase it cannot be opened.
 
-#: components\aos_apps\aos_app_settings.c:2306
+#: components\aos_apps\aos_app_settings.c:2313
 DESPUÉS DE RESTAURAR	AFTER RESTORING
 
-#: components\aos_apps\aos_app_settings.c:2313
+#: components\aos_apps\aos_app_settings.c:2320
 Pedir a la Tienda las %d apps que faltan	Ask the Store for the %d apps that are missing
 
-#: components\aos_apps\aos_app_settings.c:2316
+#: components\aos_apps\aos_app_settings.c:2323
 La mayoría de los ajustes vale recién después de reiniciar.	Most settings take effect only after a restart.
 
-#: components\aos_apps\aos_app_settings.c:2319
+#: components\aos_apps\aos_app_settings.c:2326
 COPIAS AUTOMÁTICAS	AUTOMATIC COPIES
 
-#: components\aos_apps\aos_app_settings.c:2320
+#: components\aos_apps\aos_app_settings.c:2327
 Una copia por día	A copy a day
 
-#: components\aos_apps\aos_app_settings.c:2322
+#: components\aos_apps\aos_app_settings.c:2329
 Sacarles la frase	Take their passphrase off
 
-#: components\aos_apps\aos_app_settings.c:2322
+#: components\aos_apps\aos_app_settings.c:2329
 Cifrarlas con una frase…	Seal them with a passphrase…
 
-#: components\aos_apps\aos_app_settings.c:2324
+#: components\aos_apps\aos_app_settings.c:2331
 Si algo cambió, la placa guarda una copia por día en la tarjeta, y otra antes de instalar un firmware. Quedan las cinco últimas. Van cifradas con tu frase y llevan todo.	When something changed, the board keeps a copy a day on the card, and another before a firmware is installed. The last five stay. They are sealed with your passphrase and carry everything.
 
-#: components\aos_apps\aos_app_settings.c:2325
+#: components\aos_apps\aos_app_settings.c:2332
 Si algo cambió, la placa guarda una copia por día en la tarjeta, y otra antes de instalar un firmware. Quedan las cinco últimas. Sin frase no llevan contraseñas; con una frase llevan todo, cifrado.	When something changed, the board keeps a copy a day on the card, and another before a firmware is installed. The last five stay. Without a passphrase they carry no passwords; with one they carry everything, sealed.
 
-#: components\aos_apps\aos_app_settings.c:2328
+#: components\aos_apps\aos_app_settings.c:2335
 EN LA TARJETA	ON THE CARD
 
-#: components\aos_apps\aos_app_settings.c:2329
+#: components\aos_apps\aos_app_settings.c:2336
 Todavía no hay ninguno	There is none yet
 
-#: components\aos_apps\aos_app_settings.c:2335
+#: components\aos_apps\aos_app_settings.c:2342
   ·  cifrado	  ·  sealed
 
-#: components\aos_apps\aos_app_settings.c:2336
+#: components\aos_apps\aos_app_settings.c:2343
   ·  de antes de restaurar	  ·  from before a restore
 
-#: components\aos_apps\aos_app_settings.c:2337
+#: components\aos_apps\aos_app_settings.c:2344
   ·  del día	  ·  the day's
 
-#: components\aos_apps\aos_app_settings.c:2338
+#: components\aos_apps\aos_app_settings.c:2345
   ·  de antes de actualizar	  ·  from before an update
 
-#: components\aos_apps\aos_app_settings.c:2342
+#: components\aos_apps\aos_app_settings.c:2349
 Tocar uno lo restaura: escribe sus ajustes sobre los de ahora, y lo que hay queda antes en un respaldo propio. Para guardarlo en una computadora o traer uno: el portal, Respaldo.	Tapping one restores it: it writes its settings over the ones there are, and what there is goes first into a backup of its own. To keep it on a computer or bring one: the portal, Backup.
 
-#: components\aos_apps\aos_app_settings.c:2346
+#: components\aos_apps\aos_app_settings.c:2353
 PENDRIVE	PENDRIVE
 
-#: components\aos_apps\aos_app_settings.c:2347
+#: components\aos_apps\aos_app_settings.c:2354
 Detener la copia	Stop the copy
 
-#: components\aos_apps\aos_app_settings.c:2349
+#: components\aos_apps\aos_app_settings.c:2356
 Copiar al pendrive	Copy to the pendrive
 
-#: components\aos_apps\aos_app_settings.c:2350
+#: components\aos_apps\aos_app_settings.c:2357
 Traer del pendrive	Bring from the pendrive
 
-#: components\aos_apps\aos_app_settings.c:2352
+#: components\aos_apps\aos_app_settings.c:2359
 Al pendrive van los respaldos y las carpetas elegidas de la tarjeta, en p4os-backup; lo que ya está no se copia de nuevo. Traer los pone en una tarjeta nueva, sin pisar un archivo más nuevo.	The backups and the chosen folders of the card go to the pendrive, in p4os-backup; what is already there is not copied again. Bringing puts them on a new card, without replacing a newer file.
 
-#: components\aos_apps\aos_app_settings.c:2354
+#: components\aos_apps\aos_app_settings.c:2361
 CARPETAS QUE VAN AL PENDRIVE	FOLDERS THAT GO TO THE PENDRIVE
 
-#: components\aos_apps\aos_app_settings.c:2359
+#: components\aos_apps\aos_app_settings.c:2366
 Con un pendrive en el host USB (Ajustes, USB) aparece acá la copia de los respaldos y de las carpetas de la tarjeta.	With a pendrive on the USB host (Settings, USB), the copy of the backups and of the card's folders shows up here.
 
-#: components\aos_apps\aos_app_settings.c:2368
+#: components\aos_apps\aos_app_settings.c:2375
 sin elegir	not chosen
 
-#: components\aos_apps\aos_app_settings.c:2369
+#: components\aos_apps\aos_app_settings.c:2376
 SERVIDOR PROPIO (SFTP)	A SERVER OF YOUR OWN (SFTP)
 
-#: components\aos_apps\aos_app_settings.c:2372
+#: components\aos_apps\aos_app_settings.c:2379
 Probar la conexión	Try the connection
 
-#: components\aos_apps\aos_app_settings.c:2375
+#: components\aos_apps\aos_app_settings.c:2382
 El servidor muestra %s	The server shows %s
 
-#: components\aos_apps\aos_app_settings.c:2378
+#: components\aos_apps\aos_app_settings.c:2385
 Aceptar esta clave	Accept this key
 
-#: components\aos_apps\aos_app_settings.c:2379
+#: components\aos_apps\aos_app_settings.c:2386
 Todavía no deja entrar a la placa: falta su clave en el authorized_keys del servidor. Está en el portal, Respaldo.	It does not let the board in yet: its key is missing from the server's authorized_keys. It is in the portal, Backup.
 
-#: components\aos_apps\aos_app_settings.c:2381
+#: components\aos_apps\aos_app_settings.c:2388
 Clave aceptada: %s	Key accepted: %s
 
-#: components\aos_apps\aos_app_settings.c:2384
+#: components\aos_apps\aos_app_settings.c:2391
 Una copia por semana	A copy a week
 
-#: components\aos_apps\aos_app_settings.c:2385
+#: components\aos_apps\aos_app_settings.c:2392
 Subir ahora	Send now
 
-#: components\aos_apps\aos_app_settings.c:2387
+#: components\aos_apps\aos_app_settings.c:2394
 Falta la frase de las copias automáticas (más arriba, «Cifrarlas con una frase…»): hasta que la elijas no sube nada.	The automatic copies' passphrase is missing (further up, “Seal them with a passphrase…”): until you choose one nothing is sent.
 
-#: components\aos_apps\aos_app_settings.c:2393
+#: components\aos_apps\aos_app_settings.c:2400
 A un NAS o una computadora con SSH van los respaldos cifrados, y sólo esos: hace falta la frase de las copias automáticas. La placa entra con su clave, sin contraseña: la línea para el authorized_keys del servidor está en el portal, Respaldo. Un servidor que muestre otra clave que la aceptada acá no recibe nada.	The sealed backups, and only those, go to a NAS or a computer with SSH: the automatic copies' passphrase is needed. The board logs in with its key, with no password: the line for the server's authorized_keys is in the portal, Backup. A server that shows another key than the one accepted here gets nothing.
 
-#: components\aos_apps\aos_app_settings.c:2395
+#: components\aos_apps\aos_app_settings.c:2402
 LA CLAVE DE LA PLACA	THE BOARD'S KEY
 
-#: components\aos_apps\aos_app_settings.c:2396
+#: components\aos_apps\aos_app_settings.c:2403
 Hacer una clave nueva	Make a new key
 
-#: components\aos_apps\aos_app_settings.c:2397
+#: components\aos_apps\aos_app_settings.c:2404
 Es la clave con que la placa entra a otros equipos por SSH, desde acá y desde la app SSH. Una nueva reemplaza a la anterior, que deja de servir: hay que poner la línea nueva en cada servidor.	It is the key the board logs in to other machines with by SSH, from here and from the SSH app. A new one takes the place of the old, which stops working: the new line has to be put on every server.
 
-#: components\aos_apps\aos_app_settings.c:2405
+#: components\aos_apps\aos_app_settings.c:2412
 #: components\aos_apps\aos_app_sysmon.c:307
 al encender	at power-on
 
-#: components\aos_apps\aos_app_settings.c:2406
+#: components\aos_apps\aos_app_settings.c:2413
 #: components\aos_apps\aos_app_sysmon.c:308
 por software	by software
 
-#: components\aos_apps\aos_app_settings.c:2407
+#: components\aos_apps\aos_app_settings.c:2414
 #: components\aos_apps\aos_app_sysmon.c:309
 por un error (pánico)	by an error (panic)
 
-#: components\aos_apps\aos_app_settings.c:2408
+#: components\aos_apps\aos_app_settings.c:2415
 #: components\aos_apps\aos_app_sysmon.c:310
 watchdog de interrupciones	interrupt watchdog
 
-#: components\aos_apps\aos_app_settings.c:2409
+#: components\aos_apps\aos_app_settings.c:2416
 #: components\aos_apps\aos_app_sysmon.c:311
 watchdog de tareas	task watchdog
 
-#: components\aos_apps\aos_app_settings.c:2410
+#: components\aos_apps\aos_app_settings.c:2417
 #: components\aos_apps\aos_app_sysmon.c:312
 watchdog	watchdog
 
-#: components\aos_apps\aos_app_settings.c:2411
+#: components\aos_apps\aos_app_settings.c:2418
 #: components\aos_apps\aos_app_sysmon.c:313
 caída de tensión	brownout
 
-#: components\aos_apps\aos_app_settings.c:2412
+#: components\aos_apps\aos_app_settings.c:2419
 #: components\aos_apps\aos_app_sysmon.c:314
 al salir del sueño profundo	waking from deep sleep
 
-#: components\aos_apps\aos_app_settings.c:2413
+#: components\aos_apps\aos_app_settings.c:2420
 #: components\aos_apps\aos_app_sysmon.c:315
 botón de reset	reset button
 
-#: components\aos_apps\aos_app_settings.c:2414
+#: components\aos_apps\aos_app_settings.c:2421
 #: components\aos_apps\aos_app_sysmon.c:316
 por el USB	over USB
 
-#: components\aos_apps\aos_app_settings.c:2415
+#: components\aos_apps\aos_app_settings.c:2422
 #: components\aos_apps\aos_app_sysmon.c:317
 por JTAG	over JTAG
 
-#: components\aos_apps\aos_app_settings.c:2416
+#: components\aos_apps\aos_app_settings.c:2423
 #: components\aos_apps\aos_app_sysmon.c:318
 error de eFuse	eFuse error
 
-#: components\aos_apps\aos_app_settings.c:2417
+#: components\aos_apps\aos_app_settings.c:2424
 #: components\aos_apps\aos_app_sysmon.c:319
 pico en la alimentación	power glitch
 
-#: components\aos_apps\aos_app_settings.c:2418
+#: components\aos_apps\aos_app_settings.c:2425
 #: components\aos_apps\aos_app_sysmon.c:320
 CPU trabada	CPU lockup
 
-#: components\aos_apps\aos_app_settings.c:2441
+#: components\aos_apps\aos_app_settings.c:2448
 %u KB (mínimo %u)	%u KB (lowest %u)
 
-#: components\aos_apps\aos_app_settings.c:2462
+#: components\aos_apps\aos_app_settings.c:2469
 Volcado borrado	Dump erased
 
-#: components\aos_apps\aos_app_settings.c:2472
+#: components\aos_apps\aos_app_settings.c:2479
 Temperatura del chip	Chip temperature
 
-#: components\aos_apps\aos_app_settings.c:2473
+#: components\aos_apps\aos_app_settings.c:2480
 CPU (núcleos 0 · 1)	CPU (cores 0 · 1)
 
-#: components\aos_apps\aos_app_settings.c:2474
-#: components\aos_apps\aos_app_settings.c:2849
+#: components\aos_apps\aos_app_settings.c:2481
+#: components\aos_apps\aos_app_settings.c:2856
 Interna libre	Internal free
 
-#: components\aos_apps\aos_app_settings.c:2475
-#: components\aos_apps\aos_app_settings.c:2851
-#: components\aos_apps\aos_app_settings.c:3281
+#: components\aos_apps\aos_app_settings.c:2482
+#: components\aos_apps\aos_app_settings.c:2858
+#: components\aos_apps\aos_app_settings.c:3288
 PSRAM libre	PSRAM free
 
-#: components\aos_apps\aos_app_settings.c:2476
-#: components\aos_apps\aos_app_settings.c:2858
+#: components\aos_apps\aos_app_settings.c:2483
+#: components\aos_apps\aos_app_settings.c:2865
 #: components\aos_apps\aos_app_sysmon.c:605
 #: components\aos_apps\aos_app_sysmon.c:1236
 Encendida hace	Up for
 
-#: components\aos_apps\aos_app_settings.c:2479
+#: components\aos_apps\aos_app_settings.c:2486
 ESTE ARRANQUE	THIS BOOT
 
-#: components\aos_apps\aos_app_settings.c:2481
+#: components\aos_apps\aos_app_settings.c:2488
 Motivo del reinicio	Reset reason
 
-#: components\aos_apps\aos_app_settings.c:2482
+#: components\aos_apps\aos_app_settings.c:2489
 Modo seguro	Safe mode
 
-#: components\aos_apps\aos_app_settings.c:2482
+#: components\aos_apps\aos_app_settings.c:2489
 sí: sin las apps de la tarjeta	yes: without the card's apps
 
-#: components\aos_apps\aos_app_settings.c:2482
-#: components\aos_apps\aos_app_settings.c:2867
+#: components\aos_apps\aos_app_settings.c:2489
+#: components\aos_apps\aos_app_settings.c:2874
+#: components\aos_apps\aos_app_zigbee.c:1060
+#: components\aos_154\aos_zigbee_tuya.c:250
 no	no
 
-#: components\aos_apps\aos_app_settings.c:2487
+#: components\aos_apps\aos_app_settings.c:2494
 Reinicios por cuelgue	Restarts after a hang
 
-#: components\aos_apps\aos_app_settings.c:2488
+#: components\aos_apps\aos_app_settings.c:2495
 Se arrancó con BOOT apretado: sin las apps de la tarjeta y con los ajustes de pantalla de fábrica. Reiniciá para volver a la normalidad.	It booted with BOOT held: without the card's apps and with the factory display tuning. Restart to go back to normal.
 
-#: components\aos_apps\aos_app_settings.c:2490
+#: components\aos_apps\aos_app_settings.c:2497
 RADIO (ESP32-C6)	RADIO (ESP32-C6)
 
-#: components\aos_apps\aos_app_settings.c:2492
+#: components\aos_apps\aos_app_settings.c:2499
 Firmware del C6	C6 firmware
 
-#: components\aos_apps\aos_app_settings.c:2492
+#: components\aos_apps\aos_app_settings.c:2499
 no la informa (firmware viejo)	it does not report it (old firmware)
 
-#: components\aos_apps\aos_app_settings.c:2495
+#: components\aos_apps\aos_app_settings.c:2502
 El Wi-Fi lo hace el ESP32-C6 de la placa; el P4 le habla por SDIO. Esta es la versión del firmware que corre en el C6.	The board's ESP32-C6 does the Wi-Fi; the P4 talks to it over SDIO. This is the firmware version the C6 runs.
 
-#: components\aos_apps\aos_app_settings.c:2497
+#: components\aos_apps\aos_app_settings.c:2504
 ÚLTIMO CUELGUE	LAST CRASH
 
-#: components\aos_apps\aos_app_settings.c:2500
-#: components\aos_apps\aos_app_settings.c:2502
+#: components\aos_apps\aos_app_settings.c:2507
+#: components\aos_apps\aos_app_settings.c:2509
 Volcado	Dump
 
-#: components\aos_apps\aos_app_settings.c:2502
+#: components\aos_apps\aos_app_settings.c:2509
 dañado	damaged
 
-#: components\aos_apps\aos_app_settings.c:2503
+#: components\aos_apps\aos_app_settings.c:2510
 Tarea	Task
 
-#: components\aos_apps\aos_app_settings.c:2506
+#: components\aos_apps\aos_app_settings.c:2513
 Firmware (ELF)	Firmware (ELF)
 
-#: components\aos_apps\aos_app_settings.c:2507
+#: components\aos_apps\aos_app_settings.c:2514
 Borrar el volcado	Erase the dump
 
-#: components\aos_apps\aos_app_settings.c:2508
+#: components\aos_apps\aos_app_settings.c:2515
 El volcado se baja desde el portal (Firmware, Último cuelgue) o con tools/coredump.sh, y se lee con la ELF de esa compilación.	The dump downloads from the portal (Firmware, Last crash) or with tools/coredump.sh, and is read with that build's ELF.
 
-#: components\aos_apps\aos_app_settings.c:2512
+#: components\aos_apps\aos_app_settings.c:2519
 Abrir el Monitor	Open Monitor
 
-#: components\aos_apps\aos_app_settings.c:2572
+#: components\aos_apps\aos_app_settings.c:2579
 No coinciden: empezá de nuevo	They do not match: start again
 
-#: components\aos_apps\aos_app_settings.c:2581
+#: components\aos_apps\aos_app_settings.c:2588
 Código guardado	Code saved
 
-#: components\aos_apps\aos_app_settings.c:2590
+#: components\aos_apps\aos_app_settings.c:2597
 Repetí el código nuevo	Repeat the new code
 
-#: components\aos_apps\aos_app_settings.c:2598
+#: components\aos_apps\aos_app_settings.c:2605
 Elegí el código nuevo	Choose the new code
 
-#: components\aos_apps\aos_app_settings.c:2605
-#: components\aos_apps\aos_app_settings.c:2718
+#: components\aos_apps\aos_app_settings.c:2612
+#: components\aos_apps\aos_app_settings.c:2725
 Sin código	No code
 
-#: components\aos_apps\aos_app_settings.c:2627
+#: components\aos_apps\aos_app_settings.c:2634
 Ingresá el código actual	Enter the current code
 
-#: components\aos_apps\aos_app_settings.c:2705
+#: components\aos_apps\aos_app_settings.c:2712
 La hora, los mensajes y la música sobre el fondo de pantalla; deslizá hacia arriba para entrar. Aparece al arrancar y cuando la pantalla estuvo apagada el tiempo que elijas.	The time, the messages and the music over the wallpaper; swipe up to get in. It comes up at boot and when the screen has been off for the time you choose.
 
-#: components\aos_apps\aos_app_settings.c:2708
+#: components\aos_apps\aos_app_settings.c:2715
 BLOQUEAR	LOCK
 
-#: components\aos_apps\aos_app_settings.c:2710
+#: components\aos_apps\aos_app_settings.c:2717
 Al apagarse la pantalla	When the screen goes off
 
-#: components\aos_apps\aos_app_settings.c:2710
+#: components\aos_apps\aos_app_settings.c:2717
 1 minuto después	1 minute after
 
-#: components\aos_apps\aos_app_settings.c:2710
+#: components\aos_apps\aos_app_settings.c:2717
 5 minutos después	5 minutes after
 
-#: components\aos_apps\aos_app_settings.c:2711
+#: components\aos_apps\aos_app_settings.c:2718
 15 minutos después	15 minutes after
 
-#: components\aos_apps\aos_app_settings.c:2711
+#: components\aos_apps\aos_app_settings.c:2718
 1 hora después	1 hour after
 
-#: components\aos_apps\aos_app_settings.c:2715
+#: components\aos_apps\aos_app_settings.c:2722
 Cuánto tiempo apagada antes de bloquearse. Cuándo se apaga la pantalla se elige en Pantalla.	How long it stays off before it locks. When the screen goes off is chosen in Display.
 
-#: components\aos_apps\aos_app_settings.c:2717
+#: components\aos_apps\aos_app_settings.c:2724
 CÓDIGO	CODE
 
-#: components\aos_apps\aos_app_settings.c:2719
+#: components\aos_apps\aos_app_settings.c:2726
 Código de 4 dígitos	4-digit code
 
-#: components\aos_apps\aos_app_settings.c:2720
+#: components\aos_apps\aos_app_settings.c:2727
 Código de 6 dígitos	6-digit code
 
-#: components\aos_apps\aos_app_settings.c:2721
+#: components\aos_apps\aos_app_settings.c:2728
 Cambiar el código	Change the code
 
-#: components\aos_apps\aos_app_settings.c:2722
+#: components\aos_apps\aos_app_settings.c:2729
 Modo seguro: el código no se pide, así que podés quitarlo o cambiarlo sin saberlo.	Safe mode: the code is not asked for, so you can remove or change it without knowing it.
 
-#: components\aos_apps\aos_app_settings.c:2723
+#: components\aos_apps\aos_app_settings.c:2730
 ¿Te olvidaste el código? Reiniciá con BOOT apretado (modo seguro): ahí no se pide, y lo quitás desde acá. Después de 5 intentos mal, espera 30 s, y más cada vez.	Forgot the code? Restart holding BOOT (safe mode): it is not asked for there, and you remove it from here. After 5 wrong tries it waits 30 s, and longer each time.
 
-#: components\aos_apps\aos_app_settings.c:2725
+#: components\aos_apps\aos_app_settings.c:2732
 #: components\aos_apps\_pending\aos_app_settings.c:2272
 RELOJ	WATCH
 
-#: components\aos_apps\aos_app_settings.c:2727
+#: components\aos_apps\aos_app_settings.c:2734
 Arriba	At the top
 
-#: components\aos_apps\aos_app_settings.c:2727
+#: components\aos_apps\aos_app_settings.c:2734
 Al medio	In the middle
 
-#: components\aos_apps\aos_app_settings.c:2728
+#: components\aos_apps\aos_app_settings.c:2735
 Color de acento	Accent colour
 
-#: components\aos_apps\aos_app_settings.c:2728
+#: components\aos_apps\aos_app_settings.c:2735
 Tomado de la foto	From the photo
 
-#: components\aos_apps\aos_app_settings.c:2737
+#: components\aos_apps\aos_app_settings.c:2744
 El color de la foto es el de la foto de la pantalla de bloqueo, aclarado; sin foto, el reloj queda blanco.	The photo's colour is the lock screen photo's own, lightened; without a photo the clock stays white.
 
-#: components\aos_apps\aos_app_settings.c:2739
+#: components\aos_apps\aos_app_settings.c:2746
 QUÉ SE MUESTRA	WHAT IT SHOWS
 
-#: components\aos_apps\aos_app_settings.c:2740
+#: components\aos_apps\aos_app_settings.c:2747
 #: components\aos_apps\_pending\aos_app_settings.c:1649
 Mensajes	Messages
 
-#: components\aos_apps\aos_app_settings.c:2742
+#: components\aos_apps\aos_app_settings.c:2749
 Ocultar el texto con código	Hide the text with a code
 
-#: components\aos_apps\aos_app_settings.c:2743
+#: components\aos_apps\aos_app_settings.c:2750
 Los mensajes son las notificaciones: hoy las de las apps, y las del teléfono por Bluetooth y las de Home Assistant cuando lleguen. Con código y el texto oculto, se ve de qué app son pero no qué dicen.	The messages are the notifications: today the apps' ones, and the phone's over Bluetooth and Home Assistant's when they come. With a code and the text hidden, you see which app they are from but not what they say.
 
-#: components\aos_apps\aos_app_settings.c:2746
+#: components\aos_apps\aos_app_settings.c:2753
 Bloquear ahora	Lock now
 
-#: components\aos_apps\aos_app_settings.c:2754
+#: components\aos_apps\aos_app_settings.c:2761
 PORTAL WEB	WEB PORTAL
 
-#: components\aos_apps\aos_app_settings.c:2756
+#: components\aos_apps\aos_app_settings.c:2763
 En la red	On the network
 
-#: components\aos_apps\aos_app_settings.c:2762
+#: components\aos_apps\aos_app_settings.c:2769
 Por Wi-Fi	Over Wi-Fi
 
-#: components\aos_apps\aos_app_settings.c:2766
+#: components\aos_apps\aos_app_settings.c:2773
 Por su red propia	Over its own network
 
-#: components\aos_apps\aos_app_settings.c:2769
+#: components\aos_apps\aos_app_settings.c:2776
 Por el cable USB	Over the USB cable
 
-#: components\aos_apps\aos_app_settings.c:2771
+#: components\aos_apps\aos_app_settings.c:2778
 Sin Wi-Fi no hay código QR: el teléfono tiene que estar en la misma red que la placa, o en la red propia de la placa (Ajustes, Wi-Fi).	No QR code without Wi-Fi: the phone has to be on the same network as the board, or on the board's own network (Settings, Wi-Fi).
 
-#: components\aos_apps\aos_app_settings.c:2775
+#: components\aos_apps\aos_app_settings.c:2782
 Escaneálo con el teléfono para abrir el portal.	Scan it with the phone to open the portal.
 
-#: components\aos_apps\aos_app_settings.c:2793
+#: components\aos_apps\aos_app_settings.c:2800
 Cambiar el idioma cierra las apps abiertas.	Changing the language closes open apps.
 
-#: components\aos_apps\aos_app_settings.c:2797
+#: components\aos_apps\aos_app_settings.c:2804
 Shanghái (UTC+8)	Shanghai (UTC+8)
 
-#: components\aos_apps\aos_app_settings.c:2797
+#: components\aos_apps\aos_app_settings.c:2804
 Taipéi (UTC+8)	Taipei (UTC+8)
 
-#: components\aos_apps\aos_app_settings.c:2798
+#: components\aos_apps\aos_app_settings.c:2805
 Hong Kong (UTC+8)	Hong Kong (UTC+8)
 
-#: components\aos_apps\aos_app_settings.c:2799
+#: components\aos_apps\aos_app_settings.c:2806
 Buenos Aires (UTC−3)	Buenos Aires (UTC−3)
 
-#: components\aos_apps\aos_app_settings.c:2799
+#: components\aos_apps\aos_app_settings.c:2806
 Santiago (UTC−4/−3)	Santiago (UTC−4/−3)
 
-#: components\aos_apps\aos_app_settings.c:2800
+#: components\aos_apps\aos_app_settings.c:2807
 São Paulo (UTC−3)	São Paulo (UTC−3)
 
-#: components\aos_apps\aos_app_settings.c:2800
+#: components\aos_apps\aos_app_settings.c:2807
 Ciudad de México (UTC−6)	Mexico City (UTC−6)
 
-#: components\aos_apps\aos_app_settings.c:2801
+#: components\aos_apps\aos_app_settings.c:2808
 Nueva York (UTC−5/−4)	New York (UTC−5/−4)
 
-#: components\aos_apps\aos_app_settings.c:2801
+#: components\aos_apps\aos_app_settings.c:2808
 Madrid (UTC+1/+2)	Madrid (UTC+1/+2)
 
-#: components\aos_apps\aos_app_settings.c:2802
+#: components\aos_apps\aos_app_settings.c:2809
 Londres (UTC+0/+1)	London (UTC+0/+1)
 
-#: components\aos_apps\aos_app_settings.c:2814
+#: components\aos_apps\aos_app_settings.c:2821
 Sólo a-z, 0-9 y guiones	Only a-z, 0-9 and hyphens
 
-#: components\aos_apps\aos_app_settings.c:2817
-#: components\aos_apps\aos_app_settings.c:2843
+#: components\aos_apps\aos_app_settings.c:2824
+#: components\aos_apps\aos_app_settings.c:2850
 Nombre en la red	Network name
 
-#: components\aos_apps\aos_app_settings.c:2826
+#: components\aos_apps\aos_app_settings.c:2833
 sin hora (esperando la red)	no time (waiting for network)
 
-#: components\aos_apps\aos_app_settings.c:2827
+#: components\aos_apps\aos_app_settings.c:2834
 ZONA HORARIA	TIME ZONE
 
-#: components\aos_apps\aos_app_settings.c:2834
+#: components\aos_apps\aos_app_settings.c:2841
 La hora llega por la red (SNTP). La placa no tiene reloj con pila todavía.	The time comes from the network (SNTP). The board has no battery-backed clock yet.
 
-#: components\aos_apps\aos_app_settings.c:2841
+#: components\aos_apps\aos_app_settings.c:2848
 #: components\aos_apps\_pending\aos_app_settings.c:3301
 Placa	Board
 
-#: components\aos_apps\aos_app_settings.c:2845
+#: components\aos_apps\aos_app_settings.c:2852
 #: components\aos_apps\_pending\aos_app_settings.c:3262
 MEMORIA	MEMORY
 
-#: components\aos_apps\aos_app_settings.c:2855
+#: components\aos_apps\aos_app_settings.c:2862
 microSD libre	microSD free
 
-#: components\aos_apps\aos_app_settings.c:2859
+#: components\aos_apps\aos_app_settings.c:2866
 QUÉ HAY	WHAT'S INSIDE
 
-#: components\aos_apps\aos_app_settings.c:2861
+#: components\aos_apps\aos_app_settings.c:2868
 Micrófono	Microphone
 
-#: components\aos_apps\aos_app_settings.c:2862
+#: components\aos_apps\aos_app_settings.c:2869
 Parlante	Speaker
 
-#: components\aos_apps\aos_app_settings.c:2862
+#: components\aos_apps\aos_app_settings.c:2869
 Audio full dúplex	Full-duplex audio
 
-#: components\aos_apps\aos_app_settings.c:2863
+#: components\aos_apps\aos_app_settings.c:2870
 Conector de expansión	Expansion header
 
-#: components\aos_apps\aos_app_settings.c:2864
+#: components\aos_apps\aos_app_settings.c:2871
 #: components\aos_apps\_pending\aos_app_settings.c:1787
 Batería	Battery
 
-#: components\aos_apps\aos_app_settings.c:2864
+#: components\aos_apps\aos_app_settings.c:2871
 Cámara	Camera
 
-#: components\aos_apps\aos_app_settings.c:2909
+#: components\aos_apps\aos_app_settings.c:2916
+#: components\aos_apps\aos_app_zigbee.c:581
+#: components\aos_154\aos_zigbee_devices.c:791
 abierto	open
 
-#: components\aos_apps\aos_app_settings.c:2909
+#: components\aos_apps\aos_app_settings.c:2916
 con contraseña	with password
 
-#: components\aos_apps\aos_app_settings.c:2909
+#: components\aos_apps\aos_app_settings.c:2916
 cerrado acá	closed here
 
-#: components\aos_apps\aos_app_settings.c:2926
-#: components\aos_apps\aos_app_settings.c:2969
-#: components\aos_apps\aos_app_settings.c:3019
+#: components\aos_apps\aos_app_settings.c:2933
+#: components\aos_apps\aos_app_settings.c:2976
+#: components\aos_apps\aos_app_settings.c:3026
 Tocá otra vez para quitarla	Tap again to remove it
 
-#: components\aos_apps\aos_app_settings.c:2935
+#: components\aos_apps\aos_app_settings.c:2942
 No coinciden: la contraseña no cambió	They don't match: the password did not change
 
-#: components\aos_apps\aos_app_settings.c:2936
+#: components\aos_apps\aos_app_settings.c:2943
 Contraseña guardada: los navegadores vuelven a entrar	Password saved: browsers must sign in again
 
-#: components\aos_apps\aos_app_settings.c:2945
+#: components\aos_apps\aos_app_settings.c:2952
 Repetí la contraseña	Repeat the password
 
-#: components\aos_apps\aos_app_settings.c:2951
+#: components\aos_apps\aos_app_settings.c:2958
 Tiene que tener 6 caracteres o más	It needs 6 characters or more
 
-#: components\aos_apps\aos_app_settings.c:2963
+#: components\aos_apps\aos_app_settings.c:2970
 La contraseña nueva del portal	The portal's new password
 
-#: components\aos_apps\aos_app_settings.c:2963
+#: components\aos_apps\aos_app_settings.c:2970
 Una contraseña para el portal	A password for the portal
 
-#: components\aos_apps\aos_app_settings.c:2964
+#: components\aos_apps\aos_app_settings.c:2971
 #: components\aos_apps\aos_macropad.c:163
 Siguiente	Next
 
-#: components\aos_apps\aos_app_settings.c:2979
+#: components\aos_apps\aos_app_settings.c:2986
 Tocá otra vez: el token de ahora deja de andar	Tap again: the current token stops working
 
-#: components\aos_apps\aos_app_settings.c:2986
+#: components\aos_apps\aos_app_settings.c:2993
 Tocá otra vez para cerrarlas	Tap again to close them
 
-#: components\aos_apps\aos_app_settings.c:2988
+#: components\aos_apps\aos_app_settings.c:2995
 Sesiones cerradas	Sessions closed
 
-#: components\aos_apps\aos_app_settings.c:3000
+#: components\aos_apps\aos_app_settings.c:3007
 Tocá otra vez: habrá que volver a instalarla	Tap again: it will have to be installed again
 
-#: components\aos_apps\aos_app_settings.c:3002
+#: components\aos_apps\aos_app_settings.c:3009
 Se hace uno nuevo al reiniciar	A new one is made at the next restart
 
-#: components\aos_apps\aos_app_settings.c:3026
+#: components\aos_apps\aos_app_settings.c:3033
 Tocá otra vez: ssh va a avisar que la placa cambió	Tap again: ssh will warn that the board changed
 
-#: components\aos_apps\aos_app_settings.c:3028
+#: components\aos_apps\aos_app_settings.c:3035
 La placa tiene una clave nueva	The board has a new key
 
-#: components\aos_apps\aos_app_settings.c:3046
+#: components\aos_apps\aos_app_settings.c:3053
 SSH (puerto 22)	SSH (port 22)
 
-#: components\aos_apps\aos_app_settings.c:3049
+#: components\aos_apps\aos_app_settings.c:3056
 Clave nueva de la placa	New key for the board
 
-#: components\aos_apps\aos_app_settings.c:3056
+#: components\aos_apps\aos_app_settings.c:3063
 Una consola de la placa desde la Mac: ssh p4os.local. Sigue las reglas de arriba: donde el portal está abierto entra cualquiera, donde pide la contraseña entra con ella o con una clave de la lista, y donde está cerrado no entra nadie. Lo de arriba es la huella de la placa: ssh la muestra la primera vez.	A console on the board from your computer: ssh p4os.local. It follows the rules above: where the portal is open anyone gets in, where it asks for the password you get in with it or with a key on the list, and where it is closed nobody does. Above is the board's fingerprint: ssh shows it the first time.
 
-#: components\aos_apps\aos_app_settings.c:3060
+#: components\aos_apps\aos_app_settings.c:3067
 CLAVES QUE PUEDEN ENTRAR	KEYS THAT MAY LOG IN
 
-#: components\aos_apps\aos_app_settings.c:3066
-#: components\aos_apps\aos_app_settings.c:3104
+#: components\aos_apps\aos_app_settings.c:3073
+#: components\aos_apps\aos_app_settings.c:3111
 quitar	remove
 
-#: components\aos_apps\aos_app_settings.c:3071
+#: components\aos_apps\aos_app_settings.c:3078
 Una clave que no está en la lista pide permiso acá, en la pantalla, con su huella: compará con la que da ssh-keygen -lf en la Mac. Quitar una cierra las sesiones de SSH abiertas.	A key that is not on the list asks for permission here, on the screen, with its fingerprint: compare it with what ssh-keygen -lf gives on your computer. Removing one closes the open SSH sessions.
 
-#: components\aos_apps\aos_app_settings.c:3085
+#: components\aos_apps\aos_app_settings.c:3092
 LA RED POR CABLE	THE WIRED NETWORK
 
-#: components\aos_apps\aos_app_settings.c:3088
+#: components\aos_apps\aos_app_settings.c:3095
 De confianza: por cable el portal está abierto.	Trusted: over the wire the portal is open.
 
-#: components\aos_apps\aos_app_settings.c:3089
+#: components\aos_apps\aos_app_settings.c:3096
 Por cable el portal se porta como en una red que no es de confianza. Una red por cable no tiene nombre para reconocerla: prendelo sólo donde confiás en todo lo que está enchufado.	Over the wire the portal behaves as on a network that is not trusted. A wired network has no name to know it by: switch this on only where you trust everything that is plugged in.
 
-#: components\aos_apps\aos_app_settings.c:3092
+#: components\aos_apps\aos_app_settings.c:3099
 ESTA RED	THIS NETWORK
 
-#: components\aos_apps\aos_app_settings.c:3095
+#: components\aos_apps\aos_app_settings.c:3102
 De confianza: en esta red el portal está abierto.	Trusted: on this network the portal is open.
 
-#: components\aos_apps\aos_app_settings.c:3096
+#: components\aos_apps\aos_app_settings.c:3103
 En esta red el portal pide la contraseña.	On this network the portal asks for the password.
 
-#: components\aos_apps\aos_app_settings.c:3097
+#: components\aos_apps\aos_app_settings.c:3104
 En esta red el portal está cerrado y la placa no anuncia su nombre. Se entra por la red propia de la placa o por el cable USB.	On this network the portal is closed and the board does not announce its name. It can be reached through the board's own network or the USB cable.
 
-#: components\aos_apps\aos_app_settings.c:3102
+#: components\aos_apps\aos_app_settings.c:3109
 REDES DE CONFIANZA	TRUSTED NETWORKS
 
-#: components\aos_apps\aos_app_settings.c:3105
+#: components\aos_apps\aos_app_settings.c:3112
 En una red de confianza el portal se abre como siempre. En cualquier otra, la placa no anuncia su nombre y el portal queda cerrado, o pide la contraseña si así se elige abajo.	On a trusted network the portal opens as always. On any other, the board does not announce its name and the portal stays closed, or asks for the password if chosen below.
 
-#: components\aos_apps\aos_app_settings.c:3107
+#: components\aos_apps\aos_app_settings.c:3114
 CONTRASEÑA	PASSWORD
 
-#: components\aos_apps\aos_app_settings.c:3108
+#: components\aos_apps\aos_app_settings.c:3115
 Poner una contraseña	Set a password
 
-#: components\aos_apps\aos_app_settings.c:3109
+#: components\aos_apps\aos_app_settings.c:3116
 Quitar la contraseña	Remove the password
 
-#: components\aos_apps\aos_app_settings.c:3112
+#: components\aos_apps\aos_app_settings.c:3119
 PEDIRLA	ASK FOR IT
 
-#: components\aos_apps\aos_app_settings.c:3113
+#: components\aos_apps\aos_app_settings.c:3120
 Sólo fuera de casa	Only away from home
 
-#: components\aos_apps\aos_app_settings.c:3114
+#: components\aos_apps\aos_app_settings.c:3121
 También en casa y en la red de la placa	At home and on the board's network too
 
-#: components\aos_apps\aos_app_settings.c:3115
+#: components\aos_apps\aos_app_settings.c:3122
 EN REDES QUE NO SON DE CONFIANZA	ON UNTRUSTED NETWORKS
 
-#: components\aos_apps\aos_app_settings.c:3116
+#: components\aos_apps\aos_app_settings.c:3123
 Portal cerrado	Portal closed
 
-#: components\aos_apps\aos_app_settings.c:3117
+#: components\aos_apps\aos_app_settings.c:3124
 Abierto con la contraseña	Open with the password
 
-#: components\aos_apps\aos_app_settings.c:3119
+#: components\aos_apps\aos_app_settings.c:3126
 El cable USB entra siempre, sin contraseña: quien tiene el cable tiene la placa. La contraseña y estas reglas se cambian sólo acá, nunca desde el portal.	The USB cable always gets in, without a password: whoever holds the cable holds the board. The password and these rules are changed only here, never from the portal.
 
-#: components\aos_apps\aos_app_settings.c:3122
+#: components\aos_apps\aos_app_settings.c:3129
 HTTPS (puerto 443)	HTTPS (port 443)
 
-#: components\aos_apps\aos_app_settings.c:3125
+#: components\aos_apps\aos_app_settings.c:3132
 Autoridad nueva	New authority
 
-#: components\aos_apps\aos_app_settings.c:3126
+#: components\aos_apps\aos_app_settings.c:3133
 Reiniciar para aplicarlo	Restart to apply it
 
-#: components\aos_apps\aos_app_settings.c:3133
+#: components\aos_apps\aos_app_settings.c:3140
 Con HTTPS, lo que viaja va cifrado, la contraseña incluida, y fuera de casa el portal manda del HTTP al HTTPS. La placa tiene su propia autoridad: se baja desde el portal (Ajustes, Seguridad) y se instala una vez como confiable en la Mac o el iPhone, y el navegador deja de avisar. Lo de arriba es su huella SHA-256, para compararla. Se aplica al reiniciar.	With HTTPS, what travels is encrypted, the password included, and away from home the portal sends HTTP over to HTTPS. The board has its own authority: download it from the portal (Settings, Security) and install it once as trusted on the Mac or the iPhone, and the browser stops warning. The line above is its SHA-256 fingerprint, to compare. It applies at the next restart.
 
-#: components\aos_apps\aos_app_settings.c:3138
+#: components\aos_apps\aos_app_settings.c:3145
 SESIONES Y SCRIPTS	SESSIONS AND SCRIPTS
 
-#: components\aos_apps\aos_app_settings.c:3140
+#: components\aos_apps\aos_app_settings.c:3147
 Navegadores con sesión	Browsers signed in
 
-#: components\aos_apps\aos_app_settings.c:3141
+#: components\aos_apps\aos_app_settings.c:3148
 Cerrar todas las sesiones	Close every session
 
-#: components\aos_apps\aos_app_settings.c:3142
+#: components\aos_apps\aos_app_settings.c:3149
 Token nuevo para scripts	New token for scripts
 
-#: components\aos_apps\aos_app_settings.c:3145
+#: components\aos_apps\aos_app_settings.c:3152
 El token reemplaza a la contraseña en los scripts de tools/ (cabecera Authorization: Bearer). Se le pasa así: P4OS_TOKEN=<token> tools/ota.sh p4os.local	The token stands in for the password in the tools/ scripts (Authorization: Bearer header). Pass it like this: P4OS_TOKEN=<token> tools/ota.sh p4os.local
 
-#: components\aos_apps\aos_app_settings.c:3189
+#: components\aos_apps\aos_app_settings.c:3196
 Tocá otra vez para volver a lo de fábrica	Tap again to go back to the factory settings
 
-#: components\aos_apps\aos_app_settings.c:3209
+#: components\aos_apps\aos_app_settings.c:3216
 Tocá otra vez para reiniciar en modo seguro	Tap again to restart in safe mode
 
-#: components\aos_apps\aos_app_settings.c:3227
+#: components\aos_apps\aos_app_settings.c:3234
 Tocá otra vez para cerrarla	Tap again to close it
 
-#: components\aos_apps\aos_app_settings.c:3235
+#: components\aos_apps\aos_app_settings.c:3242
 Tocá otra vez para sacarla	Tap again to take it off
 
-#: components\aos_apps\aos_app_settings.c:3243
+#: components\aos_apps\aos_app_settings.c:3250
 en segundo plano	in the background
 
-#: components\aos_apps\aos_app_settings.c:3244
+#: components\aos_apps\aos_app_settings.c:3251
 trabajando	working
 
-#: components\aos_apps\aos_app_settings.c:3245
+#: components\aos_apps\aos_app_settings.c:3252
 usa pines del header	uses header pins
 
-#: components\aos_apps\aos_app_settings.c:3246
+#: components\aos_apps\aos_app_settings.c:3253
 sonando	playing
 
-#: components\aos_apps\aos_app_settings.c:3247
+#: components\aos_apps\aos_app_settings.c:3254
 con el micrófono	using the microphone
 
-#: components\aos_apps\aos_app_settings.c:3254
+#: components\aos_apps\aos_app_settings.c:3261
 APPS EN SEGUNDO PLANO	APPS IN THE BACKGROUND
 
-#: components\aos_apps\aos_app_settings.c:3256
+#: components\aos_apps\aos_app_settings.c:3263
 Automático (de fábrica)	Automatic (default)
 
-#: components\aos_apps\aos_app_settings.c:3257
+#: components\aos_apps\aos_app_settings.c:3264
 Cerrar al salir	Close on leaving
 
-#: components\aos_apps\aos_app_settings.c:3258
+#: components\aos_apps\aos_app_settings.c:3265
 Mantener abiertas	Keep open
 
-#: components\aos_apps\aos_app_settings.c:3259
+#: components\aos_apps\aos_app_settings.c:3266
 Al salir de una app, Automático la cierra si ocupa 1 MB de PSRAM o más y no tiene nada andando; Cerrar al salir la cierra si no tiene nada andando; Mantener abiertas la deja, como antes. Andando es usar pines del header, sonar, el micrófono, grabar o trabajar en segundo plano. Con menos de 8 MB de PSRAM libre se cierran también las escondidas que no tienen nada andando.	On leaving an app, Automatic closes it if it holds 1 MB of PSRAM or more and has nothing running; Close on leaving closes it if it has nothing running; Keep open keeps it, as before. Running means using header pins, playing sound, the microphone, recording or working in the background. Below 8 MB of free PSRAM, hidden apps with nothing running are closed too.
 
-#: components\aos_apps\aos_app_settings.c:3261
+#: components\aos_apps\aos_app_settings.c:3268
 ABIERTAS AHORA	OPEN NOW
 
-#: components\aos_apps\aos_app_settings.c:3276
+#: components\aos_apps\aos_app_settings.c:3283
 Ninguna, fuera de Ajustes	None besides Settings
 
-#: components\aos_apps\aos_app_settings.c:3282
+#: components\aos_apps\aos_app_settings.c:3289
 Lo que ocupa cada una se mide al salir de ella. Tocar una la cierra.	What each one holds is measured when it is left. Tapping one closes it.
 
-#: components\aos_apps\aos_app_settings.c:3285
+#: components\aos_apps\aos_app_settings.c:3292
 ARRANCAN CON LA PLACA	START WITH THE BOARD
 
-#: components\aos_apps\aos_app_settings.c:3295
+#: components\aos_apps\aos_app_settings.c:3302
 no está en la tarjeta	not on the card
 
-#: components\aos_apps\aos_app_settings.c:3302
+#: components\aos_apps\aos_app_settings.c:3309
 Las apps que lo piden (un registrador de datos, por ejemplo) arrancan escondidas al prender la placa, como si las hubieras abierto y dejado. Tocar una la saca de la lista.	Apps that ask for it (a data logger, say) start hidden when the board powers up, as if you had opened them and left them. Tapping one takes it off the list.
 
-#: components\aos_apps\aos_app_settings.c:3308
+#: components\aos_apps\aos_app_settings.c:3315
 EN PANTALLA	ON SCREEN
 
-#: components\aos_apps\aos_app_settings.c:3309
+#: components\aos_apps\aos_app_settings.c:3316
 Mostrar los toques	Show touches
 
-#: components\aos_apps\aos_app_settings.c:3310
+#: components\aos_apps\aos_app_settings.c:3317
 Mostrar los fps	Show fps
 
-#: components\aos_apps\aos_app_settings.c:3311
+#: components\aos_apps\aos_app_settings.c:3318
 Un círculo bajo cada dedo que informa el táctil (hasta dos), y los cuadros por segundo que llegan a la pantalla, arriba a la derecha. Quedan prendidos después de reiniciar.	A ring under every finger the touch panel reports (up to two), and the frames per second that reach the screen, top right. They stay on after a restart.
 
-#: components\aos_apps\aos_app_settings.c:3315
+#: components\aos_apps\aos_app_settings.c:3322
 Sólo errores	Errors only
 
-#: components\aos_apps\aos_app_settings.c:3316
+#: components\aos_apps\aos_app_settings.c:3323
 Errores y avisos	Errors and warnings
 
-#: components\aos_apps\aos_app_settings.c:3317
+#: components\aos_apps\aos_app_settings.c:3324
 Todo (de fábrica)	Everything (factory)
 
-#: components\aos_apps\aos_app_settings.c:3318
+#: components\aos_apps\aos_app_settings.c:3325
 Lo que llega al Registro del portal y a la consola serie. Este firmware no trae los mensajes de depuración.	What reaches the portal's Log and the serial console. This firmware has no debug messages built in.
 
-#: components\aos_apps\aos_app_settings.c:3320
+#: components\aos_apps\aos_app_settings.c:3327
 DÓNDE DIBUJA LVGL	WHERE LVGL DRAWS
 
-#: components\aos_apps\aos_app_settings.c:3322
+#: components\aos_apps\aos_app_settings.c:3329
 Dos búferes en PSRAM (de fábrica)	Two buffers in PSRAM (factory)
 
-#: components\aos_apps\aos_app_settings.c:3323
+#: components\aos_apps\aos_app_settings.c:3330
 Uno en PSRAM	One in PSRAM
 
-#: components\aos_apps\aos_app_settings.c:3324
+#: components\aos_apps\aos_app_settings.c:3331
 Dos en RAM interna	Two in internal RAM
 
-#: components\aos_apps\aos_app_settings.c:3325
+#: components\aos_apps\aos_app_settings.c:3332
 Uno en RAM interna	One in internal RAM
 
-#: components\aos_apps\aos_app_settings.c:3326
+#: components\aos_apps\aos_app_settings.c:3333
 FILAS POR BÚFER	ROWS PER BUFFER
 
-#: components\aos_apps\aos_app_settings.c:3329
+#: components\aos_apps\aos_app_settings.c:3336
 128 (de fábrica)	128 (factory)
 
-#: components\aos_apps\aos_app_settings.c:3331
+#: components\aos_apps\aos_app_settings.c:3338
 Medido en la placa: la pantalla entera se redibuja en 67 ms con dos internos de 56 filas, 67 ms con dos en PSRAM de 128 y 60 ms con 320; pero 320 filas le dejan poca PSRAM a Monster Hop. En RAM interna, si no alcanza, usa menos filas o vuelve a la PSRAM.	Measured on the board: the whole screen is redrawn in 67 ms with two internal buffers of 56 rows, 67 ms with two in PSRAM of 128 and 60 ms with 320; but 320 rows leave Monster Hop little PSRAM. In internal RAM, when there is not enough, it uses fewer rows or goes back to PSRAM.
 
-#: components\aos_apps\aos_app_settings.c:3332
+#: components\aos_apps\aos_app_settings.c:3339
 PANTALLA Y COPIAS	SCREEN AND COPIES
 
-#: components\aos_apps\aos_app_settings.c:3334
+#: components\aos_apps\aos_app_settings.c:3341
 Tres búferes del panel (de fábrica)	Three panel buffers (factory)
 
-#: components\aos_apps\aos_app_settings.c:3335
+#: components\aos_apps\aos_app_settings.c:3342
 Uno solo	Just one
 
-#: components\aos_apps\aos_app_settings.c:3336
+#: components\aos_apps\aos_app_settings.c:3343
 Copias con el PPA	Copies with the PPA
 
-#: components\aos_apps\aos_app_settings.c:3337
+#: components\aos_apps\aos_app_settings.c:3344
 Bandas de los juegos en PSRAM	Game bands in PSRAM
 
-#: components\aos_apps\aos_app_settings.c:3338
+#: components\aos_apps\aos_app_settings.c:3345
 Con un solo búfer del panel, las apps que dibujan la pantalla entera (los juegos) no tienen el suyo. Sin el PPA, las copias las hace la CPU. Las bandas en PSRAM hacen a Monster Hop acostado la mitad de rápido: están para medir.	With a single panel buffer, the apps that draw the whole screen (the games) have none of their own. Without the PPA, the CPU makes the copies. Bands in PSRAM make Monster Hop in landscape half as fast: they are there for measuring.
 
-#: components\aos_apps\aos_app_settings.c:3341
+#: components\aos_apps\aos_app_settings.c:3348
 Volver a lo de fábrica	Back to factory settings
 
-#: components\aos_apps\aos_app_settings.c:3343
+#: components\aos_apps\aos_app_settings.c:3350
 Estos se leen al arrancar: hay que reiniciar. Si un ajuste no deja arrancar, el tercer arranque fallido seguido vuelve solo a lo de fábrica.	These are read at boot: a restart is needed. If a setting keeps the board from starting, the third failed boot in a row goes back to the factory settings by itself.
 
-#: components\aos_apps\aos_app_settings.c:3347
+#: components\aos_apps\aos_app_settings.c:3354
 Reiniciar en modo seguro	Restart in safe mode
 
-#: components\aos_apps\aos_app_settings.c:3348
+#: components\aos_apps\aos_app_settings.c:3355
 El modo seguro arranca sin las apps de la tarjeta, con el dibujo de fábrica y el USB quieto, como con BOOT apretado al encender. El reinicio siguiente vuelve a la normalidad.	Safe mode starts without the card's apps, with the factory drawing settings and the USB idle, as with BOOT held at power on. The next restart goes back to normal.
 
 #: components\aos_apps\aos_app_soon.c:31
@@ -8023,316 +8049,329 @@ El mes, y más adelante el calendario de Home Assistant.	The month, and later th
 #: components\aos_apps\aos_app_soon.c:87
 En construcción · fase %d	Under construction · phase %d
 
-#: components\aos_apps\aos_app_store.c:367
+#: components\aos_apps\aos_app_store.c:372
 Copiada a mano a la tarjeta: la Tienda no la maneja.	Copied to the card by hand: the Store does not manage it.
 
-#: components\aos_apps\aos_app_store.c:369
+#: components\aos_apps\aos_app_store.c:374
 Instalada de %s, que ya no está entre las fuentes.	Installed from %s, which is no longer among the sources.
 
-#: components\aos_apps\aos_app_store.c:372
+#: components\aos_apps\aos_app_store.c:377
 Instalada desde un paquete (.p4app): no está en ningún catálogo.	Installed from a package (.p4app): it is in no catalogue.
 
-#: components\aos_apps\aos_app_store.c:421
-#: components\aos_apps\aos_app_store.c:429
-#: components\aos_apps\aos_app_store.c:1091
+#: components\aos_apps\aos_app_store.c:426
+#: components\aos_apps\aos_app_store.c:434
+#: components\aos_apps\aos_app_store.c:1201
 Obtener	Get
 
-#: components\aos_apps\aos_app_store.c:425
+#: components\aos_apps\aos_app_store.c:430
 Actualizar	Update
 
-#: components\aos_apps\aos_app_store.c:426
+#: components\aos_apps\aos_app_store.c:431
 Reinstalar	Reinstall
 
-#: components\aos_apps\aos_app_store.c:445
+#: components\aos_apps\aos_app_store.c:450
 Necesita P4OS %s o más nuevo.\nActualizá el sistema primero.	It needs P4OS %s or newer.\nUpdate the system first.
 
-#: components\aos_apps\aos_app_store.c:649
+#: components\aos_apps\aos_app_store.c:697
 #: components\aos_apps\_pending\aos_app_alarm.c:377
 Nueva	New
 
-#: components\aos_apps\aos_app_store.c:652
+#: components\aos_apps\aos_app_store.c:700
 Quedó apartada: hizo caer la placa	Set aside: it made the board crash
 
-#: components\aos_apps\aos_app_store.c:676
+#: components\aos_apps\aos_app_store.c:732
+%d actualizaciones en cola	%d updates queued
+
+#: components\aos_apps\aos_app_store.c:763
+%d actualizaciones, hasta %s	%d updates, up to %s
+
+#: components\aos_apps\aos_app_store.c:767
+%d necesitan un P4OS más nuevo: actualizá el sistema primero.	%d need a newer P4OS: update the system first.
+
+#: components\aos_apps\aos_app_store.c:772
+Actualizar todas	Update all
+
+#: components\aos_apps\aos_app_store.c:783
 Actualizaciones	Updates
 
-#: components\aos_apps\aos_app_store.c:681
+#: components\aos_apps\aos_app_store.c:788
 Nuevas	New
 
-#: components\aos_apps\aos_app_store.c:683
+#: components\aos_apps\aos_app_store.c:790
 Instaladas	Installed
 
-#: components\aos_apps\aos_app_store.c:685
-#: components\aos_apps\aos_app_store.c:1192
-#: components\aos_apps\aos_app_store.c:1273
-#: components\aos_apps\aos_app_store.c:1312
+#: components\aos_apps\aos_app_store.c:792
+#: components\aos_apps\aos_app_store.c:1302
+#: components\aos_apps\aos_app_store.c:1383
+#: components\aos_apps\aos_app_store.c:1422
 Fuentes	Sources
 
-#: components\aos_apps\aos_app_store.c:698
+#: components\aos_apps\aos_app_store.c:805
 Cualquier origen	Any origin
 
-#: components\aos_apps\aos_app_store.c:702
-#: components\aos_apps\aos_app_store.c:1199
+#: components\aos_apps\aos_app_store.c:809
+#: components\aos_apps\aos_app_store.c:1309
 Sin catálogo todavía	No catalogue yet
 
-#: components\aos_apps\aos_app_store.c:704
+#: components\aos_apps\aos_app_store.c:811
 Paquetes sueltos	Loose packages
 
-#: components\aos_apps\aos_app_store.c:705
+#: components\aos_apps\aos_app_store.c:812
 Copiadas a mano	Copied by hand
 
-#: components\aos_apps\aos_app_store.c:724
+#: components\aos_apps\aos_app_store.c:833
 Buscando el catálogo...	Fetching the catalogue...
 
-#: components\aos_apps\aos_app_store.c:725
+#: components\aos_apps\aos_app_store.c:834
 No se pudo traer el catálogo	The catalogue could not be fetched
 
-#: components\aos_apps\aos_app_store.c:726
+#: components\aos_apps\aos_app_store.c:835
 Sin red: no hay catálogo todavía	No network: there is no catalogue yet
 
-#: components\aos_apps\aos_app_store.c:731
+#: components\aos_apps\aos_app_store.c:840
 Reintentar	Try again
 
-#: components\aos_apps\aos_app_store.c:746
+#: components\aos_apps\aos_app_store.c:855
 %d apps copiadas a mano	%d apps copied by hand
 
-#: components\aos_apps\aos_app_store.c:748
+#: components\aos_apps\aos_app_store.c:857
 La Tienda puede hacerse cargo de las que son las del catálogo, para avisarte cuando haya una versión nueva. No cambia ninguna app.	The Store can take over the ones that are the catalogue's, to tell you when there is a new version. It changes no app.
 
-#: components\aos_apps\aos_app_store.c:752
+#: components\aos_apps\aos_app_store.c:861
 Que las maneje la Tienda	Let the Store manage them
 
-#: components\aos_apps\aos_app_store.c:754
+#: components\aos_apps\aos_app_store.c:863
 Las que quedan no son iguales a las del catálogo (otra compilación, o una versión vieja). Reemplazarlas baja la de la Tienda para cada una; lo que guardaron y sus packs quedan.	The ones that stay are not the same as the catalogue's (another build, or an old version). Replacing them downloads the Store's for each one; what they saved and their packs stay.
 
-#: components\aos_apps\aos_app_store.c:760
+#: components\aos_apps\aos_app_store.c:869
 Tocá otra vez: reemplaza %d apps	Tap again: it replaces %d apps
 
-#: components\aos_apps\aos_app_store.c:762
+#: components\aos_apps\aos_app_store.c:871
 Reemplazarlas por las de la Tienda	Replace them with the Store's
 
-#: components\aos_apps\aos_app_store.c:770
+#: components\aos_apps\aos_app_store.c:880
 Todo está al día	Everything is up to date
 
-#: components\aos_apps\aos_app_store.c:770
+#: components\aos_apps\aos_app_store.c:880
 Nada por acá todavía	Nothing here yet
 
-#: components\aos_apps\aos_app_store.c:856
+#: components\aos_apps\aos_app_store.c:966
 Arte en packs	Art packs
 
-#: components\aos_apps\aos_app_store.c:858
+#: components\aos_apps\aos_app_store.c:968
 Acostada	Landscape
 
-#: components\aos_apps\aos_app_store.c:859
+#: components\aos_apps\aos_app_store.c:969
 De pie	Portrait
 
-#: components\aos_apps\aos_app_store.c:861
+#: components\aos_apps\aos_app_store.c:971
 Usa la red	Uses the network
 
-#: components\aos_apps\aos_app_store.c:863
+#: components\aos_apps\aos_app_store.c:973
 Página en el portal	Page in the portal
 
-#: components\aos_apps\aos_app_store.c:878
+#: components\aos_apps\aos_app_store.c:988
 Header de 40 pines	40-pin header
 
-#: components\aos_apps\aos_app_store.c:954
-#: components\aos_apps\aos_app_store.c:1181
-#: components\aos_apps\aos_app_store.c:1455
-#: components\aos_apps\aos_app_store.c:1606  (nombre de app)
+#: components\aos_apps\aos_app_store.c:1064
+#: components\aos_apps\aos_app_store.c:1291
+#: components\aos_apps\aos_app_store.c:1566
+#: components\aos_apps\aos_app_store.c:1721  (nombre de app)
 Tienda	Store
 
-#: components\aos_apps\aos_app_store.c:997
+#: components\aos_apps\aos_app_store.c:1107
 Está en la tarjeta	It is on the card
 
-#: components\aos_apps\aos_app_store.c:1003
+#: components\aos_apps\aos_app_store.c:1113
+#: components\aos_apps\aos_app_zigbee.c:1356
 ¿Seguro? Tocá otra vez	Sure? Tap again
 
-#: components\aos_apps\aos_app_store.c:1012
+#: components\aos_apps\aos_app_store.c:1122
 De %s, no de P4OS: nadie de P4OS la revisó.	From %s, not from P4OS: nobody at P4OS looked at it.
 
-#: components\aos_apps\aos_app_store.c:1020
+#: components\aos_apps\aos_app_store.c:1130
 Hizo caer la placa dos veces al cargarse y quedó apartada. Reinstalarla trae la versión del catálogo.	It made the board crash twice while loading and was set aside. Reinstalling it brings the catalogue's version.
 
-#: components\aos_apps\aos_app_store.c:1023
+#: components\aos_apps\aos_app_store.c:1133
 Ya está en la tarjeta, copiado a mano. Obtenerlo lo revisa: si es el del catálogo no baja nada.	It is on the card already, copied by hand. Getting it checks it: if it is the catalogue's, nothing is downloaded.
 
-#: components\aos_apps\aos_app_store.c:1026
+#: components\aos_apps\aos_app_store.c:1136
 Está en la tarjeta, copiada a mano: la Tienda no sabe qué versión es. Reinstalarla la deja al día.	It is on the card, copied by hand: the Store does not know which version it is. Reinstalling it brings it up to date.
 
-#: components\aos_apps\aos_app_store.c:1027
+#: components\aos_apps\aos_app_store.c:1137
 Reinstalar desde la Tienda	Reinstall from the Store
 
-#: components\aos_apps\aos_app_store.c:1029
+#: components\aos_apps\aos_app_store.c:1139
 Tenés la %s. La del catálogo es la %s.	You have %s. The catalogue's is %s.
 
-#: components\aos_apps\aos_app_store.c:1033
+#: components\aos_apps\aos_app_store.c:1143
 Necesita P4OS %s o más nuevo.	It needs P4OS %s or newer.
 
-#: components\aos_apps\aos_app_store.c:1036
+#: components\aos_apps\aos_app_store.c:1146
 Actualizar el sistema	Update the system
 
-#: components\aos_apps\aos_app_store.c:1047
+#: components\aos_apps\aos_app_store.c:1157
 Ir a Ajustes, Actualización	Go to Settings, Update
 
-#: components\aos_apps\aos_app_store.c:1069
+#: components\aos_apps\aos_app_store.c:1179
 Extras	Extras
 
-#: components\aos_apps\aos_app_store.c:1193
+#: components\aos_apps\aos_app_store.c:1303
 De dónde vienen las apps. La primera es la de P4OS; las demás las agregás vos, y sólo acá, en la placa.	Where apps come from. The first is P4OS's own; the others you add yourself, and only here, on the board.
 
-#: components\aos_apps\aos_app_store.c:1202
+#: components\aos_apps\aos_app_store.c:1312
 Apps: %d  ·  %s  ·  otras %d ya están en otra fuente y no se ofrecen	Apps: %d  ·  %s  ·  %d more are in another source already and are not offered
 
-#: components\aos_apps\aos_app_store.c:1203
+#: components\aos_apps\aos_app_store.c:1313
 Apps: %d  ·  %s	Apps: %d  ·  %s
 
-#: components\aos_apps\aos_app_store.c:1206
+#: components\aos_apps\aos_app_store.c:1316
 La fuente oficial: no se quita.	The official source: it cannot be removed.
 
-#: components\aos_apps\aos_app_store.c:1213
+#: components\aos_apps\aos_app_store.c:1323
 Quitarla con sus apps	Remove it with its apps
 
-#: components\aos_apps\aos_app_store.c:1215
+#: components\aos_apps\aos_app_store.c:1325
 Sólo la fuente	Only the source
 
-#: components\aos_apps\aos_app_store.c:1227
+#: components\aos_apps\aos_app_store.c:1337
 Desde el portal proponen esta fuente:	This source was proposed from the portal:
 
-#: components\aos_apps\aos_app_store.c:1234
+#: components\aos_apps\aos_app_store.c:1344
 Mirarla	Look at it
 
-#: components\aos_apps\aos_app_store.c:1235
+#: components\aos_apps\aos_app_store.c:1345
 Descartar	Dismiss
 
-#: components\aos_apps\aos_app_store.c:1237
-#: components\aos_apps\aos_app_store.c:1274
+#: components\aos_apps\aos_app_store.c:1347
+#: components\aos_apps\aos_app_store.c:1384
 Agregar una fuente	Add a source
 
-#: components\aos_apps\aos_app_store.c:1244
+#: components\aos_apps\aos_app_store.c:1354
 Modo desarrollo	Developer mode
 
-#: components\aos_apps\aos_app_store.c:1250
+#: components\aos_apps\aos_app_store.c:1360
 Para quien escribe apps: acepta fuentes por http:// en una red de confianza, y deja cambiar el catálogo oficial por uno de prueba desde el portal. Apagado, todo vuelve al catálogo oficial.	For whoever writes apps: it takes http:// sources on a trusted network, and lets the portal put a test catalogue in the official one's place. Off, everything goes back to the official catalogue.
 
-#: components\aos_apps\aos_app_store.c:1260
+#: components\aos_apps\aos_app_store.c:1370
 Eso no es una dirección:\nusuario/repositorio, o https://...	That is not an address:\nuser/repository, or https://...
 
-#: components\aos_apps\aos_app_store.c:1275
+#: components\aos_apps\aos_app_store.c:1385
 Escribí usuario/repositorio de GitHub, o la dirección https:// de un catálogo.	Type a GitHub user/repository, or the https:// address of a catalogue.
 
-#: components\aos_apps\aos_app_store.c:1326
+#: components\aos_apps\aos_app_store.c:1436
 Dice ser de %s  ·  apps: %d	It says it is by %s  ·  apps: %d
 
-#: components\aos_apps\aos_app_store.c:1336
+#: components\aos_apps\aos_app_store.c:1446
 Las apps de esta fuente no las revisó nadie de P4OS. Una app corre con todos los permisos del sistema: lee y escribe la tarjeta, ve las contraseñas guardadas, usa la red y los pines. Agregá sólo fuentes de gente en la que confiás.	Nobody at P4OS looked at this source's apps. An app runs with every permission of the system: it reads and writes the card, sees the saved passwords, uses the network and the pins. Add only sources from people you trust.
 
-#: components\aos_apps\aos_app_store.c:1345
+#: components\aos_apps\aos_app_store.c:1455
 Entiendo: agregarla	I understand: add it
 
-#: components\aos_apps\aos_app_store.c:1356
+#: components\aos_apps\aos_app_store.c:1466
 No se pudo bajar: revisá la red y probá de nuevo.	The download failed: check the network and try again.
 
-#: components\aos_apps\aos_app_store.c:1357
+#: components\aos_apps\aos_app_store.c:1467
 No está en el servidor.	It is not on the server.
 
-#: components\aos_apps\aos_app_store.c:1358
+#: components\aos_apps\aos_app_store.c:1468
 La placa todavía no tiene la hora de la red: probá en un momento.	The board does not have the network time yet: try in a moment.
 
-#: components\aos_apps\aos_app_store.c:1359
+#: components\aos_apps\aos_app_store.c:1469
 No se pudo verificar el servidor.	The server could not be verified.
 
-#: components\aos_apps\aos_app_store.c:1360
+#: components\aos_apps\aos_app_store.c:1470
 #: components\aos_flasher\aos_flasher.c:244
 No se pudo escribir en la tarjeta: ¿está llena?	Couldn't write to the card: is it full?
 
-#: components\aos_apps\aos_app_store.c:1361
+#: components\aos_apps\aos_app_store.c:1471
 El paquete no es el publicado, o está dañado.	The package is not the published one, or it is damaged.
 
-#: components\aos_apps\aos_app_store.c:1362
+#: components\aos_apps\aos_app_store.c:1472
 El paquete quiere escribir donde no le corresponde.	The package wants to write where it may not.
 
-#: components\aos_apps\aos_app_store.c:1363
+#: components\aos_apps\aos_app_store.c:1473
 Necesita un P4OS más nuevo.	It needs a newer P4OS.
 
-#: components\aos_apps\aos_app_store.c:1364
+#: components\aos_apps\aos_app_store.c:1474
 El catálogo no se puede leer.	The catalogue cannot be read.
 
-#: components\aos_apps\aos_app_store.c:1365
+#: components\aos_apps\aos_app_store.c:1475
 Esa fuente no se puede usar.	That source cannot be used.
 
-#: components\aos_apps\aos_app_store.c:1366
+#: components\aos_apps\aos_app_store.c:1476
 No alcanzó la memoria.	Not enough memory.
 
-#: components\aos_apps\aos_app_store.c:1367
+#: components\aos_apps\aos_app_store.c:1477
 No está en el catálogo.	It is not in the catalogue.
 
-#: components\aos_apps\aos_app_store.c:1368
+#: components\aos_apps\aos_app_store.c:1478
 Esa app es de la Tienda: se instala y se quita desde acá.	That app is the Store's: install and remove it from here.
 
-#: components\aos_apps\aos_app_store.c:1369
+#: components\aos_apps\aos_app_store.c:1479
 No la instaló la Tienda.	The Store did not install it.
 
-#: components\aos_apps\aos_app_store.c:1370
+#: components\aos_apps\aos_app_store.c:1480
 No se pudo escribir la otra ranura.	The other slot could not be written.
 
-#: components\aos_apps\aos_app_store.c:1371
+#: components\aos_apps\aos_app_store.c:1481
 Ya es la versión que corre.	It is the version already running.
 
-#: components\aos_apps\aos_app_store.c:1372
+#: components\aos_apps\aos_app_store.c:1482
 Algo salió mal.	Something went wrong.
 
-#: components\aos_apps\aos_app_store.c:1387
+#: components\aos_apps\aos_app_store.c:1497
 Buscando el catálogo	Fetching the catalogue
 
-#: components\aos_apps\aos_app_store.c:1388
+#: components\aos_apps\aos_app_store.c:1498
 Escribiendo P4OS	Writing P4OS
 
-#: components\aos_apps\aos_app_store.c:1388
+#: components\aos_apps\aos_app_store.c:1498
 Bajando P4OS	Downloading P4OS
 
-#: components\aos_apps\aos_app_store.c:1389
+#: components\aos_apps\aos_app_store.c:1499
 Quitando	Removing
 
-#: components\aos_apps\aos_app_store.c:1390
+#: components\aos_apps\aos_app_store.c:1500
 Revisando lo que hay en la tarjeta	Checking what is on the card
 
-#: components\aos_apps\aos_app_store.c:1391
+#: components\aos_apps\aos_app_store.c:1501
 Reemplazando	Replacing
 
-#: components\aos_apps\aos_app_store.c:1392
+#: components\aos_apps\aos_app_store.c:1502
 Bajando lo que necesita	Downloading what is needed by
 
-#: components\aos_apps\aos_app_store.c:1393
+#: components\aos_apps\aos_app_store.c:1503
 Instalando	Installing
 
-#: components\aos_apps\aos_app_store.c:1393
+#: components\aos_apps\aos_app_store.c:1503
 Bajando	Downloading
 
-#: components\aos_apps\aos_app_store.c:1406
+#: components\aos_apps\aos_app_store.c:1516
 No se pudo instalar %s.	%s could not be installed.
 
-#: components\aos_apps\aos_app_store.c:1407
+#: components\aos_apps\aos_app_store.c:1517
 No se pudo quitar %s.	%s could not be removed.
 
-#: components\aos_apps\aos_app_store.c:1408
+#: components\aos_apps\aos_app_store.c:1518
 No se pudo traer el catálogo.	The catalogue could not be fetched.
 
-#: components\aos_apps\aos_app_store.c:1409
+#: components\aos_apps\aos_app_store.c:1519
 No se pudo mirar esa fuente.	That source could not be looked at.
 
-#: components\aos_apps\aos_app_store.c:1410
+#: components\aos_apps\aos_app_store.c:1520
 No se pudo agregar la fuente.	The source could not be added.
 
-#: components\aos_apps\aos_app_store.c:1411
+#: components\aos_apps\aos_app_store.c:1521
 No se pudo quitar la fuente.	The source could not be removed.
 
-#: components\aos_apps\aos_app_store.c:1412
+#: components\aos_apps\aos_app_store.c:1522
 No se pudo instalar el paquete.	The package could not be installed.
 
-#: components\aos_apps\aos_app_store.c:1413
+#: components\aos_apps\aos_app_store.c:1523
 No se pudo actualizar el sistema.	The system could not be updated.
 
-#: components\aos_apps\aos_app_store.c:1413
+#: components\aos_apps\aos_app_store.c:1523
 No se pudo.	It failed.
 
 #: components\aos_apps\aos_app_sysmon.c:44
@@ -8605,6 +8644,492 @@ RAM	RAM
 #: components\aos_apps\aos_app_sysmon.c:1427
 La memoria, el procesador y la red de la placa.	The board's memory, processor and network.
 
+#: components\aos_apps\aos_app_zigbee.c:154
+pedido de asociación	association request
+
+#: components\aos_apps\aos_app_zigbee.c:155
+respuesta de asociación	association response
+
+#: components\aos_apps\aos_app_zigbee.c:156
+aviso de desasociación	disassociation notice
+
+#: components\aos_apps\aos_app_zigbee.c:157
+pedido de datos	data request
+
+#: components\aos_apps\aos_app_zigbee.c:158
+pedido de beacon	beacon request
+
+#: components\aos_apps\aos_app_zigbee.c:159
+realineación	realignment
+
+#: components\aos_apps\aos_app_zigbee.c:160
+#: components\aos_apps\aos_app_zigbee.c:1176
+comando	command
+
+#: components\aos_apps\aos_app_zigbee.c:170
+trama corta (%d bytes)	short frame (%d bytes)
+
+#: components\aos_apps\aos_app_zigbee.c:194
+acepta equipos nuevos	accepts new devices
+
+#: components\aos_apps\aos_app_zigbee.c:194
+cerrada	closed
+
+#: components\aos_apps\aos_app_zigbee.c:199
+Acuse	Ack
+
+#: components\aos_apps\aos_app_zigbee.c:202
+Comando	Command
+
+#: components\aos_apps\aos_app_zigbee.c:207
+cifrada en la capa MAC	encrypted at the MAC layer
+
+#: components\aos_apps\aos_app_zigbee.c:211
+comando de red	network command
+
+#: components\aos_apps\aos_app_zigbee.c:211
+datos	data
+
+#: components\aos_apps\aos_app_zigbee.c:212
+radio	radius
+
+#: components\aos_apps\aos_app_zigbee.c:212
+cifrada	encrypted
+
+#: components\aos_apps\aos_app_zigbee.c:213
+6LoWPAN (Thread)	6LoWPAN (Thread)
+
+#: components\aos_apps\aos_app_zigbee.c:214
+6LoWPAN, malla	6LoWPAN, mesh
+
+#: components\aos_apps\aos_app_zigbee.c:217
+trama de tipo %d	frame of type %d
+
+#: components\aos_apps\aos_app_zigbee.c:221
+trama de %d bytes, cortada	frame of %d bytes, cut short
+
+#: components\aos_apps\aos_app_zigbee.c:244
+#: components\aos_apps\aos_app_zigbee.c:334
+El C6 no tomó el pedido	The C6 did not take the request
+
+#: components\aos_apps\aos_app_zigbee.c:301
+A fondo (2 s por canal)	Thorough (2 s per channel)
+
+#: components\aos_apps\aos_app_zigbee.c:303
+La barra es la energía que hay en el canal; el número, los paquetes que se oyeron mientras se escuchaba. Una red Zigbee o Thread se ve como un canal con paquetes. Para una red nueva conviene uno sin paquetes y lejos del Wi-Fi: Zigbee suele usar el 11, 15, 20 o 25.	The bar is the energy on the channel; the number, the packets heard while listening. A Zigbee or Thread network shows as a channel with packets. For a new network, pick one with no packets and away from the Wi-Fi: Zigbee usually uses 11, 15, 20 or 25.
+
+#: components\aos_apps\aos_app_zigbee.c:358
+#: components\aos_apps\aos_app_zigbee.c:1451
+#: components\aos_apps\aos_app_zigbee.c:1536
+Escuchar	Listen
+
+#: components\aos_apps\aos_app_zigbee.c:362
+Guardar para Wireshark	Save for Wireshark
+
+#: components\aos_apps\aos_app_zigbee.c:416
+Olvidarlos	Forget them
+
+#: components\aos_apps\aos_app_zigbee.c:429
+Lo que se oyó mientras se escuchaba, el más reciente arriba. La dirección larga de una corta aparece cuando la red la manda.	What was heard while listening, the most recent on top. A short address's long one shows when the network sends it.
+
+#: components\aos_apps\aos_app_zigbee.c:431
+Todavía nadie: escuchá un canal con tráfico.	Nobody yet: listen on a channel with traffic.
+
+#: components\aos_apps\aos_app_zigbee.c:440
+coordinador	coordinator
+
+#: components\aos_apps\aos_app_zigbee.c:447
+%u paquetes · %d dBm, promedio %d · hace %u s	%u packets · %d dBm, average %d · %u s ago
+
+#: components\aos_apps\aos_app_zigbee.c:458
+canal	channel
+
+#: components\aos_apps\aos_app_zigbee.c:474
+No se pudo armar la red: ¿el C6 tiene su firmware nuevo? Tienda, Sistema, Firmware de la radio (C6)	Could not start the network: does the C6 have its new firmware? Store, System, The radio's firmware (C6)
+
+#: components\aos_apps\aos_app_zigbee.c:489
+#: components\aos_apps\aos_app_zigbee.c:512
+#: components\aos_apps\aos_app_zigbee.c:557
+#: components\aos_apps\aos_app_zigbee.c:622
+La red no tomó el pedido	The network did not take the request
+
+#: components\aos_apps\aos_app_zigbee.c:529
+Sumar Zigbee 3.0	Add Zigbee 3.0
+
+#: components\aos_apps\aos_app_zigbee.c:569
+#: components\aos_154\aos_zigbee_tuya.c:78
+contacto	contact
+
+#: components\aos_apps\aos_app_zigbee.c:570
+#: components\aos_apps\aos_app_zigbee.c:582
+#: components\aos_154\aos_zigbee_devices.c:792
+#: components\aos_154\aos_zigbee_tuya.c:81
+movimiento	motion
+
+#: components\aos_apps\aos_app_zigbee.c:571
+#: components\aos_154\aos_zigbee_tuya.c:77
+agua	water
+
+#: components\aos_apps\aos_app_zigbee.c:572
+#: components\aos_154\aos_zigbee_tuya.c:79
+humo	smoke
+
+#: components\aos_apps\aos_app_zigbee.c:573
+gas	gas
+
+#: components\aos_apps\aos_app_zigbee.c:574
+#: components\aos_apps\aos_app_zigbee.c:584
+#: components\aos_154\aos_zigbee_devices.c:794
+#: components\aos_154\aos_zigbee_tuya.c:82
+alarma	alarm
+
+#: components\aos_apps\aos_app_zigbee.c:581
+#: components\aos_154\aos_zigbee_devices.c:791
+cerrado	closed
+
+#: components\aos_apps\aos_app_zigbee.c:582
+#: components\aos_154\aos_zigbee_devices.c:792
+sin movimiento	no motion
+
+#: components\aos_apps\aos_app_zigbee.c:583
+#: components\aos_154\aos_zigbee_devices.c:793
+¡agua!	water!
+
+#: components\aos_apps\aos_app_zigbee.c:583
+#: components\aos_154\aos_zigbee_devices.c:793
+seco	dry
+
+#: components\aos_apps\aos_app_zigbee.c:584
+#: components\aos_154\aos_zigbee_devices.c:794
+normal	normal
+
+#: components\aos_apps\aos_app_zigbee.c:592
+#: components\aos_apps\aos_app_zigbee.c:1033
+#: components\aos_apps\aos_app_zigbee.c:1036
+#: components\aos_apps\aos_app_zigbee.c:1231
+batería	battery
+
+#: components\aos_apps\aos_app_zigbee.c:593
+encendido	on/off
+
+#: components\aos_apps\aos_app_zigbee.c:594
+nivel	level
+
+#: components\aos_apps\aos_app_zigbee.c:595
+#: components\aos_154\aos_zigbee_devices.c:959
+color	color
+
+#: components\aos_apps\aos_app_zigbee.c:596
+#: components\aos_apps\aos_app_zigbee.c:1229
+#: components\aos_154\aos_zigbee_emu.c:119
+#: components\aos_154\aos_zigbee_tuya.c:53
+temperatura	temperature
+
+#: components\aos_apps\aos_app_zigbee.c:597
+#: components\aos_154\aos_zigbee_fmt.c:30
+presión	pressure
+
+#: components\aos_apps\aos_app_zigbee.c:598
+#: components\aos_apps\aos_app_zigbee.c:1230
+#: components\aos_154\aos_zigbee_emu.c:120
+#: components\aos_154\aos_zigbee_tuya.c:63
+humedad	humidity
+
+#: components\aos_apps\aos_app_zigbee.c:599
+#: components\aos_154\aos_zigbee_tuya.c:67
+#: components\aos_154\aos_zigbee_tuya.c:68
+presencia	occupancy
+
+#: components\aos_apps\aos_app_zigbee.c:600
+#: components\aos_154\aos_zigbee_fmt.c:29
+#: components\aos_154\aos_zigbee_tuya.c:56
+#: components\aos_154\aos_zigbee_tuya.c:57
+luz	light
+
+#: components\aos_apps\aos_app_zigbee.c:602
+medidor	meter
+
+#: components\aos_apps\aos_app_zigbee.c:603
+eléctrico	electrical
+
+#: components\aos_apps\aos_app_zigbee.c:708
+No se pudo guardar	Could not save
+
+#: components\aos_apps\aos_app_zigbee.c:713
+Ponele un nombre	Give it a name
+
+#: components\aos_apps\aos_app_zigbee.c:716
+Guardado	Saved
+
+#: components\aos_apps\aos_app_zigbee.c:717
+No se pudo guardar (¿hay tarjeta?)	Could not save (is there a card?)
+
+#: components\aos_apps\aos_app_zigbee.c:746
+Nombre del equipo	Device name
+
+#: components\aos_apps\aos_app_zigbee.c:746
+Nombre del código	Code name
+
+#: components\aos_apps\aos_app_zigbee.c:753
+Por ejemplo: Sensor de la cocina	For example: Kitchen sensor
+
+#: components\aos_apps\aos_app_zigbee.c:753
+Por ejemplo: Tele, volumen +	For example: TV, volume +
+
+#: components\aos_apps\aos_app_zigbee.c:782
+Código borrado	Code deleted
+
+#: components\aos_apps\aos_app_zigbee.c:786
+Mantenelo apretado otra vez para borrarlo	Hold it again to delete it
+
+#: components\aos_apps\aos_app_zigbee.c:894
+La placa está emulando un equipo en otra red (pestaña Emular). La red propia y sus equipos quedan guardados: vuelven con Volver a Mi red, que reinicia la placa.	The board is emulating a device on another network (Emulate tab). Its own network and devices are kept: they come back with Back to My network, which restarts the board.
+
+#: components\aos_apps\aos_app_zigbee.c:905
+Armando la red...	Starting the network...
+
+#: components\aos_apps\aos_app_zigbee.c:906
+Armar la red	Start the network
+
+#: components\aos_apps\aos_app_zigbee.c:907
+Abierta para sumar	Open to add
+
+#: components\aos_apps\aos_app_zigbee.c:908
+Abierta: %d s	Open: %d s
+
+#: components\aos_apps\aos_app_zigbee.c:909
+Sumar equipos	Add devices
+
+#: components\aos_apps\aos_app_zigbee.c:918
+La placa arma su propia red Zigbee, con el C6 de radio, y los equipos se suman a ella: así se prueba cualquiera. Un equipo está en una sola red: para sumarlo acá hay que resetearlo (en general, el botón apretado hasta que parpadea).	The board starts its own Zigbee network, with the C6 as its radio, and devices join it: that is how any of them can be tried. A device is on one network only: to add it here, reset it (usually, hold its button until it blinks).
+
+#: components\aos_apps\aos_app_zigbee.c:922
+La red queda abierta mientras estés acá, hasta Cerrar. Reseteá los equipos de a uno: la pantalla avisa cuando entra cada uno y qué es. Si es a pila, tocale el botón cada tanto mientras se configura.	The network stays open while you are here, until Close. Reset the devices one at a time: the screen tells when each one joins and what it is. If it runs on battery, press its button now and then while it is set up.
+
+#: components\aos_apps\aos_app_zigbee.c:926
+Red en el canal %u. %d equipos. Los valores llegan cuando el equipo los manda: uno a pila puede tardar en dar noticias (tocale el botón para despertarlo). Una salida se prende o se apaga tocándola. Si un equipo sigue titilando y no termina de sumarse, probá con Sumar Zigbee 3.0. Tocá el nombre de un equipo para ponerle uno tuyo.	Network on channel %u. %d devices. Values arrive when the device sends them: one on battery may take a while to give news (press its button to wake it up). Tap an output to switch it on or off. If a device keeps blinking and never finishes joining, try Add Zigbee 3.0. Tap a device's name to give it your own.
+
+#: components\aos_apps\aos_app_zigbee.c:964
+¿Seguro?	Sure?
+
+#: components\aos_apps\aos_app_zigbee.c:964
+Sacar	Remove
+
+#: components\aos_apps\aos_app_zigbee.c:967
+router	router
+
+#: components\aos_apps\aos_app_zigbee.c:967
+a red eléctrica	mains powered
+
+#: components\aos_apps\aos_app_zigbee.c:967
+a pila	on battery
+
+#: components\aos_apps\aos_app_zigbee.c:975
+sin noticias desde que arrancó la placa	no news since the board started
+
+#: components\aos_apps\aos_app_zigbee.c:981
+se fue	left
+
+#: components\aos_apps\aos_app_zigbee.c:982
+no contestó	did not answer
+
+#: components\aos_apps\aos_app_zigbee.c:983
+configurándolo	setting it up
+
+#: components\aos_apps\aos_app_zigbee.c:1007
+hay alguien	someone there
+
+#: components\aos_apps\aos_app_zigbee.c:1007
+nadie	nobody
+
+#: components\aos_apps\aos_app_zigbee.c:1012
+salida %d: %s	output %d: %s
+
+#: components\aos_apps\aos_app_zigbee.c:1012
+#: components\aos_154\aos_zigbee_devices.c:892
+#: components\aos_154\aos_zigbee_emu.c:191
+#: components\aos_154\aos_zigbee_emu.c:368
+prendida	on
+
+#: components\aos_apps\aos_app_zigbee.c:1029
+#: components\aos_154\aos_zigbee_tuya.c:83
+brillo	brightness
+
+#: components\aos_apps\aos_app_zigbee.c:1085
+#: components\aos_apps\aos_app_zigbee.c:1177
+#: components\aos_apps\aos_app_zigbee.c:1180
+antes	earlier
+
+#: components\aos_apps\aos_app_zigbee.c:1097
+Subir	Up
+
+#: components\aos_apps\aos_app_zigbee.c:1098
+#: components\aos_apps\aos_app_zigbee.c:1451
+#: components\aos_apps\_pending\aos_app_pomodoro.c:443
+#: components\aos_apps\_pending\aos_app_stopwatch.c:81
+Parar	Stop
+
+#: components\aos_apps\aos_app_zigbee.c:1099
+Bajar	Down
+
+#: components\aos_apps\aos_app_zigbee.c:1113
+Ventilador: otro modo	Fan: next mode
+
+#: components\aos_apps\aos_app_zigbee.c:1121
+Esperando el control remoto... (tocá para cancelar)	Waiting for the remote... (tap to cancel)
+
+#: components\aos_apps\aos_app_zigbee.c:1121
+Aprender un código	Learn a code
+
+#: components\aos_apps\aos_app_zigbee.c:1124
+Enviar el último aprendido	Send the last one learned
+
+#: components\aos_apps\aos_app_zigbee.c:1125
+Guardarlo...	Save it...
+
+#: components\aos_apps\aos_app_zigbee.c:1127
+enviando...	sending...
+
+#: components\aos_apps\aos_app_zigbee.c:1128
+no tomó el código	it did not take the code
+
+#: components\aos_apps\aos_app_zigbee.c:1136
+Guardados (tocá para mandar, mantené para borrar):	Saved (tap to send, hold to delete):
+
+#: components\aos_apps\aos_app_zigbee.c:1205
+Reiniciando para emular...	Restarting to emulate...
+
+#: components\aos_apps\aos_app_zigbee.c:1209
+Volviendo a la red propia: la placa se reinicia	Back to its own network: the board restarts
+
+#: components\aos_apps\aos_app_zigbee.c:1303
+Luz y sensor de temperatura	Light and temperature sensor
+
+#: components\aos_apps\aos_app_zigbee.c:1304
+Endpoint 1: una luz que se prende y se apaga (0x0100). Endpoint 2: temperatura, humedad y batería (0x0302). Fabricante P4OS, modelo P4OS-EMU-LT.	Endpoint 1: a light that turns on and off (0x0100). Endpoint 2: temperature, humidity and battery (0x0302). Manufacturer P4OS, model P4OS-EMU-LT.
+
+#: components\aos_apps\aos_app_zigbee.c:1306
+La placa se suma a otra red Zigbee, la de Home Assistant por ejemplo, haciéndose pasar por este equipo, para ver si el coordinador lo lee y lo maneja, y qué le pide. Entra como router, con corriente: un equipo a pila no se puede emular. Antes, en Home Assistant: Agregar dispositivo (ZHA) o Permitir unirse (Zigbee2MQTT).	The board joins another Zigbee network, Home Assistant's for example, posing as this device, to see whether the coordinator reads and drives it, and what it asks. It joins as a router, mains powered: a battery device cannot be emulated. First, in Home Assistant: Add device (ZHA) or Permit join (Zigbee2MQTT).
+
+#: components\aos_apps\aos_app_zigbee.c:1310
+Hay una red guardada de la vez anterior: la placa vuelve a ella sin que la abran.	A network from last time is kept: the board goes back to it without it being opened.
+
+#: components\aos_apps\aos_app_zigbee.c:1314
+Para emular, la placa deja su red un rato: se reinicia y arranca como equipo. Tus equipos quedan guardados y vuelven con Volver a Mi red.	To emulate, the board leaves its network for a while: it restarts as a device. Your devices are kept and come back with Back to My network.
+
+#: components\aos_apps\aos_app_zigbee.c:1316
+Reiniciar y emular	Restart and emulate
+
+#: components\aos_apps\aos_app_zigbee.c:1321
+Buscando una red abierta... (intento %u de 36)	Looking for an open network... (try %u of 36)
+
+#: components\aos_apps\aos_app_zigbee.c:1324
+Fuera de la red	Out of the network
+
+#: components\aos_apps\aos_app_zigbee.c:1324
+No encontró una red abierta en 3 minutos	No open network found in 3 minutes
+
+#: components\aos_apps\aos_app_zigbee.c:1326
+Abrí la red en Home Assistant (Agregar dispositivo, o Permitir unirse) y la placa entra sola. Busca en los 16 canales cada 5 s.	Open the network in Home Assistant (Add device, or Permit join) and the board joins by itself. It looks on all 16 channels every 5 s.
+
+#: components\aos_apps\aos_app_zigbee.c:1329
+Buscar otra vez	Look again
+
+#: components\aos_apps\aos_app_zigbee.c:1330
+#: components\aos_apps\aos_app_zigbee.c:1354
+Volver a Mi red	Back to My network
+
+#: components\aos_apps\aos_app_zigbee.c:1333
+En la red 0x%04X, canal %u, como 0x%04X	In network 0x%04X, channel %u, as 0x%04X
+
+#: components\aos_apps\aos_app_zigbee.c:1335
+Con su propia clave de enlace (Zigbee 3.0).	With its own link key (Zigbee 3.0).
+
+#: components\aos_apps\aos_app_zigbee.c:1335
+Sin clave propia todavía (sólo la de la red).	No key of its own yet (only the network's).
+
+#: components\aos_apps\aos_app_zigbee.c:1339
+Home Assistant pide que se identifique: %u s	Home Assistant asks it to identify itself: %u s
+
+#: components\aos_apps\aos_app_zigbee.c:1342
+Luz: prendida	Light: on
+
+#: components\aos_apps\aos_app_zigbee.c:1342
+Luz: apagada	Light: off
+
+#: components\aos_apps\aos_app_zigbee.c:1345
+La luz la prende y la apaga Home Assistant; tocarla acá también, y Home Assistant tendría que enterarse.	Home Assistant turns the light on and off; a tap here does too, and Home Assistant should find out.
+
+#: components\aos_apps\aos_app_zigbee.c:1350
+Un valor nuevo sale según los reportes que configuró el coordinador (abajo, en lo que pidió): un cambio chico puede esperar. Reportar ahora los manda ya.	A new value goes out as the coordinator configured reporting (below, in what it asked): a small change may wait. Report now sends them at once.
+
+#: components\aos_apps\aos_app_zigbee.c:1353
+Reportar ahora	Report now
+
+#: components\aos_apps\aos_app_zigbee.c:1356
+Salir de la red	Leave the network
+
+#: components\aos_apps\aos_app_zigbee.c:1370
+Lo que pidió el coordinador	What the coordinator asked
+
+#: components\aos_apps\aos_app_zigbee.c:1407
+La radio no contesta: el C6 necesita su firmware nuevo (3.0.9-154.15). 1) Tienda, Sistema, Firmware de la radio (C6): bajarlo. 2) Ajustes, Actualización, Instalar en el C6. Son unos 15 s sin Wi-Fi y la placa se reinicia sola.	The radio does not answer: the C6 needs its new firmware (3.0.9-154.15). 1) Store, System, The radio's firmware (C6): get it. 2) Settings, Update, Install on the C6. About 15 s without Wi-Fi, and the board restarts by itself.
+
+#: components\aos_apps\aos_app_zigbee.c:1410
+El C6 se cayó con la radio prendida y la dejó apagada para no perder el Wi-Fi. Tocá Escanear o Escuchar para probar otra vez.	The C6 fell over with the radio on and kept it off so as not to lose the Wi-Fi. Tap Scan or Listen to try again.
+
+#: components\aos_apps\aos_app_zigbee.c:1417
+La radio: emulando un equipo	The radio: emulating a device
+
+#: components\aos_apps\aos_app_zigbee.c:1418
+La radio: la red Zigbee, canal %u	The radio: the Zigbee network, channel %u
+
+#: components\aos_apps\aos_app_zigbee.c:1419
+La radio: armando la red Zigbee	The radio: starting the Zigbee network
+
+#: components\aos_apps\aos_app_zigbee.c:1420
+Escaneando, canal %u	Scanning, channel %u
+
+#: components\aos_apps\aos_app_zigbee.c:1421
+Escuchando el canal %u	Listening on channel %u
+
+#: components\aos_apps\aos_app_zigbee.c:1422
+La radio, sin usar	The radio, idle
+
+#: components\aos_apps\aos_app_zigbee.c:1444
+Escaneando...	Scanning...
+
+#: components\aos_apps\aos_app_zigbee.c:1446
+Hay tráfico en el canal %d: en Escuchar se ve qué es.	There is traffic on channel %d: Listen shows what it is.
+
+#: components\aos_apps\aos_app_zigbee.c:1448
+No se oyó ningún paquete. Probá a fondo: las redes tranquilas mandan poco.	No packet was heard. Try a thorough scan: quiet networks send little.
+
+#: components\aos_apps\aos_app_zigbee.c:1453
+%u paquetes	%u packets
+
+#: components\aos_apps\aos_app_zigbee.c:1456
+%u perdidos en el C6	%u lost in the C6
+
+#: components\aos_apps\aos_app_zigbee.c:1461
+guardando %u en %s	saving %u to %s
+
+#: components\aos_apps\aos_app_zigbee.c:1526
+Zigbee y Thread	Zigbee and Thread
+
+#: components\aos_apps\aos_app_zigbee.c:1536
+Canales	Channels
+
+#: components\aos_apps\aos_app_zigbee.c:1536
+#: apps/equipos  (nombre de app)
+Equipos	Equipment
+
+#: components\aos_apps\aos_app_zigbee.c:1536
+Mi red	My network
+
+#: components\aos_apps\aos_app_zigbee.c:1536
+Emular	Emulate
+
 #: components\aos_apps\aos_bench_log.c:173
 No se pudo escribir en la tarjeta.	Could not write to the card.
 
@@ -8719,6 +9244,7 @@ sin conectar	not connected
 Sin osciloscopio	No oscilloscope
 
 #: components\aos_apps\aos_bench_scope.c:1355
+#: components\aos_154\aos_zigbee_fmt.c:133
 media	mean
 
 #: components\aos_apps\aos_claude.c:132
@@ -8929,7 +9455,7 @@ La secuencia no tiene pasos que entienda	The sequence has no steps I understand
 
 #: components\aos_apps\aos_modbus.c:42
 #: components\aos_dynapp\aos_dynapp.c:1203
-#: components\aos_portal\aos_portal.c:342
+#: components\aos_portal\aos_portal.c:343
 #: components\aos_portal\aos_portal_live.c:75
 sin memoria	out of memory
 
@@ -9118,6 +9644,7 @@ El cable no tiene dirección	The wire has no address
 No se pudo abrir el puerto 5001	Port 5001 could not be opened
 
 #: components\aos_apps\aos_riden.c:88
+#: components\aos_154\aos_zigbee_tuya.c:98
 unidad	unit
 
 #: components\aos_apps\aos_riden.c:112
@@ -9130,9 +9657,11 @@ modelo	model
 lectura	reading
 
 #: components\aos_apps\aos_riden.c:245
+#: components\aos_154\aos_zigbee_devices.c:941
 encender	turn on
 
 #: components\aos_apps\aos_riden.c:245
+#: components\aos_154\aos_zigbee_devices.c:940
 apagar	turn off
 
 #: components\aos_apps\aos_scope.c:272
@@ -9282,10 +9811,6 @@ enfoque / descanso	focus / break
 #: components\aos_apps\_pending\aos_app_pomodoro.c:380
 #: components\aos_apps\_pending\aos_app_pomodoro.c:430
 hoy: 0	today: 0
-
-#: components\aos_apps\_pending\aos_app_pomodoro.c:443
-#: components\aos_apps\_pending\aos_app_stopwatch.c:81
-Parar	Stop
 
 #: components\aos_apps\_pending\aos_app_settings.c:2722
 origen del idioma\x04firmware	firmware
@@ -9941,10 +10466,10 @@ no se pudo cargar %s: %s	could not load %s: %s
 #: components\aos_dynapp\aos_dynapp.c:1473
 %.40s hizo caer la placa dos veces al cargarse\ny quedó apartada. Instalala de nuevo desde la Tienda.	%.40s made the board crash twice while loading\nand was set aside. Install it again from the Store.
 
-#: main\main.c:222
+#: main\main.c:224
 Modo seguro: sin las apps de la tarjeta. Reiniciá para volver a la normalidad.	Safe mode: no apps from the card. Restart to go back to normal.
 
-#: main\main.c:228
+#: main\main.c:230
 La placa se cayó la vez anterior: el volcado está en el portal, en Registro.	The board crashed last time: the dump is in the portal, on the Registro page.
 
 #: components\aos_flasher\aos_flasher.c:218
@@ -10688,147 +11213,147 @@ Por la consola de U-Boot sólo se lee: no se graba ni se borra	U-Boot's console 
 #: components\aos_flasher\aos_flasher_uboot.c:930
 Queda frenado en \"%s\": reset en la Terminal, o su corriente, lo arranca	Left stopped at \"%s\": reset in the Terminal, or its power, boots it
 
-#: components\aos_hal\aos_net_p4.c:665
+#: components\aos_hal\aos_net_p4.c:670
 no se pudo abrir la imagen	the image could not be opened
 
-#: components\aos_hal\aos_net_p4.c:671
+#: components\aos_hal\aos_net_p4.c:676
 el C6 no aceptó empezar	the C6 would not start
 
-#: components\aos_hal\aos_net_p4.c:678
+#: components\aos_hal\aos_net_p4.c:683
 se cortó al mandar la imagen	the link broke while sending the image
 
-#: components\aos_hal\aos_net_p4.c:684
+#: components\aos_hal\aos_net_p4.c:689
 el C6 rechazó la imagen	the C6 rejected the image
 
-#: components\aos_hal\aos_net_p4.c:692
+#: components\aos_hal\aos_net_p4.c:697
 el C6 no activó la imagen	the C6 did not activate the image
 
-#: components\aos_portal\aos_portal.c:360
+#: components\aos_portal\aos_portal.c:361
 la placa está ocupada	the board is busy
 
-#: components\aos_portal\aos_portal.c:384
-#: components\aos_portal\aos_portal.c:1060
+#: components\aos_portal\aos_portal.c:385
+#: components\aos_portal\aos_portal.c:1061
 #: components\aos_portal\aos_portal_system.c:479
 no se pudo guardar	could not save
 
-#: components\aos_portal\aos_portal.c:432
+#: components\aos_portal\aos_portal.c:433
 falta id	id is missing
 
-#: components\aos_portal\aos_portal.c:439
+#: components\aos_portal\aos_portal.c:440
 sin ícono AIC	no AIC icon
 
-#: components\aos_portal\aos_portal.c:456
+#: components\aos_portal\aos_portal.c:457
 red o contraseña inválidas (WPA2: de 8 a 63 caracteres)	invalid network or password (WPA2: 8 to 63 characters)
 
-#: components\aos_portal\aos_portal.c:516
+#: components\aos_portal\aos_portal.c:517
 \"mode\": console o keys; \"host\": true o false; \"pins\": 21/23, 25/27 o both; \"layout\": latam o us	\"mode\": console or keys; \"host\": true or false; \"pins\": 21/23, 25/27 or both; \"layout\": latam or us
 
-#: components\aos_portal\aos_portal.c:526
+#: components\aos_portal\aos_portal.c:527
 el USB está cambiando de modo	the USB is switching modes
 
-#: components\aos_portal\aos_portal.c:687
+#: components\aos_portal\aos_portal.c:688
 falta \"on\", \"keyboard\", \"music\" o \"forget\"	missing \"on\", \"keyboard\", \"music\" or \"forget\"
 
-#: components\aos_portal\aos_portal.c:754
+#: components\aos_portal\aos_portal.c:755
 no hay una imagen del C6 en /firmware/c6.bin	there is no C6 image at /firmware/c6.bin
 
-#: components\aos_portal\aos_portal.c:756
+#: components\aos_portal\aos_portal.c:757
 no se pudo empezar (¿ya hay una en curso?)	could not start (is one already running?)
 
-#: components\aos_portal\aos_portal.c:764
+#: components\aos_portal\aos_portal.c:765
 la búsqueda falló	the scan failed
 
-#: components\aos_portal\aos_portal.c:796
+#: components\aos_portal\aos_portal.c:797
 la dirección empieza con http://	the address starts with http://
 
-#: components\aos_portal\aos_portal.c:869
+#: components\aos_portal\aos_portal.c:870
 sin tarjeta o ruta inválida	no card or invalid path
 
-#: components\aos_portal\aos_portal.c:873
-#: components\aos_portal\aos_portal.c:953
-#: components\aos_portal\aos_portal.c:1767
+#: components\aos_portal\aos_portal.c:874
+#: components\aos_portal\aos_portal.c:954
+#: components\aos_portal\aos_portal.c:1769
 #: components\aos_portal\aos_portal_backup.c:199
 no existe	does not exist
 
-#: components\aos_portal\aos_portal.c:950
-#: components\aos_portal\aos_portal.c:1017
-#: components\aos_portal\aos_portal.c:1037
-#: components\aos_portal\aos_portal.c:1087
+#: components\aos_portal\aos_portal.c:951
+#: components\aos_portal\aos_portal.c:1018
+#: components\aos_portal\aos_portal.c:1038
+#: components\aos_portal\aos_portal.c:1088
 ruta inválida	invalid path
 
-#: components\aos_portal\aos_portal.c:1002
+#: components\aos_portal\aos_portal.c:1003
 no se pudo leer	could not read
 
-#: components\aos_portal\aos_portal.c:1006
+#: components\aos_portal\aos_portal.c:1007
 menu.txt inválido: %s	invalid menu.txt: %s
 
-#: components\aos_portal\aos_portal.c:1020
+#: components\aos_portal\aos_portal.c:1021
 no se pudo abrir	could not open
 
-#: components\aos_portal\aos_portal.c:1038
+#: components\aos_portal\aos_portal.c:1039
 #: components\aos_portal\aos_portal_system.c:180
 falta Content-Length	Content-Length is missing
 
-#: components\aos_portal\aos_portal.c:1040
+#: components\aos_portal\aos_portal.c:1041
 no entra en la tarjeta	it does not fit on the card
 
-#: components\aos_portal\aos_portal.c:1044
+#: components\aos_portal\aos_portal.c:1045
 no se pudo crear (¿existe la carpeta?)	could not create (does the folder exist?)
 
-#: components\aos_portal\aos_portal.c:1055
+#: components\aos_portal\aos_portal.c:1056
 se cortó la subida	the upload was cut off
 
-#: components\aos_portal\aos_portal.c:1256
+#: components\aos_portal\aos_portal.c:1257
 ya hay una grabación en curso	a flash is already in progress
 
-#: components\aos_portal\aos_portal.c:1256
+#: components\aos_portal\aos_portal.c:1257
 #: components\aos_portal\aos_portal_bench.c:260
 no se pudo empezar	could not start
 
-#: components\aos_portal\aos_portal.c:1261
+#: components\aos_portal\aos_portal.c:1262
 falta path	path is missing
 
-#: components\aos_portal\aos_portal.c:1292
-#: components\aos_portal\aos_portal.c:1320
+#: components\aos_portal\aos_portal.c:1293
+#: components\aos_portal\aos_portal.c:1321
 ya hay un trabajo en curso	a job is already running
 
-#: components\aos_portal\aos_portal.c:1303
+#: components\aos_portal\aos_portal.c:1304
 no hay una consola abierta	no console is open
 
-#: components\aos_portal\aos_portal.c:1451
+#: components\aos_portal\aos_portal.c:1452
 la velocidad va de 50 a 5000000 baudios	the speed goes from 50 to 5000000 baud
 
-#: components\aos_portal\aos_portal.c:1454
+#: components\aos_portal\aos_portal.c:1455
 el formato es como 8N1 o 7E1	the format is like 8N1 or 7E1
 
-#: components\aos_portal\aos_portal.c:1457
+#: components\aos_portal\aos_portal.c:1458
 no se pudo abrir el puerto (¿lo tiene otra app?)	could not open the port (does another app have it?)
 
-#: components\aos_portal\aos_portal.c:1467
+#: components\aos_portal\aos_portal.c:1468
 el canal no está conectado	the channel is not connected
 
-#: components\aos_portal\aos_portal.c:1470
+#: components\aos_portal\aos_portal.c:1471
 hace falta el canal conectado y la tarjeta	needs the channel connected and a card
 
-#: components\aos_portal\aos_portal.c:1477
+#: components\aos_portal\aos_portal.c:1478
 texto vacío	empty text
 
-#: components\aos_portal\aos_portal.c:1479
+#: components\aos_portal\aos_portal.c:1480
 ya hay 8 avisos	there are already 8 alerts
 
-#: components\aos_portal\aos_portal.c:1533
+#: components\aos_portal\aos_portal.c:1534
 el nombre va con a-z, 0-9 y guiones	the name takes a-z, 0-9 and hyphens
 
-#: components\aos_portal\aos_portal.c:1541
+#: components\aos_portal\aos_portal.c:1542
 idioma no disponible	language unavailable
 
-#: components\aos_portal\aos_portal.c:1714
+#: components\aos_portal\aos_portal.c:1715
 falta \"on\"	missing \"on\"
 
-#: components\aos_portal\aos_portal.c:1715
+#: components\aos_portal\aos_portal.c:1716
 la radio está ocupada	the radio is busy
 
-#: components\aos_portal\aos_portal.c:1724
+#: components\aos_portal\aos_portal.c:1725
 no hay enlace que congelar	there is no link to freeze
 
 #: components\aos_portal\aos_portal_access.c:184
@@ -11061,6 +11586,7 @@ la otra ranura no tiene una imagen	the other slot has no image
 
 #: components\aos_ssh\aos_ssh.c:588
 #: components\aos_ssh\aos_ssh.c:653
+#: components\aos_154\aos_zigbee_fmt.c:131
 abierta	open
 
 #: components\aos_ssh\aos_ssh.c:611
@@ -11321,6 +11847,355 @@ cierra la sesión (también Ctrl-D)	ends the session (Ctrl-D too)
 #: components\aos_ssh\aos_ssh_shell.c:702
 «help» muestra los comandos; Ctrl-D o «exit» para salir.\n	“help” shows the commands; Ctrl-D or “exit” to leave.\n
 
+#: components\aos_154\aos_zigbee_devices.c:367
+Zigbee: 0x%04x no contestó (dormido): tocale el botón	Zigbee: 0x%04x did not answer (asleep): press its button
+
+#: components\aos_154\aos_zigbee_devices.c:749
+Zigbee: entró un equipo (0x%04x), preguntándole qué es	Zigbee: a device joined (0x%04x), asking what it is
+
+#: components\aos_154\aos_zigbee_devices.c:867
+#: components\aos_154\aos_zigbee_devices.c:945
+mantenido	held
+
+#: components\aos_154\aos_zigbee_devices.c:867
+#: components\aos_154\aos_zigbee_devices.c:945
+un toque	single press
+
+#: components\aos_154\aos_zigbee_devices.c:867
+#: components\aos_154\aos_zigbee_devices.c:945
+doble	double
+
+#: components\aos_154\aos_zigbee_devices.c:867
+triple	triple
+
+#: components\aos_154\aos_zigbee_devices.c:868
+#: components\aos_154\aos_zigbee_devices.c:966
+botón	button
+
+#: components\aos_154\aos_zigbee_devices.c:869
+#: components\aos_154\aos_zigbee_devices.c:951
+soltado	released
+
+#: components\aos_154\aos_zigbee_devices.c:892
+Zigbee: %s, salida %u %s	Zigbee: %s, output %u %s
+
+#: components\aos_154\aos_zigbee_devices.c:942
+alternar	toggle
+
+#: components\aos_154\aos_zigbee_devices.c:943
+encender un rato	on for a while
+
+#: components\aos_154\aos_zigbee_devices.c:948
+a un nivel	to a level
+
+#: components\aos_154\aos_zigbee_devices.c:949
+#: components\aos_154\aos_zigbee_devices.c:960
+bajar	down
+
+#: components\aos_154\aos_zigbee_devices.c:949
+#: components\aos_154\aos_zigbee_devices.c:960
+subir	up
+
+#: components\aos_154\aos_zigbee_devices.c:950
+un paso abajo	a step down
+
+#: components\aos_154\aos_zigbee_devices.c:950
+un paso arriba	a step up
+
+#: components\aos_154\aos_zigbee_devices.c:955
+escena	scene
+
+#: components\aos_154\aos_zigbee_devices.c:960
+parar	stop
+
+#: components\aos_154\aos_zigbee_devices.c:960
+mover	move
+
+#: components\aos_154\aos_zigbee_devices.c:1441
+Zigbee: 0x%04x salió de la red	Zigbee: 0x%04x left the network
+
+#: components\aos_154\aos_zigbee_devices.c:1449
+Zigbee: se pueden sumar equipos por %u s	Zigbee: devices can join for %u s
+
+#: components\aos_154\aos_zigbee_devices.c:1450
+Zigbee: ya no se pueden sumar equipos	Zigbee: no more devices can join
+
+#: components\aos_154\aos_zigbee_devices.c:1534
+Zigbee: 0x%04x, sacado de la red	Zigbee: 0x%04x, removed from the network
+
+#: components\aos_154\aos_zigbee_emu.c:191
+la luz, tocada en la placa: %s	the light, tapped on the board: %s
+
+#: components\aos_154\aos_zigbee_emu.c:219
+mandó todos los valores al coordinador	sent every value to the coordinator
+
+#: components\aos_154\aos_zigbee_emu.c:292
+leyó %s (ep %u):%s	read %s (ep %u):%s
+
+#: components\aos_154\aos_zigbee_emu.c:295
+escribió en %s (ep %u)	wrote to %s (ep %u)
+
+#: components\aos_154\aos_zigbee_emu.c:304
+configuró reportes de %s 0x%04x: cada %u s a %u s	configured reporting of %s 0x%04x: every %u s to %u s
+
+#: components\aos_154\aos_zigbee_emu.c:311
+leyó la configuración de reportes de %s	read the reporting configuration of %s
+
+#: components\aos_154\aos_zigbee_emu.c:312
+preguntó qué atributos tiene %s	asked which attributes %s has
+
+#: components\aos_154\aos_zigbee_emu.c:314
+preguntó qué comandos tiene %s	asked which commands %s has
+
+#: components\aos_154\aos_zigbee_emu.c:316
+comando general 0x%02x en %s	general command 0x%02x on %s
+
+#: components\aos_154\aos_zigbee_emu.c:321
+Prender	On
+
+#: components\aos_154\aos_zigbee_emu.c:321
+Cambiar	Toggle
+
+#: components\aos_154\aos_zigbee_emu.c:322
+mandó %s a la luz	sent %s to the light
+
+#: components\aos_154\aos_zigbee_emu.c:324
+pidió que se identifique %u s	asked it to identify itself for %u s
+
+#: components\aos_154\aos_zigbee_emu.c:326
+comando 0x%02x de %s	command 0x%02x of %s
+
+#: components\aos_154\aos_zigbee_emu.c:336
+pidió la dirección corta	asked for the short address
+
+#: components\aos_154\aos_zigbee_emu.c:337
+pidió la dirección larga	asked for the long address
+
+#: components\aos_154\aos_zigbee_emu.c:338
+pidió el descriptor del nodo	asked for the node descriptor
+
+#: components\aos_154\aos_zigbee_emu.c:339
+pidió el descriptor de energía	asked for the power descriptor
+
+#: components\aos_154\aos_zigbee_emu.c:340
+pidió el descriptor del endpoint %u	asked for endpoint %u's descriptor
+
+#: components\aos_154\aos_zigbee_emu.c:341
+pidió la lista de endpoints	asked for the list of endpoints
+
+#: components\aos_154\aos_zigbee_emu.c:344
+ató %s (ep %u) a sí mismo	bound %s (ep %u) to itself
+
+#: components\aos_154\aos_zigbee_emu.c:344
+desató %s (ep %u)	unbound %s (ep %u)
+
+#: components\aos_154\aos_zigbee_emu.c:347
+pidió la tabla de vecinos	asked for the neighbour table
+
+#: components\aos_154\aos_zigbee_emu.c:348
+pidió la tabla de rutas	asked for the routing table
+
+#: components\aos_154\aos_zigbee_emu.c:349
+le pidió a la placa que se vaya de la red	asked the board to leave the network
+
+#: components\aos_154\aos_zigbee_emu.c:350
+abrió la red para sumar por %u s	opened the network for joining for %u s
+
+#: components\aos_154\aos_zigbee_emu.c:353
+pedido ZDO 0x%04x	ZDO request 0x%04x
+
+#: components\aos_154\aos_zigbee_emu.c:368
+la luz quedó %s	the light is now %s
+
+#: components\aos_154\aos_zigbee_emu.c:403
+no encontró una red abierta en 3 minutos	no open network found in 3 minutes
+
+#: components\aos_154\aos_zigbee_emu.c:418
+adentro: canal %u, PAN 0x%04x, la placa es 0x%04x	in: channel %u, PAN 0x%04x, the board is 0x%04x
+
+#: components\aos_154\aos_zigbee_emu.c:450
+#: components\aos_154\aos_zigbee_emu.c:513
+buscando una red abierta para sumarse	looking for an open network to join
+
+#: components\aos_154\aos_zigbee_emu.c:455
+de vuelta en la red de antes	back in the network from before
+
+#: components\aos_154\aos_zigbee_emu.c:458
+la red de antes no está: buscando una abierta	the network from before is not there: looking for an open one
+
+#: components\aos_154\aos_zigbee_emu.c:468
+el coordinador le dio su propia clave de enlace (Zigbee 3.0)	the coordinator gave it its own link key (Zigbee 3.0)
+
+#: components\aos_154\aos_zigbee_emu.c:475
+salió de la red	left the network
+
+#: components\aos_154\aos_zigbee_emu.c:475
+el coordinador la sacó de la red	the coordinator took it out of the network
+
+#: components\aos_154\aos_zigbee_emu.c:496
+arrancando la pila como router	starting the stack as a router
+
+#: components\aos_154\aos_zigbee_emu.c:500
+la pila no arrancó (¿el C6 tiene su firmware 154?)	the stack did not start (does the C6 have its 154 firmware?)
+
+#: components\aos_154\aos_zigbee_emu.c:541
+pidió irse de la red y olvidarla	asked to leave the network and forget it
+
+#: components\aos_154\aos_zigbee_emu.c:549
+vuelve a la red propia (se reinicia)	back to its own network (restarting)
+
+#: components\aos_154\aos_zigbee_fmt.c:33
+#: components\aos_154\aos_zigbee_tuya.c:84
+humedad del suelo	soil moisture
+
+#: components\aos_154\aos_zigbee_fmt.c:34
+caudal	flow
+
+#: components\aos_154\aos_zigbee_fmt.c:35
+#: components\aos_154\aos_zigbee_tuya.c:60
+energía	energy
+
+#: components\aos_154\aos_zigbee_fmt.c:36
+consumo	power draw
+
+#: components\aos_154\aos_zigbee_fmt.c:39
+#: components\aos_154\aos_zigbee_tuya.c:65
+tensión	voltage
+
+#: components\aos_154\aos_zigbee_fmt.c:40
+#: components\aos_154\aos_zigbee_tuya.c:70
+corriente	current
+
+#: components\aos_154\aos_zigbee_fmt.c:41
+#: components\aos_154\aos_zigbee_tuya.c:61
+potencia	power
+
+#: components\aos_154\aos_zigbee_fmt.c:45
+cortina	curtain
+
+#: components\aos_154\aos_zigbee_fmt.c:46
+ambiente	room
+
+#: components\aos_154\aos_zigbee_fmt.c:47
+#: components\aos_154\aos_zigbee_tuya.c:54
+consigna	setpoint
+
+#: components\aos_154\aos_zigbee_fmt.c:48
+#: components\aos_154\aos_zigbee_tuya.c:66
+#: components\aos_154\aos_zigbee_tuya.c:90
+#: components\aos_154\aos_zigbee_tuya.c:91
+modo	mode
+
+#: components\aos_154\aos_zigbee_fmt.c:49
+tono	color temp
+
+#: components\aos_154\aos_zigbee_fmt.c:50
+cerradura	lock
+
+#: components\aos_154\aos_zigbee_fmt.c:51
+ventilador	fan
+
+#: components\aos_154\aos_zigbee_fmt.c:53
+#: components\aos_154\aos_zigbee_tuya.c:48
+estado	state
+
+#: components\aos_154\aos_zigbee_fmt.c:122
+%d %% cerrada	%d %% closed
+
+#: components\aos_154\aos_zigbee_fmt.c:126
+frío	cool
+
+#: components\aos_154\aos_zigbee_fmt.c:126
+calor	heat
+
+#: components\aos_154\aos_zigbee_fmt.c:131
+con llave	locked
+
+#: components\aos_154\aos_zigbee_fmt.c:131
+a medias	not fully locked
+
+#: components\aos_154\aos_zigbee_fmt.c:133
+baja	low
+
+#: components\aos_154\aos_zigbee_fmt.c:133
+alta	high
+
+#: components\aos_154\aos_zigbee_fmt.c:133
+prendido	on
+
+#: components\aos_154\aos_zigbee_fmt.c:134
+inteligente	smart
+
+#: components\aos_154\aos_zigbee_tuya.c:50
+bloqueo de teclas	key lock
+
+#: components\aos_154\aos_zigbee_tuya.c:51
+acción	action
+
+#: components\aos_154\aos_zigbee_tuya.c:52
+posición	position
+
+#: components\aos_154\aos_zigbee_tuya.c:58
+#: components\aos_154\aos_zigbee_tuya.c:59
+corrección	correction
+
+#: components\aos_154\aos_zigbee_tuya.c:62
+al volver la luz	after a power cut
+
+#: components\aos_154\aos_zigbee_tuya.c:64
+luz de fondo	backlight
+
+#: components\aos_154\aos_zigbee_tuya.c:69
+antiheladas	frost protection
+
+#: components\aos_154\aos_zigbee_tuya.c:71
+funcionando	running
+
+#: components\aos_154\aos_zigbee_tuya.c:72
+sentido del motor	motor direction
+
+#: components\aos_154\aos_zigbee_tuya.c:73
+estado de la pila	battery state
+
+#: components\aos_154\aos_zigbee_tuya.c:74
+ventana abierta	window open
+
+#: components\aos_154\aos_zigbee_tuya.c:75
+cuenta regresiva	countdown
+
+#: components\aos_154\aos_zigbee_tuya.c:80
+tapa abierta	tamper
+
+#: components\aos_154\aos_zigbee_tuya.c:87
+formaldehído	formaldehyde
+
+#: components\aos_154\aos_zigbee_tuya.c:88
+distancia	distance
+
+#: components\aos_154\aos_zigbee_tuya.c:89
+sensibilidad	sensitivity
+
+#: components\aos_154\aos_zigbee_tuya.c:92
+válvula	valve
+
+#: components\aos_154\aos_zigbee_tuya.c:93
+temperatura eco	eco temperature
+
+#: components\aos_154\aos_zigbee_tuya.c:94
+temperatura de confort	comfort temperature
+
+#: components\aos_154\aos_zigbee_tuya.c:95
+factor de potencia	power factor
+
+#: components\aos_154\aos_zigbee_tuya.c:96
+frecuencia	frequency
+
+#: components\aos_154\aos_zigbee_tuya.c:97
+energía entregada	energy produced
+
+#: components\aos_154\aos_zigbee_tuya.c:111
+salida %d	output %d
+
 #: components\aos_apps\aos_app_calc.c:319  (nombre de app)
 Calculadora	Calculator
 
@@ -11344,6 +12219,9 @@ Macro pad	Macro pad
 
 #: components\aos_apps\aos_app_modules.c:1761  (nombre de app)
 Módulos	Modules
+
+#: components\aos_apps\aos_app_zigbee.c:1569  (nombre de app)
+Zigbee	Zigbee
 
 #: components\aos_apps\_pending\aos_app_pcremote.c:809  (nombre de app)
 Control PC	PC Control
@@ -11443,9 +12321,6 @@ EEPROM	EEPROM
 
 #: apps/emulador  (nombre de app)
 Emulador	Emulator
-
-#: apps/equipos  (nombre de app)
-Equipos	Equipment
 
 #: apps/estado  (nombre de app)
 Mi casa	Home Status

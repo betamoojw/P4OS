@@ -430,7 +430,7 @@ static bool stop_autoboot(ub_t *s)
         if (!prompt_like(s->cur) || !strcmp(s->cur, other)) continue;
         /* settled, and an Enter brings the same line back */
         char cand[PROMPT_MAX];
-        snprintf(cand, sizeof cand, "%s", s->cur);
+        memcpy(cand, s->cur, strlen(s->cur) + 1);  /* prompt_like checked PROMPT_MAX */
         pump(s, 150, 0, any_line, NULL);
         for (int k = 0; k < 2; k++) {
             s->lines_in = 0;

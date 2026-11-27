@@ -6912,6 +6912,7 @@ Instalar en el C6	Instalar no C6
 
 #: components/aos_apps/aos_app_settings.c:1801
 El C6 la escribe en su otra ranura y la revisa antes de cambiar. Mientras tanto no hay Wi-Fi, y al terminar la placa se reinicia.	O C6 a grava no seu outro slot e a verifica antes de trocar. Enquanto isso não há Wi-Fi, e ao terminar a placa reinicia.
+Ojo si en esta placa usás otro firmware además de P4OS: esta versión es esp_hosted 3, y uno que traiga esp_hosted 2 (el Launcher, un sketch de Arduino, varias demos) no se entiende con ella y se queda sin Wi-Fi. Para volver, se instala desde acá un firmware 2.x del C6.	Atenção se nesta placa você usa outro firmware além do P4OS: esta versão é esp_hosted 3, e um que traga esp_hosted 2 (o Launcher, um sketch do Arduino, várias demos) não se entende com ela e fica sem Wi-Fi. Para voltar, instale daqui um firmware 2.x do C6.
 
 #: components/aos_apps/aos_app_settings.c:1829
 escribiendo la otra ranura… %u %%	gravando o outro slot… %u %%
@@ -11500,3 +11501,263 @@ Línea	Linha
 Los de siempre	Os de sempre
 Los íconos dibujados de un pack; las apps que no están en él se ven como siempre.	Os ícones desenhados de um pacote; os apps que não estão nele aparecem como sempre.
 Los packs de íconos se bajan de la Tienda, en Sistema.	Os pacotes de ícones são baixados da Loja, em Sistema.
+%d actualizaciones en cola	%d atualizações na fila
+%d actualizaciones, hasta %s	%d atualizações, até %s
+%d necesitan un P4OS más nuevo: actualizá el sistema primero.	%d precisam de um P4OS mais novo: atualize o sistema primeiro.
+Actualizar todas	Atualizar todos
+pedido de asociación	pedido de associação
+respuesta de asociación	resposta de associação
+aviso de desasociación	aviso de desassociação
+pedido de datos	pedido de dados
+pedido de beacon	pedido de beacon
+realineación	realinhamento
+comando	comando
+trama corta (%d bytes)	quadro curto (%d bytes)
+acepta equipos nuevos	aceita novos dispositivos
+cerrada	fechada
+Acuse	Confirmação
+Comando	Comando
+cifrada en la capa MAC	cifrado na camada MAC
+comando de red	comando de rede
+datos	dados
+radio	raio
+cifrada	cifrado
+6LoWPAN (Thread)	6LoWPAN (Thread)
+6LoWPAN, malla	6LoWPAN, malha
+trama de tipo %d	quadro do tipo %d
+trama de %d bytes, cortada	quadro de %d bytes, cortado
+El C6 no tomó el pedido	O C6 não aceitou o pedido
+A fondo (2 s por canal)	A fundo (2 s por canal)
+La barra es la energía que hay en el canal; el número, los paquetes que se oyeron mientras se escuchaba. Una red Zigbee o Thread se ve como un canal con paquetes. Para una red nueva conviene uno sin paquetes y lejos del Wi-Fi: Zigbee suele usar el 11, 15, 20 o 25.	A barra é a energia no canal; o número, os pacotes ouvidos enquanto escutava. Uma rede Zigbee ou Thread aparece como um canal com pacotes. Para uma rede nova, escolha um sem pacotes e longe do Wi-Fi: o Zigbee costuma usar 11, 15, 20 ou 25.
+Escuchar	Escutar
+Guardar para Wireshark	Salvar para o Wireshark
+El C6 se cayó con la radio prendida y la dejó apagada para no perder el Wi-Fi. Tocá Escanear o Escuchar para probar otra vez.	O C6 caiu com o rádio ligado e o deixou desligado para não perder o Wi-Fi. Toque em Escanear ou Escutar para tentar de novo.
+Escaneando, canal %u	Escaneando, canal %u
+Escuchando el canal %u	Escutando o canal %u
+Escaneando...	Escaneando...
+Hay tráfico en el canal %d: en Escuchar se ve qué es.	Há tráfego no canal %d: em Escutar dá para ver o que é.
+No se oyó ningún paquete. Probá a fondo: las redes tranquilas mandan poco.	Nenhum pacote foi ouvido. Tente a fundo: redes tranquilas mandam pouco.
+%u paquetes	%u pacotes
+%u perdidos en el C6	%u perdidos no C6
+guardando %u en %s	salvando %u em %s
+Zigbee y Thread	Zigbee e Thread
+Canales	Canais
+Zigbee	Zigbee
+Olvidarlos	Esquecê-los
+Lo que se oyó mientras se escuchaba, el más reciente arriba. La dirección larga de una corta aparece cuando la red la manda.	O que foi ouvido enquanto escutava, o mais recente em cima. O endereço longo de um curto aparece quando a rede o envia.
+Todavía nadie: escuchá un canal con tráfico.	Ninguém ainda: escute um canal com tráfego.
+coordinador	coordenador
+%u paquetes · %d dBm, promedio %d · hace %u s	%u pacotes · %d dBm, média %d · há %u s
+canal	canal
+Zigbee: 0x%04x no contestó (dormido): tocale el botón	Zigbee: 0x%04x não respondeu (dormindo): aperte o botão dele
+Zigbee: entró un equipo (0x%04x), preguntándole qué es	Zigbee: um dispositivo entrou (0x%04x), perguntando o que é
+Zigbee: 0x%04x salió de la red	Zigbee: 0x%04x saiu da rede
+Zigbee: se pueden sumar equipos por %u s	Zigbee: dispositivos podem entrar por %u s
+Zigbee: ya no se pueden sumar equipos	Zigbee: não dá mais para adicionar dispositivos
+La red no tomó el pedido	A rede não aceitou o pedido
+contacto	contato
+movimiento	movimento
+agua	água
+humo	fumaça
+gas	gás
+alarma	alarme
+cerrado	fechado
+sin movimiento	sem movimento
+¡agua!	água!
+seco	seco
+normal	normal
+batería	bateria
+encendido	liga/desliga
+nivel	nível
+color	cor
+temperatura	temperatura
+presión	pressão
+humedad	umidade
+presencia	presença
+luz	luz
+medidor	medidor
+eléctrico	elétrico
+Armando la red...	Criando a rede...
+Armar la red	Criar a rede
+Abierta: %d s	Aberta: %d s
+Sumar equipos	Adicionar dispositivos
+La placa arma su propia red Zigbee, con el C6 de radio, y los equipos se suman a ella: así se prueba cualquiera. Un equipo está en una sola red: para sumarlo acá hay que resetearlo (en general, el botón apretado hasta que parpadea).	A placa cria sua própria rede Zigbee, com o C6 como rádio, e os dispositivos entram nela: assim dá para testar qualquer um. Um dispositivo fica em uma rede só: para adicioná-lo aqui, resete-o (em geral, segurando o botão até piscar).
+Reseteá el equipo ahora: la pantalla avisa cuando entra y qué es. Si es a pila, tocale el botón cada tanto mientras se configura.	Resete o dispositivo agora: a tela avisa quando ele entra e o que é. Se for a pilha, aperte o botão de vez em quando enquanto ele é configurado.
+router	roteador
+a red eléctrica	na tomada
+a pila	a pilha
+se fue	saiu
+no contestó	não respondeu
+configurándolo	configurando
+hay alguien	tem alguém
+nadie	ninguém
+salida %d: %s	saída %d: %s
+prendida	ligada
+antes	antes
+Mi red	Minha rede
+Zigbee: %s, salida %u %s	Zigbee: %s, saída %u %s
+Abierta para sumar	Aberta para adicionar
+La red queda abierta mientras estés acá, hasta Cerrar. Reseteá los equipos de a uno: la pantalla avisa cuando entra cada uno y qué es. Si es a pila, tocale el botón cada tanto mientras se configura.	A rede fica aberta enquanto você estiver aqui, até Fechar. Resete os dispositivos um de cada vez: a tela avisa quando cada um entra e o que é. Se for a pilha, aperte o botão de vez em quando enquanto ele é configurado.
+Red en el canal %u. %d equipos. Los valores llegan cuando el equipo los manda: uno a pila puede tardar en dar noticias (tocale el botón para despertarlo). Una salida se prende o se apaga tocándola. Si un equipo sigue titilando y no termina de sumarse, probá con Sumar Zigbee 3.0. Tocá el nombre de un equipo para ponerle uno tuyo.	Rede no canal %u. %d dispositivos. Os valores chegam quando o dispositivo os envia: um a pilha pode demorar para dar notícias (aperte o botão para acordá-lo). Toque numa saída para ligá-la ou desligá-la. Se um dispositivo continua piscando e não termina de entrar, tente Adicionar Zigbee 3.0. Toque no nome de um dispositivo para dar um seu.
+¿Seguro?	Certeza?
+Sacar	Remover
+sin noticias desde que arrancó la placa	sem notícias desde que a placa ligou
+Zigbee: 0x%04x, sacado de la red	Zigbee: 0x%04x, removido da rede
+brillo	brilho
+Subir	Subir
+Bajar	Descer
+Ventilador: otro modo	Ventilador: próximo modo
+Esperando el control remoto... (tocá para cancelar)	Esperando o controle remoto... (toque para cancelar)
+Aprender un código	Aprender um código
+Enviar el último aprendido	Enviar o último aprendido
+enviando...	enviando...
+mantenido	segurado
+un toque	um toque
+doble	duplo
+triple	triplo
+botón	botão
+soltado	solto
+alternar	alternar
+encender un rato	ligar por um tempo
+a un nivel	para um nível
+bajar	descer
+subir	subir
+un paso abajo	um passo abaixo
+un paso arriba	um passo acima
+escena	cena
+parar	parar
+mover	mover
+humedad del suelo	umidade do solo
+caudal	vazão
+energía	energia
+consumo	consumo
+tensión	tensão
+corriente	corrente
+potencia	potência
+cortina	cortina
+ambiente	ambiente
+consigna	setpoint
+modo	modo
+tono	tom
+cerradura	fechadura
+ventilador	ventilador
+estado	estado
+%d %% cerrada	%d %% fechada
+frío	frio
+calor	calor
+con llave	trancada
+a medias	pela metade
+baja	baixa
+alta	alta
+prendido	ligado
+inteligente	inteligente
+Sumar Zigbee 3.0	Adicionar Zigbee 3.0
+Ponele un nombre	Dê um nome
+Guardado	Salvo
+No se pudo guardar (¿hay tarjeta?)	Não foi possível salvar (há um cartão?)
+Nombre del código	Nome do código
+Por ejemplo: Tele, volumen +	Por exemplo: TV, volume +
+Código borrado	Código apagado
+Mantenelo apretado otra vez para borrarlo	Segure de novo para apagar
+Guardarlo...	Salvar...
+no tomó el código	não aceitou o código
+Guardados (tocá para mandar, mantené para borrar):	Salvos (toque para enviar, segure para apagar):
+Nombre del equipo	Nome do dispositivo
+Por ejemplo: Sensor de la cocina	Por exemplo: Sensor da cozinha
+No se pudo guardar	Não foi possível salvar
+bloqueo de teclas	bloqueio de teclas
+acción	ação
+posición	posição
+corrección	correção
+al volver la luz	ao voltar a energia
+luz de fondo	luz de fundo
+antiheladas	anticongelamento
+funcionando	funcionando
+sentido del motor	sentido do motor
+estado de la pila	estado da pilha
+ventana abierta	janela aberta
+cuenta regresiva	contagem regressiva
+tapa abierta	tampa aberta
+formaldehído	formaldeído
+distancia	distância
+sensibilidad	sensibilidade
+válvula	válvula
+temperatura eco	temperatura eco
+temperatura de confort	temperatura de conforto
+factor de potencia	fator de potência
+frecuencia	frequência
+energía entregada	energia produzida
+salida %d	saída %d
+La placa está emulando un equipo en otra red (pestaña Emular). La red propia y sus equipos quedan guardados: vuelven con Volver a Mi red, que reinicia la placa.	A placa está emulando um dispositivo em outra rede (aba Emular). A rede própria e seus dispositivos ficam guardados: voltam com Voltar a Minha rede, que reinicia a placa.
+Reiniciando para emular...	Reiniciando para emular...
+Volviendo a la red propia: la placa se reinicia	Voltando à rede própria: a placa reinicia
+Luz y sensor de temperatura	Luz e sensor de temperatura
+Endpoint 1: una luz que se prende y se apaga (0x0100). Endpoint 2: temperatura, humedad y batería (0x0302). Fabricante P4OS, modelo P4OS-EMU-LT.	Endpoint 1: uma luz que acende e apaga (0x0100). Endpoint 2: temperatura, umidade e bateria (0x0302). Fabricante P4OS, modelo P4OS-EMU-LT.
+La placa se suma a otra red Zigbee, la de Home Assistant por ejemplo, haciéndose pasar por este equipo, para ver si el coordinador lo lee y lo maneja, y qué le pide. Entra como router, con corriente: un equipo a pila no se puede emular. Antes, en Home Assistant: Agregar dispositivo (ZHA) o Permitir unirse (Zigbee2MQTT).	A placa entra em outra rede Zigbee, a do Home Assistant por exemplo, fingindo ser este dispositivo, para ver se o coordenador o lê e o controla, e o que pede. Entra como roteador, na tomada: um dispositivo a pilha não pode ser emulado. Antes, no Home Assistant: Adicionar dispositivo (ZHA) ou Permitir entrar (Zigbee2MQTT).
+Hay una red guardada de la vez anterior: la placa vuelve a ella sin que la abran.	Há uma rede guardada da vez anterior: a placa volta a ela sem que a abram.
+Para emular, la placa deja su red un rato: se reinicia y arranca como equipo. Tus equipos quedan guardados y vuelven con Volver a Mi red.	Para emular, a placa deixa sua rede um tempo: reinicia como dispositivo. Seus dispositivos ficam guardados e voltam com Voltar a Minha rede.
+Reiniciar y emular	Reiniciar e emular
+Buscando una red abierta... (intento %u de 36)	Procurando uma rede aberta... (tentativa %u de 36)
+Fuera de la red	Fora da rede
+No encontró una red abierta en 3 minutos	Não encontrou uma rede aberta em 3 minutos
+Abrí la red en Home Assistant (Agregar dispositivo, o Permitir unirse) y la placa entra sola. Busca en los 16 canales cada 5 s.	Abra a rede no Home Assistant (Adicionar dispositivo, ou Permitir entrar) e a placa entra sozinha. Procura nos 16 canais a cada 5 s.
+Buscar otra vez	Procurar de novo
+Volver a Mi red	Voltar a Minha rede
+En la red 0x%04X, canal %u, como 0x%04X	Na rede 0x%04X, canal %u, como 0x%04X
+Con su propia clave de enlace (Zigbee 3.0).	Com sua própria chave de enlace (Zigbee 3.0).
+Sin clave propia todavía (sólo la de la red).	Ainda sem chave própria (só a da rede).
+Home Assistant pide que se identifique: %u s	O Home Assistant pede que se identifique: %u s
+Luz: prendida	Luz: acesa
+Luz: apagada	Luz: apagada
+La luz la prende y la apaga Home Assistant; tocarla acá también, y Home Assistant tendría que enterarse.	O Home Assistant acende e apaga a luz; tocar aqui também, e o Home Assistant deveria perceber.
+Un valor nuevo sale según los reportes que configuró el coordinador (abajo, en lo que pidió): un cambio chico puede esperar. Reportar ahora los manda ya.	Um valor novo sai conforme os relatórios que o coordenador configurou (abaixo, no que pediu): uma mudança pequena pode esperar. Reportar agora os manda já.
+Reportar ahora	Reportar agora
+Salir de la red	Sair da rede
+Lo que pidió el coordinador	O que o coordenador pediu
+Emular	Emular
+la luz, tocada en la placa: %s	a luz, tocada na placa: %s
+mandó todos los valores al coordinador	mandou todos os valores ao coordenador
+leyó %s (ep %u):%s	leu %s (ep %u):%s
+escribió en %s (ep %u)	escreveu em %s (ep %u)
+configuró reportes de %s 0x%04x: cada %u s a %u s	configurou relatórios de %s 0x%04x: a cada %u s a %u s
+leyó la configuración de reportes de %s	leu a configuração de relatórios de %s
+preguntó qué atributos tiene %s	perguntou que atributos %s tem
+preguntó qué comandos tiene %s	perguntou que comandos %s tem
+comando general 0x%02x en %s	comando geral 0x%02x em %s
+Prender	Acender
+Cambiar	Alternar
+mandó %s a la luz	mandou %s à luz
+pidió que se identifique %u s	pediu que se identifique por %u s
+comando 0x%02x de %s	comando 0x%02x de %s
+pidió la dirección corta	pediu o endereço curto
+pidió la dirección larga	pediu o endereço longo
+pidió el descriptor del nodo	pediu o descritor do nó
+pidió el descriptor de energía	pediu o descritor de energia
+pidió el descriptor del endpoint %u	pediu o descritor do endpoint %u
+pidió la lista de endpoints	pediu a lista de endpoints
+ató %s (ep %u) a sí mismo	vinculou %s (ep %u) a si mesmo
+desató %s (ep %u)	desvinculou %s (ep %u)
+pidió la tabla de vecinos	pediu a tabela de vizinhos
+pidió la tabla de rutas	pediu a tabela de rotas
+le pidió a la placa que se vaya de la red	pediu à placa que saia da rede
+abrió la red para sumar por %u s	abriu a rede para entrar por %u s
+pedido ZDO 0x%04x	pedido ZDO 0x%04x
+la luz quedó %s	a luz ficou %s
+no encontró una red abierta en 3 minutos	não encontrou uma rede aberta em 3 minutos
+adentro: canal %u, PAN 0x%04x, la placa es 0x%04x	dentro: canal %u, PAN 0x%04x, a placa é 0x%04x
+buscando una red abierta para sumarse	procurando uma rede aberta para entrar
+de vuelta en la red de antes	de volta à rede de antes
+la red de antes no está: buscando una abierta	a rede de antes não está: procurando uma aberta
+el coordinador le dio su propia clave de enlace (Zigbee 3.0)	o coordenador lhe deu sua própria chave de enlace (Zigbee 3.0)
+salió de la red	saiu da rede
+el coordinador la sacó de la red	o coordenador a tirou da rede
+arrancando la pila como router	iniciando a pilha como roteador
+la pila no arrancó (¿el C6 tiene su firmware 154?)	a pilha não iniciou (o C6 tem seu firmware 154?)
+pidió irse de la red y olvidarla	pediu para sair da rede e esquecê-la
+vuelve a la red propia (se reinicia)	volta à rede própria (reinicia)
+La radio: emulando un equipo	O rádio: emulando um dispositivo
+La radio: la red Zigbee, canal %u	O rádio: a rede Zigbee, canal %u
+La radio: armando la red Zigbee	O rádio: montando a rede Zigbee
+La radio, sin usar	O rádio, sem uso
+No se pudo armar la red: ¿el C6 tiene su firmware nuevo? Tienda, Sistema, Firmware de la radio (C6)	Não foi possível montar a rede: o C6 tem o firmware novo? Loja, Sistema, Firmware do rádio (C6)
+La radio no contesta: el C6 necesita su firmware nuevo (3.0.9-154.15). 1) Tienda, Sistema, Firmware de la radio (C6): bajarlo. 2) Ajustes, Actualización, Instalar en el C6. Son unos 15 s sin Wi-Fi y la placa se reinicia sola.	O rádio não responde: o C6 precisa do firmware novo (3.0.9-154.15). 1) Loja, Sistema, Firmware do rádio (C6): baixar. 2) Ajustes, Atualização, Instalar no C6. Uns 15 s sem Wi-Fi e a placa reinicia sozinha.

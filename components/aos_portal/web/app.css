@@ -33,9 +33,13 @@ h2 { font-size: 13px; text-transform: uppercase; color: var(--dim); font-weight:
 .row { display: flex; align-items: center; gap: 12px; padding: 13px 20px; border-top: 1px solid var(--line); min-height: 52px; }
 .row:first-child { border-top: 0; }
 .row .grow { flex: 1; min-width: 0; }
+.row .val { color: var(--dim); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+/* a long value that goes to a second line instead of being cut (a phone) */
+.row .val.wrap { white-space: normal; flex: 0 1 auto; }
+.row .grow:has(+ .val.wrap) { flex: 0 0 auto; }
+
 .screen-wrap .row .grow { flex: 0 0 6em; }
 .screen-wrap .row .val { flex: 1; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
-.row .val { color: var(--dim); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row.click { cursor: pointer; } .row.click:hover { background: var(--card2); }
 .muted { color: var(--dim); } .small { font-size: 13px; } .ok { color: var(--green); } .bad { color: var(--red); } .warn { color: var(--orange); }
 .note { color: var(--dim); font-size: 13px; margin: 8px 4px; }
@@ -277,6 +281,34 @@ a.redport { color: var(--accent); }
 .login { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
 .login form { width: 100%; max-width: 380px; }
 .login h1 { margin-top: 0; }
+
+/* Zigbee, "Mi red" */
+.zbnet { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; margin-top: 14px; }
+.zbcard { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; min-width: 0; }
+.zbcard .btn { padding: 6px 13px; font-size: 14px; white-space: normal; text-align: left; }
+.zbtop { display: flex; align-items: center; gap: 8px; }
+.zbname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; font-size: 17px; }
+.zbchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.zbchip { display: inline-block; background: var(--card2); border: 2px solid transparent; border-radius: 999px; padding: 3px 11px; font-size: 13px; }
+button.zbchip { cursor: pointer; color: var(--dim); border-color: var(--line); padding: 6px 14px; }
+button.zbchip.on { color: var(--yellow); border-color: var(--yellow); }
+button.zbchip:hover { filter: brightness(1.15); }
+.zb-or { color: var(--orange); } .zb-teal { color: #64d2ff; } .zb-red { color: var(--red); } .zb-green { color: var(--green); }
+.zb-dim { color: var(--dim); } .zb-acc { color: var(--accent); }
+.zbctl { gap: 8px; }
+.zbcodes .btns { gap: 8px; margin-top: 4px; }
+.zbcode { display: inline-flex; }
+.zbcode .btn:first-child { border-radius: 999px 0 0 999px; padding-right: 10px; }
+.zbcode .btn:last-child { border-radius: 0 999px 999px 0; padding: 6px 10px 6px 8px; color: var(--dim); border-left: 1px solid var(--line); }
+.zbslide { display: grid; grid-template-columns: 90px 1fr 58px; align-items: center; gap: 10px; }
+.zbslide .zbsv { text-align: right; font-variant-numeric: tabular-nums; }
+.zbraw summary { cursor: pointer; }
+.zbraw .mono { font-size: 12px; margin-top: 2px; }
+@media (max-width: 560px) { .zbnet { grid-template-columns: 1fr; } .zbslide { grid-template-columns: 70px 1fr 50px; } }
+
+/* Zigbee, Emular: the coordinator's requests */
+.zbemu-log { max-height: 360px; overflow-y: auto; font-size: 14px; line-height: 1.5; }
+.zbemu-board { color: var(--accent); }
 
 /* Local platform fonts: no CDN or network font dependency. */
 html:lang(zh-Hans) body { font-family: "Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", sans-serif; }

@@ -511,7 +511,11 @@ int aos_icon_scan_files(void)
         }
 
         char path[192];
-        snprintf(path, sizeof(path), "%s/%s", dir_path, name);
+        int path_len = snprintf(path, sizeof(path), "%s/%s", dir_path, name);
+        if (path_len < 0 || (size_t)path_len >= sizeof(path)) {
+            refused++;
+            continue;
+        }
         FILE *f = fopen(path, "rb");
         if (!f) {
             continue;

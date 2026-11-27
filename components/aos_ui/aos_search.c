@@ -359,13 +359,15 @@ static void walk_notes(const job_t *j)
     struct dirent *e;
     while (buf && fbuf && (e = readdir(d)) && job_live(j)) {
         if (e->d_name[0] == '.' || !ends_md(e->d_name)) continue;
-        char path[PATH_N + 100];
-        snprintf(path, sizeof path, "%s/%s", dir, e->d_name);
         /* the title: the name without .md */
         note_hit_t h;
         memset(&h, 0, sizeof h);
-        snprintf(h.file, sizeof h.file, "%s", e->d_name);
-        size_t tl = strlen(e->d_name) - 3;
+        size_t file_len = strlen(e->d_name);
+        if (file_len >= sizeof h.file) continue;
+        memcpy(h.file, e->d_name, file_len + 1);
+        char path[sizeof dir + sizeof h.file];
+        snprintf(path, sizeof path, "%s/%s", dir, h.file);
+        size_t tl = file_len - 3;
         snprintf(h.title, sizeof h.title, "%.*s", (int)(tl < sizeof h.title - 1 ? tl : sizeof h.title - 1), e->d_name);
         char ft[128];
         fold(h.title, ft, sizeof ft);

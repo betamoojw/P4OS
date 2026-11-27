@@ -8,6 +8,7 @@ Red	网络
 Terminal	终端
 Programador	烧录工具
 Banco	测试台
+Zigbee	Zigbee
 Macro pad	宏键盘
 Expansión	扩展
 Archivos	文件
@@ -790,6 +791,7 @@ necesita P4OS %s	需要 P4OS %s
 ¿Quitar %s de la placa? Lo que la app guardó queda en la tarjeta.	从开发板移除 %s？应用保存的数据将保留在存储卡上。
 Quitar	移除
 Abrir	打开
+%s actualizaciones en cola	已将 %s 项更新加入队列
 En curso: %s %s (%s)	正在运行：%s %s（%s）
 Lo último: %s	上次：%s
 Cancelado.	已取消。
@@ -798,6 +800,8 @@ Fuente	软件源
 apps: %s	应用：%s
 todavía sin catálogo	尚无软件目录
 Actualizaciones	更新
+Hasta %s: un pack que la tarjeta ya tiene no se baja de nuevo	最多 %s，存储卡上已有的资源包将跳过下载
+Actualizar todas (%s)	全部更新 (%s)
 Un recibo para las que son las del catálogo: no cambia ninguna app	为与软件目录一致的应用建立安装记录，不更改应用
 Que la Tienda maneje las %s copiadas a mano	将 %s 个手动复制的应用交由商店管理
 Las que no son iguales a las del catálogo: baja la de la Tienda para cada una. Lo que guardaron y sus packs quedan.	对于与软件目录不同的应用，将下载商店版本替换。应用保存的数据和资源包会保留。
@@ -883,6 +887,139 @@ Pedidas a la Tienda: %s	已向商店提交：%s
 Pedirle a la Tienda que las instale	让商店安装这些应用
 En la tarjeta	存储卡上的备份
 Todavía no hay ninguno.	尚无备份。
+trama corta	短帧
+Acuse	确认帧
+Comando	命令
+trama de tipo %s	类型为 %s 的帧
+Datos	数据
+cifrada en la capa MAC	MAC 层已加密
+comando de red	网络命令
+datos	数据
+cifrada	已加密
+contacto	门窗触点
+abierto	已打开
+cerrado	已闭合
+movimiento	移动
+sin movimiento	无移动
+agua	水浸
+¡agua!	检测到水！
+seco	干燥
+humo	烟雾
+alarma	警报
+normal	正常
+gas	燃气
+batería	电池
+encendido	开关
+nivel	等级
+color	颜色
+temperatura	温度
+presión	气压
+humedad	湿度
+presencia	有人感应
+luz	照度
+medidor	计量
+eléctrico	电气测量
+La red no tomó el pedido	网络未接受请求
+No se pudo armar la red: ¿el C6 tiene su firmware nuevo? Tienda, Sistema, Firmware de la radio (C6)	无法启动网络。请在“商店 → 系统 → 无线固件 (C6)”中检查 C6 固件是否已更新。
+Nombre del equipo	设备名称
+¿Sacar %s de la red? Para volver a sumarlo hay que resetearlo.	从网络中移除 %s？再次加入时需要先复位设备。
+router	路由器
+a red eléctrica	市电供电
+a pila	电池供电
+sin noticias desde que arrancó la placa	开发板启动后尚无上报
+se fue	已离网
+no contestó	无响应
+configurándolo	正在设置
+hay alguien	有人
+nadie	无人
+salida %d: %s	输出 %d：%s
+prendida	开
+apagada	关
+enviando...	正在发送…
+no tomó el código	未接受遥控码
+Arriba	上升
+Abajo	下降
+Cerrar con llave	锁定
+Ventilador: otro modo	风扇：下一模式
+Esperando el control remoto... (tocá para cancelar)	正在等待遥控器…（点按取消）
+Aprender un código	学习遥控码
+Enviar el último aprendido	发送最近学到的遥控码
+Guardarlo...	保存…
+Nombre del código	遥控码名称
+Guardados: tocá uno para mandarlo.	已保存。点按遥控码即可发送。
+¿Borrar el código %s?	删除遥控码 %s？
+Código borrado	遥控码已删除
+brillo	亮度
+posición	位置
+tono	色温
+Lo que mandó, crudo (%s)	收到的原始数据 (%s)
+comando	命令
+antes	先前
+Sacar	移除
+Mi red	我的网络
+Armando la red...	正在启动网络…
+Armar la red	启动网络
+Sumar equipos	添加设备
+Sumar Zigbee 3.0	添加 Zigbee 3.0 设备
+Abierta: %d s	开放入网：%d 秒
+Cerrar	关闭
+La placa arma su propia red Zigbee, con el C6 de radio, y los equipos se suman a ella: así se prueba cualquiera. Un equipo está en una sola red: para sumarlo acá hay que resetearlo (en general, el botón apretado hasta que parpadea).	开发板使用 C6 无线模块建立自己的 Zigbee 网络，设备加入后即可测试。每个设备只能加入一个网络。要在此添加设备，请先复位设备（通常是长按按钮，直到指示灯闪烁）。
+Abierta para sumar: reseteá los equipos de a uno; cada uno aparece acá cuando entra. Si es a pila, tocale el botón cada tanto mientras se configura.	已开放入网。请逐个复位设备，成功加入的设备会显示在这里。如果设备使用电池，设置过程中请不时按一下它的按钮。
+Red en el canal %s, %s equipos. Los valores llegan cuando el equipo los manda: uno a pila puede tardar en dar noticias. Si un equipo sigue titilando y no termina de sumarse, probá con Sumar Zigbee 3.0.	网络位于信道 %s，共 %s 个设备。设备主动上报时才会更新数值，电池设备可能较久才上报。如果设备一直闪烁且无法加入，可尝试“添加 Zigbee 3.0 设备”。
+Todavía no se sumó ningún equipo.	尚无设备加入。
+No se pudo	操作失败
+Emular un equipo	模拟设备
+La placa se suma a otra red Zigbee (la de Home Assistant) haciéndose pasar por un equipo: una luz en el endpoint 1 y un sensor de temperatura, humedad y batería en el 2 (fabricante P4OS, modelo P4OS-EMU-LT). Así se ve si el coordinador lo lee, lo maneja y qué le pide. Antes, en Home Assistant: Agregar dispositivo (ZHA) o Permitir unirse (Zigbee2MQTT).	开发板将加入另一个 Zigbee 网络（如 Home Assistant），模拟端点 1 上的灯，以及端点 2 上的温度、湿度和电池传感器（制造商 P4OS，型号 P4OS-EMU-LT）。您可以查看协调器的请求，测试它能否读取和控制设备。请先在 Home Assistant 选择“添加设备”(ZHA) 或“允许加入”(Zigbee2MQTT)。
+Hay una red guardada de la vez anterior: la placa vuelve a ella sin que la abran.	已保留上次的网络，开发板无需重新开放入网即可连接。
+La placa se reinicia y arranca como equipo. Tus equipos quedan guardados y vuelven con Volver a Mi red. ¿Seguir?	开发板将重启并模拟设备。已有设备会保留，选择“返回我的网络”即可恢复。继续吗？
+Reiniciando para emular...	正在重启以模拟设备…
+Reiniciar y emular	重启并模拟
+Buscando una red abierta... (intento %s de 36)	正在查找开放的网络…（第 %s 次，共 36 次）
+Fuera de la red	未入网
+No encontró una red abierta en 3 minutos	3 分钟内未找到开放的网络
+Buscar otra vez	重新搜索
+Volviendo a la red propia: la placa se reinicia	正在返回原网络，开发板将重启
+Volver a Mi red	返回我的网络
+En la red 0x%s, canal %s, como 0x%s	网络 0x%s，信道 %s，本机地址 0x%s
+con su propia clave de enlace	已有独立链路密钥
+sin clave propia todavía	尚无独立链路密钥
+Home Assistant pide que se identifique: %s s	Home Assistant 请求识别设备：%s 秒
+Luz: prendida	灯：开
+Luz: apagada	灯：关
+Reportar ahora	立即上报
+¿Seguro? Tocá otra vez	确定吗？再次点按确认
+Salir de la red	离开网络
+Lo que pidió el coordinador	协调器的请求
+Canal %s	信道 %s
+emulando un equipo en otra red, canal %s	正在另一个网络中模拟设备，信道 %s
+emulando un equipo: buscando una red	正在模拟设备：正在查找网络
+la red Zigbee de la placa, canal %s	开发板的 Zigbee 网络，信道 %s
+armando la red Zigbee	正在启动 Zigbee 网络
+el C6 no contesta	C6 无响应
+escaneando, canal %s	正在扫描信道 %s
+escuchando el canal %s	正在监听信道 %s
+sin usar	空闲
+Radio	无线模块
+Firmware del C6	C6 固件
+La radio no contesta: el C6 necesita su firmware nuevo (3.0.9-154.15). En la placa: 1) Tienda, Sistema, Firmware de la radio (C6): bajarlo. 2) Ajustes, Actualización, Instalar en el C6. Son unos 15 s sin Wi-Fi y la placa se reinicia sola.	无线模块无响应。C6 需要固件 3.0.9-154.15。请在开发板的“商店 → 系统 → 无线固件 (C6)”下载，然后在“设置 → 更新”中选择“安装到 C6”。Wi-Fi 将中断约 15 秒，开发板随后会自动重启。
+El C6 se cayó con la radio prendida y la dejó apagada; escanear o escuchar la vuelve a probar.	C6 在无线模块运行时异常，已关闭无线模块以保留 Wi-Fi。可扫描或监听以重试。
+Escuchar	监听
+%s paquetes	%s 个数据包
+%s perdidos en el C6	C6 丢失 %s 个数据包
+guardando %s en %s	正在将 %s 个数据包保存至 %s
+coordinador	协调器
+%s paquetes · %s dBm · hace %s s	%s 个包 · %s dBm · %s 秒前
+Todavía nadie: escuchá un canal con tráfico.	尚未发现设备。请在有流量的信道上监听。
+Olvidarlos	清除记录
+Capturas en la tarjeta	存储卡上的抓包文件
+Ninguna todavía.	暂无记录。
+Se abren con Wireshark: cada paquete trae su canal, RSSI y LQI.	可使用 Wireshark 打开。每个数据包都包含信道、信号强度 (RSSI) 和链路质量 (LQI)。
+Canales	信道
+Escanear	扫描
+A fondo (2 s por canal)	详细扫描（每个信道 2 秒）
+La barra es la energía del canal; el número, los paquetes oídos. Una red Zigbee o Thread se ve como un canal con paquetes.	条形图表示信道能量，数字表示收到的数据包数。有 Zigbee 或 Thread 网络的信道通常可收到数据包。
+Guardar para Wireshark	保存供 Wireshark 分析
+Zigbee y Thread	Zigbee 与 Thread
 registerPage: id y render	登记页面: id 和显示
 registerPage: "%s" es del portal	注册页面: "%s"属于门户
 La página falló: %s	页面失败: %s

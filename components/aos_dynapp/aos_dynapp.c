@@ -1742,8 +1742,10 @@ int aos_dynapp_scan(void)
             aos_ui_boot_progress(seen++, files + 1);
             aos_hal_unlock();
         }
+        size_t filename_len = strlen(item->d_name);
+        if (filename_len >= sizeof deferred[0]) continue;
         char full[192];
-        snprintf(full, sizeof full, "%s/%s", AOS_DYNAPP_DIR, item->d_name);
+        snprintf(full, sizeof full, "%s/%.*s", AOS_DYNAPP_DIR, (int)sizeof deferred[0] - 1, item->d_name);
         struct stat st;
         uint32_t size = 0, mtime = 0;
         if (stat(full, &st) == 0) {
@@ -1762,7 +1764,7 @@ int aos_dynapp_scan(void)
             loaded++;
             opened++;
             if (total > 1 && n_deferred < DEFERRED_MAX) {
-                snprintf(deferred[n_deferred++], sizeof(deferred[0]), "%s", item->d_name);
+                memcpy(deferred[n_deferred++], item->d_name, filename_len + 1);
             }
             if (total == 1 && size && s_count == before + 1) cache_note(item->d_name, size, mtime, &s_apps[before]);
         } else if (s_oom && n_oom < OOM_MAX) {

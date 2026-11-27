@@ -834,7 +834,9 @@ static void dev_new(uint8_t addr)
         wide_to_str(di.str_desc_manufacturer, vendor, sizeof vendor);
         wide_to_str(di.str_desc_product, product, sizeof product);
     }
-    snprintf(name, sizeof name, "%s%s%s", vendor, *vendor && *product ? " " : "", product);
+    strlcpy(name, vendor, sizeof name);
+    if (*vendor && *product) strlcat(name, " ", sizeof name);
+    strlcat(name, product, sizeof name);
     if (!name[0]) snprintf(name, sizeof name, "USB device %u", addr);
     int taken = 0, off = 0;
     const usb_standard_desc_t *d = (const usb_standard_desc_t *)cfg;

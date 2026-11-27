@@ -204,6 +204,7 @@ void aos_ui_hold_home(bool hold)
 static uint32_t s_psram_at_create_kb[AOS_MAX_APPS];
 static uint32_t s_lent_kb[AOS_MAX_APPS];         /* what the wallpaper let go for it when it opened */
 static uint32_t s_held_kb[AOS_MAX_APPS];
+static uint32_t s_min_free_kb[AOS_MAX_APPS];      /* the least free PSRAM seen while it was in front */
 static bool s_busy[AOS_MAX_APPS];
 static const char *s_left_busy[AOS_MAX_APPS];     /* what it had running when it left */
 /* an app just closed: is the PSRAM it had back? Checked a moment later
@@ -212,9 +213,12 @@ static const char *s_left_busy[AOS_MAX_APPS];     /* what it had running when it
 static uint32_t s_closed_ms[AOS_MAX_APPS], s_creates;
 static uint32_t s_closed_creates[AOS_MAX_APPS];
 
+static void need_learn(const aos_app_t *app);
+
 static void destroy_app(aos_app_t *app)
 {
     if (!app->running && !app->root) return;
+    if (app->running) need_learn(app);
     aos_hwkbd_app_gone(app->desc.id);
     aos_hwmouse_app_gone(app->desc.id);
     aos_statusbar_app_gone(app->desc.id);      /* its glyph in the bar, if it had one */
@@ -240,7 +244,11 @@ static void closed_check_tick(void)
 {
     uint32_t now = (uint32_t)aos_hal_uptime_ms();
     for (int i = 0; i < AOS_MAX_APPS; i++) {
-        if (!s_closed_ms[i] || now - s_closed_ms[i] < 1500) continue;
+        /* 5 s: at 1.5 s the wallpaper was still reading its photo back and
+         * the home screen making its icons again after a game, and Planeo
+         * looked 2 MB short that a moment later were there (on the board,
+         * 2026-11-25) */
+        if (!s_closed_ms[i] || now - s_closed_ms[i] < 5000) continue;
         if (s_cur || s_closed_creates[i] != s_creates) {      /* something else took memory since */
             s_closed_ms[i] = 0;
             continue;
@@ -597,6 +605,109 @@ static void trim_for_memory(void)
     }
 }
 
+/* A game is opening: the apps waiting in the background go, all that are
+ * not busy (playing, recording, serving the portal: busy_why), whatever the
+ * free PSRAM. Planeo's world needs ~11 MB at its peak and left the board
+ * with 517 KB free even with nothing else open (on the board, 2026-11-25). */
+static void trim_for_game(const aos_app_t *game)
+{
+    aos_app_t *alive[AOS_MAX_APPS];
+    int n = aos_ui_alive(alive, AOS_MAX_APPS);
+    for (int i = n - 1; i >= 0; i--) {
+        if (alive[i] == s_cur || alive[i] == game || busy_why(alive[i], false)) continue;
+        aos_hal_log("ui", "closing %s for %s", alive[i]->desc.id, game->desc.id);
+        destroy_app(alive[i]);
+    }
+}
+
+/* ---- what a big app needs, learnt ----
+ * The most PSRAM an app took while in front (what was free when it was
+ * created, less the least seen free while it ran, sampled from the tick),
+ * kept for the apps that took 3 MB or more, in the preference "app_need"
+ * ("id=KB;..."). Opening one again with less free than that and a margin,
+ * the apps waiting in the background that are not busy go first: Planeo
+ * opens with plenty free and only then asks for ~11 MB. A game always
+ * does this (trim_for_game). */
+#define NEED_PREF    "app_need"
+#define NEED_MIN_KB  3072
+#define NEED_SPARE   1536
+#define NEED_MAX     24
+#define NEED_TEXT    768
+
+static struct { char id[40]; uint32_t kb; } s_need[NEED_MAX];
+static int s_nneed = -1;                /* -1: not read yet */
+
+static void need_load(void)
+{
+    if (s_nneed >= 0) return;
+    s_nneed = 0;
+    char t[NEED_TEXT];
+    if (!aos_hal_pref_get_str(NEED_PREF, t, sizeof t)) return;
+    for (char *p = t; *p && s_nneed < NEED_MAX;) {
+        char *e = strchr(p, ';'), *eq = strchr(p, '=');
+        if (e) *e = 0;
+        if (eq && (!e || eq < e) && eq - p < (int)sizeof s_need[0].id) {
+            size_t l = (size_t)(eq - p);
+            memcpy(s_need[s_nneed].id, p, l);
+            s_need[s_nneed].id[l] = 0;
+            s_need[s_nneed].kb = (uint32_t)strtoul(eq + 1, NULL, 10);
+            if (s_need[s_nneed].kb) s_nneed++;
+        }
+        if (!e) break;
+        p = e + 1;
+    }
+}
+
+static uint32_t need_of(const char *id)
+{
+    need_load();
+    for (int i = 0; i < s_nneed; i++)
+        if (!strcmp(s_need[i].id, id)) return s_need[i].kb;
+    return 0;
+}
+
+static void need_learn(const aos_app_t *app)
+{
+    int s = slot_of_app(app);
+    uint32_t at = s_psram_at_create_kb[s], least = s_min_free_kb[s];
+    if (!at || !least || least >= at || !app->desc.id) return;
+    uint32_t kb = at - least;
+    if (kb < NEED_MIN_KB || strlen(app->desc.id) >= sizeof s_need[0].id) return;
+    need_load();
+    int i = 0;
+    while (i < s_nneed && strcmp(s_need[i].id, app->desc.id)) i++;
+    if (i < s_nneed && s_need[i].kb >= kb) return;          /* the most seen stays */
+    if (i == s_nneed) {
+        if (s_nneed == NEED_MAX) {                          /* the smallest makes room */
+            i = 0;
+            for (int k = 1; k < s_nneed; k++) if (s_need[k].kb < s_need[i].kb) i = k;
+            if (s_need[i].kb >= kb) return;
+        } else
+            s_nneed++;
+    }
+    snprintf(s_need[i].id, sizeof s_need[0].id, "%s", app->desc.id);
+    s_need[i].kb = kb;
+    char t[NEED_TEXT];
+    int n = 0;
+    t[0] = 0;
+    for (int k = 0; k < s_nneed && n < (int)sizeof t - 60; k++)
+        n += snprintf(t + n, sizeof t - (size_t)n, "%s%s=%u", k ? ";" : "", s_need[k].id, (unsigned)s_need[k].kb);
+    aos_hal_pref_set_str(NEED_PREF, t);
+    aos_hal_log("ui", "%s took up to %u KB of PSRAM: remembered", app->desc.id, (unsigned)kb);
+}
+
+/* the least free PSRAM while the app in front runs, every half second */
+static void need_tick(void)
+{
+    static uint32_t last;
+    uint32_t now = (uint32_t)aos_hal_uptime_ms();
+    if (!s_cur || now - last < 500) return;
+    last = now;
+    int s = slot_of_app(s_cur);
+    uint32_t f = psram_free_kb();
+    if (!s_min_free_kb[s] || f < s_min_free_kb[s]) s_min_free_kb[s] = f;
+}
+
 /* ---- apps that start with the board (aos_ui.h) ----
  * A comma-separated list of ids in the preference "boot_apps". */
 #define BOOT_KEY "boot_apps"
@@ -729,9 +840,13 @@ static void leave_current(bool destroy_now)
     if (!app) return;
     s_cur = NULL;
     if (app->hide && app->running) app->hide(app, app->inst);
+    if (app->running) need_learn(app);      /* also when it stays in the background */
     if (destroy_now || !keepable(app) || !keep_on_leaving(app)) destroy_app(app);
     else if (app->root) lv_obj_add_flag(app->root, LV_OBJ_FLAG_HIDDEN);
-    if (is_game(app) && !app->running) aos_wall_photo_for_game(false);
+    if (is_game(app) && !app->running) {
+        aos_wall_photo_for_game(false);
+        aos_home_suspend(false);
+    }
     aos_hal_app_context_set(NULL);
     aos_hal_audio_foreground(NULL);
     aos_hal_display_refresh_request(0);     /* a rate it asked for was its own */
@@ -754,6 +869,26 @@ bool aos_ui_open(const char *id)
 
     aos_app_t *prev = s_cur;
     if (prev) leave_current(false);
+
+    /* a game: before it turns the screen (which would make the home screen
+     * again, in the other orientation, behind it) the home screen and the
+     * icon pack's pictures let go of their PSRAM (aos_home_suspend) */
+    bool game_starts = is_game(app) && !app->running;
+    uint32_t home_kb = psram_free_kb();
+    /* a big app (it took that much before) with less free than it needs */
+    uint32_t need = app->running ? 0 : need_of(app->desc.id);
+    if (!game_starts && need && home_kb < need + NEED_SPARE) {
+        aos_hal_log("ui", "%s took up to %u KB before and %u KB are free: the apps waiting in the background go",
+                    app->desc.id, (unsigned)need, (unsigned)home_kb);
+        trim_for_game(app);
+    }
+    if (game_starts) {
+        aos_home_suspend(true);
+        aos_icon_pack_let_go();
+        trim_for_game(app);
+        aos_hal_log("ui", "home screen let go for %s: %u KB of PSRAM free (%u before)", app->desc.id,
+                    (unsigned)psram_free_kb(), (unsigned)home_kb);
+    }
 
     apply_rotation(app);
     aos_hal_app_context_set(app->desc.id);      /* what it claims now is its (aos_io) */
@@ -787,12 +922,13 @@ bool aos_ui_open(const char *id)
          * "kept" the 1.9 MB of the photos (Air Hockey, Vuelos and Juegos de
          * mesa on the board, 2026-11-22), and a real leak of that size
          * would have looked the same. */
-        uint32_t before_kb = psram_free_kb();
+        uint32_t before_kb = game_starts ? home_kb : psram_free_kb();
         if (is_game(app)) aos_wall_photo_for_game(true);
         uint32_t after_kb = psram_free_kb();
         s_lent_kb[slot_of_app(app)] = after_kb > before_kb ? after_kb - before_kb : 0;
         trim_for_memory();
         s_psram_at_create_kb[slot_of_app(app)] = psram_free_kb();
+        s_min_free_kb[slot_of_app(app)] = s_psram_at_create_kb[slot_of_app(app)];
         s_creates++;
         app->running = true;
         app->created_rot = aos_hal_display_get_rotation();
@@ -1491,6 +1627,7 @@ void aos_ui_tick(void)
     calls_tick();
     snapshot_tick();
     closed_check_tick();
+    need_tick();
     for (int i = 0; i < AOS_MAX_APPS; i++) {
         aos_app_t *a = &s_apps[i];
         if (!s_used[i] || !a->running || !a->tick) continue;

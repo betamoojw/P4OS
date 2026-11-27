@@ -1274,6 +1274,20 @@ proyecto).
 
 **Dónde quedó (2026-11-21):**
 
+- **Para la próxima release (2026-11-24): una parte del sistema nueva,
+  `sys-zigbee-oui`** (los fabricantes de radios para la app Zigbee,
+  `zigbee/oui.bin`). No la arma el CI: el sitio del IEEE no deja bajar
+  `oui.csv` con un script. Se baja a mano desde el navegador
+  (`open https://standards-oui.ieee.org/oui/oui.csv`), se arma con
+  `python3 tools/zigbee/gen_oui.py ~/Downloads/oui.csv build/zigbee/zigbee_oui.bin`,
+  se sube a la release publicada antes del tag como los packs y queda en
+  `CARRIED_PACKS` (ya está). Hasta entonces el catálogo la deja afuera
+  (`--missing-packs skip`).
+- **También para la próxima release (2026-11-25): `sys-zigbee-tuya`**
+  (qué es cada equipo Tuya y sus datapoints, `zigbee/tuya.txt`): se arma
+  con `python3 tools/zigbee/gen_tuya.py <zigbee-herdsman-converters>/src/devices/tuya.ts build/zigbee/zigbee_tuya.txt`
+  (el archivo de GitHub, MIT) y se sube igual que `zigbee_oui.bin`; ya
+  está en `CARRIED_PACKS` y en `store/system.json`.
 - **Fases 0 a 4, el merge y la release:** hechos. La 0.30.0 está
   publicada y la placa del usuario la corre, instalada por ella misma.
 - **De la fase 6**, adelantado: el firmware del P4 desde GitHub y las
@@ -1376,6 +1390,41 @@ proyecto).
   (`docs/internal/RELEASE-0.33.0.md`), publicada, y `releases/latest`
   sirve su catálogo. Casi todas las apps se actualizan una vez: cada
   paquete trae ahora sus textos en los tres idiomas nuevos.
+
+- **La 0.34.0 salió el 2026-11-25** (tag `v0.34.0` en `da4ab480`): Zigbee
+  (la red propia, el emisor IR, emular un equipo, la página del portal),
+  el firmware nuevo de la radio (`c6.bin` 3.0.9-154.15) y los íconos HD en
+  dos packs. Orden: los cinco archivos nuevos (`c6.bin`, `zigbee_oui.bin`,
+  `zigbee_tuya.txt`, `juguete.pak`, `linea.pak`) subidos a `v0.33.0`, la
+  última publicada, comparados por SHA-256, y anotados con `gen_store.py
+  packs --tag v0.33.0`; **esta vez `c6.bin` se movió a propósito** (de
+  `v0.29.0` a `v0.33.0`): es el firmware nuevo, el que necesita Zigbee.
+  `main` y su CI (que había quedado rojo por `zigbee/tuya.txt`, una ruta
+  que la Tienda no aceptaba: arreglado), el catálogo revisado (11 partes
+  del sistema), tag, CI del tag (borrador con 77 archivos), los 455
+  archivos del catálogo buscados en su release con su tamaño, sin un
+  error, y las cinco partes nuevas por SHA-256; notas
+  (`docs/internal/RELEASE-0.34.0.md`, con el paso a paso de la radio),
+  publicada, y `releases/latest` sirve su catálogo.
+
+- **La 0.34.1 salió el 2026-11-25** (tag `v0.34.1` en `9317cf11`), el
+  mismo día: Planeo sin mundos vacíos y con todos los mundos en vuelo
+  libre, lo que aprende la placa de las apps grandes, y la lista de la
+  Tienda con los íconos cerca de la pantalla. Sin packs nuevos; lo nuevo
+  del catálogo, el paquete de Planeo. Los 457 archivos del catálogo, sin
+  un error (`docs/internal/RELEASE-0.34.1.md`).
+
+- **La 0.34.2 salió el 2026-11-26** (tag `v0.34.2` en `ed145ebf`) con
+  ellos y el aviso del issue #2; los 457 archivos del catálogo, sin un
+  error. Lo que se hizo para los packs:
+  **los dos packs de íconos con
+  Visión** (104 apps): `juguete.pak` y `linea.pak` subidos a `v0.34.1`
+  (la última publicada; sus copias de antes en esa release, que nadie
+  nombraba, reemplazadas) y anotados en `store/packs.json` con
+  `gen_store.py packs --tag v0.34.1`, **a mano sólo esos dos**: el comando
+  quiso mover también `c6.bin` a la imagen que el CI recompiló en la
+  0.34.1, que no es la publicada en `v0.33.0`, y se dejó como estaba. La
+  Tienda los ofrece como actualización con el catálogo de la próxima.
 
 ## Preguntas abiertas
 

@@ -5,6 +5,68 @@ simulador, contra servidores falsos en la Mac. Este archivo junta, en un solo
 lugar, lo que **sólo la placa puede confirmar**, para ir tachando a medida que
 se prueba.
 
+## La 0.34.0 publicada (2026-11-25): lo que falta mirar en la placa
+
+- [ ] Actualizar la placa desde Ajustes, Actualización, desde GitHub, a la
+      0.34.0, y seguir el paso a paso de la radio de las notas tal cual
+      está escrito (su C6 ya tiene 154.15: ver qué dice la Tienda de
+      "Firmware de la radio (C6)", que no lo ofrezca de más).
+- [ ] Los íconos "línea" en la placa (bajados de la Tienda, Sistema).
+- [ ] Emular contra ZHA; un equipo Tuya TS0601 (los nombres de sus datapoints).
+
+## Zigbee, para probar el 2026-11-25 (rama `zigbee-p4`, con el usuario)
+
+Todo esto anda en el simulador; nada se instaló en la placa. En orden,
+de lo más rápido a lo que lleva más tiempo (detalle en
+`docs/plan/ZIGBEE.md` y `ZIGBEE-EMULAR.md`):
+
+1. **Instalar** el firmware (`NOBUILD=1 tools/ota.sh`, ya compilado), la
+   app Infrarrojo (`tools/install_apps.sh p4os.local infrarrojo`) y el
+   pack de idioma (`tools/install_lang.sh p4os.local en`). Después, para
+   la tabla Tuya: subir `build/zigbee/zigbee_tuya.txt` a
+   `/sdcard/zigbee/tuya.txt` (lo arma `tools/zigbee/gen_tuya.py`).
+- [ ] La red propia vuelve sola con sus 7 equipos (Mi red, Armar la red).
+- [x] **Nombre propio:** tocar el título de una tarjeta, ponerle nombre;
+      reiniciar y que siga (2026-11-25: el TS1201 como "iR Test", siguió
+      después de dos reinicios).
+- [x] **Tabla Tuya:** el TS0002 dice "Tuya TS0002_basic, 2 gang switch
+      module" (2026-11-25; el primer intento hizo caer el portal: el caché
+      sin poner en cero, arreglado). Ningún TS0601 para probar los
+      datapoints.
+- [x] **Códigos IR guardados:** aprender uno, "Guardarlo...", reiniciar,
+      tocarlo: la tele responde. Mantener dos veces: se borra.
+      2026-11-25: guardar y mandar andan (~1 s por envío); el primero
+      guardado fue un eco del emisor (arreglado e instalado). Aprendido de
+      nuevo (71 bytes, sin eco), guardado como "vol+", mandado en 0,5 s.
+- [x] **Infrarrojo por el hub** (2026-11-25: un comando de la biblioteca
+      SmartIR de la tele del usuario salió por el TS1201 en 0,6 s y la tele
+      respondió. Aprender por el hub desde Infrarrojo: anda (68 bytes, 203
+      duraciones a la pestaña Aprender). Un envío lento (17 s) después de
+      prender y apagar la escucha del emisor cuatro veces en 3 s:
+      arreglado, y probado otra vez yendo y viniendo de Aprender: 0,5 s): en Cableado, Salida = el TS1201; un
+      control de la biblioteca SmartIR (la tele del usuario) por el hub;
+      Aprender por el hub. El primer envío puede tardar: mirar el log
+      ("IR: from the blaster").
+- [x] **El portal:** la página Zigbee con Mi red, desde el celular
+      (2026-11-25: "vol+" mandado desde ahí en 0,5 s, las salidas del
+      TS0002 prendidas y apagadas; los dos primeros pedidos al relé no
+      llegaron, 167, y los siguientes sí: el relé de siempre, no el
+      portal).
+- [x] **Emular**, hecho el 2026-11-25 contra Zigbee2MQTT (ember): entró,
+      la entrevista, la luz en los dos sentidos, los valores, un reinicio
+      vuelve solo, Volver a Mi red trae los 7 equipos
+      (`ZIGBEE-EMULAR.md`, "Etapa 1 en la placa"). Lo que decía:
+      (lo que más tiempo lleva, necesita el Home Assistant del
+      usuario): antes, preguntarle qué coordinador tiene (ZHA o
+      Zigbee2MQTT, y el dongle). Pestaña Emular, "Reiniciar y emular"; en
+      Home Assistant abrir la red; la placa entra como "P4OS-EMU-LT".
+      Mirar: la entrevista en el registro, la luz desde Home Assistant y
+      desde la placa, la temperatura y la batería en Home Assistant,
+      "Reportar ahora", un reinicio (vuelve sola), "Salir de la red" y
+      **"Volver a Mi red": que la red propia vuelva con sus equipos** (es
+      lo más importante: el desvío del NVS a "zbemu"). Los nueve pasos
+      están en `ZIGBEE-EMULAR.md`, etapa 1.
+
 ## Pendientes al 2026-11-22, después de la 0.32.0
 
 La placa corre `v0.32.0`, la imagen del CI, con las 73 apps del catálogo

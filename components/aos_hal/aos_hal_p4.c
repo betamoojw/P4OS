@@ -329,6 +329,18 @@ static void prefs_trim(void)
     ESP_LOGW("pref", "the first store trimmed: %d keys erased, %d kept for an older firmware", n, kept);
 }
 
+static bool nvs_ok(void);
+
+/* P4OS: the NVS partition the preferences are on ("prefs", or the one carved
+ * out of "storage" on a board with the old table), for another user of NVS
+ * that needs room: the Zigbee stack keeps its network there
+ * (components/aos_154/aos_zigbee_p4.c); the table's "nvs" is full. The
+ * preferences are opened at start, so this touches no flash. */
+const char *aos_hal_pref_partition(void)
+{
+    return s_nvs ? s_part : NULL;
+}
+
 static bool nvs_ok(void)
 {
     if (s_nvs) return true;
@@ -535,7 +547,18 @@ static bool sd_host_config(sdmmc_host_t *out_host, sdmmc_slot_config_t *out_slot
     }
     sdmmc_host_t host = SDMMC_HOST_DEFAULT();
     host.slot = SDMMC_HOST_SLOT_0;
-    host.max_freq_khz = SDMMC_FREQ_HIGHSPEED;
+    /* 20 MHz, not 40 (high speed): the card shares the SDMMC controller with
+     * the C6's SDIO (slot 1, 40 MHz), and with both busy, the card writing
+     * (the first start of a new firmware writes the apps' cache and a new
+     * certificate) while Wi-Fi came up, the controller hung: the card's
+     * writes and the C6's link timed out together, esp_hosted restarted the
+     * board, and the card stayed stuck into the next start (no card, no
+     * Wi-Fi; on the board, 2026-11-24, five times in a day, all after an
+     * OTA). Espressif's own example of this pair (esp_hosted,
+     * examples/mcu_hosted_sdio_sdmmc_combined) runs the card at the default
+     * 20 MHz, and points at an IDF issue with the two on one controller
+     * (esp-idf #16233). */
+    host.max_freq_khz = SDMMC_FREQ_DEFAULT;
     host.pwr_ctrl_handle = pwr;
     /* A buffer that isn't DMA-ready (any malloc(): stdio's 8 KB of each FILE,
      * most apps' buffers) goes through a bounce buffer, and by default the
@@ -556,6 +579,67 @@ static bool sd_host_config(sdmmc_host_t *out_host, sdmmc_slot_config_t *out_slot
     *out_host = host;
     *out_slot = slot;
     return true;
+}
+
+/* The C6's link, brought up here, after the card, and not by esp_hosted on
+ * its own from before app_main (CONFIG_ESP_HOSTED_AUTO_CALL_INIT_BEFORE_APP_MAIN
+ * off, sdkconfig.defaults). The card and the C6 share the P4's one SDMMC
+ * controller (the card on slot 0, the C6's SDIO on slot 1), and esp_hosted
+ * resets the C6 and sets up its slot, its clock and its data path while the
+ * card would be setting up its own. When the two met, the card's commands
+ * timed out three times and the C6's link went down with them ("bring-up
+ * timed out"): the board came up with no card and no Wi-Fi, which looked
+ * like a hang (four times on 2026-11-24, after an OTA, caught on the serial
+ * port; the "no card" of 2026-09-29 below was likely the same). Waiting for
+ * the link before the card was not enough: its data path opens after the
+ * point that says "up", and they met there too. So the card first, alone on
+ * the controller as in every boot that went well, and then the C6, in a task
+ * of its own while the panel comes up; the network waits for it
+ * (aos_hal_c6_link_wait, aos_net_p4.c). Once both are up they share the
+ * controller fine, transfer by transfer. */
+static volatile int s_c6_link;          /* 0 coming up, 1 up, -1 failed */
+
+static void c6_link_task(void *arg)
+{
+    (void)arg;
+    extern int eh_host_init(const void *cfg);
+    extern int eh_host_connect_to_slave(void);
+    int64_t t0 = esp_timer_get_time();
+    int a = eh_host_init(NULL), b = a == 0 ? eh_host_connect_to_slave() : a;
+    s_c6_link = (a == 0 && b == 0) ? 1 : -1;
+    ESP_LOGI(TAG, "the C6's link, after the card: %s (%d/%d), %lld ms", s_c6_link > 0 ? "up" : "FAILED", a, b,
+             (long long)((esp_timer_get_time() - t0) / 1000));
+    vTaskDelete(NULL);
+}
+
+static void c6_link_start(void)
+{
+    /* internal RAM for its stack, and only while it runs: esp_hosted's own
+     * start ran in one like it (4 KB, priority 23) */
+    if (xTaskCreate(c6_link_task, "c6_link", 4096, NULL, 23, NULL) != pdPASS) s_c6_link = -1;
+}
+
+bool aos_hal_c6_link_wait(uint32_t ms)
+{
+    int64_t until = esp_timer_get_time() + (int64_t)ms * 1000;
+    while (!s_c6_link && esp_timer_get_time() < until) vTaskDelay(pdMS_TO_TICKS(20));
+    return s_c6_link > 0;
+}
+
+/* Before any restart by software (an OTA's, the portal's, the system's):
+ * the card unmounted. A restart does not power the card off, and one in the
+ * middle of a transfer leaves it stuck: the next start finds no card, and
+ * the C6 on the same controller fell with it (no Wi-Fi): five times on
+ * 2026-11-24, every time after an OTA, whose restart comes from a task of
+ * its own while the screen may be reading an icon, never after a restart
+ * from the screen's own task. The unmount waits for the file operation
+ * under way and lets no new one start; it frees only the card's slot
+ * (SDMMC_HOST_DEFAULT's deinit_p), not the controller the C6 is on. */
+static void sd_on_restart(void)
+{
+    if (!s_card) return;
+    aos_hal_player_stop();              /* an open file under an unmount does not end well */
+    if (esp_vfs_fat_sdcard_unmount(SD_ROOT, s_card) == ESP_OK) s_card = NULL;
 }
 
 static void sd_mount(void)
@@ -581,6 +665,8 @@ static void sd_mount(void)
         vTaskDelay(pdMS_TO_TICKS(300));
     }
     if (e != ESP_OK) ESP_LOGW(TAG, "no microSD (%s)", esp_err_to_name(e));
+    static bool hooked;
+    if (!hooked && esp_register_shutdown_handler(sd_on_restart) == ESP_OK) hooked = true;
 }
 
 bool aos_hal_sd_present(void) { return s_card != NULL || s_sd_back; }
@@ -1996,6 +2082,7 @@ bool aos_hal_init(void)
 
     aos_hal_boot_stage("card");
     sd_mount();
+    c6_link_start();                /* after the card: they share the SDMMC (c6_link_start) */
     aos_hal_boot_stage("panel");
     panel_init_on_core1();
 

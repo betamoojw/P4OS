@@ -185,7 +185,9 @@ static void dev_new(uint8_t addr)
         wide_to_str(di.str_desc_product, product, sizeof product);
     }
     xSemaphoreTake(M.mx, portMAX_DELAY);
-    snprintf(m->name, sizeof m->name, "%s%s%s", vendor, *vendor && *product ? " " : "", product);
+    strlcpy(m->name, vendor, sizeof m->name);
+    if (*vendor && *product) strlcat(m->name, " ", sizeof m->name);
+    strlcat(m->name, product, sizeof m->name);
     xSemaphoreGive(M.mx);
     m->in->num_bytes = mps_in;
     m->in->device_handle = dev;

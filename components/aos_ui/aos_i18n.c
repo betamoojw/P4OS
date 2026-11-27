@@ -790,7 +790,8 @@ int aos_i18n_scan(aos_lang_t *out, int max)
 
     const struct dirent *e;
     while (n < max && (e = readdir(d)) != NULL) {
-        if (e->d_name[0] == '.' || strlen(e->d_name) >= AOS_LANG_CODE_MAX) {
+        size_t code_len = strlen(e->d_name);
+        if (e->d_name[0] == '.' || code_len >= sizeof(out[n].code)) {
             continue;
         }
         if (strcmp(e->d_name, BASE_CODE) == 0) {
@@ -801,15 +802,17 @@ int aos_i18n_scan(aos_lang_t *out, int max)
          * the file rather than trusting dirent.d_type keeps this working the
          * same on FATFS and on the simulator's real filesystem. */
         char probe[192];
-        pack_path(probe, sizeof(probe), e->d_name, SYSTEM_CATALOG);
+        char code[AOS_LANG_CODE_MAX];
+        memcpy(code, e->d_name, code_len + 1);
+        pack_path(probe, sizeof(probe), code, SYSTEM_CATALOG);
         struct stat st;
         if (stat(probe, &st) != 0 || st.st_size <= 0) {
             continue;
         }
 
-        snprintf(out[n].code, sizeof(out[n].code), "%s", e->d_name);
-        read_meta_name(e->d_name, out[n].name, sizeof(out[n].name));
-        out[n].apps = count_app_catalogs(e->d_name);
+        memcpy(out[n].code, code, code_len + 1);
+        read_meta_name(code, out[n].name, sizeof(out[n].name));
+        out[n].apps = count_app_catalogs(code);
 
         /* Counts the lines that really are a pair: with a tab and not starting
          * with '#'. Counting the line breaks outright is cheaper but gives a

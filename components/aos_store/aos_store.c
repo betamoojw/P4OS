@@ -421,8 +421,10 @@ static bool allowed(const char *path, const char *file)
 /* Where a part of the system may put a file - the official source's own
  * (see "System parts" below): lang/<code>/_<name>.lang, the system's and
  * the portal's translations; fonts/<name>.pak, the colour emoji;
- * icons/<name>.pak, the HD icons (aos_icon_pack.h); and firmware/<name>.bin,
- * the radio's firmware, which Settings installs. */
+ * icons/<name>.pak, the HD icons (aos_icon_pack.h); zigbee/<name>.bin or
+ * .txt, the Zigbee app's tables (the makers of radios, aos_154.c; what each
+ * Tuya device is, aos_zigbee_tuya.c); and
+ * firmware/<name>.bin, the radio's firmware, which Settings installs. */
 static bool sys_allowed(const char *path)
 {
     if (strlen(path) >= sizeof(((app_t *)0)->sys_path) || strstr(path, "..") || strchr(path, '\\') || strstr(path, "//")) return false;
@@ -433,6 +435,8 @@ static bool sys_allowed(const char *path)
         return b && locale_ok(a + 1, (size_t)(b - a - 1)) && !strchr(b + 1, '/') &&
                b[1] == '_' && ends(b + 1, ".lang") && name_ok(b + 1, strlen(b + 1), "_.");
     if (!strncmp(path, "fonts/", 6)) return !b && ends(a + 1, ".pak") && name_ok(a + 1, strlen(a + 1), "_.") && a[1] != '.';
+    if (!strncmp(path, "zigbee/", 7))
+        return !b && (ends(a + 1, ".bin") || ends(a + 1, ".txt")) && name_ok(a + 1, strlen(a + 1), "_.") && a[1] != '.';
     if (!strncmp(path, "icons/", 6)) return !b && ends(a + 1, ".pak") && name_ok(a + 1, strlen(a + 1), "_.") && a[1] != '.';
     if (!strncmp(path, "firmware/", 9)) return !b && ends(a + 1, ".bin") && name_ok(a + 1, strlen(a + 1), "_.") && a[1] != '.';
     return false;
@@ -1873,6 +1877,17 @@ static bool enqueue(int kind, const char *file, const char *packs)
 {
     aos_store_init();
     lock();
+    /* an install that waits already, or is in hand, is not queued twice
+     * ("Actualizar todas" after tapping one, or a tap that went twice) */
+    if (kind == J_INSTALL && file) {
+        bool there = s_st.busy && !strcmp(s_st.job, "install") && !strcmp(s_st.file, file);
+        for (int i = 0; i < s_qn && !there; i++)
+            there = s_queue[i].kind == J_INSTALL && !strcmp(s_queue[i].file, file);
+        if (there) {
+            unlock();
+            return true;
+        }
+    }
     bool ok = s_qn < QUEUE;
     if (ok) {
         job_t *j = &s_queue[s_qn++];
